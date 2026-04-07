@@ -1,4 +1,4 @@
-wsl -e bash -c "cd /home/yoshi/project/earthraise && git diff --staged" でステージングされた差分を確認してください。
+プロジェクトルート（project-config.md 参照）で `git diff --staged` を実行し、ステージングされた差分を確認してください。
 
 問題がある場合（バグ・仕様違反・セキュリティリスク・不要な変更）はコミットメッセージを提案せず、問題点を指摘してください。
 
