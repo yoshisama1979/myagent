@@ -1,7 +1,29 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh todos)",
+      "Bash(curl -s -v -X GET \"https://stg.hana-tools.com/api/external/todos\" -H \"X-API-TOKEN: test\")",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":140,\"user_id\":34,\"content\":\"デザインカンプ確認\",\"description\":\"リニューアル用デザインカンプのレビューとフィードバック\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-18\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":140,\"user_id\":34,\"content\":\"テスト環境での動作確認\",\"description\":\"リニューアル後のページ表示・フォーム送信・レスポンシブ対応の確認\",\"next_work_date\":\"2026-04-17\",\"due_date\":\"2026-04-25\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh clients)",
+      "Bash(bash bin/hana-api.sh clients)",
+      "Bash(php -r ':*)",
+      "Bash(rm data/.clients-raw.tmp)",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh search \"カバーオール\")",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh search \"オーナーズ\")",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh search \"アークフィールド\")",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":59,\"user_id\":34,\"content\":\"交通対策費申請ページの修正\",\"description\":\"「申請方法のステップ」を削除する\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-30\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":59,\"user_id\":34,\"content\":\"エントリーナンバー機能の実装\",\"description\":\"物件・道具売買ページで各物件・道具にエントリーナンバーを表記。売買成立済みに「完売」表記。エントリーナンバーは売買成立時にコピーして使える仕様にする。\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-30\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":59,\"user_id\":34,\"content\":\"売買物件の選択エリア設定\",\"description\":\"以下14エリアを選択肢として追加：北大阪、大阪西、大阪東、南大阪、高槻、神戸、姫路、広島、岡山、京都、滋賀、名古屋、豊橋、津\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-30\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":59,\"user_id\":34,\"content\":\"お祝い欄の金額情報反映\",\"description\":\"クライアントから金額情報を受領次第、お祝い欄に反映する（現在回答待ち）\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-30\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":59,\"user_id\":34,\"content\":\"お問い合わせ司法書士欄の連絡先反映\",\"description\":\"クライアントから司法書士の連絡先情報を受領次第、お問い合わせページに反映する（現在回答待ち）\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-30\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh search \"プライムステージ\")",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":168,\"user_id\":34,\"content\":\"ショールーム見学会フォームの構築\",\"description\":\"ミサワリフォーム近畿様のショールーム見学会用応募フォーム。ページ構成：\\(1\\)希望日付選択ページ（対象期間5/9〜5/24、プルダウン選択、対象期間外はフリー入力可）\\(2\\)個人情報入力ページ \\(3\\)最終確認ページ \\(4\\)サンクスページ。UP希望日：4/22\",\"next_work_date\":\"2026-04-14\",\"due_date\":\"2026-04-22\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh search \"レクサス\")",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 フォームの実装\",\"description\":\"LEXUS OWNERS CUP 2026 応募フォームの実装\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 フォーム実装方法の資料作成\",\"description\":\"フォームの実装方法をまとめた資料を作成\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')",
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 コーディング依頼\",\"description\":\"長谷さんにコーディング依頼\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')"
     ]
   }
 }
