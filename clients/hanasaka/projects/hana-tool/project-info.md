@@ -32,7 +32,8 @@
 
 ## 関連ドキュメント
 
-- 機能追加バックログ: [feature-backlog.md](feature-backlog.md)
+- 残存課題: [backlog.md](backlog.md)
+- 決定事項・確定仕様: [decisions.md](decisions.md)
 
 ## 対応履歴
 
