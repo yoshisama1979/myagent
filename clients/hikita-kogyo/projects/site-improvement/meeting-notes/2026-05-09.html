@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打ち合わせメモ — 2026-05-09（ヒキタ工業）</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">打ち合わせメモ — 2026-05-09</h1>
+  <p class="text-gray-600 mb-8">ヒキタ工業 サイト改修・CV計測基盤整備</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">案件位置づけ</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>既存クライアントへの追加施策</li>
+    <li>広告出稿（Google広告デマンドジェネレーション）は <strong>未定</strong>。今回はまず計測基盤を整える</li>
+    <li>現状フォームは <strong>サンクスページなし</strong> → CV計測ができない状態</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">施策一覧</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ1：ベース整備</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>Google タグマネージャー（GTM）導入</li>
+    <li>メールフォームを <strong>SMTP送信</strong> に改修
+      <ul class="list-disc list-inside ml-6 mt-1">
+        <li>サンクスページを設けた通常のメールフォームに差し替え</li>
+        <li>SMTP化で到達率を担保</li>
+      </ul>
+    </li>
+    <li>LP全体に計測タグを設置</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ2：サイト改修</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>ホームページの <strong>スマホ対応</strong></li>
+    <li>追従型バナーの設置（電話 / 問い合わせ）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ3：コンバージョン計測</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>メールフォーム（新フォーム）</strong>
+      <ul class="list-disc list-inside ml-6 mt-1">
+        <li>サンクスページ到達でCV計測</li>
+        <li>マイクロコンバージョン … スクロール割合で複数取得可</li>
+      </ul>
+    </li>
+    <li><strong>現状の問い合わせフォーム</strong> にイベント計測を追加</li>
+    <li><strong>電話CV</strong></li>
+    <li><strong>拡張コンバージョン</strong> 対応</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ4：広告（出稿時）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>Google広告 デマンドジェネレーションキャンペーン
+      <ul class="list-disc list-inside ml-6 mt-1">
+        <li>デバイス：PC、モバイル</li>
+      </ul>
+    </li>
+    <li>※ 今回スコープ外。計測基盤を先に整備する前提</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認事項</h2>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm">
+    <ul class="list-disc list-inside space-y-1">
+      <li>現状サイトのGTM導入有無</li>
+      <li>使用するSMTP（クライアント側メールサーバ / SendGrid等の代行サービス）</li>
+      <li>追従バナーの設置範囲（HP / LP / 両方）</li>
+      <li>全体スケジュールと予算感</li>
+      <li>優先順位（フェーズ1から順番か、並行か）</li>
+    </ul>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">次のアクション</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>上記「要確認事項」をクライアントに確認</li>
+    <li>確認後、フェーズ別の見積・スケジュールを作成</li>
+  </ul>
+
+  <hr class="my-8 border-gray-300">
+  <p class="text-sm text-gray-500">2026-05-09 <a href="../decisions.html" class="text-blue-600 hover:underline">decisions.html</a> / <a href="../backlog.html" class="text-blue-600 hover:underline">backlog.html</a> に展開済み</p>
+
+</div>
+</body>
+</html>

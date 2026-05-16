@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>残存課題 — HANAツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">残存課題 — HANAツール</h1>
+  <p class="text-gray-600 mb-8">機能追加・修正事項・バグ・UX改善の残タスクをカテゴリごとに整理。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">タイマー・実績分析</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>タイマー実績を案件別に期間指定でグループ化（できればTodoistのタスクと併せて表示）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>1ヶ月の作業状況をクライアント別・プロジェクト別で割合表示</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Toggl からの読み込み</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">プロジェクト・案件管理</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-green-500">☑</span><span class="line-through text-gray-500">プロジェクトの変更ができない（バグ）→ 2026-04-13 修正済</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>プロジェクトとバックアップなどの設定表</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>コンパクトモードを作成（バッヂで状況がわかるように）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>案件に優先度を設定できる機能</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>自分の担当のプロジェクトが見えるようにする</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>担当者を設定できる</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>プランに「運用中」を追加</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>案件登録時に画面全体が更新されるのを修正（<strong>UX改善</strong>）<br>
+      <span class="text-gray-600 ml-6">- バックエンドにPOSTして成功レスポンスを受けたら、フロント側はDOMに案件名を1行追加するだけにする<br>- 画面全体のリロードは不要</span></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ステータス変更時に画面全体がリロードされる（<strong>UX改善</strong>）<br>
+      <span class="text-gray-600 ml-6">- 「進行中」等のステータス変更時、アイコンマークの更新だけで済ませる<br>- 案件登録と同様、非同期でバックエンド更新 → フロントはアイコンのみ差し替え</span></span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ダッシュボード</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>進行中案件の数字をダッシュボードで表示</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ダッシュボードから案件登録可能に</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ダッシュボードから紹介者を消す</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">紹介者・クライアント管理</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>紹介者登録などをリアルタイム検索で選ぶ（既に設定されている会社は色を変える）</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ToDo・Todoist 連携</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ToDoリスト作成：Toggl からデータを引っ張ってきて編集・追加できる仕組み</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Todoistに追加するエージェント</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Todoist登録画面から戻るためのリンク（パンくず）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ToDo登録時の記録</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>タスクの詳細情報内のURLを自動リンク化して表示</strong></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>TODO完了チェック機能</strong><br>
+      <span class="text-gray-600 ml-6">- 依頼された人が完了をチェック可能<br>- チェック時に依頼元へ通知<br>- 依頼元で完全にクローズできる</span></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>TODO依頼時に依頼された人のChatworkへ通知メッセージを送信</strong></span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">日報</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>日報の登録機能</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>月間カレンダーの表示</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>前月・次月への移動</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>登録されている日報の日付を選択して内容確認</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>登録日付にアイコン表示</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Toggl からの読み込み</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>前回の予定からの読み込み</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">AI・検索機能</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>AIチャットに現状をベースに質問ができるようにする</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>1ルームずつ課題などを分析して返す</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>キーワード検索して結果をまとめる<br>
+      <span class="text-gray-600 ml-6">- 「〇〇について教えて」→ 〇〇で検索して結果を出す<br>- 日付を考慮して検索<br>- 検索結果をGPTでまとめる</span></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>AIチャットのウィンドウサイズを変更すると履歴が消える問題を修正（バグ）</strong></span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">評価・スキル</h2>
+  <p class="text-sm mb-2">詳細仕様は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照（2026-05-09 決定）。<br>
+  全社方針としての位置付けは <a href="../../../../notes.html" class="text-blue-600 hover:underline">notes.html</a> 2026-05-09 エントリ参照。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">スキルチェックシート機能（人事評価）</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>評価項目（質問）の登録・管理機能（「会社として身に着けてほしい項目」を含める運用）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>社員による自己評価画面（<strong>3段階評価</strong>）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>社長レビュー画面（自己評価結果へのフィードバック）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>半期サイクル</strong> の実施スケジュール管理</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>評価結果の集計・履歴表示（個人の時系列推移、社員間比較）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>評価結果の人事査定への活用（運用設計が必要）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">旧スタブ（上記で具体化）</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><s class="text-gray-500">評価制度の作成</s><span class="text-gray-500">→ スキルチェックシート機能で具体化</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><s class="text-gray-500">スキルシートの作成</s><span class="text-gray-500">→ HANAツール内に実装することに決定</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">システム基盤</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-green-500">☑</span><span class="line-through text-gray-500">ログイン状態の保持がうまくいっていない（バグ）→ 解消済</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>日付アラート設定</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>定期バックアップ</span></li>
+  </ul>
+
+</div>
+</body>
+</html>

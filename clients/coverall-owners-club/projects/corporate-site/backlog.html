@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>残存課題 — コーポレートサイト</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">残存課題 — コーポレートサイト</h1>
+  <p class="text-sm text-gray-500 mb-8">仕様は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">実装タスク</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">交通対策費申請ページ</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>「申請方法のステップ」を削除</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">物件・道具売買ページ</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>エントリーナンバー表記の実装</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>エントリーナンバーをコピー可能にする</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>「完売」表記の実装</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>売買物件の選択エリアUI実装（14区分。一覧は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a>）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">トップページ</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>道具／物件のタブ切替で <strong>検索フォーム・タイトルも連動</strong> して変更されるようにする</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>タブの下に <strong>見出し・検索フォーム</strong> を配置する</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>検索結果の各アイテムをクリックで <strong>詳細ページへ遷移</strong></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>検索結果の <strong>「もっと見る」をクリックでリンク先へ遷移</strong></span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認・要調査</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">トップページ</h3>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm">
+    タブの下の領域は <strong>カテゴリ表示</strong> か？ クリックで該当カテゴリの一覧が表示される仕様か？
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">クライアント回答待ち</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-24">ステータス</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-28">依頼日</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">1</td>
+        <td class="px-3 py-2 border border-gray-200">お祝いの欄の金額</td>
+        <td class="px-3 py-2 border border-gray-200">未受領</td>
+        <td class="px-3 py-2 border border-gray-200">2026-04-09</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">2</td>
+        <td class="px-3 py-2 border border-gray-200">司法書士の連絡先情報</td>
+        <td class="px-3 py-2 border border-gray-200">未受領</td>
+        <td class="px-3 py-2 border border-gray-200">2026-04-09</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要件として記録（実装方針・適用範囲は要確認）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">ID・パスワード運用要件（2026-05-08 クライアント要望）</h3>
+
+  <p class="text-sm font-semibold mb-2">要件（原文）</p>
+  <blockquote class="border-l-4 border-gray-400 pl-4 py-2 my-4 text-sm text-gray-700 bg-gray-100">
+    会員へURLの通知後、ID・パスワードは年1回程度の頻度で変更可能とする運用でお願いいたします。
+  </blockquote>
+
+  <p class="text-sm font-semibold mb-2 mt-6">確認事項</p>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>対象は <strong>会員のログインID/パスワード</strong> で良いか（管理者・運営側ではない）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>「変更可能」の主体 — <strong>会員自身が画面上で変更</strong> か <strong>運営側が一括変更</strong> か</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>「年1回程度」は <strong>強制（定期変更ポリシー）</strong> か、<strong>任意（変更したい時にできるという意味）</strong> か</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>既存仕様の現状（現時点で変更機能はあるか）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>パスワードリセット機能（メール認証等）の有無・別途実装要否</span></li>
+  </ul>
+
+</div>
+</body>
+</html>

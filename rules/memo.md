@@ -8,46 +8,52 @@
 
 | ファイル | 役割 | いつ見る／書く |
 |---------|-----|--------------|
-| `backlog.md` | **残存課題**：要対応・要調査・要確認の項目 | 普段の業務・着手判断はここを見る |
-| `decisions.md` | **既成事実**：確定仕様・決定事項・既存実装の前提 | 背景確認・前提把握の参照元 |
-| `meeting-notes/YYYY-MM-DD.md` | **打ち合わせ生記録**：議事録（後で decisions/backlog に展開） | 打ち合わせ中・直後 |
-| `memo.md` | **雑記帳**：社長から内容のみ渡された無指示時のメモ | 棚卸しまでの一時置き場 |
+| `backlog.html` | **残存課題**：要対応・要調査・要確認の項目 | 普段の業務・着手判断はここを見る |
+| `decisions.html` | **既成事実**：確定仕様・決定事項・既存実装の前提 | 背景確認・前提把握の参照元 |
+| `meeting-notes/YYYY-MM-DD.html` | **打ち合わせ生記録**：議事録（後で decisions/backlog に展開） | 打ち合わせ中・直後 |
+| `memo.html` | **雑記帳**：社長から内容のみ渡された無指示時のメモ | 棚卸しまでの一時置き場 |
 
 ## 保存先
 
 ```
-clients/<クライアント名>/projects/<プロジェクト名>/backlog.md
-clients/<クライアント名>/projects/<プロジェクト名>/decisions.md
-clients/<クライアント名>/projects/<プロジェクト名>/meeting-notes/YYYY-MM-DD.md
-clients/<クライアント名>/projects/<プロジェクト名>/memo.md
+clients/<クライアント名>/projects/<プロジェクト名>/backlog.html
+clients/<クライアント名>/projects/<プロジェクト名>/decisions.html
+clients/<クライアント名>/projects/<プロジェクト名>/meeting-notes/YYYY-MM-DD.html
+clients/<クライアント名>/projects/<プロジェクト名>/memo.html
 ```
 
 ### 命名規則
 
 - クライアント名・プロジェクト名は **英小文字 + ハイフン区切り**（例: `earth-rays`, `hikita-kogyo`）
 - 既存の `clients/` 配下のディレクトリ命名と整合させる
-- meeting-notes のファイル名は **会議日付（YYYY-MM-DD.md）** とする
+- meeting-notes のファイル名は **会議日付（YYYY-MM-DD.html）** とする
 
 ### 関連ファイル
 
-- `client-info.md`: クライアント単位の基本情報（`clients/<client>/client-info.md`）
-- `project-info.md`: プロジェクト単位の基本情報（`clients/<client>/projects/<project>/project-info.md`）
+- `client-info.html`: クライアント単位の基本情報（`clients/<client>/client-info.html`）
+- `project-info.html`: プロジェクト単位の基本情報（`clients/<client>/projects/<project>/project-info.html`）
+
+### ファイルフォーマット
+
+- 全てのプロジェクト記録は **HTML5 + Tailwind CSS（CDN）** で記述する
+- 詳細は `rules/document-format.md` 参照
+- テンプレートは `clients/_template/` 配下を参照
 
 ## 業務動線
 
-1. **普段の作業**：`backlog.md` を見て次のアクションを判断
-2. **背景確認**：必要時に `decisions.md` を参照（現状仕様・確定事項）
-3. **打ち合わせ**：`meeting-notes/YYYY-MM-DD.md` に生記録 → 後で展開
-4. **雑多な記録**：`memo.md` に書き殴り（後で棚卸し）
+1. **普段の作業**：`backlog.html` を見て次のアクションを判断
+2. **背景確認**：必要時に `decisions.html` を参照（現状仕様・確定事項）
+3. **打ち合わせ**：`meeting-notes/YYYY-MM-DD.html` に生記録 → 後で展開
+4. **雑多な記録**：`memo.html` に書き殴り（後で棚卸し）
 
 ## 運用フロー（書き分け）
 
 | 社長の指示・場面 | 書き先 |
 |---------------|-------|
-| 打ち合わせ中・直後 | `meeting-notes/YYYY-MM-DD.md` |
-| 「課題に追加」「不具合として残して」「要調査」等 | `backlog.md` |
-| 「仕様として残して」「決定事項」「確定」等 | `decisions.md` |
-| 「メモしておいて」「とりあえず残して」「（指示なし）」 | `memo.md` |
+| 打ち合わせ中・直後 | `meeting-notes/YYYY-MM-DD.html` |
+| 「課題に追加」「不具合として残して」「要調査」等 | `backlog.html` |
+| 「仕様として残して」「決定事項」「確定」等 | `decisions.html` |
+| 「メモしておいて」「とりあえず残して」「（指示なし）」 | `memo.html` |
 
 ### 直接 decisions/backlog に書いて良い例外
 
@@ -56,53 +62,53 @@ clients/<クライアント名>/projects/<プロジェクト名>/memo.md
 
 ## 打ち合わせ記録の流れ
 
-1. **打ち合わせ中・直後**：`meeting-notes/YYYY-MM-DD.md` に生記録（聞いた順・整理しすぎない）
+1. **打ち合わせ中・直後**：`meeting-notes/YYYY-MM-DD.html` に生記録（聞いた順・整理しすぎない）
 2. **打ち合わせ後の整理**：
-   - 決まったこと → `decisions.md`
-   - 要対応・要確認 → `backlog.md`
+   - 決まったこと → `decisions.html`
+   - 要対応・要確認 → `backlog.html`
 3. **meeting-notes は履歴として残す**（削除しない）
 4. 展開完了したら、meeting-notes の **末尾に展開ステータス** を記載
-   - 例：`> 2026-05-09 decisions.md / backlog.md に展開済み`
+   - 例：`> 2026-05-09 decisions.html / backlog.html に展開済み`
 
 ## 棚卸し（定期作業）
 
-1. `memo.md` を読み返し、各項目を `backlog.md` / `decisions.md` へ転記
-2. 転記済み項目は `memo.md` から削除
-3. `backlog.md` の項目が完了・仕様化したら `decisions.md` へ **日付付きで転記** し、`backlog.md` から削除
+1. `memo.html` を読み返し、各項目を `backlog.html` / `decisions.html` へ転記
+2. 転記済み項目は `memo.html` から削除
+3. `backlog.html` の項目が完了・仕様化したら `decisions.html` へ **日付付きで転記** し、`backlog.html` から削除
 4. 未展開の `meeting-notes/` を確認し、展開漏れがあれば反映
 
 ## 書式
 
-### `backlog.md`
+### `backlog.html`
 
 - 種別ラベルで分類（**不具合 / 要望 / 要調査 / 仕様未確定 / 実装タスク** 等）
 - 各項目に「現状」「想定原因」「期待動作」「対応方針」を明記
 - 完了管理はチェックボックス可
 
-### `decisions.md`
+### `decisions.html`
 
 - 確定事項には **決定日（YYYY-MM-DD）** を併記
 - **結論ファースト** — 経緯ではなく結論を記載
 - 章立てで分類（仕様 / アーキテクチャ / 運用ルール / スコープ 等）
 - 出典の打ち合わせがあれば「2026-05-09 打ち合わせで決定」のように明記
 
-### `meeting-notes/YYYY-MM-DD.md`
+### `meeting-notes/YYYY-MM-DD.html`
 
 - 打ち合わせの **生記録**。整理しすぎない（後で展開する前提）
 - 出席者・日付を冒頭に記載
 - 末尾に展開ステータスを記載（展開後）
 
-### `memo.md`
+### `memo.html`
 
 - 自由記述（フォーマット不問）
 - 棚卸し時に空にする（残るのは「行き先未定」のみ）
 
 ## プロジェクト横断のメモ
 
-特定のクライアント・プロジェクトに紐づかない日常的な思いつきは、プロジェクトルートの **`notes.md`** に追記。
+特定のクライアント・プロジェクトに紐づかない日常的な思いつきは、プロジェクトルートの **`notes.html`** に追記。
 
 - 新しいエントリは日付の新しい順（上が最新）で追加
-- ある程度たまってプロジェクト化したら、該当 `clients/<client>/projects/<project>/backlog.md` または `decisions.md` へ転記
+- ある程度たまってプロジェクト化したら、該当 `clients/<client>/projects/<project>/backlog.html` または `decisions.html` へ転記
 
 ## 記録ルール
 
@@ -120,7 +126,7 @@ clients/<クライアント名>/projects/<プロジェクト名>/memo.md
 ### 2. 確定情報と未確認情報を区別
 
 - 未確認は「未記載」「目安」「要調査」等で示す
-- `decisions.md` に書くのは確定情報のみ。未確定は `backlog.md` に「要調査」として置く
+- `decisions.html` に書くのは確定情報のみ。未確定は `backlog.html` に「要調査」として置く
 
 ### 3. 記録すべきでないこと
 

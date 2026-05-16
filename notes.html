@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日常メモ — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">日常メモ</h1>
+  <p class="text-gray-600 mb-2">社長が思いついた内容を伝えてくれたものを、随時ここに整理して追記していくファイル。</p>
+  <p class="text-gray-600 mb-2">プロジェクト固有の内容ではなく、横断的なアイデア・気づき・社内向けの不具合報告などを記録する。</p>
+  <p class="text-gray-600 mb-8">新しいエントリは <strong>日付の新しい順（上が最新）</strong> で追加する。</p>
+
+  <hr class="my-8 border-gray-300">
+
+  <h2 class="text-2xl font-bold mb-4 mt-10">2026-05-09</h2>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">人事評価制度の方針確定（HANAツールへの組み込み）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">カテゴリ</td><td class="px-3 py-2 border border-gray-200">経営方針／人材教育（<strong>2026-05-08 スキルシート構想の続編</strong>）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">起案者</td><td class="px-3 py-2 border border-gray-200">社長</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200"><strong>方針確定</strong>、HANAツール側の実装フェーズへ</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">確定事項</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>人事評価の仕組みを <strong>HANAツール上にシステム化</strong> する（スプレッドシート運用は採用しない）</li>
+    <li><strong>スキルチェックシート形式</strong>（質問に対して <strong>3段階評価</strong>）</li>
+    <li><strong>半期に1度</strong> 実施</li>
+    <li><strong>自己評価 ＋ 社長レビュー</strong> の二段構え</li>
+    <li>結果は <strong>教育・意識向上＋人事査定</strong> の両方に活用</li>
+    <li>質問項目に「<strong>会社として身に着けてほしい項目</strong>」を含めることで、社員の自然なベース向上を狙う</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">2026-05-08 スキルシート構想との関係</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>同じ取り組み（スキルシート計画の段階数・運用方式・実装場所が確定）</li>
+    <li>2026-05-08 確認事項のうち「レベル定義の段階数（5/4/3）」→ <strong>3段階に確定</strong></li>
+    <li>2026-05-08 で挙げた段階構成（汎用→領域別）はそのまま継続</li>
+    <li>「ステージ1: 汎用スキル版」が HANAツール実装の <strong>最初のリリース範囲</strong> となる想定</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">HANAツール側の実装情報</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>詳細決定事項：<a href="clients/hanasaka/projects/hana-tool/decisions.html" class="text-blue-600 hover:underline">clients/hanasaka/projects/hana-tool/decisions.html</a></li>
+    <li>実装タスク：<a href="clients/hanasaka/projects/hana-tool/backlog.html" class="text-blue-600 hover:underline">clients/hanasaka/projects/hana-tool/backlog.html</a> の「評価・スキル」セクション</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">次のアクション</p>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>質問項目の整理（2026-05-08 の汎用スキル候補をベースに）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>HANAツール側の実装着手判断（優先度・スケジュール）</span></li>
+  </ul>
+
+  <hr class="my-8 border-gray-300">
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">マルコマツール（プロジェクト名要確認・API未照合）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">カテゴリ</td><td class="px-3 py-2 border border-gray-200">プロジェクトメモ（一時保管）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">状態</td><td class="px-3 py-2 border border-gray-200">hana-tools API 未確認のため <code class="bg-gray-100 px-1 rounded text-sm font-mono">notes.html</code> に一時保管。<code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> 設定後にAPI確認 → 正式な <code class="bg-gray-100 px-1 rounded text-sm font-mono">clients/marukoma/projects/&lt;確認後の名称&gt;/</code> へ転記</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">キャッシュ上の候補</td><td class="px-3 py-2 border border-gray-200">マルコマ株式会社 配下の <strong>「統合ツール」（project_id: 119）</strong> が該当の可能性</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">社長メモ（原文）</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>本番環境の作成</li>
+    <li>クライアント用アカウントの作成</li>
+    <li>PDFを画像に変換するツール
+      <ul class="list-disc list-inside ml-6 mt-1">
+        <li>技術的なところを調べて見積り</li>
+      </ul>
+    </li>
+    <li>PDF入れてそのまま変換できるツールにしたい</li>
+    <li>しっかり仕様書をまとめて共有すること</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">転記時の注意</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>プロジェクト名（「マルコマツール」が正式登録名か、キャッシュ上の「統合ツール」と同じか）をAPIで確認</li>
+    <li>確認後、<code class="bg-gray-100 px-1 rounded text-sm font-mono">clients/marukoma/projects/&lt;正式名&gt;/backlog.html</code> および <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> へ展開する</li>
+    <li>「PDF入れてそのまま変換」のUX要件は、転記時に <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> に仕様として記録するか <code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> の要件として記録するか判断</li>
+  </ul>
+
+  <hr class="my-8 border-gray-300">
+
+  <h2 class="text-2xl font-bold mb-4 mt-10">2026-05-08</h2>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">経営方針 — システム制作・運用をメイン事業へ転換</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">カテゴリ</td><td class="px-3 py-2 border border-gray-200">経営戦略</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">起案者</td><td class="px-3 py-2 border border-gray-200">社長(株式会社はなさか 代表取締役)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200"><strong>方針決定(実行フェーズへ移行)</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">会社の現状認識</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>もともと <strong>ホームページ制作会社</strong> として設立、現在も継続</li>
+    <li>社長は <strong>元システムエンジニア</strong> のバックグラウンドあり</li>
+    <li>既に「少々のシステム構築」は対応可能</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">戦略転換の背景</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>AI の登場でシステム開発の障壁が大きく低下</strong></li>
+    <li>社長の元エンジニア知識を組み合わせれば、<strong>早く・品質高く</strong> システムを作れる</li>
+    <li>HP制作と比べたシステム開発のメリット:
+      <ul class="list-disc list-inside ml-6 mt-1">
+        <li><strong>単価が高い</strong></li>
+        <li>仕様確定後はクライアントとのやり取り(ボトルネック)が <strong>少ない</strong></li>
+        <li>少ない作業量で <strong>大きな成果</strong> をクライアントに提供できる</li>
+        <li><strong>運用管理で継続収益(ストックビジネス)</strong> が見込める</li>
+      </ul>
+    </li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">今後の営業の流れ</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-4">業務改善システム構築(フロー収益)
+       ↓
+運用管理契約(月額 50,000円目標 / ストック収益)</pre>
+
+  <p class="text-sm font-semibold mb-2 mt-4">事業ごとの位置付け(確定)</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/4">事業</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">位置付け</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">HP制作</td><td class="px-3 py-2 border border-gray-200"><strong>顧客接点として残す</strong>(注力分野ではない・営業の入口として活用)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">システム制作</td><td class="px-3 py-2 border border-gray-200"><strong>メイン</strong>(業務改善システム + AIをふんだんに活用)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">運用管理</td><td class="px-3 py-2 border border-gray-200"><strong>メイン(ストック収益)</strong>(月額目標 50,000円)</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">狙うシステム像(確定)</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>中心は <strong>業務改善システム</strong> — 会社の業務効率化のためのシステム開発・カスタマイズ</li>
+    <li><strong>AI を大いに活用</strong> した、総合的に便利な仕組みにする</li>
+    <li>単機能ではなく「業務全体を効率化する」総合提案を志向</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">運用管理サービスの構成(確定)</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/4">要素</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">サーバー構成</td><td class="px-3 py-2 border border-gray-200"><strong>ステージング + 本番(VPS×2台)</strong> ※サーバー費用込み</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">バックアップ</td><td class="px-3 py-2 border border-gray-200">自動化</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">含まれる業務</td><td class="px-3 py-2 border border-gray-200">システム保守 / バックアップ / サーバー管理</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">月額目標</td><td class="px-3 py-2 border border-gray-200"><strong>50,000円程度</strong></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">価格妥当性</td><td class="px-3 py-2 border border-gray-200">業務改善システム保守の相場(5万〜20万円)の中で <strong>やや控えめ寄り</strong>(提供価値の割に高くない)</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">追加検討中の含有項目(要意思決定)</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>軽微改修対応(月◯時間まで)</li>
+    <li>死活監視・異常通知</li>
+    <li>SSL証明書・ドメイン更新</li>
+    <li>月次稼働レポート</li>
+    <li>セキュリティパッチ適用</li>
+    <li>ユーザー操作サポート(軽微)</li>
+    <li>月次定例MTG(30分)</li>
+  </ul>
+  <p class="text-sm mb-4">→ 上記の確定後、<strong>「サービス定義書」</strong> として 1 枚にまとめてクライアント提示用テンプレ化する</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">含意(他施策への波及)</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>スキルシートで重視すべき技能</strong>: システム開発スキル / AI活用 / インフラ運用(ステージング・本番分離、自動バックアップ)</li>
+    <li>提案書・営業資料・自社サイトの訴求軸を「HP制作会社」から <strong>「業務効率化のシステム会社」</strong> にシフト</li>
+    <li>提案ひな形に「<strong>初期構築費 + 月額運用費(50,000円〜)</strong>」のセット提案を組み込む</li>
+    <li>横展開のための <strong>テンプレート化・自社プロダクト化</strong> が重要になる可能性</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">確認事項(決定済み・未決の整理)</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200">HP事業の位置付け</td><td class="px-3 py-2 border border-gray-200">✅ 顧客接点として残す(注力外)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2</td><td class="px-3 py-2 border border-gray-200">運用管理の料金モデル</td><td class="px-3 py-2 border border-gray-200">✅ 月額50,000円目標</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">3</td><td class="px-3 py-2 border border-gray-200">狙うシステム領域</td><td class="px-3 py-2 border border-gray-200">✅ 業務改善 + AI活用</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200">横展開戦略</td><td class="px-3 py-2 border border-gray-200">✅ <strong>雛形ベース + カスタマイズ重視</strong> + <strong>基盤ポリシー策定</strong></td></tr>
+    </tbody>
+  </table>
+
+  <hr class="my-8 border-gray-300">
+
+  <h2 class="text-2xl font-bold mb-4 mt-10">今後決めておきたい項目(意思決定待ち)</h2>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">【A】価格・サービス設計</h3>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">A-1. 月額50,000円に含むサービス範囲の確定</h4>
+  <blockquote class="border-l-4 border-gray-400 pl-4 py-2 my-4 text-sm text-gray-700 bg-gray-100">
+    「何を含めて、何を別料金にするか」の境界線を明文化する。曖昧だと工数が膨張するリスクあり。
+  </blockquote>
+  <p class="text-sm mb-2">含めるかどうかを <strong>1つずつ判断したい候補</strong>:</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">候補</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">含める / 別料金 / 採用しない</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">軽微改修対応(月◯時間まで)</td><td class="px-3 py-2 border border-gray-200">未決</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">死活監視・異常通知(営業時間内 / 24h)</td><td class="px-3 py-2 border border-gray-200">未決</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">SSL証明書・ドメイン更新(実費別 / 込み)</td><td class="px-3 py-2 border border-gray-200">未決</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">月次稼働レポート</td><td class="px-3 py-2 border border-gray-200">未決</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">セキュリティパッチ適用</td><td class="px-3 py-2 border border-gray-200">未決(含めるべき)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ユーザー操作サポート(軽微)</td><td class="px-3 py-2 border border-gray-200">未決</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">月次定例MTG(30分)</td><td class="px-3 py-2 border border-gray-200">未決</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm mb-4">→ 確定後、<strong>「サービス定義書」テンプレート</strong> を作成し、提案・契約時に使う</p>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">A-2. 初期構築費の想定レンジ</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>小規模 / 中規模 / 大規模 ごとの目安価格</li>
+    <li>工数換算 + 利益率の基準</li>
+    <li>提案テンプレに「初期費用 + 月額50,000円〜」をセットする際の数字</li>
+  </ul>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">【B】営業・対象設計</h3>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">B-1. 営業ターゲット</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>既存HP顧客へのアップセル</li>
+    <li>新規開拓</li>
+    <li>両方(の比率・優先順位)</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">B-2. ターゲット業種・規模</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>中小企業全般 / 特定業種にフォーカス</li>
+    <li>従業員規模の目安</li>
+  </ul>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">【C】開発・運用基盤</h3>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">C-1. 「はなさか 業務改善システム構築ポリシー」の策定</h4>
+  <blockquote class="border-l-4 border-gray-400 pl-4 py-2 my-4 text-sm text-gray-700 bg-gray-100">
+    雛形で固定する領域とカスタムする領域を分類するドキュメント。社員教育(スキルシート連動)・営業資料・見積基準として使う。
+  </blockquote>
+  <p class="text-sm font-semibold mb-2">スコープ:</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>基盤技術(PHP・DB・フレームワーク選定)</li>
+    <li>認証・権限</li>
+    <li>共通UI</li>
+    <li>ログ・監査</li>
+    <li>AI連携</li>
+    <li>インフラ(VPS・バックアップ・デプロイ)</li>
+    <li>業務ロジック</li>
+    <li>画面・帳票</li>
+  </ul>
+  <p class="text-sm mb-4">→ 私(AI)の方で叩き台ドラフト作成可能。着手指示があれば作業開始</p>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">【D】体制・キャパシティ</h3>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">D-1. 3名体制での同時並行キャパ</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>同時に走らせる案件数の上限想定</li>
+    <li>1案件あたりの平均工数想定(フェーズ別)</li>
+    <li>これが営業ペースの上限を決める</li>
+  </ul>
+
+  <hr class="my-8 border-gray-300">
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">社員教育用スキルシートの作成・運用ロードマップ</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">カテゴリ</td><td class="px-3 py-2 border border-gray-200">経営／人材教育</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">起案者</td><td class="px-3 py-2 border border-gray-200">社長(株式会社はなさか 代表取締役)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">対象</td><td class="px-3 py-2 border border-gray-200">社員3名(社長を含む小規模体制)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ゴール</td><td class="px-3 py-2 border border-gray-200">スキルシートを作成し、社員教育に運用する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200"><strong>構想段階</strong></td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">目的</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>社員のスキルレベルを可視化し、教育・育成・評価の基盤にする</li>
+    <li>自己学習の指針 + 人事評価基準として機能させる</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">進め方の方針(確定)</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>段階的アプローチ</strong>で進める</li>
+    <li><strong>まず「汎用スキル版」を作成</strong> → その後、領域別に展開していく</li>
+    <li>社長が <strong>過去に作成したスキルシート資料</strong> をベースにする予定(後ほど共有予定)</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">段階構成(仮案)</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/4">ステージ</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/4">状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>ステージ1: 汎用スキル版</strong></td><td class="px-3 py-2 border border-gray-200">PC操作・作業スピード・基本ビジネススキル等、全社員共通の前提スキル</td><td class="px-3 py-2 border border-gray-200"><strong>着手予定</strong>(資料受領待ち)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステージ2: 制作領域版</td><td class="px-3 py-2 border border-gray-200">HTML/CSS/JS、WordPress、デザイン等</td><td class="px-3 py-2 border border-gray-200">未定</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステージ3: 開発領域版</td><td class="px-3 py-2 border border-gray-200">PHP、API、DB等</td><td class="px-3 py-2 border border-gray-200">未定</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステージ4: AI活用版</td><td class="px-3 py-2 border border-gray-200">プロンプト設計、LLM連携等</td><td class="px-3 py-2 border border-gray-200">未定</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステージ5: 営業・経営支援版</td><td class="px-3 py-2 border border-gray-200">営業対応、提案資料、経営管理等</td><td class="px-3 py-2 border border-gray-200">未定</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-gray-500 mb-4">※ ステージ2以降は、ステージ1完了後に優先順位を再検討</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">ステージ1(汎用スキル版)の進行ステップ</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><strong>社長から過去のスキルシート資料を受領</strong>(着手の前提)</li>
+    <li>資料を下敷きにスキル項目を整理(追加・削除・更新)</li>
+    <li>レベル定義(例: 5段階)とフォーマットを策定</li>
+    <li>社員に自己評価を実施</li>
+    <li>社長レビュー・フィードバック → 改善</li>
+    <li>本運用開始(定期更新サイクルを設計)</li>
+  </ol>
+
+  <p class="text-sm font-semibold mb-2 mt-4">汎用スキル項目の候補(資料受領前のたたき台)</p>
+  <blockquote class="border-l-4 border-gray-400 pl-4 py-2 my-4 text-sm text-gray-700 bg-gray-100">
+    ※ 単なるPC操作ではなく、<strong>AI活用を前提とした現代的な汎用スキル</strong>として設計する。<br>
+    AIにできる作業は積極的に任せ、人は判断と仕上げに集中することを基本姿勢とする。
+  </blockquote>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">A. AI活用力(最重要・現代の前提スキル)</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>AI移譲の判断</strong>: 面倒な作業・繰り返し作業をAIにやらせる発想</li>
+    <li><strong>限界の見極め</strong>: AIが苦手な作業(事実確認、最新情報、機微な判断等)を識別</li>
+    <li><strong>役割分担の判断</strong>: 「人がやるべきか / 工夫してAIにやらせるか」を場面ごとに選べる</li>
+    <li><strong>プロンプト設計</strong>: 目的を達成するための指示の出し方・分解の仕方</li>
+    <li><strong>出力の検証</strong>: AI出力を鵜呑みにせず、ファクト・品質を評価できる</li>
+    <li><strong>ツール使い分け</strong>: ChatGPT / Claude / Gemini / 画像生成系 / Claude Code 等を用途で選べる</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">B. PC操作(基礎)</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>ショートカット、タイピング速度、ファイル管理</li>
+    <li>複数アプリ・ウィンドウの切替効率</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">C. 作業スピード・段取り</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>業務処理量、見積/段取り力</li>
+    <li>AIに任せる前提でのタスク分解・並行処理</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">D. ビジネス基礎</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>報連相、メール作法</li>
+    <li>Slack / Chatwork 等のチャット運用</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">E. ドキュメント作成</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>Word、Excel、Google スプレッドシート</li>
+    <li>Markdown(AIとの相性も良い)</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">F. 情報収集力</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>検索スキル(Web、社内資料、AI検索)</li>
+    <li>一次情報を辿る習慣</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">G. セキュリティ意識</h4>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>パスワード管理、機密情報取り扱い</li>
+    <li>AIに渡してはいけない情報の判別</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">次のアクション</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><strong>【最優先】社長から過去のスキルシート資料を受領する</strong></li>
+    <li>受領後、汎用スキル版のスキル項目をドラフト</li>
+    <li>並行して、下記の確認事項を整理する</li>
+  </ol>
+
+  <p class="text-sm font-semibold mb-2 mt-4">確認事項(後ほど社長へ確認)</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200">運用開始の希望時期</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2</td><td class="px-3 py-2 border border-gray-200">評価方式(自己評価のみ / 自己 + 社長レビュー)</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">3</td><td class="px-3 py-2 border border-gray-200">育成計画・給与査定との連動有無</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200">レベル定義の段階数(5段階 / 4段階 / 3段階 等)</td></tr>
+    </tbody>
+  </table>
+
+  <hr class="my-8 border-gray-300">
+
+  <p class="text-sm text-gray-500">※ 「Hana ツール — AIチャット履歴がウィンドウサイズ変更で消える不具合」は <a href="clients/hanasaka/projects/hana-tool/backlog.html" class="text-blue-600 hover:underline">HANAツール backlog.html</a> に転記済み(2026-05-08)。</p>
+
+</div>
+</body>
+</html>

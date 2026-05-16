@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>残存課題</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">残存課題 — <span class="text-gray-500">[プロジェクト名]</span></h1>
+  <p class="text-gray-600 mb-4">要対応・要調査・要確認の項目を種別ごとに整理する。</p>
+  <p class="text-sm text-gray-500 mb-8">仕様は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">不具合</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2">
+      <span class="text-gray-400">☐</span>
+      <span>不具合内容（現状・想定原因・対応方針を明記）</span>
+    </li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">実装タスク</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>タスク内容</span></li>
+    <li class="flex items-start gap-2"><span class="text-green-500">☑</span><span class="line-through text-gray-500">完了済みタスク（履歴）</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認・要調査</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>確認したい項目</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">クライアント回答待ち</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-24">ステータス</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-28">依頼日</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">1</td>
+        <td class="px-3 py-2 border border-gray-200"></td>
+        <td class="px-3 py-2 border border-gray-200">未受領</td>
+        <td class="px-3 py-2 border border-gray-200"></td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

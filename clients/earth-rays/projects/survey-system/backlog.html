@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>残存課題 — 地盤調査管理システム</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">残存課題 — 地盤調査管理システム</h1>
+  <p class="text-sm text-gray-500 mb-8">仕様は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">不具合</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">編集画面：調査会社が「ログイン中アカウント」で表示される</h3>
+  <div class="bg-red-50 border-l-4 border-red-400 p-4 my-4 text-sm space-y-2">
+    <p><strong>現状</strong>：編集画面を開くと、登録時に確定したアカウントではなく <strong>今ログイン中のアカウント</strong> が初期表示される</p>
+    <p><strong>本来の動作</strong>（仕様：<a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照）：登録時に確定したアカウントが表示されるべき</p>
+    <p><strong>想定原因</strong>：編集画面で、レコード保存値ではなく <strong>ログイン中アカウントを再読み込み</strong> している</p>
+    <p><strong>対応方針</strong>：編集画面で調査案件レコードに保存された調査会社を読み込むよう改修</p>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">実装タスク</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">削除処理を一覧画面に集約</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>仕様：<a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照（2026-05-09 決定）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>一覧画面に削除UIを実装</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>編集画面側の削除UIの扱いは要調査（下記参照）</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要調査</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">「削除が編集画面に反映されていない？」</h3>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm space-y-2">
+    <p>現状の事象を確認（再現手順・影響範囲）</p>
+    <p>結果に応じて <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> に対応事項として追記、または <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> に整理</p>
+  </div>
+
+</div>
+</body>
+</html>

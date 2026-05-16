@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>決定事項・確定仕様 — 地盤調査管理システム</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">決定事項・確定仕様 — 地盤調査管理システム</h1>
+  <p class="text-sm text-gray-500 mb-8">実装タスクは <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">仕様</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">調査会社</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>調査会社は <strong>新規登録時に確定</strong> する</li>
+    <li>新規登録画面では、ログイン中アカウントを調査会社として初期入力 → 登録時に確定</li>
+    <li>編集画面では <strong>登録時に確定したアカウント</strong> を表示する
+      <ul class="list-disc list-inside ml-6 mt-1 text-gray-500">
+        <li>※ 実装側で不具合あり、要修正（→ <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a>）</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">削除処理（2026-05-09 決定）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>調査案件の削除処理は <strong>一覧画面で行う</strong></li>
+    <li>※ 実装着手は <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> に残置</li>
+  </ul>
+
+</div>
+</body>
+</html>
