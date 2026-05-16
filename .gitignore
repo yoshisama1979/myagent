@@ -1,1 +1,3 @@
 .env
+data/financial/*
+!data/financial/README.md
