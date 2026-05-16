@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>決定事項・確定仕様 — HANAチャット</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">決定事項・確定仕様 — HANAチャット</h1>
+  <p class="text-sm text-gray-500 mb-8">実装タスク・営業タスクは <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">事業方針（2026-05-09 確認）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">位置付け</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>株式会社はなさかの自社プロダクト</strong>として展開</li>
+    <li>経営方針（<a href="../../../../business/strategy.html" class="text-blue-600 hover:underline">strategy.html</a>）の主軸である <strong>ストック収益</strong> を担う事業の一つ</li>
+    <li>既に <strong>販売中</strong>（導入クライアントあり）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">サービス内容</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>ウェブサイトに設置できる AI チャット</li>
+    <li>サイトを辿らず、その場で質問できる UX を提供（ユーザー側の価値）</li>
+    <li>運営者側に <strong>ユーザーの課題・質問データ</strong> を提供（顧客インサイト分析の価値）</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">価格構造</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">区分</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">月額</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">エンドユーザー価格</td><td class="px-3 py-2 border border-gray-200"><strong>10,000円 / 月</strong></td><td class="px-3 py-2 border border-gray-200">代理店経由で末端企業に提供される価格</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">代理店仕入価格</td><td class="px-3 py-2 border border-gray-200"><strong>5,000円 / 月</strong></td><td class="px-3 py-2 border border-gray-200">代理店マージン 50%</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">販売モデル</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">代理店モデル（メイン）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>自社では直接営業をかけない</strong>方針</li>
+    <li>既存クライアントの中から <strong>「自社の顧客にHANAチャットを売りたい」</strong> という代理店候補を発掘する</li>
+    <li>代理店が末端企業に販売し、はなさかは代理店から仕入価格（5,000円/月）を受け取る</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">セルフサーブ化（準備中）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>オンライン契約 → 即利用開始</strong> の仕組みを構築中</li>
+    <li>完成すれば、代理店ルートと並行して直接販売も可能になる</li>
+    <li>営業コストを抑えつつスケール可能なフローを目指す</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">新規開拓</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>新規開拓も並行で進める意向</li>
+    <li>ただし自社直販ではなく、代理店リクルートまたはセルフサーブ経由</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">紹介サイト（2026-05-09 決定）</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>設置場所：<code class="bg-gray-100 px-1 rounded text-sm font-mono">hanasaka.co.jp/hana-chat/</code> 配下（自社サイトのサービス一覧の一部として位置付け）</li>
+    <li>Web上にHTMLで公開し、代理店打診時にURL共有して見てもらう運用</li>
+    <li>含むコンテンツ（予定）：サービス概要 / 機能詳細 / 導入事例 / 料金プラン / 代理店向け情報</li>
+  </ul>
+
+</div>
+</body>
+</html>

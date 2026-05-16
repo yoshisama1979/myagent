@@ -47,7 +47,16 @@
   </ul>
 
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ToDo・Todoist 連携</h2>
+
+  <div class="bg-red-50 border-l-4 border-red-400 p-4 my-4 text-sm">
+    <p class="font-semibold mb-1">★ 最優先：外部API（TODO登録）の公開（2026-05-09 確認）</p>
+    <p>現状クライアント情報取得APIは公開済み。<strong>TODO登録APIの公開が未実装</strong>。これが実装されれば「AIとの会話 → 自動でTODO登録 → HANAツールで進捗管理」の協働ワークフローが回り始める。</p>
+    <p class="mt-2 text-gray-700">期待される効果：会話で出てきたタスクの取りこぼし防止／秘書機能の本格稼働／HANAツール自体が「AI協働基盤」として強みを持つ</p>
+    <p class="mt-2"><strong>実装予定：2026-05-09〜05-23（今週・来週中、社長が自ら実装）</strong></p>
+  </div>
+
   <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>外部API: TODO登録の実装・公開</strong>（最優先 / 2026-05-09 追加）</span></li>
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ToDoリスト作成：Toggl からデータを引っ張ってきて編集・追加できる仕組み</span></li>
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Todoistに追加するエージェント</span></li>
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Todoist登録画面から戻るためのリンク（パンくず）</span></li>

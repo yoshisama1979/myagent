@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>残存課題 — HANAチャット</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">残存課題 — HANAチャット</h1>
+  <p class="text-sm text-gray-500 mb-8">事業方針は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">代理店リクルート</h2>
+  <ul class="space-y-2 text-sm mb-6">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>下記マトリクスで <strong>代理店候補の優先順位</strong> を確定し、社長から打診</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>代理店向け <strong>販促資料の整備</strong>（代理店が末端企業に説明・提案するときに使える1枚資料）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>代理店契約のテンプレ整備（マージン50%、契約期間、解約条件等）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">代理店候補マトリクス（2026-05-09 ドラフト）</h3>
+  <p class="text-sm text-gray-500 mb-2">既存の取引関係を、代理店としての適性で評価したもの。社長との議論で更新する。</p>
+  <p class="text-sm mb-3"><strong>評価軸：</strong>① 顧客プール（売る先がいるか） ② 営業実績（既に法人に何か売っているか） ③ HANAチャット相性（顧客がHP持ち、AIに興味あり） ④ 関係性の深さ・信頼</p>
+
+  <p class="text-sm mb-3"><strong>営業スタイル（2026-05-09 確認）：</strong>積極営業ではなく <strong>話の流れの中で自然に紹介</strong>。実物を見せると好反応が多い → <strong>デモ環境・既存事例</strong>を準備しておくと打診の威力が上がる</p>
+
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">候補</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">①顧客</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">②営業</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">③相性</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">④関係</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">所感・打診の切り口</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="bg-green-50">
+        <td class="px-3 py-2 border border-gray-200"><strong>ふじや印刷株式会社</strong></td>
+        <td class="px-3 py-2 border border-gray-200">◎</td>
+        <td class="px-3 py-2 border border-gray-200">◎</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">◎</td>
+        <td class="px-3 py-2 border border-gray-200"><strong>既に実質的な代理店として機能中</strong>。創拓 / シード / みずの / 和や会 等、複数顧客をはなさかに発注している実績あり。「次案件のとき HANAチャットも紹介」が最も自然。<strong>2026-05-09 前向き検討中</strong></td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200"><strong>株式会社プライムステージ</strong></td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">ミサワリフォーム近畿・レクサス各店舗等の販路。HP制作との抱合せが自然な提案ルート</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">東京ヒーローズ</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200"><strong>2026-05-09 前向き検討中</strong>。キャッシュ未登録のため詳細は要API確認（.env 整備後）</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">株式会社サンヒル</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">大阪トヨペット等への発注元。法人向け制作を多数販売中</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">株式会社HRAs</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">アースレイズ・マルコマの紹介元。紹介ネットワークあり</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">株式会社ソリデンテ</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">?</td>
+        <td class="px-3 py-2 border border-gray-200">△</td>
+        <td class="px-3 py-2 border border-gray-200">ヒキタ工業の発注元。顧客層・関係性の深さは要調査</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">福岡ひとみ</td>
+        <td class="px-3 py-2 border border-gray-200">△</td>
+        <td class="px-3 py-2 border border-gray-200">△</td>
+        <td class="px-3 py-2 border border-gray-200">△</td>
+        <td class="px-3 py-2 border border-gray-200">◯</td>
+        <td class="px-3 py-2 border border-gray-200">個人発注元。代理店としての規模感は弱め。優先度は下げる</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">他（追加候補）</td>
+        <td class="px-3 py-2 border border-gray-200 text-gray-400">—</td>
+        <td class="px-3 py-2 border border-gray-200 text-gray-400">—</td>
+        <td class="px-3 py-2 border border-gray-200 text-gray-400">—</td>
+        <td class="px-3 py-2 border border-gray-200 text-gray-400">—</td>
+        <td class="px-3 py-2 border border-gray-200 text-gray-500">社長から追加していただく欄</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-gray-500 mb-6">※ ◎ 強い／◯ 良い／△ 普通／? 要調査。社長の感覚で精度を上げる。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">打診のための準備物（提案）</h3>
+  <p class="text-sm text-gray-500 mb-3">※ 2026-05-09 確認：営業資料は <strong>Web上にHTMLで公開して見てもらう運用</strong>。AIチャットの紹介サイト・機能説明ページが営業基盤の中核となる。</p>
+  <ul class="space-y-2 text-sm mb-6">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>HANAチャット紹介サイトの構築</strong>（社長の課題、優先）：機能説明・導入事例・料金プラン・代理店向け情報を集約。Web 公開で打診時にURL共有できる状態に</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>機能詳細ページ</strong>：細かな機能まで網羅した説明環境（社長の課題）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>既存導入事例ページ</strong>：4〜10社の事例を見える化、打診時の説得材料に</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>代理店向けページ</strong>：マージン50%・契約条件・販売支援内容を明示。ふじや印刷等への提示資料に</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>デモ環境の整備</strong>：話の流れで「見せられる」状態を維持（営業スタイルと一致）</span></li>
+  </ul>
+
+  <p class="text-sm text-gray-500 mb-2"><strong>設置場所決定（2026-05-09）：</strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">hanasaka.co.jp/hana-chat/</code> 配下</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">セルフサーブ化（開発中）</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>オンライン契約フロー（決済 + サインアップ）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>即時利用開始の仕組み（埋込タグ発行・管理画面アクセス）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>セルフサーブ向けのランディングページ・申し込みフォーム</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>完成時期の目標設定（要確認）</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">既存導入クライアントの管理</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>現状の <strong>導入クライアント一覧</strong> の棚卸し（誰が、いつから、月額いくらで契約しているか）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>解約リスクのチェック（利用状況・満足度）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>追加機能・改善要望のヒアリング</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">新規開拓</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>新規ターゲットの絞り込み（業種・規模、代理店経由 / セルフサーブ）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>導入実績の事例化（既存顧客の効果を見える化）</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認・要調査</h2>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm space-y-2">
+    <p>現状の導入クライアント数・売上規模（KPIの基準値設定に必要）</p>
+    <p>セルフサーブ化の完成時期目標</p>
+    <p>既存7クライアントで代理店候補に思い当たる候補（要ヒアリング）</p>
+    <p>競合サービスとの差別化要素（営業時に強みを出すため）</p>
+  </div>
+
+</div>
+</body>
+</html>
