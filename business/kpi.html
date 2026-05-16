@@ -40,12 +40,22 @@
     </tbody>
   </table>
 
-  <h3 class="text-lg font-semibold mb-3 mt-6">マネーフォワードから取りたい 3つの CSV</h3>
-  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
-    <li><strong>月次推移表（PL）</strong> ← Tier 1 のほぼ全部</li>
-    <li><strong>補助元帳（取引先別）</strong> ← Tier 2 のクライアント別売上</li>
-    <li><strong>試算表（BS）</strong> ← Tier 1 のキャッシュ残高、Tier 3 の売掛金</li>
-  </ol>
+  <h3 class="text-lg font-semibold mb-3 mt-6">マネーフォワードから取りたい CSV（決算書ベース）</h3>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">CSV種類</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">何が見える</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">主な用途</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>損益計算書（PL）</strong></td><td class="px-3 py-2 border border-gray-200">当月の売上・費用・利益</td><td class="px-3 py-2 border border-gray-200">Tier 1：月次売上・経費・粗利・営業利益</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>貸借対照表（BS）</strong></td><td class="px-3 py-2 border border-gray-200">月末時点の資産・負債・純資産</td><td class="px-3 py-2 border border-gray-200">Tier 1：キャッシュ残高 / Tier 3：売掛金推移</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>月次推移表（PL推移）</strong></td><td class="px-3 py-2 border border-gray-200">売上・経費・利益の月別推移</td><td class="px-3 py-2 border border-gray-200">時系列分析（伸びの把握）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>補助元帳（取引先別）</strong></td><td class="px-3 py-2 border border-gray-200">クライアント別の売上・入金</td><td class="px-3 py-2 border border-gray-200">Tier 2：クライアント別売上TOP10 / 依存度</td></tr>
+    </tbody>
+  </table>
   <p class="text-sm text-gray-500 mb-6">配置場所と運用は <a href="../data/financial/README.md" class="text-blue-600 hover:underline font-mono">data/financial/README.md</a> 参照。</p>
 
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ダッシュボードの全体構造（7カテゴリ）</h2>
