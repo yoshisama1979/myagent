@@ -107,11 +107,77 @@
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><s class="text-gray-500">スキルシートの作成</s><span class="text-gray-500">→ HANAツール内に実装することに決定</span></li>
   </ul>
 
+  <h3 class="text-lg font-semibold mb-3 mt-6">スキルシート関連 API（2026-05-17 追加 / AI協働を前提とした軽量・段階取得設計）</h3>
+  <p class="text-sm text-gray-500 mb-2">背景：スキルシートが大量になったとき、全データを一括取得すると AI（私）のトークン消費が大きくなる。「必要な部分だけ取得できる」設計にする。</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">推奨エンドポイント（最小セット）</p>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>A. 構造取得（軽量）</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">GET /api/external/skill-sheets/structure</code> — カテゴリ・項目名のみ。全体像を把握</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>B. カテゴリ別取得</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">GET /api/external/skill-sheets/items?category=...</code> — 必要なカテゴリだけ詳細を取得</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>C. キーワード検索</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">GET /api/external/skill-sheets/search?q=...</code> — 関連項目を絞り込み</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>D. 項目詳細1件</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">GET /api/external/skill-sheets/items/{id}</code> — 1項目を深く見る</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>E. 評価結果取得</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">GET /api/external/skill-sheets/scores?user_id=...</code> — 特定社員のスコア</span></li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">将来追加候補</p>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>F. 集計</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">GET /api/external/skill-sheets/aggregate?metric=avg&groupby=item</code> — 「全社員平均で低い項目」等の集計</span></li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">設計原則</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><strong>階層化</strong>：全体 → カテゴリ → 項目 のドリルダウン</li>
+    <li><strong>検索可能</strong>：キーワードで絞り込み</li>
+    <li><strong>メタデータと値の分離</strong>：構造定義（structure）と評価結果（scores）を別エンドポイントに</li>
+    <li><strong>ページング</strong>：大量データに備えて limit / offset 対応</li>
+    <li><strong>更新日時返却</strong>：「前回取得から変わっているか」を判定できるよう updated_at を含める</li>
+  </ol>
+
+  <p class="text-sm text-gray-500 mb-4">データソース：現状はスプレッドシート管理。API化の方針は社長が検討中。HANAツール側に取り込んでAPIで返すか、スプレッドシートを直接ラップするかは実装時に判断。</p>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">システム基盤</h2>
   <ul class="space-y-2 text-sm">
     <li class="flex items-start gap-2"><span class="text-green-500">☑</span><span class="line-through text-gray-500">ログイン状態の保持がうまくいっていない（バグ）→ 解消済</span></li>
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>日付アラート設定</span></li>
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>定期バックアップ</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">横展開・SaaS化対応（2026-05-17 追加）</h2>
+  <p class="text-sm text-gray-500 mb-3">背景：HANAツール を他社展開するため、マルチテナント化＋プラン制が必要。事業モデルは <a href="../../../../business/strategy.html" class="text-blue-600 hover:underline">strategy.html J.</a> 参照。</p>
+
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm">
+    <p class="font-semibold mb-1">中期テーマ（採用後のスケールフェーズの主力候補）</p>
+    <p>マルチテナント化には 3-6ヶ月以上必要。短期は HANAチャット 代理店リクルート＋既存顧客への運用契約提案を優先。</p>
+  </div>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ1：マルチテナント化（基盤改修）</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>テナント（顧客企業）の概念導入</strong> — DB スキーマに tenant_id を追加、データ分離</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>テナント別ログイン・認証</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>テナント別の設定・ユーザー管理</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>既存社内データのテナント化対応（はなさかをテナント0として運用）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ2：プラン制・機能アンロック</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>機能フラグの仕組み</strong> — テナント毎に各機能のON/OFFを制御</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>プラン定義（エントリー / スタンダード / プレミアム）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>プラン変更・アップグレード操作画面</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>機能アンロック時のUI制御（無効機能はグレーアウト or 非表示）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ3：顧客対応の周辺機能</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>顧客向け管理画面（自社のユーザー管理・契約状況確認）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>課金・契約管理（請求発行、解約処理、プラン変更履歴）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>サポート問い合わせ窓口（チャット・メール）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>導入時のオンボーディング（チュートリアル・初期設定支援）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">フェーズ4：営業・コンサル支援機能</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>顧客向けデモ環境の整備（営業時に見せる用）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>業務改善コンサルのテンプレート化（ヒアリングシート・診断ツール）</span></li>
   </ul>
 
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">経営ダッシュボード / データ連携（2026-05-16 追加）</h2>
