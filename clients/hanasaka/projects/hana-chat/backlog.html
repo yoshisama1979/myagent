@@ -138,6 +138,48 @@
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>導入実績の事例化（既存顧客の効果を見える化）</span></li>
   </ul>
 
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">AI学習（RAG）強化</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">学習データ登録 — 自由入力 → 自動整理 → 登録</h3>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>RAGに登録したい内容を雑に入力するだけで、AIが整理して登録する機能</strong></span></li>
+  </ul>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-4 text-gray-700">
+    <li>ユーザーは思いついた内容をそのまま投げ込めばよい（箇条書きでも口語でも可）</li>
+    <li>AI側で構造化（タイトル / カテゴリ / 本文 / タグ 等）してから登録</li>
+    <li>「登録前のプレビュー → 承認 → 確定」のフローにするかは要検討</li>
+    <li><strong>目的：</strong>学習データ更新のハードルを下げ、RAG の鮮度と網羅性を上げる</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">会話分析 → 学習内容の改善提案</h3>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>ユーザー会話を分析し、回答品質を上げるための学習内容の改善提案をする機能</strong></span></li>
+  </ul>
+  <p class="text-sm mb-2 ml-6">想定の分析観点：</p>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-3 text-gray-700">
+    <li>回答できなかった / 回答精度が低かった質問の抽出</li>
+    <li>同じトピックの質問が繰り返されていないか</li>
+    <li>既存ナレッジで不足している領域の検出</li>
+  </ul>
+  <p class="text-sm mb-2 ml-6">出力イメージ：</p>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-3 text-gray-700">
+    <li>「この質問に答えられるよう、◯◯のドキュメントを追加してください」</li>
+    <li>「既存ドキュメント X の説明が不足。以下を追記推奨」</li>
+  </ul>
+  <p class="text-sm ml-6 mb-4 text-gray-700"><strong>目的：</strong>運用しながら自律的に賢くなる RAG にする（学習データの保守を自動補助）</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">UI・ヘルプ</h2>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>チャットの使い方のページを作成</strong>（初めて触るユーザー向けの導入ガイド）</span></li>
+  </ul>
+  <p class="text-sm mb-2 ml-6">想定コンテンツ（要確定）：</p>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-4 text-gray-700">
+    <li>基本的な質問の仕方</li>
+    <li>うまく回答を引き出すコツ</li>
+    <li>できること / できないこと</li>
+    <li>学習データの追加方法（上記の新機能とリンク）</li>
+  </ul>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認・要調査</h2>
   <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm space-y-2">
     <p>現状の導入クライアント数・売上規模（KPIの基準値設定に必要）</p>
@@ -145,6 +187,25 @@
     <p>既存7クライアントで代理店候補に思い当たる候補（要ヒアリング）</p>
     <p>競合サービスとの差別化要素（営業時に強みを出すため）</p>
   </div>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">AI学習（RAG）強化機能の実装前に詰めたい点</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">影響範囲</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200">学習データ登録の承認フロー（即登録 / プレビュー後確定 / 管理者承認）</td><td class="px-3 py-2 border border-gray-200">UX・データ品質</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2</td><td class="px-3 py-2 border border-gray-200">整理後の構造化フォーマット（既存スキーマに合わせるか / 新設するか）</td><td class="px-3 py-2 border border-gray-200">DB・RAG実装</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">3</td><td class="px-3 py-2 border border-gray-200">会話分析の対象範囲（全会話 / ユーザー単位 / 一定期間）</td><td class="px-3 py-2 border border-gray-200">プライバシー・処理コスト</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200">改善提案の通知先（管理者画面 / メール / Chatwork）</td><td class="px-3 py-2 border border-gray-200">運用フロー</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">5</td><td class="px-3 py-2 border border-gray-200">使い方ページの掲載場所（チャット内モーダル / 別URL / ヘルプセンター化）</td><td class="px-3 py-2 border border-gray-200">フロントエンド</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">6</td><td class="px-3 py-2 border border-gray-200">使い方ページのターゲット（社内 / クライアント / 両方）</td><td class="px-3 py-2 border border-gray-200">文体・公開範囲</td></tr>
+    </tbody>
+  </table>
 
 </div>
 </body>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webサイト改ざんインシデント対応報告書 — 2026-05-11</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../../../../index.html" class="text-blue-600 hover:underline">クライアント一覧</a> &gt;
+    <a href="../../../index.html" class="text-blue-600 hover:underline">大阪府立箕面高等学校</a> &gt;
+    <a href="../index.html" class="text-blue-600 hover:underline">PTAサイト</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">Webサイト改ざんインシデント対応報告書</h1>
+  <p class="text-sm text-gray-500 mb-8">残存課題は <a href="../residual-tasks.html" class="text-blue-600 hover:underline">residual-tasks.html</a> 参照。</p>
+
+  <table class="w-full border-collapse text-sm mb-6">
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 w-1/3 font-semibold">報告書作成日</td><td class="px-3 py-2 border border-gray-200">2026年5月11日</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">発生サーバ</td><td class="px-3 py-2 border border-gray-200">さくらのレンタルサーバ（共有プラン）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">影響を受けたサイト</td><td class="px-3 py-2 border border-gray-200">minokopta.com</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">攻撃の足場とされたサイト</td><td class="px-3 py-2 border border-gray-200">konjaku-photo.com（同一サーバアカウント配下）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">対応者</td><td class="px-3 py-2 border border-gray-200">社長</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">対応所要時間</td><td class="px-3 py-2 border border-gray-200">約3時間</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. エグゼクティブサマリ</h2>
+  <p class="text-sm mb-4">2026年5月11日、minokopta.com の複数ページがインドネシア系オンラインギャンブルサイト「PAPADEWA」を宣伝するスパムページに置き換えられていることを発見しました。</p>
+  <p class="text-sm mb-4">調査の結果、原因は同一サーバアカウントで運用していた別サイト konjaku-photo.com 配下に2026年1月13日頃に設置されていた webshell（遠隔操作用の不正PHPファイル）5件であることが判明しました。さくらのレンタルサーバは共有FTPユーザー権限のため、konjaku 配下に置かれた webshell から minokopta のファイルも書き換え可能な状態にありました。</p>
+  <p class="text-sm mb-3">当日中に以下を完了しました：</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>改ざんファイル6件の復旧（4件は正規ファイルで上書き、2件は不要ファイルとして削除）</li>
+    <li>webshell 5件の無効化（3件は使用していなかった WordPress 削除に伴い物理削除、2件はリネームによる隔離）</li>
+    <li>サーバパスワードおよび WordPress 管理者パスワードの変更</li>
+    <li>未使用の WordPress（konjaku/blog/）の削除による攻撃面縮小</li>
+  </ul>
+  <div class="bg-green-50 border-l-4 border-green-400 p-4 my-4 text-sm">
+    <p>復旧後の表示確認・スパム残存チェックともに問題なく、攻撃の継続的経路はすべて遮断されています。</p>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2. 何が起こったか</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.1 改ざんの内容</h3>
+  <p class="text-sm mb-4">minokopta.com の6ページが、PAPADEWA というインドネシア系オンラインギャンブルサイトを宣伝するページに置き換えられていました。</p>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">改ざん対象</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">サイズ（改ざん後）</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">改ざん日時</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">mail_about/index.html</code></td><td class="px-3 py-2 border border-gray-200">517,436 byte</td><td class="px-3 py-2 border border-gray-200">4/25 17:06</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">template/index.html</code></td><td class="px-3 py-2 border border-gray-200">542,254 byte</td><td class="px-3 py-2 border border-gray-200">5/3 14:01</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">3</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">terms/index.html</code></td><td class="px-3 py-2 border border-gray-200">541,873 byte</td><td class="px-3 py-2 border border-gray-200">5/3 23:49</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">topics/index.html</code></td><td class="px-3 py-2 border border-gray-200">542,030 byte</td><td class="px-3 py-2 border border-gray-200">5/4 12:10</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">5</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">contact/index.html</code></td><td class="px-3 py-2 border border-gray-200">541,677 byte</td><td class="px-3 py-2 border border-gray-200">5/4 12:10</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">6</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">contents/3_KOUHOU/index.html</code></td><td class="px-3 py-2 border border-gray-200">542,962 byte</td><td class="px-3 py-2 border border-gray-200">5/4 12:11</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm mb-3">改ざんページの主な特徴:</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;html lang="id-ID"&gt;</code>（インドネシア語）で記述</li>
+    <li>title: <code class="bg-gray-100 px-1 rounded text-sm font-mono">PAPADEWA Situs Resmi Hari Ini Tempat Nikmati Pengalaman Terbaik!</code></li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">canonical</code> タグで minokopta.com の各URLを正規ページとして固定</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">amphtml</code> タグで AMP代替として攻撃者のCloudflare Pages ドメイン（<code class="bg-gray-100 px-1 rounded text-sm font-mono">minokopta-ppdw.pages.dev</code>）に誘導</li>
+    <li>Cloudflare Insights ビーコンによるアクセス計測</li>
+  </ul>
+  <p class="text-sm mb-4">これは「Japanese SEO Spam」「Indonesian Gambling Spam」として知られる手口で、被害サイトのSEO評価に寄生してギャンブルサイトを検索結果に表示させ、最終的に攻撃者のドメインへ誘導することを目的としています。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.2 攻撃の目的</h3>
+  <p class="text-sm mb-4">PHP実行を伴わない静的HTML置換型のSEOスパム改ざんで、被害サイト訪問者を直接攻撃するものではなく、検索エンジン経由でのユーザー誘導を狙ったものです。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">3. 原因</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">3.1 侵入経路</h3>
+  <p class="text-sm mb-4">調査の結果、minokopta.com 自体への直接侵入ではなく、<strong>同一サーバアカウントで運用されていた konjaku-photo.com 配下に設置されていた webshell</strong> が攻撃の足場でした。</p>
+  <p class="text-sm mb-4">さくらのレンタルサーバでは複数サイトを同一OSユーザー権限で動かす構造のため、konjaku 配下の webshell から minokopta のファイルも書き換え可能な状態にありました。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">3.2 設置されていた webshell（全5件）</h3>
+  <p class="text-sm mb-4">すべて konjaku-photo.com 配下に設置されていました。</p>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">設置先</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">サイズ</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">種類</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">konjaku/vendor/phpmailer/phpmailer/language/phpmailer.lang-ke.php</code></td><td class="px-3 py-2 border border-gray-200">184,830 byte</td><td class="px-3 py-2 border border-gray-200">主webshell</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">konjaku/blog/wp-content/plugins/jetpack/json-endpoints/class.wpcom-json-api-list-lamp-endpoint.php</code></td><td class="px-3 py-2 border border-gray-200">184,830 byte</td><td class="px-3 py-2 border border-gray-200">冗長化バックドア</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">3</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">konjaku/blog/wp-content/themes/twentythirteen/content-media.php</code></td><td class="px-3 py-2 border border-gray-200">184,830 byte</td><td class="px-3 py-2 border border-gray-200">冗長化バックドア</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">konjaku/blog/wp-includes/Text/Diff/Engine/index.php</code></td><td class="px-3 py-2 border border-gray-200">184,830 byte</td><td class="px-3 py-2 border border-gray-200">冗長化バックドア</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">5</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">konjaku/php_lib/Library/securimage/shellfinder1.php</code></td><td class="px-3 py-2 border border-gray-200">4,136 byte</td><td class="px-3 py-2 border border-gray-200">ライバル攻撃者排除ツール</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm mb-4">ファイル1〜4 は完全に同一の webshell（184,830バイトの同一バイト数）で、攻撃者は1つの webshell を異なる4ヶ所にコピー配置していました。これは「1ヶ所が削除されても他の場所から再活動できる」ようにする冗長化バックドアの典型的な手口です。</p>
+
+  <p class="text-sm mb-3">特徴:</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>ファイル先頭に <code class="bg-gray-100 px-1 rounded text-sm font-mono">"PHP Melody"</code> というアプリケーションのコメントを偽装ヘッダとして配置</li>
+    <li>周囲のファイル群とパーミッションを変えている（644 vs 周囲の604）ため、<code class="bg-gray-100 px-1 rounded text-sm font-mono">-perm 644</code> での検索で機械的に検出可能</li>
+    <li>タイムスタンプは <code class="bg-gray-100 px-1 rounded text-sm font-mono">touch</code> で過去日付に偽装（2022年・2024年の日付）</li>
+  </ul>
+
+  <p class="text-sm mb-4">5番目の <code class="bg-gray-100 px-1 rounded text-sm font-mono">shellfinder1.php</code> は「SCR1PT K1DD135 Finder v1.0 | Created by XNY」と名乗るインドネシア語の不正ツールで、他の攻撃者が設置したwebshellを検出・削除する機能を持つもの。攻撃者が乗っ取ったサーバを他の攻撃者と共有しないために設置する典型的なツールです。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">3.3 攻撃のタイムライン</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">日時</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">出来事</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/1/13 16:16 頃</td><td class="px-3 py-2 border border-gray-200">konjaku 配下に webshell 4ファイルを同時設置（jetpack偽装ファイルのタイムスタンプ偽装失敗から判明）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/2/16 22:22</td><td class="px-3 py-2 border border-gray-200">IP <code class="bg-gray-100 px-1 rounded text-sm font-mono">162.128.185.123</code> から webshell の生存確認・サイト構造偵察開始</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/2〜4月</td><td class="px-3 py-2 border border-gray-200">攻撃者が断続的にアクセス（2/23: 454回、3/9: 298回、4/25: 355回など）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/4/25 17:06</td><td class="px-3 py-2 border border-gray-200">1件目の改ざん実行（mail_about）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/5/3 14:01</td><td class="px-3 py-2 border border-gray-200">2件目の改ざん（template）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/5/3 23:49</td><td class="px-3 py-2 border border-gray-200">3件目の改ざん（terms）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/5/4 12:10〜12:11</td><td class="px-3 py-2 border border-gray-200">4〜6件目の改ざん（topics, contact, contents/3_KOUHOU）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/5/8</td><td class="px-3 py-2 border border-gray-200">攻撃者の最終アクセス</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">2026/5/11</td><td class="px-3 py-2 border border-gray-200">改ざん発覚、調査・対応開始</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm mb-4"><code class="bg-gray-100 px-1 rounded text-sm font-mono">162.128.185.123</code> からのアクセスログは過去ログ（2026年2月以降）で網羅的に確認しましたが、1月時点でwebshellをどのように設置したか（初回侵入手段）については、ログが残っていないため特定できませんでした。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">3.4 webshell 設置を許した根本原因</h3>
+  <p class="text-sm mb-4">konjaku-photo.com アプリケーション自体の脆弱性が原因と推定されますが、本日の対応時間内では根本原因の特定には至っていません。後日の追加調査が必要な事項です。</p>
+  <p class="text-sm mb-3">候補:</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>konjaku-photo.com アプリケーション自体のアップロード機能等の脆弱性</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">vendor/</code> ディレクトリが Web 公開されていた設定ミス</li>
+    <li>PHPMailer 等の依存ライブラリの既知脆弱性（CVE-2016-10033 等）放置</li>
+    <li>認証情報（FTP/SSH/コントロールパネル）の漏洩</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4. 対応内容</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 1: 状況把握と侵入経路特定（調査）</h3>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>SSH接続して minokopta 配下のディレクトリ構造を確認</li>
+    <li>ファイルタイムスタンプから改ざんされたファイル群を特定</li>
+    <li>改ざんファイル内容からスパム改ざんと判明（<code class="bg-gray-100 px-1 rounded text-sm font-mono">PAPADEWA</code>, <code class="bg-gray-100 px-1 rounded text-sm font-mono">lang="id-ID"</code>）</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">grep -rl 'lang="id-ID"'</code> で改ざんファイル6件を網羅的に特定</li>
+    <li>アクセスログから攻撃者IP（<code class="bg-gray-100 px-1 rounded text-sm font-mono">162.128.185.123</code>）と侵入経路（konjaku経由）を特定</li>
+    <li>複数の検索手法（eval系コード、ファイルサイズ、特定文字列、ファイル名パターン）でwebshell5件を特定</li>
+  </ol>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 2: 証拠保全</h3>
+  <p class="text-sm mb-3"><code class="bg-gray-100 px-1 rounded text-sm font-mono">~/incident_20260511/evidence/</code> 配下に以下を保全:</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">webshells/</code> - webshell 5ファイルのコピー</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">minokopta_hacked/</code> - 改ざんされた minokopta の6ファイルのコピー</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">attacker_logs/</code> - 攻撃者IPのアクセスログ（空のまま、必要に応じて後日抽出）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 3: webshell の無効化</h3>
+  <p class="text-sm mb-4">webshell 5ファイルすべてを <code class="bg-gray-100 px-1 rounded text-sm font-mono">.QUARANTINED</code> 拡張子にリネームし、PHPとして実行不能な状態に変更。これにより、攻撃者が引き続き webshell にアクセスしても何も起きない状態にしました。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 4: 認証情報の更新</h3>
+  <p class="text-sm mb-3">以下のパスワードを変更しました:</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>サーバパスワード（SSH/FTP用）</li>
+    <li>WordPress 管理者パスワード（konjaku, minokopta 両方）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 5: 改ざんファイルの復旧</h3>
+  <p class="text-sm mb-3">オリジナルファイル（手元の保管していたもの）で改ざんされた6ファイルを上書き復旧。</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">terms/index.html</code> → 9,233 byte（復旧後）</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">topics/index.html</code> → 14,998 byte（復旧後）</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">mail_about/index.html</code> → 5,256 byte（復旧後）</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">contents/3_KOUHOU/index.html</code> → 12,326 byte（復旧後）</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">contact/index.html</code> → もともと存在しないファイルだったため削除</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">template/index.html</code> → もともと存在しないファイルだったため削除</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 6: 攻撃面の縮小</h3>
+  <p class="text-sm mb-4">使っていなかった konjaku/blog/（WordPress）ディレクトリを丸ごと削除しました。これに伴い、その配下にあった webshell 3件も物理的に削除されました。残った webshell 2件は隔離状態を維持しています。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 7: 復旧確認</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>全6ファイルが正規サイズ（数KB〜十数KB）で配置されていることを確認</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">grep</code> による全文検索で <code class="bg-gray-100 px-1 rounded text-sm font-mono">lang="id-ID"</code>, <code class="bg-gray-100 px-1 rounded text-sm font-mono">PAPADEWA</code>, <code class="bg-gray-100 px-1 rounded text-sm font-mono">minokopta-ppdw</code> がいずれも検出されないことを確認</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">find -size 184830c</code> および <code class="bg-gray-100 px-1 rounded text-sm font-mono">grep "PHP Melody"</code> で webshell の残存ゼロを確認</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 8: 副次的な問題への対処</h3>
+  <p class="text-sm mb-4">konjaku-photo.com アプリのSQLログが <code class="bg-gray-100 px-1 rounded text-sm font-mono">php_error.log</code> に約41.6GB蓄積していたため、当該ファイルをゼロクリア。ディスク容量を解放しました（根本のログ出力停止は後日対応事項）。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">5. 現在の状態</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">minokopta.com の表示</td><td class="px-3 py-2 border border-gray-200">正常（改ざん前のコンテンツに復旧済み）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">攻撃者の継続アクセス経路</td><td class="px-3 py-2 border border-gray-200">遮断済み（webshell 無効化 + パスワード変更）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">webshell 残存</td><td class="px-3 py-2 border border-gray-200">ゼロ（2件は <code class="bg-gray-100 px-1 rounded text-sm font-mono">.QUARANTINED</code> で実行不能、3件は物理削除）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">サーバ認証情報</td><td class="px-3 py-2 border border-gray-200">変更済み</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">WordPress 管理者認証情報</td><td class="px-3 py-2 border border-gray-200">変更済み</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">攻撃面</td><td class="px-3 py-2 border border-gray-200">konjaku/blog/ 削除により縮小</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">証拠保全</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">~/incident_20260511/evidence/</code> に保管</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">6. 残課題</h2>
+  <p class="text-sm mb-4">→ 別ファイル <a href="../residual-tasks.html" class="text-blue-600 hover:underline">residual-tasks.html</a> で管理。要点のみ記載。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">優先度: 高（数日以内）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>Google Search Console での確認・対応（セキュリティ警告 / スパム残存 / URL再クロール依頼）</li>
+    <li>konjaku-photo.com の継続要否判断（継続なら下記の根本原因追究が必須）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">優先度: 中（1〜2週間以内）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>konjaku-photo.com の脆弱性追究（侵入経路の特定）</li>
+    <li>php_error.log の出力停止（41.6GB蓄積の根本対処）</li>
+    <li>不要ファイル整理（composer/ 777パーミッション、backup/ 古いDBバックアップ33GB）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">優先度: 低（長期的）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>minokopta/blog の WordPress・プラグイン最新化</li>
+    <li>改ざん検知の自動化（<code class="bg-gray-100 px-1 rounded text-sm font-mono">find -mtime</code> の cron 化）</li>
+    <li>さくらの「バックアップ&ステージング」契約検討</li>
+    <li>WordPress二要素認証導入</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">7. 教訓と所感</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">7.1 学んだこと</h3>
+  <p class="text-sm mb-2"><strong>マルチサイト共有環境のリスク</strong></p>
+  <p class="text-sm mb-4">さくらのレンタルサーバは複数サイトを同一OSユーザー権限で動かす構造のため、1つのサイトの脆弱性が他のサイトに波及します。今回は使っていない konjaku 配下のアプリの脆弱性から、稼働中の minokopta が改ざんされる結果になりました。</p>
+  <p class="text-sm mb-2"><strong>未使用サイトの放置リスク</strong></p>
+  <p class="text-sm mb-4">最も深刻な点として、攻撃の足場になった konjaku-photo.com の <code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog/</code>（WordPress）は使用していませんでした。使っていないからメンテナンスもされず、脆弱性が放置され、結果として攻撃の温床になりました。「使っていないなら削除する」が最も効果的な対策です。</p>
+  <p class="text-sm mb-2"><strong>冗長化バックドアの認識</strong></p>
+  <p class="text-sm mb-4">攻撃者は1つの webshell が見つかっても他から再活動できるよう、複数箇所に同一の webshell をコピー配置します。発見した1つを削除しただけでは不十分で、必ず網羅的に探す必要があります。複数の検索手法（コードパターン、ファイルサイズ、特定文字列、ファイル名、パーミッション）を組み合わせることが重要でした。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">7.2 防御の有効性</h3>
+  <p class="text-sm mb-2"><strong>検出手段</strong></p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>ファイル更新時刻の確認 → 改ざんファイル群の特定に有効</li>
+    <li>特定文字列の grep（<code class="bg-gray-100 px-1 rounded text-sm font-mono">PHP Melody</code>, <code class="bg-gray-100 px-1 rounded text-sm font-mono">phpsugar</code> 等） → webshell の網羅的検出に有効</li>
+    <li>ファイルサイズによる絞り込み → 同一バイト数のコピー webshell の検出に有効</li>
+    <li>パーミッションによる絞り込み → 攻撃者のファイルとアプリのファイルの区別に有効</li>
+  </ul>
+  <p class="text-sm mb-2"><strong>ログの価値</strong></p>
+  <p class="text-sm mb-4">過去3ヶ月分のアクセスログがあったことで、攻撃者IPの特定・攻撃タイムラインの再構築・侵入経路（別サイト経由）の特定がすべて可能になりました。ログ保管は事後調査において決定的に重要です。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">付録: 攻撃者情報</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">値</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">攻撃者IP</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">162.128.185.123</code></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">初回アクセス記録</td><td class="px-3 py-2 border border-gray-200">2026/2/16 22:22:24</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">最終アクセス記録</td><td class="px-3 py-2 border border-gray-200">2026/5/8</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">User-Agent</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36</code></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">webshell の固定サイズ</td><td class="px-3 py-2 border border-gray-200">184,830 byte</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">偽装に使われたコメント</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">PHP Melody ( www.phpsugar.com )</code></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">排除ツール作者の名乗り</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">XNY</code>（インドネシア語スクリプト内に記載）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">誘導先ドメイン</td><td class="px-3 py-2 border border-gray-200"><code class="bg-gray-100 px-1 rounded text-sm font-mono">minokopta-ppdw.pages.dev</code>（Cloudflare Pages）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">宣伝ブランド</td><td class="px-3 py-2 border border-gray-200">PAPADEWA</td></tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>
