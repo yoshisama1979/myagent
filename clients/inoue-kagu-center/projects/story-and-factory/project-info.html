@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プロジェクト情報 — Story&Factory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../../../index.html" class="text-blue-600 hover:underline">クライアント一覧</a> &gt;
+    <a href="../../index.html" class="text-blue-600 hover:underline">井上家具センター</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">Story&Factory</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">プロジェクト情報 — Story&Factory</h1>
+  <p class="text-gray-600 mb-8">家具ブランド「Story&Factory」のコーポレート＋商品ページサイト。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">概要</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">プロジェクト名</td><td class="px-3 py-2 border border-gray-200">Story&Factory</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">hana-tools project_id</td><td class="px-3 py-2 border border-gray-200">31</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ドメイン</td><td class="px-3 py-2 border border-gray-200"><a href="https://storyandfactory.com" class="text-blue-600 hover:underline" target="_blank" rel="noopener">storyandfactory.com</a></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">種別</td><td class="px-3 py-2 border border-gray-200">HP制作・運用</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200">運用中（年1〜2回頻度の運用作業）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">制作元</td><td class="px-3 py-2 border border-gray-200">シソーラス（井上氏とは決別済み）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要件</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>家具商品の紹介・SKU別の素材／張地プルダウン選択</li>
+    <li>FACTORY ページ（STORY 01〜）と商品ページの相互リンク</li>
+    <li>新商品追加に伴う初期設定対応（年1〜2回頻度の運用作業）</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">技術スタック</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>独自CMS／フロント実装（シソーラス開発）</li>
+    <li>商品プルダウンのデフォルト選択は <code class="bg-gray-100 px-1 rounded text-sm font-mono">assets/js/items.detail.js</code> のswitch文で制御（詳細は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a>）</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">サーバー情報</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">ホスト名</td><td class="px-3 py-2 border border-gray-200">（要確認）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">サーバー種別</td><td class="px-3 py-2 border border-gray-200">（要確認）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">用途</td><td class="px-3 py-2 border border-gray-200">本番</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">SSH/FTP情報</td><td class="px-3 py-2 border border-gray-200">（要確認 / 引継ぎ資料の有無）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連ドキュメント</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> — 残存課題</li>
+    <li><a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> — 確定仕様（プルダウン制御の仕組み）</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">対応履歴</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-32">日付</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">2024-09 〜 10</td><td class="px-3 py-2 border border-gray-200">ちば対応：新商品7点追加に伴うFACTORYページ追加・相互リンク・SKUプルダウンデフォルト設定</td></tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>決定事項・確定仕様 — Story&Factory</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../../../index.html" class="text-blue-600 hover:underline">クライアント一覧</a> &gt;
+    <a href="../../index.html" class="text-blue-600 hover:underline">井上家具センター</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">Story&Factory</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">決定事項・確定仕様 — Story&Factory</h1>
+  <p class="text-sm text-gray-500 mb-8">実装タスクは <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">商品ページ プルダウン初期表示の制御仕様（2024-10-04 シソーラス由来）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">制御ファイル</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>編集箇所：<code class="bg-gray-100 px-1 rounded text-sm font-mono">assets/js/items.detail.js</code> の <strong>45行目からのswitch文</strong></li>
+    <li>分岐キー：<code class="bg-gray-100 px-1 rounded text-sm font-mono">tid</code>（アイテムID = URL <code class="bg-gray-100 px-1 rounded text-sm font-mono">/item/{tid}/</code> の数字）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6"><code class="bg-gray-100 px-1 rounded font-mono">chg_arr</code> の指定ルール</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>形式：<code class="bg-gray-100 px-1 rounded font-mono">chg_arr = [[セレクトindex, 選択肢index], ...]</code></li>
+    <li>セレクトが2つある場合：<strong>1個目 = index 0、2個目 = index 1</strong></li>
+    <li>選択肢のindexも 0 始まり</li>
+    <li>選択肢が 0 のものを指定したい場合は <strong>該当行を省略可</strong>（デフォルトで 0 が選ばれるため）</li>
+    <li>すべて省略（<code class="bg-gray-100 px-1 rounded font-mono">chg_arr = []</code>）すると <strong>登録SKU最上位がそのまま表示</strong>される</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">記載例（シソーラス共有）</h3>
+  <p class="text-sm mb-2">「1個目を選択肢3、2個目を選択肢2」にしたい場合：</p>
+  <pre class="bg-gray-100 p-3 rounded text-sm overflow-x-auto mb-4"><code>chg_arr = [
+  [0, 2],
+  [1, 1]
+]</code></pre>
+  <p class="text-sm mb-2">「2個目のみ、選択肢5番目（=index 4）を初期表示」にしたい場合：</p>
+  <pre class="bg-gray-100 p-3 rounded text-sm overflow-x-auto mb-4"><code>chg_arr = [
+  [1, 4]
+]</code></pre>
+
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm">
+    <p><strong>注意：</strong>シソーラス記載例では「選択肢3 → index 2」のように、<strong>選択肢の番号（序数・1始まり）と index（0始まり）が1ずれて</strong>記載されている。クライアントから「選択肢N」と指定された際は、<strong>序数表記か index 表記か</strong>を実装前に実機で確認すること。</p>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">運用上の確定事項</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>連絡手段：メール直送</strong>（井上氏は Chatwork 退会済み・2024-10-03 時点）</li>
+    <li>新商品追加に伴う初期設定対応は <strong>年1〜2回頻度</strong>で発生する想定（井上氏認識）</li>
+    <li>サイトの初期構築はシソーラス。同社とは井上氏が決別済みのため、技術質問は基本的にはなさか側で完結させる前提</li>
+  </ul>
+
+</div>
+</body>
+</html>
