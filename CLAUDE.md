@@ -12,7 +12,9 @@
   - ホームページ制作（コーポレートサイト、LP、WordPress等）
   - システム開発（API、バックエンド、業務システム等）
   - AIを活用したサービスの提供
-- **開発環境**: XAMPP（Apache + MySQL + PHP）/ d:\xampp\htdocs\
+- **開発環境**:
+  - ローカル：XAMPP（Apache + MySQL + PHP）/ d:\xampp\htdocs\
+  - VPS：プレビュー用Nginxサーバ（Tailscale経由）/ `/home/vpsuser/projects/myagent/preview/` → `http://100.123.104.87/`
 
 ## 対応できる業務領域
 
@@ -48,6 +50,7 @@
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |
 | [rules/document-format.md](rules/document-format.md) | 記録ファイルのHTML出力ルール |
 | [rules/development.md](rules/development.md) | 開発・コミット時のルール |
+| [rules/preview-server.md](rules/preview-server.md) | プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用 |
 
 ## クライアント向け成果物のルール
 
@@ -71,6 +74,20 @@
   - 現状の課題・背景
   - アウトプットの用途（社内メモ／クライアント提出／見積もり元ネタ等）
 - 質問は選択肢形式でまとめ、答えやすくする
+
+## HTML出力先ルール（プレビューサーバ運用）
+
+ブラウザ確認用のHTMLを生成する際は、用途に応じて以下のディレクトリに出力する。
+詳細は [rules/preview-server.md](rules/preview-server.md) 参照。
+
+| 用途 | 出力先 |
+|------|--------|
+| 社内ドラフト・自分の確認用 | `preview/private/` |
+| クライアントレビュー用（提案書、LP案、モック） | `preview/client/` |
+| 公開LP・公開ポートフォリオ | `preview/public/` |
+| 用途が不明な場合 | 作業前に確認 |
+
+出力後、`http://100.123.104.87/[ディレクトリ]/ファイル名` でブラウザ確認可（Tailscale経由）。
 
 ## ファイル編集後の表示ルール
 
