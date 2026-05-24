@@ -16,28 +16,28 @@
 ## 保存先
 
 ```
-clients/<クライアント名>/projects/<プロジェクト名>/backlog.html
-clients/<クライアント名>/projects/<プロジェクト名>/decisions.html
-clients/<クライアント名>/projects/<プロジェクト名>/meeting-notes/YYYY-MM-DD.html
-clients/<クライアント名>/projects/<プロジェクト名>/memo.html
+site/clients/<クライアント名>/projects/<プロジェクト名>/backlog.html
+site/clients/<クライアント名>/projects/<プロジェクト名>/decisions.html
+site/clients/<クライアント名>/projects/<プロジェクト名>/meeting-notes/YYYY-MM-DD.html
+site/clients/<クライアント名>/projects/<プロジェクト名>/memo.html
 ```
 
 ### 命名規則
 
 - クライアント名・プロジェクト名は **英小文字 + ハイフン区切り**（例: `earth-rays`, `hikita-kogyo`）
-- 既存の `clients/` 配下のディレクトリ命名と整合させる
+- 既存の `site/clients/` 配下のディレクトリ命名と整合させる
 - meeting-notes のファイル名は **会議日付（YYYY-MM-DD.html）** とする
 
 ### 関連ファイル
 
-- `client-info.html`: クライアント単位の基本情報（`clients/<client>/client-info.html`）
-- `project-info.html`: プロジェクト単位の基本情報（`clients/<client>/projects/<project>/project-info.html`）
+- `client-info.html`: クライアント単位の基本情報（`site/clients/<client>/client-info.html`）
+- `project-info.html`: プロジェクト単位の基本情報（`site/clients/<client>/projects/<project>/project-info.html`）
 
 ### ファイルフォーマット
 
 - 全てのプロジェクト記録は **HTML5 + Tailwind CSS（CDN）** で記述する
 - 詳細は `rules/document-format.md` 参照
-- テンプレートは `clients/_template/` 配下を参照
+- テンプレートは `site/clients/_template/` 配下を参照
 
 ## 業務動線
 
@@ -105,10 +105,10 @@ clients/<クライアント名>/projects/<プロジェクト名>/memo.html
 
 ## プロジェクト横断のメモ
 
-特定のクライアント・プロジェクトに紐づかない日常的な思いつきは、プロジェクトルートの **`notes.html`** に追記。
+特定のクライアント・プロジェクトに紐づかない日常的な思いつきは、**`site/notes.html`** に追記。
 
 - 新しいエントリは日付の新しい順（上が最新）で追加
-- ある程度たまってプロジェクト化したら、該当 `clients/<client>/projects/<project>/backlog.html` または `decisions.html` へ転記
+- ある程度たまってプロジェクト化したら、該当 `site/clients/<client>/projects/<project>/backlog.html` または `decisions.html` へ転記
 
 ## 記録ルール
 

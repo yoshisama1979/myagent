@@ -1,77 +1,116 @@
 # プレビューサーバ運用ルール
 
-Claude Code が生成した HTML をブラウザで確認するためのプレビュー環境の構成と運用ルール。
+VPS上のNginxとTailscaleを使った、社内専用のブラウザ閲覧環境の構成と運用ルール。
 
 ## 構成概要
 
 ```
-[Claude Code]
-  ↓ HTMLファイルを生成
-/home/vpsuser/projects/myagent/preview/
-  ↓ Nginx（Tailscale IPのみ待ち受け）
-http://100.123.104.87/[ディレクトリ]/xxx.html
-  ↑
-🔒 Tailscale ON のデバイスのみアクセス可
+[プロジェクトルート]
+/home/vpsuser/projects/myagent/
+├── site/          ← Nginxのドキュメントルート（公開対象）
+└── rules/, bin/, data/, CLAUDE.md, ... ← 公開しない
+
+[Nginx]
+listen 100.123.104.87:80
+↑ Tailscale IPのみ待ち受け（公開IPからは到達不可）
+
+[ブラウザ]
+http://100.123.104.87/<相対パス>
+↑ Tailscale ONのデバイスのみアクセス可
 ```
 
 - **VPS**: x210-131-217-220（Ubuntu）
 - **Tailscale IP**: `100.123.104.87`
-- **公開IP**: 公開アクセスは現状なし（将来クライアント共有時に使用）
 - **Webサーバ**: Nginx
-- **ドキュメントルート**: `/home/vpsuser/projects/myagent/preview/`
+- **ドキュメントルート**: `/home/vpsuser/projects/myagent/site/`
 
-## ディレクトリ構成と公開範囲
+## ディレクトリ構成
 
-| ディレクトリ | 公開範囲 | 用途 | URL（現状） |
-|------------|---------|------|-----------|
-| `preview/private/` | Tailscale経由のみ | 自分・社内スタッフの作業用（社内ドラフト・検証・草案） | `http://100.123.104.87/private/xxx.html` |
-| `preview/client/` | 将来：Basic認証 + 公開IP | クライアントレビュー用（提案書・LP案・モック） | 現状は Tailscale のみ |
-| `preview/public/` | 将来：公開 | 誰でも閲覧可（公開LP・ポートフォリオ） | 現状は Tailscale のみ |
+| パス | 用途 |
+|------|------|
+| `site/index.html` | サイトトップ（全プロジェクトへの入口） |
+| `site/notes.html` | プロジェクト横断メモ |
+| `site/business/` | 経営トラッカー（戦略・KPI・レビュー・スキルシート） |
+| `site/clients/` | クライアント・プロジェクトの記録（[memo.md](memo.md) 準拠） |
+| `site/docs/` | 一般ドキュメント |
+| `site/skill-sheets/` | スキルシート関連の素材 |
+| `site/drafts/` | 草案・LP案・モック・検証用HTML |
 
-### Claude が HTML を生成する際の判断基準
+### site/ 配下に置かないもの
 
-| 状況 | 出力先 |
-|------|--------|
-| 社長個人の確認用、社内議論用、ドラフト | `preview/private/` |
-| クライアントに見せる前提のもの（提案書、LP案、モックアップ） | `preview/client/` |
-| 公開LP・公開ポートフォリオ・OPメッセージ等 | `preview/public/` |
-| 用途が不明な場合 | 確認してから決める |
-
-ファイル名は内容がわかる英数字＋ハイフン推奨（例：`lp-yamada-corp-v1.html`、`proposal-abc-202605.html`）。
+- `CLAUDE.md`, `rules/`：AI協働用ルール（AI内部参照）
+- `bin/`：開発用スクリプト
+- `data/`：データソース（一部機密、`.gitignore` 対象）
+- `.env`、`.git/`：機密・Git内部
+- → これらは **Nginxの公開対象外** なのでブラウザでは見えない
 
 ## アクセス方法
 
-### 自分が見るとき
-1. Tailscale が ON になっていることを確認（タスクトレイ／メニューバー）
+### 自分・社内スタッフが見るとき
+1. Tailscale が ON になっていることを確認
 2. ブラウザで `http://100.123.104.87/` にアクセス
-3. ディレクトリ一覧から目的のファイルへ
+3. サイトトップから目的のページへ
 
-### 会社スタッフを追加するとき（フェーズ2）
-1. Tailscale管理画面の「Users」→「Invite users」でメール招待
-2. スタッフがアカウント作成 → 各デバイスにTailscaleインストール → ログイン
-3. 完了後、同じURLでアクセス可
-4. 料金：複数ユーザーで使う場合は Personal Plus / Starter プランへの移行が必要
+### URL例
 
-### クライアントに見せるとき（フェーズ3・未実装）
+```
+http://100.123.104.87/                                              ← トップ
+http://100.123.104.87/business/kpi.html                             ← 経営KPI
+http://100.123.104.87/notes.html                                    ← 横断メモ
+http://100.123.104.87/clients/hanasaka/projects/hana-tool/backlog.html ← プロジェクト課題
+http://100.123.104.87/drafts/                                       ← 草案一覧
+```
+
+## クライアント共有の運用方針
+
+**「ファイルは動かさない、URLは固定、Nginx設定で公開可否を切り替える」** が基本方針。
+
+### フェーズ1：自分でドラフト作成
+- `site/drafts/<案件名>/` 配下に作成（例：`site/drafts/yamada-corp/lp.html`）
+- アクセス：Tailscale経由のみ
+
+### フェーズ2：クライアントレビュー（Basic認証付き公開）
+
 **前提条件**：
 - 独自ドメイン取得（例：`preview.hanasaka.co.jp`）
-- Let's Encrypt で HTTPS化（Basic認証はHTTPだとパスワード漏洩のため必須）
+- Let's Encrypt で HTTPS化（HTTP上のBasic認証はパスワード平文流出のため必須）
 
-**実装内容**：
-- Nginx に公開IP用の server ブロックを追加
-- `/client/` ロケーションに Basic認証（`.htpasswd`）を設定
-- `/private/` 配下は public IP からアクセス不可になるよう deny 設定
-- クライアントには `https://preview.hanasaka.co.jp/client/proposal.html` + ID/PW を共有
+**Nginx設定例（追加するserverブロック）**：
+```nginx
+server {
+    listen 公開IP:443 ssl;
+    server_name preview.hanasaka.co.jp;
+
+    # 既定はすべて遮断
+    location / { return 403; }
+
+    # 特定の案件ディレクトリのみ Basic認証で公開
+    location /drafts/yamada-corp/ {
+        root /home/vpsuser/projects/myagent/site;
+        auth_basic "山田商事レビュー";
+        auth_basic_user_file /etc/nginx/yamada.htpasswd;
+    }
+}
+```
+
+**運用フロー**：
+1. クライアントに `https://preview.hanasaka.co.jp/drafts/yamada-corp/lp.html` + ID/PW を共有
+2. 修正は元ファイルを更新するだけ（コピーは作らない）
+3. レビュー終了 → Nginxのlocationブロックを削除して閉鎖
+
+### フェーズ3：完全公開（公開LP・公開ポートフォリオ）
+- 認証を外したlocationブロックで公開
+- 公開対象は機密性のないものに限定
 
 ## セキュリティ設計
 
 ### Nginx 設定の要点
 - `listen 100.123.104.87:80` で Tailscale IP のみ待ち受け（公開IP では一切待ち受けない）
-- 公開IP（210.131.217.220）からの HTTP アクセスは TCP レベルで届かない
+- 公開IPからのHTTPアクセスはTCPレベルで届かない
 
 ### 権限設定
 - `/home/vpsuser` は `drwxr-x--x`（others に traverse のみ、list は不可）
-- `preview/` 配下は `drwxrwxr-x`（Nginx が読める）
+- `site/` 配下は `drwxrwxr-x`（Nginxが読める）
 - このVPSは単一ユーザー（vpsuser）のため、`o+x` でも実害なし
 - 将来複数ユーザーを作成する場合は ACL 方式（`setfacl -m u:www-data:x`）への移行を検討
 
@@ -82,11 +121,11 @@ http://100.123.104.87/[ディレクトリ]/xxx.html
 
 ## 運用上の注意
 
-1. **`preview/` 配下のファイルは原則 Git 管理する**
-   - 社内ドラフト・社則・提案書なども含めて、Git 履歴に残せる内容に留める
-   - パスワード・APIキー・個人情報・クライアントの非公開資料など、**Git に乗せたくない情報は preview/ に置かない**（別途 `.env` や Git管理外のディレクトリに置く）
-2. **`preview/public/` は将来インターネット公開される前提**
-   - 機密性のある内容は置かない
+1. **`site/` 配下のファイルは原則 Git 管理する**
+   - 社内ドラフト・社則・提案書なども含めて、Git履歴に残せる内容に留める
+   - パスワード・APIキー・個人情報など、**Git に乗せたくない情報は `site/` に置かない**（別途 `.env` や Git管理外のディレクトリに置く）
+2. **公開対象を増やしたい場合は、まず `site/` 配下に置く**
+   - `site/` 外に置いたファイルはNginxから見えない（CLAUDE.mdやrules/などは意図的に外している）
 3. **Tailscale のログイン状態を定期的に確認**
    - スマホアプリは OFF になっていることがある
 4. **VPS の Nginx ログ**: `/var/log/nginx/myagent-preview.access.log` / `.error.log`
@@ -103,6 +142,6 @@ http://100.123.104.87/[ディレクトリ]/xxx.html
 ## 関連ファイル
 
 - Nginx設定: `/etc/nginx/sites-available/myagent-preview`
-- ドキュメントルート: `/home/vpsuser/projects/myagent/preview/`
+- ドキュメントルート: `/home/vpsuser/projects/myagent/site/`
 - アクセスログ: `/var/log/nginx/myagent-preview.access.log`
 - エラーログ: `/var/log/nginx/myagent-preview.error.log`
