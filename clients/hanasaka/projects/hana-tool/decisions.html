@@ -30,7 +30,7 @@
     </thead>
     <tbody>
       <tr><td class="px-3 py-2 border border-gray-200">形式</td><td class="px-3 py-2 border border-gray-200">スキルチェックシート（質問に対する評価）</td></tr>
-      <tr><td class="px-3 py-2 border border-gray-200">評価段階</td><td class="px-3 py-2 border border-gray-200"><strong>3段階</strong></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">評価段階</td><td class="px-3 py-2 border border-gray-200"><strong>5段階</strong>（2026-05-24 変更、当初3段階）</td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">実施頻度</td><td class="px-3 py-2 border border-gray-200"><strong>半期に1度</strong></td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">評価主体</td><td class="px-3 py-2 border border-gray-200"><strong>社員の自己評価 ＋ 社長によるレビュー</strong></td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">結果の用途</td><td class="px-3 py-2 border border-gray-200"><strong>教育・意識向上 ＋ 人事査定</strong> の両方</td></tr>
@@ -42,6 +42,63 @@
     <li>質問項目に <strong>「会社として身に着けてほしい項目」</strong> を含めることで、社員の自然なベース向上を狙う</li>
     <li>スキル可視化 ＋ 育成・査定の基盤として機能させる</li>
     <li>2026-05-08 「スキルシート構想」（→ <a href="../../../../notes.html" class="text-blue-600 hover:underline">notes.html</a>）と一体の取り組み</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">5段階評価の定義（2026-05-24 確定）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">レベル</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">定義</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">1</td><td class="px-3 py-2 border border-gray-200">知らない</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">2</td><td class="px-3 py-2 border border-gray-200">知っているができていない</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">3</td><td class="px-3 py-2 border border-gray-200">使うように努力している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">4</td><td class="px-3 py-2 border border-gray-200">積極的に使っている</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">5</td><td class="px-3 py-2 border border-gray-200">良さを人に伝えられる（マスター・教える側）</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-gray-500 mb-3">学習プロセス型評価。レベル5の「人に伝えられる」を最上位に置くことで、組織全体の底上げループを作る設計。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">重要度別 段階的運用ルール（2026-05-24 確定）</h3>
+  <p class="text-sm mb-2">各項目に <strong>重要度（A基礎／B業務効率／C専門）</strong> を付け、A から段階的に評価対象を広げる。</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">重要度の定義</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-32">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>A. 基礎（必須）</strong></td><td class="px-3 py-2 border border-gray-200">業務遂行に必須、できないと業務効率が大きく落ちる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>B. 業務効率（推奨）</strong></td><td class="px-3 py-2 border border-gray-200">業務スピードを大きく上げる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>C. 専門（応用）</strong></td><td class="px-3 py-2 border border-gray-200">専門性・差別化につながる高度なスキル</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">段階的進行ルール</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-3">[Step 1] 重要度A の項目のみ評価
+              ↓
+[判定] 全社員の80%以上が「4以上」を達成？
+   No  → 改善期間 → 次回半期評価で再判定
+   Yes → 重要度A は基礎クリア（常時 4以上 維持）
+              ↓
+[Step 2] 重要度B の項目を評価範囲に追加
+              ↓
+[判定] 80%が4以上？
+   No  → 改善期間
+   Yes → 重要度B クリア → 重要度C へ</pre>
+
+  <p class="text-sm font-semibold mb-2 mt-4">この設計の効果</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-3">
+    <li><strong>ゲーミフィケーション</strong>：次の重要度が「解放」される達成感</li>
+    <li><strong>チーム目標</strong>：「全員80%」が共通ゴール、協力動機が生まれる</li>
+    <li><strong>評価工数の最小化</strong>：常に「次の重要度」だけ評価</li>
+    <li><strong>段階的ステップアップ</strong>：基礎→応用→専門と自然に深化</li>
   </ul>
 
   <h3 class="text-lg font-semibold mb-3 mt-6">運用フロー（2026-05-17 追加）</h3>
@@ -86,6 +143,7 @@
   <ul class="list-disc list-inside space-y-1 text-sm">
     <li>実装タスク：<a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> の「評価・スキル」セクション</li>
     <li>API設計：<a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> の「スキルシート関連 API」セクション</li>
+    <li>スキルシート本体（PC操作）：<a href="../../../../business/skill-sheet/pc-skills.html" class="text-blue-600 hover:underline">business/skill-sheet/pc-skills.html</a></li>
     <li>全社方針：<a href="../../../../notes.html" class="text-blue-600 hover:underline">notes.html</a> 2026-05-09 エントリ</li>
   </ul>
 
