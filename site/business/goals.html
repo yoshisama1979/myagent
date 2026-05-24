@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>目標ツリー — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .goal-card { transition: background-color 0.15s; }
+  .goal-card:hover { background-color: #f9fafb; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+  .badge-status-draft { background: #f3f4f6; color: #6b7280; }
+  .badge-status-active { background: #dbeafe; color: #1e40af; }
+  .badge-status-done { background: #d1fae5; color: #065f46; }
+  .badge-status-paused { background: #fef3c7; color: #92400e; }
+  .metric { font-family: ui-monospace, monospace; font-size: 0.9rem; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">ビジネスダッシュボード</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🌳 目標ツリー</h1>
+  <p class="text-gray-600 mb-2">経営最上位目標から日々の活動までを <strong>樹形図で結ぶ</strong>。各ノードに数値目標を持たせる。</p>
+  <p class="text-sm text-gray-500 mb-8">トップダウン（経営方針 → 必要施策）とボトムアップ（現場の気づき → 上位目標への寄与）の両方向で組み立てる。グルーピング・細分化は適宜やり直す。</p>
+
+  <!-- 使い方 -->
+  <details class="mb-8 bg-blue-50 border border-blue-200 rounded-lg">
+    <summary class="cursor-pointer p-4 font-semibold text-blue-800">📖 このページの使い方（クリックで開く）</summary>
+    <div class="px-4 pb-4 text-sm text-gray-700 space-y-2">
+      <p>1. <strong>各目標には可能な限り数値目標</strong>を書く（達成判定が曖昧になるのを防ぐ）</p>
+      <p>2. <strong>3階層を目安</strong>に：経営目標 → カテゴリ目標 → サブ目標。深くしすぎない</p>
+      <p>3. <strong>月初／四半期初に見直す</strong>：目標の並び替え・統合・分割・廃止を躊躇しない</p>
+      <p>4. <strong>サブ目標から日次タスクへの落とし込み</strong>は <a href="focus.html" class="text-blue-600 hover:underline">focus.html</a> 側で行う</p>
+      <p>5. ステータス：<span class="badge badge-status-draft">構想中</span> <span class="badge badge-status-active">進行中</span> <span class="badge badge-status-done">達成</span> <span class="badge badge-status-paused">保留</span></p>
+    </div>
+  </details>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 経営最上位目標 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4">🎯 経営最上位目標</h2>
+    <div class="bg-white border-2 border-gray-800 rounded-lg p-5">
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="text-xl font-bold">G0. システム制作・運用をメイン事業へ転換、ストック収益基盤を確立する</h3>
+        <span class="badge badge-status-active">進行中</span>
+      </div>
+      <p class="text-sm text-gray-600 mb-3">2026-05-08 確定。受託制作中心から、自社プロダクト＋月額運用への重心移動。</p>
+      <table class="w-full text-sm">
+        <tr><td class="py-1 pr-3 font-semibold w-32">主要指標</td><td>ストック収益比率 / 月次新規受注件数 / HANAチャット月額契約数</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">関連</td><td><a href="strategy.html" class="text-blue-600 hover:underline">strategy.html</a> / <a href="kpi.html" class="text-blue-600 hover:underline">kpi.html</a></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- G1. HANAチャット販売拡大 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold border-b-2 border-blue-700 pb-2 mb-4">💬 G1. HANAチャット販売拡大</h2>
+
+    <!-- G1: カテゴリ目標 -->
+    <div class="bg-white border-2 border-blue-500 rounded-lg p-5 mb-4">
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="text-lg font-bold text-blue-700">G1. HANAチャットを多くの企業に届け、月額収益化する</h3>
+        <span class="badge badge-status-draft">構想中</span>
+      </div>
+      <table class="w-full text-sm">
+        <tr><td class="py-1 pr-3 font-semibold w-32">数値目標（案）</td><td class="metric">12ヶ月で月額契約 50社 / MRR ¥1,000,000 ※要確定</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">現状</td><td class="text-gray-500">—（要計測）</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">なぜ</td><td>ストック収益基盤の主軸。受託案件の波を埋める安定収入源にする</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">関連</td><td><a href="../clients/hanasaka/projects/hana-chat/" class="text-blue-600 hover:underline">hana-chat プロジェクト</a></td></tr>
+      </table>
+    </div>
+
+    <!-- G1.1 -->
+    <div class="ml-8 border-l-4 border-blue-300 pl-4 space-y-3 mb-3">
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G1.1 認知獲得（リード数を増やす）</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 月間リード 100件</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G1.1.1 LP制作・改善（CVR向上、A/Bテスト）</li>
+          <li>G1.1.2 SEO対策（コーポレートSEO・コンテンツSEO）</li>
+          <li>G1.1.3 SNS／ブログ／コンテンツマーケティング</li>
+          <li>G1.1.4 リスティング広告・SNS広告</li>
+          <li>G1.1.5 PR活動（プレスリリース、メディア掲載）</li>
+          <li>G1.1.6 紹介プログラム（既存顧客・パートナー）</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G1.2 商談化率の向上</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: リード→商談率 20%（月20件の商談）</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G1.2.1 デモ動画／無料トライアル環境の整備</li>
+          <li>G1.2.2 セールス資料（紹介書・事例集）の標準化</li>
+          <li>G1.2.3 オンラインセミナー・ウェビナー定期開催</li>
+          <li>G1.2.4 問い合わせ初動対応のスピード化（24時間以内）</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G1.3 成約率の向上</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 商談→成約率 25%（月5件の新規契約）</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G1.3.1 競合比較資料の整備</li>
+          <li>G1.3.2 価格プラン体系の整理（個別／中堅／エンタープライズ）</li>
+          <li>G1.3.3 決済フローの簡略化（クレカ・口座振替）</li>
+          <li>G1.3.4 契約書テンプレ・利用規約の整備</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G1.4 継続率・LTVの向上</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 月次解約率 2%以下 / 平均契約期間 24ヶ月</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G1.4.1 オンボーディングフローの標準化（最初の30日）</li>
+          <li>G1.4.2 カスタマーサクセス体制（活用支援・課題ヒアリング）</li>
+          <li>G1.4.3 機能リリースの定期通知・アップセル提案</li>
+          <li>G1.4.4 ヘルススコア計測（活用度の可視化）</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- G2. システム受注件数増加 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold border-b-2 border-teal-700 pb-2 mb-4">🛠️ G2. システム受注件数増加</h2>
+
+    <div class="bg-white border-2 border-teal-500 rounded-lg p-5 mb-4">
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="text-lg font-bold text-teal-700">G2. 月額運用契約を含むシステム受注を継続的に積み上げる</h3>
+        <span class="badge badge-status-active">進行中</span>
+      </div>
+      <table class="w-full text-sm">
+        <tr><td class="py-1 pr-3 font-semibold w-32">数値目標（案）</td><td class="metric">月間新規受注 3件 / ストック収益比率 40% ※要確定</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">現状</td><td class="text-gray-500">—（要計測：マネーフォワード集計）</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">なぜ</td><td>月額管理費用を含めた受注で収益基盤を強化。スポット案件依存からの脱却</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">関連</td><td><a href="../clients/index.html" class="text-blue-600 hover:underline">clients/</a> / <a href="kpi.html" class="text-blue-600 hover:underline">kpi.html</a></td></tr>
+      </table>
+    </div>
+
+    <div class="ml-8 border-l-4 border-teal-300 pl-4 space-y-3 mb-3">
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G2.1 既存クライアントからの追加受注・継続契約</h4>
+          <span class="badge badge-status-active">進行中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 既存クライアントからの月額契約 5社以上</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G2.1.1 月次定例での改善提案・追加開発打診</li>
+          <li>G2.1.2 スポット案件 → 月額運用契約への切り替え提案</li>
+          <li>G2.1.3 既存クライアントの満足度ヒアリング（半期1回）</li>
+          <li>G2.1.4 ヒキタ工業・コーバーオール等の継続フォロー</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G2.2 新規クライアント獲得</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 月間新規問い合わせ 5件 / 月間新規受注 2件</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G2.2.1 紹介パイプライン整備（既存顧客・パートナー経由）</li>
+          <li>G2.2.2 実績の公開（事例集、コーポレートサイト改善）</li>
+          <li>G2.2.3 リファラル制度の設計</li>
+          <li>G2.2.4 営業活動（展示会・業界イベント・テレアポ）</li>
+          <li>G2.2.5 HANAツールズ（公開ツールシリーズ）経由のリード獲得 → <a href="../notes.html" class="text-blue-600 hover:underline">notes.html 2026-05-24</a></li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G2.3 案件単価の向上</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 平均案件単価 ¥X（要決定）</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G2.3.1 サービスメニュー体系化（パッケージ化）</li>
+          <li>G2.3.2 標準価格表の整備</li>
+          <li>G2.3.3 ハイエンド案件（業務システム・基幹システム）の獲得</li>
+          <li>G2.3.4 保守・運用契約の単価見直し</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G2.4 営業パイプラインの可視化</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 商談ステージ別の件数を毎月レビュー</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G2.4.1 商談管理の仕組み構築（HANAツール内 or 既存CRM）</li>
+          <li>G2.4.2 ステージ別歩留まり率の計測</li>
+          <li>G2.4.3 受注確度に応じたフォロー優先度判定</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- G3. HANAツール業務効率化 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold border-b-2 border-purple-700 pb-2 mb-4">⚙️ G3. HANAツール業務効率化</h2>
+
+    <div class="bg-white border-2 border-purple-500 rounded-lg p-5 mb-4">
+      <div class="flex items-start justify-between mb-2">
+        <h3 class="text-lg font-bold text-purple-700">G3. 社内管理ツールHANAを進化させ、業務効率と意思決定スピードを上げる</h3>
+        <span class="badge badge-status-active">進行中</span>
+      </div>
+      <table class="w-full text-sm">
+        <tr><td class="py-1 pr-3 font-semibold w-32">数値目標（案）</td><td class="metric">月間削減工数 40時間以上 / 利用率 全社員週5回以上 ※要確定</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">現状</td><td class="text-gray-500">バックログ 69件（最多）。評価・スキル機能フェーズへ</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">なぜ</td><td>自社の生産性そのものが、提供できるサービスの質と量に直結する</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">関連</td><td><a href="../clients/hanasaka/projects/hana-tool/" class="text-blue-600 hover:underline">hana-tool プロジェクト</a> / <a href="../clients/hanasaka/projects/hana-tool/backlog.html" class="text-blue-600 hover:underline">backlog.html</a></td></tr>
+      </table>
+    </div>
+
+    <div class="ml-8 border-l-4 border-purple-300 pl-4 space-y-3 mb-3">
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G3.1 既存業務の自動化</h4>
+          <span class="badge badge-status-active">進行中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 月間削減工数 30時間</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G3.1.1 顧客管理（CRM）機能の強化</li>
+          <li>G3.1.2 タスク・ToDo管理機能の拡充（既存基盤あり）</li>
+          <li>G3.1.3 見積もり・請求・入金管理の自動化</li>
+          <li>G3.1.4 進捗ダッシュボードの整備</li>
+          <li>G3.1.5 ChatworkやAPI連携の拡張</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G3.2 スキル管理・人事評価のシステム化</h4>
+          <span class="badge badge-status-active">進行中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 半期1回の評価サイクルを完全システム化（紙・スプレッドシートゼロ）</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G3.2.1 スキルシート（5シート310項目）のHANAツール組み込み</li>
+          <li>G3.2.2 自己評価＋社長レビューの二段フロー実装</li>
+          <li>G3.2.3 スキル別のアサイン提案機能</li>
+          <li>G3.2.4 評価結果と給与・査定の連携</li>
+        </ul>
+        <p class="text-xs text-gray-500 mt-2">関連: <a href="../notes.html" class="text-blue-600 hover:underline">notes.html 2026-05-09 人事評価方針</a> / <a href="skill-sheet/" class="text-blue-600 hover:underline">skill-sheet/</a></p>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G3.3 AI協働基盤の充実</h4>
+          <span class="badge badge-status-active">進行中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: Claude Code 経由の作業効率を計測可能にする</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G3.3.1 CLAUDE.md・rules/ ルール体系の継続整備</li>
+          <li>G3.3.2 hana-tools API ラッパーの拡充（bin/）</li>
+          <li>G3.3.3 VPS+Tailscale+Nginx プレビュー環境の運用熟成</li>
+          <li>G3.3.4 ナレッジ・テンプレートの蓄積（_template/）</li>
+        </ul>
+      </div>
+
+      <div class="goal-card bg-white border border-gray-200 rounded p-4">
+        <div class="flex items-start justify-between mb-1">
+          <h4 class="font-semibold">G3.4 内部品質・運用安定化</h4>
+          <span class="badge badge-status-draft">構想中</span>
+        </div>
+        <p class="text-sm text-gray-600 mb-2 metric">目標（案）: 障害ゼロ・データ消失ゼロ・セキュリティ事故ゼロ</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+          <li>G3.4.1 監視・モニタリング体制</li>
+          <li>G3.4.2 バックアップ自動化</li>
+          <li>G3.4.3 セキュリティ強化（権限管理・監査ログ）</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 関連リンク -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="focus.html" class="text-blue-600 hover:underline">focus.html</a> — 今週/今月のフォーカス（目標から日々の活動への落とし込み先）</li>
+    <li><a href="strategy.html" class="text-blue-600 hover:underline">strategy.html</a> — 経営方針・重点課題</li>
+    <li><a href="kpi.html" class="text-blue-600 hover:underline">kpi.html</a> — KPI理想形（数値目標の設計図）</li>
+    <li><a href="reviews/index.html" class="text-blue-600 hover:underline">reviews/</a> — 月次レビュー（目標進捗の振り返り）</li>
+    <li><a href="../notes.html" class="text-blue-600 hover:underline">notes.html</a> — 日常メモ（新規目標の種・意思決定論点）</li>
+  </ul>
+
+  <p class="text-xs text-gray-400 mt-10">最終更新: 2026-05-24 / 更新頻度: 月次（月初に再編） + 随時（新規目標の追加）</p>
+
+</div>
+</body>
+</html>
