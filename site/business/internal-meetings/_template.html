@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社内会議 — YYYY-MM-DD</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../index.html" class="text-blue-600 hover:underline">ビジネスダッシュボード</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">社内会議</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">社内定例会議 — YYYY-MM-DD（曜日）</h1>
+
+  <!-- 基本情報 -->
+  <table class="w-full border-collapse text-sm mb-6">
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold w-32">日時</td><td class="px-3 py-2 border border-gray-200">YYYY-MM-DD（曜日） HH:MM〜HH:MM</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">場所</td><td class="px-3 py-2 border border-gray-200">（会議室／オンライン等）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">出席者</td><td class="px-3 py-2 border border-gray-200">（敬称略）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">欠席者</td><td class="px-3 py-2 border border-gray-200">—</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-gray-50 font-semibold">議事録担当</td><td class="px-3 py-2 border border-gray-200">—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 議題 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">議題一覧</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">議題</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-20">所要</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200">議題名</td><td class="px-3 py-2 border border-gray-200">N分</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 議題詳細 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. 議題名（N分）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">目的</h3>
+  <p class="text-sm mb-4">（この議題で何を達成するか）</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">事前共有資料</h3>
+  <ul class="list-disc list-inside text-sm mb-4">
+    <li>—</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">論点・質問</h3>
+  <ul class="list-disc list-inside text-sm mb-4">
+    <li>—</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">議事メモ</h3>
+  <div class="bg-yellow-50 border border-yellow-200 rounded p-4 text-sm mb-6">
+    <p class="text-gray-400 italic">（会議中に記入）</p>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 決定事項 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">決定事項</h2>
+  <ol class="list-decimal list-inside text-sm space-y-2 mb-6">
+    <li class="text-gray-400 italic">（会議中に追記。確定事項は事後 strategy.html / decisions.html へ展開）</li>
+  </ol>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- アクションアイテム -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">アクションアイテム</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-12">#</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-24">担当</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-32">期限</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-20">状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">1</td>
+        <td class="px-3 py-2 border border-gray-200 text-gray-400 italic">—</td>
+        <td class="px-3 py-2 border border-gray-200">—</td>
+        <td class="px-3 py-2 border border-gray-200">—</td>
+        <td class="px-3 py-2 border border-gray-200">☐</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 次回 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">次回</h2>
+  <ul class="list-disc list-inside text-sm">
+    <li>日時：—</li>
+    <li>持ち越し議題：—</li>
+  </ul>
+
+  <p class="text-xs text-gray-400 mt-10">テンプレートの記入後、ファイル名を <code>YYYY-MM-DD.html</code> にリネームすること。</p>
+
+</div>
+</body>
+</html>
