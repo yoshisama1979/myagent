@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>目標管理機能 MVP 実装指示書 — HANAツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  pre { background: #1a202c; color: #e2e8f0; padding: 1em; border-radius: 6px; overflow-x: auto; font-size: 0.85em; line-height: 1.5; }
+  code.inline { background: #f1f5f9; color: #c026d3; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  table.spec { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 0.85em; }
+  table.spec th, table.spec td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; vertical-align: top; }
+  table.spec th { background: #f8fafc; font-weight: 600; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../../../../index.html" class="text-blue-600 hover:underline">クライアント</a> &gt;
+    <a href="../../../index.html" class="text-blue-600 hover:underline">はなさか</a> &gt;
+    <a href="../index.html" class="text-blue-600 hover:underline">HANAツール</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">目標管理機能 MVP 実装指示書</h1>
+  <p class="text-gray-600 mb-2">HANAツール内に目標ツリーと達成記録を扱う機能を新設するための、Phase 1 MVP 範囲の技術仕様。</p>
+  <p class="text-sm text-gray-500 mb-8">作成日：2026-05-25 ／ 設計方針：<a href="../decisions.html" class="text-blue-600 hover:underline">decisions.html「目標管理機能」</a> ／ 上位の概念整理：<a href="../../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a></p>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 1. 目的・スコープ -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">1. 目的とスコープ</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">解決したい課題</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>現状の目標管理（<a href="../../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a> 手書き）では、達成度の更新・履歴管理・複数人運用ができない</li>
+    <li>達成記録が蓄積されないと「組織の学習資産化」が進まない</li>
+    <li>レビューが回らないと、目標管理が「飾り」になる</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 1 MVP の範囲</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>機能</th><th>含む</th><th>除外</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>目標CRUD</td><td>階層構造、親子関係、ステータス8種</td><td>並び替え・コピー機能</td></tr>
+      <tr><td>指標管理</td><td>目標値・現状値・単位、複数指標可</td><td>自動計算（数値ロールアップ）</td></tr>
+      <tr><td>達成ログ</td><td>達成日・結果値・主な貢献・学び の記録</td><td>承認フロー</td></tr>
+      <tr><td>レビュー画面</td><td>月次：今月のObjective一覧 → 達成度更新</td><td>四半期/半期/年次レビュー画面（Phase 2）</td></tr>
+      <tr><td>API</td><td>READ + WRITE の REST エンドポイント</td><td>GraphQL、Webhook</td></tr>
+      <tr><td>UI</td><td>基本CRUDとツリー表示、月次レビュー</td><td>ガントチャート、グラフ、ダッシュボード（Phase 2）</td></tr>
+      <tr><td>権限</td><td>ログインユーザー単位（既存認証流用）</td><td>RBAC、目標別ACL（Phase 3）</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">想定する技術スタック</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>PHP 8.x / <strong>Laravel</strong>（既存プロジェクト準拠）</li>
+    <li><strong>MySQL</strong>（既存DB準拠）</li>
+    <li>API認証：既存の external API トークン方式（<code class="inline">/api/external/...</code> パターン）</li>
+    <li>UI：既存のフロントエンド方式（Blade / Vue 等、現行に合わせる）</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 2. データモデル -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">2. データモデル</h2>
+
+  <p class="text-sm mb-4">下記6テーブルで構成。すべて <code class="inline">id</code>（bigint, AI, PK）、<code class="inline">created_at</code>、<code class="inline">updated_at</code>、<code class="inline">deleted_at</code>（soft delete）を共通カラムとして持つ。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.1 <code class="inline">goals</code>（目標本体）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>カラム</th><th>型</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>parent_id</td><td>bigint nullable, FK→goals.id</td><td>親目標のID。最上位はNULL</td></tr>
+      <tr><td>level</td><td>tinyint</td><td>階層レベル（1=Strategic, 2=Objective, 3=KR, 4=Action）</td></tr>
+      <tr><td>title</td><td>varchar(200)</td><td>目標名（例：「HANAチャット販売拡大」）</td></tr>
+      <tr><td>description</td><td>text nullable</td><td>詳細説明（なぜ・判定基準）</td></tr>
+      <tr><td>owner_user_id</td><td>bigint, FK→users.id</td><td>オーナー（必須、1人のみ）</td></tr>
+      <tr><td>status</td><td>varchar(20)</td><td>draft / active / paused / done / partial / missed / cancelled / carried_over</td></tr>
+      <tr><td>period_start</td><td>date</td><td>開始日</td></tr>
+      <tr><td>period_end</td><td>date</td><td>期限</td></tr>
+      <tr><td>achievement_rate</td><td>decimal(5,2) nullable</td><td>達成率%（0.00〜100.00。Phase 1は手動入力、Phase 2で指標から自動算出）</td></tr>
+      <tr><td>sort_order</td><td>int</td><td>同一親内での表示順</td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-3">📌 階層はself-referenceで実装。深さ制限は app層 で5階層までに制限（DBは無制限）。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.2 <code class="inline">goal_metrics</code>（指標）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>カラム</th><th>型</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>goal_id</td><td>bigint, FK→goals.id</td><td>紐づく目標</td></tr>
+      <tr><td>name</td><td>varchar(100)</td><td>指標名（例：「月間契約数」）</td></tr>
+      <tr><td>unit</td><td>varchar(20)</td><td>単位（例：「件」「円」「%」）</td></tr>
+      <tr><td>target_value</td><td>decimal(15,2)</td><td>目標値</td></tr>
+      <tr><td>current_value</td><td>decimal(15,2) nullable</td><td>現状値（最新の <code class="inline">goal_measurements</code> を反映）</td></tr>
+      <tr><td>direction</td><td>varchar(10)</td><td>up / down / maintain</td></tr>
+      <tr><td>metric_type</td><td>varchar(20)</td><td>leading / lagging</td></tr>
+      <tr><td>sort_order</td><td>int</td><td>表示順</td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-3">📌 1目標に2〜3指標までを推奨（4以上は警告表示。バリデーションはしない）。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.3 <code class="inline">goal_measurements</code>（指標の時系列値）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>カラム</th><th>型</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>goal_metric_id</td><td>bigint, FK→goal_metrics.id</td><td>紐づく指標</td></tr>
+      <tr><td>measured_at</td><td>date</td><td>計測日</td></tr>
+      <tr><td>value</td><td>decimal(15,2)</td><td>実測値</td></tr>
+      <tr><td>note</td><td>text nullable</td><td>備考</td></tr>
+      <tr><td>recorded_by_user_id</td><td>bigint, FK→users.id</td><td>記録者</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.4 <code class="inline">goal_achievement_logs</code>（達成記録）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>カラム</th><th>型</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>goal_id</td><td>bigint, FK→goals.id</td><td>達成された目標</td></tr>
+      <tr><td>achieved_at</td><td>date</td><td>達成日</td></tr>
+      <tr><td>result_status</td><td>varchar(20)</td><td>done / partial / missed / cancelled</td></tr>
+      <tr><td>achievement_rate</td><td>decimal(5,2)</td><td>達成率%</td></tr>
+      <tr><td>contributions</td><td>text nullable</td><td>主な貢献（何が効いたか）</td></tr>
+      <tr><td>lessons</td><td>text nullable</td><td>学び（次に活かすこと）</td></tr>
+      <tr><td>recorded_by_user_id</td><td>bigint, FK→users.id</td><td>記録者</td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-3">📌 「未達成」「中止」も <strong>明示的に記録</strong>。達成ログは消さない（組織の学習資産）。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.5 <code class="inline">goal_status_history</code>（ステータス変遷ログ）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>カラム</th><th>型</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>goal_id</td><td>bigint, FK→goals.id</td><td>対象目標</td></tr>
+      <tr><td>from_status</td><td>varchar(20) nullable</td><td>変更前ステータス</td></tr>
+      <tr><td>to_status</td><td>varchar(20)</td><td>変更後ステータス</td></tr>
+      <tr><td>changed_at</td><td>datetime</td><td>変更日時</td></tr>
+      <tr><td>changed_by_user_id</td><td>bigint, FK→users.id</td><td>変更者</td></tr>
+      <tr><td>reason</td><td>text nullable</td><td>変更理由</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.6 <code class="inline">goal_reviews</code>（レビュー記録、Phase 1 では月次のみ）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>カラム</th><th>型</th><th>説明</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>review_type</td><td>varchar(20)</td><td>monthly（Phase 1）/ quarterly / semi-annual / annual（Phase 2以降）</td></tr>
+      <tr><td>review_period</td><td>varchar(20)</td><td>例：「2026-06」「2026-Q3」</td></tr>
+      <tr><td>summary</td><td>text</td><td>振り返り総括</td></tr>
+      <tr><td>decisions</td><td>text nullable</td><td>レビューで決まった目標調整内容</td></tr>
+      <tr><td>reviewer_user_id</td><td>bigint, FK→users.id</td><td>レビュー実施者</td></tr>
+      <tr><td>reviewed_at</td><td>date</td><td>実施日</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">2.7 ER図（テキスト表現）</h3>
+  <pre>users
+  └─ owns ─ goals
+                ├─ parent_id ─ goals (self-ref)
+                ├─ has many ─ goal_metrics
+                │              └─ has many ─ goal_measurements
+                ├─ has many ─ goal_achievement_logs
+                └─ has many ─ goal_status_history
+
+goal_reviews（特定の goal とは紐づかない、期間単位のスナップショット）</pre>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 3. API 仕様 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">3. API 仕様</h2>
+
+  <p class="text-sm mb-4">既存 <code class="inline">/api/external/...</code> パターンに合わせる。認証は既存トークン方式を流用。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">エンドポイント一覧</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>メソッド</th><th>パス</th><th>用途</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>GET</td><td><code class="inline">/api/external/goals</code></td><td>一覧取得（フィルタ：status, parent_id, owner_user_id, period）</td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/goals/tree</code></td><td>ツリー構造で全件取得（ネストJSON）</td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/goals/{id}</code></td><td>詳細取得（指標・達成ログ・履歴を含む）</td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/goals</code></td><td>新規作成</td></tr>
+      <tr><td>PATCH</td><td><code class="inline">/api/external/goals/{id}</code></td><td>更新（部分更新可）</td></tr>
+      <tr><td>DELETE</td><td><code class="inline">/api/external/goals/{id}</code></td><td>削除（soft delete）</td></tr>
+      <tr><td>PATCH</td><td><code class="inline">/api/external/goals/{id}/status</code></td><td>ステータス変更（status_history に自動記録）</td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/goals/{id}/metrics</code></td><td>指標追加</td></tr>
+      <tr><td>PATCH</td><td><code class="inline">/api/external/goal-metrics/{id}</code></td><td>指標更新</td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/goal-metrics/{id}/measurements</code></td><td>計測値の記録</td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/goals/{id}/achievement-logs</code></td><td>達成ログ登録</td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/goals/achievements</code></td><td>達成ログ横断検索（period, owner, level でフィルタ）</td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/goal-reviews</code></td><td>レビュー記録の登録</td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/goal-reviews</code></td><td>レビュー一覧取得</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">レスポンス例：<code class="inline">GET /api/external/goals/{id}</code></h3>
+  <pre>{
+  "id": 12,
+  "parent_id": 5,
+  "level": 3,
+  "title": "認知獲得（リード数を増やす）",
+  "description": "HANAチャット販売拡大の認知段階。LP・SEO・SNS・広告で月100リードを目指す",
+  "owner": { "id": 1, "name": "松田 義宗" },
+  "status": "active",
+  "period_start": "2026-04-01",
+  "period_end": "2027-03-31",
+  "achievement_rate": 35.00,
+  "metrics": [
+    {
+      "id": 21,
+      "name": "月間リード数",
+      "unit": "件",
+      "target_value": 100,
+      "current_value": 35,
+      "direction": "up",
+      "metric_type": "leading",
+      "recent_measurements": [
+        {"measured_at": "2026-05-01", "value": 28},
+        {"measured_at": "2026-05-15", "value": 35}
+      ]
+    }
+  ],
+  "achievement_logs": [],
+  "children_count": 6,
+  "created_at": "2026-04-01T09:00:00+09:00",
+  "updated_at": "2026-05-15T18:00:00+09:00"
+}</pre>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">リクエスト例：<code class="inline">POST /api/external/goals/{id}/achievement-logs</code></h3>
+  <pre>{
+  "achieved_at": "2026-06-30",
+  "result_status": "partial",
+  "achievement_rate": 75.00,
+  "contributions": "SEO記事30本投下、技術ブログ立ち上げ",
+  "lessons": "リード100件はストレッチすぎた。次期は60件設定が妥当"
+}</pre>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">エラーレスポンス</h3>
+  <p class="text-sm mb-2">既存APIの慣例に従う。標準的なHTTPステータスコード + JSONエラーメッセージ：</p>
+  <pre>{ "error": "Goal not found", "code": "GOAL_NOT_FOUND" }   // 404
+{ "error": "Validation failed", "details": { ... } }      // 422</pre>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 4. UI 仕様 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">4. UI 仕様</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">画面一覧（Phase 1）</h3>
+  <table class="spec">
+    <thead>
+      <tr><th>#</th><th>画面</th><th>パス</th><th>目的</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>目標ツリー一覧</td><td><code class="inline">/goals</code></td><td>全目標を階層構造で俯瞰</td></tr>
+      <tr><td>2</td><td>目標詳細・編集</td><td><code class="inline">/goals/{id}</code></td><td>個別目標の詳細表示・編集、達成ログ確認</td></tr>
+      <tr><td>3</td><td>目標新規作成</td><td><code class="inline">/goals/create</code></td><td>新規目標の作成（親選択 → 詳細入力）</td></tr>
+      <tr><td>4</td><td>達成ログ登録</td><td><code class="inline">/goals/{id}/achievement-logs/create</code></td><td>達成（または部分達成・中止）の記録</td></tr>
+      <tr><td>5</td><td>月次レビュー</td><td><code class="inline">/goals/reviews/monthly</code></td><td>今月のObjective一覧 → 達成度更新 → レビュー記録</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">画面1：目標ツリー一覧</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>左ペイン：ツリー表示（折りたたみ可能、ステータスバッジ付き）</li>
+    <li>右ペイン：選択中の目標の概要（指標・直近の達成ログ）</li>
+    <li>フィルタ：ステータス（active/done/all）、オーナー、期間</li>
+    <li>並び順：sort_order → level → title</li>
+    <li>「新規作成」ボタン（親選択モーダル）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">画面2：目標詳細・編集</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>ヘッダー：タイトル、ステータスバッジ、オーナー、期間</li>
+    <li>セクション1：説明（なぜ・判定基準）</li>
+    <li>セクション2：指標一覧（目標値・現状値・進捗バー）、追加ボタン</li>
+    <li>セクション3：子目標一覧（リンク）</li>
+    <li>セクション4：達成ログ履歴（最新10件、もっと見る）</li>
+    <li>セクション5：ステータス変遷履歴</li>
+    <li>操作：編集 / ステータス変更 / 達成記録 / 削除（オーナーのみ可）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">画面5：月次レビュー</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>表示対象：当月期間中の Objective レベル目標（level=2）</li>
+    <li>各目標について：現在の指標値を入力 → 達成率を計算（手動 or 自動）→ ステータス更新</li>
+    <li>レビュー総括欄（テキスト）→ <code class="inline">goal_reviews</code> に保存</li>
+    <li>過去レビュー一覧へのリンク</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 5. 実装フェーズ -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">5. 実装順序（推奨イテレーション）</h2>
+
+  <table class="spec">
+    <thead>
+      <tr><th>Iter.</th><th>内容</th><th>完了の判定</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>DBマイグレーション（6テーブル）、シーダー（テストデータ）</td><td>artisan migrate / seed が通る、テーブル確認</td></tr>
+      <tr><td>2</td><td>REST API：goals CRUD（基本）</td><td>curl で create/read/update/delete が通る</td></tr>
+      <tr><td>3</td><td>REST API：metrics、measurements、status変更</td><td>curl テストパス、status_history が記録される</td></tr>
+      <tr><td>4</td><td>REST API：achievement_logs、reviews</td><td>curl テストパス、ログ検索が動く</td></tr>
+      <tr><td>5</td><td>UI：画面1（一覧ツリー）と画面2（詳細）</td><td>ブラウザで目標を作成・編集できる</td></tr>
+      <tr><td>6</td><td>UI：画面3（新規作成）、画面4（達成ログ登録）</td><td>UI から CRUD・達成記録の全フローが動く</td></tr>
+      <tr><td>7</td><td>UI：画面5（月次レビュー）</td><td>月次レビューの一連の操作が完結する</td></tr>
+      <tr><td>8</td><td>data移行：<a href="../../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a> の内容を初期データとして投入</td><td>HTML版の目標がツール内に再現される</td></tr>
+      <tr><td>9</td><td><a href="../../../../../../bin/hana-api.sh" class="text-blue-600 hover:underline">bin/hana-api.sh</a> に goals 用コマンドを追加</td><td>Claude が CLI で目標一覧を取得できる</td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-3">📌 各イテレーションごとに動作確認 → コミット。Big bang を避ける。</p>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 6. 受入条件 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">6. 受入条件（Phase 1 完了の判定）</h2>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>5階層までの目標ツリーをUIで作成・編集・削除できる</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>各目標に指標を複数登録でき、目標値・現状値を更新できる</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>達成ログを登録でき、過去の達成ログを期間・オーナーで絞り込み表示できる</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>ステータスを変更すると status_history に自動記録される</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>月次レビュー画面から当月Objectiveを一覧 → 一括更新 → レビュー記録ができる</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>全APIエンドポイントが認証付きで動作する</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="inline">business/goals.html</code> の現状目標案がツール内に投入され、参照可能</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>Claude Code から <code class="inline">bash bin/hana-api.sh goals</code> で目標一覧が取得できる</span></li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 7. 既存システムとの統合 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">7. 既存システムとの統合点</h2>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li><strong>users テーブル</strong>：オーナーは既存ユーザーから選択</li>
+    <li><strong>外部APIトークン</strong>：既存の <code class="inline">/api/external/...</code> 認証を流用</li>
+    <li><strong>Chatwork通知</strong>：月次レビュー期限が近付いた時に通知（Phase 2）</li>
+    <li><strong>ToDoとの連携</strong>：将来、目標の Action 層を ToDo と連携検討（Phase 3）</li>
+    <li><strong>クライアント・プロジェクト</strong>：目標に関連プロジェクトを紐付ける外部キー追加検討（Phase 2）</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 8. 将来拡張 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">8. Phase 2・3 への布石</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 2（運用が回り始めたら）</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>達成度の自動計算（指標値から達成率を算出）</li>
+    <li>時系列グラフ（measurements の推移を可視化）</li>
+    <li>四半期・半期・年次レビュー画面</li>
+    <li>Chatworkでのレビュー時期リマインダー</li>
+    <li>関連プロジェクトとの紐付け</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Phase 3（複数人運用が定着したら）</h3>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>個人目標と組織目標の連携（個人OKR）</li>
+    <li>権限管理（オーナー以外の閲覧・編集権限）</li>
+    <li>CRM・タスク管理ツールとの連携</li>
+    <li>達成記録のサマリー自動生成（AIによる年次振り返り）</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 9. 注意事項 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">9. 実装時の注意事項</h2>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li><strong>「完了≠削除」を死守</strong>：達成・中止・持ち越しのいずれも履歴に残し、検索・参照可能に</li>
+    <li><strong>階層深度の制限</strong>：UI上で5階層を超える作成をブロック（バリデーション）</li>
+    <li><strong>オーナーは必ず1人</strong>：共同オーナー禁止（UIで複数選択不可）</li>
+    <li><strong>削除はsoft delete</strong>：物理削除しない（誤操作時のリカバリ・履歴保全のため）</li>
+    <li><strong>API ドキュメント</strong>：Swagger等で公開し、Claude協働で参照可能に</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 関連 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="../decisions.html" class="text-blue-600 hover:underline">decisions.html「目標管理機能」</a> — 設計方針の根拠</li>
+    <li><a href="../backlog.html" class="text-blue-600 hover:underline">backlog.html</a> — 実装タスク（本書から展開）</li>
+    <li><a href="../../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a> — 現状の目標ツリー（移行元データ）</li>
+    <li><a href="../../../../../business/focus.html" class="text-blue-600 hover:underline">business/focus.html</a> — Action層との接続（フォーカスダッシュボード）</li>
+    <li><a href="../../../../../../bin/hana-api.sh" class="text-blue-600 hover:underline">bin/hana-api.sh</a> — APIラッパー（goals コマンド追加予定）</li>
+  </ul>
+
+  <p class="text-xs text-gray-400 mt-10">バージョン: 1.0 / 作成: 2026-05-25 / 改訂時はバージョン番号と更新内容を末尾に追記</p>
+
+</div>
+</body>
+</html>

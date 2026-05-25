@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hana-tools API 拡張ロードマップ（議論用） — HANAツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  code.inline { background: #f1f5f9; color: #c026d3; padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+  table.spec { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 0.85em; }
+  table.spec th, table.spec td { border: 1px solid #e2e8f0; padding: 6px 10px; text-align: left; vertical-align: top; }
+  table.spec th { background: #f8fafc; font-weight: 600; }
+  .priority-1 { border-left: 4px solid #dc2626; padding-left: 12px; }
+  .priority-2 { border-left: 4px solid #d97706; padding-left: 12px; }
+  .priority-3 { border-left: 4px solid #65a30d; padding-left: 12px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+  .badge-p1 { background: #fee2e2; color: #991b1b; }
+  .badge-p2 { background: #fef3c7; color: #92400e; }
+  .badge-p3 { background: #ecfccb; color: #3f6212; }
+  .badge-decision { background: #fef9c3; color: #854d0e; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../../../../index.html" class="text-blue-600 hover:underline">クライアント</a> &gt;
+    <a href="../../../index.html" class="text-blue-600 hover:underline">はなさか</a> &gt;
+    <a href="../index.html" class="text-blue-600 hover:underline">HANAツール</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">hana-tools API 拡張ロードマップ <span class="badge badge-decision ml-2">議論待ち</span></h1>
+  <p class="text-gray-600 mb-2">Claude（パートナーAI）が秘書として動くために必要なAPI機能の提案集。優先度別に整理。</p>
+  <p class="text-sm text-gray-500 mb-8">作成：2026-05-25 ／ 起案：Claude（パートナーAI） ／ ステータス：<strong>方針議論待ち</strong></p>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 経緯 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">経緯</h2>
+  <ul class="list-disc list-inside text-sm space-y-1 mb-4">
+    <li>2026-05-25：ToDo API（GET/POST <code class="inline">/api/external/todos</code>）の整備が完了 → <a href="../../../../../../bin/hana-api.sh" class="text-blue-600 hover:underline">bin/hana-api.sh</a> と <a href="../../../../../.claude/commands/hana-todos.md" class="text-blue-600 hover:underline">hana-todos</a> / <a href="../../../../../.claude/commands/hana-create-todo.md" class="text-blue-600 hover:underline">hana-create-todo</a> スキルに反映</li>
+    <li>その流れで「Claude が秘書として動くために他にどんなAPIが欲しいか」を整理する必要性が出た</li>
+    <li>本書は <strong>議論のたたき台</strong>。実装する／しない／優先度の判断はこれから</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 現状の API -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">現状利用可能なAPI（2026-05-25時点）</h2>
+  <table class="spec">
+    <thead>
+      <tr><th>メソッド</th><th>エンドポイント</th><th>用途</th><th>スキル</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>GET</td><td><code class="inline">/api/external/clients</code></td><td>クライアント一覧</td><td><code class="inline">hana-clients</code></td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/clients/search</code></td><td>クライアント検索（部分一致・OR）</td><td><code class="inline">hana-clients</code></td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/outsources</code></td><td>外注先一覧</td><td><code class="inline">hana-outsources</code></td></tr>
+      <tr><td>GET</td><td><code class="inline">/api/external/todos</code></td><td>ToDo一覧（user/assignee/work/status フィルタ）</td><td><code class="inline">hana-todos</code></td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/todos</code></td><td>ToDo登録（assignee_user_id null正規化対応）</td><td><code class="inline">hana-create-todo</code></td></tr>
+      <tr><td>POST</td><td><code class="inline">/api/external/chatwork/send-message</code></td><td>Chatwork通知</td><td><code class="inline">hana-chatwork</code></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- Priority 1 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-red-700 pb-2 mb-4 mt-10"><span class="badge badge-p1 mr-2">P1</span>Priority 1：即効性が高い・今すぐ困る</h2>
+
+  <div class="priority-1 mb-6">
+    <h3 class="text-lg font-bold mb-2">P1-1. ToDo更新 API</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">エンドポイント案</td><td><code class="inline">PATCH /api/external/todos/{id}</code></td></tr>
+      <tr><td class="font-semibold">更新可能フィールド案</td><td>content / description / next_work_date / due_date / assignee_user_id</td></tr>
+      <tr><td class="font-semibold">なぜ秘書として必要</td><td>「あのタスクの期日を木曜に変えて」「内容ちょっと書き直して」が今できない。会話で発生するメンテを即時反映できない</td></tr>
+      <tr><td class="font-semibold">使用シーン</td><td>会議中の調整、クライアント連絡後のタスク微調整、ToDo整理</td></tr>
+    </table>
+  </div>
+
+  <div class="priority-1 mb-6">
+    <h3 class="text-lg font-bold mb-2">P1-2. ToDo完了化 API</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">エンドポイント案</td><td><code class="inline">PATCH /api/external/todos/{id}/complete</code>（or P1-1 の status 変更で兼用）</td></tr>
+      <tr><td class="font-semibold">挙動</td><td><code class="inline">completed_at</code> に現在日時を設定。再開時は <code class="inline">/api/external/todos/{id}/reopen</code> で null 戻し</td></tr>
+      <tr><td class="font-semibold">なぜ秘書として必要</td><td>「これ終わったから完了にしておいて」が今できない。完了登録のハードルが下がれば <strong>達成記録が貯まりやすくなる</strong>（達成記録併走の原則と直結）</td></tr>
+      <tr><td class="font-semibold">使用シーン</td><td>会話中の完了報告の即時反映、週次レビュー時の一括完了化</td></tr>
+    </table>
+  </div>
+
+  <div class="priority-1 mb-6">
+    <h3 class="text-lg font-bold mb-2">P1-3. users 一覧 API</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">エンドポイント案</td><td><code class="inline">GET /api/external/users</code></td></tr>
+      <tr><td class="font-semibold">取得項目</td><td>id, name, email, role, 在籍状況 等</td></tr>
+      <tr><td class="font-semibold">なぜ秘書として必要</td><td>担当者を振る際、社員リストが分からない。「松木さんに振っておいて」→ 松木さんのID が取れない（現状 .env のデフォルト1人のみ把握）。<strong>ToDo登録の正確性が大きく上がる</strong></td></tr>
+      <tr><td class="font-semibold">セキュリティ</td><td>email等の機密性に応じて返却項目を絞る検討要</td></tr>
+    </table>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- Priority 2 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-yellow-600 pb-2 mb-4 mt-10"><span class="badge badge-p2 mr-2">P2</span>Priority 2：重要だが今すぐは凌げる</h2>
+
+  <div class="priority-2 mb-6">
+    <h3 class="text-lg font-bold mb-2">P2-1. work（案件）一覧 API</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">エンドポイント案</td><td><code class="inline">GET /api/external/works</code>（フィルタ：status, project_id, client_id, due_date_from/to）</td></tr>
+      <tr><td class="font-semibold">なぜ必要</td><td>現状 <code class="inline">clients/search</code> 経由でしか案件IDが分からない。「進行中の全案件」「今月期日の案件」を俯瞰したい。月曜定例の事前準備に有用</td></tr>
+    </table>
+  </div>
+
+  <div class="priority-2 mb-6">
+    <h3 class="text-lg font-bold mb-2">P2-2. ToDo の日付範囲フィルタ</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">追加パラメータ案</td><td><code class="inline">completed_at_from</code> / <code class="inline">completed_at_to</code> / <code class="inline">due_date_from</code> / <code class="inline">due_date_to</code> / <code class="inline">created_at_from</code> / <code class="inline">created_at_to</code></td></tr>
+      <tr><td class="font-semibold">なぜ必要</td><td>今は全件取得して app 側で絞っている（先週分の取得もそう）。<strong>件数が増えるとパフォーマンス・データ転送量に影響</strong></td></tr>
+      <tr><td class="font-semibold">使用シーン</td><td>月次レビュー、週次振り返り、期限切れアラート</td></tr>
+    </table>
+  </div>
+
+  <div class="priority-2 mb-6">
+    <h3 class="text-lg font-bold mb-2">P2-3. ToDoキーワード検索</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">追加パラメータ案</td><td><code class="inline">q</code> パラメータで content / description を部分一致検索</td></tr>
+      <tr><td class="font-semibold">なぜ必要</td><td>「あのバナー削除の件どこだっけ」と聞かれた時に直接引ける。<strong>記憶補助としての役割</strong></td></tr>
+    </table>
+  </div>
+
+  <div class="priority-2 mb-6">
+    <h3 class="text-lg font-bold mb-2">P2-4. ToDoの複数work_id指定</h3>
+    <table class="spec mb-3">
+      <tr><td class="font-semibold w-32">パラメータ案</td><td><code class="inline">?work_ids[]=49&work_ids[]=140</code></td></tr>
+      <tr><td class="font-semibold">なぜ必要</td><td>「HANAツール関連全部」「特定クライアントの全案件のToDo」など、案件横断で見たい</td></tr>
+    </table>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- Priority 3 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-green-700 pb-2 mb-4 mt-10"><span class="badge badge-p3 mr-2">P3</span>Priority 3：あると便利・将来的に</h2>
+
+  <table class="spec mb-6">
+    <thead>
+      <tr><th>機能</th><th>エンドポイント案</th><th>用途</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ToDoへのコメント追加</td><td><code class="inline">POST /api/external/todos/{id}/comments</code></td><td>「進捗どう？」のような会話履歴をToDoに残せる</td></tr>
+      <tr><td>work詳細取得</td><td><code class="inline">GET /api/external/works/{id}</code></td><td>予算・期日・関係者情報。秘書として濃い議論ができる</td></tr>
+      <tr><td>稼働時間取得（Toggl連携）</td><td><code class="inline">GET /api/external/work-times</code></td><td>「先週HANAツールに何時間使った」→ 利益率の議論に使える</td></tr>
+      <tr><td>日報取得・投稿</td><td><code class="inline">GET/POST /api/external/daily-reports</code></td><td>「今日の日報書いておいて」を会話から実行</td></tr>
+      <tr><td>ダッシュボード集計</td><td><code class="inline">GET /api/external/stats/...</code></td><td>案件別完了率、月次推移など。毎回計算せずに取れる</td></tr>
+      <tr><td>クライアント別の累積売上</td><td><code class="inline">GET /api/external/stats/clients/{id}/revenue</code></td><td>クライアント単価の判断材料</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 情報の所在 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-blue-700 pb-2 mb-4 mt-10">秘書として欲しい情報（API機能より一段先の論点）</h2>
+
+  <p class="text-sm mb-4">API機能ではなく「情報そのものがどこにあるか」「Claudeがそれにアクセスできるか」の論点。<strong>HANAツールに集約するか、個別連携するか</strong>の方針判断が必要。</p>
+
+  <table class="spec mb-6">
+    <thead>
+      <tr><th>欲しい情報</th><th>現状の所在</th><th>私の活用方法</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>クライアント別の累積売上</td><td>マネーフォワード or スプレッドシート</td><td>「このクライアント単価高い／低い」の判断材料</td></tr>
+      <tr><td>進行中案件の予算・実績工数</td><td>Toggl + 案件管理</td><td>「赤字案件」の早期発見</td></tr>
+      <tr><td>メール／Chatworkの未対応一覧</td><td>各ツール直接</td><td>「対応漏れない？」のチェック</td></tr>
+      <tr><td>Googleカレンダーの予定</td><td>Google直接</td><td>「今週何時間が会議で潰れる」を見て、現実的なフォーカス3つを提案</td></tr>
+      <tr><td>外注先の稼働状況・残作業</td><td>個別やりとり</td><td>外注リソースの最適配分</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 議論ポイント -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-10">議論ポイント（後日決定）</h2>
+
+  <ol class="list-decimal list-inside text-sm space-y-3 mb-4">
+    <li><strong>Priority 1 から着手するか？</strong>
+      <ul class="list-disc list-inside ml-6 mt-1 text-gray-700">
+        <li>パートナー推奨：YES。ToDo更新 + users一覧で「会話↔︎HANAツールの双方向更新」が成立する</li>
+        <li>判断：☐ YES（実装する）  ☐ NO（後回し）  ☐ 一部のみ</li>
+      </ul>
+    </li>
+    <li><strong>目標管理機能 MVP との実装順序</strong>
+      <ul class="list-disc list-inside ml-6 mt-1 text-gray-700">
+        <li>選択肢A：目標管理MVP優先 → 落ち着いてからAPI拡張</li>
+        <li>選択肢B：API拡張Priority 1だけ先に → 目標管理MVPは後（並行作業可？）</li>
+        <li>選択肢C：両方並行（要工数）</li>
+      </ul>
+    </li>
+    <li><strong>「情報の所在」論点の方針</strong>
+      <ul class="list-disc list-inside ml-6 mt-1 text-gray-700">
+        <li>選択肢A：HANAツールに段階的に集約（自社で抱える、自由度高い）</li>
+        <li>選択肢B：個別ツールAPIを Claude が直接叩く（既存ツール活用、複雑）</li>
+        <li>選択肢C：ハイブリッド（読み取り頻度の高いものはHANAツールにキャッシュ）</li>
+      </ul>
+    </li>
+    <li><strong>users一覧のセキュリティポリシー</strong>
+      <ul class="list-disc list-inside ml-6 mt-1 text-gray-700">
+        <li>email・電話など機密情報を含めて返す？</li>
+        <li>外部APIで返す範囲をどこまでにするか</li>
+      </ul>
+    </li>
+    <li><strong>API設計の統一規約</strong>
+      <ul class="list-disc list-inside ml-6 mt-1 text-gray-700">
+        <li>更新系：PATCH か PUT か</li>
+        <li>状態変更：専用エンドポイント（<code class="inline">/complete</code>）か汎用PATCH（<code class="inline">status: "completed"</code>）か</li>
+        <li>ページネーション：必要か、必要ならどの方式（offset / cursor）</li>
+      </ul>
+    </li>
+  </ol>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 関連 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="goal-management-mvp.html" class="text-blue-600 hover:underline">specs/goal-management-mvp.html</a> — 目標管理機能 MVP 実装指示書（実装順序の議論で参照）</li>
+    <li><a href="../backlog.html" class="text-blue-600 hover:underline">backlog.html</a> — 実装決定後はこちらにタスクを展開</li>
+    <li><a href="../decisions.html" class="text-blue-600 hover:underline">decisions.html</a> — 方針確定後はこちらに転記</li>
+    <li><a href="../../../../../../bin/hana-api.sh" class="text-blue-600 hover:underline">bin/hana-api.sh</a> — APIラッパー（新API追加時はここに反映）</li>
+  </ul>
+
+  <p class="text-xs text-gray-400 mt-10">バージョン: 1.0 / 作成: 2026-05-25 / 議論結果は本書末尾または decisions.html に追記</p>
+
+</div>
+</body>
+</html>

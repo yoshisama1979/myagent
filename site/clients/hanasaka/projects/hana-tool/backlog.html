@@ -181,6 +181,47 @@
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>業務改善コンサルのテンプレート化（ヒアリングシート・診断ツール）</span></li>
   </ul>
 
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">目標管理機能 Phase 1 MVP（2026-05-25 追加）</h2>
+  <p class="text-sm text-gray-500 mb-3">実装指示書：<a href="specs/goal-management-mvp.html" class="text-blue-600 hover:underline">specs/goal-management-mvp.html</a> ／ 設計方針：<a href="decisions.html" class="text-blue-600 hover:underline">decisions.html「目標管理機能」</a></p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Iteration 1：DBマイグレーション・シーダー</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">goals</code> テーブル作成（階層構造、ステータス、期間、達成率）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">goal_metrics</code> テーブル作成（指標、目標値、現状値、方向、リード/ラグ）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">goal_measurements</code> テーブル作成（時系列値）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">goal_achievement_logs</code> テーブル作成（達成・部分達成・中止の記録）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">goal_status_history</code> テーブル作成（ステータス変遷ログ）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">goal_reviews</code> テーブル作成（月次レビュー記録）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>シーダーでテストデータ投入</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Iteration 2-4：REST API 実装</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">/api/external/goals</code> CRUD（GET一覧/詳細、POST、PATCH、DELETE）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">/api/external/goals/tree</code> ツリー構造取得</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><code class="bg-gray-100 px-1 rounded text-sm font-mono">/api/external/goals/{id}/status</code> ステータス変更（履歴自動記録）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>指標 API（追加・更新・計測値記録）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>達成ログ API（登録・横断検索）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>レビュー API（登録・一覧）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>認証は既存外部APIトークンを流用</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Iteration 5-7：UI 実装</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>画面1：目標ツリー一覧（左：ツリー、右：選択中の概要）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>画面2：目標詳細・編集（指標・子目標・達成ログ・履歴）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>画面3：目標新規作成（親選択モーダル → 詳細入力）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>画面4：達成ログ登録（達成日・結果・貢献・学び）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>画面5：月次レビュー（当月Objective一覧 → 一括更新）</span></li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Iteration 8-9：データ移行・Claude協働基盤</h3>
+  <ul class="space-y-2 text-sm">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><a href="../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a> の現状目標案をツールに投入（移行スクリプト or 手動）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><a href="../../../../../bin/hana-api.sh" class="text-blue-600 hover:underline">bin/hana-api.sh</a> に <code class="bg-gray-100 px-1 rounded text-sm font-mono">goals</code> サブコマンド追加（一覧・詳細取得）</span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>受入条件（指示書 §6）の全項目をパス</span></li>
+  </ul>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">経営ダッシュボード / データ連携（2026-05-16 追加）</h2>
   <p class="text-sm text-gray-500 mb-3">経営ダッシュボード理想形は <a href="../../../../business/kpi.html" class="text-blue-600 hover:underline">business/kpi.html</a> 参照。</p>
   <ul class="space-y-2 text-sm">
