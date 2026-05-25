@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drafts - はなさかプレビューサーバ</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 0 24px;
+            line-height: 1.7;
+            color: #222;
+        }
+        h1 { color: #2c7a7b; border-bottom: 3px solid #2c7a7b; padding-bottom: 8px; }
+        h2 { color: #2c7a7b; margin-top: 36px; }
+        code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-size: 0.95em; }
+        .info { background: #f9f9f9; padding: 16px 20px; border-left: 4px solid #2c7a7b; margin: 20px 0; }
+        a { color: #2c7a7b; }
+    </style>
+</head>
+<body>
+    <h1>drafts/ — 草案・モック置き場</h1>
+    <p>クライアント案件のLP案、提案書モック、検証用HTMLなど、<strong>作業中の草案</strong>を置く場所です。</p>
+
+    <div class="info">
+        <strong>使い方</strong>
+        <ul>
+            <li><code>drafts/</code> 直下：単発のテスト・モック</li>
+            <li><code>drafts/&lt;案件名&gt;/</code>：案件単位でフォルダを切る（例：<code>drafts/yamada-corp/</code>）</li>
+        </ul>
+    </div>
+
+    <h2>クライアント共有が必要になったら</h2>
+    <p>
+        Nginxの設定で「特定のドラフトディレクトリだけBasic認証付き公開」が可能。<br>
+        ファイル移動は不要、URLは固定のまま公開状態だけ切り替えられます。<br>
+        詳細：<code>rules/preview-server.md</code>
+    </p>
+
+    <p style="margin-top: 40px; color: #888; font-size: 0.9em;">
+        🔒 現状はTailscale経由のアクセスのみ許可されています。<br>
+        <a href="/">← サイトトップへ戻る</a>
+    </p>
+</body>
+</html>

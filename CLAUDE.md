@@ -12,7 +12,9 @@
   - ホームページ制作（コーポレートサイト、LP、WordPress等）
   - システム開発（API、バックエンド、業務システム等）
   - AIを活用したサービスの提供
-- **開発環境**: XAMPP（Apache + MySQL + PHP）/ d:\xampp\htdocs\
+- **開発環境**:
+  - ローカル：XAMPP（Apache + MySQL + PHP）/ d:\xampp\htdocs\
+  - VPS：プレビュー用Nginxサーバ（Tailscale経由）/ `/home/vpsuser/projects/myagent/site/` → `http://100.123.104.87/`
 
 ## 対応できる業務領域
 
@@ -48,6 +50,7 @@
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |
 | [rules/document-format.md](rules/document-format.md) | 記録ファイルのHTML出力ルール |
 | [rules/development.md](rules/development.md) | 開発・コミット時のルール |
+| [rules/preview-server.md](rules/preview-server.md) | プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用 |
 
 ## クライアント向け成果物のルール
 
@@ -71,6 +74,40 @@
   - 現状の課題・背景
   - アウトプットの用途（社内メモ／クライアント提出／見積もり元ネタ等）
 - 質問は選択肢形式でまとめ、答えやすくする
+
+## プロジェクト構造とHTML出力先
+
+プロジェクトルートは以下の2階層構成：
+
+| ディレクトリ | 役割 |
+|------------|------|
+| `site/` | Nginxのドキュメントルート。ブラウザで閲覧する全HTMLを配置（Tailscale経由のみ） |
+| `rules/` / `bin/` / `data/` / `CLAUDE.md` 等 | AI協働・開発ツール・機密データ用（ブラウザ公開しない） |
+
+### site/ 配下の構成
+
+| パス | 用途 |
+|------|------|
+| `site/index.html` | サイトトップ |
+| `site/notes.html` | プロジェクト横断メモ |
+| `site/business/` | 経営トラッカー・スキルシート |
+| `site/clients/` | クライアント・プロジェクト記録（[rules/memo.md](rules/memo.md)準拠） |
+| `site/docs/` | ドキュメント類 |
+| `site/skill-sheets/` | スキルシート関連 |
+| `site/drafts/` | 草案・モック・検証用HTML |
+
+### Claude が新規HTMLを作るときの判断基準
+
+| 用途 | 出力先 |
+|------|--------|
+| クライアント・プロジェクトの記録（backlog/decisions/meeting-notes 等） | `site/clients/<client>/projects/<project>/` |
+| 経営関連の記録 | `site/business/` |
+| 横断メモ | `site/notes.html` に追記 |
+| 草案・LP案・モック・検証 | `site/drafts/` または `site/drafts/<案件名>/` |
+| 用途が不明な場合 | 作業前に確認 |
+
+出力後、`http://100.123.104.87/[相対パス]` でブラウザ確認可（Tailscale経由）。
+クライアント共有が必要になったら **Nginx設定でドラフトを一時公開**（[rules/preview-server.md](rules/preview-server.md) 参照）。
 
 ## ファイル編集後の表示ルール
 

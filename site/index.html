@@ -12,6 +12,17 @@
   <h1 class="text-3xl font-bold mb-2">株式会社はなさか — プロジェクト記録</h1>
   <p class="text-gray-600 mb-8">全プロジェクト・全社メモへの入口。各リンクから配下の記録に辿れます。</p>
 
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <a href="business/focus.html" class="block border-2 border-red-500 bg-red-50 rounded-lg p-5 hover:bg-red-100 transition">
+      <h3 class="font-bold text-red-700 mb-1 text-lg">🎯 今日のフォーカス</h3>
+      <p class="text-sm text-gray-700">今週/今月「やる」「やった」「決める」を一画面で。毎日朝に開く。</p>
+    </a>
+    <a href="business/goals.html" class="block border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 hover:bg-emerald-100 transition">
+      <h3 class="font-bold text-emerald-700 mb-1 text-lg">🌳 目標ツリー</h3>
+      <p class="text-sm text-gray-700">経営目標→カテゴリ目標→サブ目標の樹形図。月初に見直す。</p>
+    </a>
+  </div>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">経営トラッカー</h2>
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <a href="business/index.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
@@ -21,6 +32,14 @@
     <a href="notes.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
       <h3 class="font-semibold text-blue-600 mb-1">日常メモ</h3>
       <p class="text-sm text-gray-600">横断的な気づき・思考メモ</p>
+    </a>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">プレビュー</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <a href="drafts/index.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
+      <h3 class="font-semibold text-blue-600 mb-1">drafts/</h3>
+      <p class="text-sm text-gray-600">作業中の草案・LP案・モックHTML（Tailscale経由のみ）</p>
     </a>
   </div>
 
@@ -55,6 +74,7 @@
     <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/memo.md</code> — メモ運用ルール（4ファイル構成）</li>
     <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/document-format.md</code> — HTML出力ルール</li>
     <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/development.md</code> — 開発ルール（コミット・デプロイ）</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/preview-server.md</code> — プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用</li>
   </ul>
 
 </div>

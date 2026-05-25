@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>開発スキル（全体・習慣編） — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../index.html" class="text-blue-600 hover:underline">ビジネスダッシュボード</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">スキルシート</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">開発スキル（全体・習慣編）</h1>
+  <p class="text-gray-600 mb-2">HTML/CSS のコーディングから業務システムのプログラミングまでを含む、<strong>開発全般に共通する習慣・姿勢・プロセス</strong>のスキル定義。</p>
+  <p class="text-sm text-gray-500 mb-8">2026-05-24 ドラフト（言語別の細かいスキルは別シートで作成予定）</p>
+
+  <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm">
+    <p class="font-semibold mb-1">対象スコープ</p>
+    <p class="mt-1">本シートは「**開発者として共通で持つべき習慣**」を扱います。HTML、CSS、JavaScript、PHP、SQL 等の <strong>言語固有のスキルは別シート</strong>（今後作成）。</p>
+    <p class="mt-2"><strong>評価ルール:</strong> PC操作スキルと同じ（5段階評価／重要度別 段階的進行）</p>
+  </div>
+
+  <p class="text-sm mb-2"><strong>重要度の凡例:</strong>
+    <span class="bg-red-100 px-2 py-1 rounded text-xs mr-2"><strong>A</strong> 基礎（必須）</span>
+    <span class="bg-yellow-100 px-2 py-1 rounded text-xs mr-2"><strong>B</strong> 業務効率（推奨）</span>
+    <span class="bg-green-100 px-2 py-1 rounded text-xs"><strong>C</strong> 専門（応用）</span>
+  </p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. 要件理解・コミュニケーション（5項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">機能の <strong>目的・背景</strong> を理解しようと努めてから着手する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">仕様の <strong>不明点・曖昧点を質問</strong> してから実装する（推測で進めない）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">クライアント・社内の要望を <strong>技術要件に翻訳</strong> できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">開発前に <strong>スコープ・優先度</strong> を明確に確認する習慣がある</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">要件の <strong>妥当性・実現可能性を判断</strong> し、代替案を提案できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2. 設計（6項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">実装前に <strong>「何を作るか」を整理</strong> してから着手する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">既存のコード構造を <strong>理解してから</strong> 変更を加える</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">機能を <strong>小さな単位に分割</strong> して設計できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200"><strong>命名（変数・関数・クラス）</strong> に時間をかけ、意味の通る名前を付ける</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">データ構造・処理フローを意識して設計する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200"><strong>拡張性・保守性</strong> を考慮した設計（疎結合、責任分離等）ができる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">3. コーディング習慣（7項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">既存の <strong>コードスタイル・規約</strong> に合わせて書く</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">動作確認をしてから次のタスクに進む（「動くはず」で渡さない）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">ハードコードを避け、<strong>定数・変数化</strong> する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">関数を <strong>小さく保つ</strong>（1関数=1責任）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">重複コードを発見したら <strong>リファクタ</strong> する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200"><strong>エラーハンドリング</strong> を意識した実装ができる（例外・null チェック等）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">パフォーマンス・セキュリティを意識した実装ができる（N+1、SQL インジェクション等）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4. テスト・品質管理（5項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">機能完成後、<strong>複数ケース</strong> で動作確認する（正常系だけで終わらせない）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200"><strong>エッジケース</strong>（空・最大・最小・異常値・特殊文字）を想定する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">自動テストの価値を理解しており、書いたコードに対してテストを書く意識がある</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">テスト駆動開発（TDD）を実践できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">CI/CD やコードカバレッジ・自動化されたチェックを意識・活用できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">5. バージョン管理（Git）（7項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">git status / log / diff を <strong>頻繁に使い</strong>、変更内容を常に把握する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">コミットメッセージを <strong>意味のあるもの</strong> にする（「修正」だけで終わらせない）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">機能単位・修正単位で <strong>適切な粒度でコミット</strong> する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">ブランチを <strong>目的別</strong> に分けて運用できる（feature ブランチ等）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">コンフリクトを <strong>落ち着いて解決</strong> できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">rebase / merge を場面で使い分けられる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">高度な操作（cherry-pick、bisect、reflog 等）で問題解決できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">6. デバッグ・問題解決（6項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">エラーメッセージを <strong>必ず読む</strong> 習慣がある（読まずに勘で直さない）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">ログ・コンソール出力・dump を活用して状態を可視化できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">問題を <strong>小さく切り分け</strong> て原因を特定できる（再現条件の絞り込み）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">ブラウザの DevTools、IDE のデバッガを使える</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">同じエラーを <strong>二度起こさない仕組み</strong> を作る（メモ、テスト、定数化等）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">スタックトレースから原因を推測できる／再現性のないバグを系統的に追える</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">7. ドキュメンテーション（5項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">コードに必要なコメントを書ける（<strong>「なぜ」を残す</strong>、「何を」はコードで分かる）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">仕様変更時に <strong>ドキュメントも更新</strong> する（コードと仕様の乖離を防ぐ）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">README・API 仕様書・運用手順書を書ける</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">図（フロー図・構成図・ER 図等）を使って説明できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">他の開発者がすぐ理解できる構造で書ける（読み手を意識）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">8. AI活用（開発における）（8項目）</h2>
+  <p class="text-sm text-gray-500 mb-3">PC操作の「AI活用（業務における）」とは別軸で、開発業務での AI 活用に特化したスキル。</p>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">AIに <strong>「エラーの原因調査・解決策」</strong> を相談できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">AIに <strong>「コードのレビュー・改善提案」</strong> を依頼できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">AIの提案を <strong>鵜呑みにせず</strong>、自分で検証・テストする</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">AIに <strong>叩き台</strong> を作らせ、自分で仕上げる流れができる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">AIに <strong>技術調査</strong>（ライブラリ比較・最新手法等）を依頼できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200"><strong>Claude Code 等の AI エージェント</strong> を開発業務に活用できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">AIと <strong>ペアプログラミング</strong> ができる（対話的にコードを育てる）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">AIを使った <strong>開発ワークフローを設計</strong> し、他社員に展開できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">9. 学習・継続的改善（5項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200"><strong>公式ドキュメント</strong> を読む習慣がある（解説サイトだけに頼らない）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">知らない技術・用語を <strong>即時に調べる</strong> 習慣がある</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">業界トレンド・新技術に <strong>定期的に</strong> 目を通す（週次など）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">新しい技術・ツールを <strong>試す時間</strong> を業務内で確保している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">自分の経験を <strong>言語化・共有</strong> できる（社内勉強会・ブログ・ドキュメント化）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">項目数 集計</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">重要度</th>
+        <th class="text-right px-3 py-2 border border-gray-200 font-semibold">項目数</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">備考</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50"><strong>A 基礎（必須）</strong></td><td class="px-3 py-2 border border-gray-200 text-right">19</td><td class="px-3 py-2 border border-gray-200">初回評価対象</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50"><strong>B 業務効率（推奨）</strong></td><td class="px-3 py-2 border border-gray-200 text-right">19</td><td class="px-3 py-2 border border-gray-200">Aクリア後</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50"><strong>C 専門（応用）</strong></td><td class="px-3 py-2 border border-gray-200 text-right">9</td><td class="px-3 py-2 border border-gray-200">Bクリア後</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>合計</strong></td><td class="px-3 py-2 border border-gray-200 text-right"><strong>47</strong></td><td class="px-3 py-2 border border-gray-200"></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">レビュー観点（社長判断用）</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>初回評価対象（A 19項目）は社員1人あたり 5〜10分</strong>。気軽に開始できる規模</li>
+    <li>9カテゴリで開発全般の習慣を網羅、A:B:C = 19:19:9 のバランス</li>
+    <li><strong>「AI活用（開発における）」を独立セクションに</strong> — はなさかの方針（AI活用重視）を強く反映。Claude Code への言及あり</li>
+    <li>「テスト・品質管理」は A が2項目のみ（複数ケース確認・エッジケース）。社員の現状に合わせて調整余地あり</li>
+    <li>「ドキュメンテーション」の「なぜを残す」は、はなさかの「CLAUDE.md 中心の運用」とも整合</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">今後追加予定（言語別・領域別の細かいスキル）</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm text-gray-500">
+    <li>HTML / CSS / JavaScript 関連スキル</li>
+    <li>PHP / Laravel スキル</li>
+    <li>SQL / DB 設計スキル</li>
+    <li>サーバー・インフラ・運用スキル</li>
+    <li>WordPress 関連スキル</li>
+    <li>その他（要件次第で追加）</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>PC操作スキル：<a href="pc-skills.html" class="text-blue-600 hover:underline">pc-skills.html</a></li>
+    <li>運用ルール: <a href="../../clients/hanasaka/projects/hana-tool/decisions.html" class="text-blue-600 hover:underline">HANAツール decisions.html</a></li>
+    <li>システム実装: <a href="../../clients/hanasaka/projects/hana-tool/backlog.html" class="text-blue-600 hover:underline">HANAツール backlog.html</a></li>
+    <li>スキルシート全体: <a href="index.html" class="text-blue-600 hover:underline">business/skill-sheet/index.html</a></li>
+  </ul>
+
+</div>
+</body>
+</html>

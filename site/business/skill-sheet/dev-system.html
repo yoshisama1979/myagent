@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>システム開発スキル — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../index.html" class="text-blue-600 hover:underline">ビジネスダッシュボード</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">スキルシート</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">システム開発スキル</h1>
+  <p class="text-gray-600 mb-2">PHP/Laravel、DB、API、サーバー・インフラ、セキュリティなどシステム開発領域のスキル。</p>
+  <p class="text-sm text-gray-500 mb-8">2026-05-24 ドラフト（社長レビュー待ち）</p>
+
+  <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm">
+    <p class="font-semibold mb-1">対象スコープ</p>
+    <p class="mt-1">業務システム・API・バックエンドを扱う <strong>システム開発担当者向け</strong>のシート。営業職・Web制作専任は評価対象外でOK。</p>
+    <p class="mt-2"><strong>評価ルール:</strong> PC操作スキルと同じ（5段階評価／重要度別 段階的進行）</p>
+  </div>
+
+  <p class="text-sm mb-2"><strong>重要度の凡例:</strong>
+    <span class="bg-red-100 px-2 py-1 rounded text-xs mr-2"><strong>A</strong> 基礎（必須）</span>
+    <span class="bg-yellow-100 px-2 py-1 rounded text-xs mr-2"><strong>B</strong> 業務効率（推奨）</span>
+    <span class="bg-green-100 px-2 py-1 rounded text-xs"><strong>C</strong> 専門（応用）</span>
+  </p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. PHP / Laravel（7項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">PHP の基本構文（変数、関数、配列、クラス）を使える</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">Laravel の <strong>ルーティング・コントローラ・ビュー</strong>（MVC）の基本を理解している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200"><strong>Eloquent ORM</strong> の基本（モデル・リレーション）を理解している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">Middleware、Service、Repository パターンを使える</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">Queue、Job、Scheduler を活用できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">Laravel のテスト機能（PHPUnit、Pest）を実装できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">パッケージ作成・依存管理（Composer）を理解・運用できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2. データベース（SQL / 設計）（7項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">SELECT、INSERT、UPDATE、DELETE の基本 SQL を書ける</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">JOIN（INNER、LEFT）を使える</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">テーブル設計（主キー・外部キー・INDEX）の基本を理解している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">トランザクション・ロックを適切に使える</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200"><strong>N+1問題</strong> を理解し、回避（eager loading）できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">マイグレーション・シーダーで DB を管理できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">パフォーマンスチューニング（実行計画、INDEX 最適化、SLOW QUERY 分析）ができる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">3. API 設計・実装（6項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">REST API の基本（HTTPメソッド、ステータスコード）を理解している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">JSON レスポンスを適切に設計できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">認証（Token、OAuth、API Key）を実装できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">バリデーション・エラーハンドリングを統一的に実装できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">API ドキュメント（OpenAPI / Swagger 等）を書ける</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">外部 API 連携（決済、SNS、AI、Chatwork 等）を実装できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4. サーバー・インフラ（6項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">SSH でサーバーに接続できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">SCP / SFTP / Git でデプロイができる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">nginx / Apache の基本設定を変更できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">cron でバッチを設定できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">ログの確認・調査（tail、grep、less）ができる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">VPS・クラウド（さくら、AWS、ConoHa等）の構築・運用ができる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">5. セキュリティ（5項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">パスワードを <strong>平文で保存しない</strong>（ハッシュ化を理解している）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200"><strong>SQLインジェクション・XSS</strong> を回避する書き方ができる（プレースホルダ、エスケープ）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">CSRF 対策を理解し実装できる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">HTTPS・SSL証明書の管理ができる（Let's Encrypt 等）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">脆弱性診断ツール・セキュリティアップデートを継続的に実施できる</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">6. システムテスト・運用（4項目）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50 text-center font-semibold">A</td><td class="px-3 py-2 border border-gray-200">動作確認時、複数ユーザー・複数ケースで検証する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">ステージング環境で本番デプロイ前に確認する</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50 text-center font-semibold">B</td><td class="px-3 py-2 border border-gray-200">バックアップ・リストア手順を整備している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50 text-center font-semibold">C</td><td class="px-3 py-2 border border-gray-200">監視・アラート設定で異常を検知できる（死活監視、エラー通知）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">項目数 集計</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">重要度</th>
+        <th class="text-right px-3 py-2 border border-gray-200 font-semibold">項目数</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-red-50"><strong>A 基礎（必須）</strong></td><td class="px-3 py-2 border border-gray-200 text-right">13</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-yellow-50"><strong>B 業務効率（推奨）</strong></td><td class="px-3 py-2 border border-gray-200 text-right">14</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 bg-green-50"><strong>C 専門（応用）</strong></td><td class="px-3 py-2 border border-gray-200 text-right">8</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>合計</strong></td><td class="px-3 py-2 border border-gray-200 text-right"><strong>35</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>開発全体・習慣編：<a href="dev-skills.html" class="text-blue-600 hover:underline">dev-skills.html</a></li>
+    <li>Web制作：<a href="dev-web.html" class="text-blue-600 hover:underline">dev-web.html</a></li>
+    <li>デザイン領域：<a href="design-skills.html" class="text-blue-600 hover:underline">design-skills.html</a></li>
+    <li>スキルシート全体: <a href="index.html" class="text-blue-600 hover:underline">index.html</a></li>
+  </ul>
+
+</div>
+</body>
+</html>

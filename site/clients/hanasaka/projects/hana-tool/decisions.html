@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>決定事項・確定仕様 — HANAツール</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <h1 class="text-3xl font-bold mb-2">決定事項・確定仕様 — HANAツール</h1>
+  <p class="text-sm text-gray-500 mb-8">実装タスクは <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> 参照。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">評価・スキル機能（2026-05-09 決定）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">方針</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><strong>人事評価機能を HANAツール に組み込む</strong>（システム化）</li>
+    <li>検討時、スプレッドシート運用も候補に挙がったが、<strong>システム化のメリット</strong>（履歴管理・自動集計・運用負荷軽減・全社員横断の一元管理）を優先</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">評価方式</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">形式</td><td class="px-3 py-2 border border-gray-200">スキルチェックシート（質問に対する評価）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">評価段階</td><td class="px-3 py-2 border border-gray-200"><strong>5段階</strong>（2026-05-24 変更、当初3段階）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">実施頻度</td><td class="px-3 py-2 border border-gray-200"><strong>半期に1度</strong></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">評価主体</td><td class="px-3 py-2 border border-gray-200"><strong>社員の自己評価 ＋ 社長によるレビュー</strong></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">結果の用途</td><td class="px-3 py-2 border border-gray-200"><strong>教育・意識向上 ＋ 人事査定</strong> の両方</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">設計思想</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>質問項目に <strong>「会社として身に着けてほしい項目」</strong> を含めることで、社員の自然なベース向上を狙う</li>
+    <li>スキル可視化 ＋ 育成・査定の基盤として機能させる</li>
+    <li>2026-05-08 「スキルシート構想」（→ <a href="../../../../notes.html" class="text-blue-600 hover:underline">notes.html</a>）と一体の取り組み</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">5段階評価の定義（2026-05-24 確定）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-16">レベル</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">定義</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">1</td><td class="px-3 py-2 border border-gray-200">知らない</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">2</td><td class="px-3 py-2 border border-gray-200">知っているができていない</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">3</td><td class="px-3 py-2 border border-gray-200">使うように努力している</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">4</td><td class="px-3 py-2 border border-gray-200">積極的に使っている</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200 font-semibold">5</td><td class="px-3 py-2 border border-gray-200">良さを人に伝えられる（マスター・教える側）</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-gray-500 mb-3">学習プロセス型評価。レベル5の「人に伝えられる」を最上位に置くことで、組織全体の底上げループを作る設計。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">重要度別 段階的運用ルール（2026-05-24 確定）</h3>
+  <p class="text-sm mb-2">各項目に <strong>重要度（A基礎／B業務効率／C専門）</strong> を付け、A から段階的に評価対象を広げる。</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">重要度の定義</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-32">重要度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>A. 基礎（必須）</strong></td><td class="px-3 py-2 border border-gray-200">業務遂行に必須、できないと業務効率が大きく落ちる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>B. 業務効率（推奨）</strong></td><td class="px-3 py-2 border border-gray-200">業務スピードを大きく上げる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>C. 専門（応用）</strong></td><td class="px-3 py-2 border border-gray-200">専門性・差別化につながる高度なスキル</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">段階的進行ルール</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-3">[Step 1] 重要度A の項目のみ評価
+              ↓
+[判定] 全社員の80%以上が「4以上」を達成？
+   No  → 改善期間 → 次回半期評価で再判定
+   Yes → 重要度A は基礎クリア（常時 4以上 維持）
+              ↓
+[Step 2] 重要度B の項目を評価範囲に追加
+              ↓
+[判定] 80%が4以上？
+   No  → 改善期間
+   Yes → 重要度B クリア → 重要度C へ</pre>
+
+  <p class="text-sm font-semibold mb-2 mt-4">この設計の効果</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-3">
+    <li><strong>ゲーミフィケーション</strong>：次の重要度が「解放」される達成感</li>
+    <li><strong>チーム目標</strong>：「全員80%」が共通ゴール、協力動機が生まれる</li>
+    <li><strong>評価工数の最小化</strong>：常に「次の重要度」だけ評価</li>
+    <li><strong>段階的ステップアップ</strong>：基礎→応用→専門と自然に深化</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">運用フロー（2026-05-17 追加）</h3>
+  <p class="text-sm font-semibold mb-2">評価タイミング</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-3">
+    <li>定期：<strong>年2回（3月末・9月末）</strong> — 決算サイクル準拠</li>
+    <li>初回（既存社員）：スキルシート完成後 <strong>すぐ実施</strong>（定期スケジュール待たない）</li>
+    <li>初回（入社者）：<strong>入社時にベースライン評価 → 6ヶ月後に成長確認</strong></li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">査定（賃金改定）との連動</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-3">
+    <li>評価：年2回（成長フィードバック中心）</li>
+    <li>査定（賃金改定）：<strong>年1回</strong>（決算後＝4月想定）</li>
+    <li>半期評価は「軌道修正・育成」、年次評価が「給与反映」というレイヤー分け</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">評価運用フロー</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-3">[評価期間終了の1ヶ月前]
+  社長: スキルシート配布 → 社員: 自己評価(1週間)
+              ↓
+[終了2週間前]
+  社長: 社長評価実施 → ギャップ把握
+              ↓
+[評価期間終了]
+  1on1ミーティング(30分〜1時間):
+   ・自己評価 vs 社長評価のすり合わせ
+   ・成長点と課題点の共有
+   ・次期の目標設定
+              ↓
+[終了+1ヶ月（年次は4月）]
+  査定反映(年1回)</pre>
+
+  <p class="text-sm font-semibold mb-2 mt-4">最初のスキルカテゴリ（2026-05-17 確定）</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-3">
+    <li><strong>PC操作・作業効率</strong>（両手のショートカット、繰り返し作業の効率化、AI活用）</li>
+    <li>理由：測定しやすい・改善が早く出る・全員に共通する基礎スキル・AI活用評価とセット</li>
+    <li>「操作スピードの積み重ね」を仕組みとして強化する設計思想</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">関連</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>実装タスク：<a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> の「評価・スキル」セクション</li>
+    <li>API設計：<a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> の「スキルシート関連 API」セクション</li>
+    <li>スキルシート本体（PC操作）：<a href="../../../../business/skill-sheet/pc-skills.html" class="text-blue-600 hover:underline">business/skill-sheet/pc-skills.html</a></li>
+    <li>全社方針：<a href="../../../../notes.html" class="text-blue-600 hover:underline">notes.html</a> 2026-05-09 エントリ</li>
+  </ul>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <!-- 目標管理機能 -->
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-12">目標管理機能（2026-05-24 設計方針）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">背景</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>2026-05-24 にHTMLベースの目標ツリー（<a href="../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a>）を新設したが、運用負荷を下げ、達成度の自動集計・履歴管理・複数人運用に対応するため、HANAツール本体への組み込みを企図</li>
+    <li>達成記録の蓄積を「組織の学習資産」として残し、停滞感の防止と次の打ち手の判断材料にする（→ 全社運用ルールとして反映済み）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">設計の本質3原則</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">原則</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">外すと…</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">目標は「正解」ではなく<strong>「仮説」</strong></td><td class="px-3 py-2 border border-gray-200">目標変更が「悪」になり、現実とズレた目標を持ち続ける</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">達成も未達成も<strong>等しく資産</strong></td><td class="px-3 py-2 border border-gray-200">「未達成だった」を記録しないと組織が学習しない</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">レビューしない目標は<strong>存在しないのと同じ</strong></td><td class="px-3 py-2 border border-gray-200">立派な目標ツリーが「飾り」になる</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">採用フレームワーク：OKR-Lite + 達成ログ併走型</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>世界的に検証された <strong>OKR</strong>（Google/Intel発祥）をベースに、はなさかの規模に合わせて軽量化</li>
+    <li><strong>O（Objective：定性目標）</strong> と <strong>KR（Key Results：定量指標）</strong> を分離管理</li>
+    <li>KRの60〜70%達成で成功とするストレッチ文化（100%必達にしない）</li>
+    <li>達成ログを別エンティティとして管理（完了 ≠ 削除）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">階層モデル（5層、運用は2-3層）</h3>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-3">1. Vision        — 「どこに向かう会社か」          (10年)
+2. Strategic     — 「3年でここに到達」              (1-3年)
+3. Objective     — 「今期これを達成」              (3-12ヶ月)
+4. Key Result    — 「これが動けば達成と言える」    (1-3ヶ月)
+5. Action        — 「そのために今これをやる」      (1-4週)</pre>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>階層は <strong>3〜5層が運用限界</strong>。深くしすぎない</li>
+    <li>5層目（Action）と「日々のタスク」は別物。タスクは目標管理システムでは扱わない</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">各目標ノードの属性</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/4">種類</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">属性</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">アイデンティティ</td><td class="px-3 py-2 border border-gray-200">ID / 名前 / 親ID / 階層レベル</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">時間軸</td><td class="px-3 py-2 border border-gray-200">開始日 / 期限 / 想定期間</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">責任</td><td class="px-3 py-2 border border-gray-200">オーナー（必ず1人）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">数値</td><td class="px-3 py-2 border border-gray-200">目標値 / 現状値 / 単位 / 方向（↑↓→）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">質的説明</td><td class="px-3 py-2 border border-gray-200">なぜ（why） / 達成判定基準</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200">構想中 / 進行中 / 保留 / 達成 / 部分達成 / 未達成 / 中止 / 持ち越し</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">履歴</td><td class="px-3 py-2 border border-gray-200">ステータス変遷ログ / 数値の時系列 / 達成記録</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">関連</td><td class="px-3 py-2 border border-gray-200">関連プロジェクトID / 関連ドキュメントURL</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-gray-600 mb-3">⚠ ステータスは「未達成」「中止」「持ち越し」も明示的に持つ。削除・非表示にしない。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">指標（KR）の設計原則</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">原則</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">Leading と Lagging を混ぜる</td><td class="px-3 py-2 border border-gray-200">結果指標だけだと打ち手が遅れる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">1目標に2〜3指標まで</td><td class="px-3 py-2 border border-gray-200">多すぎると焦点がブレる</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">入力可能なものに絞る</td><td class="px-3 py-2 border border-gray-200">計測できない指標は無意味</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">方向と期間を明示</td><td class="px-3 py-2 border border-gray-200">「↑ Q3末までに ¥X」のように記述</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">レビューサイクル（運用の心臓部）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-24">頻度</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-32">対象階層</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-20">所要時間</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">毎日（朝）</td><td class="px-3 py-2 border border-gray-200">KR / Action</td><td class="px-3 py-2 border border-gray-200">今日やることの確認、昨日の達成記録</td><td class="px-3 py-2 border border-gray-200">5分</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">毎週（月曜）</td><td class="px-3 py-2 border border-gray-200">KR</td><td class="px-3 py-2 border border-gray-200">今週のフォーカス決定、KR進捗更新</td><td class="px-3 py-2 border border-gray-200">30分</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">毎月（月初）</td><td class="px-3 py-2 border border-gray-200">Objective</td><td class="px-3 py-2 border border-gray-200">月次振り返り、目標の追加・削除・調整</td><td class="px-3 py-2 border border-gray-200">60-90分</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">四半期</td><td class="px-3 py-2 border border-gray-200">Objective 全面評価</td><td class="px-3 py-2 border border-gray-200">達成度判定、次四半期のObjective設定</td><td class="px-3 py-2 border border-gray-200">半日</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">半期</td><td class="px-3 py-2 border border-gray-200">Strategic</td><td class="px-3 py-2 border border-gray-200">戦略の妥当性検証、必要なら方針転換</td><td class="px-3 py-2 border border-gray-200">1日</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">達成記録（Achievement Log）の運用</h3>
+  <ol class="list-decimal list-inside space-y-2 text-sm mb-4">
+    <li><strong>完了 ≠ 削除。完了 = 達成ログに転記</strong>
+      <ul class="list-disc list-inside ml-4 mt-1 space-y-1 text-gray-700">
+        <li>達成時にログエントリ生成（達成日 / 結果値 / 目標値 / 達成率 / 主な貢献 / 学び）</li>
+        <li>Goalツリー上では「達成」状態で表示続ける</li>
+      </ul>
+    </li>
+    <li><strong>達成ログは検索・絞り込み可能に</strong>
+      <ul class="list-disc list-inside ml-4 mt-1 space-y-1 text-gray-700">
+        <li>期間・カテゴリ・オーナーで絞れる</li>
+        <li>月次／年次レビューで自動参照</li>
+      </ul>
+    </li>
+    <li><strong>部分達成・中止・持ち越しも記録</strong>
+      <ul class="list-disc list-inside ml-4 mt-1 space-y-1 text-gray-700">
+        <li>「やめた理由」「届かなかった理由」を明示的に残す → 組織の学習資産化</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">よくある失敗パターン（先回りで避ける）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/2">失敗</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">仕組みでの予防</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">目標が増え続けて回らない</td><td class="px-3 py-2 border border-gray-200">Active状態の上限を設ける（例：Objective 10個まで）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">KRに「やった/やらない」しかない</td><td class="px-3 py-2 border border-gray-200">必ず数値化。数値化できないものはKRにしない</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ストレッチ過剰 or 安全すぎる</td><td class="px-3 py-2 border border-gray-200">ストレッチKRと通常KRの混在を推奨</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">親なし目標が増える</td><td class="px-3 py-2 border border-gray-200">親IDを必須にする（最上位以外）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">レビューしても何も変わらない</td><td class="px-3 py-2 border border-gray-200">レビューで「追加/削除/期限変更」を1つ以上必須化</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">オーナー不在</td><td class="px-3 py-2 border border-gray-200">オーナーは必ず1人（共同オーナー禁止）</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">実装フェーズ（MVP優先順位）</h3>
+
+  <p class="text-sm font-semibold mb-2 mt-4">Phase 1（MVP・これだけで実用化）</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>目標のCRUD（階層構造、親子関係）</li>
+    <li>指標の登録（目標値・現状値・単位）</li>
+    <li>ステータス管理（8状態）</li>
+    <li>達成ログ機能（記録できる場所）</li>
+    <li>月次レビュー画面（今月のObjective一覧 → 達成度更新）</li>
+  </ol>
+
+  <p class="text-sm font-semibold mb-2 mt-4">Phase 2（運用が回り始めたら）</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4" start="6">
+    <li>達成度の自動計算（指標から）</li>
+    <li>時系列グラフ（数値の推移）</li>
+    <li>通知・リマインダー（月次レビュー時期）</li>
+    <li>レビュー記録（議事録形式）</li>
+  </ol>
+
+  <p class="text-sm font-semibold mb-2 mt-4">Phase 3（複数人運用時）</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4" start="10">
+    <li>個人目標と組織目標の連携</li>
+    <li>メンバー別の目標管理</li>
+    <li>CRM・タスク管理ツールとの連携</li>
+  </ol>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">API設計の方針（Claude協働を見据えて）</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>目標一覧・詳細取得APIを <code class="bg-gray-100 px-1 rounded">bin/hana-api.sh</code> から呼び出せるように整備</li>
+    <li>Claudeが <strong>登録済み目標を参照しながら作業</strong> できるようにする（議論時の前提共有・整合性チェック）</li>
+    <li>達成ログの登録APIも用意し、Claude経由でも記録可能に</li>
+    <li>READのみのAPIキー / 全権APIキーを分離（用途に応じて使い分け）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">関連</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>現状の目標ツリー（HTML版・移行元）：<a href="../../../../business/goals.html" class="text-blue-600 hover:underline">business/goals.html</a></li>
+    <li>フォーカスダッシュボード（Action層との接続点）：<a href="../../../../business/focus.html" class="text-blue-600 hover:underline">business/focus.html</a></li>
+    <li>実装タスク：<a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a>（順次追加予定）</li>
+  </ul>
+
+</div>
+</body>
+</html>
