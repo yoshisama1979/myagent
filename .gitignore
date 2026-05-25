@@ -3,3 +3,4 @@ data/financial/*
 !data/financial/README.md
 data/ycom/financial/*
 !data/ycom/financial/README.md
+*.Identifier
