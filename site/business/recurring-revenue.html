@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月次ストック収益 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .metric { font-family: ui-monospace, monospace; font-feature-settings: "tnum"; }
+  .num { text-align: right; font-family: ui-monospace, monospace; font-feature-settings: "tnum"; }
+  .dup { background: #fef3c7; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-6xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">ビジネスダッシュボード</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">💰 月次ストック収益</h1>
+  <p class="text-gray-600 mb-2">月額契約による継続的収益の見える化。<a href="goals.html#g0-2" class="text-emerald-700 hover:underline">G0.2「FY2026 ストック収益比率 20%以上」</a> 達成度のモニタリング基盤。</p>
+  <p class="text-sm text-gray-500 mb-4">データ元：Google Sheets「YCOMデータ（最新）」運用管理費用シート（D列「計」） / 取得日時：2026-05-26<br>
+  集計方法：D列が数値の有効契約のみを合計。実費・契約終了マーカー・0円は別記。<code class="bg-gray-100 px-1 rounded text-xs">python3 bin/build-recurring-revenue.py</code> で再生成可。</p>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-5 text-center">
+      <p class="text-sm text-emerald-700 font-semibold">有効契約数</p>
+      <p class="text-3xl font-bold text-emerald-800 metric">48 件</p>
+    </div>
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-5 text-center">
+      <p class="text-sm text-emerald-700 font-semibold">月額合計</p>
+      <p class="text-3xl font-bold text-emerald-800 metric">¥837,300</p>
+    </div>
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-5 text-center">
+      <p class="text-sm text-emerald-700 font-semibold">年換算</p>
+      <p class="text-3xl font-bold text-emerald-800 metric">¥10,047,600</p>
+    </div>
+  </div>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-8">FY2026 目標との関係</h2>
+  <div class="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-6">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="bg-white">
+          <th class="text-left px-3 py-2 border border-gray-200">基準</th>
+          <th class="num px-3 py-2 border border-gray-200">対象売上</th>
+          <th class="num px-3 py-2 border border-gray-200">ストック収益（年）</th>
+          <th class="num px-3 py-2 border border-gray-200">比率</th>
+          <th class="text-left px-3 py-2 border border-gray-200">判定</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="px-3 py-2 border border-gray-200">FY2025実績 売上</td><td class="num px-3 py-2 border border-gray-200">¥26,671,170</td><td class="num px-3 py-2 border border-gray-200">¥10,047,600</td><td class="num px-3 py-2 border border-gray-200 font-bold">37.7%</td><td class="px-3 py-2 border border-gray-200">参考</td></tr>
+        <tr><td class="px-3 py-2 border border-gray-200">FY2026 保守目標 売上</td><td class="num px-3 py-2 border border-gray-200">¥30,000,000</td><td class="num px-3 py-2 border border-gray-200">¥10,047,600</td><td class="num px-3 py-2 border border-gray-200 font-bold">33.5%</td><td class="px-3 py-2 border border-gray-200 text-green-700">目標20%超</td></tr>
+        <tr class="bg-emerald-100"><td class="px-3 py-2 border border-gray-200 font-semibold">FY2026 標準目標 売上</td><td class="num px-3 py-2 border border-gray-200">¥33,000,000</td><td class="num px-3 py-2 border border-gray-200">¥10,047,600</td><td class="num px-3 py-2 border border-gray-200 font-bold">30.4%</td><td class="px-3 py-2 border border-gray-200 text-green-700 font-semibold">✅ 目標20%超</td></tr>
+        <tr><td class="px-3 py-2 border border-gray-200">FY2026 ストレッチ目標 売上</td><td class="num px-3 py-2 border border-gray-200">¥37,000,000</td><td class="num px-3 py-2 border border-gray-200">¥10,047,600</td><td class="num px-3 py-2 border border-gray-200 font-bold">27.2%</td><td class="px-3 py-2 border border-gray-200 text-green-700">目標20%超</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm mt-3"><strong>含意</strong>：契約管理上の数字では、ストック収益比率は <strong>すでに目標を達成している水準</strong>。次の課題は「契約値 vs 実際の入金実績」のギャップ確認と、データの正確性向上。</p>
+  </div>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-8">⚠️ データ品質の要確認ポイント</h2>
+  <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 text-sm">
+    <p class="font-semibold mb-2">スプレッドシートの整理が必要なポイント</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>シート2行目の「計¥578,000」と本ページの集計¥837,300に大きな乖離 → 「計」フィールドの算出方法を確認・統一</li>
+      <li>同一クライアント・同一プロジェクト名で複数行があるもの（重複の可能性）— 下記テーブルで黄色背景で表示</li>
+      <li>「契約終了」メモがある行 — 実態を反映してリストから外すか別管理に</li>
+      <li>クライアント名が未記載の行 — 補完が必要</li>
+      <li>「実費」項目 — 売上計上ではなく実費代行のため、本サマリからは除外</li>
+    </ul>
+  </div>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-8">クライアント別 月額契約一覧</h2>
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="text-left px-3 py-2 border border-gray-200 font-semibold">クライアント</th>
+          <th class="text-left px-3 py-2 border border-gray-200 font-semibold">プロジェクト</th>
+          <th class="num px-3 py-2 border border-gray-200 font-semibold">月額</th>
+          <th class="num px-3 py-2 border border-gray-200 font-semibold">クライアント計</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社サンヒル</td>
+          <td class="px-3 py-2 border border-gray-200">顧客データベース作成</td>
+          <td class="num px-3 py-2 border border-gray-200">¥46,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="7">¥153,500</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">フォームプラットフォーム</td>
+          <td class="num px-3 py-2 border border-gray-200">¥36,500</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">おもいでフォト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥36,500</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">大阪トヨペット</td>
+          <td class="num px-3 py-2 border border-gray-200">¥15,000</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレート</td>
+          <td class="num px-3 py-2 border border-gray-200">¥9,500</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">大阪トヨペットLP <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥5,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">大阪トヨペットLP <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥5,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200">株式会社HRAs</td>
+          <td class="px-3 py-2 border border-gray-200">コンパネ屋 台湾向けカタログ <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥100,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="3">¥141,400</td>
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コンパネ屋 台湾向けカタログ <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥38,400</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">現場DX</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200">株式会社HEROES</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥40,500</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="5">¥100,500</td>
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥30,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥15,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥10,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥5,000</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">マエダ不動産株式会社</td>
+          <td class="px-3 py-2 border border-gray-200">エル・セレーノ大阪堂島レジデンス</td>
+          <td class="num px-3 py-2 border border-gray-200">¥100,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥100,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">藤阪ガスセンター</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥50,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥50,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社VUELO</td>
+          <td class="px-3 py-2 border border-gray-200">Vリーグチケット検索サイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥45,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥45,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">大阪府立箕面高等学校</td>
+          <td class="px-3 py-2 border border-gray-200">大阪府立箕面高等学校PTA</td>
+          <td class="num px-3 py-2 border border-gray-200">¥25,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="2">¥35,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">大阪府立箕面高等学校</td>
+          <td class="num px-3 py-2 border border-gray-200">¥10,000</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">ふじや印刷株式会社</td>
+          <td class="px-3 py-2 border border-gray-200">おもいでフォト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥28,400</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="2">¥33,400</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">和や会ホームページ</td>
+          <td class="num px-3 py-2 border border-gray-200">¥5,000</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">E&Cサポート株式会社</td>
+          <td class="px-3 py-2 border border-gray-200">FunFunKids</td>
+          <td class="num px-3 py-2 border border-gray-200">¥30,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥30,000</td>
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200">(未記載)</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥20,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="3">¥29,000</td>
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥6,000</td>
+          
+        </tr>
+        <tr class="dup">
+          <td class="px-3 py-2 border border-gray-200"></td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト <span class="text-yellow-700 text-xs">⚠重複疑い</span></td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社ウェルカム</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥20,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥20,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">おおひらレディスクリニック</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥15,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥15,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社ソリデンテ</td>
+          <td class="px-3 py-2 border border-gray-200">ヒキタ工業株式会社</td>
+          <td class="num px-3 py-2 border border-gray-200">¥12,500</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥12,500</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社井上家具センター</td>
+          <td class="px-3 py-2 border border-gray-200">Story&Factory</td>
+          <td class="num px-3 py-2 border border-gray-200">¥10,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥10,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社はなさか</td>
+          <td class="px-3 py-2 border border-gray-200">HANAチャット</td>
+          <td class="num px-3 py-2 border border-gray-200">¥10,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥10,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社メディコン</td>
+          <td class="px-3 py-2 border border-gray-200">のぞみクリニック</td>
+          <td class="num px-3 py-2 border border-gray-200">¥4,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥4,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社スタープライド</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社 丸産業</td>
+          <td class="px-3 py-2 border border-gray-200">株式会社 丸産業コーポレート</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社HOPE</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">門井社会保険労務士事務所</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社ナカイ</td>
+          <td class="px-3 py-2 border border-gray-200">サーバー管理</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">アイアール保険</td>
+          <td class="px-3 py-2 border border-gray-200">サーバー管理</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">リトルスターズ(ジンジン英語教室)</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">大場伸軌税理士事務所</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社リベラル</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">オフィスひだまり</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">アシスト(吉岡さん)</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">ＣＭ大阪</td>
+          <td class="px-3 py-2 border border-gray-200">土井あきら</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">西中 奈都子</td>
+          <td class="px-3 py-2 border border-gray-200">公式ホームページ</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社エクスジール</td>
+          <td class="px-3 py-2 border border-gray-200">サーバー管理</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">S．S進学教室</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">有限会社 宝塚新樹園</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">¥3,000</td>
+          <td class="num px-3 py-2 border border-gray-200 font-bold align-top" rowspan="1">¥3,000</td>
+        </tr>
+        <tr class="bg-emerald-50 font-bold border-t-2 border-emerald-500">
+          <td colspan="2" class="px-3 py-2 border border-gray-200">月額合計</td>
+          <td class="num px-3 py-2 border border-gray-200 text-emerald-800">¥837,300</td>
+          <td class="num px-3 py-2 border border-gray-200 text-emerald-800">¥837,300</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-gray-500 mb-6">黄色背景 = 同一クライアント・同一プロジェクト名で複数行あり（重複の可能性）。スプレッドシートの整理で確認・統合を推奨。</p>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-8">除外・要確認の項目</h2>
+  <div class="overflow-x-auto mb-6">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="text-left px-3 py-2 border border-gray-200 font-semibold">クライアント</th>
+          <th class="text-left px-3 py-2 border border-gray-200 font-semibold">プロジェクト</th>
+          <th class="num px-3 py-2 border border-gray-200 font-semibold">金額</th>
+          <th class="text-left px-3 py-2 border border-gray-200 font-semibold">理由</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社プライムステージ</td>
+          <td class="px-3 py-2 border border-gray-200">スタッドレスタイヤ価格検索</td>
+          <td class="num px-3 py-2 border border-gray-200">¥5,000</td>
+          <td class="px-3 py-2 border border-gray-200">契約終了マーカー</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">株式会社VUELO</td>
+          <td class="px-3 py-2 border border-gray-200">Vリーグチケット検索サイト</td>
+          <td class="num px-3 py-2 border border-gray-200">実費</td>
+          <td class="px-3 py-2 border border-gray-200">実費（除外）</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">越田クリニック</td>
+          <td class="px-3 py-2 border border-gray-200">コーポレートサイト</td>
+          <td class="num px-3 py-2 border border-gray-200">—</td>
+          <td class="px-3 py-2 border border-gray-200">0円／空欄（要確認）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-800 pb-2 mb-4 mt-8">更新運用と次のアクション</h2>
+
+  <h3 class="text-lg font-semibold mb-2 mt-4">更新運用</h3>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>本ページは Google Sheets「YCOMデータ（最新）」運用管理費用シートから自動生成</li>
+    <li>再生成コマンド：<code class="bg-gray-100 px-1 rounded text-xs">python3 bin/build-recurring-revenue.py</code></li>
+    <li>毎月初に再生成 → 前月の契約変動を反映</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-2 mt-4">次のアクション</h3>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><strong>スプレッドシートのクレンジング</strong>：重複行の統合、契約終了の整理、クライアント名の補完</li>
+    <li><strong>「計」フィールドの算出ルール統一</strong>：列計算式の見直し</li>
+    <li><strong>契約値 vs 実入金 のギャップ確認</strong>：補助元帳または請求シートとの突合</li>
+    <li><strong>HANAツール案件マスタへの移行</strong>（Phase 2）：スプレッドシート → HANAツールDB への構造化</li>
+  </ol>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="goals.html" class="text-blue-600 hover:underline">目標ツリー（goals.html）</a> — G0.2 ストック収益比率20%以上</li>
+    <li><a href="reviews/fy2025-annual.html" class="text-blue-600 hover:underline">FY2025年度決算振り返り</a></li>
+    <li><a href="kpi.html" class="text-blue-600 hover:underline">経営KPIダッシュボード</a></li>
+    <li><a href="focus.html" class="text-blue-600 hover:underline">フォーカスダッシュボード</a></li>
+  </ul>
+
+  <p class="text-xs text-gray-400 mt-10">最終更新: 2026-05-26 / データ元: Google Sheets / 更新頻度: 月次（再生成は bin/build-recurring-revenue.py）</p>
+
+</div>
+</body>
+</html>

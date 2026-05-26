@@ -4,3 +4,8 @@ data/financial/*
 data/ycom/financial/*
 !data/ycom/financial/README.md
 *.Identifier
+
+# 機密情報（APIキー・サービスアカウント等）
+data/secrets/
+*-key.json
+service-account-*.json

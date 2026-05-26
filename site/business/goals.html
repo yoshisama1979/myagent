@@ -99,18 +99,43 @@
       </div>
 
       <!-- G0.2 FY2026 ストック収益比率 -->
-      <div class="bg-white border-2 border-emerald-600 rounded-lg p-5 mt-4">
+      <div class="bg-white border-2 border-emerald-600 rounded-lg p-5 mt-4" id="g0-2">
         <div class="flex items-start justify-between mb-2">
           <h3 class="text-lg font-bold text-emerald-800">G0.2 FY2026 ストック収益比率 20%以上（最重点論点）</h3>
           <span class="badge badge-status-active">進行中</span>
         </div>
         <table class="w-full text-sm">
-          <tr><td class="py-1 pr-3 font-semibold w-32">数値目標</td><td class="metric">ストック収益 売上比 <strong>20%以上</strong>（標準目標3,300万なら 660万円以上）</td></tr>
-          <tr><td class="py-1 pr-3 font-semibold">現状</td><td class="text-gray-500">FY2025: 要計測（ストック収益の定義をまずkpi.htmlで設計）</td></tr>
+          <tr><td class="py-1 pr-3 font-semibold w-32">数値目標</td><td class="metric">ストック収益 売上比 <strong>20%以上</strong>（標準目標3,300万なら 660万円以上 / 月¥550,000以上）</td></tr>
+          <tr><td class="py-1 pr-3 font-semibold">現状</td><td class="metric">月¥111,600（Square分のみ・2026-05時点、振込3件分は未集計）→ <a href="recurring-revenue.html" class="text-blue-600 hover:underline">recurring-revenue.html</a></td></tr>
           <tr><td class="py-1 pr-3 font-semibold">なぜ</td><td>FY2025で顕在化した「単価ムラ・売掛偏在」問題の構造的解。1〜2案件で年商が振れる体質からの脱却</td></tr>
           <tr><td class="py-1 pr-3 font-semibold">寄与先</td><td><a href="#" class="text-blue-600 hover:underline">G1 HANAチャット販売</a> / <a href="#" class="text-blue-600 hover:underline">G2.1 既存月額契約への切替</a></td></tr>
           <tr><td class="py-1 pr-3 font-semibold">関連</td><td><a href="reviews/fy2025-annual.html" class="text-blue-600 hover:underline">FY2025年度決算振り返り</a> の最重点論点として位置付け</td></tr>
         </table>
+      </div>
+
+      <!-- G0.2.1 月次ストック収益の見える化（インフラ整備） -->
+      <div class="ml-8 border-l-4 border-emerald-300 pl-4 mt-4">
+        <div class="bg-white border border-emerald-400 rounded-lg p-4">
+          <div class="flex items-start justify-between mb-2">
+            <h4 class="font-bold text-emerald-700">G0.2.1 月次ストック収益の見える化（インフラ整備）— 最優先課題</h4>
+            <span class="badge badge-status-active">進行中</span>
+          </div>
+          <p class="text-sm mb-2">「測れないものは管理できない」。<strong>G0.2 を達成・モニタリングするための前提インフラ</strong>。</p>
+          <table class="w-full text-sm">
+            <tr><td class="py-1 pr-3 font-semibold w-32">数値目標</td><td>毎月初に前月分のストック収益を集計・更新できる状態</td></tr>
+            <tr><td class="py-1 pr-3 font-semibold">現状</td><td>Phase 1着手：<a href="recurring-revenue.html" class="text-blue-600 hover:underline">recurring-revenue.html</a> 新設、Square分の月次推移を可視化済み</td></tr>
+            <tr><td class="py-1 pr-3 font-semibold">サブ目標</td>
+              <td>
+                <ul class="list-disc list-inside space-y-1">
+                  <li><strong>Phase 1（短期）</strong>：手動リスト化 — Square分完了、振込3件分を追記中</li>
+                  <li><strong>Phase 2（中期）</strong>：HANAツール案件マスタに月額契約フラグ・金額追加、API化</li>
+                  <li><strong>Phase 3（長期）</strong>：MF会計の補助科目化、analyze-mf.py 連携で自動集計</li>
+                </ul>
+              </td>
+            </tr>
+            <tr><td class="py-1 pr-3 font-semibold">関連</td><td>HANAツール backlog の Phase 2 実装タスク（順次起票）</td></tr>
+          </table>
+        </div>
       </div>
     </div>
   </section>
