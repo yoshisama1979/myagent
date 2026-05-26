@@ -12,8 +12,17 @@
   - 補助元帳            ※将来対応
 
 使い方:
-  python bin/analyze-mf.py data/financial/2025/      # 年度データ
-  python bin/analyze-mf.py data/financial/2026-05/   # 月次データ
+  python bin/analyze-mf.py <data_dir>                    # 単一期間の分析
+  python bin/analyze-mf.py compare <dir_old> <dir_new>   # 2期間の比較分析
+
+例:
+  python bin/analyze-mf.py data/financial/2025/                       # 年度データ
+  python bin/analyze-mf.py data/financial/2026-05/                    # 月次データ
+  python bin/analyze-mf.py compare data/financial/2024/ data/financial/2025/  # 年度比較
+
+ファイル名規約（自動検出、どちらでも可）:
+  - 損益計算書: pl.csv / 損益計算書*.csv
+  - 貸借対照表: bs.csv / 貸借対照表*.csv
 
 データディレクトリ内の損益計算書・貸借対照表 CSV を自動検出し、
 標準出力に Markdown レポートを書き出す。
@@ -263,35 +272,184 @@ def report_bs(bs: Dict) -> None:
                 print(f'| {name} | {yen(credit)} | {yen(end)} |')
 
 
-def main():
-    if len(sys.argv) < 2:
-        print('使い方: python bin/analyze-mf.py <data_dir>')
-        print('例: python bin/analyze-mf.py data/financial/2025/      （年度データ）')
-        print('例: python bin/analyze-mf.py data/financial/2026-05/   （月次データ）')
-        sys.exit(1)
+def find_pl_csv(data_dir: Path):
+    """損益計算書CSVを検出（pl.csv / 損益計算書*.csv のいずれか）"""
+    for pattern in ('pl.csv', 'pl-*.csv', '損益計算書*.csv'):
+        matches = list(data_dir.glob(pattern))
+        if matches:
+            return matches[0]
+    return None
 
-    data_dir = Path(sys.argv[1])
+
+def find_bs_csv(data_dir: Path):
+    """貸借対照表CSVを検出（bs.csv / 貸借対照表*.csv のいずれか）"""
+    for pattern in ('bs.csv', 'bs-*.csv', '貸借対照表*.csv'):
+        matches = list(data_dir.glob(pattern))
+        if matches:
+            return matches[0]
+    return None
+
+
+def analyze_single(data_dir: Path):
+    """単一期間の分析"""
     if not data_dir.is_dir():
         print(f'エラー: ディレクトリが存在しません: {data_dir}')
         sys.exit(1)
 
-    pl_files = list(data_dir.glob('損益計算書*.csv'))
-    bs_files = list(data_dir.glob('貸借対照表*.csv'))
+    pl_file = find_pl_csv(data_dir)
+    bs_file = find_bs_csv(data_dir)
 
     print(f'# マネーフォワード 財務分析レポート\n')
     print(f'データソース: {data_dir}\n')
 
-    if pl_files:
-        pl = parse_pl(read_mf_csv(pl_files[0]))
+    if pl_file:
+        pl = parse_pl(read_mf_csv(pl_file))
         report_pl(pl)
     else:
         print('損益計算書 CSV が見つかりません')
 
-    if bs_files:
-        bs = parse_bs(read_mf_csv(bs_files[0]))
+    if bs_file:
+        bs = parse_bs(read_mf_csv(bs_file))
         report_bs(bs)
     else:
         print('\n貸借対照表 CSV が見つかりません')
+
+
+def pct(numerator: int, denominator: int) -> str:
+    """変化率を %± 表記で返す（分母0の場合は '—'）"""
+    if denominator == 0:
+        return '—'
+    return f'{(numerator - denominator) / denominator * 100:+.1f}%'
+
+
+def diff_row(label: str, old: int, new: int, ratio_base_old: int = 0, ratio_base_new: int = 0) -> str:
+    """1行の比較を Markdown 表セルにする"""
+    delta = new - old
+    return f'| {label} | {yen(old)} | {yen(new)} | {yen(delta) if delta != 0 else "0"} | {pct(new, old)} |'
+
+
+def compare(dir_old: Path, dir_new: Path):
+    """2期間の比較分析"""
+    for d in (dir_old, dir_new):
+        if not d.is_dir():
+            print(f'エラー: ディレクトリが存在しません: {d}')
+            sys.exit(1)
+
+    pl_old_file = find_pl_csv(dir_old)
+    pl_new_file = find_pl_csv(dir_new)
+    bs_old_file = find_bs_csv(dir_old)
+    bs_new_file = find_bs_csv(dir_new)
+
+    print(f'# マネーフォワード 期間比較レポート\n')
+    print(f'- 前期データ: `{dir_old}`')
+    print(f'- 当期データ: `{dir_new}`\n')
+
+    # ─── PL比較 ───
+    if pl_old_file and pl_new_file:
+        pl_old = parse_pl(read_mf_csv(pl_old_file))
+        pl_new = parse_pl(read_mf_csv(pl_new_file))
+
+        print('## 損益計算書 期間比較\n')
+        print(f'- 前期: {pl_old["period"]}')
+        print(f'- 当期: {pl_new["period"]}\n')
+
+        print('### 主要指標の前期比\n')
+        print('| 指標 | 前期 | 当期 | 増減 | 前期比 |')
+        print('|------|------|------|------|--------|')
+        for label, key in [
+            ('売上高', 'sales'),
+            ('売上原価', 'cogs'),
+            ('売上総利益（粗利）', 'gross_profit'),
+            ('販管費', 'sga'),
+            ('営業利益', 'operating_profit'),
+            ('経常利益', 'ordinary_profit'),
+            ('税引前利益', 'pretax_profit'),
+            ('当期純利益', 'net_profit'),
+        ]:
+            print(diff_row(label, pl_old[key], pl_new[key]))
+
+        # 利益率
+        print('\n### 利益率の推移\n')
+        print('| 指標 | 前期 | 当期 | 差分 |')
+        print('|------|------|------|------|')
+        for label, key in [
+            ('粗利率', 'gross_profit'),
+            ('営業利益率', 'operating_profit'),
+            ('経常利益率', 'ordinary_profit'),
+            ('当期純利益率', 'net_profit'),
+        ]:
+            r_old = pl_old[key] / pl_old['sales'] * 100 if pl_old['sales'] else 0
+            r_new = pl_new[key] / pl_new['sales'] * 100 if pl_new['sales'] else 0
+            print(f'| {label} | {r_old:.1f}% | {r_new:.1f}% | {r_new - r_old:+.1f}pt |')
+
+        # 販管費の変化
+        print('\n### 販管費 科目別変化（前期 or 当期で売上比1%以上の科目）\n')
+        old_sga_map = {name: amount for name, amount, _ in pl_old.get('sga_items', [])}
+        new_sga_map = {name: amount for name, amount, _ in pl_new.get('sga_items', [])}
+        all_keys = sorted(set(old_sga_map) | set(new_sga_map))
+        threshold = max(pl_old['sales'], pl_new['sales']) * 0.01
+        rows = []
+        for k in all_keys:
+            o = old_sga_map.get(k, 0)
+            n = new_sga_map.get(k, 0)
+            if max(o, n) >= threshold:
+                rows.append((k, o, n, n - o))
+        rows.sort(key=lambda x: -abs(x[3]))
+        if rows:
+            print('| 科目 | 前期 | 当期 | 増減 | 前期比 |')
+            print('|------|------|------|------|--------|')
+            for k, o, n, d in rows:
+                print(f'| {k} | {yen(o)} | {yen(n)} | {yen(d) if d != 0 else "0"} | {pct(n, o)} |')
+        else:
+            print('（しきい値以上の科目なし）')
+    else:
+        print('## 損益計算書 期間比較\n\n両期間のPL CSVが揃っていません\n')
+
+    # ─── BS比較 ───
+    if bs_old_file and bs_new_file:
+        bs_old = parse_bs(read_mf_csv(bs_old_file))
+        bs_new = parse_bs(read_mf_csv(bs_new_file))
+
+        print('\n## 貸借対照表 期間比較\n')
+        print('### 主要項目の期末残高比較\n')
+        print('| 項目 | 前期末 | 当期末 | 増減 | 前期比 |')
+        print('|------|--------|--------|------|--------|')
+        for label, key in [
+            ('現金預金', 'cash'),
+            ('売掛金', 'receivables'),
+            ('流動資産合計', 'current_assets'),
+            ('固定資産合計', 'fixed_assets'),
+            ('資産合計', 'total_assets'),
+            ('流動負債合計', 'current_liabilities'),
+            ('固定負債合計', 'fixed_liabilities'),
+            ('負債合計', 'total_liabilities'),
+            ('純資産合計', 'total_equity'),
+        ]:
+            if key in bs_old and key in bs_new:
+                print(diff_row(label, bs_old[key], bs_new[key]))
+
+        # 自己資本比率
+        eq_ratio_old = bs_old.get('total_equity', 0) / bs_old.get('total_assets', 1) * 100 if bs_old.get('total_assets') else 0
+        eq_ratio_new = bs_new.get('total_equity', 0) / bs_new.get('total_assets', 1) * 100 if bs_new.get('total_assets') else 0
+        print(f'\n**自己資本比率**: 前期 {eq_ratio_old:.1f}% → 当期 {eq_ratio_new:.1f}%（{eq_ratio_new - eq_ratio_old:+.1f}pt）\n')
+    else:
+        print('\n## 貸借対照表 期間比較\n\n両期間のBS CSVが揃っていません\n')
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('使い方:')
+        print('  python bin/analyze-mf.py <data_dir>                    （単一期間）')
+        print('  python bin/analyze-mf.py compare <dir_old> <dir_new>   （2期間比較）')
+        sys.exit(1)
+
+    if sys.argv[1] == 'compare':
+        if len(sys.argv) < 4:
+            print('使い方: python bin/analyze-mf.py compare <dir_old> <dir_new>')
+            sys.exit(1)
+        compare(Path(sys.argv[2]), Path(sys.argv[3]))
+    else:
+        analyze_single(Path(sys.argv[1]))
 
 
 if __name__ == '__main__':
