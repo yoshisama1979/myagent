@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>案件 状態別割合＆月次見積額 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">ビジネスダッシュボード</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">案件 状態別割合 & 月次見積額</h1>
+  <p class="text-gray-600 mb-2">スプレッドシート「案件リスト」の見える化。請求漏れ・支払い漏れ・失注の把握が目的。</p>
+  <p class="text-xs text-gray-500 mb-8">最終更新: 2026-05-27 11:20 ／ 全 2,910 件 ／ 自動生成: <code>bin/build-projects-overview.py</code></p>
+
+  <!-- ① 状態別割合 -->
+  <section class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-xl font-bold mb-1">① 案件の状態別割合</h2>
+    <p class="text-sm text-gray-600 mb-4">全 2,910 件の状態別件数と見積額。「受注できず」は失注分。</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+      <div class="relative" style="height: 320px;">
+        <canvas id="stateChart"></canvas>
+      </div>
+      <div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b text-gray-600">
+              <th class="text-left py-2">状態</th>
+              <th class="text-right py-2">件数</th>
+              <th class="text-right py-2">割合</th>
+              <th class="text-right py-2">見積額合計</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#10b981"></span>完了</td>
+              <td class="text-right py-2 font-mono">710</td>
+              <td class="text-right py-2 text-gray-500">24.4%</td>
+              <td class="text-right py-2 font-mono">¥46,685,918</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#3b82f6"></span>支払待</td>
+              <td class="text-right py-2 font-mono">355</td>
+              <td class="text-right py-2 text-gray-500">12.2%</td>
+              <td class="text-right py-2 font-mono">¥53,374,419</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#f59e0b"></span>要対応</td>
+              <td class="text-right py-2 font-mono">236</td>
+              <td class="text-right py-2 text-gray-500">8.1%</td>
+              <td class="text-right py-2 font-mono">¥24,741,141</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#a855f7"></span>請求待</td>
+              <td class="text-right py-2 font-mono">148</td>
+              <td class="text-right py-2 text-gray-500">5.1%</td>
+              <td class="text-right py-2 font-mono">¥7,305,199</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#06b6d4"></span>制作中</td>
+              <td class="text-right py-2 font-mono">39</td>
+              <td class="text-right py-2 text-gray-500">1.3%</td>
+              <td class="text-right py-2 font-mono">¥5,211,690</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#ef4444"></span>受注できず</td>
+              <td class="text-right py-2 font-mono">941</td>
+              <td class="text-right py-2 text-gray-500">32.3%</td>
+              <td class="text-right py-2 font-mono">¥115,797,322</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#f87171"></span>未受注</td>
+              <td class="text-right py-2 font-mono">2</td>
+              <td class="text-right py-2 text-gray-500">0.1%</td>
+              <td class="text-right py-2 font-mono">¥316,250</td>
+            </tr>
+            <tr class="border-b">
+              <td class="py-2"><span class="inline-block w-3 h-3 rounded-full mr-2 align-middle" style="background:#9ca3af"></span>(空)</td>
+              <td class="text-right py-2 font-mono">479</td>
+              <td class="text-right py-2 text-gray-500">16.5%</td>
+              <td class="text-right py-2 font-mono">¥0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 月次見積額 -->
+  <section class="bg-white rounded-lg shadow p-6 mb-8">
+    <h2 class="text-xl font-bold mb-1">② 月次見積額の推移</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      見積発生月（<code>date_estimate</code>）ベース。受注（売上対象）／失注／その他の積み上げ。
+      <span class="text-gray-500">※ 帳簿には出てこない営業活動の量と質が見える。</span>
+    </p>
+    <div style="height: 420px;">
+      <canvas id="monthlyChart"></canvas>
+    </div>
+  </section>
+
+  <p class="text-xs text-gray-500 mt-8">
+    更新方法: <code>python3 bin/build-projects-overview.py</code> → このページが再生成されます。<br>
+    関連: <a href="recurring-revenue.html" class="text-blue-600 hover:underline">月次ストック収益</a>
+  </p>
+
+</div>
+
+<script>
+const stateData = [{"label": "完了", "count": 710, "money": 46685918, "color": "#10b981"}, {"label": "支払待", "count": 355, "money": 53374419, "color": "#3b82f6"}, {"label": "要対応", "count": 236, "money": 24741141, "color": "#f59e0b"}, {"label": "請求待", "count": 148, "money": 7305199, "color": "#a855f7"}, {"label": "制作中", "count": 39, "money": 5211690, "color": "#06b6d4"}, {"label": "受注できず", "count": 941, "money": 115797322, "color": "#ef4444"}, {"label": "未受注", "count": 2, "money": 316250, "color": "#f87171"}, {"label": "(空)", "count": 479, "money": 0, "color": "#9ca3af"}];
+const months = ["2020/09", "2020/10", "2020/11", "2020/12", "2021/01", "2021/02", "2021/03", "2021/04", "2021/05", "2021/06", "2021/07", "2021/08", "2021/09", "2021/10", "2021/11", "2021/12", "2022/01", "2022/02", "2022/03", "2022/04", "2022/05", "2022/06", "2022/07", "2022/08", "2022/09", "2022/10", "2022/11", "2022/12", "2023/01", "2023/02", "2023/03", "2023/04", "2023/05", "2023/06", "2023/07", "2023/08", "2023/09", "2023/10", "2023/11", "2023/12", "2024/01", "2024/02", "2024/03", "2024/04", "2024/05", "2024/06", "2024/07", "2024/08", "2024/09", "2024/10", "2024/11", "2024/12", "2025/01", "2025/02", "2025/03", "2025/04", "2025/05", "2025/06", "2025/07", "2025/08", "2025/09", "2025/10", "2025/11", "2025/12", "2026/01", "2026/02", "2026/03", "2026/04", "2026/05", "2026/06", "2026/07", "2026/08", "2026/09", "2026/10", "2026/11", "2026/12", "2027/01", "2027/02"];
+const seriesSales = [176000, 631400, 271150, 0, 712258, 55000, 1611500, 188000, 2415380, 1231090, 1919500, 548900, 2426050, 4381850, 1962180, 1263350, 1894640, 826650, 990000, 2358400, 1147380, 1426700, 2651550, 1499850, 2123000, 565950, 864160, 739750, 13522795, 706750, 465850, 1137400, 536250, 757900, 31350, 2042700, 5950230, 5207070, 1697300, 577500, 1328756, 4913300, 765050, 1271699, 1771000, 990440, 344300, 411400, 624250, 106700, 1172600, 1830755, 849308, 191667, 1100431, 5446115, 448611, 1628033, 7828938, 1661565, 2320347, 1258256, 3186040, 1573440, 2693580, 2396941, 1290301, 1358931, 12229475, 587845, 592245, 548245, 568045, 587845, 502045, 105055, 49500, 49500];
+const seriesLost  = [0, 0, 0, 546700, 0, 269500, 130900, 615450, 239250, 189970, 2669700, 1576300, 1303500, 1085810, 172480, 1948650, 1495450, 943250, 332200, 3828550, 437800, 1311200, 1252350, 1207800, 1916200, 150150, 1971310, 226050, 16427180, 1229250, 242000, 1522400, 202400, 515900, 202400, 202400, 3058102, 213400, 1624700, 1323850, 495990, 414150, 499480, 1364550, 1366750, 1467950, 3045350, 1263800, 3787725, 527054, 3659480, 826379, 1038400, 11975810, 15694250, 7497380, 1414600, 1362900, 233750, 233750, 233750, 233750, 285302, 55000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const seriesOther = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+new Chart(document.getElementById('stateChart'), {
+  type: 'doughnut',
+  data: {
+    labels: stateData.map(s => s.label),
+    datasets: [{
+      data: stateData.map(s => s.count),
+      backgroundColor: stateData.map(s => s.color),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.label}: ${ctx.parsed.toLocaleString()}件`
+        }
+      }
+    }
+  }
+});
+
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'bar',
+  data: {
+    labels: months,
+    datasets: [
+      { label: '受注', data: seriesSales, backgroundColor: '#10b981' },
+      { label: '失注', data: seriesLost,  backgroundColor: '#ef4444' },
+      { label: 'その他', data: seriesOther, backgroundColor: '#9ca3af' }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { stacked: true },
+      y: {
+        stacked: true,
+        ticks: { callback: (v) => '¥' + v.toLocaleString() }
+      }
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (ctx) => `${ctx.dataset.label}: ¥${ctx.parsed.y.toLocaleString()}`
+        }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
