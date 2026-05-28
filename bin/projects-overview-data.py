@@ -12,8 +12,11 @@ HTML 生成は PHP 側で行うので、ここはデータ集計のみ。
 import json
 import sys
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, date
 from pathlib import Path
+
+DAYS_BILL_OVERDUE = 30
+DAYS_PAY_OVERDUE = 60
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'bin'))
@@ -87,6 +90,18 @@ def parse_ym(s):
     return None
 
 
+def parse_date(s):
+    s = str(s or '').strip()
+    if not s:
+        return None
+    for fmt in ('%Y/%m/%d', '%Y-%m-%d'):
+        try:
+            return datetime.strptime(s, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
 def main():
     header, rows = fetch_rows()
     i_state = col(header, 'state')
@@ -95,11 +110,29 @@ def main():
     i_client = col(header, 'client_name')
     i_project = col(header, 'project_name')
     i_cat = col(header, 'category')
+    i_dr = col(header, 'date_received')
+    i_dc = col(header, 'date_complete')
+    i_db = col(header, 'date_bill')
+    i_sp = col(header, 'sum_pay')
+
+    today = date.today()
 
     state_count = Counter()
     state_money = defaultdict(int)
     by_month = defaultdict(lambda: {'受注': 0, '失注': 0, 'その他': 0})
     by_month_details = defaultdict(list)
+
+    quality = {
+        'billing_overdue':       0,  # 🔴 請求待 & date_complete から DAYS_BILL_OVERDUE 経過
+        'payment_overdue':       0,  # 🔴 支払待 & date_bill から DAYS_PAY_OVERDUE 経過
+        'completed_no_bill':     0,  # 🔴 完了なのに date_bill 空
+        'completed_no_pay':      0,  # 🔴 完了なのに sum_pay が空/0
+        'empty_state':           0,  # 🟡 状態空
+        'empty_name':            0,  # 🟡 client_name or project_name 空
+        'date_inconsistent':     0,  # 🟡 日付の論理矛盾
+        'lost_with_received':    0,  # 🟡 受注できず/未受注なのに date_received あり
+        'completed_no_received': 0,  # 🟡 完了なのに date_received 空
+    }
 
     for r in rows:
         st_raw = cell(r, i_state)
@@ -129,6 +162,34 @@ def main():
                 'bucket': bucket,
                 'color': STATE_COLORS.get(st, '#9ca3af'),
             })
+
+        # ---- データ品質チェック ----
+        de = parse_date(cell(r, i_de))
+        dr = parse_date(cell(r, i_dr))
+        dc = parse_date(cell(r, i_dc))
+        db = parse_date(cell(r, i_db))
+        sp = to_money(cell(r, i_sp))
+        client = str(cell(r, i_client) or '').strip()
+        project = str(cell(r, i_project) or '').strip()
+
+        if st == '請求待' and dc and (today - dc).days > DAYS_BILL_OVERDUE:
+            quality['billing_overdue'] += 1
+        if st == '支払待' and db and (today - db).days > DAYS_PAY_OVERDUE:
+            quality['payment_overdue'] += 1
+        if st == '完了' and not db:
+            quality['completed_no_bill'] += 1
+        if st == '完了' and sp <= 0:
+            quality['completed_no_pay'] += 1
+        if not st_raw:
+            quality['empty_state'] += 1
+        if not client or not project:
+            quality['empty_name'] += 1
+        if (de and dr and de > dr) or (dr and dc and dr > dc) or (dc and db and dc > db):
+            quality['date_inconsistent'] += 1
+        if st in ('受注できず', '未受注') and dr:
+            quality['lost_with_received'] += 1
+        if st == '完了' and not dr:
+            quality['completed_no_received'] += 1
 
     total = sum(state_count.values())
     state_data = [
@@ -161,6 +222,11 @@ def main():
         'months': labels,
         'series': series,
         'details': details,
+        'quality': quality,
+        'quality_thresholds': {
+            'bill_overdue_days': DAYS_BILL_OVERDUE,
+            'pay_overdue_days': DAYS_PAY_OVERDUE,
+        },
     }
     print(json.dumps(payload, ensure_ascii=False))
 

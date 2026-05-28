@@ -48,7 +48,25 @@ $state_data = $data['state_data'];
 $months = $data['months'];
 $series = $data['series'];
 $details = $data['details'] ?? [];
+$quality = $data['quality'] ?? [];
+$thresholds = $data['quality_thresholds'] ?? ['bill_overdue_days' => 30, 'pay_overdue_days' => 60];
 $fetched_at = $data['fetched_at'];
+
+$quality_critical = [
+    'billing_overdue'    => ['label' => "請求待ち & 完了から{$thresholds['bill_overdue_days']}日以上経過",  'hint' => '請求漏れの可能性'],
+    'payment_overdue'    => ['label' => "支払待ち & 請求から{$thresholds['pay_overdue_days']}日以上経過",   'hint' => '入金漏れ → 督促検討'],
+    'completed_no_bill'  => ['label' => '完了なのに請求日(date_bill)が空',                                  'hint' => 'ステータス入力ミス'],
+    'completed_no_pay'   => ['label' => '完了なのに入金額(sum_pay)が0/空',                                  'hint' => '入金記録漏れ'],
+];
+$quality_warn = [
+    'empty_state'           => ['label' => '状態(state)が空',                                'hint' => '集計から漏れる'],
+    'empty_name'            => ['label' => 'クライアント名 or 案件名 が空',                  'hint' => '検索・集計困難'],
+    'date_inconsistent'     => ['label' => '日付の論理矛盾 (見積>受注 / 受注>完了 / 完了>請求)', 'hint' => '入力ミス'],
+    'lost_with_received'    => ['label' => '受注できず/未受注なのに受注日あり',              'hint' => '状態とデータの矛盾'],
+    'completed_no_received' => ['label' => '完了なのに受注日(date_received)が空',            'hint' => '受注日不明'],
+];
+$critical_total = array_sum(array_map(fn($k) => (int)($quality[$k] ?? 0), array_keys($quality_critical)));
+$warn_total     = array_sum(array_map(fn($k) => (int)($quality[$k] ?? 0), array_keys($quality_warn)));
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -155,6 +173,68 @@ $fetched_at = $data['fetched_at'];
         <tbody id="monthDetailsTable"></tbody>
       </table>
     </div>
+  </section>
+
+  <!-- ④ データ品質チェック -->
+  <section class="bg-white rounded-lg shadow p-6 mb-8 border-l-4 border-amber-400">
+    <h2 class="text-xl font-bold mb-1">⚠️ データ品質チェック</h2>
+    <p class="text-sm text-gray-600 mb-4">
+      入力ルールから逸脱しているデータの件数。クレンジング・運用ルール見直しの優先順位付けに使う。
+      <span class="text-gray-500">（明細表示は未実装。件数のみ）</span>
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- 🔴 重大 -->
+      <div>
+        <h3 class="font-semibold text-red-700 mb-2 flex items-center justify-between">
+          <span>🔴 重大：請求・入金漏れに直結</span>
+          <span class="text-sm font-mono"><?= number_format($critical_total) ?> 件</span>
+        </h3>
+        <table class="w-full text-sm">
+          <tbody>
+            <?php foreach ($quality_critical as $key => $meta): $n = (int)($quality[$key] ?? 0); ?>
+              <tr class="border-b">
+                <td class="py-2 align-top">
+                  <div><?= htmlspecialchars($meta['label']) ?></div>
+                  <div class="text-xs text-gray-500"><?= htmlspecialchars($meta['hint']) ?></div>
+                </td>
+                <td class="py-2 text-right font-mono align-top whitespace-nowrap <?= $n > 0 ? 'text-red-700 font-semibold' : 'text-gray-400' ?>">
+                  <?= number_format($n) ?> 件
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 🟡 中 -->
+      <div>
+        <h3 class="font-semibold text-amber-700 mb-2 flex items-center justify-between">
+          <span>🟡 中：データ整合性</span>
+          <span class="text-sm font-mono"><?= number_format($warn_total) ?> 件</span>
+        </h3>
+        <table class="w-full text-sm">
+          <tbody>
+            <?php foreach ($quality_warn as $key => $meta): $n = (int)($quality[$key] ?? 0); ?>
+              <tr class="border-b">
+                <td class="py-2 align-top">
+                  <div><?= htmlspecialchars($meta['label']) ?></div>
+                  <div class="text-xs text-gray-500"><?= htmlspecialchars($meta['hint']) ?></div>
+                </td>
+                <td class="py-2 text-right font-mono align-top whitespace-nowrap <?= $n > 0 ? 'text-amber-700 font-semibold' : 'text-gray-400' ?>">
+                  <?= number_format($n) ?> 件
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-4">
+      閾値: 請求漏れ判定 = <?= (int)$thresholds['bill_overdue_days'] ?>日 ／ 入金漏れ判定 = <?= (int)$thresholds['pay_overdue_days'] ?>日<br>
+      ※ 同じ案件が複数項目に重複カウントされる可能性あり（例：完了&請求日空&入金額0 → 2つに該当）
+    </p>
   </section>
 
   <p class="text-xs text-gray-500 mt-8">
