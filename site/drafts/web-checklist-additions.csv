@@ -1,0 +1,17 @@
+フェーズ,カテゴリ,項目,補足,重要度,参考URL
+納品前,セキュリティ,SSL証明書の有効期限・自動更新確認,Let's Encrypt等の場合は自動更新の動作確認まで,A,
+納品前,セキュリティ,wp-loginのリネーム or reCAPTCHA設置,プラグイン: WPS Hide Login / Invisible reCAPTCHA,B,
+納品前,セキュリティ,管理画面の2段階認証,プラグイン: Two-Factor / Wordfence Login Security,B,
+納品時,セキュリティ,バックアップ設定(DB・ファイル両方),UpdraftPlus等。クラウド保存先まで設定して動作確認,A,
+納品前,パフォーマンス,PageSpeed Insights(モバイル/PC),モバイルスコア60以上を目標。改善余地を記録,A,https://pagespeed.web.dev/
+納品前,パフォーマンス,Core Web Vitals確認,LCP・INP・CLSが「良好」の範囲か,B,https://pagespeed.web.dev/
+納品前,検索エンジン,robots.txt設置・確認,プレビュー時のnoindex指定を本番で必ず外す,A,
+納品時,検索エンジン,sitemap.xml設置・Search Console送信,Yoast SEO等で自動生成。SCに送信して認識確認,A,
+納品前,検索エンジン,カスタム404ページの設置,404.phpを用意。トップ・サイトマップへ誘導,B,
+納品前,アクセシビリティ,キーボード操作確認,Tabキーだけで全機能にアクセスできるか,B,
+納品前,アクセシビリティ,色コントラスト確認,WCAG AA基準(4.5:1)以上を満たすか,B,https://webaim.org/resources/contrastchecker/
+納品前,マルチデバイス,クロスブラウザ確認,Chrome/Safari/Firefox/Edge 最新版で表示確認,A,
+納品前,マルチデバイス,iPhone/Android実機確認,Safari(iOS)/Chrome(Android)で実機確認(エミュレータ不可),A,
+制作時,法務,プライバシーポリシー設置,個人情報取扱・Cookie使用・フォーム送信先を明記,B,
+制作時,法務,Cookie同意バナー,GA等のCookieを使用する場合に必要(B2C特に),B,
+納品前,法務,特定商取引法に基づく表示,EC機能を含むサイトの場合は必須,A,
