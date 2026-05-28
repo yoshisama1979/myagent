@@ -9,3 +9,7 @@ data/ycom/financial/*
 data/secrets/
 *-key.json
 service-account-*.json
+
+# ランタイム生成物
+data/cache/
+__pycache__/
