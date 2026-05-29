@@ -1,4 +1,17 @@
-<!DOCTYPE html>
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/_financial-lib.php';
+
+$pl_25 = load_pl(2025);
+$pl_26 = load_pl(2026);
+$forecast_26 = forecast($pl_26);
+
+const TOP_KPIS = [
+    '売上高合計' => ['label' => '売上高', 'icon' => '💰', 'role' => 'revenue'],
+    '営業利益' => ['label' => '営業利益', 'icon' => '📊', 'role' => 'op'],
+    '経常利益' => ['label' => '経常利益', 'icon' => '📈', 'role' => 'recurring'],
+];
+?><!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -14,7 +27,66 @@
   </nav>
 
   <h1 class="text-3xl font-bold mb-2">ビジネスダッシュボード</h1>
-  <p class="text-gray-600 mb-8">経営方針・KPI・月次レビューの集約入口。「方針 → 行動 → 振り返り → 課題更新」の循環を回す。</p>
+  <p class="text-gray-600 mb-6">経営方針・KPI・月次レビューの集約入口。「方針 → 行動 → 振り返り → 課題更新」の循環を回す。</p>
+
+  <!-- ============================== 経営サマリー（常時表示） ============================== -->
+  <div class="border-2 border-blue-400 bg-white rounded-lg p-5 mb-8 shadow-sm">
+    <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-3 gap-1">
+      <h2 class="text-lg font-bold text-blue-800">📈 経営サマリー（FY2026予測 vs FY2025実績）</h2>
+      <a href="annual-forecast.php" class="text-xs text-blue-600 hover:underline">→ 詳細を見る</a>
+    </div>
+
+    <?php if ($pl_26 === null && $pl_25 === null): ?>
+      <p class="text-sm text-gray-500 py-2">財務データ未投入。<a href="annual-forecast.php" class="text-blue-600 hover:underline">年度通年予測</a> から MFクラウドCSV をアップロードしてください。</p>
+    <?php else: ?>
+
+      <!-- データ状態バッジ -->
+      <div class="flex flex-wrap gap-2 mb-3 text-xs">
+        <?php if ($pl_25 !== null): ?>
+          <span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">FY2025: 通年実績（<?= $pl_25['months'] ?>ヶ月）</span>
+        <?php else: ?>
+          <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded">FY2025: 未投入</span>
+        <?php endif; ?>
+        <?php if ($pl_26 !== null): ?>
+          <?php if ($pl_26['is_full_year']): ?>
+            <span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded">FY2026: 通年実績</span>
+          <?php else: ?>
+            <span class="bg-amber-100 text-amber-700 px-2 py-0.5 rounded">FY2026: <?= $pl_26['months'] ?>ヶ月実績 → 通年予測</span>
+          <?php endif; ?>
+          <span class="text-gray-400">更新: <?= h(date('Y-m-d', $pl_26['file_mtime'])) ?></span>
+        <?php else: ?>
+          <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded">FY2026: 未投入</span>
+        <?php endif; ?>
+      </div>
+
+      <!-- KPI カード 3枚 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <?php foreach (TOP_KPIS as $key => $cfg):
+          $v25 = $pl_25['items'][$key] ?? null;
+          $v26_fc = $forecast_26[$key] ?? null;
+          $pct = diff_pct($v25, $v26_fc);
+        ?>
+        <div class="border border-gray-200 rounded p-3 bg-gray-50">
+          <div class="text-xs text-gray-500 mb-1"><?= h($cfg['icon']) ?> <?= h($cfg['label']) ?></div>
+          <div class="text-2xl font-bold mb-1"><?= jpy($v26_fc) ?></div>
+          <div class="text-xs text-gray-500">FY2026 <?= ($pl_26 !== null && $pl_26['is_full_year']) ? '実績' : '通年予測' ?></div>
+          <div class="mt-2 pt-2 border-t border-gray-300 text-xs text-gray-600">
+            FY2025: <span class="font-semibold"><?= jpy($v25) ?></span>
+          </div>
+          <div class="mt-1">
+            <?php if ($pct !== null): $j = judge($pct); ?>
+              <span class="<?= $j['class'] ?> text-sm"><?= $j['icon'] ?> <?= sprintf('%+.1f%%', $pct) ?> <?= h($j['label']) ?></span>
+            <?php else: ?>
+              <span class="text-gray-400 text-xs">前年比 算出不可</span>
+            <?php endif; ?>
+          </div>
+        </div>
+        <?php endforeach; ?>
+      </div>
+
+    <?php endif; ?>
+  </div>
+  <!-- ============================== /経営サマリー ============================== -->
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <a href="focus.html" class="block border-2 border-red-500 bg-red-50 rounded-lg p-5 hover:bg-red-100 transition">
