@@ -16,3 +16,6 @@ __pycache__/
 
 # 月次アップロードデータ（売上・コスト等）
 data/monthly/
+
+# Windows のファイル属性メタデータ（NTFS Zone.Identifier）
+*Zone.Identifier
