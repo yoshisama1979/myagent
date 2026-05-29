@@ -13,3 +13,6 @@ service-account-*.json
 # ランタイム生成物
 data/cache/
 __pycache__/
+
+# 月次アップロードデータ（売上・コスト等）
+data/monthly/

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メモ — HANAチャット</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">← はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">HANAチャット</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">メモ — HANAチャット</h1>
+  <p class="text-gray-600 mb-4">社長から内容のみ渡された無指示時の雑記帳。棚卸し時に <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> / <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> へ転記し、空にする。</p>
+
+  <!-- ============================== -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2026-05-28：システム内チャットの機能追加アイデア</h2>
+
+  <!-- 用語整理 -->
+  <div class="bg-amber-50 border-l-4 border-amber-400 rounded p-4 mb-6 text-sm">
+    <h3 class="font-bold text-amber-800 mb-2">⚠️ 用語の区別（混同注意）</h3>
+    <table class="w-full">
+      <tbody>
+        <tr class="border-b border-amber-200">
+          <td class="py-1 pr-3 font-semibold whitespace-nowrap">HANAチャット（サービス本体）</td>
+          <td class="py-1 text-gray-700"><strong>クライアントのウェブサイトに設置する AI チャット</strong>。エンドユーザー向け。これが販売対象。</td>
+        </tr>
+        <tr>
+          <td class="py-1 pr-3 font-semibold whitespace-nowrap">システム内チャット（管理側）</td>
+          <td class="py-1 text-gray-700"><strong>HANAチャットの管理画面の中にあるチャット</strong>。クライアント自身（HANAチャットを契約している事業者）が使う。サービス本体とは別物。</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-amber-700 mt-2">※ 以下に書く機能は <strong>システム内チャット側</strong> に追加したいもの。エンドユーザー向けのチャットUIではない。</p>
+  </div>
+
+  <!-- 追加したい機能 -->
+  <h3 class="text-lg font-semibold mb-3 mt-6">追加したい機能</h3>
+  <ol class="list-decimal list-inside space-y-3 text-sm">
+
+    <li>
+      <strong>使い方の質問対応</strong>
+      <p class="text-gray-600 ml-6 mt-1">クライアントが HANAチャットの使い方をシステム内チャットで質問できる。「設定の変更方法」「学習データの追加方法」等を会話形式で案内。</p>
+    </li>
+
+    <li>
+      <strong>チャットユーザー（エンドユーザー）の分析</strong>
+      <p class="text-gray-600 ml-6 mt-1">サービス本体側でやり取りしているエンドユーザーの会話傾向・質問内容を、システム内チャットで分析・要約できる。</p>
+    </li>
+
+    <li>
+      <strong>「うまくいかなかった会話」の原因分析</strong>
+      <p class="text-gray-600 ml-6 mt-1">エンドユーザーとの会話の中で <strong>うまく回答できなかったやり取り</strong> を抽出し、<strong>なぜ今の学習状態では回答できなかったか</strong> を分析する。学習データ不足／表現の揺れ／文脈不足 等を切り分け。</p>
+    </li>
+
+    <li>
+      <strong>学習データの類似整理</strong>
+      <p class="text-gray-600 ml-6 mt-1">学習データの中で <strong>似通った項目を発見</strong> し、統合・整理する補助を行う。重複・矛盾・冗長を解消するための見える化。</p>
+    </li>
+
+    <li>
+      <strong>検索方法の拡張（RAG + キーワード等のハイブリッド）</strong>
+      <p class="text-gray-600 ml-6 mt-1">現状は RAG（ベクトル検索）で学習データを引いている。これに <strong>キーワード検索</strong> 等を組み合わせ、<strong>現代のエージェントがよく行う方法（ツール呼び出し・複数手法の併用）</strong> で必要な情報を引き出す仕組みを入れたい。</p>
+    </li>
+
+  </ol>
+
+  <p class="text-xs text-gray-500 mt-6">※ 上記はあくまで機能アイデアのメモ。具体的な実装方針・優先順位は未定。棚卸し時に <a href="backlog.html" class="text-blue-600 hover:underline">backlog.html</a> へ移し、課題として整理する。</p>
+
+</div>
+</body>
+</html>
