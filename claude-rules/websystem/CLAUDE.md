@@ -28,7 +28,9 @@
 
 | ファイル | いつ参照するか |
 |---------|--------------|
-| `agent.md` | 常に（実装フロー・共通原則） |
+| `agent.md` | 常に（実装フロー・共通原則・モード判定の入口） |
+| `dialogue-mode.md` | **仕様策定モード**。ゴール記録ファイル無し / `status: dialogue` / ユーザーが仕様検討意図を示したとき |
+| `autopilot.md` | **自走モード**。`mode: autopilot` かつ `status: active`/`paused` の goals.md があるとき。`status: completed` の goals.md は原則作業対象外（追加要望なら Dialogue で再定義） |
 | `dev.md` | 実装時（開発規約） |
 | `tdd.md` | テスト作成時（BDDシナリオ・RGBCサイクル・三者整合性チェック） |
 | `testcode.md` | バックエンドテスト作成時 |
