@@ -124,6 +124,10 @@ const TOP_KPIS = [
       <h3 class="font-semibold text-blue-700 mb-1">📈 年度通年予測（FY2025 vs FY2026）</h3>
       <p class="text-sm text-gray-700">MFクラウドPL CSV を投入 → 期中実績から通年を按分予測 → 前年比較で経営判定</p>
     </a>
+    <a href="journal-check.php" class="block border-2 border-purple-400 bg-purple-50 rounded p-4 hover:bg-purple-100 transition">
+      <h3 class="font-semibold text-purple-700 mb-1">📒 仕訳チェック（経理サポート）</h3>
+      <p class="text-sm text-gray-700">MFクラウド仕訳帳CSVを月単位で投入 → 形式チェック・集計・異常検知（v1：アップロード機能のみ）</p>
+    </a>
     <a href="monthly-status.php" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition opacity-70">
       <h3 class="font-semibold text-gray-600 mb-1">📊 月次データ（将来用・未運用）</h3>
       <p class="text-sm text-gray-500">月次CSV投入の枠組み。将来「月単位で比較したい」となった時に使う</p>
