@@ -31,6 +31,7 @@
 | `agent.md` | 常に（実装フロー・共通原則・モード判定の入口） |
 | `dialogue-mode.md` | **仕様策定モード**。ゴール記録ファイル無し / `status: dialogue` / ユーザーが仕様検討意図を示したとき |
 | `autopilot.md` | **自走モード**。`mode: autopilot` かつ `status: active`/`paused` の goals.md があるとき。`status: completed` の goals.md は原則作業対象外（追加要望なら Dialogue で再定義） |
+| `inbox-mode.md` | **Inbox モード（並走型）**。`/inbox` スラッシュコマンドで起動。開発エージェント稼働中の裏で別セッションを立て、ユーザーの「次やってほしいこと」を `documents/inbox.md` に追記。実装・仕様策定には踏み込まない |
 | `dev.md` | 実装時（開発規約） |
 | `tdd.md` | テスト作成時（BDDシナリオ・RGBCサイクル・三者整合性チェック） |
 | `testcode.md` | バックエンドテスト作成時 |
@@ -41,7 +42,7 @@
 | `coding.md` | コーディング時（CSS/Sass・HTML・PHP定数の規約） |
 | `setup.md` | 初回セットアップ時のみ（SCSS自動コンパイル等の環境構築） |
 | `ui-design.md`     | UI/デザインを実装・変更するとき |
-| `commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン） |
+| `commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン）／**ブランチ運用方針：単一AI × `develop` 直接コミット**（feature ブランチを切らない・PR とマージはユーザー手動） |
 | `estimation.md` | 新機能のタスク抽出・見積もり（難易度評価）を行うとき |
 
 ## 改行コード
