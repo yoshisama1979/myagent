@@ -16,6 +16,205 @@
 
   <hr class="my-8 border-gray-300">
 
+  <h2 class="text-2xl font-bold mb-4 mt-10">2026-05-29</h2>
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">開発オートパイロット構想 — 人間判断を最小化しAIに一括自走させる仕組み（社長の大タスク）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">カテゴリ</td><td class="px-3 py-2 border border-gray-200">開発・運用基盤／AI活用ワークフロー</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">起案者</td><td class="px-3 py-2 border border-gray-200">社長</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200"><strong>構想段階</strong>。<strong>社長の「大タスク」の一つ</strong>として仕組み構築に取り組む意向</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">適用範囲</td><td class="px-3 py-2 border border-gray-200"><strong>まず社内の開発プロセス改善</strong>。確立後は<strong>将来クライアントへの提供（プロダクト／サービス化）も視野</strong>（確認済み）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">既存 ai-loop との関係</td><td class="px-3 py-2 border border-gray-200"><strong>別の新しい仕組みとして考える</strong>（確認済み）。発想は近いが用途が異なる（ai-loop はプロジェクト自体のレビュー、本構想は開発作業そのものの自走化）</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">課題・背景</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>現在 <strong>3台のPCで別案件を並行</strong>してシステム構築中（確認済み）</li>
+    <li>一つ一つの確認に人間が都度対応するため、<strong>そこがボトルネック</strong>になっている</li>
+    <li>確認をAIに一気に任せられれば、<strong>並行作業がもっと進む</strong></li>
+    <li>狙い：<strong>AIをよりよく活用するため、人間の判断を極力小さくする</strong></li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">仕組みの基本ループ（社長案）</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-4">1. ゴールとなる仕様書を作る ← ここだけ人間と一緒に行う
+   │
+   ▼
+2. その仕様書を「全て解決するまで」AIを動かす（自走）
+   │
+   ▼
+3. 問題が出たり、人間の判断が必要なことが出たら
+   → どこかに残しておく（溜める。途中で人間を止めない）
+   │
+   ▼
+4. 一通りの作業が終わったら、溜めた確認事項を
+   → 人間がまとめて確認・判断
+   │
+   ▼
+5. 人間の判断をすべて反映し、それをもとに次のゴールへ向かう
+   │
+   ▼（2〜5を繰り返す）
+   ▼
+6. すべての問題が解決したとき → 完成</pre>
+  <p class="text-sm mb-4">ポイント：人間の関与を <strong>「最初の仕様書づくり」と「区切りごとの一括確認」</strong> の2点に集約し、その間はAIを止めずに走らせ続ける。確認待ちで作業を分断しないことで、3台並行の効率を上げる狙い。</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">棚卸し時の検討事項・次のアクション（Main モード向け）</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>「人間判断が必要なこと」を溜めておく場所・形式</strong>の設計（例：案件ごとの保留キュー／チェックリスト。ai-loop の conversation.md とは別建て）</li>
+    <li><strong>AIが「人間判断が必要」と自己判断する基準</strong>の定義（どこで止めて溜める／どこは自走で進めてよいか）</li>
+    <li><strong>「全て解決した＝完成」の判定条件</strong>の定義（テスト全パス・保留キューが空 等）。前項 2026-05-29「品質保証方針（テストピラミッド＋AI探索テスト）」と連動させると、完成判定の自動化に使える</li>
+    <li>3台並行を <strong>1人の人間がまとめて確認する</strong>運用の負荷・タイミング設計（案件横断で一括確認するか、案件ごとか）</li>
+    <li>将来のクライアント提供を見据えた場合の <strong>プロダクト化の切り出し方</strong>（社内ツールとして磨きつつ汎用化）</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">具体化①：Codex によるデザイン/UX 自動修正環境</h4>
+  <p class="text-sm mb-2">本構想の具体ピースの一つ。開発の中で <strong>デザイン的なところも自動的に修正される環境</strong> を作りたい。</p>
+  <p class="text-sm font-semibold mb-2 mt-4">アーキテクチャ（確認済み）</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-4">Claude Code（親・修正実装役）
+   │  ← 現在すでに Claude Code から Codex を呼び出している
+   ▼
+Codex（発見役）
+   ・UI 上の問題、UX・デザインなどの修正点を洗い出す
+   ・必要な修正事項を整理（呼び出し）
+   │
+   ▼ 修正事項を元の Claude Code に渡す
+   ▼
+Claude Code が、その修正事項をもとに修正を実装</pre>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>Codex ＝ 発見役</strong>：これまで人間が目視していた「デザイン崩れ・UX 違和感」のレビューを代替（前述「品質保証方針」の "AIエージェントの使いどころ" に対応）</li>
+    <li><strong>Claude Code ＝ 修正実装役</strong>：Codex から渡された修正事項を反映</li>
+    <li>これにより、開発ループの中でデザイン領域も自走的に改善される</li>
+  </ul>
+  <p class="text-sm font-semibold mb-2 mt-4">検討事項</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>自動修正と人間承認の線引き</strong>：デザイン/UX は主観が入るため、どこまで自動修正に任せ、どこを上述「人間判断キュー」に回すか（社長は「自動的に修正される」を志向。承認フローの要否は未確定）</li>
+    <li><strong>Codex への指示書・判断基準</strong>：「何を問題とみなすか」を仕様書・デザインカンプと突合できる形で与える設計</li>
+    <li>画面操作AIの <strong>ツール選定は要調査</strong>（前述メモ参照。現時点の呼び出し先が Codex）</li>
+  </ul>
+
+  <h4 class="text-lg font-semibold mb-3 mt-6">具体化②：仕様策定エージェント（人間と一緒にゴール仕様を考える役）</h4>
+  <p class="text-sm mb-2">システム開発用のエージェントを <strong>もう1つ増やしたい</strong>。本構想の「最初のゴール仕様書づくりは人間と一緒に行う」役を担う専任エージェント。</p>
+  <p class="text-sm font-semibold mb-2 mt-4">背景・現状</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>現在は <strong>1つのエージェント</strong>で開発している</li>
+    <li>最近 <strong>自動走行（自走）機能</strong>を作り、指示するとゴールまで自律的に進める機能がついた（＝本構想の自走実装役に相当）</li>
+  </ul>
+  <p class="text-sm font-semibold mb-2 mt-4">役割分担（2エージェント体制）</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">エージェント</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">役割</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>既存エージェント</strong>（自走実装役）</td><td class="px-3 py-2 border border-gray-200">仕様書を受け取り、ゴールまで自律的に開発を進める（自動走行機能）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>新エージェント</strong>（仕様策定役）</td><td class="px-3 py-2 border border-gray-200">ユーザと一緒に <strong>仕様（spec）を考える</strong>（確認済み：「使用」＝「仕様」）。対話しながらゴールとなる仕様書を固める</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm font-semibold mb-2 mt-4">検討事項</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>2エージェント間の受け渡し</strong>：仕様策定エージェントの成果物（仕様書）を、自走エージェントが読み込める形式で連携</li>
+    <li><strong>仕様策定エージェントの対話設計</strong>：要件ヒアリング・抜け漏れや前提不足の指摘（Memo モードの「精度を上げる対話者」に近い発想を流用できる可能性）</li>
+    <li>本構想の人間関与「最初の仕様書づくり」を、この新エージェントが担う位置づけ</li>
+  </ul>
+
+  <hr class="my-8 border-gray-300">
+
+  <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">システム開発の品質保証方針 — 手動テスト最小化 × AIエージェント活用（調査メモ）</h3>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/3">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">カテゴリ</td><td class="px-3 py-2 border border-gray-200">開発・運用基盤／品質保証（テスト自動化方針）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">起案者</td><td class="px-3 py-2 border border-gray-200">社長</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">ステータス</td><td class="px-3 py-2 border border-gray-200"><strong>調査・アイデア段階</strong>（今後システムに導入していきたい意向）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">適用対象</td><td class="px-3 py-2 border border-gray-200"><strong>クライアント納品システム全般</strong>の標準テスト方針として組み込む想定（確認済み）</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">出典</td><td class="px-3 py-2 border border-gray-200">社長が外部AIに「手動テストを減らしつつ品質を高めたい」と相談して得た回答（調査結果）</td></tr>
+    </tbody>
+  </table>
+
+  <p class="text-sm font-semibold mb-2 mt-4">ゴール</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>人間が行う手動テストを極力減らし、かつ品質を高く保つ</strong></li>
+    <li>E2Eテストを軸にしつつ、すべてをE2Eに頼らず「適材適所の自動化」と「AIエージェントの賢い配置」で実現する</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">1. テスト自動化の黄金比（テストピラミッド）</p>
+  <table class="w-full border-collapse text-sm mb-4">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold w-1/4">層</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">役割・特徴</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>ユニットテスト</strong>（底辺・大量）</td><td class="px-3 py-2 border border-gray-200">ロジック・関数の検証。ミリ秒単位で高速、原因特定が容易。<strong>バグの大部分をここで堰き止める</strong></td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>結合テスト</strong>（中間）</td><td class="px-3 py-2 border border-gray-200">API連携・DBとのやり取りが正しいか検証</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200"><strong>E2Eテスト</strong>（頂点・厳選）</td><td class="px-3 py-2 border border-gray-200">ユーザーの主要導線（ログイン〜決済等）に絞ってデプロイ時に自動実行。遅く Flaky（不安定）になりやすいので全カバーしない</td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm mb-4">→ 「ユニット/結合で大半のバグを潰し、E2Eで最後の導線を確認」が、打鍵コスト（手動テスト）を減らす近道。</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">2. AIエージェント（画面操作AI）の使いどころ</p>
+  <p class="text-sm mb-2">E2Eを整備しても残る「人間がやらざるを得なかったテスト」こそ、画面操作AIエージェントの主戦場：</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>デザイン・レイアウトの崩れチェック</strong>：スマホでのボタン文字被り、デザインカンプとの違和感など視覚確認</li>
+    <li><strong>文言・文脈のニュアンス確認</strong>：エラーメッセージの日本語の不自然さ、文脈的におかしい挙動</li>
+    <li><strong>探索的テスト（モンキーテスト）</strong>：無効値の入力・ボタン連打など、テストケース化しにくい意地悪なテスト</li>
+  </ul>
+  <p class="text-sm mb-4">→ 仕様書・指示書を渡して裏で実行させ、これまでの目視「受け入れテスト」の時間を大幅削減。</p>
+
+  <p class="text-sm font-semibold mb-2 mt-4">3. 理想の開発ワークフロー（CI/CD組み込み）</p>
+  <pre class="bg-gray-900 text-gray-100 p-4 rounded text-sm font-mono mb-4">[コード変更]
+   │
+   ▼
+1. ユニット・結合テスト（GitHub Actions等で自動 / 1〜2分）
+   仕様通りのロジックかを瞬時に検証
+   │
+   ▼
+2. 従来のE2Eテスト（Playwright等で自動 / 3〜5分）
+   主要導線・ブラウザ基本動作のデグレ防止を厳密に検証
+   │
+   ▼
+3. AIによる探索・視覚テスト（画面操作エージェント / 5〜10分）
+   UIの崩れ・エッジケース不具合を自律テスト。バグ発見時は修正パッチまで提案
+   │
+   ▼
+【人間は最終確認のみ】</pre>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>従来E2E ＝「デグレード（先祖返り）の完全防止」を担保</li>
+    <li>AIエージェント ＝「人間による目視・レビューの自動化」を担う</li>
+    <li>この2段構えで、テストコードのメンテからもリリース前の泥臭い手動テストからも解放され、本質的な機能開発に集中できる</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">補足・前提（確認済み）</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>適用先は <strong>クライアント納品システム全般</strong>の標準テスト方針として組み込む想定（確認済み）</li>
+    <li>文中の「Codex」は <strong>特定ツールの指定ではなく、ツール選定は要調査</strong>（確認済み）。Codex / Playwright MCP / その他の画面操作AIを比較検討する課題として残す</li>
+  </ul>
+
+  <p class="text-sm font-semibold mb-2 mt-4">棚卸し時の検討事項・次のアクション（Main モード向け）</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li>画面操作AIエージェントのツール選定（Codex / Playwright MCP 等の比較・検証）</li>
+    <li>最初の自動化・AI置き換えスポットの特定 — 「現在の手動テストで最も時間がかかる部分／毎回同じことを確認していて退屈な部分」を洗い出す（外部AIからの問いかけ。社長未回答）</li>
+    <li>「はなさか 業務改善システム構築ポリシー」（2026-05-08 メモ【C-1】）への <strong>テスト・品質保証セクション</strong>としての組み込み可否</li>
+    <li>運用管理サービス（月額50,000円）の品質保証施策と連動させるか</li>
+  </ul>
+
+  <hr class="my-8 border-gray-300">
+
   <h2 class="text-2xl font-bold mb-4 mt-10">2026-05-24</h2>
 
   <h3 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-8">「HANAツールズ」（仮称）構想：小ツール公開シリーズの立ち上げ検討</h3>
