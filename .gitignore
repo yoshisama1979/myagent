@@ -19,3 +19,12 @@ data/monthly/
 
 # Windows のファイル属性メタデータ（NTFS Zone.Identifier）
 *Zone.Identifier
+
+# 別プロジェクトの移植元ソース（_assistant/ への移植元として一時的に配置。myagent の git 履歴には含めない）
+harness-factory-main/
+
+# _assistant/ のローカル環境（venv・.env・Python キャッシュ）
+_assistant/.venv/
+_assistant/.env
+_assistant/__pycache__/
+_assistant/**/__pycache__/
