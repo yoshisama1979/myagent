@@ -1,0 +1,17 @@
+# 経営サポート用業務パートナー (_assistant) の Python 依存
+# インストール: python3 -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt
+
+# Claude API クライアント
+anthropic>=0.40
+
+# Chainlit Web UI
+chainlit>=2.11.1
+
+# HTTP クライアント（hana-tools への接続）
+httpx>=0.28.1
+
+# OS の証明書ストアを使う（社内 TLS / プロキシ証明書対応）
+truststore>=0.10.4
+
+# 開発・テスト
+pytest>=8.0
