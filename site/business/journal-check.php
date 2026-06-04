@@ -16,8 +16,11 @@ const CARD_SOURCES = [
     'other'        => 'その他',
 ];
 
+const JOURNAL_RULES_FILE = FINANCIAL_ROOT . '/journal-rules.json';
+
 const JOURNAL_REQUIRED_HEADERS = ['取引No', '取引日', '借方勘定科目', '借方金額(円)', '貸方勘定科目', '貸方金額(円)', '摘要'];
 const CARD_RESONA_REQUIRED_HEADERS = ['利用日', '利用内容', '金額', '承認番号', 'ステータス'];
+const CARD_SBI_REQUIRED_HEADERS = ['お取引日', 'お取引内容', 'お取引金額'];
 
 function read_csv_rows(string $file): array {
     if (!is_file($file)) return [];
@@ -95,13 +98,33 @@ function handle_journal_upload(): array {
     return $result;
 }
 
+function detect_sbi_period(string $file): ?string {
+    $rows = read_csv_rows($file);
+    if (count($rows) < 2) return null;
+    $months = [];
+    foreach (array_slice($rows, 1) as $row) {
+        $date = trim((string)($row[1] ?? ''));
+        if (preg_match('#^(\d{4})/(\d{1,2})/\d{1,2}$#', $date, $m)) {
+            $ym = sprintf('%04d-%02d', (int)$m[1], (int)$m[2]);
+            $months[$ym] = ($months[$ym] ?? 0) + 1;
+        }
+    }
+    if (empty($months)) return null;
+    arsort($months);
+    $top_ym = array_key_first($months);
+    $top_count = $months[$top_ym];
+    $total = array_sum($months);
+    if ($total > 0 && $top_count / $total >= 0.6) return $top_ym;
+    return null;
+}
+
 function handle_card_upload(): array {
     $source = (string)($_POST['card_source'] ?? '');
     if (!array_key_exists($source, CARD_SOURCES)) {
         return ['type' => 'error', 'text' => 'カード種別の指定が不正です'];
     }
-    $fy = (int)($_POST['card_fy'] ?? 0);
-    if ($fy < 2020 || $fy > 2100) return ['type' => 'error', 'text' => '年度の指定が不正です'];
+    $label = trim((string)($_POST['card_label'] ?? ''));
+    $label_auto = false;
 
     if (!isset($_FILES['card_csv']) || $_FILES['card_csv']['error'] === UPLOAD_ERR_NO_FILE) {
         return ['type' => 'error', 'text' => 'ファイルが選択されていません'];
@@ -110,14 +133,34 @@ function handle_card_upload(): array {
     if ($f['error'] !== UPLOAD_ERR_OK) return ['type' => 'error', 'text' => "アップロードエラー (code: {$f['error']})"];
     if ($f['size'] > CARD_MAX_FILE_SIZE) return ['type' => 'error', 'text' => 'ファイルサイズが5MBを超えています'];
 
-    $dest = CARD_STATEMENT_DIR . '/' . $source . "/FY{$fy}.csv";
-    $validator = $source === 'resona-debit'
-        ? fn(string $p) => validate_csv_headers($p, CARD_RESONA_REQUIRED_HEADERS)
-        : null;
+    $validator = match ($source) {
+        'resona-debit' => fn(string $p) => validate_csv_headers($p, CARD_RESONA_REQUIRED_HEADERS),
+        'sbi-debit'    => fn(string $p) => validate_csv_headers($p, CARD_SBI_REQUIRED_HEADERS),
+        default        => null,
+    };
+
+    if ($label === '') {
+        if ($source === 'sbi-debit') {
+            $detected = detect_sbi_period($f['tmp_name']);
+            if ($detected === null) {
+                return ['type' => 'error', 'text' => 'ラベルを自動推定できませんでした。「2026-04」形式で手動指定してください'];
+            }
+            $label = $detected;
+            $label_auto = true;
+        } else {
+            return ['type' => 'error', 'text' => 'ラベル（「FY2026」または「2026-04」）を指定してください'];
+        }
+    }
+    if (!preg_match('/^(FY\d{4}|\d{4}-\d{2})$/', $label)) {
+        return ['type' => 'error', 'text' => 'ラベルは「FY2026」または「2026-04」の形式で指定してください'];
+    }
+
+    $dest = CARD_STATEMENT_DIR . '/' . $source . "/{$label}.csv";
     $result = safe_save_uploaded($f['tmp_name'], $dest, $validator);
     if ($result['type'] === 'success') {
-        $label = CARD_SOURCES[$source];
-        $result['text'] = "✅ {$label} / FY{$fy}.csv を保存しました（" . number_format($f['size']) . "バイト）";
+        $src_label = CARD_SOURCES[$source];
+        $auto_note = $label_auto ? '（中身から自動推定）' : '';
+        $result['text'] = "✅ {$src_label} / {$label}.csv を保存しました{$auto_note}（" . number_format($f['size']) . "バイト）";
     }
     return $result;
 }
@@ -128,20 +171,23 @@ function list_card_statements(): array {
     foreach (CARD_SOURCES as $slug => $label) {
         $dir = CARD_STATEMENT_DIR . '/' . $slug;
         if (!is_dir($dir)) continue;
-        $files = glob($dir . '/FY????.csv') ?: [];
+        $files = glob($dir . '/*.csv') ?: [];
         foreach ($files as $f) {
-            if (!preg_match('/FY(\d{4})\.csv$/', $f, $m)) continue;
+            if (!preg_match('/\/(FY\d{4}|\d{4}-\d{2})\.csv$/', $f, $m)) continue;
             $result[] = [
                 'source' => $slug,
-                'label' => $label,
-                'fy' => (int)$m[1],
+                'source_label' => $label,
+                'period' => $m[1],
                 'path' => $f,
                 'size' => filesize($f),
                 'mtime' => filemtime($f),
             ];
         }
     }
-    usort($result, fn($a, $b) => $b['mtime'] <=> $a['mtime']);
+    usort($result, function ($a, $b) {
+        if ($a['source'] !== $b['source']) return strcmp($a['source'], $b['source']);
+        return strcmp($b['period'], $a['period']);
+    });
     return $result;
 }
 
@@ -209,6 +255,23 @@ function load_journal(int $fy): ?array {
     ];
 }
 
+const CARD_DESC_DICT = [
+    'ｴﾂｸｽｻ-ﾊﾞ-'        => 'エックスサーバー',
+    'ｻｸﾗｲﾝﾀ-ﾈﾂﾄ'       => 'さくらインターネット',
+    'ﾑ-ﾑ-ﾄﾞﾒｲﾝ'        => 'ムームードメイン',
+    'ｶ)ｼｰｴｽｱｰﾙ'         => 'カ）シーエスアール',
+    'ｴﾌｲ-ﾙｳｵ-ﾀ-ﾏｲﾂｷﾊﾂｶｼﾞﾒ' => 'エフィールウォーター（毎月初日定期）',
+    'ｶﾌﾞｼｷｶﾞｲｼｬｸﾗｳﾄﾞﾜｰｸｽ' => 'クラウドワークス',
+    'CROWDWORKS'         => 'クラウドワークス',
+];
+
+function pretty_card_desc(string $desc): string {
+    foreach (CARD_DESC_DICT as $from => $to) {
+        $desc = str_replace($from, $to, $desc);
+    }
+    return mb_convert_kana($desc, 'KV');
+}
+
 function extract_visa_debit_code(string $memo): ?string {
     if (preg_match('/VISAデビ\s+0?(\d{6,7})A?/u', $memo, $m)) {
         $code = ltrim($m[1], '0');
@@ -226,9 +289,11 @@ function parse_card_statement_resona(string $file): array {
         if (count($row) < 5) continue;
         $auth = trim((string)($row[3] ?? ''));
         if ($auth === '') continue;
+        $raw = trim((string)($row[1] ?? ''));
         $result[ltrim($auth, '0')] = [
             'date' => trim((string)($row[0] ?? '')),
-            'desc' => trim((string)($row[1] ?? '')),
+            'desc' => pretty_card_desc($raw),
+            'desc_raw' => $raw,
             'amount' => (int)str_replace([',', '"', ' '], '', (string)($row[2] ?? '')),
             'status' => trim((string)($row[4] ?? '')),
             'source' => 'resona-debit',
@@ -238,12 +303,63 @@ function parse_card_statement_resona(string $file): array {
     return $result;
 }
 
-function build_pending_list(array $journal, array $card_lookup): array {
+function parse_card_statement_sbi(string $file): array {
+    $rows = read_csv_rows($file);
+    if (count($rows) < 2) return [];
+    $result = [];
+    foreach (array_slice($rows, 1) as $row) {
+        if (count($row) < 5) continue;
+        $marker = trim((string)($row[0] ?? ''));
+        if ($marker !== '2') continue;
+        $date = trim((string)($row[1] ?? ''));
+        $desc = trim((string)($row[2] ?? ''));
+        $amount = (int)round((float)str_replace([',', '"', ' '], '', (string)($row[4] ?? '')));
+        if ($date === '' || $amount === 0) continue;
+        $result[] = [
+            'date' => $date,
+            'desc' => pretty_card_desc($desc),
+            'desc_raw' => $desc,
+            'amount' => $amount,
+            'source' => 'sbi-debit',
+            'source_label' => '住信SBI VISAデビ',
+        ];
+    }
+    return $result;
+}
+
+function build_sbi_index(array $stmts): array {
+    $idx = [];
+    foreach ($stmts as $i => $s) {
+        $key = $s['date'] . '|' . $s['amount'];
+        $idx[$key][] = $i;
+    }
+    return $idx;
+}
+
+function is_sbi_debit_entry(array $e): bool {
+    return mb_strpos($e['cr_sub'], '住信SBI') !== false
+        && mb_strpos($e['memo'], 'デビット') !== false;
+}
+
+const SBI_NEAR_DAYS_MAX = 6;
+const SBI_FUZZY_AMOUNT_RATIO = 0.03;
+const SBI_FUZZY_AMOUNT_ABS_MAX = 500;
+
+function build_pending_list(array $journal, array $card_lookup, array $sbi_stmts): array {
+    $sbi_idx = build_sbi_index($sbi_stmts);
+    $sbi_used = [];
     $pending = [];
     foreach ($journal['entries'] as $i => $e) {
         if (mb_strpos($e['dr_acct'], '要確認') === false) continue;
         $code = extract_visa_debit_code($e['memo']);
-        $card = ($code !== null && isset($card_lookup[$code])) ? $card_lookup[$code] : null;
+        $card = null;
+        $match_kind = null;
+
+        if ($code !== null && isset($card_lookup[$code])) {
+            $card = $card_lookup[$code];
+            $match_kind = 'auth';
+        }
+
         $pending[] = [
             'line' => $i + 2,
             'tx_no' => $e['tx_no'],
@@ -252,9 +368,119 @@ function build_pending_list(array $journal, array $card_lookup): array {
             'memo' => $e['memo'],
             'code' => $code,
             'card' => $card,
+            'match_kind' => $match_kind,
+            '_entry' => $e,
         ];
     }
+
+    $try_sbi_match = function (int $k, int $delta) use (&$pending, &$sbi_used, $sbi_idx, $sbi_stmts): bool {
+        $p = $pending[$k];
+        $ts = strtotime(str_replace('/', '-', $p['date']));
+        if ($ts === false) return false;
+        $nd = date('Y/m/d', $ts + 86400 * $delta);
+        $key = $nd . '|' . $p['amount'];
+        if (!isset($sbi_idx[$key])) return false;
+        foreach ($sbi_idx[$key] as $j) {
+            if (isset($sbi_used[$j])) continue;
+            $sbi_used[$j] = true;
+            $pending[$k]['card'] = $sbi_stmts[$j];
+            if ($delta === 0) {
+                $pending[$k]['match_kind'] = count($sbi_idx[$key]) > 1 ? 'date-amount-multi' : 'date-amount';
+            } else {
+                $pending[$k]['match_kind'] = 'date-amount-near' . abs($delta);
+            }
+            return true;
+        }
+        return false;
+    };
+
+    // パス1：同日同額（完全一致）
+    foreach ($pending as $k => $p) {
+        if ($p['card'] !== null) continue;
+        if (!is_sbi_debit_entry($p['_entry'])) continue;
+        $try_sbi_match($k, 0);
+    }
+
+    // パス2：±1〜N日同額（距離の近い順）
+    for ($dist = 1; $dist <= SBI_NEAR_DAYS_MAX; $dist++) {
+        foreach ($pending as $k => $p) {
+            if ($pending[$k]['card'] !== null) continue;
+            if (!is_sbi_debit_entry($pending[$k]['_entry'])) continue;
+            if ($try_sbi_match($k, -$dist)) continue;
+            $try_sbi_match($k, $dist);
+        }
+    }
+
+    // パス3：金額近似マッチ（為替レート差等。同日 → ±N日 の順、金額差最小を選択）
+    $try_sbi_fuzzy = function (int $k, int $delta) use (&$pending, &$sbi_used, $sbi_stmts): bool {
+        $p = $pending[$k];
+        $ts = strtotime(str_replace('/', '-', $p['date']));
+        if ($ts === false || $p['amount'] === 0) return false;
+        $target_date = date('Y/m/d', $ts + 86400 * $delta);
+        $best_j = null;
+        $best_diff = PHP_INT_MAX;
+        foreach ($sbi_stmts as $j => $s) {
+            if (isset($sbi_used[$j])) continue;
+            if ($s['date'] !== $target_date) continue;
+            $diff = abs($s['amount'] - $p['amount']);
+            if ($diff === 0) continue;
+            if ($diff > SBI_FUZZY_AMOUNT_ABS_MAX) continue;
+            if ($diff / $p['amount'] > SBI_FUZZY_AMOUNT_RATIO) continue;
+            if ($diff < $best_diff) {
+                $best_diff = $diff;
+                $best_j = $j;
+            }
+        }
+        if ($best_j === null) return false;
+        $sbi_used[$best_j] = true;
+        $card = $sbi_stmts[$best_j];
+        $card['amount_diff'] = $card['amount'] - $p['amount'];
+        $pending[$k]['card'] = $card;
+        $pending[$k]['match_kind'] = $delta === 0 ? 'fuzzy' : 'fuzzy-near' . abs($delta);
+        return true;
+    };
+
+    foreach ($pending as $k => $p) {
+        if ($pending[$k]['card'] !== null) continue;
+        if (!is_sbi_debit_entry($pending[$k]['_entry'])) continue;
+        $try_sbi_fuzzy($k, 0);
+    }
+    for ($dist = 1; $dist <= SBI_NEAR_DAYS_MAX; $dist++) {
+        foreach ($pending as $k => $p) {
+            if ($pending[$k]['card'] !== null) continue;
+            if (!is_sbi_debit_entry($pending[$k]['_entry'])) continue;
+            if ($try_sbi_fuzzy($k, -$dist)) continue;
+            $try_sbi_fuzzy($k, $dist);
+        }
+    }
+
+    foreach ($pending as &$p) unset($p['_entry']);
     return $pending;
+}
+
+function load_journal_rules(): array {
+    if (!is_file(JOURNAL_RULES_FILE)) return [];
+    $json = file_get_contents(JOURNAL_RULES_FILE);
+    if ($json === false || $json === '') return [];
+    $data = json_decode($json, true);
+    if (!is_array($data) || !isset($data['rules']) || !is_array($data['rules'])) return [];
+    return $data['rules'];
+}
+
+function apply_rule(string $desc, array $rules): ?array {
+    foreach ($rules as $r) {
+        $m = $r['match'] ?? '';
+        if ($m === '') continue;
+        $type = $r['match_type'] ?? 'exact';
+        $hit = match ($type) {
+            'exact'    => $desc === $m,
+            'contains' => mb_strpos($desc, $m) !== false,
+            'prefix'   => str_starts_with($desc, $m),
+            default    => false,
+        };
+        if ($hit) return $r;
+    }
+    return null;
 }
 
 function group_pending_by_pattern(array $pending): array {
@@ -262,11 +488,15 @@ function group_pending_by_pattern(array $pending): array {
     foreach ($pending as $p) {
         $key = $p['card']['desc'] ?? '(カード明細未マッチ)';
         if (!isset($groups[$key])) {
-            $groups[$key] = ['count' => 0, 'total' => 0, 'items' => [], 'matched' => $p['card'] !== null];
+            $groups[$key] = ['count' => 0, 'total' => 0, 'items' => [], 'matched' => $p['card'] !== null, 'desc_raws' => []];
         }
         $groups[$key]['count']++;
         $groups[$key]['total'] += $p['amount'];
         $groups[$key]['items'][] = $p;
+        $raw = $p['card']['desc_raw'] ?? null;
+        if ($raw !== null && $raw !== $key) {
+            $groups[$key]['desc_raws'][$raw] = true;
+        }
     }
     uasort($groups, fn($a, $b) => $b['total'] <=> $a['total']);
     return $groups;
@@ -397,14 +627,33 @@ $journal = ($selected_fy && isset($files[$selected_fy])) ? load_journal($selecte
 $analysis = $journal ? analyze_journal($journal) : null;
 
 $card_lookup = [];
+$sbi_stmts = [];
 if ($journal && $selected_fy) {
     $resona_file = CARD_STATEMENT_DIR . "/resona-debit/FY{$selected_fy}.csv";
     if (is_file($resona_file)) {
         $card_lookup += parse_card_statement_resona($resona_file);
     }
+    $sbi_dir = CARD_STATEMENT_DIR . '/sbi-debit';
+    if (is_dir($sbi_dir)) {
+        $sbi_files = glob($sbi_dir . '/*.csv') ?: [];
+        $fy_start = sprintf('%04d/04/01', $selected_fy);
+        $fy_end   = sprintf('%04d/03/31', $selected_fy + 1);
+        foreach ($sbi_files as $sf) {
+            foreach (parse_card_statement_sbi($sf) as $st) {
+                if ($st['date'] >= $fy_start && $st['date'] <= $fy_end) {
+                    $sbi_stmts[] = $st;
+                }
+            }
+        }
+    }
 }
-$pending = $journal ? build_pending_list($journal, $card_lookup) : [];
+$journal_rules = load_journal_rules();
+$pending = $journal ? build_pending_list($journal, $card_lookup, $sbi_stmts) : [];
 $pending_groups = group_pending_by_pattern($pending);
+foreach ($pending_groups as $desc => &$g) {
+    $g['rule'] = apply_rule($desc, $journal_rules);
+}
+unset($g);
 $pending_matched_count = count(array_filter($pending, fn($p) => $p['card'] !== null));
 
 $default_fy = 2026;
@@ -471,7 +720,7 @@ $default_fy = 2026;
     <div class="p-4 border-t border-gray-200 space-y-3">
       <p class="text-xs text-gray-600">
         仕訳帳の「★要確認」（VISAデビット引落）の科目を特定するため、各カード／銀行のデビット・カード明細CSVを保管する。<br>
-        保存先：<code>data/financial/card-statements/&lt;source&gt;/FY{年度}.csv</code>（gitignored）／ 年度単位・同年度は上書き
+        保存先：<code>data/financial/card-statements/&lt;source&gt;/&lt;label&gt;.csv</code>（gitignored）／ 同カード種別×同ラベルは上書き
       </p>
       <form method="POST" enctype="multipart/form-data" class="space-y-3">
         <input type="hidden" name="upload_type" value="card">
@@ -484,21 +733,21 @@ $default_fy = 2026;
             </label>
           <?php endforeach; ?>
         </div>
-        <div class="flex gap-4 items-center">
-          <label class="font-semibold text-sm">対象年度：</label>
-          <?php foreach (JOURNAL_TARGET_FYS as $fy): ?>
-            <label class="inline-flex items-center gap-1">
-              <input type="radio" name="card_fy" value="<?= $fy ?>" <?= $fy === $default_fy ? 'checked' : '' ?> required>
-              <span>FY<?= $fy ?></span>
-            </label>
-          <?php endforeach; ?>
+        <div class="flex gap-3 items-center flex-wrap">
+          <label class="font-semibold text-sm whitespace-nowrap">ラベル：</label>
+          <input type="text" name="card_label" value="" pattern="(FY\d{4}|\d{4}-\d{2})"
+                 class="border border-gray-300 rounded px-2 py-1 text-sm font-mono w-32" placeholder="自動推定">
+          <span class="text-xs text-gray-500">
+            空欄=自動推定（住信SBIのみ対応）／ 年度通し: <code>FY2026</code> ／ 月単位: <code>2026-04</code>
+          </span>
         </div>
         <div>
-          <label class="block text-sm font-semibold mb-1">カード明細 CSV（期首〜現時点）</label>
+          <label class="block text-sm font-semibold mb-1">カード明細 CSV</label>
           <input type="file" name="card_csv" accept=".csv,text/csv" required
                  class="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-purple-600 file:text-white file:font-semibold">
         </div>
         <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-5 rounded">アップロード</button>
+        <p class="text-xs text-gray-500">同ラベル（同カード種別 × 同ラベル）は上書き。違うラベルは別ファイルとして保存。</p>
       </form>
     </div>
   </details>
@@ -511,7 +760,7 @@ $default_fy = 2026;
         <thead class="bg-gray-100">
           <tr>
             <th class="px-3 py-2 text-left">カード種別</th>
-            <th class="px-3 py-2 text-left">年度</th>
+            <th class="px-3 py-2 text-left">ラベル</th>
             <th class="px-3 py-2 text-right">サイズ</th>
             <th class="px-3 py-2 text-left">最終更新</th>
           </tr>
@@ -519,8 +768,8 @@ $default_fy = 2026;
         <tbody>
           <?php foreach ($card_files as $cf): ?>
           <tr class="border-t border-gray-200">
-            <td class="px-3 py-2"><?= h($cf['label']) ?></td>
-            <td class="px-3 py-2 font-mono">FY<?= h((string)$cf['fy']) ?></td>
+            <td class="px-3 py-2"><?= h($cf['source_label']) ?></td>
+            <td class="px-3 py-2 font-mono"><?= h($cf['period']) ?></td>
             <td class="px-3 py-2 text-right text-gray-600"><?= number_format($cf['size']) ?> バイト</td>
             <td class="px-3 py-2 text-gray-600"><?= h(date('Y-m-d H:i', $cf['mtime'])) ?></td>
           </tr>
@@ -611,11 +860,33 @@ $default_fy = 2026;
             <tr class="border-t border-gray-200 cursor-pointer hover:bg-amber-50" data-toggle-target="grp-<?= $gi ?>">
               <td class="px-3 py-2">
                 <span class="toggle-icon inline-block w-4 text-gray-400 text-xs">▶</span>
-                <?php if (!$g['matched']): ?><span class="text-red-600 font-bold"><?= h($desc) ?></span><?php else: ?><?= h($desc) ?><?php endif; ?>
+                <?php if (!$g['matched']): ?>
+                  <span class="text-red-600 font-bold"><?= h($desc) ?></span>
+                <?php else: ?>
+                  <?= h($desc) ?>
+                  <?php if (!empty($g['desc_raws'])): ?>
+                    <span class="text-xs text-gray-500 ml-1">（<?= h(implode(' / ', array_keys($g['desc_raws']))) ?>）</span>
+                  <?php endif; ?>
+                <?php endif; ?>
               </td>
               <td class="px-3 py-2 text-right font-mono"><?= number_format($g['count']) ?></td>
               <td class="px-3 py-2 text-right"><?= jpy($g['total']) ?></td>
-              <td class="px-3 py-2 text-xs text-gray-500">—（後でルール定義）</td>
+              <td class="px-3 py-2 text-xs">
+                <?php if ($g['rule']): ?>
+                  <span class="font-semibold text-blue-700"><?= h($g['rule']['dr_acct']) ?></span>
+                  <?php if (!empty($g['rule']['dr_sub'])): ?>
+                    <span class="text-gray-700"> / <?= h($g['rule']['dr_sub']) ?></span>
+                  <?php endif; ?>
+                  <?php if (!empty($g['rule']['dr_partner'])): ?>
+                    <span class="text-gray-500"> / 取引先: <?= h($g['rule']['dr_partner']) ?></span>
+                  <?php endif; ?>
+                  <?php if (!empty($g['rule']['note'])): ?>
+                    <div class="text-gray-500 mt-0.5"><?= h($g['rule']['note']) ?></div>
+                  <?php endif; ?>
+                <?php else: ?>
+                  <span class="text-gray-400">—（未設定）</span>
+                <?php endif; ?>
+              </td>
             </tr>
             <tr id="grp-<?= $gi ?>" class="hidden bg-gray-50">
               <td colspan="4" class="px-6 py-2">
@@ -625,17 +896,45 @@ $default_fy = 2026;
                       <th class="text-left py-1">日付</th>
                       <th class="text-left py-1">取引No</th>
                       <th class="text-right py-1">金額</th>
-                      <th class="text-left py-1">承認番号</th>
+                      <th class="text-left py-1">マッチ</th>
                       <th class="text-left py-1">元の摘要</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($g['items'] as $it): ?>
-                    <tr>
+                    <?php
+                    $kind_badge = [
+                      'auth'               => '<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 text-xs">承認番号</span>',
+                      'date-amount'        => '<span class="px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 text-xs">日付＋金額</span>',
+                      'date-amount-multi'  => '<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-xs">日付＋金額(候補複数)</span>',
+                      'date-amount-near1'  => '<span class="px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-700 text-xs">±1日</span>',
+                      'date-amount-near2'  => '<span class="px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-700 text-xs">±2日</span>',
+                      'date-amount-near3'  => '<span class="px-1.5 py-0.5 rounded bg-cyan-100 text-cyan-700 text-xs">±3日</span>',
+                      'date-amount-near4'  => '<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-xs">⚠ ±4日</span>',
+                      'date-amount-near5'  => '<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-xs">⚠ ±5日</span>',
+                      'date-amount-near6'  => '<span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 text-xs">⚠ ±6日</span>',
+                      'fuzzy'              => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(同日・金額近似)</span>',
+                      'fuzzy-near1'        => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(±1日・金額近似)</span>',
+                      'fuzzy-near2'        => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(±2日・金額近似)</span>',
+                      'fuzzy-near3'        => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(±3日・金額近似)</span>',
+                      'fuzzy-near4'        => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(±4日・金額近似)</span>',
+                      'fuzzy-near5'        => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(±5日・金額近似)</span>',
+                      'fuzzy-near6'        => '<span class="px-1.5 py-0.5 rounded bg-orange-100 text-orange-700 text-xs">⚠ 暫定(±6日・金額近似)</span>',
+                    ];
+                    $is_fuzzy = fn($k) => str_starts_with((string)$k, 'fuzzy');
+                    ?>
+                    <?php foreach ($g['items'] as $it):
+                      $diff = $it['card']['amount_diff'] ?? null;
+                    ?>
+                    <tr class="<?= $is_fuzzy($it['match_kind']) ? 'bg-orange-50' : '' ?>">
                       <td class="py-0.5 font-mono"><?= h($it['date']) ?></td>
                       <td class="py-0.5 font-mono"><?= h($it['tx_no']) ?></td>
-                      <td class="py-0.5 text-right"><?= jpy($it['amount']) ?></td>
-                      <td class="py-0.5 font-mono"><?= h($it['code'] ?? '—') ?></td>
+                      <td class="py-0.5 text-right">
+                        <?= jpy($it['amount']) ?>
+                        <?php if ($diff !== null && $diff !== 0): ?>
+                          <span class="text-orange-700 text-xs ml-1">(明細 <?= jpy($it['card']['amount']) ?> / 差 <?= ($diff > 0 ? '+' : '') . number_format($diff) ?>円)</span>
+                        <?php endif; ?>
+                      </td>
+                      <td class="py-0.5"><?= $kind_badge[$it['match_kind']] ?? '<span class="text-gray-400 text-xs">—</span>' ?></td>
                       <td class="py-0.5 text-gray-600"><?= h($it['memo']) ?></td>
                     </tr>
                     <?php endforeach; ?>
