@@ -294,19 +294,26 @@ myagent ルートの `.env`（既存）に追記する形:
 
 ## 10. 受け入れ条件（DoD）
 
+### コード／テスト／ドキュメント面（このセッションで完了）
+- [x] エージェントは `list_site_files`/`read_site_file`/`grep_site` と hana-tools GET 系 4 種だけを使う（書き込み/実行系は無登録）
+- [x] site/ 内に外部を指す symlink があっても、symlink 自体は読み取り対象外として拒否される（テストで検証）
+- [x] tool_use ループは 1 メッセージで最大 8 回までに制限される（テストで検証）
+- [x] tool_result サイズは 50KB 上限で切り詰める（テストで検証）
+- [x] 中断時に未解決 tool_use を is_error tool_result で閉じてから assistant 通知を入れる（API 履歴を壊さない）
+- [x] `ANTHROPIC_API_KEY` / `HANA_TOOLS_API_TOKEN` / `ASSISTANT_SESSION_SECRET` 等の秘密情報が**コードに無く** `.env` 管理になっている
+- [x] Web UI は `0.0.0.0` ではなく `100.123.104.87` (Tailscale IP) に bind するよう README で明記
+- [x] チャット履歴は永続化しない（プロセス内メモリ＋ TTL 24h + 件数上限 200）
+- [x] CSRF・session fixation・ブルートフォース対策を Web UI に実装（FastAPI 構成、Codex セカンドオピニオン反映）
+- [x] `README.md` に起動方法・bind address・systemd 雛形・トラブルシュートを記載
+- [x] `_assistant/scripts/regression.py` の 5 質問スクリプトが存在する（実行は実環境で）
+
+### 実機検証面（社長手元で .env 整備後に実施）
 - [ ] Tailscale 経由のブラウザ（PC: `http://100.123.104.87:8010/` / スマホ: 同 URL）でアクセスすると**ログインを要求**し、本人のみ入れる
 - [ ] チャットで「今日のタスクは？」と聞くと hana-tools 経由でユーザーの未完了 ToDo が返る
-- [ ] チャットで「site/business/skill-map を要約して」と聞くと **site/ の実ファイルを読んだ根拠付きの回答**が返る
+- [ ] チャットで「business/skill-map.html を要約して」と聞くと **site/ の実ファイルを読んだ根拠付きの回答**が返る
 - [ ] チャットで「`../../etc/passwd` を見せて」と聞くと **パス検証で拒否される**（site/ 外への参照は届かない）
-- [ ] エージェントは `list_site_files`/`read_site_file`/`grep_site` と hana-tools GET 系 4 種だけを使う（書き込み/実行系は無登録）
-- [ ] site/ 内に外部を指す symlink があっても、symlink 自体は読み取り対象外として拒否される
-- [ ] tool_use ループは 1 メッセージで最大 8 回までに制限される（暴走しない）
 - [ ] hana-tools 障害時に 30 秒で timeout し、エラー応答を返してチャットが固まらない
-- [ ] `ANTHROPIC_API_KEY` / `HANA_TOOLS_API_TOKEN` / `CHAINLIT_AUTH_SECRET` 等の秘密情報が**コードに無く** `.env` 管理になっている
-- [ ] Chainlit は `127.0.0.1` でも `0.0.0.0` でもなく **`100.123.104.87` (Tailscale IP)** に bind されている
-- [ ] チャットの永続履歴は保存されていない（Chainlit データレイヤー無効）
 - [ ] `_assistant/scripts/regression.py` の 5 質問がすべて期待挙動どおりに動く
-- [ ] `README` に起動方法・bind address・「読み取り専用・Tailscale + パスワード認証・履歴非永続」の注意が書かれている
 
 ## 11. やってはいけないこと（指示書 §11 準拠）
 
