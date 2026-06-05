@@ -23,7 +23,7 @@ alwaysApply: false
 ### テスト DB 使用方法
 
 - **SafeTestCase**: 本番 DB 保護機能付きテストベースクラス（実体: `src/tests/SafeTestCase.php`）
-  - **本番 DB 名チェック**: `earthraise`, `production`, `prod`, `live`, `main` への接続を拒否
+  - **本番 DB 名チェック**: 本番 DB 名（`production` / `prod` / `live` / `main` 等の一般名に加え、各プロジェクトの実 DB 名）への接続を拒否。**禁止する DB 名のリストは `project-config.md` を正とする**
   - **testing 環境でのみ実行許可**: `APP_ENV=testing` 必須
   - **SQLite インメモリ許可**: `DB_DATABASE=:memory:` は安全としてスキップ
   - チェックは `parent::setUp()` 前に実行されるため、`RefreshDatabase` の破壊処理が走る前に必ず検証される
@@ -86,26 +86,22 @@ class FooControllerTest extends SafeTestCase
 
 ### Policy のテスト・実装規約
 
-Laravel の Policy は Gate から呼ばれるため、**プロジェクト内のあらゆる Authenticatable 種別**が `$actor` として渡される可能性がある。本プロジェクトでは現在 `User`（管理画面）と `Customer`（カタログ画面）の 2 種別が存在する。
+Laravel の Policy は Gate から呼ばれるため、**プロジェクト内のあらゆる Authenticatable 種別**が `$actor` として渡される可能性がある。複数の認証主体（例：管理画面ユーザーとエンドユーザーを別モデルで扱う構成）を持つプロジェクトでは、想定外の種別が `$actor` に渡って 500 になり得る。**そのプロジェクトに実在する Authenticatable 種別とロールの一覧は `project-config.md` を正とする**（以下のコード例のモデル名・ロール名はあくまで説明用のプレースホルダ）。
 
 #### Policy のコード規約
 
 - **Policy / Policy トレイトのメソッド引数 `$actor` を特定モデル型で固定しない**
   - ❌ `public function viewAny(User $actor): bool` — 別種の Authenticatable で TypeError 500
   - ✅ `public function viewAny($actor): bool { ... $actor instanceof User ... }`
-- 判定ヘルパー（`isServiceOwner` 等）も `instanceof` でガードしてから属性アクセスする
-  - 例: `return $actor instanceof User && $actor->role === UserRole::SERVICE_OWNER;`
-- 型ヒントを示したい場合は PHPDoc で `@param User|Customer $actor` のように複数許容を明示
+- 判定ヘルパー（ロール判定メソッド等）も `instanceof` でガードしてから属性アクセスする
+  - 例: `return $actor instanceof User && $actor->role === UserRole::ROLE_A;`（`ROLE_A` は説明用のプレースホルダ）
+- 型ヒントを示したい場合は PHPDoc で `@param User|OtherAuthModel $actor` のように複数許容を明示（`OtherAuthModel` はそのプロジェクトの第二の Authenticatable 種別に読み替える）
 
 #### Policy のテスト規約
 
 Policy を新規作成・シグネチャ変更したときは、**プロジェクト内の全 Authenticatable 種別**で当該エンドポイントが **500 にならないこと**を必ず確認する。
 
-- 現プロジェクトでカバーすべき種別:
-  - `User`（SERVICE_OWNER / AGENCY_OWNER / AGENCY_STAFF 全ロール）
-  - `Customer`
+- **カバーすべき種別は `project-config.md` に列挙された全 Authenticatable 種別と全ロール**とする（モデルごとに、ロールを持つものは全ロール分）
 - 期待ステータスが 200 / 403 のどちらでも構わない場合は、**500 でないことだけを保証**するテストを置く
   - 例: `->assertStatus(403);`（500 だと自動的に fail する）
-- 参考実装:
-  - `src/tests/Feature/api/controllers/MasterResourceAccessControlTest.php` — User ロール別
-  - `src/tests/Feature/api/controllers/CatalogMasterResourceAccessTest.php` — Customer による回帰防止
+- 参考実装：各プロジェクトの「種別・ロール別アクセス制御を網羅した既存テスト」を参照する（典型的には、管理画面ユーザーのロール別テストと、別 Authenticatable 種別による回帰防止テストの2系統を用意する）

@@ -26,10 +26,11 @@ Bash(git -C *)
 ## ルール
 
 - 上記パターンでカバーできる個別エントリは削除する
-  - 例: `Bash(wsl -e bash -c "cd /home/yoshi/project/earthraise && git diff --staged")` → `Bash(wsl -e bash -c *)` でカバー済み → 削除
-  - 例: `Read(///wsl.localhost/Ubuntu/home/yoshi/project/earthraise/src/**)` → `Read(///wsl.localhost/Ubuntu/**)` でカバー済み → 削除
+  - 例: `Bash(<実行環境> bash -c "cd <project-root> && git diff --staged")` → `Bash(<実行環境> bash -c *)` でカバー済み → 削除
+  - 例: `Read(<project-root>/src/**)` → `Read(<project-root>/**)` でカバー済み → 削除
+  - （`<実行環境>` / `<project-root>` は `project-config.md` の実値に読み替える）
 - 上記パターンでカバーできない独自のエントリは残す
-- additionalDirectories は `\\\\wsl.localhost\\Ubuntu\\home\\yoshi\\project\\earthraise` 配下のみに統一する（`\\home\\...` の重複パスは削除）
+- additionalDirectories は **そのプロジェクトのルート配下のみに統一**する（重複・上位階層の冗長パスは削除）
 - 整理後の結果を報告する（削除数・残存数）
 
 ## 安全性チェック（集約時に必ず確認）

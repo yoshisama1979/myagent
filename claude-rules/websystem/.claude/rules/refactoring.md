@@ -40,7 +40,7 @@ alwaysApply: false
 - エージェント自身が`git diff` / `git show`等で差分を確認
 - ユーザーからDiffの貼り付けを待つのではなく、自ら取得・分析
 - Diffを正確に読み取り、変更の文脈を完全に把握してから作業開始
-- コマンド例：wsl -e bash -c "cd /home/yoshi/project/form-platform && git diff --staged"
+- コマンド例：`git diff --staged`（プロジェクトルート・シェル・コンテナ経由の有無など実行環境は `project-config.md` を参照）
 
 ---
 
