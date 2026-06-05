@@ -4,8 +4,13 @@
 # Claude API クライアント
 anthropic>=0.40
 
-# Chainlit Web UI
-chainlit>=2.11.1
+# Web UI（FastAPI + Jinja2 + cookie session）
+# Chainlit は Python 3.14 非対応のため不採用。Python 追従が確実な FastAPI 構成を採る。
+fastapi>=0.115
+uvicorn[standard]>=0.32
+jinja2>=3.1
+itsdangerous>=2.2
+python-multipart>=0.0.12
 
 # HTTP クライアント（hana-tools への接続）
 httpx>=0.28.1

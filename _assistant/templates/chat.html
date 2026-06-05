@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="chat-container">
+  <div class="messages">
+    {% if not history %}
+      <div class="empty-state">
+        質問してください（例：「今日のタスクは？」「○○の過去メモを探して」）
+      </div>
+    {% else %}
+      {% for msg in history %}
+        <div class="message message-{{ msg.role }}">
+          <div class="role">{{ "あなた" if msg.role == "user" else "パートナー" }}</div>
+          <div class="text">{{ msg.text }}</div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  <form method="post" action="/chat" class="chat-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <textarea name="message" placeholder="メッセージを入力" rows="3" autofocus required></textarea>
+    <div class="chat-actions">
+      <button type="submit" class="primary">送信</button>
+    </div>
+  </form>
+  {% if history %}
+  <form method="post" action="/clear" class="clear-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button type="submit" class="secondary">履歴をクリア</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

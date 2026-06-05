@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}ログイン | 経営サポート業務パートナー{% endblock %}
+{% block content %}
+<div class="login-container">
+  <form method="post" action="/login" class="login-form">
+    <h2>ログイン</h2>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% endif %}
+    <label>
+      ユーザー名
+      <input type="text" name="username" autofocus required autocomplete="username">
+    </label>
+    <label>
+      パスワード
+      <input type="password" name="password" required autocomplete="current-password">
+    </label>
+    <button type="submit" class="primary">ログイン</button>
+  </form>
+</div>
+{% endblock %}

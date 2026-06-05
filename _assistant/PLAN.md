@@ -97,24 +97,36 @@ def _validate(rel_path: str) -> Path:
 
 超過時は **「途中まで」ではなく明示エラー** を返し、LLM 側に「絞り込みを促す／別の検索を試す」判断をさせる。
 
-### 4.2 Chainlit パスワード認証
+### 4.2 Web UI 認証（FastAPI + cookie session）
+
+**当初は Chainlit を採用する計画だったが、Chainlit 2.11 系の対応 Python が `>=3.10,<3.14`
+で、VPS の Python 3.14 と互換しなかったため FastAPI + Jinja2 テンプレに変更**（PLAN 履歴
+としては Chainlit を保留・FastAPI 採用）。社長判断「Python バージョン追従が止まる依存は
+避けたい」を反映。
 
 ```python
 # _assistant/app.py より抜粋イメージ
-import chainlit as cl
+from fastapi import FastAPI, Form, Request
+from starlette.middleware.sessions import SessionMiddleware
+import secrets
 
-@cl.password_auth_callback
-def auth_callback(username: str, password: str):
-    expected_user = os.environ.get("ASSISTANT_USER", "yoshi")
-    expected_pass = os.environ.get("ASSISTANT_PASSWORD")
-    if not expected_pass:
-        return None  # 未設定時はログイン不可
-    if username == expected_user and password == expected_pass:
-        return cl.User(identifier=username)
-    return None
+_USER = require_env("ASSISTANT_USER")
+_PASSWORD = require_env("ASSISTANT_PASSWORD")
+_SESSION_SECRET = require_env("ASSISTANT_SESSION_SECRET")
+
+app = FastAPI()
+app.add_middleware(SessionMiddleware, secret_key=_SESSION_SECRET, max_age=8*3600)
+
+@app.post("/login")
+def login(request, username=Form(...), password=Form(...)):
+    if secrets.compare_digest(username, _USER) and secrets.compare_digest(password, _PASSWORD):
+        request.session["user"] = username
+        return RedirectResponse("/", 303)
+    return TEMPLATES.TemplateResponse(request, "login.html", {"error": "認証失敗"}, status_code=401)
 ```
 
-`ASSISTANT_USER` / `ASSISTANT_PASSWORD` を `.env` に追加。
+`ASSISTANT_USER` / `ASSISTANT_PASSWORD` / `ASSISTANT_SESSION_SECRET` を `.env` に追加。
+（旧 `CHAINLIT_AUTH_SECRET` は使わない）。
 
 ### 4.3 エージェント実行制約（暴走・コスト・障害への対策）
 
@@ -131,19 +143,19 @@ def auth_callback(username: str, password: str):
 | JSON Schema validation 失敗 | tool result に `is_error: true` で定型エラー返却（LLM が次手を選べる形） | `agent.py` の `_run_tools` |
 | 同一ツール連続呼び出し検出 | 直前 3 回連続で **同じ name + 同じ args** なら強制終了 | `agent.py` のループ前段 |
 
-### 4.4 Chainlit 起動・セッション・ログ設定
+### 4.4 Web UI 起動・セッション・ログ設定
 
 | 項目 | 方針 |
 |------|------|
 | bind address | **Tailscale IP に bind**（`100.123.104.87`）。`127.0.0.1` だとスマホから繋がらない。`0.0.0.0` は禁止（意図せず外部公開のリスク） |
-| 起動コマンド | `chainlit run _assistant/app.py --host 100.123.104.87 --port 8010 -h`（`-h` は headless = 自動でブラウザを開かない） |
-| Chainlit 永続履歴（DB） | **使わない**（`CHAINLIT_AUTH_SECRET` のみ設定、データレイヤーは無効） |
-| アップロード機能 | **無効化**（`@cl.on_message` のみ受け付け、添付ファイルは無視） |
-| Cookie secret | `CHAINLIT_AUTH_SECRET` を `.env` で管理（ランダム32文字以上） |
-| ログレベル | **WARNING 以上**を標準出力に。INFO は出さない |
-| 認証失敗ログ | ユーザー名と時刻は記録、パスワードや UA は記録しない |
-| CORS | デフォルト（Chainlit が同一オリジン前提で動く）。明示変更しない |
-| CSRF | Chainlit 内蔵の対策をそのまま使う（無効化しない） |
+| 起動コマンド | `_assistant/.venv/bin/uvicorn _assistant.app:app --host 100.123.104.87 --port 8010 --log-level warning` |
+| 永続履歴（DB） | **使わない**。会話履歴はサーバープロセス内メモリのみ（再起動でリセット） |
+| アップロード機能 | **無効化**（`<input type="file">` を置かない、`/chat` は `message` フィールドのみ受け付け） |
+| Cookie secret | `ASSISTANT_SESSION_SECRET` を `.env` で管理（ランダム 32 文字以上） |
+| ログレベル | **WARNING 以上**を標準出力に（`--log-level warning`） |
+| 認証失敗ログ | デフォルト挙動（uvicorn のアクセスログ）に任せる。パスワード・UA を別途記録するロジックは持たない |
+| CORS | 同一オリジン前提（外向きの API は無い） |
+| CSRF | cookie session の `same_site="lax"` で軽減。Tailscale 経由＋単独運用のため強化対策は保留（既存仕訳ページと同じ運用） |
 | プロセス管理 | systemd または tmux で常駐。自動再起動は将来検討（今は手動起動） |
 
 ### 4.5 hana-tools 4 ツール仕様（明文化）
