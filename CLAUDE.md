@@ -16,6 +16,7 @@
 ## 会社概要
 
 - **社名**: 株式会社はなさか
+- **決算期（会計年度）**: 4月1日〜翌3月31日（例: FY2025 = 2025-04〜2026-03）。年度の区切りはこれで判断する。
 - **事業内容**:
   - ホームページ制作（コーポレートサイト、LP、WordPress等）
   - システム開発（API、バックエンド、業務システム等）
@@ -55,6 +56,7 @@
 | ファイル | 用途 |
 |---------|------|
 | [OVERVIEW.md](OVERVIEW.md) | リポジトリ全体像・ディレクトリ早見表（スレッド開始時の把握用） |
+| [AI-INDEX.md](AI-INDEX.md) | AI用の在処マップ（site/全ページのタイトル・見出し・リード＋data/一覧）。`python3 bin/build-ai-index.py` で再生成。データを探す前にまず見る |
 | [rules/partnership.md](rules/partnership.md) | 秘書＋パートナーとしての協働ルール |
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |
 | [rules/document-format.md](rules/document-format.md) | 記録ファイルのHTML出力ルール |
