@@ -1,32 +1,247 @@
 {% extends "base.html" %}
+{% block body_class %}chat-page{% endblock %}
 {% block content %}
-<div class="chat-container">
-  <div class="messages">
-    {% if not history %}
-      <div class="empty-state">
-        質問してください（例：「今日のタスクは？」「○○の過去メモを探して」）
-      </div>
-    {% else %}
-      {% for msg in history %}
-        <div class="message message-{{ msg.role }}">
-          <div class="role">{{ "あなた" if msg.role == "user" else "パートナー" }}</div>
-          <div class="text">{{ msg.text }}</div>
+<div class="chat-shell">
+  <div class="messages-scroll" id="messages-scroll">
+    <div class="messages" id="messages">
+      {% if not history %}
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">💬</div>
+          <h2>業務パートナーへようこそ</h2>
+          <p>株式会社はなさかの業務を横断的に支援します。</p>
+          <div class="example-prompts">
+            <div class="example-prompt">「今日のタスクは？」</div>
+            <div class="example-prompt">「○○の過去メモを探して」</div>
+            <div class="example-prompt">「外注先の一覧を見せて」</div>
+            <div class="example-prompt">「business/skill-map を要約して」</div>
+          </div>
         </div>
-      {% endfor %}
-    {% endif %}
-  </div>
-  <form method="post" action="/chat" class="chat-form">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <textarea name="message" placeholder="メッセージを入力" rows="3" autofocus required></textarea>
-    <div class="chat-actions">
-      <button type="submit" class="primary">送信</button>
+      {% else %}
+        {% for msg in history %}
+          <div class="message message-{{ msg.role }}">
+            <div class="message-avatar">{% if msg.role == "user" %}YOU{% else %}AI{% endif %}</div>
+            <div class="message-body">
+              <div class="message-role">{{ "あなた" if msg.role == "user" else "業務パートナー" }}</div>
+              <div class="message-text markdown-body">{{ msg.html | safe }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
-  </form>
-  {% if history %}
-  <form method="post" action="/clear" class="clear-form">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <button type="submit" class="secondary">履歴をクリア</button>
-  </form>
-  {% endif %}
+  </div>
+
+  <div class="composer">
+    <div class="composer-inner">
+      <form method="post" action="/chat" class="chat-form" id="chat-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <textarea
+          name="message"
+          id="chat-input"
+          placeholder="メッセージを入力（Enter で送信、Shift+Enter で改行）"
+          rows="1"
+          autofocus
+          required></textarea>
+        <button type="submit" class="send-button" id="chat-submit" aria-label="送信">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/>
+          </svg>
+        </button>
+      </form>
+      <form method="post" action="/clear" class="clear-form" id="clear-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit" class="text-link">履歴をクリア</button>
+      </form>
+    </div>
+  </div>
 </div>
+
+<script>
+(function() {
+  const form = document.getElementById('chat-form');
+  const messages = document.getElementById('messages');
+  const scrollArea = document.getElementById('messages-scroll');
+  const input = document.getElementById('chat-input');
+  const submit = document.getElementById('chat-submit');
+  const emptyState = document.getElementById('empty-state');
+
+  const TOOL_LABELS = {
+    get_todos: 'タスク取得',
+    list_clients: 'クライアント一覧',
+    search_clients: 'クライアント検索',
+    list_outsources: '外注先一覧',
+    list_site_files: 'ファイル一覧',
+    read_site_file: 'ファイル読込',
+    grep_site: '全文検索',
+  };
+
+  // 起動時：最下部までスクロール
+  function scrollToBottom() {
+    scrollArea.scrollTop = scrollArea.scrollHeight;
+  }
+  scrollToBottom();
+
+  // textarea の自動高さ調整
+  function autoResize() {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 200) + 'px';
+  }
+  input.addEventListener('input', autoResize);
+
+  // Enter で送信 / Shift+Enter で改行
+  input.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter' && !ev.shiftKey && !ev.isComposing) {
+      ev.preventDefault();
+      form.requestSubmit();
+    }
+  });
+
+  function appendMessage(role, html) {
+    if (emptyState) emptyState.remove();
+    const div = document.createElement('div');
+    div.className = 'message message-' + role;
+    const label = role === 'user' ? 'あなた' : '業務パートナー';
+    const avatar = role === 'user' ? 'YOU' : 'AI';
+    div.innerHTML =
+      '<div class="message-avatar">' + avatar + '</div>' +
+      '<div class="message-body">' +
+        '<div class="message-role">' + label + '</div>' +
+        '<div class="message-text markdown-body">' + html + '</div>' +
+      '</div>';
+    messages.appendChild(div);
+    scrollToBottom();
+    return div;
+  }
+
+  function ensureProgressBox() {
+    let box = document.getElementById('current-progress');
+    if (!box) {
+      if (emptyState) emptyState.remove();
+      box = document.createElement('div');
+      box.id = 'current-progress';
+      box.className = 'message message-assistant progress-message';
+      box.innerHTML =
+        '<div class="message-avatar">AI</div>' +
+        '<div class="message-body">' +
+          '<div class="message-role">業務パートナー</div>' +
+          '<div class="progress-box">' +
+            '<div class="progress-title"><span class="progress-dot"></span>処理中…</div>' +
+            '<ul class="progress-list"></ul>' +
+          '</div>' +
+        '</div>';
+      messages.appendChild(box);
+      scrollToBottom();
+    }
+    return box;
+  }
+
+  function clearProgress() {
+    const box = document.getElementById('current-progress');
+    if (box) box.remove();
+  }
+
+  function addProgressItem(text, cls) {
+    const box = ensureProgressBox();
+    const list = box.querySelector('.progress-list');
+    const li = document.createElement('li');
+    li.className = 'progress-item ' + (cls || '');
+    li.innerHTML = text;
+    list.appendChild(li);
+    scrollToBottom();
+    return li;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function toolLabel(name) { return TOOL_LABELS[name] || name; }
+
+  function formatInput(input) {
+    if (!input || Object.keys(input).length === 0) return '';
+    const parts = [];
+    for (const [k, v] of Object.entries(input)) {
+      parts.push(escapeHtml(k) + '=' + escapeHtml(JSON.stringify(v)));
+    }
+    return ' <span class="tool-args">' + parts.join(', ') + '</span>';
+  }
+
+  function handleEvent(event) {
+    if (event.type === 'user') {
+      appendMessage('user', event.html);
+    } else if (event.type === 'thinking') {
+      // thinking は visual noise になりやすいので、初回だけ表示
+      const box = document.getElementById('current-progress');
+      if (!box) {
+        addProgressItem('<span class="pi-icon">💭</span> 考え中…', 'thinking');
+      }
+    } else if (event.type === 'tool_use') {
+      addProgressItem(
+        '<span class="pi-icon">🔧</span> <strong>' + escapeHtml(toolLabel(event.name)) + '</strong>' + formatInput(event.input),
+        'tool-use'
+      );
+    } else if (event.type === 'tool_result') {
+      const icon = event.ok ? '✅' : '❌';
+      const preview = event.preview ? '<div class="tool-preview">' + escapeHtml(event.preview) + '</div>' : '';
+      addProgressItem(
+        '<span class="pi-icon">' + icon + '</span> ' + escapeHtml(toolLabel(event.name)) + ' 結果' + preview,
+        event.ok ? 'tool-ok' : 'tool-error'
+      );
+    } else if (event.type === 'final') {
+      clearProgress();
+      appendMessage('assistant', event.html);
+    }
+  }
+
+  async function send(message, csrfToken) {
+    const body = new FormData();
+    body.set('message', message);
+    body.set('csrf_token', csrfToken);
+    const res = await fetch('/chat/stream', {method: 'POST', body});
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status);
+    }
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    while (true) {
+      const {value, done} = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, {stream: true});
+      let idx;
+      while ((idx = buffer.indexOf('\n\n')) !== -1) {
+        const chunk = buffer.slice(0, idx);
+        buffer = buffer.slice(idx + 2);
+        for (const line of chunk.split('\n')) {
+          if (line.startsWith('data: ')) {
+            try {
+              const event = JSON.parse(line.slice(6));
+              handleEvent(event);
+            } catch (e) { console.error('parse error', e, line); }
+          }
+        }
+      }
+    }
+  }
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const message = input.value.trim();
+    if (!message) return;
+    const csrfToken = form.querySelector('input[name=csrf_token]').value;
+    input.value = '';
+    autoResize();
+    submit.disabled = true;
+    submit.classList.add('sending');
+    try {
+      await send(message, csrfToken);
+    } catch (e) {
+      addProgressItem('<span class="pi-icon">⚠️</span> エラー: ' + escapeHtml(e.message), 'tool-error');
+    } finally {
+      submit.disabled = false;
+      submit.classList.remove('sending');
+      input.focus();
+    }
+  });
+})();
+</script>
 {% endblock %}

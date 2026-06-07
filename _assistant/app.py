@@ -14,19 +14,27 @@
 
 from __future__ import annotations
 
+import asyncio
+import json
 import os
 import secrets
 import time
 from pathlib import Path
 
+# SSE エンドポイントで使うウォッチドッグ余裕（agent 側の TOTAL_TIMEOUT_SECONDS に少し足す）
+_STREAM_WATCHDOG_BUFFER_SECONDS = 30
+# クライアント切断検知のポーリング間隔（heartbeat 兼用）
+_DISCONNECT_POLL_SECONDS = 5
+
 from fastapi import FastAPI, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 
 from _assistant.agent import PartnerAgent
 from _assistant.config import load_dotenv, require_env
+from _assistant.render import escape_text, markdown_to_safe_html
 from _assistant.runtime import build_agent
 
 load_dotenv()
@@ -61,6 +69,18 @@ app.mount("/static", StaticFiles(directory=str(_HERE / "static")), name="static"
 # プロセス再起動で消える（永続化しない方針）。マルチワーカで分散すると履歴がワーカ間で割れるので
 # 必ず --workers 1 で起動すること。
 _chat_state: dict[str, dict] = {}
+
+# sid ごとの並行制御。同一セッションで /chat/stream を同時に走らせると agent_history を
+# 後勝ちで上書きするので、Lock で順次化する。
+_chat_locks: dict[str, asyncio.Lock] = {}
+
+
+def _get_sid_lock(sid: str) -> asyncio.Lock:
+    lock = _chat_locks.get(sid)
+    if lock is None:
+        lock = asyncio.Lock()
+        _chat_locks[sid] = lock
+    return lock
 
 # ログイン失敗の簡易 rate limit（プロセス内、IP は Tailscale 経由想定）
 _login_failures: dict[str, list[float]] = {}
@@ -113,6 +133,7 @@ def _gc_chat_state() -> None:
     ]
     for sid in dead:
         _chat_state.pop(sid, None)
+        _chat_locks.pop(sid, None)
 
 
 def _touch(state: dict) -> None:
@@ -137,6 +158,17 @@ def _record_login_failure(client_id: str) -> None:
     _login_failures.setdefault(client_id, []).append(time.monotonic())
 
 
+def _render_display_history(state: dict) -> list[dict]:
+    """display_history を UI 用に整形（assistant は markdown→HTML、user はエスケープ）。"""
+    rendered = []
+    for msg in state.get("display_history", []):
+        if msg["role"] == "assistant":
+            rendered.append({"role": "assistant", "html": markdown_to_safe_html(msg["text"])})
+        else:
+            rendered.append({"role": "user", "html": escape_text(msg["text"]).replace("\n", "<br>")})
+    return rendered
+
+
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     if not _logged_in(request):
@@ -148,7 +180,7 @@ def index(request: Request):
         request,
         "chat.html",
         {
-            "history": state.get("display_history", []),
+            "history": _render_display_history(state),
             "user": request.session.get("user"),
             "csrf_token": csrf_token,
         },
@@ -214,12 +246,14 @@ def logout(request: Request, csrf_token: str = Form(...)):
     sid = request.session.get("sid")
     if sid:
         _chat_state.pop(sid, None)
+        _chat_locks.pop(sid, None)
     request.session.clear()
     return RedirectResponse("/login", status_code=303)
 
 
 @app.post("/chat", response_class=HTMLResponse)
 def chat(request: Request, message: str = Form(...), csrf_token: str = Form(...)):
+    """同期版チャット（JavaScript 無効時のフォールバック）。"""
     _verify_csrf(request, csrf_token)
     if not _logged_in(request):
         return RedirectResponse("/login", status_code=303)
@@ -252,11 +286,140 @@ def chat(request: Request, message: str = Form(...), csrf_token: str = Form(...)
         request,
         "chat.html",
         {
-            "history": state["display_history"],
+            "history": _render_display_history(state),
             "user": request.session.get("user"),
             "csrf_token": _ensure_csrf_token(request),
         },
     )
+
+
+@app.post("/chat/stream")
+async def chat_stream(
+    request: Request,
+    message: str = Form(...),
+    csrf_token: str = Form(...),
+):
+    """SSE 版チャット。ツール呼び出し・結果・最終応答を順次イベントとして流す。
+
+    クライアントは fetch + ReadableStream で受信。送信本文は POST form（CSRF 同梱）。
+
+    並行制御・切断検知・ウォッチドッグ:
+    - 同一 sid の二重送信は 409 で弾く（agent_history の race 防止 — Codex 指摘 C2）
+    - クライアント切断で `closed` フラグを立て、以降のイベントは捨て、state も更新しない
+      （Codex 指摘 C1。ただしワーカスレッド自体は協調キャンセル不能なので走り続ける）
+    - 全体 timeout を `TOTAL_TIMEOUT_SECONDS + buffer` に設定し、初回 LLM 呼び出しが
+      詰まっても永久待ちにしない（Codex 指摘 C3）
+    """
+    _verify_csrf(request, csrf_token)
+    if not _logged_in(request):
+        raise HTTPException(status_code=401, detail="not logged in")
+    _gc_chat_state()
+
+    sid = _get_or_create_sid(request)
+    state = _chat_state.setdefault(
+        sid,
+        {"agent_history": [], "display_history": [], "last_seen": time.monotonic()},
+    )
+
+    user_msg = message.strip()
+    if not user_msg:
+        raise HTTPException(status_code=400, detail="empty message")
+
+    lock = _get_sid_lock(sid)
+    if lock.locked():
+        raise HTTPException(status_code=409, detail="already processing a message in this session")
+
+    agent = _get_agent()
+    loop = asyncio.get_running_loop()
+    queue: asyncio.Queue = asyncio.Queue()
+    _SENTINEL = object()
+    # クライアント切断後にワーカが投げ続けるイベントを「捨てる」ためのフラグ
+    closed = {"flag": False}
+
+    def on_event(event: dict) -> None:
+        # ワーカスレッドから呼ばれる。closed なら捨てる（接続が無いので意味がない）。
+        if closed["flag"]:
+            return
+        try:
+            asyncio.run_coroutine_threadsafe(queue.put(event), loop)
+        except RuntimeError:
+            # loop が落ちている。fire-and-forget で無視。
+            pass
+
+    def run_agent() -> tuple[str, list]:
+        try:
+            return agent.reply(user_msg, history=state["agent_history"], on_event=on_event)
+        except Exception as exc:  # noqa: BLE001
+            return (f"エラー: {exc}", state["agent_history"])
+
+    async def event_stream():
+        await lock.acquire()
+        try:
+            yield _sse({"type": "user", "html": escape_text(user_msg).replace("\n", "<br>")})
+
+            from _assistant.config import TOTAL_TIMEOUT_SECONDS
+            watchdog_deadline = time.monotonic() + TOTAL_TIMEOUT_SECONDS + _STREAM_WATCHDOG_BUFFER_SECONDS
+
+            task = asyncio.create_task(asyncio.to_thread(run_agent))
+
+            def _push_sentinel(_t):
+                try:
+                    asyncio.run_coroutine_threadsafe(queue.put(_SENTINEL), loop)
+                except RuntimeError:
+                    pass
+
+            task.add_done_callback(_push_sentinel)
+
+            # tool_use / tool_result / thinking などのイベントを逐次流す。
+            # asyncio.wait_for の heartbeat で「切断検知」と「全体ウォッチドッグ」を両立。
+            try:
+                while True:
+                    if time.monotonic() > watchdog_deadline:
+                        yield _sse({"type": "error", "message": f"タイムアウト ({TOTAL_TIMEOUT_SECONDS}s + バッファ) を超えました"})
+                        break
+                    try:
+                        item = await asyncio.wait_for(queue.get(), timeout=_DISCONNECT_POLL_SECONDS)
+                    except asyncio.TimeoutError:
+                        # heartbeat: 切断検知を試みる
+                        if await request.is_disconnected():
+                            closed["flag"] = True
+                            break
+                        continue
+                    if item is _SENTINEL:
+                        break
+                    yield _sse(item)
+            except asyncio.CancelledError:
+                closed["flag"] = True
+                raise
+
+            if closed["flag"]:
+                # クライアントが切断 / タイムアウト → state は更新しない
+                # （ワーカ自体は走り続けるが、結果は捨てられる）
+                return
+
+            text, new_history = await task
+
+            state["agent_history"] = new_history
+            state["display_history"].append({"role": "user", "text": user_msg})
+            state["display_history"].append({"role": "assistant", "text": text})
+            _trim_display_history(state)
+            _touch(state)
+
+            yield _sse({"type": "final", "html": markdown_to_safe_html(text)})
+        finally:
+            closed["flag"] = True  # ワーカ側のイベント発火を抑止
+            if lock.locked():
+                lock.release()
+
+    headers = {
+        "Cache-Control": "no-cache",
+        "X-Accel-Buffering": "no",  # nginx でバッファされないように
+    }
+    return StreamingResponse(event_stream(), media_type="text/event-stream", headers=headers)
+
+
+def _sse(payload: dict) -> str:
+    return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
 
 
 @app.post("/clear")

@@ -18,5 +18,10 @@ httpx>=0.28.1
 # OS の証明書ストアを使う（社内 TLS / プロキシ証明書対応）
 truststore>=0.10.4
 
+# マークダウン → HTML レンダリング（assistant 応答の整形表示）
+markdown>=3.7
+# HTML サニタイズ（LLM 出力のホワイトリスト方式）
+bleach>=6.2
+
 # 開発・テスト
 pytest>=8.0

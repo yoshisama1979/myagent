@@ -61,12 +61,24 @@ class PartnerAgent:
         text, _ = self.reply(user_message, history=[])
         return text
 
-    def reply(self, user_message: str, history: list) -> tuple[str, list]:
+    def reply(
+        self,
+        user_message: str,
+        history: list,
+        on_event: Callable[[dict[str, Any]], None] | None = None,
+    ) -> tuple[str, list]:
         """会話履歴つきの応答。返り値は (回答テキスト, 更新後の履歴)。
 
         履歴には user/assistant に加え tool_use / tool_result も積み、
         次ターンで Claude が「何を取得したか」を覚えていられるようにする。
+
+        `on_event` が指定されている場合、tool_use 直前と tool_result 直後に
+        進捗イベントを発火する（UI のリアルタイム表示用）。コールバックが投げた
+        例外はログに出さず黙って無視する（応答処理を止めないため）。
         """
+        emit = _safe_emitter(on_event)
+        emit({"type": "thinking"})
+
         system = self._render_system()
         messages: list = list(history)
         messages.append({"role": "user", "content": user_message})
@@ -97,10 +109,6 @@ class PartnerAgent:
                     len(recent_calls) == CONSECUTIVE_SAME_TOOL_LIMIT
                     and len(set(recent_calls)) == 1
                 ):
-                    # ここで raise する前にも tool_use を未解決のまま残さない（履歴は最後の
-                    # assistant tool_use まで含まれている）。raise を受けた呼び出し側が履歴を
-                    # 再利用する設計なら _abort_with_tool_results を使う想定だが、現状は呼び側で
-                    # 履歴を捨てる前提なので raise 単独で OK。
                     raise AgentLoopDetectedError(
                         f"同一ツール+引数が {CONSECUTIVE_SAME_TOOL_LIMIT} 回連続呼ばれました: {block.name}"
                     )
@@ -112,12 +120,14 @@ class PartnerAgent:
                 )
                 return _abort_with_tool_results(messages, tool_blocks, notice)
 
-            messages.append({"role": "user", "content": self._run_tools(tool_blocks)})
+            messages.append({"role": "user", "content": self._run_tools(tool_blocks, emit)})
+            emit({"type": "thinking"})
             response = self._llm.create(system=system, messages=messages, tools=TOOL_SCHEMAS)
 
-    def _run_tools(self, blocks: list) -> list[dict]:
+    def _run_tools(self, blocks: list, emit: Callable[[dict[str, Any]], None]) -> list[dict]:
         results: list[dict] = []
         for block in blocks:
+            emit({"type": "tool_use", "name": block.name, "input": dict(block.input)})
             try:
                 data = self._dispatch(block.name, block.input)
                 content = _stringify(data)
@@ -129,13 +139,30 @@ class PartnerAgent:
                         "content": content,
                     }
                 )
+                emit(
+                    {
+                        "type": "tool_result",
+                        "name": block.name,
+                        "ok": True,
+                        "preview": _preview(content),
+                    }
+                )
             except Exception as exc:  # noqa: BLE001 - ツール失敗は Claude に返して継続させる
+                err = f"ツール実行エラー: {exc}"
                 results.append(
                     {
                         "type": "tool_result",
                         "tool_use_id": block.id,
-                        "content": f"ツール実行エラー: {exc}",
+                        "content": err,
                         "is_error": True,
+                    }
+                )
+                emit(
+                    {
+                        "type": "tool_result",
+                        "name": block.name,
+                        "ok": False,
+                        "preview": _preview(err),
                     }
                 )
         return results
@@ -194,3 +221,34 @@ def _text_of(response: Any) -> str:
         if getattr(block, "type", None) == "text"
     ]
     return "".join(parts).strip()
+
+
+_PREVIEW_MAX_CHARS = 200
+
+
+def _preview(content: str) -> str:
+    """tool_result の冒頭を UI 表示用に切り出す（長すぎなら…で省略）。"""
+    if not isinstance(content, str):
+        content = str(content)
+    if len(content) <= _PREVIEW_MAX_CHARS:
+        return content
+    return content[:_PREVIEW_MAX_CHARS] + "…"
+
+
+def _safe_emitter(
+    on_event: Callable[[dict[str, Any]], None] | None,
+) -> Callable[[dict[str, Any]], None]:
+    """on_event が None でも例外を吐いても応答処理を止めない、安全な発火関数を返す。"""
+    if on_event is None:
+        def noop(_event: dict[str, Any]) -> None:
+            return None
+
+        return noop
+
+    def safe(event: dict[str, Any]) -> None:
+        try:
+            on_event(event)
+        except Exception:  # noqa: BLE001
+            pass
+
+    return safe
