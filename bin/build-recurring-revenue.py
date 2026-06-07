@@ -21,6 +21,7 @@ from pathlib import Path
 
 SHEET_ID = '1u-oRLHZUE9HZHRZqFiJQLs0AVA1eZC1qJGmrOS-lxpc'
 SHEET_RANGE = '運用管理費用!A3:Q100'
+SHEET_TOTAL_CELL = '運用管理費用!D2'  # シート2行目の「計」（ライブ照合用）
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_FILE = PROJECT_ROOT / 'site' / 'business' / 'recurring-revenue.html'
 SHEETS_SCRIPT = PROJECT_ROOT / 'bin' / 'sheets.py'
@@ -36,6 +37,36 @@ def fetch_rows():
     return json.loads(result.stdout)
 
 
+def fetch_sheet_total():
+    """シート2行目の「計」(D2) を取得。数値でなければ None を返す（照合をスキップ）。"""
+    result = subprocess.run(
+        ['python3', str(SHEETS_SCRIPT), 'read', SHEET_ID, SHEET_TOTAL_CELL, '--json'],
+        capture_output=True, text=True
+    )
+    if result.returncode != 0:
+        return None
+    try:
+        val = json.loads(result.stdout)[0][0]
+    except (IndexError, ValueError, TypeError):
+        return None
+    return int(val) if isinstance(val, (int, float)) else None
+
+
+def reconciliation_line(total_monthly, excluded_numeric, sheet_total):
+    """シート計 ＝ 有効契約 ＋ 除外行 のライブ照合結果を <li> 文字列で返す。"""
+    if sheet_total is None:
+        return ('<li>シート「計」(D2) を取得できませんでした → 手動で集計'
+                f'¥{total_monthly:,} と突合してください</li>')
+    reconciled = total_monthly + excluded_numeric
+    gap = sheet_total - reconciled
+    if gap == 0:
+        return (f'<li>✅ シート「計」¥{sheet_total:,} ＝ 有効契約¥{total_monthly:,} ＋ '
+                f'除外行¥{excluded_numeric:,}（<strong>整合確認済み</strong>）</li>')
+    return (f'<li>⚠️ シート「計」¥{sheet_total:,} と（有効¥{total_monthly:,}＋除外'
+            f'¥{excluded_numeric:,}＝¥{reconciled:,}）に <strong>¥{gap:,}</strong> の差 '
+            '→ 「計」フィールドの算出方法を確認・統一</li>')
+
+
 def classify(rows):
     active, inactive = [], []
     for row in rows:
@@ -44,6 +75,11 @@ def classify(rows):
         name, client, project, amount = row[0], row[1], row[2], row[3]
         url_field, memo_field = row[4], row[16]
         if not name and not client and not project:
+            # 名前は無いが金額だけある行 → シート「計」には入るので要確認として残す
+            if isinstance(amount, (int, float)) and amount:
+                inactive.append({'name': '', 'client': '', 'project': '',
+                                 'amount': int(amount),
+                                 'reason': '名前未記載（シート計に含む・要確認）'})
             continue
         contract_ended = '契約終了' in (str(url_field) + str(memo_field))
         if contract_ended:
@@ -70,7 +106,7 @@ def classify(rows):
     return active, inactive
 
 
-def build_html(active, inactive):
+def build_html(active, inactive, sheet_total=None):
     by_client = defaultdict(list)
     for a in active:
         by_client[a['client']].append(a)
@@ -85,6 +121,11 @@ def build_html(active, inactive):
     total_monthly = sum(a['amount'] for a in active)
     total_yearly = total_monthly * 12
     today = datetime.now().strftime('%Y-%m-%d')
+
+    # シート「計」とのライブ照合（除外行の数値ぶんを足し戻して突合）
+    excluded_numeric = sum(int(x['amount']) for x in inactive
+                           if isinstance(x['amount'], (int, float)) and x['amount'])
+    quality_total_line = reconciliation_line(total_monthly, excluded_numeric, sheet_total)
 
     # ヘッダー
     html = f'''<!DOCTYPE html>
@@ -154,7 +195,7 @@ def build_html(active, inactive):
   <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 text-sm">
     <p class="font-semibold mb-2">スプレッドシートの整理が必要なポイント</p>
     <ul class="list-disc list-inside space-y-1">
-      <li>シート2行目の「計¥578,000」と本ページの集計¥{total_monthly:,}に大きな乖離 → 「計」フィールドの算出方法を確認・統一</li>
+      {quality_total_line}
       <li>同一クライアント・同一プロジェクト名で複数行があるもの（重複の可能性）— 下記テーブルで黄色背景で表示</li>
       <li>「契約終了」メモがある行 — 実態を反映してリストから外すか別管理に</li>
       <li>クライアント名が未記載の行 — 補完が必要</li>
@@ -267,12 +308,15 @@ def build_html(active, inactive):
 
 def main():
     rows = fetch_rows()
+    sheet_total = fetch_sheet_total()
     active, inactive = classify(rows)
-    html, n, monthly, yearly, n_inv = build_html(active, inactive)
+    html, n, monthly, yearly, n_inv = build_html(active, inactive, sheet_total)
     OUTPUT_FILE.write_text(html, encoding='utf-8')
     print(f'✅ {OUTPUT_FILE} 生成完了')
     print(f'   有効契約: {n}件 / 月額: ¥{monthly:,} / 年換算: ¥{yearly:,}')
     print(f'   除外・要確認: {n_inv}件')
+    if sheet_total is not None:
+        print(f'   シート計(D2): ¥{sheet_total:,} / 有効との差: ¥{sheet_total - monthly:,}（除外行ぶん）')
 
 
 if __name__ == '__main__':

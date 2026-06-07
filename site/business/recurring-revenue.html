@@ -21,7 +21,7 @@
 
   <h1 class="text-3xl font-bold mb-2">💰 月次ストック収益</h1>
   <p class="text-gray-600 mb-2">月額契約による継続的収益の見える化。<a href="goals.html#g0-2" class="text-emerald-700 hover:underline">G0.2「FY2026 ストック収益比率 20%以上」</a> 達成度のモニタリング基盤。</p>
-  <p class="text-sm text-gray-500 mb-4">データ元：Google Sheets「YCOMデータ（最新）」運用管理費用シート（D列「計」） / 取得日時：2026-05-26<br>
+  <p class="text-sm text-gray-500 mb-4">データ元：Google Sheets「YCOMデータ（最新）」運用管理費用シート（D列「計」） / 取得日時：2026-06-07<br>
   集計方法：D列が数値の有効契約のみを合計。実費・契約終了マーカー・0円は別記。<code class="bg-gray-100 px-1 rounded text-xs">python3 bin/build-recurring-revenue.py</code> で再生成可。</p>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -65,7 +65,7 @@
   <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-6 text-sm">
     <p class="font-semibold mb-2">スプレッドシートの整理が必要なポイント</p>
     <ul class="list-disc list-inside space-y-1">
-      <li>シート2行目の「計¥578,000」と本ページの集計¥837,300に大きな乖離 → 「計」フィールドの算出方法を確認・統一</li>
+      <li>✅ シート「計」¥872,300 ＝ 有効契約¥837,300 ＋ 除外行¥35,000（<strong>整合確認済み</strong>）</li>
       <li>同一クライアント・同一プロジェクト名で複数行があるもの（重複の可能性）— 下記テーブルで黄色背景で表示</li>
       <li>「契約終了」メモがある行 — 実態を反映してリストから外すか別管理に</li>
       <li>クライアント名が未記載の行 — 補完が必要</li>
@@ -413,6 +413,12 @@
           <td class="num px-3 py-2 border border-gray-200">—</td>
           <td class="px-3 py-2 border border-gray-200">0円／空欄（要確認）</td>
         </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200">—</td>
+          <td class="px-3 py-2 border border-gray-200">—</td>
+          <td class="num px-3 py-2 border border-gray-200">¥30,000</td>
+          <td class="px-3 py-2 border border-gray-200">名前未記載（シート計に含む・要確認）</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -442,7 +448,7 @@
     <li><a href="focus.html" class="text-blue-600 hover:underline">フォーカスダッシュボード</a></li>
   </ul>
 
-  <p class="text-xs text-gray-400 mt-10">最終更新: 2026-05-26 / データ元: Google Sheets / 更新頻度: 月次（再生成は bin/build-recurring-revenue.py）</p>
+  <p class="text-xs text-gray-400 mt-10">最終更新: 2026-06-07 / データ元: Google Sheets / 更新頻度: 月次（再生成は bin/build-recurring-revenue.py）</p>
 
 </div>
 </body>
