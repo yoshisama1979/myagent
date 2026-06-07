@@ -1,0 +1,278 @@
+{
+  "id": "pc-skills",
+  "title": "PC操作スキル",
+  "subtitle": "社員教育・人事評価で使用する PC 操作に関するスキル定義。",
+  "updates": [
+    "2026-05-24 ドラフト（社長レビュー反映：Outlook・Zoom 削除、Office系（Word/Excel/PowerPoint）はオプション扱い）",
+    "2026-06-07 追記：仮想デスクトップ作成（Win+Ctrl+D）、脱マウス（C）を追加。提案項目の大半は既存収録済みのため差分のみ反映",
+    "2026-06-07 改訂：Win11／ブラウザ最新仕様の操作を純増13項目追加（§2-6、新規14・うち旧Win+V項目1件をA項目へ統合）。あわせて各グループを重要度 A→B→C 順に並べ替え"
+  ],
+  "nav": [
+    {"label": "← 株式会社はなさか", "href": "../../index.html"},
+    {"label": "ビジネスダッシュボード", "href": "../index.html"},
+    {"label": "スキルシート", "href": "index.html"}
+  ],
+  "boxes": [
+    {
+      "color": "blue",
+      "heading": "評価ルール",
+      "paragraphs": [
+        {"cls": "mt-1", "html": "<strong>5段階評価:</strong> 1=知らない／2=知識あるが実践なし／3=使うように努力／4=積極的に使用／5=人に伝えられる"},
+        {"cls": "mt-1", "html": "<strong>重要度 A/B/C:</strong> A から評価開始 → 全社員の80%が「4以上」達成で次の重要度へ進む"},
+        {"cls": "mt-1", "html": "<strong>オプション O:</strong> 利用頻度が少ないため評価ルール対象外。利用する社員が任意で自己評価する"}
+      ]
+    },
+    {
+      "color": "amber",
+      "heading": "対象環境について",
+      "paragraphs": [
+        {"cls": "mt-1", "html": "本シートは <strong>Windows 環境を基準</strong>に記載。Mac で評価する場合は <code>Ctrl→Cmd</code>、<code>Win→Cmd</code> 等に読み替える（OS標準機能の差異は各自で補完）。"}
+      ]
+    }
+  ],
+  "summary": {"firstColHeader": "区分"},
+  "groups": [
+    {
+      "title": "タイピング・文字入力",
+      "skills": [
+        {"rank": "A", "text": "タッチタイピング（ホームポジションを見ずに入力）ができる"},
+        {"rank": "A", "text": "日本語入力で1分間に60文字以上入力できる"},
+        {"rank": "A", "text": "半角/全角切替（半角/全角キー、Alt+`）が無意識にできる"},
+        {"rank": "A", "text": "IMEのオン/オフ切替（変換/無変換キー）を使い分けられる"},
+        {"rank": "A", "text": "Ctrl+Backspace、Ctrl+Deleteで単語単位の削除ができる"},
+        {"rank": "A", "text": "Ctrl+←/→でカーソルを単語単位で移動できる"},
+        {"rank": "A", "text": "Shift+方向キーで範囲選択ができる"},
+        {"rank": "A", "text": "Home/Endで行頭・行末へ瞬時に移動できる"},
+        {"rank": "A", "text": "Ctrl+Home/Endで文書の先頭・末尾へ瞬時に移動できる"},
+        {"rank": "B", "text": "英数入力で1分間に120文字以上入力できる"},
+        {"rank": "B", "text": "F6（ひらがな）・F7（全角カタカナ）・F8（半角カタカナ）・F9（全角英数）・F10（半角英数）で再変換できる"},
+        {"rank": "B", "text": "Ctrl+Shift+←/→で単語単位の範囲選択ができる"},
+        {"rank": "B", "text": "Shift+Home/Endで行頭・行末まで一気に選択できる"},
+        {"rank": "B", "text": "IMEに頻出語句（会社名・住所・定型文）を単語登録している"},
+        {"rank": "C", "text": "定型文・スニペットツール（クリップボード拡張等）を活用している"}
+      ]
+    },
+    {
+      "title": "Windows全般のショートカット",
+      "skills": [
+        {"rank": "A", "text": "Alt+Tabでウィンドウを切り替えられる"},
+        {"rank": "A", "text": "Win+D でデスクトップを表示・復元できる"},
+        {"rank": "A", "text": "Win+方向キーでウィンドウのスナップ（左右・最大化・最小化）ができる"},
+        {"rank": "A", "text": "Win+L で画面ロックできる"},
+        {"rank": "A", "text": "Win+E でエクスプローラーを開ける"},
+        {"rank": "A", "text": "Win+S または Win+Q で検索を開ける"},
+        {"rank": "A", "text": "Win+V でクリップボード履歴を呼び出し、矢印キーと Enter だけで（マウスを使わず）目的の項目を貼り付けられる"},
+        {"rank": "A", "text": "PrintScreen / Alt+PrintScreen で画面・アクティブウィンドウのキャプチャができる"},
+        {"rank": "A", "text": "Alt+F4 でアプリを終了できる"},
+        {"rank": "B", "text": "Win＋数字でタスクバーのアプリを起動・切替できる"},
+        {"rank": "B", "text": "Win+Tabでタスクビュー・仮想デスクトップを操作できる"},
+        {"rank": "B", "text": "Win+Ctrl+←/→で仮想デスクトップを切り替えられる"},
+        {"rank": "B", "text": "Win+Ctrl+D で新しい仮想デスクトップを作成し、複数案件の画面を切り替えられる（Win+Ctrl+F4 で閉じる）"},
+        {"rank": "B", "text": "Win+Z でスナップレイアウトのメニューを呼び出し、数字キーだけで画面分割の配置を決定できる（Win11）"},
+        {"rank": "B", "text": "Win+M でウィンドウを一括最小化できる"},
+        {"rank": "B", "text": "Win+Shift+←/→ でウィンドウを別モニターへ移動できる"},
+        {"rank": "B", "text": "Win+P で外部ディスプレイの表示モードを切替できる"},
+        {"rank": "B", "text": "Win+R でファイル名を指定して実行を開ける"},
+        {"rank": "B", "text": "Win+I で設定を開ける"},
+        {"rank": "B", "text": "Win+X でクイックリンクメニューを開ける"},
+        {"rank": "B", "text": "Win+. で絵文字・記号入力ができる"},
+        {"rank": "B", "text": "Ctrl+Shift+V で書式（フォント・色）をクリアし、プレーンテキストとして貼り付けできる（Office・ブラウザ間のコピペで有効）"},
+        {"rank": "B", "text": "Win+Shift+S で範囲指定スクリーンショットが撮れる"},
+        {"rank": "B", "text": "Ctrl+Shift+Esc でタスクマネージャーを直接起動できる"},
+        {"rank": "C", "text": "Ctrl+Alt+Tabでウィンドウ一覧を固定表示して選べる"},
+        {"rank": "C", "text": "Win+K でワイヤレスディスプレイ・Bluetooth機器の接続メニューを即座に呼び出せる（会議室での画面投影など）"}
+      ]
+    },
+    {
+      "title": "共通の編集ショートカット",
+      "skills": [
+        {"rank": "A", "text": "Ctrl+C/X/V/Z/Y を即座に使い分けられる"},
+        {"rank": "A", "text": "Ctrl+A で全選択ができる"},
+        {"rank": "A", "text": "Ctrl+S で保存を習慣化している"},
+        {"rank": "A", "text": "Ctrl+F で検索、Ctrl+H で置換ができる"},
+        {"rank": "A", "text": "Ctrl+矢印（上下）で、カーソル位置を変えずに画面全体をスクロールできる（対応エディタ・ブラウザで）"},
+        {"rank": "A", "text": "F2 で名前変更・編集モードに入れる"},
+        {"rank": "A", "text": "F5 で更新・再読み込みができる"},
+        {"rank": "B", "text": "Ctrl+P で印刷ダイアログを開ける"},
+        {"rank": "B", "text": "複数行を選択した状態で Tab／Shift+Tab を押し、まとめてインデント（字下げ）を増減できる（各種エディタ・Markdownツール共通）"},
+        {"rank": "B", "text": "Ctrl+マウスホイール で拡大・縮小できる"},
+        {"rank": "B", "text": "Ctrl+クリックで複数選択、Shift+クリックで範囲選択ができる"},
+        {"rank": "C", "text": "Alt+ドラッグ（または Ctrl+Alt+矢印）で矩形選択し、縦一列を同時選択・同時編集できる（VS Code・Cursor・Notion 等）"}
+      ]
+    },
+    {
+      "title": "エクスプローラー・ファイル操作",
+      "skills": [
+        {"rank": "A", "text": "Alt+↑ で上の階層へ、Alt+←/→ で履歴を前後移動できる"},
+        {"rank": "A", "text": "アドレスバーにパスを直接入力して目的フォルダへ瞬時移動できる"},
+        {"rank": "A", "text": "Ctrl+Shift+N で新規フォルダを作成できる"},
+        {"rank": "A", "text": "Shift+Delete で完全削除できる"},
+        {"rank": "A", "text": "Alt+Enter でプロパティを開ける"},
+        {"rank": "A", "text": "<strong>F2 でファイルやフォルダの名前を変更できる</strong>（左上メニューを開かずに即変更）"},
+        {"rank": "A", "text": "<strong>ファイル一覧表示中にキーボードで頭文字を入力すると、該当ファイル・フォルダにジャンプできる</strong>（目視で探さない）"},
+        {"rank": "B", "text": "Ctrl+T で新しいタブを開き、Ctrl+Tab でタブを切り替えられる（Win11のタブ化エクスプローラー）"},
+        {"rank": "B", "text": "Ctrl+N で新しいウィンドウ、Ctrl+W でウィンドウを閉じられる"},
+        {"rank": "B", "text": "Ctrl+L または Alt+D でアドレスバーへフォーカス移動できる"},
+        {"rank": "B", "text": "フォルダ・ファイルを選択して Enter で開き、Backspace で上の階層へ戻る一連の操作を右手だけでリズミカルに行える"},
+        {"rank": "B", "text": "Shift+右クリックで「パスのコピー」など拡張メニューを使える"},
+        {"rank": "B", "text": "検索ボックスで更新日・サイズ・拡張子の絞り込み演算子が使える"},
+        {"rank": "B", "text": "よく使うフォルダをクイックアクセス・ピン留めしている"},
+        {"rank": "C", "text": "フォルダーの空白部分を Shift+右クリックし、「ターミナル（PowerShell）をここで開く」でカレントディレクトリとして即起動できる"}
+      ]
+    },
+    {
+      "title": "ブラウザ",
+      "skills": [
+        {"rank": "A", "text": "Ctrl+T で新規タブ、Ctrl+W でタブを閉じる"},
+        {"rank": "A", "text": "Ctrl+Shift+T で閉じたタブを復活できる"},
+        {"rank": "A", "text": "Ctrl+Tab / Ctrl+Shift+Tab でタブを切り替えられる"},
+        {"rank": "A", "text": "リンクを Ctrl+クリック（またはマウスのホイールクリック）で、今のページを保ったままバックグラウンドの新しいタブで開ける"},
+        {"rank": "A", "text": "Ctrl+L または F6 でアドレスバーへフォーカス移動できる"},
+        {"rank": "A", "text": "Ctrl+F でページ内検索、F3で次の一致へ移動できる"},
+        {"rank": "A", "text": "Ctrl+D でブックマーク追加ができる"},
+        {"rank": "A", "text": "Backspace または Alt+← で前のページへ戻れる"},
+        {"rank": "B", "text": "Ctrl+1〜8 で指定位置のタブへ、Ctrl+9 で最後のタブへ移動できる"},
+        {"rank": "B", "text": "Ctrl+Enter でアドレスバーの文字列を「www.〜.com」に補完できる"},
+        {"rank": "B", "text": "Ctrl+Shift+R（または Ctrl+F5）でキャッシュを無視して強制再読み込み（スーパーリロード）できる"},
+        {"rank": "B", "text": "Ctrl+Shift+Del で「閲覧履歴データの削除」ダイアログを開き、キャッシュ・Cookie をクリアできる"},
+        {"rank": "B", "text": "Ctrl+Shift+B でブックマークバー表示切替ができる"},
+        {"rank": "B", "text": "Ctrl+H で履歴、Ctrl+J でダウンロード一覧を開ける"},
+        {"rank": "B", "text": "Ctrl+Shift+N（Edge:Ctrl+Shift+P）でシークレットウィンドウを開ける"},
+        {"rank": "B", "text": "Space / Shift+Space でページスクロール、Home/Endでページ先頭・末尾へ移動できる"},
+        {"rank": "C", "text": "F12 で開発者ツールを開ける"},
+        {"rank": "C", "text": "検索演算子（\"完全一致\" -除外 site: filetype:）を使いこなせる"}
+      ]
+    },
+    {
+      "title": "業務効率化・自動化",
+      "skills": [
+        {"rank": "A", "text": "デスクトップショートカットやピン留めでよく使うアプリ・ファイルへ即座にアクセスできる"},
+        {"rank": "A", "text": "スタートメニュー検索（Winキーから入力）でアプリを最短で起動できる"},
+        {"rank": "B", "text": "クリップボード履歴（Win+V）を多用して貼り付け作業を高速化している"},
+        {"rank": "B", "text": "スニッピングツール（Win+Shift+S）で素早く範囲キャプチャしている"},
+        {"rank": "B", "text": "ファイル名指定実行（Win+R）で「cmd」「control」「ms-settings:」等を直接起動できる"},
+        {"rank": "B", "text": "複数モニター・FancyZones等で作業領域を最適化している"},
+        {"rank": "B", "text": "キーボード主体で操作し、マウスへの持ち替え回数を最小化している"},
+        {"rank": "C", "text": "PowerToys（FancyZones、PowerToys Run、Keyboard Manager等）を活用している"},
+        {"rank": "C", "text": "定型作業をマクロ・Power Automateで自動化している"},
+        {"rank": "C", "text": "ブラウジング・ファイル操作を含め、マウス／トラックパッドの使用を極力減らし、キーボード中心で一連の作業を完結できる（脱マウス）"},
+        {"rank": "C", "text": "「左手は常にキーボード、右手はマウスかテンキー」など、手のポジションを意識して持ち替えロスを抑える習慣がある"},
+        {"rank": "C", "text": "自分の業務でボトルネックになっている操作を特定し改善できる"}
+      ]
+    },
+    {
+      "title": "AI活用（業務における）",
+      "note": "AIを業務で活用するスキル。ツールとしての操作だけでなく、判断・検証・組み込みの観点を含む。",
+      "skills": [
+        {"rank": "A", "text": "主要な生成AI（ChatGPT、Claude、Gemini等）の存在を知っており、業務で使えると認識している"},
+        {"rank": "A", "text": "<strong>機密情報・個人情報・パスワードを AI に渡してはいけない</strong>と判断できる"},
+        {"rank": "A", "text": "AIの出力を <strong>鵜呑みにせず</strong>、ファクトチェック・自分の判断を入れられる"},
+        {"rank": "A", "text": "AIに依頼する際、<strong>目的・背景・前提条件</strong>を伝えられる（プロンプトの基本）"},
+        {"rank": "A", "text": "AIに「文章の校正・要約・翻訳」を依頼できる"},
+        {"rank": "A", "text": "AIに「情報の整理・分類・比較」を依頼できる"},
+        {"rank": "B", "text": "ChatGPT・Claude・Gemini等の特性を理解し、<strong>用途で使い分け</strong>られる"},
+        {"rank": "B", "text": "AIに「叩き台」を作らせ、<strong>自分で仕上げる流れ</strong>ができる"},
+        {"rank": "B", "text": "AI の結果に対して <strong>追加質問・修正依頼（ラリー）</strong>ができる"},
+        {"rank": "B", "text": "<strong>AIに依頼する vs 自分でやる</strong> を場面で判断できる（AI移譲の見極め）"},
+        {"rank": "B", "text": "画像生成AI（DALL-E、Midjourney等）を業務で使える"},
+        {"rank": "B", "text": "AIの会話履歴を整理・保存・再利用できる"},
+        {"rank": "C", "text": "高度なプロンプト設計（チェーン、role 設定、few-shot 等）ができる"},
+        {"rank": "C", "text": "Claude Code 等の <strong>AIエージェント</strong> を業務に使える"},
+        {"rank": "C", "text": "複数AIを組み合わせて1つのワークフローを設計できる"},
+        {"rank": "C", "text": "AI活用ノウハウを他社員に <strong>教えられる</strong>（社内勉強会・マニュアル作成）"}
+      ]
+    }
+  ],
+  "optionIntro": {
+    "heading": "オプション（利用する人のみ評価）",
+    "body": "以下は社員全員ではなく、業務で実際に利用する人だけが任意で自己評価する項目。<strong>重要度別の段階的評価ルールの対象外</strong>。"
+  },
+  "optionGroups": [
+    {
+      "id": "O-1",
+      "title": "Word",
+      "skills": [
+        "Ctrl+B/I/U で太字・斜体・下線を切り替えられる",
+        "Ctrl+Shift+>/< でフォントサイズの拡大・縮小ができる",
+        "Ctrl+L/E/R/J で左寄せ・中央・右寄せ・両端揃えができる",
+        "Ctrl+Shift+C/V で書式のコピー・貼り付けができる",
+        "Ctrl+Space で書式をクリアできる",
+        "Ctrl+Enter で改ページを挿入できる",
+        "Shift+Enter で段落内改行ができる",
+        "F4 で直前の操作を繰り返せる",
+        "Ctrl+クリックで文中の単語に一致する範囲を選択できる",
+        "スタイル機能を使って見出し・本文を一括書式設定できる"
+      ]
+    },
+    {
+      "id": "O-2",
+      "title": "Excel",
+      "skills": [
+        "Ctrl+方向キー でデータ範囲の端へジャンプできる",
+        "Ctrl+Shift+方向キー で端まで一括選択できる",
+        "Ctrl+A で表全体を選択できる",
+        "Ctrl+Home/End でシート先頭・データ末尾へ移動できる",
+        "Ctrl+PageUp/PageDown でシートを切り替えられる",
+        "Ctrl+;（日付）、Ctrl+:（時刻）を即座に入力できる",
+        "Alt+Enter でセル内改行ができる",
+        "F2 でセル編集モード、Esc で取消ができる",
+        "F4 で絶対参照/相対参照を切り替えられる",
+        "F4（直前操作の繰り返し）を活用できる",
+        "Ctrl+D で上のセルをコピー、Ctrl+R で左のセルをコピーできる",
+        "Ctrl+Enter で複数セルに同じ値を一括入力できる",
+        "Alt+= で SUM を自動入力できる",
+        "Ctrl+1 でセルの書式設定ダイアログを開ける",
+        "Ctrl+Shift+L でフィルターのオン/オフを切り替えられる",
+        "Ctrl+T でテーブル化できる",
+        "Ctrl+Shift+&/_ で罫線の追加・解除ができる",
+        "Ctrl+Shift+1〜6 で表示形式（数値・%・日付等）を切り替えられる",
+        "Ctrl+9/0 で行・列を非表示、Ctrl+Shift+9/0 で再表示できる",
+        "Ctrl+Shift++/- で行・列の挿入・削除ができる",
+        "Ctrl+Z/Y を頻繁に活用して操作を巻き戻せる",
+        "Ctrl+F/H で検索・置換ができる",
+        "Alt→キーで リボンのキーヒントを使ってキーボードのみで操作できる",
+        "テンキーを使った数値入力ができる",
+        "オートフィル（フィルハンドルのダブルクリック）で式を一括コピーできる",
+        "VLOOKUP/XLOOKUP/IF/SUMIFS等の関数をマウスを使わず入力できる",
+        "ピボットテーブルを最短手順で作成できる"
+      ]
+    },
+    {
+      "id": "O-3",
+      "title": "PowerPoint",
+      "skills": [
+        "Ctrl+M で新しいスライドを追加できる",
+        "Ctrl+D でスライド・オブジェクトを複製できる",
+        "F5 で先頭から、Shift+F5 で現在のスライドからスライドショーを開始できる",
+        "スライドショー中にBで黒画面、Wで白画面に切り替えられる",
+        "Ctrl+G/Shift+Ctrl+G で図形のグループ化・解除ができる",
+        "Tab/Shift+Tab で重ね順を移動できる",
+        "Alt+方向キー で図形を1px単位で動かせる",
+        "Shift+ドラッグ で水平/垂直/比率固定の移動・拡大ができる",
+        "Ctrl+ドラッグ で複製、Ctrl+Shift+ドラッグ で平行複製ができる",
+        "配置（整列・等間隔配置）機能で素早くレイアウトできる",
+        "スライドマスターを使って書式変更を一括反映できる"
+      ]
+    }
+  ],
+  "removed": {
+    "intro": "以下のカテゴリは「利用頻度が極めて少ない」ため スキルシートから削除：",
+    "items": [
+      "<strong>メール（Outlook）</strong>：11項目",
+      "<strong>オンライン会議（Teams/Zoom）</strong>：6項目"
+    ],
+    "note": "将来、社員の使用ツールが変わった場合に再度追加可能。"
+  },
+  "totalsNote": "（前回149 + Win11/ブラウザ操作 純増13 = {TOTAL}）",
+  "reviewPoints": [
+    "<strong>初回評価（A {A}項目）は社員1人あたり 13〜20分</strong>が目安",
+    "A:B:C = {A}:{B}:{C} のバランス。基礎と業務効率がほぼ均衡し、専門は絞り込まれている",
+    "<strong>PowerPoint をオプション化</strong>（社長言及にはなかったが、同じ Office 系として判断）— 違っていれば戻します",
+    "業務効率化の「Power Automate」を C に置いたまま — はなさかの方針（AI活用重視）から B 昇格も検討余地あり"
+  ],
+  "related": [
+    {"prefix": "運用ルール: ", "label": "HANAツール decisions.html", "href": "../../clients/hanasaka/projects/hana-tool/decisions.html"},
+    {"prefix": "システム実装: ", "label": "HANAツール backlog.html", "href": "../../clients/hanasaka/projects/hana-tool/backlog.html"},
+    {"prefix": "スキルシート全体: ", "label": "business/skill-sheet/index.html", "href": "index.html"}
+  ]
+}

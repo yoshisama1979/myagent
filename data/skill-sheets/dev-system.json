@@ -1,0 +1,236 @@
+{
+  "id": "dev-system",
+  "title": "システム開発スキル",
+  "nav": [
+    {
+      "label": "← 株式会社はなさか",
+      "href": "../../index.html"
+    },
+    {
+      "label": "ビジネスダッシュボード",
+      "href": "../index.html"
+    },
+    {
+      "label": "スキルシート",
+      "href": "index.html"
+    }
+  ],
+  "subtitle": "PHP/Laravel、DB、API、サーバー・インフラ、セキュリティなどシステム開発領域のスキル。",
+  "updates": [
+    "2026-05-24 ドラフト（社長レビュー待ち）"
+  ],
+  "boxes": [
+    {
+      "color": "blue",
+      "heading": "対象スコープ",
+      "paragraphs": [
+        {
+          "cls": "mt-1",
+          "html": "業務システム・API・バックエンドを扱う <strong>システム開発担当者向け</strong>のシート。営業職・Web制作専任は評価対象外でOK。"
+        },
+        {
+          "cls": "mt-2",
+          "html": "<strong>評価ルール:</strong> PC操作スキルと同じ（5段階評価／重要度別 段階的進行）"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "title": "PHP / Laravel",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "PHP の基本構文（変数、関数、配列、クラス）を使える"
+        },
+        {
+          "rank": "A",
+          "text": "Laravel の <strong>ルーティング・コントローラ・ビュー</strong>（MVC）の基本を理解している"
+        },
+        {
+          "rank": "A",
+          "text": "<strong>Eloquent ORM</strong> の基本（モデル・リレーション）を理解している"
+        },
+        {
+          "rank": "B",
+          "text": "Middleware、Service、Repository パターンを使える"
+        },
+        {
+          "rank": "B",
+          "text": "Queue、Job、Scheduler を活用できる"
+        },
+        {
+          "rank": "C",
+          "text": "Laravel のテスト機能（PHPUnit、Pest）を実装できる"
+        },
+        {
+          "rank": "C",
+          "text": "パッケージ作成・依存管理（Composer）を理解・運用できる"
+        }
+      ]
+    },
+    {
+      "title": "データベース（SQL / 設計）",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "SELECT、INSERT、UPDATE、DELETE の基本 SQL を書ける"
+        },
+        {
+          "rank": "A",
+          "text": "JOIN（INNER、LEFT）を使える"
+        },
+        {
+          "rank": "A",
+          "text": "テーブル設計（主キー・外部キー・INDEX）の基本を理解している"
+        },
+        {
+          "rank": "B",
+          "text": "トランザクション・ロックを適切に使える"
+        },
+        {
+          "rank": "B",
+          "text": "<strong>N+1問題</strong> を理解し、回避（eager loading）できる"
+        },
+        {
+          "rank": "B",
+          "text": "マイグレーション・シーダーで DB を管理できる"
+        },
+        {
+          "rank": "C",
+          "text": "パフォーマンスチューニング（実行計画、INDEX 最適化、SLOW QUERY 分析）ができる"
+        }
+      ]
+    },
+    {
+      "title": "API 設計・実装",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "REST API の基本（HTTPメソッド、ステータスコード）を理解している"
+        },
+        {
+          "rank": "A",
+          "text": "JSON レスポンスを適切に設計できる"
+        },
+        {
+          "rank": "B",
+          "text": "認証（Token、OAuth、API Key）を実装できる"
+        },
+        {
+          "rank": "B",
+          "text": "バリデーション・エラーハンドリングを統一的に実装できる"
+        },
+        {
+          "rank": "B",
+          "text": "API ドキュメント（OpenAPI / Swagger 等）を書ける"
+        },
+        {
+          "rank": "C",
+          "text": "外部 API 連携（決済、SNS、AI、Chatwork 等）を実装できる"
+        }
+      ]
+    },
+    {
+      "title": "サーバー・インフラ",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "SSH でサーバーに接続できる"
+        },
+        {
+          "rank": "A",
+          "text": "SCP / SFTP / Git でデプロイができる"
+        },
+        {
+          "rank": "B",
+          "text": "nginx / Apache の基本設定を変更できる"
+        },
+        {
+          "rank": "B",
+          "text": "cron でバッチを設定できる"
+        },
+        {
+          "rank": "B",
+          "text": "ログの確認・調査（tail、grep、less）ができる"
+        },
+        {
+          "rank": "C",
+          "text": "VPS・クラウド（さくら、AWS、ConoHa等）の構築・運用ができる"
+        }
+      ]
+    },
+    {
+      "title": "セキュリティ",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "パスワードを <strong>平文で保存しない</strong>（ハッシュ化を理解している）"
+        },
+        {
+          "rank": "A",
+          "text": "<strong>SQLインジェクション・XSS</strong> を回避する書き方ができる（プレースホルダ、エスケープ）"
+        },
+        {
+          "rank": "B",
+          "text": "CSRF 対策を理解し実装できる"
+        },
+        {
+          "rank": "B",
+          "text": "HTTPS・SSL証明書の管理ができる（Let's Encrypt 等）"
+        },
+        {
+          "rank": "C",
+          "text": "脆弱性診断ツール・セキュリティアップデートを継続的に実施できる"
+        }
+      ]
+    },
+    {
+      "title": "システムテスト・運用",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "動作確認時、複数ユーザー・複数ケースで検証する"
+        },
+        {
+          "rank": "B",
+          "text": "ステージング環境で本番デプロイ前に確認する"
+        },
+        {
+          "rank": "B",
+          "text": "バックアップ・リストア手順を整備している"
+        },
+        {
+          "rank": "C",
+          "text": "監視・アラート設定で異常を検知できる（死活監視、エラー通知）"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "firstColHeader": "重要度",
+    "showRemarks": false
+  },
+  "related": [
+    {
+      "prefix": "開発全体・習慣編：",
+      "label": "dev-skills.html",
+      "href": "dev-skills.html"
+    },
+    {
+      "prefix": "Web制作：",
+      "label": "dev-web.html",
+      "href": "dev-web.html"
+    },
+    {
+      "prefix": "デザイン領域：",
+      "label": "design-skills.html",
+      "href": "design-skills.html"
+    },
+    {
+      "prefix": "スキルシート全体: ",
+      "label": "index.html",
+      "href": "index.html"
+    }
+  ]
+}

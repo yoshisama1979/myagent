@@ -1,0 +1,349 @@
+{
+  "id": "dev-skills",
+  "title": "開発スキル（全体・習慣編）",
+  "nav": [
+    {
+      "label": "← 株式会社はなさか",
+      "href": "../../index.html"
+    },
+    {
+      "label": "ビジネスダッシュボード",
+      "href": "../index.html"
+    },
+    {
+      "label": "スキルシート",
+      "href": "index.html"
+    }
+  ],
+  "subtitle": "HTML/CSS のコーディングから業務システムのプログラミングまでを含む、<strong>開発全般に共通する習慣・姿勢・プロセス</strong>のスキル定義。",
+  "updates": [
+    "2026-05-24 ドラフト（言語別の細かいスキルは別シートで作成予定）"
+  ],
+  "boxes": [
+    {
+      "color": "blue",
+      "heading": "対象スコープ",
+      "paragraphs": [
+        {
+          "cls": "mt-1",
+          "html": "本シートは「**開発者として共通で持つべき習慣**」を扱います。HTML、CSS、JavaScript、PHP、SQL 等の <strong>言語固有のスキルは別シート</strong>（今後作成）。"
+        },
+        {
+          "cls": "mt-2",
+          "html": "<strong>評価ルール:</strong> PC操作スキルと同じ（5段階評価／重要度別 段階的進行）"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "title": "要件理解・コミュニケーション",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "機能の <strong>目的・背景</strong> を理解しようと努めてから着手する"
+        },
+        {
+          "rank": "A",
+          "text": "仕様の <strong>不明点・曖昧点を質問</strong> してから実装する（推測で進めない）"
+        },
+        {
+          "rank": "B",
+          "text": "クライアント・社内の要望を <strong>技術要件に翻訳</strong> できる"
+        },
+        {
+          "rank": "B",
+          "text": "開発前に <strong>スコープ・優先度</strong> を明確に確認する習慣がある"
+        },
+        {
+          "rank": "C",
+          "text": "要件の <strong>妥当性・実現可能性を判断</strong> し、代替案を提案できる"
+        }
+      ]
+    },
+    {
+      "title": "設計",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "実装前に <strong>「何を作るか」を整理</strong> してから着手する"
+        },
+        {
+          "rank": "A",
+          "text": "既存のコード構造を <strong>理解してから</strong> 変更を加える"
+        },
+        {
+          "rank": "B",
+          "text": "機能を <strong>小さな単位に分割</strong> して設計できる"
+        },
+        {
+          "rank": "B",
+          "text": "<strong>命名（変数・関数・クラス）</strong> に時間をかけ、意味の通る名前を付ける"
+        },
+        {
+          "rank": "B",
+          "text": "データ構造・処理フローを意識して設計する"
+        },
+        {
+          "rank": "C",
+          "text": "<strong>拡張性・保守性</strong> を考慮した設計（疎結合、責任分離等）ができる"
+        }
+      ]
+    },
+    {
+      "title": "コーディング習慣",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "既存の <strong>コードスタイル・規約</strong> に合わせて書く"
+        },
+        {
+          "rank": "A",
+          "text": "動作確認をしてから次のタスクに進む（「動くはず」で渡さない）"
+        },
+        {
+          "rank": "A",
+          "text": "ハードコードを避け、<strong>定数・変数化</strong> する"
+        },
+        {
+          "rank": "B",
+          "text": "関数を <strong>小さく保つ</strong>（1関数=1責任）"
+        },
+        {
+          "rank": "B",
+          "text": "重複コードを発見したら <strong>リファクタ</strong> する"
+        },
+        {
+          "rank": "B",
+          "text": "<strong>エラーハンドリング</strong> を意識した実装ができる（例外・null チェック等）"
+        },
+        {
+          "rank": "C",
+          "text": "パフォーマンス・セキュリティを意識した実装ができる（N+1、SQL インジェクション等）"
+        }
+      ]
+    },
+    {
+      "title": "テスト・品質管理",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "機能完成後、<strong>複数ケース</strong> で動作確認する（正常系だけで終わらせない）"
+        },
+        {
+          "rank": "A",
+          "text": "<strong>エッジケース</strong>（空・最大・最小・異常値・特殊文字）を想定する"
+        },
+        {
+          "rank": "B",
+          "text": "自動テストの価値を理解しており、書いたコードに対してテストを書く意識がある"
+        },
+        {
+          "rank": "C",
+          "text": "テスト駆動開発（TDD）を実践できる"
+        },
+        {
+          "rank": "C",
+          "text": "CI/CD やコードカバレッジ・自動化されたチェックを意識・活用できる"
+        }
+      ]
+    },
+    {
+      "title": "バージョン管理（Git）",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "git status / log / diff を <strong>頻繁に使い</strong>、変更内容を常に把握する"
+        },
+        {
+          "rank": "A",
+          "text": "コミットメッセージを <strong>意味のあるもの</strong> にする（「修正」だけで終わらせない）"
+        },
+        {
+          "rank": "A",
+          "text": "機能単位・修正単位で <strong>適切な粒度でコミット</strong> する"
+        },
+        {
+          "rank": "B",
+          "text": "ブランチを <strong>目的別</strong> に分けて運用できる（feature ブランチ等）"
+        },
+        {
+          "rank": "B",
+          "text": "コンフリクトを <strong>落ち着いて解決</strong> できる"
+        },
+        {
+          "rank": "B",
+          "text": "rebase / merge を場面で使い分けられる"
+        },
+        {
+          "rank": "C",
+          "text": "高度な操作（cherry-pick、bisect、reflog 等）で問題解決できる"
+        }
+      ]
+    },
+    {
+      "title": "デバッグ・問題解決",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "エラーメッセージを <strong>必ず読む</strong> 習慣がある（読まずに勘で直さない）"
+        },
+        {
+          "rank": "A",
+          "text": "ログ・コンソール出力・dump を活用して状態を可視化できる"
+        },
+        {
+          "rank": "B",
+          "text": "問題を <strong>小さく切り分け</strong> て原因を特定できる（再現条件の絞り込み）"
+        },
+        {
+          "rank": "B",
+          "text": "ブラウザの DevTools、IDE のデバッガを使える"
+        },
+        {
+          "rank": "B",
+          "text": "同じエラーを <strong>二度起こさない仕組み</strong> を作る（メモ、テスト、定数化等）"
+        },
+        {
+          "rank": "C",
+          "text": "スタックトレースから原因を推測できる／再現性のないバグを系統的に追える"
+        }
+      ]
+    },
+    {
+      "title": "ドキュメンテーション",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "コードに必要なコメントを書ける（<strong>「なぜ」を残す</strong>、「何を」はコードで分かる）"
+        },
+        {
+          "rank": "A",
+          "text": "仕様変更時に <strong>ドキュメントも更新</strong> する（コードと仕様の乖離を防ぐ）"
+        },
+        {
+          "rank": "B",
+          "text": "README・API 仕様書・運用手順書を書ける"
+        },
+        {
+          "rank": "B",
+          "text": "図（フロー図・構成図・ER 図等）を使って説明できる"
+        },
+        {
+          "rank": "C",
+          "text": "他の開発者がすぐ理解できる構造で書ける（読み手を意識）"
+        }
+      ]
+    },
+    {
+      "title": "AI活用（開発における）",
+      "note": "PC操作の「AI活用（業務における）」とは別軸で、開発業務での AI 活用に特化したスキル。",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "AIに <strong>「エラーの原因調査・解決策」</strong> を相談できる"
+        },
+        {
+          "rank": "A",
+          "text": "AIに <strong>「コードのレビュー・改善提案」</strong> を依頼できる"
+        },
+        {
+          "rank": "A",
+          "text": "AIの提案を <strong>鵜呑みにせず</strong>、自分で検証・テストする"
+        },
+        {
+          "rank": "B",
+          "text": "AIに <strong>叩き台</strong> を作らせ、自分で仕上げる流れができる"
+        },
+        {
+          "rank": "B",
+          "text": "AIに <strong>技術調査</strong>（ライブラリ比較・最新手法等）を依頼できる"
+        },
+        {
+          "rank": "B",
+          "text": "<strong>Claude Code 等の AI エージェント</strong> を開発業務に活用できる"
+        },
+        {
+          "rank": "C",
+          "text": "AIと <strong>ペアプログラミング</strong> ができる（対話的にコードを育てる）"
+        },
+        {
+          "rank": "C",
+          "text": "AIを使った <strong>開発ワークフローを設計</strong> し、他社員に展開できる"
+        }
+      ]
+    },
+    {
+      "title": "学習・継続的改善",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "<strong>公式ドキュメント</strong> を読む習慣がある（解説サイトだけに頼らない）"
+        },
+        {
+          "rank": "A",
+          "text": "知らない技術・用語を <strong>即時に調べる</strong> 習慣がある"
+        },
+        {
+          "rank": "B",
+          "text": "業界トレンド・新技術に <strong>定期的に</strong> 目を通す（週次など）"
+        },
+        {
+          "rank": "B",
+          "text": "新しい技術・ツールを <strong>試す時間</strong> を業務内で確保している"
+        },
+        {
+          "rank": "C",
+          "text": "自分の経験を <strong>言語化・共有</strong> できる（社内勉強会・ブログ・ドキュメント化）"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "firstColHeader": "重要度",
+    "showRemarks": true
+  },
+  "reviewPoints": [
+    "<strong>初回評価対象（A {A}項目）は社員1人あたり 5〜10分</strong>。気軽に開始できる規模",
+    "9カテゴリで開発全般の習慣を網羅、A:B:C = {A}:{B}:{C} のバランス",
+    "<strong>「AI活用（開発における）」を独立セクションに</strong> — はなさかの方針（AI活用重視）を強く反映。Claude Code への言及あり",
+    "「テスト・品質管理」は A が2項目のみ（複数ケース確認・エッジケース）。社員の現状に合わせて調整余地あり",
+    "「ドキュメンテーション」の「なぜを残す」は、はなさかの「CLAUDE.md 中心の運用」とも整合"
+  ],
+  "extraSections": [
+    {
+      "heading": "今後追加予定（言語別・領域別の細かいスキル）",
+      "items": [
+        "HTML / CSS / JavaScript 関連スキル",
+        "PHP / Laravel スキル",
+        "SQL / DB 設計スキル",
+        "サーバー・インフラ・運用スキル",
+        "WordPress 関連スキル",
+        "その他（要件次第で追加）"
+      ],
+      "listClass": "text-gray-500"
+    }
+  ],
+  "related": [
+    {
+      "prefix": "PC操作スキル：",
+      "label": "pc-skills.html",
+      "href": "pc-skills.html"
+    },
+    {
+      "prefix": "運用ルール: ",
+      "label": "HANAツール decisions.html",
+      "href": "../../clients/hanasaka/projects/hana-tool/decisions.html"
+    },
+    {
+      "prefix": "システム実装: ",
+      "label": "HANAツール backlog.html",
+      "href": "../../clients/hanasaka/projects/hana-tool/backlog.html"
+    },
+    {
+      "prefix": "スキルシート全体: ",
+      "label": "business/skill-sheet/index.html",
+      "href": "index.html"
+    }
+  ]
+}

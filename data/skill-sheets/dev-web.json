@@ -1,0 +1,274 @@
+{
+  "id": "dev-web",
+  "title": "Web制作スキル",
+  "nav": [
+    {
+      "label": "← 株式会社はなさか",
+      "href": "../../index.html"
+    },
+    {
+      "label": "ビジネスダッシュボード",
+      "href": "../index.html"
+    },
+    {
+      "label": "スキルシート",
+      "href": "index.html"
+    }
+  ],
+  "subtitle": "HTML/CSS/JavaScript からレスポンシブ・SEO・WordPress まで、Web制作領域のスキル。",
+  "updates": [
+    "2026-05-24 ドラフト（社長レビュー待ち）"
+  ],
+  "boxes": [
+    {
+      "color": "blue",
+      "heading": "対象スコープ",
+      "paragraphs": [
+        {
+          "cls": "mt-1",
+          "html": "Web制作（HP・LP・キャンペーンサイト等）に関わる技術スキル。<strong>Web制作担当者向け</strong>のシート。営業職等は評価対象外でOK。"
+        },
+        {
+          "cls": "mt-2",
+          "html": "<strong>評価ルール:</strong> PC操作スキルと同じ（5段階評価／重要度別 段階的進行）"
+        }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "title": "HTML / マークアップ",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "HTML の基本構造（doctype, html, head, body）を理解している"
+        },
+        {
+          "rank": "A",
+          "text": "<strong>セマンティックHTML</strong> を理解し、適切な要素を選べる（header, main, article, section, nav 等）"
+        },
+        {
+          "rank": "A",
+          "text": "適切な見出しレベル（h1〜h6）の階層を組める"
+        },
+        {
+          "rank": "B",
+          "text": "メタタグ（OGP、Twitter Card 等）を適切に設定できる"
+        },
+        {
+          "rank": "B",
+          "text": "構造化データ（Schema.org / JSON-LD）を意識できる"
+        },
+        {
+          "rank": "C",
+          "text": "ARIA 属性を使ったアクセシブルなマークアップができる"
+        }
+      ]
+    },
+    {
+      "title": "CSS / スタイリング",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "CSS セレクタの基本（class、id、子要素、隣接、疑似要素等）を使える"
+        },
+        {
+          "rank": "A",
+          "text": "<strong>Flexbox</strong> でレイアウトを組める"
+        },
+        {
+          "rank": "A",
+          "text": "文字サイズ・色・余白の設計ができる（rem/em の使い分け含む）"
+        },
+        {
+          "rank": "B",
+          "text": "<strong>Grid Layout</strong> でレイアウトを組める"
+        },
+        {
+          "rank": "B",
+          "text": "CSS変数（カスタムプロパティ）を活用できる"
+        },
+        {
+          "rank": "B",
+          "text": "メディアクエリでレスポンシブ対応できる"
+        },
+        {
+          "rank": "C",
+          "text": "Tailwind CSS / Sass / PostCSS 等のモダンツールを使いこなせる"
+        },
+        {
+          "rank": "C",
+          "text": "アニメーション・トランジションを適切に実装できる"
+        }
+      ]
+    },
+    {
+      "title": "JavaScript / インタラクション",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "DOM 操作の基本（querySelector、addEventListener 等）ができる"
+        },
+        {
+          "rank": "A",
+          "text": "フォームのバリデーション・送信処理を実装できる"
+        },
+        {
+          "rank": "A",
+          "text": "非同期処理（fetch、Promise、async/await）の基本を理解している"
+        },
+        {
+          "rank": "B",
+          "text": "jQuery と素のJSの両方を場面で使い分けられる"
+        },
+        {
+          "rank": "B",
+          "text": "モダンライブラリ（Vue、React、Alpine.js 等）の基本理解がある"
+        },
+        {
+          "rank": "C",
+          "text": "パフォーマンス（遅延読込、レンダリング最適化、debounce/throttle）を意識できる"
+        }
+      ]
+    },
+    {
+      "title": "レスポンシブ・モバイル対応",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "スマホ・タブレット・PC でレイアウトを最適化できる"
+        },
+        {
+          "rank": "A",
+          "text": "viewport の設定を適切に行える"
+        },
+        {
+          "rank": "B",
+          "text": "タッチデバイス特有の操作（ホバー無し、タップ領域）を考慮できる"
+        },
+        {
+          "rank": "B",
+          "text": "画像の最適化（srcset、loading=lazy、WebP）ができる"
+        },
+        {
+          "rank": "C",
+          "text": "PWA、オフライン対応、Service Worker の基本を知っている"
+        }
+      ]
+    },
+    {
+      "title": "アクセシビリティ",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "alt 属性、label と input の紐付けが適切にできる"
+        },
+        {
+          "rank": "B",
+          "text": "キーボード操作で操作可能なフォーム・ナビゲーションを作れる"
+        },
+        {
+          "rank": "B",
+          "text": "コントラスト比・文字サイズを意識できる"
+        },
+        {
+          "rank": "C",
+          "text": "スクリーンリーダー対応・WCAG ガイドラインを意識した実装ができる"
+        }
+      ]
+    },
+    {
+      "title": "SEO・パフォーマンス",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "title、description、構造化された URL を意識できる"
+        },
+        {
+          "rank": "B",
+          "text": "画像最適化、不要なライブラリ削除でページ速度を上げられる"
+        },
+        {
+          "rank": "B",
+          "text": "PageSpeed Insights、Lighthouse の結果を読み解ける"
+        },
+        {
+          "rank": "C",
+          "text": "Core Web Vitals（LCP、INP、CLS）を理解し、改善できる"
+        },
+        {
+          "rank": "C",
+          "text": "サーバーサイドのキャッシュ・CDN 活用を提案できる"
+        }
+      ]
+    },
+    {
+      "title": "CMS（WordPress）",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "WordPress の管理画面で記事・固定ページ・メニューを編集できる"
+        },
+        {
+          "rank": "A",
+          "text": "テーマ・プラグインの追加・更新ができる"
+        },
+        {
+          "rank": "B",
+          "text": "<strong>子テーマ</strong> を使った安全なカスタマイズができる"
+        },
+        {
+          "rank": "B",
+          "text": "functions.php、テンプレートファイルを修正できる"
+        },
+        {
+          "rank": "C",
+          "text": "カスタム投稿タイプ・カスタムフィールド（ACF 等）を実装できる"
+        }
+      ]
+    },
+    {
+      "title": "クロスブラウザ・実機確認",
+      "skills": [
+        {
+          "rank": "A",
+          "text": "Chrome、Edge、Safari、Firefox での表示確認をする習慣がある"
+        },
+        {
+          "rank": "A",
+          "text": "<strong>実機</strong>（iPhone / Android）で確認する習慣がある"
+        },
+        {
+          "rank": "B",
+          "text": "ブラウザの開発者ツールで他端末をエミュレートできる"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "firstColHeader": "重要度",
+    "showRemarks": false
+  },
+  "related": [
+    {
+      "prefix": "開発全体・習慣編：",
+      "label": "dev-skills.html",
+      "href": "dev-skills.html"
+    },
+    {
+      "prefix": "システム開発：",
+      "label": "dev-system.html",
+      "href": "dev-system.html"
+    },
+    {
+      "prefix": "デザイン領域：",
+      "label": "design-skills.html",
+      "href": "design-skills.html"
+    },
+    {
+      "prefix": "スキルシート全体: ",
+      "label": "index.html",
+      "href": "index.html"
+    }
+  ]
+}
