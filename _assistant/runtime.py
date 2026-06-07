@@ -26,13 +26,15 @@ def build_agent() -> PartnerAgent:
     """
     load_dotenv()
 
-    my_user_id_raw = os.environ.get("HANA_MY_USER_ID")
+    # `HANA_TOOLS_DEFAULT_USER_ID`（bin/hana-api.sh と統一）を優先、
+    # 旧名 `HANA_MY_USER_ID` も後方互換で読む
+    my_user_id_raw = os.environ.get("HANA_TOOLS_DEFAULT_USER_ID") or os.environ.get("HANA_MY_USER_ID")
     if my_user_id_raw:
         try:
             my_user_id: int | None = int(my_user_id_raw)
         except ValueError as exc:
             raise RuntimeError(
-                f"HANA_MY_USER_ID は整数で指定してください（実値: {my_user_id_raw!r}）"
+                f"HANA_TOOLS_DEFAULT_USER_ID は整数で指定してください（実値: {my_user_id_raw!r}）"
             ) from exc
     else:
         my_user_id = None

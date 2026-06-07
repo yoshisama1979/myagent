@@ -19,7 +19,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
         "name": "get_todos",
         "description": (
             "hana-tools の ToDo 一覧を取得する。引数なしで全件取得。"
-            "自分宛の未完了タスクを見たい場合は assignee_user_id=HANA_MY_USER_ID と "
+            "自分宛の未完了タスクを見たい場合は assignee_user_id=<あなたの user_id> と "
             "status='incomplete' を指定する。"
             "各 ToDo の completed_at が null なら未完了。"
         ),
@@ -32,7 +32,7 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
                 },
                 "assignee_user_id": {
                     "type": "integer",
-                    "description": "担当者の user_id で絞り込む（任意、自分のタスクなら HANA_MY_USER_ID）",
+                    "description": "担当者の user_id で絞り込む（任意。自分のタスクならシステムプロンプトで通知された user_id を渡す）",
                 },
                 "work_id": {
                     "type": "integer",

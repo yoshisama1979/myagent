@@ -47,14 +47,14 @@ python3 -m venv _assistant/.venv
 # 依存をインストール
 _assistant/.venv/bin/pip install -r _assistant/requirements.txt
 
-# .env を整備（プロジェクトルートの .env を使うか、_assistant/.env を別途置く）
-# load_dotenv は _assistant/.env → ../.env の順で探す
-cp _assistant/.env.example _assistant/.env
-# エディタで実値を埋める：
+# .env を整備（プロジェクトルート .env に追記する運用）
+# load_dotenv は _assistant/.env があればそれを優先、無ければ ../.env を読む
+cp .env.example .env  # 既に .env があればスキップ。雛形はルートの .env.example
+# エディタで実値を埋める（必要キー）：
 #   ANTHROPIC_API_KEY=sk-ant-...
 #   HANA_TOOLS_BASE_URL=https://stg.hana-tools.com
 #   HANA_TOOLS_API_TOKEN=...
-#   HANA_MY_USER_ID=（hana-tools 上のあなたの user_id）
+#   HANA_TOOLS_DEFAULT_USER_ID=（hana-tools 上のあなたの user_id。bin/hana-api.sh と共用）
 #   ASSISTANT_USER=yoshi
 #   ASSISTANT_PASSWORD=（強いランダム文字列）
 #   ASSISTANT_SESSION_SECRET=$(python3 -c "import secrets; print(secrets.token_urlsafe(32))")

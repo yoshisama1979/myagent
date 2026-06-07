@@ -164,7 +164,7 @@ partner/tools.py から移植する 4 ツールの仕様を明示する。すべ
 
 | ツール | endpoint | 必須/任意 params | ユーザー絞り込み | 件数上限 |
 |--------|----------|------------------|------------------|----------|
-| `get_todos` | `GET /api/external/todos` | 任意: `user_id` / `assignee_user_id` / `work_id` / `status` | **自分のタスクは `assignee_user_id=$HANA_MY_USER_ID` を必須化**（prompt.md で明示） | API 側に従う（クライアント側で追加制限なし、ただし出力過大なら summary 要約を LLM に任せる） |
+| `get_todos` | `GET /api/external/todos` | 任意: `user_id` / `assignee_user_id` / `work_id` / `status` | **自分のタスクは `assignee_user_id=$HANA_TOOLS_DEFAULT_USER_ID` を必須化**（prompt.md で明示） | API 側に従う（クライアント側で追加制限なし、ただし出力過大なら summary 要約を LLM に任せる） |
 | `search_clients` | `GET /api/external/clients/search` | 必須: `q`（カンマ区切り OR） | なし（全社） | API 側に従う |
 | `get_clients` | `GET /api/external/clients` | なし | なし（全社） | API 側に従う |
 | `get_outsources` | `GET /api/external/outsources` | なし | なし（全社） | API 側に従う |
@@ -255,9 +255,10 @@ myagent ルートの `.env`（既存）に追記する形:
 | `ANTHROPIC_API_KEY` | Claude API キー | 新規追加 |
 | `HANA_TOOLS_BASE_URL` | hana-tools の URL | **既存**（myagent で使用中） |
 | `HANA_TOOLS_API_TOKEN` | hana-tools の API トークン | **既存**（myagent で使用中） |
-| `HANA_MY_USER_ID` | hana-tools 上の自分の user_id | 新規追加 |
-| `ASSISTANT_USER` | Chainlit ログイン用ユーザー名 | 新規追加 |
-| `ASSISTANT_PASSWORD` | Chainlit ログイン用パスワード | 新規追加 |
+| `HANA_TOOLS_DEFAULT_USER_ID` | hana-tools 上の自分の user_id | **既存**（bin/hana-api.sh と共用、`HANA_MY_USER_ID` 旧名は後方互換で読む） |
+| `ASSISTANT_USER` | Web UI ログイン用ユーザー名 | 新規追加 |
+| `ASSISTANT_PASSWORD` | Web UI ログイン用パスワード | 新規追加 |
+| `ASSISTANT_SESSION_SECRET` | cookie session 署名鍵 | 新規追加 |
 
 `.env.example` を `_assistant/` 配下に作って雛形を提示する。
 
