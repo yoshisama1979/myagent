@@ -21,11 +21,6 @@ import secrets
 import time
 from pathlib import Path
 
-# SSE エンドポイントで使うウォッチドッグ余裕（agent 側の TOTAL_TIMEOUT_SECONDS に少し足す）
-_STREAM_WATCHDOG_BUFFER_SECONDS = 30
-# クライアント切断検知のポーリング間隔（heartbeat 兼用）
-_DISCONNECT_POLL_SECONDS = 5
-
 from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
@@ -33,7 +28,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 
 from _assistant.agent import PartnerAgent
-from _assistant.config import load_dotenv, require_env
+from _assistant.config import TOTAL_TIMEOUT_SECONDS, load_dotenv, require_env
 from _assistant.render import escape_text, markdown_to_safe_html
 from _assistant.runtime import build_agent
 
@@ -51,6 +46,11 @@ _DISPLAY_HISTORY_MAX_TURNS = 200  # 1 セッションあたり最大保持メッ
 # ブルートフォース簡易対策（プロセス内・1 ユーザー想定）
 _LOGIN_FAIL_THRESHOLD = 5
 _LOGIN_LOCKOUT_SECONDS = 60
+
+# /chat/stream SSE 用のウォッチドッグ余裕（agent 側の TOTAL_TIMEOUT_SECONDS に少し足す）
+_STREAM_WATCHDOG_BUFFER_SECONDS = 30
+# クライアント切断検知のポーリング間隔（heartbeat 兼用）
+_DISCONNECT_POLL_SECONDS = 5
 
 _HERE = Path(__file__).resolve().parent
 _TEMPLATES = Jinja2Templates(directory=str(_HERE / "templates"))
@@ -357,8 +357,9 @@ async def chat_stream(
         try:
             yield _sse({"type": "user", "html": escape_text(user_msg).replace("\n", "<br>")})
 
-            from _assistant.config import TOTAL_TIMEOUT_SECONDS
-            watchdog_deadline = time.monotonic() + TOTAL_TIMEOUT_SECONDS + _STREAM_WATCHDOG_BUFFER_SECONDS
+            watchdog_deadline = (
+                time.monotonic() + TOTAL_TIMEOUT_SECONDS + _STREAM_WATCHDOG_BUFFER_SECONDS
+            )
 
             task = asyncio.create_task(asyncio.to_thread(run_agent))
 
