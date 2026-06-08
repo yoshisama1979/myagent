@@ -30,7 +30,7 @@
 |---------|--------------|
 | `/staging` | 変更ファイルを `git add` でステージング(コンパイル済み `.css` を巻き込まないよう注意) |
 | `/commit` | ステージング差分をチェックし、日本語コミットメッセージを提案 |
-| `/commit-pipeline` | staging → 差分確認 → Design.md整合チェック → コミット → リファクタ提案 のフルパイプライン |
+| `/commit-pipeline` | staging → 差分確認 → Design.md整合チェック → Codexクロスレビュー → コミット → リファクタ提案 のフルパイプライン |
 | `/refactor` | `rules/refactor.md` に従ってリファクタリング候補を列挙 |
 | `/cleanup-permissions` | `.claude/settings.local.json` の permissions を整理 |
 
