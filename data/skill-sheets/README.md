@@ -31,7 +31,8 @@
 
 ## 状態（2026-06-07）
 
-- ✅ 全5シート（`pc-skills` / `dev-skills` / `dev-system` / `dev-web` / `design-skills`）JSON化＋生成器で運用中
+- ✅ 全6シート（`pc-skills` / `dev-skills` / `dev-system` / `dev-web` / `design-skills` / `advanced-skills`）JSON化＋生成器で運用中
+- 🟡 `advanced-skills`（ビジネス基礎力スキル：情報・文章・管理・セキュリティ）は **暫定シート**。ランクは別AI提案ベースの仮置きで、社長レビューで確定・統廃合・他シートへの統合を行う前提。既存と重複するAI活用・検索演算子・公式ドキュメント等は除外済み
 - ✅ `index.html` の各カードの項目数 … `build-skills.py` 実行時に全JSONから自動同期（カード説明文の末尾「（…項目）」のみ差し替え）
 
 ### 移行時に判明・修正した既存バグ（集計表の手計算ミス）

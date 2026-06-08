@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メルマガ配信 手順書 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">業務</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📨 メルマガ配信 手順書</h1>
+  <p class="text-gray-600 mb-2">メルマガは <strong>ブラストメール（blastmail）</strong> を利用して配信する。</p>
+  <p class="text-xs text-gray-500 mb-8">配信前に、送信元メールアドレスの認証設定（SPF / DKIM）を済ませておく。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">送信元メールアドレスの設定</h2>
+  <p class="text-sm text-gray-600 mb-4">迷惑メール判定を避けるため、送信元ドメインに SPF と DKIM を設定する。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">① SPF を追加</h3>
+  <p class="text-sm">
+    <span class="text-gray-500">手順：</span>
+    <a href="https://support.blastmail.jp/manual/spfdkim?utm_source=product_bmas&contract_id=bm77399tx&user_id=bm77399tx&utm_medium=spfdkim#2_SPFレコードの設定方法" target="_blank" rel="noopener" class="text-blue-600 hover:underline">ブラストメール マニュアル — SPFレコードの設定方法</a>
+  </p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">② DKIM（署名作成者署名）を設定</h3>
+  <p class="text-sm">
+    <span class="text-gray-500">手順：</span>
+    <a href="https://support.blastmail.jp/manual/spfdkim?utm_source=product_bmas&contract_id=bm77399tx&user_id=bm77399tx&utm_medium=spfdkim#3_DKIM署名作成者署名の設定方法" target="_blank" rel="noopener" class="text-blue-600 hover:underline">ブラストメール マニュアル — DKIM署名の設定方法</a>
+  </p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="index.html" class="text-blue-600 hover:underline">業務トップ</a></li>
+    <li><a href="mail-dns.html" class="text-blue-600 hover:underline">メールDNS設定 手順書</a> — ドメイン自体のメール基盤（MX/A/SPF/DKIM/DMARC）</li>
+  </ul>
+
+</div>
+</body>
+</html>

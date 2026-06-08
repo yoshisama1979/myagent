@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>勤怠 手順書 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">業務</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🕒 勤怠 手順書</h1>
+  <p class="text-gray-600 mb-2">休日設定・休日出勤・振替休日・代休・欠勤/有給の申請と承認の流れをまとめる。</p>
+  <p class="text-xs text-gray-500 mb-8">勤怠システム：<strong>MFクラウド勤怠（マネーフォワード）</strong></p>
+
+  <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-6 text-sm">
+    <strong>用語整理：振替休日と代休の違い</strong>
+    <ul class="list-disc list-inside mt-2 space-y-1 text-gray-700">
+      <li><strong>振替休日</strong>＝休日出勤の<strong>前に</strong>「代わりに休む日」を決めておく（事前申請）。</li>
+      <li><strong>代休</strong>＝<strong>急な</strong>休日出勤の<strong>後に</strong>取得する。上長承認で代休日数が増える。</li>
+    </ul>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">① 管理者：休日設定</h2>
+  <p class="text-sm text-gray-600 mb-3">就業ルールに休暇ルールを設定する。新しい休暇区分を追加したいときの手順。</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>休暇ルールを追加する</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">勤怠ルール</code> → <code class="bg-gray-100 px-1 rounded text-sm font-mono">就業ルール</code> を開く</li>
+    <li>対象の <strong>{就業ルール名}</strong> を編集する</li>
+    <li>その他休日／休暇で、<strong>該当する休暇ルールにチェック</strong>を入れる</li>
+  </ol>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">② 休日出勤の申請</h2>
+  <p class="text-sm text-gray-600 mb-3">休日に出勤した場合は、<strong>出勤した時間を登録</strong>して休日出勤の申請を行う。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">③ 振替休日（事前に休む日を決める）</h2>
+  <p class="text-sm text-gray-600 mb-3">休日出勤が事前に分かっている場合は、代わりに休む日程を決めて<strong>振替休日</strong>として設定する。</p>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">申請</code> を開く</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">休日出勤申請</code> を選ぶ</li>
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">振替休日を取得する</code> を選び、代わりに休む日程を設定する</li>
+  </ol>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">④ 代休（急な休日出勤の後で取る）</h2>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>急な休日出勤は、まず <strong>休日出勤として登録</strong>する</li>
+    <li>上長により休日出勤が<strong>承認されると、代休の日数が増える</strong></li>
+    <li>代休の日数がある場合、代休を取る際は<strong>申請から代休を行える</strong></li>
+    <li>上長による承認により<strong>相殺</strong>される</li>
+  </ol>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">⑤ 欠勤・有給</h2>
+  <p class="text-sm text-gray-600 mb-3">MFクラウド勤怠で申請する。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">申請する側</h3>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>MFクラウド勤怠で <code class="bg-gray-100 px-1 rounded text-sm font-mono">日時勤怠</code> → <code class="bg-gray-100 px-1 rounded text-sm font-mono">申請</code> をクリック</li>
+    <li>申請内容を選択し、コメントを入れて申請する</li>
+  </ol>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">承認する側（上長）</h3>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">上長メニュー</code> → <code class="bg-gray-100 px-1 rounded text-sm font-mono">受信ワークフロー</code> から承認する</li>
+  </ol>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="index.html" class="text-blue-600 hover:underline">業務トップ</a></li>
+    <li><a href="../company/index.html" class="text-blue-600 hover:underline">社内規程</a>（就業規則 ほか）</li>
+  </ul>
+
+</div>
+</body>
+</html>

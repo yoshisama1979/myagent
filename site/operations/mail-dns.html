@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メールDNS設定 手順書 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">業務</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📧 メールに関するDNS設定 手順書</h1>
+  <p class="text-gray-600 mb-2">ドメインのメール基盤（受信・送信認証）を整えるDNSレコード設定。受信・到達性・なりすまし対策をまとめて行う。</p>
+  <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm">
+    メルマガ（ブラストメール）の<strong>送信元アドレス認証</strong>はこのページとは別 → <a href="newsletter.html" class="text-blue-600 hover:underline">メルマガ配信 手順書</a>。<br>
+    本ページはドメイン自体のメールサーバ（さくら共用サーバ等）の設定。
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">設定の全体像</h2>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><strong>MXレコード</strong>（受信先指定）</li>
+    <li><strong>Aレコード</strong>（メールサーバー指定）</li>
+    <li><strong>SPF</strong>（送信元IPの正当性証明）</li>
+    <li><strong>DKIM</strong>（改ざん防止・送信者証明）</li>
+    <li><strong>DMARC</strong>（ポリシー管理・可視化）</li>
+  </ol>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm">
+    ※ 共用サーバーの場合、<strong>逆引き（PTR）は未対応</strong>。
+  </div>
+  <p class="text-xs text-gray-500 mb-6">※ 以下の値（<code class="bg-gray-100 px-1 rounded text-xs font-mono">example-domain.com</code> / <code class="bg-gray-100 px-1 rounded text-xs font-mono">192.0.2.1</code> 等）はサンプル。実際のドメイン・サーバIP・セレクタ名に置き換えること。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">DNS設定内容（最終形）</h2>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">MXレコード</h3>
+  <pre class="bg-gray-800 text-gray-100 rounded p-3 text-xs overflow-x-auto mb-6">種別:     MX
+ホスト名: @
+優先度:   10
+値:       mail.example-domain.com</pre>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">Aレコード（メールサーバー）</h3>
+  <pre class="bg-gray-800 text-gray-100 rounded p-3 text-xs overflow-x-auto mb-6">種別:     A
+ホスト名: mail
+値:       192.0.2.1</pre>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">SPFレコード（TXT）</h3>
+  <pre class="bg-gray-800 text-gray-100 rounded p-3 text-xs overflow-x-auto mb-6">種別:     TXT
+ホスト名: @
+値:       v=spf1 ip4:192.0.2.1 ~all</pre>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">DKIM設定</h2>
+  <h3 class="text-lg font-semibold mb-3 mt-6">DKIM公開鍵の設定</h3>
+  <p class="text-sm text-gray-600 mb-3">さくらのコントロールパネル「メールドメイン」で設定する。設定時に<strong>セレクタ名と公開鍵</strong>が提供されるので、それを使用する。</p>
+  <pre class="bg-gray-800 text-gray-100 rounded p-3 text-xs overflow-x-auto mb-6">種別:     TXT
+ホスト名: セレクタ名
+値:       v=DKIM1; k=rsa; p=（改行を除去した公開鍵）</pre>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">DKIM確認コマンド</h3>
+  <pre class="bg-gray-800 text-gray-100 rounded p-3 text-xs overflow-x-auto mb-6">nslookup -type=txt セレクタ名.example-domain.com 8.8.8.8</pre>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">DMARC設定</h2>
+  <p class="text-sm text-gray-600 mb-6">DKIMと同時に、さくらのコントロールパネルで設定できる。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="index.html" class="text-blue-600 hover:underline">業務トップ</a></li>
+    <li><a href="newsletter.html" class="text-blue-600 hover:underline">メルマガ配信 手順書</a>（ブラストメール送信元のSPF/DKIM）</li>
+    <li><a href="web-resources.html" class="text-blue-600 hover:underline">制作リソース集</a></li>
+  </ul>
+
+</div>
+</body>
+</html>

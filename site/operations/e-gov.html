@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>電子申請 手順書 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">業務</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📑 電子申請 手順書</h1>
+  <p class="text-gray-600 mb-8">商業登記電子認証による鍵ペアファイルの作成・証明書のインストール・e-Gov 電子申請までの流れ。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">① 鍵ペアファイルの作成</h2>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li><strong>商業登記電子認証ソフト</strong>を起動する</li>
+    <li>「鍵ペアファイル及び証明書発行申請ファイル」を作成する</li>
+  </ol>
+
+  <p class="text-sm text-gray-600 mb-2">作成時に入力する会社情報：</p>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="px-3 py-2 border border-gray-200">商号</td><td class="px-3 py-2 border border-gray-200">株式会社はなさか</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">会社所在地</td><td class="px-3 py-2 border border-gray-200">大阪府大阪市北区天満１－５－２　トリシマオフィスワンビル９０２号</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">被証明者</td><td class="px-3 py-2 border border-gray-200">松田祥宗</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">被証明者の資格</td><td class="px-3 py-2 border border-gray-200">代表取締役</td></tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200">パスワード</td>
+        <td class="px-3 py-2 border border-gray-200">
+          🔒 別管理（このページには記載しない）<br>
+          <a href="https://app.notion.com/p/ID-PASS-1d870cebf15680baaebbcbcbc92ecad8" target="_blank" rel="noopener" class="text-blue-600 hover:underline">→ Notion「ID・パスワード」で確認</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm">
+    <strong>⚠️ パスワードはこのページに平文で記載しない。</strong>
+    認証用パスワードは Notion「ID・パスワード」ページで一元管理する。手順書からはリンク参照のみとする。
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">② 証明書のインストール</h2>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>発行された <code class="bg-gray-100 px-1 rounded text-sm font-mono">.p12</code> ファイルをダブルクリックしてインストールする</li>
+  </ol>
+  <p class="text-sm">
+    <span class="text-gray-500">参考：</span>
+    <a href="https://shinsei.e-gov.go.jp/contents/preparation/certificate/import.html" target="_blank" rel="noopener" class="text-blue-600 hover:underline">e-Gov 電子証明書のインポート手順</a>
+  </p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">③ e-Gov 電子申請アプリケーション</h2>
+  <ol class="list-decimal list-inside space-y-1 text-sm mb-4">
+    <li>e-Gov 電子申請アプリケーションを起動する</li>
+    <li><strong>GビズID</strong> でログインして申請を行う</li>
+  </ol>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="index.html" class="text-blue-600 hover:underline">業務トップ</a></li>
+    <li><a href="https://shinsei.e-gov.go.jp/" target="_blank" rel="noopener" class="text-blue-600 hover:underline">e-Gov 電子申請</a></li>
+  </ul>
+
+</div>
+</body>
+</html>
