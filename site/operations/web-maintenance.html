@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ホームページ運用管理 手順書 — 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a>
+    /
+    <a href="index.html" class="text-blue-600 hover:underline">業務</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🔄 ホームページ運用管理 手順書</h1>
+  <p class="text-gray-600 mb-2">納品後のサイトを継続的に改善し、アクセス・問い合わせを伸ばすための運用フロー。<br>
+  <strong>「はなさかAIが診断・提案 → サイト専用エージェントが実装」</strong>の二段構えで回す。</p>
+  <p class="text-xs text-gray-500 mb-8">制作（納品まで）の手順は <a href="web-development.html" class="text-blue-600 hover:underline">制作フロー（10段階）</a> を参照。本書はその<strong>後工程＝運用・改善</strong>を扱う。</p>
+
+  <!-- 役割分担 -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">役割分担（2つのAＩ＋社長）</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">担当</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">役割</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200 whitespace-nowrap"><strong>はなさかAI</strong><br><span class="text-gray-500 text-xs">（このシステム／<code class="bg-gray-100 px-1 rounded font-mono">/hp-improve</code>）</span></td>
+        <td class="px-3 py-2 border border-gray-200">対象サイトを<strong>診断</strong>し、効果順に<strong>改善提案</strong>を出す。公開後の<strong>検証</strong>（HTML再取得で突合）も担当。実サイトのソースは直接触らない</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200 whitespace-nowrap"><strong>サイト専用エージェント</strong><br><span class="text-gray-500 text-xs">（各サイト側のAI）</span></td>
+        <td class="px-3 py-2 border border-gray-200">採用された改善案を受け取り、<strong>そのサイトのHTMLソースに実装</strong>する</td>
+      </tr>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200 whitespace-nowrap"><strong>社長</strong></td>
+        <td class="px-3 py-2 border border-gray-200">提案の<strong>採否判断</strong>・着手範囲の決定・最終確認</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm">
+    💡 <strong>なぜ分けるか</strong>：診断・提案（俯瞰・横断ノウハウ）と実装（各サイト固有の構造・ソース）は性質が違う。
+    はなさかAIは「どのサイトにも効く改善の目」、サイト専用エージェントは「そのサイトを熟知した手」を担う。
+  </div>
+
+  <!-- 改善サイクル -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">改善サイクル（運用の基本フロー）</h2>
+  <ol class="list-decimal list-inside space-y-3 text-sm mb-4">
+    <li>
+      <strong>① 診断・提案</strong>（はなさかAI）<br>
+      <span class="text-gray-600">はなさかとのチャットで <code class="bg-gray-100 px-1 rounded font-mono">/hp-improve</code> を実行。対象サイトURL・改善ゴール（アクセス増／問い合わせ増 等）・ターゲットを伝える。<br>
+      → サイトを評価し、<strong>「観察→なぜ問題か→改善案→効果→工数→優先度」</strong>形式で、効果順（Quick win優先）に提案が返る。</span>
+    </li>
+    <li>
+      <strong>② 採否判断</strong>（社長）<br>
+      <span class="text-gray-600">提案を見て「どれを・どの順で」やるか決める。まずは工数小・効果大の Quick win から着手するのが基本。</span>
+    </li>
+    <li>
+      <strong>③ 実装</strong>（サイト専用エージェント）<br>
+      <span class="text-gray-600">採用案（具体的な修正箇所・貼り付け用コード）を、そのサイト専用エージェントに渡してHTMLソースへ反映させる。</span>
+    </li>
+    <li>
+      <strong>④ 検証</strong>（はなさかAI）<br>
+      <span class="text-gray-600">公開後、はなさかAIが実際のHTMLを再取得し、<strong>(a) 修正が反映されたか (b) 構造化データ等が正しい形か</strong> を突合チェック。</span>
+    </li>
+    <li>
+      <strong>⑤ 記録</strong><br>
+      <span class="text-gray-600">改善の経緯・判断を該当クライアントの記録（<code class="bg-gray-100 px-1 rounded font-mono">site/clients/&lt;client&gt;/...</code>）に残す。次サイクルの土台にする。</span>
+    </li>
+    <li>
+      <strong>⑥ 計測 → 次サイクルへ</strong><br>
+      <span class="text-gray-600">GA4・Search Console等でアクセス／問い合わせの変化を確認し、①へ戻る。運用は<strong>1回で終わらせず回し続ける</strong>。</span>
+    </li>
+  </ol>
+
+  <!-- 診断の観点 -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">診断の観点（<code class="bg-gray-100 px-1 rounded font-mono">/hp-improve</code> が見る範囲）</h2>
+  <p class="text-sm text-gray-600 mb-3">網羅レポートではなく<strong>「ゴールに効く次の一手」</strong>を出すのが目的。主に以下の観点で評価する。</p>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-sm mb-4">
+    <ul class="list-disc list-inside space-y-1">
+      <li>ファーストビュー（3秒で何のサイトか伝わるか）</li>
+      <li>導線・CV（問い合わせ／予約への動線・CTA）</li>
+      <li>情報設計（ナビ・階層・回遊性）</li>
+      <li>コンテンツ（強み・実績・信頼要素）</li>
+      <li>訴求・コピー（ベネフィット訴求か）</li>
+      <li>SEO（title／meta／見出し／内部リンク／alt／構造化データ）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1">
+      <li>表示速度（画像最適化・Core Web Vitals）</li>
+      <li>モバイル対応（レスポンシブ・可読性）</li>
+      <li>デザイン（ブランド統一感・余白・配色）</li>
+      <li>アクセシビリティ（コントラスト・alt）</li>
+      <li>信頼性・安心（会社情報・SSL・問い合わせ先）</li>
+    </ul>
+  </div>
+  <p class="text-xs text-gray-500 mb-4">※ 観点・手順・出力フォーマットの詳細ルールは <code class="bg-gray-100 px-1 rounded font-mono">.claude/rules/hp-improve.md</code>（リポジトリ内）。</p>
+
+  <!-- ローカル集客 -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">地域密着サイトで特に効く施策</h2>
+  <p class="text-sm text-gray-600 mb-3">枚方などローカル商圏のBtoCサイトは、次が「アクセス増・問い合わせ増」に直結しやすい。</p>
+  <ul class="list-disc list-inside space-y-1 text-sm mb-4">
+    <li><strong>SEO基礎の整備</strong>：title（地域＋サービスKW）／meta description／<strong>LocalBusiness構造化データ（住所・電話・営業時間・対応エリア）</strong>／OGP画像</li>
+    <li><strong>MEO（Googleビジネスプロフィール）</strong>：地図検索での露出。地域集客の最重要レバー</li>
+    <li><strong>ブログのSEO活用</strong>：「地域名×悩み」KW（例『枚方 給湯器 交換 費用』）で記事化</li>
+    <li><strong>CV導線強化</strong>：電話に加えLINE問い合わせ・緊急対応バナー・料金目安の掲示</li>
+  </ul>
+
+  <!-- 実例 -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">運用実例</h2>
+  <table class="w-full border-collapse text-sm mb-6">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">サイト</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">ゴール</th>
+        <th class="text-left px-3 py-2 border border-gray-200 font-semibold">初回サイクルの着手内容</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="px-3 py-2 border border-gray-200 whitespace-nowrap">藤阪ガス<br><span class="text-gray-500 text-xs">（枚方・BtoC・静的）</span></td>
+        <td class="px-3 py-2 border border-gray-200">アクセス増・問い合わせ増（ローカル集客）</td>
+        <td class="px-3 py-2 border border-gray-200">SEO基礎の修復：OGP画像の仮設定／無効化されていたLocalBusiness構造化データ／title最適化 等（Quick win）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li><a href="index.html" class="text-blue-600 hover:underline">業務トップ</a></li>
+    <li><a href="web-development.html" class="text-blue-600 hover:underline">ホームページ制作フロー（10段階）</a> — 納品までの前工程</li>
+    <li><a href="web-resources.html" class="text-blue-600 hover:underline">制作リソース集</a></li>
+    <li><a href="https://docs.google.com/spreadsheets/d/13RGtNlawzXozWNN_QHWtgnH-ul6NBfEH3C7jsyUxyPM/edit" target="_blank" rel="noopener" class="text-blue-600 hover:underline">ホームページ進行管理（スプレッドシート）</a></li>
+  </ul>
+
+</div>
+</body>
+</html>
