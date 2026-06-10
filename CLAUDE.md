@@ -51,6 +51,16 @@
 
 詳細な協働ルールは [rules/partnership.md](rules/partnership.md) 参照。
 
+## 自動化・外部送信を作るときの核（必読）
+
+スクリプト・定期実行（`/loop`・cron）・外部送信（Slack/Chatwork/メール）・API書き込みを **作る/動かす** ときは、記録物と違い誤爆・スパム・秘密漏洩・暴走のリスクがある。最低限：
+
+1. **外部送信・書き込み・破壊的操作は社長合意なしに自動実行しない**。自動ループ送信は「手動テスト → 合意 → 重複防止実装 → 自動化」の順。
+2. **秘密情報は `.env`（gitignore済み）集約・ハードコード禁止**。ログ・通知本文・コミットに漏らさない。実値はAIが読まない・表示しない。
+3. **小さく作って手動検証 → 確認 → スケジュール化**。停止条件と頻度を決めてから回す。
+
+詳細は [rules/automation.md](rules/automation.md) 参照。
+
 ## ルールファイル一覧
 
 | ファイル | 用途 |
@@ -61,6 +71,7 @@
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |
 | [rules/document-format.md](rules/document-format.md) | 記録ファイルのHTML出力ルール |
 | [rules/development.md](rules/development.md) | 開発・コミット時のルール |
+| [rules/automation.md](rules/automation.md) | 自動化・定期実行・外部送信（Slack等）・API連携を作る/動かすときの安全ルール |
 | [rules/preview-server.md](rules/preview-server.md) | プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用 |
 
 ## クライアント向け成果物のルール

@@ -44,6 +44,22 @@ bash bin/hana-api.sh create-todo '{"work_id":140,"user_id":34,"assignee_user_id"
 bash bin/hana-api.sh chatwork '{"room_id":"123","message":"メッセージ"}'
 ```
 
+## Slack 通知（bin/slack.sh）
+
+Slack Incoming Webhook へメッセージを送る独立スクリプト（`.env` の `SLACK_WEBHOOK_URL` を使用）。
+定期通知の送信土台。安全に作る・回す際の作法は [rules/automation.md](../rules/automation.md) を参照。
+
+```bash
+# 単純なメッセージ
+bash bin/slack.sh "メッセージ"
+
+# チェック処理の出力をそのまま送る（標準入力）
+some-check | bash bin/slack.sh
+
+# 装飾付き（生JSON：blocks 等）
+bash bin/slack.sh --raw '{"text":"...","blocks":[...]}'
+```
+
 ## ToDo API のポイント
 
 ### `assignee_user_id` の正規化規則
