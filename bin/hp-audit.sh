@@ -85,9 +85,6 @@ if fetch_err:
         print(f"  HTTP {http_code or '—'} / curl_exit={curl_exit} / final={final_url or '—'}")
     sys.exit(3)
 
-def tag_attr(tagre):
-    return re.findall(tagre, html, re.I | re.S)
-
 def metas(attr, key):
     # <meta {attr}="key" content="...">
     out = []
