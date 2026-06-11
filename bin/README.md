@@ -60,6 +60,21 @@ some-check | bash bin/slack.sh
 bash bin/slack.sh --raw '{"text":"...","blocks":[...]}'
 ```
 
+## オンページSEO監査（bin/hp-audit.sh）
+
+ホームページのオンページSEO信号を**読み取り専用**で監査する独立スクリプト（HTTP GETのみ・外部送信なし）。
+`/hp-loop`（HP分析ループ）の一次情報用。作成履歴は [data/hp-loop/tools-log.md](../data/hp-loop/tools-log.md) の T-001。
+
+```bash
+# 人が読む要約（末尾に課題を ⚠️ で列挙）
+bash bin/hp-audit.sh https://example.com/
+
+# JSON出力（サイクル比較・機械処理用）
+bash bin/hp-audit.sh https://example.com/ --json
+```
+
+取得：title/description（文字数）・canonical・robots・viewport（ズーム禁止検出）・OGP/Twitter（**プレースホルダ検出**）・JSON-LD（型・無効化検出）・見出しh1-h3（h1複数検出）・img/alt欠落・問い合わせ動線・CMS。
+
 ## ToDo API のポイント
 
 ### `assignee_user_id` の正規化規則
