@@ -104,6 +104,12 @@ def load_client():
 URL_TABLE = "searchdata_url_impression"
 SITE_TABLE = "searchdata_site_impression"
 
+# 集計指標の共通 SELECT 句（summary/queries/pages で共通。1か所で定義して重複を排除）
+# avg_position は sum_position が0始まりのため +1 して実掲載順位に揃える近似値
+_METRICS = """SUM(clicks) AS clicks, SUM(impressions) AS impressions,
+       SAFE_DIVIDE(SUM(clicks), SUM(impressions)) AS ctr,
+       SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position"""
+
 
 def find_dataset(client, project, explicit):
     """GSC エクスポート表を含むデータセットを特定する。明示指定があればそれを使う。"""
@@ -181,9 +187,7 @@ def _where(search_type, site, extra=""):
 def q_summary(client, fq, args, start, end):
     sql = f"""
 SELECT MIN(data_date) AS first_date, MAX(data_date) AS last_date,
-       SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-       SAFE_DIVIDE(SUM(clicks), SUM(impressions)) AS ctr,
-       SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+       {_METRICS}
 FROM `{fq}`
 WHERE {_where(args.search_type, args.site)}
 """
@@ -193,9 +197,7 @@ WHERE {_where(args.search_type, args.site)}
 def q_queries(client, fq, args, start, end):
     sql = f"""
 SELECT query,
-       SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-       SAFE_DIVIDE(SUM(clicks), SUM(impressions)) AS ctr,
-       SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+       {_METRICS}
 FROM `{fq}`
 WHERE {_where(args.search_type, args.site, "query IS NOT NULL")}
 GROUP BY query
@@ -212,9 +214,7 @@ LIMIT @limit
 def q_pages(client, fq, args, start, end):
     sql = f"""
 SELECT url,
-       SUM(clicks) AS clicks, SUM(impressions) AS impressions,
-       SAFE_DIVIDE(SUM(clicks), SUM(impressions)) AS ctr,
-       SAFE_DIVIDE(SUM(sum_position), SUM(impressions)) + 1 AS avg_position
+       {_METRICS}
 FROM `{fq}`
 WHERE {_where(args.search_type, args.site)}
 GROUP BY url
