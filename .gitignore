@@ -28,3 +28,6 @@ _assistant/.venv/
 _assistant/.env
 _assistant/__pycache__/
 _assistant/**/__pycache__/
+
+# BigQuery 等の bin ツール用 venv（コミットしない）
+bin/.venv/
