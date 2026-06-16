@@ -44,7 +44,7 @@
 
 このプロジェクトでは AI 側で実行しない方針のもの:
 
-- ❌ `Bash(sass:*)` `Bash(sass.bat:*)` — コンパイルは開発者が手動実施
+- ❌ `Bash(sass:*)` `Bash(sass.bat:*)` — AIが手動でコンパイルを叩かないため不要。コンパイルは自動環境ならハーネスのフック（Bash権限ではなくフックが起動）・無ければ開発者が実施（`scss-autocompile.md`）
 - ❌ `Bash(npm:*)` `Bash(node:*)` — このプロジェクトでは Node.js を使わない
 - ❌ `Bash(php:*)` — XAMPP の Apache 経由で動作確認するため AI 実行不要
 
