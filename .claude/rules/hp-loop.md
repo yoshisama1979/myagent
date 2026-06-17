@@ -28,7 +28,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 （AI）/hp-loop 1サイクル：指示反映 → データ取得 → 分析 → 提案・質問
         │  追記（AIが書く）
         ▼
-（掲示板）site/hp-analysis/index.html ＝ 社長がどこでも見る（Tailscale）
+（掲示板）site/hp-analysis/ycom/index.html ＝ 社長がどこでも見る（Tailscale）
         │  社長が読む → 回答を from-president.md へ
         └──────────────（ループ）──────────────┘
 ```
@@ -37,10 +37,12 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 |------|---------|---------|
 | 設定（対象・データ源・頻度・スコープ） | `data/hp-loop/config.md` | 社長（AIは読む。提案はするが勝手に変えない） |
 | 社長の指示・回答 | `data/hp-loop/from-president.md` | **社長のみ**（AIは読むだけ） |
-| 掲示板（分析・提案・質問・履歴） | `site/hp-analysis/index.html` | **AIのみ**（社長は読む） |
+| 掲示板（分析・提案・質問・履歴） | `site/hp-analysis/ycom/index.html` | **AIのみ**（社長は読む） |
 | サイクルの生データ・ログ（任意） | `data/hp-loop/cycles/` | AI |
 
 > **責務分離（reviewer 流）**：社長の領域（from-president.md）と AI の領域（掲示板）を混ぜない。AI は from-president.md を編集しない。処理済み管理は掲示板側に「対応サイクル」を書いて行う。
+
+> **置き場の統一（2026-06-16・ハブ構成）**：HP分析の成果（診断・改善提案・実装引き渡し）は **`site/hp-analysis/` ハブにサイト別サブページで集約**する。索引＝`site/hp-analysis/index.html`、本ループ（YCOM＝はなさか自社）＝`site/hp-analysis/ycom/index.html`、クライアントは `site/hp-analysis/<site>/`（例：よしだ歯科＝`yoshida/`）。**案件の記録（議事録・backlog・decisions・打ち合わせ準備）は従来どおり `site/clients/<client>/projects/<project>/`** に置き、ハブと相互リンクする。本ファイルの「掲示板」は YCOM ループの `ycom/` を指す。
 
 ---
 
@@ -63,7 +65,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 | 操作 | 可否 |
 |------|------|
 | Read（任意） / Grep / Glob / git status・log・diff | ✅ 可 |
-| Write/Edit: `site/hp-analysis/`（掲示板・「📥欲しい情報」含む） | ✅ 可（AIの担当） |
+| Write/Edit: `site/hp-analysis/ycom/`（YCOM掲示板・「📥欲しい情報」含む） | ✅ 可（AIの担当） |
 | Write: `data/hp-loop/cycles/`（生データ・ログ） | ✅ 可 |
 | `bin/` へ分析ツールを**作成**＋ `data/hp-loop/tools-log.md` に履歴 | ✅ 可。ただし作るツールは**実行時に読み取り専用**（HTTP GET 等のみ・外部送信/ファイル書き込み/破壊的操作をしない。automation.md準拠） |
 | サイトのソース取得（`bin/hp-audit.sh`・curl 等・読み取り） | ✅ 可（手作業は「暫定」と明示） |
@@ -80,7 +82,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 ### Step 0: 前提読み込み
 1. `data/hp-loop/config.md` を読む（対象・データ源・頻度・スコープ）。**対象未確定なら Step 1 へ進まず、掲示板に「対象確認の質問」だけ出して終了**。
 2. `data/hp-loop/from-president.md` を読む（新しい指示・回答）。
-3. 掲示板 `site/hp-analysis/index.html` を読む（前回までの状態・未解決の質問・通し番号）。
+3. 掲示板 `site/hp-analysis/ycom/index.html` を読む（前回までの状態・未解決の質問・通し番号）。
 
 ### Step 1: 社長の指示を反映
 - from-president.md の **未対応項目**（掲示板にまだ「対応サイクル」が記録されていないもの）を最優先で次の行動に反映。
@@ -109,7 +111,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 - 質問は**選択肢形式**で答えやすく。
 
 ### Step 5: 掲示板に追記
-- `site/hp-analysis/index.html` に新サイクルを追記（最新を上）。
+- `site/hp-analysis/ycom/index.html` に新サイクルを追記（最新を上）。
 - **未回答の質問はページ最上部の「🔔 社長への質問」に集約**（社長が一目で対応できるように）。
 - **「📥 分析に欲しい情報」を最新化**：今サイクルで「これがあればもっと精度が上がる」と感じたデータ・アクセス・ツールを追記/更新する。
 - 処理した from-president.md の指示に「対応：Cycle NNN」を掲示板側で明記。
@@ -124,7 +126,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 
 ---
 
-## 出力フォーマット（掲示板 site/hp-analysis/index.html）
+## 出力フォーマット（掲示板 site/hp-analysis/ycom/index.html）
 
 掲示板は HTML（Tailwind）。1サイクルは以下のブロックを **サイクルログの先頭**に追加：
 

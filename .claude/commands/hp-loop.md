@@ -13,7 +13,7 @@
 
 - 対象サイトを **定期的に分析** し、**効果の高い改善提案＋社長への質問** を掲示板に積む
 - 社長は `data/hp-loop/from-president.md` に回答・指示を書く → AI はそれを読んで次の行動を決める
-- 掲示板は `site/hp-analysis/index.html`（社長がどこでも見られる＝Tailscale経由）
+- 掲示板は `site/hp-analysis/ycom/index.html`（YCOM＝はなさか自社。HP分析ハブ `site/hp-analysis/` のサイト別サブページ。社長がどこでも見られる＝Tailscale経由）
 - 網羅レポートではなく「**次の一手を明確にする**」のが目的
 
 ## 実行

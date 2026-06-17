@@ -14,7 +14,7 @@ $ARGUMENTS
 ## 必読・参照（書く前に読む）
 
 1. `data/hp-loop/from-president.md` — 既存の書式・内容（**追記のみ。既存は絶対に上書き・削除しない**）
-2. `site/hp-analysis/index.html` — 「🔔 社長への質問」で未回答の `Q-NNN` を把握し、コメントがどの質問への回答かを紐づける
+2. `site/hp-analysis/ycom/index.html`（YCOM掲示板） — 「🔔 社長への質問」で未回答の `Q-NNN` を把握し、コメントがどの質問への回答かを紐づける
 
 ## 手順
 

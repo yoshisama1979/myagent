@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打ち合わせ用ブリーフ 2026-06-17 — よしだ歯科 改善提案</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="../../../index.html" class="text-blue-600 hover:underline">クライアント一覧</a> &gt;
+    <a href="../../index.html" class="text-blue-600 hover:underline">よしだ歯科</a> &gt;
+    <a href="index.html" class="text-blue-600 hover:underline">コーポレートサイト</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">打ち合わせ用ブリーフ — よしだ歯科 改善提案</h1>
+  <p class="text-gray-600 mb-2">打ち合わせ日：2026-06-17 ／ 作成：2026-06-16 ／ 対象：<a href="https://yoshida-smile.info" class="text-blue-600 hover:underline">yoshida-smile.info</a></p>
+  <p class="text-gray-700 mb-8 text-sm">よしだ歯科の運用方針「<strong>アクセス数は十分確保できている → 質（来院・便利さ・わかりやすさ）の向上を優先</strong>」（2026-04-27 打ち合わせメモ）に沿って、<strong>GSC（検索）＋GA4（予約・電話CV）＋Google広告（費用・CPA）のフルファネル実データ</strong>と既存 backlog を突き合わせた改善案。</p>
+
+  <!-- ===== 現状サマリ ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">現状サマリ（GSC実データ）</h2>
+  <div class="border-2 border-amber-300 bg-amber-50 rounded-lg p-4 mb-4 text-sm">
+    <p class="text-amber-900"><strong>⚠️ データの限界（先に明記）</strong>：<strong>GSC</strong>の一括エクスポートは <strong>2026-06-14 開始で現状1日分のみ</strong>＝この章の数値はトレンドではなく「方向性の事実」として扱う。一方 <strong>GA4は約4年9か月分が蓄積済み</strong>で、予約・電話の実CVと推移は次章で見られる（GSCの不足はGA4が補う）。</p>
+  </div>
+  <div class="grid md:grid-cols-2 gap-4 mb-4">
+    <div class="border border-gray-300 rounded-lg p-4 bg-white text-sm">
+      <h3 class="font-semibold text-gray-700 mb-2">全体（2026-06-14・WEB検索）</h3>
+      <ul class="space-y-1 text-gray-700">
+        <li>クリック <strong>29</strong> / 表示 <strong>1,611</strong></li>
+        <li>CTR <strong class="text-red-600">1.80%</strong>（＝表示は多いがクリックは少ない）</li>
+        <li>平均掲載順位 <strong>6.5</strong></li>
+        <li>指名検索は強い：「よしだ歯科 箕面」1.7位／「吉田歯科 箕面」1.9位</li>
+      </ul>
+    </div>
+    <div class="border border-gray-300 rounded-lg p-4 bg-white text-sm">
+      <h3 class="font-semibold text-gray-700 mb-2">目立つ事実：1位なのにクリック0が複数</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">クエリ / ページ</th><th class="py-1 pr-2">表示</th><th class="py-1 pr-2">CTR</th><th class="py-1">順位</th></tr></thead>
+        <tbody class="text-gray-700">
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">歯垢と歯石の違い</td><td class="py-1 pr-2">34</td><td class="py-1 pr-2 text-red-600">0%</td><td class="py-1">1.0</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">歯石と歯垢の違い</td><td class="py-1 pr-2">22</td><td class="py-1 pr-2 text-red-600">0%</td><td class="py-1">1.0</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">blog/?p=5246</td><td class="py-1 pr-2">455</td><td class="py-1 pr-2 text-red-600">0.66%</td><td class="py-1">6.9</td></tr>
+          <tr><td class="py-1 pr-2 font-mono">blog/?p=5110</td><td class="py-1 pr-2">105</td><td class="py-1 pr-2 text-red-600">0%</td><td class="py-1">1.0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-500 mt-2">来院に近いページは健闘：トップ CTR8.6%／<span class="font-mono">/access/</span> 2.6位／<span class="font-mono">/first/</span>(初診) 2.0位／<span class="font-mono">/cleaning/</span> 1.0位。<span class="font-mono">/kidskyousei/</span>(子供矯正) は33表示・5.0位・0クリック＝自由診療の伸びしろ。</p>
+    </div>
+  </div>
+  <p class="text-sm text-gray-700 mb-8"><strong>読み取り</strong>：認知（指名検索）は取れている一方、<strong>「表示は大量にあるのにクリックされない＝質の課題」</strong>がデータで裏付けられた。よしだ歯科の方針（質の向上）とそのまま一致する。次の打ち手は「来院に近い動線・ページの質」を上げること。</p>
+
+  <!-- ===== GA4 + 広告 実CV ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">実CVで見る現状（GA4 予約・電話 ＋ 広告CPA）</h2>
+  <div class="border-2 border-emerald-300 bg-emerald-50 rounded-lg p-4 mb-4 text-sm">
+    <p class="text-emerald-900"><strong>結論：アクセスは減っているのに「予約」は増えている＝サイトの質（CVR）が確実に上がっている。広告も同じ予算で効率が倍増。</strong> GA4は約4年9か月分（2021-09〜）が蓄積済みで、予約・電話のCVが計測できている。</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-4 mb-4">
+    <div class="border border-gray-300 rounded-lg p-4 bg-white text-sm">
+      <h3 class="font-semibold text-gray-700 mb-2">GA4：予約・電話の月次（抜粋）</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">月</th><th class="py-1 pr-2">WEB予約</th><th class="py-1 pr-2">電話タップ</th><th class="py-1">訪問者</th></tr></thead>
+        <tbody class="text-gray-700">
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">2025-06</td><td class="py-1 pr-2">127</td><td class="py-1 pr-2">119</td><td class="py-1">7,026</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">2025-12</td><td class="py-1 pr-2">137</td><td class="py-1 pr-2">127</td><td class="py-1">4,955</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">2026-03</td><td class="py-1 pr-2">154</td><td class="py-1 pr-2">123</td><td class="py-1">5,957</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-semibold">2026-04</td><td class="py-1 pr-2 font-semibold text-emerald-700">204</td><td class="py-1 pr-2">153</td><td class="py-1">5,545</td></tr>
+          <tr><td class="py-1 pr-2">2026-05</td><td class="py-1 pr-2">172</td><td class="py-1 pr-2">89</td><td class="py-1">4,725</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-600 mt-2">予約：2025年 月108〜137 → 2026年 月148〜204 へ<strong>増加</strong>。訪問者は 7,026→4,725（<strong>約-33%</strong>）。<strong>少ない訪問者でより多く予約＝CVR向上</strong>。</p>
+    </div>
+    <div class="border border-gray-300 rounded-lg p-4 bg-white text-sm">
+      <h3 class="font-semibold text-gray-700 mb-2">Google広告：費用・CV・CPA（月次）</h3>
+      <table class="w-full text-xs border-collapse">
+        <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">月</th><th class="py-1 pr-2">広告費</th><th class="py-1 pr-2">広告CV</th><th class="py-1">CPA</th></tr></thead>
+        <tbody class="text-gray-700">
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">2025-06</td><td class="py-1 pr-2">¥63,861</td><td class="py-1 pr-2">40.5</td><td class="py-1 text-red-600">¥1,577</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">2026-01</td><td class="py-1 pr-2">¥63,408</td><td class="py-1 pr-2">60.8</td><td class="py-1">¥1,043</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2">2026-03</td><td class="py-1 pr-2">¥63,863</td><td class="py-1 pr-2">68.8</td><td class="py-1">¥928</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-semibold">2026-04</td><td class="py-1 pr-2">¥61,783</td><td class="py-1 pr-2 font-semibold">83.0</td><td class="py-1 font-semibold text-emerald-700">¥744</td></tr>
+          <tr><td class="py-1 pr-2">2026-05</td><td class="py-1 pr-2">¥63,829</td><td class="py-1 pr-2">82.7</td><td class="py-1">¥772</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-600 mt-2"><strong>予算ほぼ一定（月¥64k）でCVが40→83へ倍増、CPAが¥1,577→¥770へ半減</strong>。同じ費用で獲得効率が倍増。</p>
+    </div>
+  </div>
+
+  <div class="border-2 border-amber-300 bg-amber-50 rounded-lg p-4 mb-8 text-sm">
+    <p class="text-amber-900 mb-1"><strong>⚠️ 数字の前提（打ち合わせで誤解を避けるため）</strong></p>
+    <ul class="list-disc list-inside text-amber-900 space-y-0.5">
+      <li>GA4の「予約」「電話」は<strong>イベント発火数</strong>（`reservation`/`tel`）。「予約完了」の厳密な定義（ボタン押下か完了か）は要確認。傾向の判断には十分。</li>
+      <li>広告の「広告CV」は<strong>Google広告側のCV定義</strong>で、GA4の予約と同一とは限らない。両者の定義突合せが今後の精度向上ポイント。</li>
+      <li>2026-04 の予約204は突出（<strong>推測</strong>：新年度・春の新患需要、または広告強化）。要因の切り分けは要確認。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 改善提案 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">改善提案（効果×工数順・既存 backlog と整合）</h2>
+
+  <h3 class="text-lg font-bold text-red-700 mb-3">🔴 Quick win（明日すぐ握れる）</h3>
+
+  <div class="border-l-4 border-red-400 bg-white rounded-r p-4 mb-3 shadow-sm">
+    <p class="font-semibold mb-1">R1：予約・WEB問診・電話の導線を全ページのファーストビューに固定</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
+      <li><strong>観察</strong>：WEB問診の導入が<strong>決定済み</strong>。予約アプリも導入予定。サイト側の導線設置はこれから。</li>
+      <li><strong>なぜ</strong>：歯科サイトのCV＝<strong>予約・来院</strong>。スマホで「電話タップ／WEB予約／WEB問診」が常に押せる状態が、質・便利さに直結。</li>
+      <li><strong>改善案</strong>：追従ボタン（電話・WEB予約・WEB問診リンク）をPC/SP両方に。WEB問診はサービス開始に合わせてリンク投入。</li>
+      <li><strong>効果：高 ／ 工数：小〜中</strong></li>
+    </ul>
+  </div>
+
+  <div class="border-l-4 border-red-400 bg-white rounded-r p-4 mb-6 shadow-sm">
+    <p class="font-semibold mb-1">R2：高表示・低CTRページの title / meta description 見直し（WP）</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
+      <li><strong>観察</strong>：1位でも0クリックのページが複数（上表）。</li>
+      <li><strong>なぜ</strong>：検索結果でクリックされる文言になっていない／リッチリザルトに負けている。<strong>最小工数で効く</strong>。</li>
+      <li><strong>改善案</strong>：来院に近いページ（<span class="font-mono">/cleaning/・/first/・/kidskyousei/</span>・診療メニュー）を優先してタイトル・説明文を魅力的に。</li>
+      <li class="text-gray-600">⚠️ <strong>事実と推測の分離</strong>：症状系（口内炎・歯石の違い）は<strong>情報収集層でCTRを上げても来院に直結しにくい</strong>（推測）。来院意図ページを優先し、症状記事は「院内予約への導線追加」で拾う。</li>
+      <li><strong>効果：中 ／ 工数：小</strong></li>
+    </ul>
+  </div>
+
+  <h3 class="text-lg font-bold text-amber-700 mb-3">🟡 中期（打ち合わせで方向性を握る）</h3>
+
+  <div class="border-l-4 border-amber-400 bg-white rounded-r p-4 mb-3 shadow-sm">
+    <p class="font-semibold mb-1">R3：診療メニュー×地域のローカルSEO＋MEO整備</p>
+    <p class="text-sm text-gray-700">「箕面 ○○（矯正／ホワイトニング／小児／インプラント）」の受け皿ページ強化＋<strong>GBP（Googleビジネスプロフィール）最適化・レビュー獲得</strong>。来院の主戦場。GBP運用ははなさかの権限外のため、<strong>対応範囲（最適化／投稿代行／レビュー施策）をクライアントと握る</strong>のが今回の宿題（backlog の MEO 議題）。</p>
+  </div>
+
+  <div class="border-l-4 border-amber-400 bg-white rounded-r p-4 mb-3 shadow-sm">
+    <p class="font-semibold mb-1">R4：症例集ページの実装（WP）<span class="text-red-600 text-sm font-normal">※運用管理ToDo・期日超過（〜2026-05-30）で未完</span></p>
+    <p class="text-sm text-gray-700">信頼要素＝来院の決め手。医療系（YMYL）は E-E-A-T にも効く。律速は<strong>クライアントからの症例内容の回収</strong>。回収しやすいよう「症状／処置／期間／費用目安／注意点／写真」の<strong>型（テンプレ）</strong>を用意して渡す。<strong>効果：中〜高 ／ 工数：中</strong></p>
+  </div>
+
+  <div class="border-l-4 border-amber-400 bg-white rounded-r p-4 mb-6 shadow-sm">
+    <p class="font-semibold mb-1">R5：広告予算 — 「いくらかけるべきか」＝今は単純増額の局面ではない（データで確認済み）</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
+      <li><strong>観察（事実）</strong>：予算ほぼ一定（月¥64k）で<strong>CV 40→83へ倍増・CPA ¥1,577→¥770へ半減</strong>。5月支出は<strong>全額が主力「Campaign #1（検索）」</strong>（¥63,829・940クリック・CV82.7）。</li>
+      <li><strong>観察（事実）</strong>：<strong>Googleは増額を推奨していない</strong>（推奨予算なし・増額時の見込みクリック増＝0）。＝予算制約ではなく検索需要/入札が天井。また<strong>土曜診療・ファインド・ディスプレイは予算ありENABLEDだが実支出¥0＝休眠</strong>。</li>
+      <li><strong>提案</strong>：①検索広告は<strong>「今のままで優秀」</strong>＝慌てた増額は不要。②伸ばすなら予算額より<strong>休眠キャンペーンの停止理由を確認・活用</strong>、または<strong>Campaign #1を少額テスト増額（例¥2,100→¥3,000/日）してCPA維持を実測</strong>してから判断。③<strong>流入の先細り対策（MEO/SEO＝R3）への投資の方が費用対効果が高い可能性</strong>。広告は維持で十分。</li>
+      <li><strong>計測の精度</strong>：広告CVとGA4予約の<strong>CV定義の突合せ</strong>（同じ「予約完了」を指すか）を整える。</li>
+    </ul>
+  </div>
+
+  <h3 class="text-lg font-bold text-emerald-700 mb-3">🟢 余裕があれば</h3>
+  <div class="border-l-4 border-emerald-400 bg-white rounded-r p-4 mb-6 shadow-sm text-sm text-gray-700 space-y-2">
+    <p><strong>R6：AIチャット（HANAチャット）導入提案</strong> — 「診療時間・予約方法・痛い時の対処」等を即答→予約導線。自社サービス販売＋来院利便性の両取り（backlog の提案案件）。</p>
+    <p><strong>R7：Instagram 埋め込み — ✅ 実装済み</strong>（GA4でも <span class="font-mono">instagram</span> クリック 月96件と利用を確認）。次の一手は「投稿の鮮度維持」と「予約導線の近くに配置できているかの確認」。</p>
+  </div>
+
+  <!-- ===== 握りたいこと ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">明日クライアントに「握りたいこと」（宿題回収）</h2>
+  <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li><strong>MEOの対応範囲</strong>（GBP最適化／投稿運用／レビュー獲得 — どこまで対応するか）→ R3</li>
+    <li><strong>WEB問診・予約アプリのサービス名と、サイト連携の要否</strong>（導線設置の可否・リンク先）→ R1</li>
+    <li><strong>症例集の中身</strong>（症例写真・件数・掲載許諾）→ R4 の律速</li>
+    <li><strong>Yahoo/Google広告の現状</strong>（月額予算・KW・<strong>CV計測の有無</strong>）→ R5 の前提</li>
+    <li><strong>外部リンク（MISOKA／バイオガイア）の打診ルート</strong>（誰が・どう依頼するか）→ backlog の SEO 施策</li>
+  </ol>
+
+  <!-- ===== 出典 ===== -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-3">出典・関連記録</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+    <li>GSC実データ：BigQuery <span class="font-mono">searchconsole_yoshida</span>（project 80 の <span class="font-mono">gsc_dataset</span>）／2026-06-14・1日分</li>
+    <li>GA4実データ：BigQuery <span class="font-mono">analytics_287348176</span>（よしだ歯科GA4・2021-09〜・予約/電話CV）</li>
+    <li>Google広告実データ：BigQuery <span class="font-mono">YCOM_MCC</span>（アカウント 8060658506「スマイル会 よしだ歯科」・費用/CV）</li>
+    <li><a href="backlog.html" class="text-blue-600 hover:underline">残存課題（backlog.html）</a> ／ <a href="meeting-notes/2026-04-27.html" class="text-blue-600 hover:underline">前回打ち合わせメモ（2026-04-27）</a></li>
+    <li>運用管理ToDo（hana-tools work_id 167）：症例集ページ実装が期日超過で未完</li>
+  </ul>
+
+</div>
+</body>
+</html>
