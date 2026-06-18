@@ -1,0 +1,5 @@
+{
+  "title": "📬 メールボックスAPI",
+  "desc": "拠点横断のエージェント間メッセージ受信箱（Tailscale経由・JSON API）。スライス2＝読み取り＋投函/処理済み。承認(approve)はスライス3。",
+  "tag": "API / slice2"
+}

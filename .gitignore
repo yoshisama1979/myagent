@@ -14,6 +14,9 @@ service-account-*.json
 data/cache/
 __pycache__/
 
+# 拠点横断メールボックスのメッセージ実体（クライアント情報を含み得る・git非追跡）
+data/mailbox/
+
 # 月次アップロードデータ（売上・コスト等）
 data/monthly/
 

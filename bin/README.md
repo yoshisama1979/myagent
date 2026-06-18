@@ -95,6 +95,25 @@ bash bin/hp-audit.sh https://example.com/ --json
 
 取得：title/description（文字数）・canonical・robots・viewport（ズーム禁止検出）・OGP/Twitter（**プレースホルダ検出**）・JSON-LD（型・無効化検出）・見出しh1-h3（h1複数検出）・img/alt欠落・問い合わせ動線・CMS。
 
+## 拠点横断メールボックス（bin/mailbox.sh）
+
+別マシン（事務所・自宅・VPS）にいるエージェント同士が、Tailscale 経由で非同期にメッセージをやり取りする共有受信箱のクライアント。
+VPS の API（`site/tools/mailbox/`）を叩く。`.env` の `MAILBOX_URL` / `MAILBOX_TOKEN` を必要キーだけ抽出して使う（トークンは画面・ログに出さない）。
+規約・メッセージ書式・`needs_approval`ポリシーは [.claude/rules/mailbox.md](../.claude/rules/mailbox.md)。
+
+```bash
+# 自分宛の未読(new/)を取得
+bash bin/mailbox.sh inbox
+
+# メッセージ投函（本文は引数末尾 or 標準入力。外部送信/本番改変/書込を促すものは --needs-approval）
+echo "本文" | bash bin/mailbox.sh send --to yoshida-dev --subject "件名" --thread t1
+
+# 自分宛メッセージを処理済み(cur/)へ移動
+bash bin/mailbox.sh done <id>
+```
+
+> スライス2まで実装（inbox / send / done）。`approve`（hold/ の社長承認）はスライス3で社長用ブラウザビューと併せて実装。
+
 ## ToDo API のポイント
 
 ### `assignee_user_id` の正規化規則
