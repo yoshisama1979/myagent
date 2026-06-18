@@ -23,7 +23,17 @@
       "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh search \"レクサス\")",
       "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 フォームの実装\",\"description\":\"LEXUS OWNERS CUP 2026 応募フォームの実装\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')",
       "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 フォーム実装方法の資料作成\",\"description\":\"フォームの実装方法をまとめた資料を作成\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')",
-      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 コーディング依頼\",\"description\":\"長谷さんにコーディング依頼\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')"
+      "Bash(bash d:/xampp/htdocs/myagent/bin/hana-api.sh create-todo '{\"work_id\":65,\"user_id\":34,\"content\":\"LEXUS OWNERS CUP 2026 コーディング依頼\",\"description\":\"長谷さんにコーディング依頼\",\"next_work_date\":\"2026-04-16\",\"due_date\":\"2026-04-24\"}')",
+      "Bash(bin/.venv/bin/python3 bin/slack-poll.py:*)",
+      "Bash(bin/hp-audit.sh:*)",
+      "Bash(bin/check-ssl.sh:*)",
+      "Bash(bin/.venv/bin/python3 bin/gsc-fetch.py:*)",
+      "Bash(bin/mailbox.sh inbox)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(stat:*)",
+      "Bash(date:*)"
     ]
   }
 }

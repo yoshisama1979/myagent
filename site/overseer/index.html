@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>統括レポート（Overseer）｜株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <span>統括レポート（Overseer）</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🛰️ 統括レポート（Overseer）</h1>
+  <p class="text-gray-600 mb-2">このシステム（複数の半自律モードの集合体）を俯瞰し、<strong>整合・健全性・安全</strong>の綻びを見つけて<strong>改善提案</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-18（Cycle 004・軽い巡回）／地図：<span class="font-mono bg-gray-100 px-1 rounded">SYSTEM.md</span>／動作ルール：<span class="font-mono bg-gray-100 px-1 rounded">.claude/rules/overseer.md</span>／起動：<span class="font-mono bg-gray-100 px-1 rounded">/overseer</span>（<span class="font-mono">/loop</span> 併用で定期巡回）</p>
+
+  <!-- ===== 使い方（常設） ===== -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <h2 class="text-lg font-semibold mb-3">この統括ループの回し方</h2>
+    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-700">
+      <li>AI が <span class="font-mono bg-gray-100 px-1 rounded">SYSTEM.md</span>（モード地図）を読み、版ズレ・滞り・未完の型・リンク切れを<strong>実体で</strong>健康チェック</li>
+      <li>綻び・改善余地を <span class="font-mono bg-gray-100 px-1 rounded">O-NNN</span> 提案として下の「サイクルログ」に積む（<strong>提案まで。勝手に直さない＝reviewer 型</strong>）</li>
+      <li>社長は最上部の<strong>「🔔 社長の判断・対応待ち」</strong>を見て、採用/却下/保留や手元作業を判断</li>
+      <li>採用分のみ、別途ルール/本体に反映（記録と反映の分離）</li>
+    </ol>
+    <p class="text-xs text-gray-500 mt-3">統括は個別モードの中の仕事はしません（HP診断・案件進行などは各モードの領分）。見るのは<strong>モード群のつなぎ目と運用</strong>です。</p>
+  </div>
+
+  <!-- ===== 🔔 社長の判断・対応待ち（未処理だけ集約） ===== -->
+  <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-5 mb-8">
+    <h2 class="text-xl font-bold text-amber-800 mb-3">🔔 社長の判断・対応待ち</h2>
+    <ul class="space-y-3 text-sm text-amber-900">
+      <li><strong>O-004（社長の残存課題）</strong>：<span class="font-mono">/task-partner</span> コマンドは社長が着手したが未完成。<strong>社長本人のタスクとして継続トラッキング</strong>（2026-06-18 社長確認）。統括は毎サイクル現状を報告し続ける。</li>
+    </ul>
+    <p class="text-xs text-amber-800 mt-3">✅ 解決済み（2026-06-18 社長判断）：O-001＝承認→版0.4反映済／O-002・O-003・O-005＝<strong>mailbox は開発中につき想定内・様子見</strong>。回答・指示は <strong>Slack でも可</strong>（毎時ループが拾います）。</p>
+  </div>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">サイクルログ</h2>
+
+  <!-- ===== Cycle 004 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 004 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（精密診断は Cycle 001 で本日実施済）。<strong>チェック範囲</strong>：Slack fetch（新着なし）＋自分宛受信箱の処理。新規の綻び探索は安価な範囲のみ。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：✅ ループ稼働正常。社長の mailbox 指示1件（Slack経由「ループ動いていますか」）を処理し、稼働中である旨を元スレッドへ返信。新規の綻びなし。<span class="font-mono">new/</span> に他モード宛（hp-loop×2＝web-hanasaka/yoshida-dev、旧テスト×2）の mailbox メッセージが残るが、いずれも統括の責務領域外（各モードが処理）＋ mailbox 開発中＝想定内（O-003 で様子見済）。</p>
+    </div>
+
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <h4 class="font-bold mb-2">今サイクルで処理した社長の指示（mailbox／Slack双方向）</h4>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li>📩「ループ動いていますか」→ 稼働中（毎時:07巡回・本日は精密診断済の軽い巡回）である旨を Slack 元スレッドへ <span class="font-mono">reply</span>。処理済みを <span class="font-mono">cur/</span> へ移動。✅ 完了。</li>
+        <li>未処理提案：<strong>O-004</strong>（<span class="font-mono">/task-partner</span> コマンド＝社長の残存課題として継続報告）のみ。新規提案なし。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 003 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 003 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（精密診断は Cycle 001 で本日実施済）。<strong>チェック範囲</strong>：Slack fetch（新着なし）＋自分宛受信箱の処理。新規の綻び探索は安価な範囲のみ。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：✅ ループ稼働正常。社長の mailbox 指示1件を処理（O-004 の位置づけ確定）。新規の綻びなし。<span class="font-mono">new/</span> に他モード宛（hp-loop/yoshida-dev）の mailbox 開発テスト残骸が3件あるが、mailbox は開発中＝想定内（O-003 で様子見済・統括の責務領域外）。</p>
+    </div>
+
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <h4 class="font-bold mb-2">今サイクルで処理した社長の指示（mailbox／Slack双方向）</h4>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li>📩「O-004 は作ろうとしたが未完成。私の残存課題として今後も報告して」→ <strong>O-004 を「社長の残存課題」に位置づけ変更</strong>し、🔔 で継続トラッキングする旨をスレッド返信。✅ 完了。</li>
+        <li>未処理提案：<strong>O-004</strong>（社長の残存課題として継続報告）のみ。新規提案なし。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 002 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 002 — 2026-06-18（軽い巡回・初回ループ稼働）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（精密診断は Cycle 001 で本日実施済）。<strong>チェック範囲</strong>：Slack 受信箱の処理＋社長判断の反映。新規の綻び探索は安価な範囲のみ。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：✅ 統括ループ稼働確認（毎時:07・Slack双方向 fetch/reply 正常）。社長の Slack 指示2件を処理し、Cycle 001 提案のステータスを更新。新規の綻びなし。</p>
+    </div>
+
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <h4 class="font-bold mb-2">今サイクルで処理した社長の指示（Slack 双方向）</h4>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li>📩「ループちゃんと回ってるかな」→ 稼働中である旨をスレッド返信。</li>
+        <li>📩「O-001 0.4で」→ <strong>O-001 を反映</strong>（task-partner.md 版ヘッダを 0.2→0.4）。✅ 完了。</li>
+        <li>📩「mailbox は現在開発中のもの」→ <strong>O-002・O-003・O-005 を「様子見（想定内）」に変更</strong>。開発中の機能に対する綻び指摘は再掲しない。</li>
+        <li>残る未処理提案：<strong>O-004</strong>（<span class="font-mono">/task-partner</span> コマンド未作成）のみ。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 001 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 001 — 2026-06-18（初回健康チェック）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>チェック範囲</strong>：全モードのルール参照パス実在性／版ヘッダ↔changelog 整合／mailbox の実体・滞留／未完の型（コマンド・スライス）／相互リンク。読み取りのみ。</p>
+
+    <div class="border-l-4 border-blue-400 bg-blue-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：致命的な綻びは無し。各モードの参照パスはほぼ実在し整合。最大の論点は <strong>mailbox が「作ったが、まだ実運用ループに入っていない」</strong>こと（恒久トークン表・承認導線・各モード Step0 への組込が未了）。加えて軽微な版ズレ1件。安全（外部送信・秘密）に関わる即時リスクは検出されず。</p>
+    </div>
+
+    <!-- O-001 -->
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-001：task-partner.md の版ヘッダが changelog と不一致</h4>
+        <span class="text-xs font-bold text-white bg-yellow-500 px-2 py-0.5 rounded">🟡 推奨</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>観察</strong>：ファイル先頭は <span class="font-mono">version 0.2（2026-06-12）</span>。一方 changelog には 0.3・0.4 の追記あり（台帳を hana-tools に確定した 0.4 まで）。</li>
+        <li><strong>なぜ問題か</strong>：版ヘッダが古いと、SYSTEM.md の版表や他からの参照が実態とズレる。「どれが最新ルールか」の判断を誤らせる。</li>
+        <li><strong>推奨</strong>：AI が先頭ヘッダを 0.4 に更新（社長合意後）。併せて SYSTEM.md の版表記も 0.4 で確定。</li>
+        <li><strong>効果</strong>：中　<strong>工数</strong>：小　<strong>関連</strong>：<span class="font-mono">.claude/rules/task-partner.md</span> / SYSTEM.md</li>
+        <li><strong>ステータス</strong>：✅ 反映済み（2026-06-18 社長承認「0.4で」→版ヘッダを0.4に更新。SYSTEM.md版表と一致）</li>
+      </ul>
+    </div>
+
+    <!-- O-002 -->
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-002：mailbox の恒久トークン表が未作成（実運用の前提欠落）</h4>
+        <span class="text-xs font-bold text-white bg-yellow-500 px-2 py-0.5 rounded">🟡 推奨</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>観察</strong>：<span class="font-mono">data/secrets/mailbox-tokens.json</span> が存在しない。mailbox は send/done（スライス2）まで実装済みだが、これまでの検証は使い捨てトークン。</li>
+        <li><strong>なぜ問題か</strong>：恒久トークン表が無いと、各拠点エージェントが正規の <span class="font-mono">agent_id</span> で名乗れず、スライス4の試運転（hp-loop↔yoshida-dev）に入れない。</li>
+        <li><strong>推奨</strong>：社長の手元作業でトークン表を作成（<span class="font-mono">.claude/rules/mailbox.md</span>「トークン表のセットアップ」手順）。各拠点 <span class="font-mono">.env</span> にそのマシンのトークンだけ設定。※実値は AI が読まない。</li>
+        <li><strong>効果</strong>：高（実運用の前提）　<strong>工数</strong>：小　<strong>関連</strong>：mailbox.md / 各拠点 .env</li>
+        <li><strong>ステータス</strong>：🟦 様子見（2026-06-18 社長「mailbox は開発中」＝想定内。実運用フェーズで対応）</li>
+      </ul>
+    </div>
+
+    <!-- O-003 -->
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-003：mailbox new/ にテストメッセージ2件が滞留</h4>
+        <span class="text-xs font-bold text-white bg-green-600 px-2 py-0.5 rounded">🟢 余裕があれば</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>観察</strong>：<span class="font-mono">data/mailbox/new/</span> に <span class="font-mono">M-...-hploop-001.json</span> と <span class="font-mono">M-...-president-001.json</span> の2件（2026-06-17 のテスト）。<span class="font-mono">cur/</span>・<span class="font-mono">hold/</span> は空。</li>
+        <li><strong>なぜ問題か</strong>：推測：スライス1検証の残骸。実運用開始時に「未読が初めから溜まっている」状態になり、受信箱の信頼性が下がる。</li>
+        <li><strong>推奨</strong>：残骸なら整理（各エージェントが <span class="font-mono">done</span> で cur/ へ、または社長判断で削除）。<em>統括は責務領域に直接触れないため提案に留める。</em></li>
+        <li><strong>効果</strong>：低　<strong>工数</strong>：小　<strong>関連</strong>：data/mailbox/new/</li>
+        <li><strong>ステータス</strong>：🟦 様子見（mailbox 開発中＝想定内。シード残骸は実運用前に整理）</li>
+      </ul>
+    </div>
+
+    <!-- O-004 -->
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-004：/task-partner コマンドが未作成（ループ運用の宿題）</h4>
+        <span class="text-xs font-bold text-white bg-green-600 px-2 py-0.5 rounded">🟢 余裕があれば</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>観察</strong>：<span class="font-mono">.claude/rules/task-partner.md</span> は v0.4 まで成熟しているが、起動コマンド <span class="font-mono">.claude/commands/task-partner.md</span> が無い（rule にも「仮・未作成」と明記）。</li>
+        <li><strong>なぜ問題か</strong>：他モード（hp-loop/reviewer/overseer）はコマンド＋/loop で回せるが、進行管理だけ手動起動できない。型は揃っているのに運用に乗らない。</li>
+        <li><strong>推奨</strong>：reviewer-cycle/overseer と同形のコマンドを作成（書き込み・通知は手動合意前提）。社長が着手可否を判断。</li>
+        <li><strong>効果</strong>：中　<strong>工数</strong>：小　<strong>関連</strong>：task-partner.md（設計論点1）</li>
+        <li><strong>ステータス</strong>：⏳ Pending</li>
+      </ul>
+    </div>
+
+    <!-- O-005 -->
+    <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-005：mailbox スライス3（承認導線）未実装で hold/ が機能しない</h4>
+        <span class="text-xs font-bold text-white bg-green-600 px-2 py-0.5 rounded">🟢 余裕があれば</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>観察</strong>：<span class="font-mono">approve</span>（hold/→new/）は未実装でサーバが 501。社長用ブラウザビューも未作成。</li>
+        <li><strong>なぜ問題か</strong>：<span class="font-mono">needs_approval: true</span> のメッセージは hold/ に入るが、社長が承認して相手へ届ける手段が無い＝外部・破壊的作用を促すメッセージが宙に浮く。安全ゲートが「入口だけで出口が無い」状態。</li>
+        <li><strong>推奨</strong>：スライス3（approve＋社長ブラウザビュー）を自社開発タスク化。優先度は O-002 と並べて社長判断（トークン表→承認導線→スライス4試運転の順が自然）。</li>
+        <li><strong>効果</strong>：中　<strong>工数</strong>：中　<strong>関連</strong>：mailbox.md（段階導入スライス3）</li>
+        <li><strong>ステータス</strong>：🟦 様子見（2026-06-18 社長「mailbox は開発中」＝想定内。スライス3は開発計画の一部）</li>
+      </ul>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-4">今サイクルの自己改善（K）：健康チェックを手作業（ls/grep）で実施。版ヘッダ↔changelog 照合・パス実在・mailbox 滞留は決定論的に出せるため、次段で読み取り専用スクリプト（<span class="font-mono">bin/system-health.sh</span> 想定）化すると毎回の精度が安定する。→ skill-kaizen 候補。</p>
+  </section>
+
+</div>
+</body>
+</html>

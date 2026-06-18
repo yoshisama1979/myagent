@@ -1,0 +1,20 @@
+# SSL 有効期限チェック対象ドメイン（bin/check-ssl.sh が読む）
+# 1行1ドメイン。# で始まる行と空行は無視。
+stg.hana-tools.com
+hana-chat.jp
+dev.hana-chat.jp
+gen-ba.net
+tanoseemo.net
+stg.tanoseemo.net
+taiwan-catalog.shop
+stg.taiwan-catalog.shop
+konjaku-photo.jp
+stg.konjaku-photo.jp
+po-mlp-system.com
+stg.po-mlp-system.com
+marukoma-tool.com
+stg.marukoma-tool.com
+osakatp.com
+stg.osakatp.com
+ticket-v.jp
+dev.ticket-v.jp

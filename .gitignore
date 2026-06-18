@@ -20,6 +20,11 @@ data/mailbox/
 # 月次アップロードデータ（売上・コスト等）
 data/monthly/
 
+# overseer / slack のランタイム状態・ログ・ロック・ハートビート（毎サイクル書き換わる・git非追跡）
+data/overseer/
+data/slack/
+site/overseer/last-tick.txt
+
 # Windows のファイル属性メタデータ（NTFS Zone.Identifier）
 *Zone.Identifier
 

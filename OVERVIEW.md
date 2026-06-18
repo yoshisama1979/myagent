@@ -24,6 +24,7 @@
 | パス | 何か | 備考 |
 |------|------|------|
 | `CLAUDE.md` | プロジェクト規範（毎ターン読まれる核） | 詳細はこの OVERVIEW と `rules/` に外出し |
+| `SYSTEM.md` | **動くモード同士の地図**（役割・一次情報源・承認ゲート・ハンドオフ） | 統括者の入口。OVERVIEW=ディレクトリ地図／SYSTEM=モード地図 |
 | `site/` | ブラウザ閲覧用 HTML 全般（記録・トラッカー・スキルシート等） | Nginx ドキュメントルート。Tailscale 経由のみ公開 |
 | `_assistant/` | 経営サポート用チャットアプリ（FastAPI、**読み取り専用**） | 詳細は `_assistant/README.md` / `_assistant/PLAN.md` |
 | `bin/` | 財務・案件・スキルシートの**生成スクリプト群**（Python） | 詳細は `bin/README.md`。`hana-api.sh` は hana-tools 連携 |

@@ -66,6 +66,8 @@
 | ファイル | 用途 |
 |---------|------|
 | [OVERVIEW.md](OVERVIEW.md) | リポジトリ全体像・ディレクトリ早見表（スレッド開始時の把握用） |
+| [SYSTEM.md](SYSTEM.md) | 動くモード同士の地図（役割・一次情報源・承認ゲート・ハンドオフ）。統括者の入口 |
+| [.claude/rules/overseer.md](.claude/rules/overseer.md) | 統括（Overseer）モード：システム全体の整合・健全性を見張り改善提案（`/overseer`） |
 | [AI-INDEX.md](AI-INDEX.md) | AI用の在処マップ（site/全ページのタイトル・見出し・リード＋data/一覧）。`python3 bin/build-ai-index.py` で再生成。データを探す前にまず見る |
 | [rules/partnership.md](rules/partnership.md) | 秘書＋パートナーとしての協働ルール |
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |

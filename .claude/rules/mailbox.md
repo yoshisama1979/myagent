@@ -77,11 +77,11 @@
 | agent_id | 役割 | 居場所 |
 |----------|------|--------|
 | `president` | 社長（admin・承認権限） | — |
-| `overseer` | 統括（Overseer）モード。社長Slackの既定受け先（`bin/slack-poll.py` の default route） | VPS |
-| `hp-loop` | HP分析ループ（YCOM自社） | VPS 等 |
+| `overseer` | 統括（Overseer）モード。社長は overseer の**日報スレッドに返信**して指示を渡す（`post --as overseer` で持ち主が overseer のスレッド） | VPS |
+| `hp-loop` | HP分析ループ（YCOM自社）。社長は hp-loop の**日報スレッドに返信**して指示を渡す | VPS 等 |
 | `yoshida-dev` | よしだ歯科サイト実装エージェント | 拠点PC |
 | `web-hanasaka` | はなさか自社サイト（y-com.info）実装エージェント。hp-loop の提案を実装し、報告・質問を hp-loop へ返す | 拠点PC |
-| `hanasaka-main` | はなさか本体の業務エージェント | 拠点PC / VPS |
+| `hanasaka-main` | はなさか本体の業務エージェント＝**社長Slackの既定受け先**（`bin/slack-poll.py` の `DEFAULT_AGENT`）。新規トップレベル投稿＝社長との会話を `/chat` で受ける | 拠点PC / VPS |
 
 ---
 
