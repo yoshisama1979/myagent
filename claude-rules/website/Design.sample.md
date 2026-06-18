@@ -1,4 +1,9 @@
-# YCOM Design.md
+# Design.md 記入例（YCOM）
+
+> ⚠️ **これは「記入例（サンプル）」です。** YCOM の実値で `Design.md` を書くとこうなる、という見本。
+> **各プロジェクトでは、このファイルを `Design.md` としてコピーし、自分のプロジェクトの値に置き換えて使ってください。**
+> ここに並ぶ色 hex・フォント・1000px幅・`1rem=1px`換算・`$m_tpl` 等は **YCOM固有の値** であり、そのまま流用しないこと。
+> デザイン規約の「汎用ルール（何を守るか）」は [.claude/rules/design.md](.claude/rules/design.md)、作成手順は [.claude/rules/start.md](.claude/rules/start.md) を参照。
 
 株式会社はなさか / YCOM (https://www.y-com.info) のデザインルール集。
 **AIコーディングエージェント(Claude Code 等)と人間の両方が、UIを足し引きする前に必ず読むファイル。**
