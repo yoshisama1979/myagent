@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — YCOM（はなさか自社・y-com.info）</h1>
   <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。</p>
-  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-16（Cycle 006・GSC再取得でアクセス&CV増の打ち手を具体化）／対象サイト：<a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">y-com.info</a>（はなさか自社・YCOM）／ゴール：SEO流入＋問い合わせ増</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-18（Cycle 008・🔧事実訂正＝GA4は稼働中・R-022新規作成は中止・効果検証は既存データで可能）／対象サイト：<a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">y-com.info</a>（はなさか自社・YCOM）／ゴール：SEO流入＋問い合わせ増</p>
 
   <!-- ===== 使い方（常設） ===== -->
   <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
@@ -42,11 +42,11 @@
         <div class="text-gray-700 mt-1">事例を強い武器にするには事実が要ります。①数値成果（問い合わせ◯%増 等）を出せる事例がある ／ ②お客様コメントの掲載許諾を取れる ／ ③まずは社長の所感ベースで書く（数値なし）。どれで進めますか？（AIは数値を捏造しません）</div>
       </li>
       <li>
-        <span class="font-semibold">Q-008</span>：GSC データは「都度取得」と「日次で蓄積」どちらにしますか？（Cycle 005 起点）
-        <div class="text-gray-700 mt-1">エクスポートは 2026-06-06 開始で現状<strong>4日分</strong>。トレンド・施策の効果検証には蓄積が要ります。①当面は <span class="font-mono">/hp-loop</span> の都度取得でOK（データは自然に増える） ／ ②日次でスナップショットを <span class="font-mono">data/hp-loop/cycles/</span> に貯めるツール（T-004）を作る ／ ③GA4（流入・問い合わせCV）の連携も次に進める。</div>
+        <span class="font-semibold">Q-010</span>：<span class="font-mono">/price/basic.html</span> に載せる料金の目安レンジを提示できますか？（<strong>R-014b</strong> の前提）
+        <div class="text-gray-700 mt-1">料金クエリで1ページ目化しても、ページに目安価格が無いと問い合わせ前に離脱します。①プラン別の目安レンジを出せる ／ ②「○万円〜」のざっくりレンジでよい ／ ③価格は載せず「要お見積り」で進める。どれにしますか？（AIは価格を捏造しません）</div>
       </li>
     </ul>
-    <p class="text-xs text-amber-700 mt-3">✅ 回答済み：Q-001（対象=y-com.info）／ Q-002（ゴール=SEO流入＋問い合わせ増）／ Q-003（<strong>GSCデータ＝BigQuery一括エクスポートを T-006 gsc-fetch.py で取得・解決 2026-06-12</strong>。GA4は別途）／ Q-004・Q-006（頻度＝定期化せず都度 /hp-loop）／ Q-005（実装は y-com.info 担当エージェントに引き渡し。本ループは診断・提案まで）</p>
+    <p class="text-xs text-amber-700 mt-3">✅ 回答済み：Q-001（対象=y-com.info）／ Q-002（ゴール=SEO流入＋問い合わせ増）／ Q-003（<strong>GSCデータ＝BigQuery一括エクスポートを T-006 gsc-fetch.py で取得・解決 2026-06-12</strong>。GA4は別途）／ Q-004・Q-006（頻度＝定期化せず都度 /hp-loop）／ Q-005（実装は y-com.info 担当エージェントに引き渡し。本ループは診断・提案まで）／ Q-008（GSCデータ＝継続共有・蓄積で運用）／ <strong>Q-009</strong>（<strong class="text-emerald-700">GA4新規作成は不要＝GA4は稼働中</strong>と BigQuery で確認・<strong>R-022は中止</strong>。詳細は Cycle 008）</p>
   </div>
 
   <!-- ===== 📥 分析に欲しい情報・データ・ツール（常設・AIが書く） ===== -->
@@ -68,9 +68,9 @@
         </tr>
         <tr class="border-b border-sky-100">
           <td class="py-1 pr-3 font-semibold">GA4 データ</td>
-          <td class="py-1 pr-3">流入経路・滞在・離脱・<strong>問い合わせ/見積CV数</strong>。<strong>GSCは順位/クリックまで＝「問い合わせが増えたか」は計測不能</strong>。Cycle 006 の提案効果はこれが無いと検証できない（Q-008③）</td>
-          <td class="py-1 pr-3">GA4 Data API連携 or エクスポート貼付（Q-008）</td>
-          <td class="py-1">🔴 高（格上げ 2026-06-16）</td>
+          <td class="py-1 pr-3">流入経路・滞在・離脱・<strong>問い合わせ/見積CV数</strong>。<strong class="text-emerald-700">※稼働中と判明（2026-06-18・BigQuery <span class="font-mono">analytics_265729912</span>）＝2021〜現在まで計測・問い合わせ/見積/電話/メール/応募のCVイベント発火中</strong>。新規作成は不要（R-022中止）。HTMLベタ書きは旧UAだが GTM が GA4 注入＝担当の「未計測」は誤り</td>
+          <td class="py-1 pr-3"><strong>取得済み</strong>：効果検証は <span class="font-mono">bin/ga4-fetch.py</span>（T-007・整備中）。イベント名の重複整理＋キーイベント設定はコンソール作業（R-023）</td>
+          <td class="py-1">✅ 取得可（残：CV定義の正規化）</td>
         </tr>
         <tr class="border-b border-sky-100">
           <td class="py-1 pr-3 font-semibold">ターゲット・競合の確定情報</td>
@@ -97,6 +97,112 @@
 
   <!-- ===== サイクルログ（最新が上） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">サイクルログ</h2>
+
+  <!-- 1サイクル分のテンプレート（AIが Cycle ごとに、この section を先頭に追加していく） -->
+
+  <section class="border-2 border-rose-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 008 — 2026-06-18（y-com.info｜🔧 事実訂正：GA4 は“稼働中”＝R-022（新規作成）を中止・効果検証は既存データで可能）</h3>
+    <p class="text-sm text-gray-500 mb-4">対象：<a href="https://y-com.info/" class="text-blue-600 hover:underline">y-com.info</a> ／ データ状況：<strong class="text-emerald-700">GA4 を BigQuery で直接確認 ✅</strong>（<span class="font-mono">myservice-219202.analytics_265729912</span>・読み取り・dry-run 0.0017GB）。起点：社長が Q-009（GA4再計測）に着手しようとしたため、新規作成の前に既存GA4の実在・鮮度を検証。</p>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">① 検証で判明した事実（Cycle 007 の認識を覆す）</h4>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li><strong class="text-emerald-700">GA4 は現役で稼働中</strong>：<span class="font-mono">analytics_265729912</span> に <strong>2021-09-23〜2026-06-15（intraday）＋ 06-16・06-17（daily 切替）</strong>のデータ。<strong>昨日まで途切れず計測</strong>＝今も生きている。</li>
+        <li><strong class="text-emerald-700">問い合わせ・見積の CV イベントが発火済み</strong>（直近35日）：<span class="font-mono">問い合わせ</span>12件/10人・<span class="font-mono">その他お問い合わせ</span>14件/14人・<span class="font-mono">お問い合わせ完了ページ(normal)</span>12件/10人・<span class="font-mono">見積もりのリクエスト</span>12件/8人・<span class="font-mono">見積り依頼完了ページ(create)</span>・電話(tel/スマホ)・メール・<span class="font-mono">コーダー応募1次/2次完了</span> 等。<strong>「問い合わせ・見積が増えたか」は新規作成せずとも今日から測れる。</strong></li>
+        <li><strong class="text-amber-700">担当報告の訂正</strong>：「タグが旧UA(<span class="font-mono">UA-2650013-1</span>)のまま」は<strong>半分正しい</strong>（HTMLベタ書きは旧UA）。だが「<strong>GA4 は実質未計測</strong>」は<strong>誤り</strong>＝<strong>GTM(<span class="font-mono">GTM-55DB6J6</span>)が GA4 を注入</strong>し全イベント＋CVが取れている。GTM注入を見落とした筋。</li>
+      </ul>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">② 提案の差し替え</h4>
+      <div class="border-l-4 border-gray-400 pl-3 mb-3">
+        <p class="font-semibold text-gray-500">R-022（GA4 新規作成）：<span class="text-rose-700">❌ 中止</span></p>
+        <p class="text-sm text-gray-700 mt-1">GA4 は稼働中。新規作成は <strong>4年9か月の履歴を捨て・計測を分散</strong>させる悪手のため取り下げる。Q-009（誰が新規作成するか）も<strong>解決＝不要</strong>。</p>
+      </div>
+      <div class="border-l-4 border-amber-400 pl-3 mb-3">
+        <p class="font-semibold">R-023（新規）：GA4 の CV イベントを正規化し「問い合わせ完了／見積り完了」をキーイベント（コンバージョン）に揃える 🟡（コンソール作業＝社長/担当）</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mt-1">
+          <li><strong>観察（事実）</strong>：イベント名が重複乱立（<span class="font-mono">見積り</span>/<span class="font-mono">見積もりのリクエスト</span>/<span class="font-mono">見積り2</span>/<span class="font-mono">見積り依頼完了ページ</span>、<span class="font-mono">問い合わせ</span>/<span class="font-mono">その他お問い合わせ</span>/<span class="font-mono">お問い合わせ完了ページ</span>）。</li>
+          <li><strong>なぜ問題か</strong>：CV の集計が分散し「問い合わせが何件か」が一目で出ない。<span class="text-gray-500">推測：</span>命名の継ぎ足しでこうなった。</li>
+          <li><strong>改善案</strong>：正規の「問い合わせ完了」「見積り完了」をGA4のキーイベントに設定し、報告KPIを統一。死んだ UA タグ(<span class="font-mono">UA-2650013-1</span>)の撤去は任意。<strong>GA4/GTM コンソール作業＝AI権限外（社長/担当）</strong>。</li>
+          <li><strong>効果</strong>：中（計測の信頼性） ｜ <strong>工数</strong>：小〜中 ｜ <strong>優先度</strong>：🟡 推奨</li>
+        </ul>
+      </div>
+      <div class="border-l-4 border-emerald-400 pl-3">
+        <p class="font-semibold">T-007（ツール・整備中）：<span class="font-mono">bin/ga4-fetch.py</span>＝GA4(BigQuery)読み取りで CV を月次集計し、title/meta 改善（R-014a/019/020）前後の問い合わせ・見積の増減を実データで検証</p>
+        <p class="text-sm text-gray-700 mt-1">読み取り専用・コスト上限・dry-run（gsc-fetch.py と同型）。intraday(過去)＋daily(今後) 両対応。</p>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-1">③ 次の一手</h4>
+      <p class="text-sm text-gray-700">GA4 は揃っているので、次は <strong>ga4-fetch（T-007）で R-014a/019/020 の効果（問い合わせ・見積の増減）を実測</strong>。並行して <strong>R-023（CVイベント正規化・キーイベント設定）はコンソール作業</strong>として社長/担当へ。実装側（web-hanasaka）には「GA4新規作成は不要・稼働中」を通知（メールボックス接続後 or 社長橋渡し）。</p>
+    </div>
+
+    <div class="border-t border-gray-200 pt-3">
+      <h4 class="font-semibold text-gray-700 mb-1">対応記録</h4>
+      <p class="text-sm text-gray-700">社長が Q-009（GA4再計測）に着手しようとしたのを受け、新規作成の前に BigQuery <span class="font-mono">analytics_265729912</span> を読み取り検証。<strong>Cycle 007 の「GA4実質未計測」は事実誤りと判明し訂正</strong>（hp-loop の「実装報告も自分でGET/データ検証してから確定」原則・skill-kaizen K-014 に沿う）。R-022 を中止、Q-009 を解決（不要）、R-023（CV正規化）を新規起票、📥 の GA4 を「✅取得可」に更新。担当の指摘（タグは旧UA）はフェアに認めつつ、結論（未計測）の誤りをデータで訂正。</p>
+    </div>
+  </section>
+
+  <!-- 1サイクル分のテンプレート（AIが Cycle ごとに、この section を先頭に追加していく） -->
+
+  <section class="border-2 border-emerald-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 007 — 2026-06-18（y-com.info｜✅ 実装報告の検証：R-014a/R-019/R-020 の本番反映を確認＋GA4実質未計測の重大事実を反映）</h3>
+    <p class="text-sm text-gray-500 mb-4">対象：<a href="https://y-com.info/" class="text-blue-600 hover:underline">y-com.info</a> ／ データ状況：<strong>y-com.info 担当からの実装報告</strong>（<span class="font-mono">from-president.md</span> 2026-06-18）を受領し<strong>本番GET（curl・読み取り）で再監査</strong>。報告は「デプロイ後に観測可能・現状は旧値」としていたが、<strong class="text-emerald-700">実際にGETすると4ページとも新値が配信済み＝デプロイ完了を確認</strong>。一方 GA4＝<strong class="text-red-600">実質未計測と判明</strong>（後述）。<strong class="text-amber-700">⚠️【Cycle 008 で訂正】この「GA4未計測」は事実誤りでした。GA4 は稼働中（BigQueryで確認）＝R-022は中止。</strong></p>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">① 実装検証（再監査：観測した事実）</h4>
+      <p class="text-sm text-gray-700 mb-2">Cycle 006 で引き渡した提案のうち、最小工数の title/meta から着手したとの報告。本番URLを実際にGETして突き合わせた結果：</p>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li><strong class="text-emerald-700">R-014a ✅ 本番反映確認</strong>：<span class="font-mono">/price/basic.html</span> の <span class="font-mono">&lt;title&gt;</span>＝「ホームページ制作の料金表・費用の目安 | 大阪のホームページ制作会社YCOM」、description も料金表向けの新値を配信中（旧「制作料金一覧」から「料金表・費用・目安・大阪」へ語ズレ解消済み）。</li>
+        <li><strong class="text-emerald-700">R-019 ✅ 本番反映確認</strong>：<span class="font-mono">/partners/coder.html</span> の title/meta/h1/<strong>本文</strong>すべてコーダー向けに修正済み。<strong>コピペ崩れ（コーダーページなのに「デザイナー募集」）も解消</strong>（本文「外注コーダー様を募集」を観測）。<span class="font-mono">designer.html</span> の流用 description 修正（「WEBデザイナーを募集中」）も確認。</li>
+        <li><strong class="text-emerald-700">R-020 ✅ 本番反映確認</strong>：<span class="font-mono">/company/</span> は title＝「会社概要 | 大阪市北区のホームページ制作会社YCOM」で <strong>description を title と別文に分離</strong>済み。<span class="font-mono">/contact/normal/</span> も title に「ホームページ制作のご相談・お問い合わせ｜…YCOM」と社名・地域語を補い新値配信中。</li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-2">※ 検証は本番URLへの読み取りGET（curl）で title/meta/h1/本文を突き合わせた範囲。順位・CTR・CV への効果は GSC/GA4 の継続計測で別途確認する。</p>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">② 認識合わせ（報告 → 本ループへの反映）</h4>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li><strong class="text-red-600">🔴 GA4 が実質未計測と判明（最重要）</strong>：計測タグが <span class="font-mono">UA-2650013-1</span>（Universal Analytics＝2023/7 に計測停止済の旧式）のままで、<strong>GA4 は実質動いていない</strong>（GTM <span class="font-mono">GTM-55DB6J6</span> は稼働）。→「順位・CTR は上げられても“問い合わせ・見積が増えたか”を今のデータでは検証できない」が確定。📥 の GA4 を「連携」から<strong>「新規プロパティ作成＋GTM設置＋CV設定」</strong>に具体化し、新規提案 <strong>R-022</strong>・質問 <strong>Q-009</strong> として起票。</li>
+        <li><strong>デプロイ状態の事実訂正</strong>：報告は「本番反映はデプロイ後・現状GETは旧値」としていたが、<strong>観測上すでに新値が配信済み</strong>。よって完了判定を保留せず今サイクルで確定した（担当が追って入れる予定の「反映確認連絡」を待つ必要はなくなった）。</li>
+        <li><strong>構成前提を再確認</strong>：メインは独自PHPテンプレート（WordPress は一部のみ）＝<span class="font-mono">config.md</span> の記載と一致。WordPress 前提のプラグイン施策（Yoast 等）は不適合で、canonical/メタはテンプレート側出力で対応、で合意。</li>
+      </ul>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">③ 新規提案</h4>
+      <div class="border-l-4 border-red-400 pl-3 mb-1">
+        <p class="font-semibold">R-022（新規）：GA4 の再計測を立て直す（死んだ UA タグの置換）＝全施策の効果検証基盤 🔴</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mt-1">
+          <li><strong>観察（事実）</strong>：現行の計測タグは <span class="font-mono">UA-2650013-1</span>（Universal Analytics）で 2023/7 に計測停止済。GTM（<span class="font-mono">GTM-55DB6J6</span>）は稼働中。GA4 プロパティでの計測が事実上存在しない。</li>
+          <li><strong>なぜ問題か</strong>：title/meta 改善（R-014a/019/020）で順位・CTR は動かせても、<strong>本来のゴール「問い合わせ・見積CVが増えたか」を測る土台が無い</strong>。効果検証ができないと優先順位付けも投資判断も精度が出ない。</li>
+          <li><strong>改善案</strong>：稼働中の GTM 経由で GA4 プロパティを新規作成し、<strong>問い合わせ/見積フォーム送信をコンバージョンとして設定</strong>。あわせて GSC は継続共有（蓄積）。※ GA4 作成・GTM 設定は<strong>AI の権限外＝社長/担当の作業</strong>（Q-009）。</li>
+          <li><strong>効果</strong>：高（全施策の検証基盤） ｜ <strong>工数</strong>：中 ｜ <strong>優先度</strong>：🔴 最優先</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-1">④ 残課題（担当より・継続）</h4>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
+        <li><strong>R-014b</strong>：<span class="font-mono">/price/basic.html</span> の料金レンジ・FAQ 追記＋料金系ブログ→<span class="font-mono">/price/</span> 内部リンク。<strong>社長から目安価格レンジの提供待ち</strong>（Q-010）。影響範囲＝当該ページ＋一部ブログ。</li>
+        <li><strong>R-018</strong>：ローカルSEO（対応エリア明記・事例の地域タグ）。共有テンプレ変更は全ページ影響のため着手前に範囲確定。MEO（Googleビジネスプロフィール）は社長手作業。</li>
+        <li><strong>R-021</strong>：自作vs外注・ソフト比較系の人気記事末尾に「制作相談」CTA＋関連サービスリンク。</li>
+      </ul>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-1">⑤ 次の一手</h4>
+      <p class="text-sm text-gray-700">title/meta 改善は<strong>本番反映済み</strong>。次の最重要は <strong>R-022（GA4 再計測の確立）</strong>＝これが無いと今回の改善効果（問い合わせ増）を測れない。あわせて <strong>R-014b の料金レンジ（社長提供）</strong>が <span class="font-mono">/price/</span> の1ページ目化を“クリック→問い合わせ”に変える鍵。<strong>Q-009（GA4 を誰がいつ）</strong>と <strong>Q-010（料金レンジ）</strong>への回答をお願いします。</p>
+    </div>
+
+    <div class="border-t border-gray-200 pt-3">
+      <h4 class="font-semibold text-gray-700 mb-1">対応記録</h4>
+      <p class="text-sm text-gray-700"><span class="font-mono">from-president.md</span> 2026-06-18「Cycle 006 提案（R-014/R-019/R-020）への対応報告（y-com.info 担当より）」に対応。報告内容を本番GETで再監査し <strong>R-014a/R-019/R-020 を ✅本番反映確認</strong>。報告の「デプロイ待ち・旧値」前提は観測と食い違ったため<strong>事実を優先（既に配信済み）</strong>。認識合わせの GA4 計測停止（UA-2650013-1）を反映し <strong>R-022・Q-009</strong> を起票、R-014b の価格レンジ待ちを <strong>Q-010</strong> に明示。残課題 R-018/R-021 は継続。</p>
+    </div>
+  </section>
 
   <!-- 1サイクル分のテンプレート（AIが Cycle ごとに、この section を先頭に追加していく） -->
 

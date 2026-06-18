@@ -44,6 +44,17 @@
 - 既知の限界：(1)**データはエクスポート有効化以降のみ**。y-com.info は 2026-06-06 開始＝現状4日分のみ（トレンドはこれから蓄積）。(2)平均順位は `SUM(sum_position)/SUM(impressions)+1` の近似。(3)site_impression 表は未使用（url_impression で順位も取れるため）。(4)GA4（流入/CV）は別途＝T-003 のまま
 - 拡張余地：複数プロパティ対応済み（`searchconsole_ycom` / `searchconsole_fujisaka` を `--dataset` で切替）。将来：日次推移・前期間比較・cycles/ への蓄積（T-004 と統合可）
 
+### T-007: ga4-fetch.py（bin/ga4-fetch.py）
+- 2026-06-18 / ✅運用中
+- 目的：**GA4 実データ取得**（planned T-003 の本対応）。効果計測の本丸＝「title/meta 改善（R-014a/019/020）が問い合わせ・見積の増加につながったか」を実数で検証する。Cycle 008 で「GA4は稼働中（`analytics_265729912`・2021〜・CVイベント有）」と判明したのを受け、その既存データを継続的に読む手段として作成（K-014/K-015）
+- 使い方：`bin/.venv/bin/python bin/ga4-fetch.py {summary|events|cv} [--dataset analytics_265729912] [--days N | --start/--end] [--events "問い合わせ,見積もりのリクエスト"] [--max-gb 8] [--dry-run] [--json]`
+  - 例：`bin/.venv/bin/python bin/ga4-fetch.py cv --start 2026-04-01 --end 2026-06-18`（CVを月次トレンドで）
+  - 認証：T-006 と同じ（`.env` の `GSC_SA_JSON` → `data/secrets/gsc-sa.json`・SA `gsc-reader@myservice-219202`）
+- 出力：summary（期間・イベント数・ユーザー数）／events（event_name 別件数・人数）／cv（問い合わせ・見積等を月次集計）。`--json` で機械可読
+- 関連：K-014（報告のデプロイ状態を鵜呑みにしない）／K-015（既存資産の実在をデータで確認＝二重作成を防ぐ）／掲示板 Cycle 008（R-022 中止・効果検証へ転換）。📥欲しい情報の「GA4データ」を充足
+- メモ（制約・安全装置）：**読み取り専用＝SELECTのみ**（automation.md準拠）。`_TABLE_SUFFIX`（日付）必須フィルタ＋`maximum_bytes_billed`（既定8GB）＋`--dry-run`。**daily(`events_*`)とintraday(`events_intraday_*`)の二重計上を防止**＝同一日にdailyがあればintraday側を `event_date` で除外（`events_*` は8桁日付フィルタで `intraday_*` を自然に除外）
+- 既知の限界：(1)CVの「正確な定義」は GA4 側のイベント命名に依存（重複乱立＝R-023 でキーイベント正規化が必要・本ツールは生のevent_nameを数えるだけ）。(2)6月など期間途中の月は部分集計。(3)プロパティ横断は `--dataset` で切替（よしだ＝`analytics_287348176` 等）。(4)セッション数・チャネル別流入は未実装（必要なら追加）
+
 ---
 
 ## 未着手・欲しいツール（権限非依存で書く＝作れるか否かに関わらず記録）
@@ -51,6 +62,6 @@
 | 仮ID | ツール | 目的 | 必要なもの | 状態 |
 |------|--------|------|-----------|------|
 | ~~T-002~~ | ~~GSC連携~~ | → **T-006 gsc-fetch.py で実現（✅）** | — | ✅ 完了（2026-06-12） |
-| T-003? | GA4連携（流入・CV取得） | 施策の効果を数値検証 | GA4 Data API＋認証（要・社長） | ⛔ 未着手（Q-003のGA4分） |
+| ~~T-003?~~ | ~~GA4連携（流入・CV取得）~~ | → **T-007 ga4-fetch.py で実現（✅）**。GA4 は既に BigQuery エクスポート稼働中（`analytics_265729912`）と判明し、Data API 不要で SELECT 取得 | — | ✅ 完了（2026-06-18） |
 | T-004? | 監査スナップショット差分／GSC日次蓄積 | 定期実行で「変化時のみ提案」・順位推移 | cycles/ にJSON保存＋差分ロジック | ⛔ 未着手（K-006） |
 | T-005? | 表示速度/CWV計測 | 速度・Core Web Vitals の客観値 | PageSpeed Insights API 等 | ⛔ 未着手 |
