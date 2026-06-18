@@ -65,6 +65,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 | 操作 | 可否 |
 |------|------|
 | Read（任意） / Grep / Glob / git status・log・diff | ✅ 可 |
+| `bin/mailbox.sh inbox`（自分宛受信箱を読む）/ `done <id>`（自分宛を `cur/` へ）/ `send --to web-hanasaka`（提案引き渡し・検証依頼・受領確認＝純粋な内部調整） | ✅ 可（[mailbox.md](mailbox.md)準拠。外部送信・本番改変・hana-tools書込を**相手に促す**ものだけ `--needs-approval`＝`hold/`で社長承認待ち） |
 | Write/Edit: `site/hp-analysis/ycom/`（YCOM掲示板・「📥欲しい情報」含む） | ✅ 可（AIの担当） |
 | Write: `data/hp-loop/cycles/`（生データ・ログ） | ✅ 可 |
 | `bin/` へ分析ツールを**作成**＋ `data/hp-loop/tools-log.md` に履歴 | ✅ 可。ただし作るツールは**実行時に読み取り専用**（HTTP GET 等のみ・外部送信/ファイル書き込み/破壊的操作をしない。automation.md準拠） |
@@ -83,11 +84,13 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 1. `data/hp-loop/config.md` を読む（対象・データ源・頻度・スコープ）。**対象未確定なら Step 1 へ進まず、掲示板に「対象確認の質問」だけ出して終了**。
 2. `data/hp-loop/from-president.md` を読む（新しい指示・回答）。
 3. 掲示板 `site/hp-analysis/ycom/index.html` を読む（前回までの状態・未解決の質問・通し番号）。
+4. **メールボックスの受信箱を読む**：`bash bin/mailbox.sh inbox`（hp-loop 宛の `new/`）。`web-hanasaka`（y-com.info サイト実装エージェント）からの**実装報告・質問・認識合わせ**がここに直接届く（従来の「社長が from-president.md に手転記」に代わる直接チャネル）。処理は Step 1 で行い、終えたら `bash bin/mailbox.sh done <id>` で `cur/` へ移す（**本文は編集しない・履歴を消さない**）。詳細・書式は [mailbox.md](mailbox.md)。
 
 ### Step 1: 社長の指示を反映
 - from-president.md の **未対応項目**（掲示板にまだ「対応サイクル」が記録されていないもの）を最優先で次の行動に反映。
 - 質問への回答が来ていれば、該当 `Q-NNN` を解決済みにし、対応内容を掲示板に記録。
-- **実装報告（commit・対応 `R-NNN`・認識合わせ）が来ていたら**：該当ページを **hp-audit.sh 等で再監査して実装を検証**（✅完了／🔧一部／未反映を判定）。指摘された**事実誤りは素直に訂正**し、原因が自分のツール・前提なら**ツール/ルールを直す**（例：Cycle 003 のコメント無視バグ→hp-audit修正）。残課題は次の `R-NNN` として起票。
+- **実装報告（commit・対応 `R-NNN`・認識合わせ）が来ていたら**：該当ページを **hp-audit.sh 等で再監査して実装を検証**（✅完了／🔧一部／未反映を判定）。指摘された**事実誤りは素直に訂正**し、原因が自分のツール・前提なら**ツール/ルールを直す**（例：Cycle 003 のコメント無視バグ→hp-audit修正）。残課題は次の `R-NNN` として起票。**報告がデプロイ状態を述べていても鵜呑みにせず、まず本番URLをGETして現状を観測してから完了判定する**（`data/hp-improve/skill-kaizen.md` K-014）。
+- **メールボックス受信（`web-hanasaka`）も同じ作法で反映**：実装報告・質問はこの直接チャネルから届く。報告は上記同様に再監査で検証し、掲示板に記録。hp-loop からの返信（受領確認・追加の引き渡し・認識合わせ）は `bash bin/mailbox.sh send --to web-hanasaka --type ack|request --thread <id> ...` で返す（**純粋な内部調整＝`needs_approval` なし**。外部送信・本番改変・hana-tools書込を相手に促すときだけ `--needs-approval`）。**社長の指示・回答は引き続き `from-president.md` が一次**（`web-hanasaka`＝実装側／社長＝意思決定側でチャネルを分ける）。
 - 矛盾・曖昧があれば、掲示板で聞き返す（推測で進めない）。
 
 ### Step 2: データ取得（権限非依存・不足要求・ツールは自分で作る）

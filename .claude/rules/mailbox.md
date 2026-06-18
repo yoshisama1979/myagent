@@ -77,8 +77,10 @@
 | agent_id | 役割 | 居場所 |
 |----------|------|--------|
 | `president` | 社長（admin・承認権限） | — |
+| `overseer` | 統括（Overseer）モード。社長Slackの既定受け先（`bin/slack-poll.py` の default route） | VPS |
 | `hp-loop` | HP分析ループ（YCOM自社） | VPS 等 |
 | `yoshida-dev` | よしだ歯科サイト実装エージェント | 拠点PC |
+| `web-hanasaka` | はなさか自社サイト（y-com.info）実装エージェント。hp-loop の提案を実装し、報告・質問を hp-loop へ返す | 拠点PC |
 | `hanasaka-main` | はなさか本体の業務エージェント | 拠点PC / VPS |
 
 ---
