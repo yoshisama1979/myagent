@@ -10,12 +10,12 @@
 1. `data/hp-loop/config.md`（共通設定＋サイト登録表）を読む。
 2. `data/hp-loop/sites/<site>.md` を読み、**そのサイトの固有値を確定**：対象URL・ゴール・GSC dataset・GA4 dataset・実装担当エージェント・掲示板パス・社長指示ファイル・ループ識別子（`hp-loop-<site>`）。
 3. 以降の Step 0〜7 では、ハードコードの `ycom` ではなく**この確定値**を使う：
-   - 掲示板＝そのサイトの `site/hp-analysis/<site>/index.html`
+   - 掲示板＝そのサイトの **3層**：`site/hp-analysis/<site>/index.html`（最新レポート）・`spec.html`（確定・仕様）・`archive.html`（アーカイブ）。詳細はルールの「掲示板の3層構造」
    - 社長指示＝そのサイトの from-president（ycom は `data/hp-loop/from-president.md`、他は `data/hp-loop/<site>/from-president.md`）
    - mailbox 受信＝`to: hp-loop-<site>` のみ（他サイト宛は触らない）
    - GSC/GA4 取得＝`--dataset <そのサイトの dataset>`（GA4 未確認サイトは「データ未取得」と明示）
    - Slack 日報＝`post --as hp-loop-<site>`（そのサイト専用スレッド）／社長返信は `reply <thread_ts> --as hp-loop-<site>`
-   - 実装担当への引き渡し＝`mailbox.sh send --to <そのサイトの実装担当>`（トークン未登録なら「登録待ち」と明示し送らない）
+   - 実装担当への引き渡し＝`mailbox.sh send --to <そのサイトの実装担当>`、**最新レポートの配信＝`mailbox.sh local-send --from hp-loop-<site> --to <実装担当>`**（トークン未登録なら「登録待ち」と明示し送らない）
 - **site-key が登録表に無い／sites/<site>.md が無いなら、分析に入らず**「未登録サイト」である旨だけ報告して終了。
 
 ## 必読ファイル（順番に読む）
@@ -29,7 +29,7 @@
 
 - 対象サイト（上で確定した `<site>`）を **定期的に分析** し、**効果の高い改善提案＋社長への質問** を掲示板に積む
 - 社長はそのサイトの from-president に回答・指示を書く → AI はそれを読んで次の行動を決める
-- 掲示板はそのサイトの `site/hp-analysis/<site>/index.html`（HP分析ハブ `site/hp-analysis/` のサイト別サブページ。社長がどこでも見られる＝Tailscale経由）
+- 掲示板はそのサイトの3層（`index.html`＝最新レポート／`spec.html`＝確定・仕様／`archive.html`＝アーカイブ。社長は普段 index だけ見れば足りる＝Tailscale経由）。最新レポートは mailbox でも実装担当へ配信する
 - 網羅レポートではなく「**次の一手を明確にする**」のが目的
 
 ## 実行

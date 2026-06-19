@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>確定・仕様（前提・背景）｜YCOM HP分析｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">YCOM（はなさか自社）</a>
+    <span class="mx-1">/</span>
+    <span>確定・仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 確定・仕様（前提・背景）— YCOM（y-com.info）</h1>
+  <p class="text-gray-600 mb-2">HP分析ループの<strong>変わりにくい確定情報</strong>を常設するリファレンスです。サイトの前提・ゴール・確定した質問の回答・データソース・計測の事実・役割分担をまとめています（完了した施策の履歴は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>）。<strong>今まさに知るべきこと（最新サイクル）は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>へ、過去の経緯は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ。</strong></p>
+  <p class="text-sm text-gray-500 mb-8">対象サイト：<a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">y-com.info</a>（はなさか自社・YCOM）／ゴール：SEO流入＋問い合わせ（見積）増</p>
+
+  <!-- 3ページの案内 -->
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold">📐 確定・仕様（このページ）</span>
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ（過去サイクル）</a>
+  </div>
+
+  <!-- ===== サイト前提 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">サイト前提</h2>
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <table class="w-full text-sm border-collapse">
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold w-32">URL</td><td class="py-1"><a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">https://y-com.info/</a></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">サイト種別</td><td class="py-1"><strong>独自PHPテンプレート</strong>（WordPress は一部ディレクトリのみ）。<span class="font-mono">config.md</span> の記載と一致（Cycle 007 で再確認）。WordPress 前提のプラグイン施策（Yoast 等）は不適合で、canonical/メタはテンプレート側出力で対応。<span class="text-gray-500">※ hp-audit の <span class="font-mono">wp-content</span> 検出はヒューリスティック＝CMS断定はこれに依存（K-009）。</span></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">SEO流入＋問い合わせ（見積）増（Q-001/Q-002 で確定）</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">ターゲット</td><td class="py-1">BtoB中心・大阪市北区/関西・HP制作を探す事業者</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== 確定した質問の回答 ===== -->
+  <h2 id="answered" class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">確定した質問の回答（Q-NNN ✅）</h2>
+  <div class="border-2 border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <p class="text-sm text-emerald-900 mb-3">最新レポートの「🔔 社長への質問」で<strong>✅回答済み</strong>となった項目を、確定内容とともに常設します（未回答は Q-007 のみ＝<a href="index.html" class="underline">最新レポート</a>参照）。</p>
+    <ul class="space-y-2 text-sm text-gray-700">
+      <li><strong>Q-001</strong>：対象＝<strong>y-com.info</strong>（はなさか自社・YCOM）。</li>
+      <li><strong>Q-002</strong>：ゴール＝<strong>SEO流入＋問い合わせ増</strong>。</li>
+      <li><strong>Q-003</strong>：GSCデータ＝<strong>BigQuery 一括エクスポートを T-006 <span class="font-mono">gsc-fetch.py</span> で取得・解決（2026-06-12）</strong>。GA4は別途。</li>
+      <li><strong>Q-004・Q-006</strong>：頻度＝<strong>定期化せず都度 <span class="font-mono">/hp-loop</span></strong>（後に日次 daily 実行で運用）。</li>
+      <li><strong>Q-005</strong>：実装は <strong>y-com.info 担当エージェント（web-hanasaka）に引き渡し</strong>。本ループは診断・提案まで。</li>
+      <li><strong>Q-008</strong>：GSCデータ＝<strong>継続共有・蓄積で運用</strong>。</li>
+      <li><strong>Q-009</strong>：<strong class="text-emerald-700">GA4新規作成は不要＝GA4は稼働中</strong>と BigQuery で確認・<strong>R-022は中止</strong>（詳細はアーカイブ Cycle 008）。</li>
+      <li><strong>Q-010</strong>：<strong class="text-emerald-700">料金の目安レンジ提供済み＝R-014b 本番反映を確認（2026-06-18）</strong>。<span class="font-mono">/price/basic.html</span> に総額目安＋料金FAQを設置（詳細はアーカイブ Cycle 009）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== データソース・ツール ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">データソース・ツール</h2>
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="text-left border-b border-gray-300 text-gray-700">
+          <th class="py-1 pr-3">データ／ツール</th><th class="py-1 pr-3">中身</th><th class="py-1">取得手段</th>
+        </tr>
+      </thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-3 font-semibold">GSC（Search Console）</td>
+          <td class="py-1 pr-3">BigQuery <span class="font-mono">searchconsole_ycom</span>（project 148 の <span class="font-mono">gsc_dataset</span>）。検索クエリ・表示・CTR・順位。<strong>データラグ 2〜3日</strong>・エクスポート開始 2026-06-06。</td>
+          <td class="py-1"><span class="font-mono">bin/gsc-fetch.py</span>（T-006・運用中・読み取り専用）</td>
+        </tr>
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-3 font-semibold">GA4</td>
+          <td class="py-1 pr-3">BigQuery <span class="font-mono">analytics_265729912</span>。<strong class="text-emerald-700">稼働中</strong>（2021-09〜現在まで計測・問い合わせ/見積/電話/メール/応募の CV イベント発火中）。</td>
+          <td class="py-1"><span class="font-mono">bin/ga4-fetch.py</span>（T-007・整備中・読み取り専用）</td>
+        </tr>
+        <tr>
+          <td class="py-1 pr-3 font-semibold">オンページ監査</td>
+          <td class="py-1 pr-3">title/OGP/見出し/canonical/JSON-LD 等のオンページ信号。本番URLへの読み取り GET。</td>
+          <td class="py-1"><span class="font-mono">bin/hp-audit.sh</span>（T-001・運用中・読み取り専用）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== 計測の確定事実 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">計測の確定事実</h2>
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+      <li><strong>GTM（<span class="font-mono">GTM-55DB6J6</span>）が既存 GA4 を注入</strong>し、全イベント＋CVが取れている（HTMLベタ書きは旧UAだが、GTM経由で GA4 が計測中＝担当の「未計測」報告は誤りと判明）。</li>
+      <li>旧 <span class="font-mono">UA-2650013-1</span>（Universal Analytics）は<strong>計測停止（死亡）</strong>。死んだ UA タグの撤去は既存GA4の健全性確認後に web-hanasaka が実施で合意。</li>
+      <li><strong class="text-rose-700">R-022（GA4新規作成）は中止で相互合意</strong>（4年9か月の履歴を捨てるため／web-hanasaka も GTM 注入の見落としを認め、社内手順書 <span class="font-mono">documents/ga4-setup.md</span> を「既存プロパティを使う」に訂正済み）。</li>
+      <li><strong>効果検証（GSC/GA4 の読み取り）は本ループ担当で確定</strong>。web-hanasaka は外部NW制限で GA4/BigQuery を直接見られないため、計測の事実確認は hp-loop の共有に依拠する。</li>
+      <li>本番のデプロイ状態は報告を鵜呑みにせず、<strong>本番URLをGETで観測してから完了判定</strong>する（skill-kaizen K-014）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 施策の状況（要点のみ・詳細は index/archive） ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">施策の状況（要点）</h2>
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <p class="text-sm text-gray-700 mb-2"><strong>title/meta の即効施策は出尽くし、本番反映も完了</strong>。残るは「コンテンツ・内部リンク」「ローカルSEO」「計測基盤（CV正規化）」。R-023（CV正規化＝集計の信頼性）の完了が効果判定の前提。</p>
+    <p class="text-sm text-gray-700">提案の所在（<strong>二重に持たない</strong>）：</p>
+    <ul class="space-y-1 text-sm text-gray-700 list-disc list-inside mt-1">
+      <li><strong>🔧 進行中（未完了）の提案</strong>（R-014c・R-018・R-021・R-023・R-024）→ <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> の「進行中の提案」表</li>
+      <li><strong>✅ 完了・❌ 中止の提案</strong>（R-014a/b・R-019/020 ✅／R-022 ❌）→ <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a> の「完了した提案」</li>
+    </ul>
+  </div>
+
+  <!-- ===== 役割分担・対話相手 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">役割分担・対話相手</h2>
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+      <li><strong>本ループ（hp-loop）</strong>＝診断・提案まで（<strong>実装しない</strong>）。効果検証（GSC/GA4 の読み取り）も本ループ担当で確定。</li>
+      <li><strong>実装＝web-hanasaka</strong>（y-com.info サイト実装エージェント）。提案の引き渡し・検証依頼は mailbox <span class="font-mono">to: web-hanasaka</span>。実装報告・質問・認識合わせは web-hanasaka → hp-loop へ。</li>
+      <li><strong>社長の指示・回答</strong>は <span class="font-mono">data/hp-loop/from-president.md</span> が一次（<span class="font-mono">/hp-reply</span> で代筆転記も可）。意思決定は社長、実装は web-hanasaka でチャネルを分ける。</li>
+    </ul>
+  </div>
+
+  <p class="text-xs text-gray-400 mt-10">設定（対象サイト・データソース・頻度）：<span class="font-mono">data/hp-loop/config.md</span>／動作ルール：<span class="font-mono">.claude/rules/hp-loop.md</span>／起動：<span class="font-mono">/hp-loop</span>（<span class="font-mono">/loop</span> 併用で定期実行）。最新の分析は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>、過去の経緯は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a> へ。</p>
+
+</div>
+</body>
+</html>
