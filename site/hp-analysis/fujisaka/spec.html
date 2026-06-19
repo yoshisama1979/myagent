@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>藤阪ガス HP分析｜確定・仕様｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">藤阪ガス</a>
+    <span class="mx-1">/</span>
+    <span>確定・仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 確定・仕様（藤阪ガス・前提と背景）</h1>
+  <p class="text-gray-600 mb-2">変わりにくい<strong>前提・背景</strong>を常設するリファレンスです。変わりやすい最新の動きは<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>、完了した提案・過去サイクルは<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ。</p>
+
+  <!-- 3ページの案内 -->
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold">📐 確定・仕様（このページ）</span>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <!-- サイト前提 -->
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">サイト前提</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm border-collapse">
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-44">対象サイト</td><td class="py-1">藤阪ガスセンター（<a href="https://fujisakagas.com/" class="text-blue-600 hover:underline font-mono">fujisakagas.com</a>）</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">アクセス＋コンバージョン（問い合わせ）増</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">種別／前提</td><td class="py-1">hp-audit で WordPress 検出。<strong>本文の精読は未実施＝種別・情報設計は要確認</strong>（初回サイクルで技術＋検索データのみ）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ターゲット（推定）</td><td class="py-1">枚方市＋近隣の、給湯器交換・修理／ガス／水まわりの需要層。買い手意図の地域クエリ（「枚方市 給湯器交換」等）が中心。指名検索（「藤阪ガスセンター」）は既存客・強い。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">案件管理（hana-tools）</td><td class="py-1">client_id 11「藤阪ガスセンター」／project_id 14「コーポレートサイト」／work_id 16「運用管理」</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">案件記録</td><td class="py-1">Notion <span class="font-mono">dc2026246a2e46deacb64b8c294a2b56</span>（document_url）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- データソース・ツール -->
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">データソース・ツール</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm border-collapse">
+      <thead><tr class="text-left border-b border-gray-300 text-gray-700"><th class="py-1 pr-3">ソース</th><th class="py-1 pr-3">取得手段</th><th class="py-1">状態</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">Google Search Console</td><td class="py-1 pr-3"><span class="font-mono">bin/gsc-fetch.py --dataset searchconsole_fujisaka</span>（BigQuery読み取り・ヘッドレス可）</td><td class="py-1 text-emerald-700">✅ 取得可（データラグ2〜3日）</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">Google Analytics (GA4)</td><td class="py-1 pr-3"><span class="font-mono">bin/ga4-fetch.py --dataset analytics_316110295</span></td><td class="py-1 text-amber-700">🟡 2026-06-16設定・蓄積中（数日分・CV未定義）</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">オンページ監査</td><td class="py-1 pr-3"><span class="font-mono">bin/hp-audit.sh &lt;URL&gt;</span>（T-001・読み取り）</td><td class="py-1 text-emerald-700">✅ 運用中</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-2">本文の精読（コピー・事例・料金記載）は無人実行では curl/WebFetch 未承認のため未取得＝<a href="index.html" class="text-blue-600 hover:underline">最新レポートの📥</a>で要求中。</p>
+  </div>
+
+  <!-- 計測・技術の確定事実 -->
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">計測・技術の確定事実（Cycle 001 時点）</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li><strong>オンページ技術は良好</strong>：title 29字・description 84字 適切、OGP・Twitterカードあり、<strong>JSON-LD(LocalBusiness)有効</strong>、canonical 設定、<strong>img alt 欠落 0/72件</strong>、問い合わせ動線（tel×5・contact×7）あり。</li>
+    <li><strong>GA4 は実質未計測</strong>：dataset は2026-06-16設定で数日分のみ。CVイベント未定義＝問い合わせの発生源・導線効果が測れない（R-F03 で定義予定）。</li>
+    <li><strong>ブランド検索が強い</strong>：「藤阪ガスセンター」順位2.1・CTR4.9%（全クリックの約23%）＝指名・既存客は取れている。新規獲得は買い手意図の地域クエリが鍵（R-F02）。</li>
+    <li><strong>viewport がズーム禁止</strong>（<code>user-scalable=no</code>）＝アクセシビリティ課題（R-F01）。</li>
+  </ul>
+
+  <!-- 役割分担 -->
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">役割分担・対話相手</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li><strong>本ループ（hp-loop-fujisaka）＝診断・提案まで</strong>。実装はしない。</li>
+    <li><strong>実装担当＝<span class="font-mono">fujisaka-dev</span></strong>（拠点PC・<strong>mailbox トークン登録済＝直接引き渡し可</strong>）。最新レポートは mailbox（<span class="font-mono">to: fujisaka-dev</span>）でも配信する。</li>
+    <li><strong>効果検証（GSC/GA4 の読み取り）は本ループ担当</strong>。</li>
+    <li>社長の指示・回答＝<span class="font-mono">data/hp-loop/fujisaka/from-president.md</span>（社長の領域・AIは読むだけ）。</li>
+  </ul>
+
+  <p class="text-xs text-gray-400 mt-10">動作ルール：<span class="font-mono">.claude/rules/hp-loop.md</span>／サイト設定：<span class="font-mono">data/hp-loop/sites/fujisaka.md</span>／起動：<span class="font-mono">/hp-loop fujisaka</span>。</p>
+
+</div>
+</body>
+</html>
