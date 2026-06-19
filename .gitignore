@@ -39,3 +39,10 @@ _assistant/**/__pycache__/
 
 # BigQuery 等の bin ツール用 venv（コミットしない）
 bin/.venv/
+
+# Node tooling (VPS-only: hp-shot 撮影ツール)
+node_modules/
+package-lock.json
+
+# HP分析ループの生データ・スクリーンショット（VPS-local・コミットしない＝大容量/再生成可）
+data/hp-loop/cycles/

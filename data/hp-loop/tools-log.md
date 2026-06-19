@@ -55,6 +55,27 @@
 - メモ（制約・安全装置）：**読み取り専用＝SELECTのみ**（automation.md準拠）。`_TABLE_SUFFIX`（日付）必須フィルタ＋`maximum_bytes_billed`（既定8GB）＋`--dry-run`。**daily(`events_*`)とintraday(`events_intraday_*`)の二重計上を防止**＝同一日にdailyがあればintraday側を `event_date` で除外（`events_*` は8桁日付フィルタで `intraday_*` を自然に除外）
 - 既知の限界：(1)CVの「正確な定義」は GA4 側のイベント命名に依存（重複乱立＝R-023 でキーイベント正規化が必要・本ツールは生のevent_nameを数えるだけ）。(2)6月など期間途中の月は部分集計。(3)プロパティ横断は `--dataset` で切替（よしだ＝`analytics_287348176` 等）。(4)セッション数・チャネル別流入は未実装（必要なら追加）
 
+### T-008: hp-shot（bin/hp-shot.sh → bin/hp-shot.mjs）
+- 2026-06-19 / ✅運用中（社長が Google Chrome を導入後）
+- 目的：**ビジュアル面の取得**。hp-audit（タグ解析）＋GSC では拾えない「ファーストビューの訴求・レイアウト・配色・視線誘導・CTAの目立ち・SP表示崩れ・イントロ演出」を、ループ（マルチモーダル）が**実際の見た目を見て**評価できるようにする。各サイトが📥で要望していた「本文・見た目を見たい」を充足。
+- 仕組み：system の Google Chrome（`/usr/bin/google-chrome`）を `puppeteer-core`（ブラウザDLなし）でヘッドレス駆動。`networkidle2` 後にスクロールで遅延読込/イントロを発火させてから撮影。
+- 使い方：`bin/hp-shot.sh <URL> <出力ディレクトリ> [名前]`（`.sh` が cron/ヘッドレスでも node を解決するラッパ）
+  - 例：`bin/hp-shot.sh https://y-com.info/ data/hp-loop/cycles/ycom/shots/ top`
+  - 出力4枚：`<名前>-pc-fold.png`（PC幅・ファーストビュー＝鮮明・コピー精読用）／`<名前>-pc-full.png`（PC幅・フルページ＝構造）／`<名前>-sp-fold.png`（SP幅DPR2・ファーストビュー）／`<名前>-sp-full.png`（SP幅・フルページ）。標準出力に結果JSON（title/finalUrl/サイズ）。
+  - 保存先：`data/hp-loop/cycles/<site>/shots/`（**gitignore＝コミットしない**。大容量・再生成可）。ループは Read で PNG を見て評価する。
+- 出力先・権限：`settings.local.json` に `Bash(bin/hp-shot.sh:*)` 許可（社長が追加）。Chrome 本体は `sudo apt`（社長が導入済・Ubuntu26.04はPlaywright未対応のため Chrome安定版を使用）。`puppeteer-core` は `node_modules`（gitignore）。
+- メモ（制約・安全装置＝無人運用前提の多層防御。Codexレビュー反映済 2026-06-19）：**実行時は読み取り専用**＝描画＋PNG保存のみ（automation.md準拠）。クリック・フォーム送信・外部送信・本番改変はしない。具体的には：
+  1. **非GETリクエスト(POST/PUT/beacon等)を abort** ＋ダウンロード拒否＝read-onlyを物理担保
+  2. URLは `http(s)://` のみ受理／**認証情報付きURL・localhost を拒否**。さらに**宛先IPがプライベート/内部帯なら拒否**＝ループバック(127/8)・リンクローカル(169.254/16＝クラウドメタデータ)・10/8・172.16/12・192.168/16・100.64/10(CGNAT/Tailscale)・IPv6 ULA/リンクローカル(fc/fd/fe80)・metadata.google.internal。**ホスト名はDNS解決して全アドレスを判定**（DNS→内部IP のSSRFも遮断）
+  3. **出力は `data/hp-loop/cycles/` 配下のみ**に限定（committed資産＝site/等の上書き防止）＋`name` のパストラバーサル無害化（`[a-zA-Z0-9._-]` のみ・64字上限）
+  8. Chrome 実行バイナリは**既知パスの allowlist のみ**（`HP_SHOT_CHROME` で任意バイナリに差し替える抜け道を封じる）
+  4. Chromeプロファイルは使い捨て tmp（`mkdtemp`）に隔離し終了時に撤去＝PNG以外を書かない
+  5. **Chromeサンドボックスは有効**のまま起動（このVPSは user namespace 可＝`--no-sandbox` は使わない。実機で起動確認済）
+  6. 標準出力のURLはクエリ・認証情報を除去（ログに秘密を残さない）。タイトルも200字上限
+  7. スクロールは回数(60)・時間(15s)・高さ(200k px)上限つき（無限スクロールで止まらない保険）。撮影後すぐ閉じる
+- 既知の限界：(1)イントロ演出が長い/ループするサイトは fold が演出を写すことがある（＝「初見の体験」自体は所見になる／本体は full 版で取得）。(2)フルページは縦長＝Read時に縮小され文字が潰れがち（構造把握用。文字精読は fold 版）。(3)動画/外部埋め込みの描画タイミング差。(4)1ページ4枚＝撮りすぎ注意（主要ページに絞る）。(5)**プライベートIP帯を弾く＝Tailscaleプレビュー(100.123.104.87)は撮影不可**（本ループの分析対象は本番公開サイトなので可。プレビューを撮りたくなったら設計判断＝allowlistで内部ホストを例外許可する形に締め直す）。(6)SSRFのDNSチェックは撮影開始時点の解決＝ロード後に内部IPへリダイレクトする経路までは追えない（信頼URL前提・将来締め余地）。
+- 前提の確認事項：無人 `claude -p`（cron）が PNG を画像として読めるか＝対話では読めることを実証済（fujisaka/ycom）。ヘッドレス実行での読取は初回運用で疎通確認する。
+
 ---
 
 ## 未着手・欲しいツール（権限非依存で書く＝作れるか否かに関わらず記録）
