@@ -77,9 +77,23 @@ def validate_args(args):
         sys.exit(2)
 
 
+def _env_from_dotenv(key):
+    """.env から必要キーだけ読む（全体を読み込まない）。cron 等で環境変数が無いとき用。"""
+    try:
+        with open(".env", encoding="utf-8") as f:
+            for line in f:
+                s = line.strip()
+                if s.startswith(key + "="):
+                    return s[len(key) + 1:]
+    except FileNotFoundError:
+        pass
+    return None
+
+
 def load_client():
     """サービスアカウント JSON で BigQuery クライアントを作る。中身は読まない（ライブラリに渡すだけ）。"""
-    cred_path = os.environ.get("GSC_SA_JSON") or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    cred_path = (os.environ.get("GSC_SA_JSON") or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+                 or _env_from_dotenv("GSC_SA_JSON"))
     if not cred_path:
         err("ERROR: 認証JSONのパス未設定。.env に GSC_SA_JSON=data/secrets/gsc-sa.json を設定してください。")
         sys.exit(2)

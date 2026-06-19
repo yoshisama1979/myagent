@@ -18,6 +18,12 @@
 #         --needs-approval                 外部送信/本番改変/書き込みを促す → hold/(社長承認待ち)
 #       例: echo "本文" | bin/mailbox.sh send --to yoshida-dev --subject "依頼" --thread t1
 #
+#   bin/mailbox.sh local-send --from <agent> --to <agent> --subject "件名" [options] [本文...]
+#       同一マシン(VPS)内の内部調整を HTTP 不経由で new/ へ直接投函（json安全・atomic・一意id）。
+#       from を自己申告できる（同一マシン例外）。needs_approval は常に false。
+#       外部送信/本番改変/書込を促すものは使わず、通常の send（+--needs-approval）を使うこと。
+#       options: --type request|report|ack|fyi（既定 request）/ --thread <id>
+#
 #   bin/mailbox.sh done <id>
 #       自分宛の new/<id> を処理済み(cur/)へ移動。本文は編集しない。
 #
@@ -110,6 +116,68 @@ print(json.dumps({
       --data-binary @- "${MAILBOX_URL}/?action=send"; echo
     ;;
 
+  local-send)
+    # 同一マシン(VPS常駐)内の内部調整専用：HTTP を経由せず data/mailbox/new/ へ直接投函。
+    # mailbox.sh(HTTP)の from はトークン由来＝1マシン1トークンで「相手の名」を名乗れないため、
+    # 同居モード間の転送は from を自己申告でローカル投函する（規約 mailbox.md 同一マシン例外）。
+    # needs_approval は常に false（外部送信/本番改変/書込を促すものはこの近道を使わず HTTP send + hold/ へ）。
+    from="" to="" subject="" type="request" thread=""
+    body_args=()
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --from)    from="${2:-}"; shift 2 ;;
+        --to)      to="${2:-}"; shift 2 ;;
+        --subject) subject="${2:-}"; shift 2 ;;
+        --type)    type="${2:-}"; shift 2 ;;
+        --thread)  thread="${2:-}"; shift 2 ;;
+        --) shift; body_args+=("$@"); break ;;
+        *)  body_args+=("$1"); shift ;;
+      esac
+    done
+    [ -n "$from" ] || die "local-send: --from <agent> は必須です"
+    [ -n "$to" ]   || die "local-send: --to <agent> は必須です"
+    if [ ${#body_args[@]} -gt 0 ]; then
+      body="${body_args[*]}"
+    elif [ ! -t 0 ]; then
+      body="$(cat)"
+    else
+      body=""
+    fi
+    [ -n "$subject" ] || [ -n "$body" ] || die "件名(--subject)か本文のどちらかは必要です"
+    newdir="$ROOT_DIR/data/mailbox/new"
+    [ -d "$newdir" ] || die "mailbox の new/ がありません（$newdir）"
+    # 一意id・JSON安全生成・atomic 書き込み（tmp に書いて os.replace）を python3 で。
+    # tmp は .json 以外の接尾辞にして、書き込み途中を dispatcher(find -name '*.json') に拾わせない。
+    MB_FROM="$from" MB_TO="$to" MB_SUBJECT="$subject" MB_TYPE="$type" \
+    MB_THREAD="$thread" MB_BODY="$body" MB_NEWDIR="$newdir" python3 -c '
+import os, json, datetime, uuid, tempfile
+jst = datetime.timezone(datetime.timedelta(hours=9))
+now = datetime.datetime.now(jst)
+mid = "M-%s-%s-%s" % (now.strftime("%Y%m%dT%H%M%S"), os.environ["MB_FROM"], uuid.uuid4().hex[:6])
+msg = {
+    "id": mid,
+    "thread": os.environ["MB_THREAD"],
+    "from": os.environ["MB_FROM"],
+    "to": os.environ["MB_TO"],
+    "type": os.environ["MB_TYPE"],
+    "needs_approval": False,
+    "ts": now.isoformat(),
+    "subject": os.environ["MB_SUBJECT"],
+    "body": os.environ["MB_BODY"],
+}
+newdir = os.environ["MB_NEWDIR"]
+fd, tmp = tempfile.mkstemp(dir=newdir, suffix=".tmp")
+try:
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        json.dump(msg, f, ensure_ascii=False, indent=2)
+    os.replace(tmp, os.path.join(newdir, mid + ".json"))
+except BaseException:
+    try: os.unlink(tmp)
+    except OSError: pass
+    raise
+print(mid)'
+    ;;
+
   done)
     id="${1:-}"
     [ -n "$id" ] || die "done <id> の id は必須です"
@@ -122,7 +190,7 @@ print(json.dumps({
     ;;
 
   ""|-h|--help|help)
-    sed -n '2,30p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' >&2
+    sed -n '2,36p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' >&2
     exit 1
     ;;
   *)

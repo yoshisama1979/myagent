@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI右腕の自動運用 — 目的と使い方｜株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <span>AI右腕の自動運用</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🤖 AI右腕の自動運用 — 目的と使い方</h1>
+  <p class="text-gray-600 mb-2">「<strong>無人ループ</strong>」と「<strong>Slackでの会話</strong>」が何のための仕組みか、社長が見て分かるようにまとめた資料です。技術仕様ではなく<strong>目的・効果・使い方</strong>に絞っています。</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-18</p>
+
+  <!-- 一言で -->
+  <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-bold text-indigo-900 mb-2">ひとことで言うと</h2>
+    <p class="text-indigo-900">AIの右腕を、<strong>社長が見ていない間も「無人で」常時動かす</strong>ための仕組みです。<br>
+    放っておいても<strong>毎日サイトを診断し、システムの綻びを見張り</strong>、必要があれば社長に<strong>Slackで報告・相談</strong>します。社長は<strong>出先からスマホのSlackで右腕と会話</strong>でき、指示も返せます。</p>
+  </div>
+
+  <!-- なぜ作ったか -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">なぜ作ったか（背景）</h2>
+  <div class="space-y-3 mb-8 text-gray-800">
+    <p>これまでAIは「社長がPCを開いて、その場で指示している間」しか動けませんでした。これだと：</p>
+    <ul class="list-disc list-inside space-y-1 ml-2">
+      <li>社長が忙しい・出先だと、診断も改善も<strong>止まったまま</strong>。</li>
+      <li>以前の方式（画面に張り付くループ）は、PC再起動やクラッシュで<strong>黙って止まり、誰も気づかない</strong>。</li>
+    </ul>
+    <p>そこで、<strong>サーバ(VPS)側で時間が来たら確実に動き出す</strong>仕組み（cron）に切り替え、さらに<strong>Slack</strong>を窓口にして、社長がどこにいても右腕とやり取りできるようにしました。</p>
+  </div>
+
+  <!-- 2本柱 -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">2本の柱</h2>
+  <div class="grid md:grid-cols-2 gap-5 mb-8">
+    <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+      <h3 class="text-lg font-bold mb-2">① 無人ループ（自動で動く）</h3>
+      <p class="text-sm text-gray-700 mb-3">社長が指示しなくても、サーバが時間どおりにAIを起動して仕事をさせます。</p>
+      <ul class="text-sm space-y-2">
+        <li>🩺 <strong>HP解析ループ</strong>：毎日サイトを診断し、改善提案を掲示板に積む（まず自社 y-com.info、のちクライアント）。</li>
+        <li>🛰️ <strong>統括（Overseer）</strong>：システム全体の整合・安全の綻びを見張り、改善を提案。</li>
+        <li>💤 用が無い時はほぼ何もしない（コストを掛けない）。<strong>異常時は社長にSlack通知</strong>。</li>
+      </ul>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm">
+      <h3 class="text-lg font-bold mb-2">② Slackでの会話（どこからでも）</h3>
+      <p class="text-sm text-gray-700 mb-3">スマホのSlackから、右腕に相談・質問・指示ができます。</p>
+      <ul class="text-sm space-y-2">
+        <li>💬 <strong>新しい投稿</strong>＝主担当（右腕）との<strong>気軽な会話</strong>。</li>
+        <li>🧵 <strong>日報スレッドへの返信</strong>＝そのループ（HP解析／統括）への<strong>指示</strong>。</li>
+        <li>⏱️ 返答は<strong>非同期</strong>（最大10分のタイムラグ）。即レスのチャットではなく「置いておけば返ってくる」イメージ。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 何が社長の得になるか -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">社長にとっての価値</h2>
+  <ul class="list-disc list-inside space-y-1 mb-8 ml-2 text-gray-800">
+    <li><strong>放置でも前進</strong>：見ていない間も診断・監視が進み、戻ると結果が溜まっている。</li>
+    <li><strong>取りこぼさない</strong>：黙って止まらない（生存確認＋異常通知）ので「壊れてたのに気づかなかった」を防ぐ。</li>
+    <li><strong>どこでも指揮</strong>：出先からSlackひとつで相談・指示。PCを開く必要がない。</li>
+    <li><strong>判断に集中</strong>：右腕が「診断・提案・下ごしらえ」を進め、社長は<strong>採否の判断</strong>に集中できる。</li>
+  </ul>
+
+  <!-- 今の稼働状況 -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">今の稼働状況</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm border border-gray-200">
+      <thead class="bg-gray-100">
+        <tr><th class="text-left p-2 border-b">機能</th><th class="text-left p-2 border-b">状態</th><th class="text-left p-2 border-b">補足</th></tr>
+      </thead>
+      <tbody>
+        <tr class="border-b"><td class="p-2">Slack会話（右腕）</td><td class="p-2">✅ 稼働中</td><td class="p-2">新規投稿で会話できる</td></tr>
+        <tr class="border-b"><td class="p-2">統括（Overseer）</td><td class="p-2">✅ 稼働中</td><td class="p-2">10分ごとに受信対応＋毎日1:00に精密診断</td></tr>
+        <tr class="border-b"><td class="p-2">HP解析（自社 y-com.info）</td><td class="p-2">🟡 準備中</td><td class="p-2">残存課題：権限2行の追加＋日次cron1行（戻り次第）</td></tr>
+        <tr class="border-b"><td class="p-2">HP解析（よしだ歯科）</td><td class="p-2">⏳ 次フェーズ</td><td class="p-2">掲示板・対話相手は用意済み</td></tr>
+        <tr><td class="p-2">HP解析（藤阪ガス）</td><td class="p-2">⏳ 後追い</td><td class="p-2">掲示板・対話相手の用意が先</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 使い方 -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">社長の使い方（Slack）</h2>
+  <div class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm mb-3">
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b"><td class="p-2 font-semibold w-1/3">気軽に相談・質問したい</td><td class="p-2">チャンネルに<strong>新規投稿</strong> → 右腕が返信</td></tr>
+        <tr class="border-b"><td class="p-2 font-semibold">会話を続けたい</td><td class="p-2">その<strong>スレッドに返信</strong></td></tr>
+        <tr class="border-b"><td class="p-2 font-semibold">統括に指示したい</td><td class="p-2"><strong>Overseerの日報スレッド</strong>に返信</td></tr>
+        <tr><td class="p-2 font-semibold">HP解析に指示したい</td><td class="p-2"><strong>HP解析の日報スレッド</strong>に返信</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-sm text-gray-500 mb-8">覚えることは1つ：<strong>新規投稿＝会話／スレッド返信＝そのスレッドの相手に続ける</strong>。各ループは自分の日報をスレッドで出すので、それに返せばそのループに届きます。</p>
+
+  <!-- 安全 -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">安全の考え方</h2>
+  <ul class="list-disc list-inside space-y-1 mb-8 ml-2 text-gray-800">
+    <li><strong>最小権限</strong>：無人で実行してよいコマンドは「安全な読み取り・社内連絡だけ」を事前許可。他は実行しない。</li>
+    <li><strong>外部送信は承認ゲート</strong>：クライアント・Chatwork・メール等への送信や本番改変は、<strong>社長の承認</strong>を挟むまで自動では出さない。</li>
+    <li><strong>黙って止まらない</strong>：生存確認（ハートビート）を常時記録し、異常時はSlackに通知。</li>
+    <li><strong>秘密は持ち出さない</strong>：トークン等の秘密情報はAIが読まない・出さない・記録しない。</li>
+  </ul>
+
+  <!-- 用語 -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">用語ミニ辞典</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm border border-gray-200">
+      <tbody>
+        <tr class="border-b"><td class="p-2 font-semibold w-1/4">cron（クロン）</td><td class="p-2">「毎日2時」のように時間で確実にプログラムを起動するサーバの仕組み。無人運用の土台。</td></tr>
+        <tr class="border-b"><td class="p-2 font-semibold">無人（ヘッドレス）</td><td class="p-2">画面・人の操作なしでAIを1回走らせる動かし方。</td></tr>
+        <tr class="border-b"><td class="p-2 font-semibold">日報スレッド</td><td class="p-2">各ループがSlackに出す報告。返信するとそのループへの指示になる。</td></tr>
+        <tr class="border-b"><td class="p-2 font-semibold">ハートビート</td><td class="p-2">「今も生きてます」という生存確認の記録。止まれば気づける。</td></tr>
+        <tr><td class="p-2 font-semibold">メールボックス</td><td class="p-2">エージェント同士が拠点をまたいで連絡し合う社内の受信箱（外部送信ではない）。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 関連 -->
+  <h2 class="text-2xl font-bold border-b border-gray-300 pb-2 mb-4">関連ページ</h2>
+  <ul class="list-disc list-inside space-y-1 ml-2 text-gray-800">
+    <li><a href="../overseer/index.html" class="text-blue-600 hover:underline">🛰️ 統括レポート（Overseer）</a> — システムの綻び・改善提案の最新レポート</li>
+    <li><a href="../hp-analysis/index.html" class="text-blue-600 hover:underline">🩺 HP分析ハブ</a> — サイト別の診断・改善提案の掲示板</li>
+  </ul>
+
+</div>
+</body>
+</html>

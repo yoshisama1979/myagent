@@ -51,11 +51,22 @@ FAILURES=()
 fail() { FAILURES+=("$1"); }
 status_str() { if [ "${#FAILURES[@]}" -eq 0 ]; then echo "ok"; else echo "${FAILURES[*]}"; fi; }
 
-# --- 多重起動防止（前回がまだ走っていれば静かに退避） ---
+# --- 多重起動防止 ---
+# normal（反応ティック）は前回が走っていれば静かにスキップ（取りこぼしても次の */N で拾える）。
+# daily（強制起動）は取りこぼすと「毎日忘れず解析」の規律が崩れるので、ロックを最大15分待つ。
+# （同時刻の */N ティックと衝突しても skip させない＝mode=daily が 0回になっていたバグ対策。2026-06-19）
 exec 9>"$LOCK"
-if ! flock -n 9; then
-  echo "$(now) [skip] 前回の tick がまだ実行中。今回はスキップ" >>"$LOG"
-  exit 0
+if [ "$MODE" = "daily" ]; then
+  # 待ち時間は「反応tickの最悪保持時間（複数エージェント×各~930s）」を上回る余裕を取る。
+  if ! flock -w 3600 9; then
+    echo "$(now) [skip] daily: 60分待ってもロックを取得できずスキップ" >>"$LOG"
+    exit 0
+  fi
+else
+  if ! flock -n 9; then
+    echo "$(now) [skip] 前回の tick がまだ実行中。今回はスキップ" >>"$LOG"
+    exit 0
+  fi
 fi
 
 # --- tick.log の肥大防止（末尾を残して切り詰め＝Codex🟢7） ---
@@ -104,6 +115,12 @@ declare -a ACTIONS=()
 dispatch() {
   local label="$1" slash="$2" to="$3"
   local pending force action rc
+  # daily（強制）モードでは強制対象だけ動かす。他エージェントの pending 処理は反応tickに任せ、
+  # daily の保持時間を最短にして取りこぼし／横入りを防ぐ（Codex指摘：daily中に全dispatchが走る問題）。
+  if [ "$MODE" = "daily" ] && [ "$FORCE_AGENT" != "$to" ]; then
+    ACTIONS+=("$label:-:skip(daily)")
+    return 0
+  fi
   # new/ が健全な時だけ数える。find なので glob 非展開や空ディレクトリでも誤検知しない
   if [ "$MAILBOX_OK" -eq 1 ]; then
     pending=$(find "$MAILBOX_NEW" -maxdepth 1 -type f -name '*.json' \
@@ -135,7 +152,7 @@ dispatch() {
 # --- 2) 各エージェントを振り分け（会話→統括の順。pending か daily 強制のときだけ起動） ---
 dispatch "chat"     "/chat"     "hanasaka-main"
 dispatch "overseer" "/overseer" "overseer"
-# Phase2 で有効化： dispatch "hp-loop" "/hp-loop" "hp-loop"   （+ cron に daily hp-loop を追加）
+dispatch "hp-loop"  "/hp-loop"  "hp-loop"
 
 # --- 3) ハートビート（毎回・Web可視・書き込み失敗も検知＝Codex🔴2） ---
 HB_LINE="agent-tick alive: $(now) | mode=$MODE force=${FORCE_AGENT:-none} | ${ACTIONS[*]:-none} | status=$(status_str)"
