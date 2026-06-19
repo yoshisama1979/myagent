@@ -111,7 +111,7 @@ automation.md §3（外部送信・書き込み・破壊的操作は合意なし
 
 > `approve`（`hold/` → `new/`）はスライス3以降。現在サーバが `501` を返す（社長用ブラウザビューと併せて実装）。
 
-> **同一マシン（VPS常駐）内の内部調整は、HTTP API ではなく `new/` へのローカル投函でよい**：mailbox.sh(HTTP)の `from` はトークン由来＝1マシン1トークンなので、同じVPSに同居する複数モードは「相手の名で」送れない。そこで同一VPS内では **`bash bin/mailbox.sh local-send --from <自分> --to <相手> ...`** を使う（HTTP不経由で `new/` に **json安全・atomic(tmp→os.replace)・一意id(uuid)** で直接書く。`from` は自己申告・`needs_approval` は常に false）。例：`/chat`（hanasaka-main）が社長Slackの解析依頼を hp-loop へ即時転送する（`from: hanasaka-main` / `to: hp-loop`）。**外部送信・本番改変・hana-tools書込を促すもの（`needs_approval:true`）はこの近道を使わず、必ず通常の `send`（+`--needs-approval`）で `hold/` ゲートを通す**。
+> **同一マシン（VPS常駐）内の内部調整は、HTTP API ではなく `new/` へのローカル投函でよい**：mailbox.sh(HTTP)の `from` はトークン由来＝1マシン1トークンなので、同じVPSに同居する複数モードは「相手の名で」送れない。そこで同一VPS内では **`bash bin/mailbox.sh local-send --from <自分> --to <相手> ...`** を使う（HTTP不経由で `new/` に **json安全・atomic(tmp→os.replace)・一意id(uuid)** で直接書く。`from` は自己申告だが**識別子検証＋登録エージェント許可リストで制限**＝`from` は VPS常駐モードのみ・**`president`(人間)不可**・`to` は実在エージェントのみ。`needs_approval` は常に false）。例：`/chat`（hanasaka-main）が社長Slackの解析依頼を hp-loop へ即時転送する（`from: hanasaka-main` / `to: hp-loop`）。**外部送信・本番改変・hana-tools書込を促すもの（`needs_approval:true`）はこの近道を使わず、必ず通常の `send`（+`--needs-approval`）で `hold/` ゲートを通す**。
 
 ---
 

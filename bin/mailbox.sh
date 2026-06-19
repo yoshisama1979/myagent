@@ -136,6 +136,10 @@ print(json.dumps({
     done
     [ -n "$from" ] || die "local-send: --from <agent> は必須です"
     [ -n "$to" ]   || die "local-send: --to <agent> は必須です"
+    # 早期拒否（多重防御の一段目）：from/to に識別子以外の文字が混ざっていたら弾く。
+    # from はファイル名(mid)に入るため、ここを抜けないとパストラバーサル(../)の余地になる。
+    case "$from" in *[!A-Za-z0-9_-]*) die "local-send: --from は英数字/_/- のみ" ;; esac
+    case "$to"   in *[!A-Za-z0-9_-]*) die "local-send: --to は英数字/_/- のみ" ;; esac
     if [ ${#body_args[@]} -gt 0 ]; then
       body="${body_args[*]}"
     elif [ ! -t 0 ]; then
@@ -147,30 +151,42 @@ print(json.dumps({
     newdir="$ROOT_DIR/data/mailbox/new"
     [ -d "$newdir" ] || die "mailbox の new/ がありません（$newdir）"
     # 一意id・JSON安全生成・atomic 書き込み（tmp に書いて os.replace）を python3 で。
+    # セキュリティ：from/to を厳格検証（正規表現＋登録エージェント許可リスト・president不可＝人間の代弁禁止）、
+    # 格納先が new/ 直下に収まることを realpath で保証（パストラバーサル/なりすまし対策）。
     # tmp は .json 以外の接尾辞にして、書き込み途中を dispatcher(find -name '*.json') に拾わせない。
     MB_FROM="$from" MB_TO="$to" MB_SUBJECT="$subject" MB_TYPE="$type" \
     MB_THREAD="$thread" MB_BODY="$body" MB_NEWDIR="$newdir" python3 -c '
-import os, json, datetime, uuid, tempfile
+import os, json, datetime, uuid, tempfile, re, sys
+ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
+# local-send を出せるのは VPS 常駐モードのみ。president(人間)は不可。受け手は実在エージェントのみ。
+SENDERS    = {"overseer", "hp-loop", "hanasaka-main"}
+RECIPIENTS = {"overseer", "hp-loop", "hanasaka-main", "web-hanasaka", "yoshida-dev"}
+TYPES      = {"request", "report", "ack", "fyi"}
+frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
+if not ID.match(frm) or frm not in SENDERS:
+    sys.exit("local-send: 不正な --from（許可: %s）: %r" % (",".join(sorted(SENDERS)), frm))
+if not ID.match(to) or to not in RECIPIENTS:
+    sys.exit("local-send: 不正な --to（許可: %s）: %r" % (",".join(sorted(RECIPIENTS)), to))
+if typ not in TYPES:
+    sys.exit("local-send: 不正な --type（許可: %s）: %r" % (",".join(sorted(TYPES)), typ))
 jst = datetime.timezone(datetime.timedelta(hours=9))
 now = datetime.datetime.now(jst)
-mid = "M-%s-%s-%s" % (now.strftime("%Y%m%dT%H%M%S"), os.environ["MB_FROM"], uuid.uuid4().hex[:6])
-msg = {
-    "id": mid,
-    "thread": os.environ["MB_THREAD"],
-    "from": os.environ["MB_FROM"],
-    "to": os.environ["MB_TO"],
-    "type": os.environ["MB_TYPE"],
-    "needs_approval": False,
-    "ts": now.isoformat(),
-    "subject": os.environ["MB_SUBJECT"],
-    "body": os.environ["MB_BODY"],
-}
+mid = "M-%s-%s-%s" % (now.strftime("%Y%m%dT%H%M%S"), frm, uuid.uuid4().hex[:6])
 newdir = os.environ["MB_NEWDIR"]
+dest = os.path.join(newdir, mid + ".json")
+# 多重防御：格納先が必ず new/ 直下であることを保証（id 検証を抜けても外へ出さない）
+if os.path.dirname(os.path.realpath(dest)) != os.path.realpath(newdir):
+    sys.exit("local-send: 不正な格納先")
+msg = {
+    "id": mid, "thread": os.environ["MB_THREAD"], "from": frm, "to": to,
+    "type": typ, "needs_approval": False, "ts": now.isoformat(),
+    "subject": os.environ["MB_SUBJECT"], "body": os.environ["MB_BODY"],
+}
 fd, tmp = tempfile.mkstemp(dir=newdir, suffix=".tmp")
 try:
     with os.fdopen(fd, "w", encoding="utf-8") as f:
         json.dump(msg, f, ensure_ascii=False, indent=2)
-    os.replace(tmp, os.path.join(newdir, mid + ".json"))
+    os.replace(tmp, dest)
 except BaseException:
     try: os.unlink(tmp)
     except OSError: pass
