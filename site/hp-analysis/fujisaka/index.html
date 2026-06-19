@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>藤阪ガス サイト分析・改善提案（HP分析ループ）</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <span>藤阪ガス</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">藤阪ガス サイト分析・改善提案</h1>
+  <p class="text-gray-600 mb-1">対象：<a href="https://fujisakagas.com/" class="text-blue-600 hover:underline">fujisakagas.com</a> ／ ゴール：アクセス＋コンバージョン（問い合わせ）増 ／ 実装担当：fujisaka-dev</p>
+  <p class="text-gray-700 mb-6 text-sm">HP分析ループ（<code>/hp-loop fujisaka</code>）が毎日分析し、改善提案（R-NNN）と社長への質問（Q-NNN）を最新を上に積む。提案は実装担当エージェントがそのまま着手できる粒度で書く。</p>
+
+  <!-- 🔔 社長への質問（未回答を集約） -->
+  <div id="questions" class="border-2 border-amber-300 bg-amber-50 rounded-lg p-4 mb-6">
+    <p class="font-semibold text-amber-900 mb-2">🔔 社長への質問（未回答）</p>
+    <ul class="list-disc list-inside text-sm text-amber-900 space-y-1">
+      <li><strong>Q-F01</strong>：コンバージョン（問い合わせ）の定義は？ (a)問い合わせフォーム送信／(b)電話タップ／(c)LINE／(d)来店・訪問予約／(e)複数 — GA4 のCV設計と効果計測に必要（R-F03）</li>
+      <li><strong>Q-F02</strong>：実装担当 <code>fujisaka-dev</code> の mailbox トークンは登録済みですか？ 未登録だと提案の引き渡し（往復）ができません。(a)登録済み／(b)未登録（登録します）／(c)別の渡し方にする</li>
+      <li><strong>Q-F03</strong>：R-F02（給湯器交換ページ強化）で載せたい「概算価格レンジ・対応エリア・即日/最短対応の可否」など、出せる実情報はありますか？ 捏造はしないので、出せる範囲を教えてください。(a)価格レンジ出せる／(b)対応エリア確定／(c)即日・最短情報あり／(d)現時点は出せない（要相談）</li>
+    </ul>
+    <p class="text-xs text-amber-800 mt-2">回答は <code>data/hp-loop/fujisaka/from-president.md</code> へ、または Slack の藤阪ガス日報スレッドに返信。</p>
+  </div>
+
+  <!-- 📥 分析に欲しい情報 -->
+  <div id="wanted" class="border border-sky-300 bg-sky-50 rounded-lg p-4 mb-6 text-sm">
+    <p class="font-semibold text-sky-900 mb-1">📥 分析に欲しい情報（精度を上げるため）</p>
+    <ul class="list-disc list-inside text-sky-900 space-y-0.5">
+      <li><strong>ページ本文を精読する手段</strong>：今サイクルは技術監査(hp-audit)＋GSCは取得できたが、<em>本文の精読（ファーストビューのコピー・事例・お客様の声・料金記載）</em>が、この無人実行では curl/WebFetch 未承認で取れなかった。settings の許可に読み取り専用 curl を足す or hp-audit を本文抜粋対応に拡張したい（次サイクルで本文評価を厚くするため）。</li>
+      <li><strong>GA4 のCV定義と蓄積</strong>：dataset <code>analytics_316110295</code> は2026-06-16設定で数日分のみ＝流入経路・CV未計測。CVイベント定義後、1〜2週の蓄積で「どのページ・経路が問い合わせを生むか」を分析したい（R-F03）。</li>
+      <li><strong>給湯器交換の概算価格・対応エリア・即日対応可否</strong>（R-F02用。現場情報。Q-F03）。</li>
+      <li><strong>50年の実績を裏づける具体数値</strong>（累計対応件数・対応世帯・有資格者数・お客様の声）＝信頼の見える化用（R-F05）。捏造しないので社長/現場から。</li>
+      <li><code>fujisaka-dev</code> の mailbox トークン登録（実装引き渡しの往復に必要。Q-F02）。</li>
+    </ul>
+  </div>
+
+  <!-- サイクルログ（最新を上に積む） -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">サイクルログ</h2>
+
+  <!-- ===== Cycle 001 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-2">Cycle 001 — 2026-06-19（藤阪ガス・初回ベースライン）</h3>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-semibold mb-1">データ状況</p>
+      <ul class="list-disc list-inside space-y-0.5 text-gray-700">
+        <li>✅ <strong>GSC（実データ取得）</strong>：直近28日窓のうち実データは <strong>2026-06-06〜06-16（約11日分）</strong>。エクスポート開始直後のため日次差分は次サイクル以降。</li>
+        <li>✅ <strong>hp-audit（技術監査）</strong>：トップページ取得・解析済（HTTP200 / WordPress / 52.9KB / 1.85s）。</li>
+        <li>🟡 <strong>GA4：データ未取得</strong>：dataset <code>analytics_316110295</code> は2026-06-16設定で数日分のみ＝流入経路・CV未計測（捏造しない。蓄積待ち）。</li>
+        <li>🟡 <strong>ページ本文の精読：暫定未取得</strong>：この無人実行では curl/WebFetch が未承認で本文を取れず。技術＋検索データからの評価に留め、本文評価は次サイクルへ（📥に記録）。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-semibold mb-1">評価サマリ</p>
+      <p class="text-gray-700 mb-2">技術土台は良好で大きな欠陥は無い。最大の機会は <strong>「枚方市 給湯器交換／設置／水漏れ」など買い手意図の地域クエリが2〜4ページ目に沈み、新規問い合わせを取りこぼしている</strong>こと。表示回数は多い（4,850）が全体CTRは1.86%・平均順位9.5＝「出てはいるがクリックされない」状態。</p>
+      <p class="text-gray-700"><strong>✅ 良い点</strong></p>
+      <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+        <li>オンページ技術が整備：title(29字)/description(84字) 適切、OGP・Twitterカード・<strong>JSON-LD(LocalBusiness)有効</strong>、canonical設定、<strong>img alt欠落0/72件</strong>、問い合わせ動線(tel×5・contact×7)あり。</li>
+        <li>ブランド検索が強い：「藤阪ガスセンター」順位2.1・CTR4.9%（21クリック＝全クリックの約23%）＝指名・既存客は取れている。</li>
+        <li>「50年・地域密着のサービスショップ」という強い信頼資産（description/OGPで訴求）。</li>
+      </ul>
+      <p class="text-gray-700"><strong>⚠️ 課題</strong></p>
+      <ul class="list-disc list-inside text-gray-700 space-y-0.5">
+        <li><strong>SEO×CV</strong>：買い手意図の地域クエリが圏外〜2ページ目（後述R-F02）。/hotwater/（給湯器ページ）は38impr・順位10.7と弱い。</li>
+        <li><strong>CTR</strong>：全体1.86%・平均順位9.5。impr上位でCTR低（/about/ 286impr=1.4%、/contact/ 199impr=1.0%）。</li>
+        <li><strong>アクセシビリティ</strong>：viewport がズーム禁止（<code>user-scalable=no, maximum-scale=1.0</code>）。</li>
+        <li><strong>計測</strong>：GA4実質未計測＝問い合わせの発生源・導線効果が測れない。</li>
+      </ul>
+    </div>
+
+    <p class="font-semibold mb-2">改善提案（効果×工数順・Quick win先頭）</p>
+
+    <!-- R-F01 -->
+    <div class="border-l-4 border-red-400 bg-white rounded p-4 mb-3 text-sm">
+      <p class="font-bold">R-F01 🔴 viewport のズーム禁止を撤廃（Quick win）</p>
+      <ul class="mt-1 space-y-0.5 text-gray-700">
+        <li><strong>観点</strong>：モバイル／アクセシビリティ</li>
+        <li><strong>観察（事実）</strong>：meta viewport が <code>width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no</code>（hp-audit検出）。</li>
+        <li><strong>なぜ問題か</strong>：ピンチズームを禁止している。<span class="text-gray-500">推測：</span>ガス・給湯器・水まわりの顧客は高齢層が一定割合いるため、文字を拡大できないと可読性が落ち離脱・問い合わせ機会の損失につながる。アクセシビリティ評価でも減点。</li>
+        <li><strong>改善案</strong>：viewport を <code>width=device-width, initial-scale=1.0</code> のみにし、<code>maximum-scale</code>／<code>user-scalable=no</code> を削除（WordPressテーマ or header.php の1行）。</li>
+        <li><strong>効果</strong>：中 ／ <strong>工数</strong>：小（1行） ／ <strong>優先度</strong>：🔴</li>
+      </ul>
+    </div>
+
+    <!-- R-F02 -->
+    <div class="border-l-4 border-red-400 bg-white rounded p-4 mb-3 text-sm">
+      <p class="font-bold">R-F02 🔴 「枚方市 給湯器交換」の買い手意図を取りこぼし → 給湯器ページを地域×交換で強化</p>
+      <ul class="mt-1 space-y-0.5 text-gray-700">
+        <li><strong>観点</strong>：SEO×コンテンツ×CV</li>
+        <li><strong>観察（事実・GSC）</strong>：「枚方市 給湯器交換」順位18.5（21impr/1click）、「枚方市 給湯器設置」順位32.6（21impr/0click）、「枚方市 給湯器 水漏れ」順位7.1（14impr/0click）、「給湯器」順位10.5（16impr/0click）。給湯器ページ <code>/hotwater/</code> は38impr・順位10.7。</li>
+        <li><strong>なぜ問題か</strong>：給湯器の交換・水漏れは最も問い合わせ・受注に直結する買い手意図。これが2〜4ページ目＝枚方の見込み客を競合（大手・他店）に取られている。表示はされているのにクリック0が並ぶ。</li>
+        <li><strong>改善案</strong>：<code>/hotwater/</code>（または専用LP）を「枚方市の給湯器交換・修理」意図に最適化。①H1/titleに地域＋交換（例「枚方市の給湯器交換・修理｜藤阪ガス」）②交換費用の目安レンジ（出せる範囲・Q-F03）③対応エリア（枚方市＋近隣）④即日／最短対応の明示⑤交換事例（写真＋メーカー＋概算）⑥「お湯が出ない・水漏れ・エラー番号」のFAQ⑦固定電話＋フォーム＋（あれば）LINEのCTAをファーストビューと末尾に。トップ・関連ブログから内部リンクを集約。</li>
+        <li><strong>効果</strong>：高 ／ <strong>工数</strong>：中〜大 ／ <strong>優先度</strong>：🔴</li>
+      </ul>
+    </div>
+
+    <!-- R-F03 -->
+    <div class="border-l-4 border-amber-400 bg-white rounded p-4 mb-3 text-sm">
+      <p class="font-bold">R-F03 🟡 GA4で「問い合わせ」CVを定義・計測開始（土台）</p>
+      <ul class="mt-1 space-y-0.5 text-gray-700">
+        <li><strong>観点</strong>：効果計測の土台</li>
+        <li><strong>観察（事実）</strong>：GA4 dataset <code>analytics_316110295</code> は2026-06-16設定で数日分のみ。CV定義・イベント未確認。tel:リンクは5件あるが電話タップ計測の有無は不明。</li>
+        <li><strong>なぜ問題か</strong>：ゴールが「問い合わせ増」なのに、どのページ・流入経路が問い合わせを生むか測れない＝施策の効果検証ができず、改善が当て推量になる。</li>
+        <li><strong>改善案</strong>：GA4でCVイベントを定義（フォーム送信＝generate_lead、tel:クリック、LINE遷移）。Q-F01でCV定義を確定後、GTM/GA4で設定（実装＝fujisaka-dev）。1〜2週蓄積で発生ページ・経路を分析。</li>
+        <li><strong>効果</strong>：高（土台） ／ <strong>工数</strong>：中 ／ <strong>優先度</strong>：🟡</li>
+      </ul>
+    </div>
+
+    <!-- R-F04 -->
+    <div class="border-l-4 border-amber-400 bg-white rounded p-4 mb-3 text-sm">
+      <p class="font-bold">R-F04 🟡 表示は多いがクリックされない → 主要ページの title/description をクリック誘発型に</p>
+      <ul class="mt-1 space-y-0.5 text-gray-700">
+        <li><strong>観点</strong>：SEO（スニペット最適化）</li>
+        <li><strong>観察（事実）</strong>：全体CTR1.86%・平均順位9.5。impr上位でCTR低：/about/ 286impr・CTR1.4%、/contact/ 199impr・CTR1.0%、トップ(utm付) 558impr・CTR1.4%。</li>
+        <li><strong>なぜ問題か</strong>：検索結果に出ているのにクリックされない＝スニペット（title・description）が指名検索以外で訴求できていない可能性。順位を上げる前にCTR改善で取れるクリックがある。</li>
+        <li><strong>改善案</strong>：主要ページ（hotwater／lineup／各サービス／about）の title・meta description を「地域＋ベネフィット＋行動喚起」型に。例：「枚方市の給湯器交換｜最短即日・見積無料｜藤阪ガスセンター」。<span class="text-gray-500">※本文精読後に文面を確定（📥参照）。</span></li>
+        <li><strong>効果</strong>：中 ／ <strong>工数</strong>：小〜中 ／ <strong>優先度</strong>：🟡</li>
+      </ul>
+    </div>
+
+    <!-- R-F05 -->
+    <div class="border-l-4 border-green-400 bg-white rounded p-4 mb-3 text-sm">
+      <p class="font-bold">R-F05 🟢 「創業50年・地域密着」を数値と事例で見える化（信頼）</p>
+      <ul class="mt-1 space-y-0.5 text-gray-700">
+        <li><strong>観点</strong>：信頼・コンテンツ</li>
+        <li><strong>観察</strong>：description/OGPに「枚方市藤阪で50年・地域密着のサービスショップ」。<span class="text-gray-500">推測：</span>一方トップでの実績数値・お客様の声・施工事例の充実度は本文未精読のため未確認。</li>
+        <li><strong>なぜ問題か</strong>：ガス・水まわりは「信頼できる地元業者か」が選定軸。50年は強力な資産だが、累計対応件数・対応エリア・顔の見えるスタッフ・施工事例・口コミがあるほど問い合わせ率が上がる。</li>
+        <li><strong>改善案</strong>：トップに信頼バッジ（創業50年・累計◯件・対応エリア・有資格）と施工事例／お客様の声への導線を配置。<strong>具体数値は社長に確認（📥・捏造しない）。</strong></li>
+        <li><strong>効果</strong>：中 ／ <strong>工数</strong>：中 ／ <strong>優先度</strong>：🟢</li>
+      </ul>
+    </div>
+
+    <div class="bg-gray-100 border border-gray-200 rounded p-3 text-xs text-gray-600">
+      <p><strong>対応記録</strong>：from-president.md＝新規指示なし（初回）。mailbox <code>to: hp-loop-fujisaka</code>＝新着なし。本サイクルはベースライン作成。実装引き渡し（fujisaka-dev へ mailbox send）は <strong>Q-F02のトークン登録待ち＋社長のQuick win合意後</strong>に行う（現時点では送らない）。</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

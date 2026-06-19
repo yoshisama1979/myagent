@@ -159,8 +159,10 @@ print(json.dumps({
 import os, json, datetime, uuid, tempfile, re, sys
 ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 # local-send を出せるのは VPS 常駐モードのみ。president(人間)は不可。受け手は実在エージェントのみ。
+# 総称 hp-loop は複数サイト化で廃止：宛先は必ず hp-loop-<site>（消費する dispatch が存在する名のみ許可＝孤児化防止）。
 SENDERS    = {"overseer", "hp-loop", "hanasaka-main"}
-RECIPIENTS = {"overseer", "hp-loop", "hanasaka-main", "web-hanasaka", "yoshida-dev"}
+RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev",
+              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
 if not ID.match(frm) or frm not in SENDERS:

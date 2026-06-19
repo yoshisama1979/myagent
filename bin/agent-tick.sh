@@ -152,7 +152,10 @@ dispatch() {
 # --- 2) 各エージェントを振り分け（会話→統括の順。pending か daily 強制のときだけ起動） ---
 dispatch "chat"     "/chat"     "hanasaka-main"
 dispatch "overseer" "/overseer" "overseer"
-dispatch "hp-loop"  "/hp-loop"  "hp-loop"
+# HP分析ループはサイト別に独立（mailbox to: hp-loop-<site> 新着 or daily hp-loop-<site> 強制で起動）
+dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
+dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
+dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka"
 
 # --- 3) ハートビート（毎回・Web可視・書き込み失敗も検知＝Codex🔴2） ---
 HB_LINE="agent-tick alive: $(now) | mode=$MODE force=${FORCE_AGENT:-none} | ${ACTIONS[*]:-none} | status=$(status_str)"

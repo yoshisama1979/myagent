@@ -10,7 +10,7 @@ Slack は **社長からの入力窓口**、`/hp-loop` が **解析エンジン*
 |---|---|
 | 質問・雑談・相談 | **その場で答える**（スレッド返信。短く・結論ファースト） |
 | 解析結果への**コメント・回答・フィードバック・指示** | **溜める**：`data/hp-loop/from-president.md` に代筆追記（＝hp-reply 相当・追記のみ）。その場で解析・実装はしない。スレッドに「溜めました。次の解析で踏まえます」と短く返す |
-| **解析依頼**（今／随時 解析を回してほしい） | **即時に解析を回す**：`bash bin/mailbox.sh local-send --from hanasaka-main --to hp-loop ...` で hp-loop へ投函（同一VPS内のローカル投函＝json安全・atomic・一意id・トークン不要）。次の反応ティックで `/hp-loop` が走る。スレッドに「解析を回します」と返す。**溜めるだけにしない・自分で解析しない** |
+| **解析依頼**（今／随時 解析を回してほしい） | **即時に解析を回す**：`bash bin/mailbox.sh local-send --from hanasaka-main --to hp-loop-<site> ...` で**当該サイトのループ**へ投函（同一VPS内＝json安全・atomic・一意id・トークン不要。site は ycom/yoshida/fujisaka、**不明なら既定 `hp-loop-ycom`**）。次の反応ティックで `/hp-loop <site>` が走る。スレッドに「解析を回します」と返す。**溜めるだけにしない・自分で解析しない** |
 
 > **なぜこの形か**：解析は (a) 社長が**任意のタイミングで即時に**回せる ＋ (b) 人は毎日コンスタントには続けられない（忘れる）ので **1日1回は自動で回る**（cron＝規律の担保・人間の負担をループが肩代わり）。**どちらの起動でも** hp-loop は、溜まった `from-president.md`（社長コメント）＋開発エージェントの作業報告（mailbox）を**踏まえて**解析する＝積み上がる（COMPOUND）。
 > 迷ったら（コメントか解析依頼か曖昧）短く確認する。HP以外の作業依頼（メモ・案件進行・コミット等）は下記のとおり各モードへ案内する。
@@ -27,13 +27,13 @@ Slack は **社長からの入力窓口**、`/hp-loop` が **解析エンジン*
 2. **仕分けて動く**：上の「動作の基本モデル」で意図（質問／コメント＝溜める／解析依頼＝即時）を判断する。
    - **質問・雑談・相談 → その場で答える**（Slack なので**短く・結論ファースト**。長文レポートにしない）。事実確認が要るなら repo を Read で調べてから答える（**推測で埋めない**。分からなければ「未確認」と言って確認手段を示す）。
    - **解析結果へのコメント・回答・フィードバック・指示 → 溜める**：`data/hp-loop/from-president.md` の末尾 `<!-- ここから下に社長が追記 -->` の**下**に、本日の絶対日付見出し（`## YYYY-MM-DD`）＋箇条書きで**代筆追記**する（既存ブロックは触らない・追記のみ）。口語は簡潔な箇条書き（体言止め）に清書し、固有名詞・数値・URLはそのまま。掲示板の質問への回答なら `Q-NNN:` を頭につける。**その場で解析・実装はしない**。
-   - **解析依頼（今／随時 解析を回してほしい）→ hp-loop へ即時転送**：次のコマンドで hp-loop の受信箱へローカル投函する（chat と hp-loop は同一VPSなので HTTP は使わず、`local-send` が json安全・atomic・一意idで `new/` に書く。`from` 自己申告・`needs_approval:false`・既存 `mailbox.sh:*` 権限で実行可）：
+   - **解析依頼（今／随時 解析を回してほしい）→ 当該サイトのループへ即時転送**：どのサイトの依頼か判断する（ycom=はなさか自社／yoshida=よしだ歯科／fujisaka=藤阪ガス。**不明なら既定 `ycom`**）。次のコマンドで `hp-loop-<site>` の受信箱へローカル投函（HTTP不使用・`local-send` が json安全・atomic・一意idで `new/` に書く。`from` 自己申告・`needs_approval:false`）：
      ```bash
-     bin/mailbox.sh local-send --from hanasaka-main --to hp-loop --type request \
+     bin/mailbox.sh local-send --from hanasaka-main --to hp-loop-ycom --type request \
        --thread "<関連thread or 新規>" --subject "<解析依頼の要約>" \
        "<社長の依頼本文＋関連して溜めたコメントへのポインタ>"
      ```
-     これで次の反応ティックで `/hp-loop` が走る。**自分で `/hp-loop` の中身は実行しない**（解析は hp-loop の領分）。なお社長が hp-loop の日報スレッドに直接書いた解析依頼は `to: hp-loop` で直接届くので、この転送は不要。
+     （`--to` を依頼サイトに合わせる：`hp-loop-ycom`/`hp-loop-yoshida`/`hp-loop-fujisaka`）。これで次の反応ティックで `/hp-loop <site>` が走る。**自分で `/hp-loop` の中身は実行しない**（解析はループの領分）。なお社長が各サイトの日報スレッドに直接書いた解析依頼は `to: hp-loop-<site>` で直接届くので、この転送は不要。
    - **これは会話の窓口**。HP以外の本格的な作業依頼（メモ整理・案件進行・コミット等）が来たら、**勝手に大きな実装・破壊的操作・外部送信・コミットはしない**。要点だけ即答しつつ「これは `/memo`／`/task-partner` 等で対応するのが適切」と一手を案内する（automation.md §3）。
 3. **スレッドへ返信**：`bin/.venv/bin/python3 bin/slack-poll.py reply <thread_ts> --as hanasaka-main "本文"`（本文は標準入力も可。複数行は heredoc）。`<thread_ts>` はメッセージの `slack.thread_ts`。溜めた場合は「溜めました。次の解析で踏まえます」、解析依頼を渡した場合は「解析を回します」と短く返す。
 4. **処理済みにする**：返信したら `bin/.venv/bin/python3 bin/slack-poll.py done <msg_id>` で `cur/` へ移す（**本文は編集しない・履歴を消さない**。raw mv は使わない）。
@@ -47,7 +47,7 @@ Slack は **社長からの入力窓口**、`/hp-loop` が **解析エンジン*
 | 自分宛 `data/mailbox/new/`（`to: hanasaka-main`）を読む／`slack-poll.py done` で `cur/` へ | ✅ 可（本文は編集しない） |
 | `slack-poll.py reply <thread_ts> --as hanasaka-main`（**社長専用チャンネルのスレッドへ返信**） | ✅ 可（社長本人への返答＝合意済みの会話） |
 | Write/Edit: `data/hp-loop/from-president.md`（**末尾への代筆追記のみ**＝hp-reply 相当） | ✅ 可（社長の Slack コメント・回答・フィードバックを溜める唯一の書き込み先。**追記のみ・既存は上書き/削除しない**） |
-| `bash bin/mailbox.sh local-send --from hanasaka-main --to hp-loop ...`（**解析依頼を hp-loop へ即時転送**＝同一VPS内ローカル投函・`needs_approval:false`） | ✅ 可（純粋な内部調整。外部送信・本番改変ではない。mailbox.md準拠） |
+| `bash bin/mailbox.sh local-send --from hanasaka-main --to hp-loop-<site> ...`（**解析依頼を当該サイトのループへ即時転送**＝同一VPS内ローカル投函・`needs_approval:false`） | ✅ 可（純粋な内部調整。外部送信・本番改変ではない。mailbox.md準拠） |
 | 読み取り専用ツールの実行（hp-audit / gsc-fetch / ga4-fetch / mailbox inbox 等・HTTP GET/読取のみ） | ✅ 可（会話の事実確認に必要なら） |
 | **本番サイト・本番システムの改変／外部送信（Slack他チャンネル・Chatwork・メール・クライアント宛）／API書き込み（ToDo登録等）** | ❌ 合意前は不可（automation.md §3） |
 | **ルール・本体ファイルの編集／コミット／push** | ❌ このモードではしない（会話の窓口。作業は各モード・社長判断） |

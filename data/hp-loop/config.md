@@ -1,22 +1,21 @@
 # HP分析ループ — 設定（config）
 
-> `/hp-loop` が毎サイクル最初に読む設定。対象サイト・データソース・頻度・スコープを定義する。
-> ここを社長が編集すれば、ループの振る舞いが変わる。**型のため値は仮置き／未確定**。確定するまで AI は実装・本番改変に進まない。
+> `/hp-loop <site>` が毎サイクル最初に読む**共通設定**。サイト固有値（URL・GSC/GA4 dataset・ゴール・実装担当・掲示板・社長指示ファイル）は **サイト別 config `data/hp-loop/sites/<site>.md`** に分離（2026-06-19 複数サイト化）。
+> ここを社長が編集すれば全サイト共通の振る舞いが、`sites/<site>.md` を編集すればそのサイトの設定が変わる。
 
 ---
 
-## 対象サイト（要確定）
+## 対象サイト登録表（マルチサイト）
 
-| 項目 | 値 | 状態 |
-|------|----|----|
-| 対象サイト名 | はなさか自社サイト（YCOM） | ✅ 確定(2026-06-11) |
-| 対象URL | https://y-com.info/ | ✅ 確定 |
-| 種別 | **独自PHPテンプレート**（WordPressは一部ディレクトリのみ）。※ hp-audit の `wp-content` 検出は資産参照によるヒューリスティックで、サイト全体がWPの意味ではない（社長指摘 2026-06-11） | ✅ 訂正済 |
-| 記録先（クライアント記録） | `site/business/`（自社）想定 | 🟡 仮 |
-| 改善ゴール | SEO流入増 ＋ 問い合わせ増 | ✅ 確定 |
-| ターゲット | BtoB中心・地域＝大阪市北区/関西・HP制作を探す事業者 | 🟡 推定（要確認） |
+`/hp-loop <site>` の `<site>` に site-key を渡す（無指定は後方互換で `ycom`）。各サイトの詳細は右のconfigを読む。
 
-※ 複数サイトを回す場合は、このブロックをサイトごとに増やすか、サイト別 config に分割する（型では1サイト想定）。
+| site-key | サイト | URL | GSC dataset | 実装担当 | 掲示板 | ループ識別子 | config |
+|----------|--------|-----|-------------|---------|--------|-------------|--------|
+| `ycom` | はなさか自社(YCOM) | https://y-com.info/ | `searchconsole_ycom` | `web-hanasaka` | `hp-analysis/ycom/` | `hp-loop-ycom` | [sites/ycom.md](sites/ycom.md) |
+| `yoshida` | よしだ歯科 | https://yoshida-smile.info | `searchconsole_yoshida` | `yoshida-dev` | `hp-analysis/yoshida/` | `hp-loop-yoshida` | [sites/yoshida.md](sites/yoshida.md) |
+| `fujisaka` | 藤阪ガス | https://fujisakagas.com/ | `searchconsole_fujisaka` | `fujisaka-dev` | `hp-analysis/fujisaka/` | `hp-loop-fujisaka` | [sites/fujisaka.md](sites/fujisaka.md) |
+
+> 各サイトは**独立したループ**として回る（mailbox `to: hp-loop-<site>`／Slack日報スレッド所有者 `hp-loop-<site>`／daily起動も別）。1回の実行を1サイトに限定し、ヘッドレス900秒タイムアウトを避ける。
 
 ---
 
@@ -26,8 +25,8 @@
 
 | ソース | 何に使う | 現状の取得手段 | 状態 |
 |--------|---------|--------------|------|
-| Google Search Console | 検索クエリ・表示回数・CTR・掲載順位・インデックス | `bin/.venv/bin/python3 bin/gsc-fetch.py`（BigQuery読み取り専用・**ヘッドレス/cron でも実行可**＝settings.local.json許可済・認証は.env自前ロード）。**`--dataset searchconsole_ycom` 必須**（他に yoshida/fujisaka あり） | ✅ 取得可 |
-| Google Analytics (GA4) | 流入・流入経路・滞在・離脱・CV | `bin/.venv/bin/python3 bin/ga4-fetch.py`（BigQuery読み取り専用・ヘッドレス可・既存GA4 `analytics_265729912`）。※CVイベントの正規化は R-023 で先方実装中 | ✅ 取得可 |
+| Google Search Console | 検索クエリ・表示回数・CTR・掲載順位・インデックス | `bin/.venv/bin/python3 bin/gsc-fetch.py`（BigQuery読み取り専用・**ヘッドレス/cron でも実行可**＝settings.local.json許可済・認証は.env自前ロード）。**`--dataset <サイトのGSC dataset>` 必須**（`sites/<site>.md` 参照：ycom/yoshida/fujisaka） | ✅ 取得可 |
+| Google Analytics (GA4) | 流入・流入経路・滞在・離脱・CV | `bin/.venv/bin/python3 bin/ga4-fetch.py`（BigQuery読み取り専用・ヘッドレス可）。**GA4 dataset はサイト別**（ycom=`analytics_265729912` 稼働／yoshida・fujisaka は要確認＝無ければ「データ未取得」と明示し社長へ要求） | 🟡 サイト別 |
 | サイトアクセス（HTML/レスポンス） | ファーストビュー・導線・on-page信号・速度・モバイル | `curl`/`bin/hp-audit.sh`（運用中）で取得可 | ✅ 取得可 |
 
 > **原則**：GSC/GA4 は BigQuery 経由で**ヘッドレス（cron）でも取得可**＝「承認待ち/未整備で回せない」は誤り。効果計測が要る提案では実データを引く（捏造しない）。ただし **GSC はデータラグ 2〜3日**・施策反映直後は“施策前”値しか出ないので、効果の実測はラグを見越して次サイクルに予約してよい。サイトのソース取得（curl 等）は hp-audit を一次にする。
@@ -38,11 +37,11 @@
 
 | 項目 | 値 |
 |------|----|
-| 頻度（目安） | **日次**（毎日 02:00 に解析を強制）＋ `to: hp-loop` の新着（web-hanasaka 報告／社長Slack返信）があれば随時。HP本体もGSC/GA4も1時間では変わらないため日次が妥当 |
+| 頻度（目安） | **サイトごとに日次**（毎日深夜に各サイトの解析を強制：ycom 02:00 / yoshida 02:30 / fujisaka 03:00）＋ `to: hp-loop-<site>` の新着（実装担当の報告／社長Slack返信）があれば随時。HP本体もGSC/GA4も1時間では変わらないため日次が妥当 |
 | 1サイクルの提案数 | 3〜5件目安（過剰提案禁止。Quick win 優先） |
 | タイムゾーン | Asia/Tokyo |
 | 停止条件 | 社長の停止指示／未回答の質問が溜まったら一旦停止して回答待ち |
-| 実行方式 | **VPSローカル cron ＋ ヘッドレス `claude -p "/hp-loop"`（無人・日次）**（2026-06-18 確定。旧：都度 `/hp-loop`）。ディスパッチャ＝`bin/agent-tick.sh`（`daily hp-loop` で強制／`to: hp-loop` 新着で随時）。日報は Slack のサイト別スレッドへ `post --as hp-loop`（**日次実行では毎日必ず1本＝概要＋掲示板URL**。変化が無い日も省略しない＝社長の「毎日忘れず」の規律可視化）。[[project_unattended-loop-cron]] |
+| 実行方式 | **VPSローカル cron ＋ ヘッドレス `claude -p "/hp-loop <site>"`（無人・サイト別日次）**。ディスパッチャ＝`bin/agent-tick.sh`（`daily hp-loop-<site>` で強制／`to: hp-loop-<site>` 新着で随時）。日報は Slack のサイト別スレッドへ `post --as hp-loop-<site>`（**日次実行では毎日必ず1本＝概要＋掲示板URL**。変化が無い日も省略しない＝社長の「毎日忘れず」の規律可視化）。[[project_unattended-loop-cron]] |
 | 役割分担 | **本ループ＝診断・提案まで。実装（drafts作成含む）はしない。** 提案は社長が対象サイト担当の別エージェントに引き渡して実装（web-maintenance と同じ分担） |
 
 ## スコープ

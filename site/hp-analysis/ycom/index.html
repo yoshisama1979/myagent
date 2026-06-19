@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — YCOM（はなさか自社・y-com.info）</h1>
   <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。</p>
-  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-18（Cycle 008・🔧事実訂正＝GA4は稼働中・R-022新規作成は中止・効果検証は既存データで可能）／対象サイト：<a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">y-com.info</a>（はなさか自社・YCOM）／ゴール：SEO流入＋問い合わせ増</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-19（Cycle 010・📸 施策“前”baseline確定＝料金/地域クエリ・受け皿ページ・GA4 CV の06-06〜16実数を記録し効果実測の比較起点を固定／新規 R-024＝/works/実績ページが上位表示なのに0クリック）／対象サイト：<a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">y-com.info</a>（はなさか自社・YCOM）／ゴール：SEO流入＋問い合わせ増</p>
 
   <!-- ===== 使い方（常設） ===== -->
   <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
@@ -41,12 +41,8 @@
         <span class="font-semibold">Q-007</span>：制作実績の「成果数値」と「お客様の声」を出せますか？（R-006/R-007 の前提）
         <div class="text-gray-700 mt-1">事例を強い武器にするには事実が要ります。①数値成果（問い合わせ◯%増 等）を出せる事例がある ／ ②お客様コメントの掲載許諾を取れる ／ ③まずは社長の所感ベースで書く（数値なし）。どれで進めますか？（AIは数値を捏造しません）</div>
       </li>
-      <li>
-        <span class="font-semibold">Q-010</span>：<span class="font-mono">/price/basic.html</span> に載せる料金の目安レンジを提示できますか？（<strong>R-014b</strong> の前提）
-        <div class="text-gray-700 mt-1">料金クエリで1ページ目化しても、ページに目安価格が無いと問い合わせ前に離脱します。①プラン別の目安レンジを出せる ／ ②「○万円〜」のざっくりレンジでよい ／ ③価格は載せず「要お見積り」で進める。どれにしますか？（AIは価格を捏造しません）</div>
-      </li>
     </ul>
-    <p class="text-xs text-amber-700 mt-3">✅ 回答済み：Q-001（対象=y-com.info）／ Q-002（ゴール=SEO流入＋問い合わせ増）／ Q-003（<strong>GSCデータ＝BigQuery一括エクスポートを T-006 gsc-fetch.py で取得・解決 2026-06-12</strong>。GA4は別途）／ Q-004・Q-006（頻度＝定期化せず都度 /hp-loop）／ Q-005（実装は y-com.info 担当エージェントに引き渡し。本ループは診断・提案まで）／ Q-008（GSCデータ＝継続共有・蓄積で運用）／ <strong>Q-009</strong>（<strong class="text-emerald-700">GA4新規作成は不要＝GA4は稼働中</strong>と BigQuery で確認・<strong>R-022は中止</strong>。詳細は Cycle 008）</p>
+    <p class="text-xs text-amber-700 mt-3">✅ 回答済み：Q-001（対象=y-com.info）／ Q-002（ゴール=SEO流入＋問い合わせ増）／ Q-003（<strong>GSCデータ＝BigQuery一括エクスポートを T-006 gsc-fetch.py で取得・解決 2026-06-12</strong>。GA4は別途）／ Q-004・Q-006（頻度＝定期化せず都度 /hp-loop）／ Q-005（実装は y-com.info 担当エージェントに引き渡し。本ループは診断・提案まで）／ Q-008（GSCデータ＝継続共有・蓄積で運用）／ Q-009（<strong class="text-emerald-700">GA4新規作成は不要＝GA4は稼働中</strong>と BigQuery で確認・<strong>R-022は中止</strong>。詳細は Cycle 008）／ <strong>Q-010</strong>（<strong class="text-emerald-700">料金の目安レンジ提供済み＝R-014b 本番反映を確認 2026-06-18</strong>。<span class="font-mono">/price/basic.html</span> に総額目安＋料金FAQを設置。詳細は Cycle 009）</p>
   </div>
 
   <!-- ===== 📥 分析に欲しい情報・データ・ツール（常設・AIが書く） ===== -->
@@ -97,6 +93,124 @@
 
   <!-- ===== サイクルログ（最新が上） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">サイクルログ</h2>
+
+  <!-- 1サイクル分のテンプレート（AIが Cycle ごとに、この section を先頭に追加していく） -->
+
+  <section class="border-2 border-cyan-500 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 010 — 2026-06-19（y-com.info｜📸 施策“前”baseline 確定＝効果実測の比較起点を固定／新規 R-024：実績ページが上位なのに0クリック）</h3>
+    <p class="text-sm text-gray-500 mb-4">対象：<a href="https://y-com.info/" class="text-blue-600 hover:underline">y-com.info</a> ／ データ状況：<strong class="text-emerald-700">GSC＝T-006・GA4＝T-007 を実取得 ✅</strong>。GSCの最新データは <strong>2026-06-06〜06-16</strong>（last_date=06-16・全体 click 1,014／imp 34,406／CTR 2.95%／avg 9.0）。<strong class="text-amber-700">施策（R-014a/019/020/b）は ~06-18 反映＝この06-16までのデータは全て“施策前”＝クリーンな baseline</strong>。GSCラグ2〜3日のため施策効果が数値に乗るのは概ね 06-21 以降。<strong>本サイクルの主眼＝Cycle 009 が見送った「施策前の実数」を今のうちに固定し、次サイクルの before/after 比較の起点にすること</strong>（＝COMPOUND：効果測定の土台づくり）。起点：daily 実行（新規の社長指示・自サイト宛mailboxなし）。</p>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">① 施策“前” baseline（2026-06-06〜06-16・次サイクルでここと比較する）</h4>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm font-semibold text-gray-700 mb-1">買い手意図クエリ（料金/地域）＝施策前の順位・CTR</p>
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">クエリ</th><th class="py-1 pr-2">表示</th><th class="py-1 pr-2">click</th><th class="py-1">順位</th></tr></thead>
+            <tbody class="text-gray-700">
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2">ホームページ制作 料金表</td><td class="py-1 pr-2">87</td><td class="py-1 pr-2">0</td><td class="py-1 text-red-600">11.0</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2">ホームページ制作 料金</td><td class="py-1 pr-2">85</td><td class="py-1 pr-2">0</td><td class="py-1 text-red-600">11.6</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2">web制作会社 料金表</td><td class="py-1 pr-2">23</td><td class="py-1 pr-2">0</td><td class="py-1 text-red-600">13.4</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2">レスポンシブ対応 大阪</td><td class="py-1 pr-2">27</td><td class="py-1 pr-2">0</td><td class="py-1 text-red-600">10.7</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2">ホームページ運用代行 大阪</td><td class="py-1 pr-2">20</td><td class="py-1 pr-2">0</td><td class="py-1 text-red-600">13.6</td></tr>
+              <tr><td class="py-1 pr-2">大阪市北区 ホームページ制作</td><td class="py-1 pr-2">12</td><td class="py-1 pr-2">0</td><td class="py-1 text-red-600">11.5</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-gray-500 mt-1">→ 料金系の主力2語は施策前 <strong>順位11.0/11.6・0クリック</strong>。R-014a/b の title/meta＋FAQ で<strong>1ページ目化（≦10位）とCTR&gt;0</strong>に動けば効果あり、と次サイクルで判定する。</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-700 mb-1">受け皿（固定）ページ＝施策前の実力</p>
+          <table class="w-full text-xs border-collapse">
+            <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">URL</th><th class="py-1 pr-2">表示</th><th class="py-1 pr-2">click</th><th class="py-1 pr-2">CTR</th><th class="py-1">順位</th></tr></thead>
+            <tbody class="text-gray-700">
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">/price/basic.html</td><td class="py-1 pr-2">479</td><td class="py-1 pr-2">4</td><td class="py-1 pr-2 text-red-600">0.84%</td><td class="py-1 text-red-600">10.4</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">/partners/coder.html</td><td class="py-1 pr-2">327</td><td class="py-1 pr-2">14</td><td class="py-1 pr-2">4.28%</td><td class="py-1">9.6</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">/company/</td><td class="py-1 pr-2">151</td><td class="py-1 pr-2">2</td><td class="py-1 pr-2 text-red-600">1.32%</td><td class="py-1">6.0</td></tr>
+              <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">/contact/normal/</td><td class="py-1 pr-2">76</td><td class="py-1 pr-2">0</td><td class="py-1 pr-2 text-red-600">0%</td><td class="py-1 text-red-600">23.8</td></tr>
+              <tr><td class="py-1 pr-2 font-mono">/works/（実績一覧）</td><td class="py-1 pr-2">24</td><td class="py-1 pr-2">0</td><td class="py-1 pr-2 text-red-600">0%</td><td class="py-1 text-emerald-700">4.75</td></tr>
+            </tbody>
+          </table>
+          <p class="text-xs text-gray-500 mt-1">→ <span class="font-mono">/price/basic.html</span> は施策前 <strong>479表示・4click・CTR0.84%・順位10.4</strong>＝R-014a/b の効果はここで測る。<strong class="text-amber-700">/works/ は順位4.75と上位なのに0クリック</strong>（→ R-024）。</p>
+        </div>
+      </div>
+      <div class="mt-3">
+        <p class="text-sm font-semibold text-gray-700 mb-1">GA4 CV baseline（問い合わせ・見積・採用／月次・※イベント名は乱立中＝R-023 正規化前の“粗”値）</p>
+        <p class="text-sm text-gray-700">5月（施策前・満月）：<strong>問い合わせ系</strong>＝お問い合わせ完了(normal) 10／問い合わせ 10／その他お問い合わせ 6（重複計上含む＝R-023で要正規化）。<strong>見積系</strong>＝見積もりのリクエスト 14／見積り依頼完了(create) 1。<strong>採用（別軸）</strong>＝コーダー応募1次18・2次11。6月（途中・〜06-16）：問い合わせ完了4／見積もりのリクエスト8／コーダー1次16。<span class="text-gray-500">※ 正確なCV件数は R-023（キーイベント正規化）後に確定。本表は「桁感の baseline」として記録し、効果は正規化後に before/after で見る。</span></p>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">生データ：<span class="font-mono">data/hp-loop/cycles/ycom/baseline-20260619-queries.json</span> / <span class="font-mono">…-pages.json</span>（再現用に保存）。</p>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">② 新規提案（baseline 取得で初めて見えた1件のみ＝過剰提案しない）</h4>
+      <div class="border-l-4 border-amber-400 pl-3">
+        <p class="font-semibold">R-024（新規）：制作実績ページ（<span class="font-mono">/works/</span>・<span class="font-mono">/works/case/detail.html</span>）が上位表示なのに0クリック＝信頼要素の取りこぼし 🟡</p>
+        <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mt-1">
+          <li><strong>観察（事実）</strong>：<span class="font-mono">/works/</span> 24表示・順位4.75・0クリック。<span class="font-mono">/works/case/detail.html?p_id=1404</span>(順位4.6)・<span class="font-mono">?p_id=2337</span>(7.6) ほか works 系が軒並み順位4〜8で0クリック。<span class="font-mono">/service/</span> も順位2.7で0クリック。<span class="text-gray-500">（これまでの Cycle は /price/・partners・company・contact 中心で、works は未分析＝新発見）</span></li>
+          <li><strong>なぜ問題か</strong>：制作実績は「問い合わせの決め手＝信頼要素」（Q-007 と同根）。<strong>上位表示まで来ているのにクリックされない</strong>＝検索結果での見え方（title/meta/サムネ・実績名）が弱く、最も低工数で改善余地がある。<span class="text-gray-500">推測：</span>実績一覧/詳細の title が汎用的でクリックを誘えていない可能性。</li>
+          <li><strong>改善案</strong>：(a) <span class="font-mono">/works/</span> と主要 case 詳細の title/meta を「業種・成果・地域」を含む具体的な文言に（例「〇〇業の制作実績｜大阪のホームページ制作YCOM」）。(b) 実績詳細に課題→施策→成果（数値が出せれば）＋お客様の声を載せ、内部リンクで <span class="font-mono">/contact/</span>・<span class="font-mono">/price/</span> へ送客。<strong>(b) は Q-007 の事実（成果数値・掲載許諾）が前提＝AIは捏造しない</strong>。まず (a) の title/meta だけでも先行可。</li>
+          <li><strong>効果</strong>：中（信頼要素＋CV導線） ｜ <strong>工数</strong>：小（(a)）〜中（(b)） ｜ <strong>優先度</strong>：🟡 推奨</li>
+          <li><strong>引き渡し</strong>：web-hanasaka（mailbox トークン接続後 or 社長橋渡し）。(a) は title/meta のみ＝R-014a/019/020 と同型の低リスク改善。</li>
+        </ul>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">※ 料金/地域/採用の即効施策（R-014a/b・R-019・R-020）は反映済み、R-014c/R-018/R-021/R-023 は継続中（Cycle 009 のステータス表のまま変更なし）。本サイクルは新規 R を R-024 の1件に絞った。</p>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-1">③ 次の一手（効果実測＝06-21以降）</h4>
+      <p class="text-sm text-gray-700">baseline を固定したので、次サイクル（概ね 06-21 以降・施策がGSCデータに乗ってから）は<strong>この①表と同じクエリ・ページを再取得して before/after で判定</strong>：①料金2語が <strong>順位11→1ページ目（≦10）</strong>に動いたか・CTRが0超になったか、②<span class="font-mono">/price/basic.html</span> の CTR が 0.84%→改善したか、③GA4は R-023 正規化後に問い合わせ・見積CVを月次比較。R-023（CV正規化＝集計の信頼性）の完了が効果判定の前提なので、<strong>R-023 の進捗確認を次サイクルで web-hanasaka／社長に問う</strong>。</p>
+    </div>
+
+    <div class="border-t border-gray-200 pt-3">
+      <h4 class="font-semibold text-gray-700 mb-1">対応記録</h4>
+      <p class="text-sm text-gray-700"><span class="font-mono">from-president.md</span> に新規の手書き指示なし（最新は 06-18・処理済）。自サイト宛（<span class="font-mono">to: hp-loop-ycom</span>）の mailbox 新着なし（<span class="font-mono">new/</span> の1件は <span class="font-mono">to: yoshida-dev</span> 宛＝他サイト分のため触れていない）。Cycle 009 が施策前データの取得を見送っていたため、<strong>本サイクルで施策“前”の実数（GSC料金/地域クエリ・受け皿ページ・GA4 CV）を baseline として固定</strong>し、生JSONを <span class="font-mono">cycles/ycom/</span> に保存。baseline 取得で初めて見えた <strong>R-024（実績ページが上位なのに0クリック）</strong>のみ新規起票（過剰提案回避）。継続 R のステータスは Cycle 009 から変化なし。</p>
+    </div>
+  </section>
+
+  <!-- 1サイクル分のテンプレート（AIが Cycle ごとに、この section を先頭に追加していく） -->
+
+  <section class="border-2 border-teal-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 009 — 2026-06-19（y-com.info｜📌 進捗追跡：R-014b ✅本番反映確認・Q-010解決／web-hanasaka と R-022中止・R-023[既存GA4でCV正規化]を相互合意）</h3>
+    <p class="text-sm text-gray-500 mb-4">対象：<a href="https://y-com.info/" class="text-blue-600 hover:underline">y-com.info</a> ／ データ状況：<strong>メールボックス thread <span class="font-mono">ycom-seo</span> の確定事項を反映</strong>（web-hanasaka との内部調整＝事実）。<strong class="text-emerald-700">GSC＝T-006・GA4＝T-007 ともに運用可</strong>だが、施策（R-014a/019/020/b）の本番反映は ~06-18＝<strong>GSCエクスポートの2〜3日ラグ＋データ06-06開始</strong>のため、本日の数値取得は<strong>施策“前”のbaseline</strong>にしかならない。よって本サイクルは<strong>進捗追跡（COMPOUND）に専念</strong>し、効果の実測は反映が数値に乗る次サイクル以降に行う。起点：web-hanasaka の ack 受信（Cycle 008 を書いた後に届いた R-014b 確認・合意群）。</p>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">① 進捗追跡（Cycle 008 以降に確定したこと）</h4>
+      <ul class="space-y-2 text-sm text-gray-700">
+        <li><strong class="text-emerald-700">R-014b ✅ 本番反映確認・Q-010 解決</strong>：<span class="font-mono">/price/basic.html</span> を hp-loop が本番GET（読み取り）して観測。<strong>#price-total</strong>（制作タイプ別の総額目安＝LP 約15万円〜／通常5ページ 約28万円〜／10ページ 約44万円〜／＋WordPress ＋10万円〜）と <strong>#price-faq</strong>（料金FAQ5問＝最低料金・着手金3割/納品後・納期3ヶ月〜半年・月額3,000円〜・掲載は目安）を確認。社長から目安レンジの提供を受けて実装＝<strong>Q-010 を解決</strong>。料金クエリ（2ページ目で取りこぼし中）の受け皿に「価格の答え」が乗った。</li>
+        <li><strong class="text-emerald-700">R-022（GA4新規作成）＝中止で相互合意</strong>：web-hanasaka より ack 受領（2026-06-18 16:37）。先方も「GTM(<span class="font-mono">GTM-55DB6J6</span>)が既存GA4 <span class="font-mono">analytics_265729912</span> を注入していた点を見落とし」と認め、<strong>社内手順書（<span class="font-mono">documents/ga4-setup.md</span>）を「既存プロパティを使う」に訂正済み</strong>。新規作成で履歴を捨てるリスクを回避。</li>
+        <li><strong>R-023（CVイベント正規化＋キーイベント化）＝先方が既存 <span class="font-mono">analytics_265729912</span> に適用して進行</strong>：CV設計は <span class="font-mono">contact_complete / estimate_complete / partner_apply</span> の3種に集約（送信完了が <span class="font-mono">?p_mode=complete</span> 付きURLになるため GTM の URL条件で取得＝<strong>コード変更不要</strong>）。現状の乱立イベント名（問い合わせ／その他お問い合わせ／お問い合わせ完了ページ、見積り／見積もりのリクエスト／見積り2…）を3種に正規化。<strong>キーイベント設定のコンソール作業は社長</strong>。</li>
+        <li><strong>死んだ UA タグ（<span class="font-mono">UA-2650013-1</span>）撤去</strong>：既存GA4の健全性確認後に web-hanasaka が実施で合意。</li>
+        <li><strong>計測面の事実確認は本ループが情報源</strong>：web-hanasaka は外部NW制限で GA4/BigQuery を直接見られないため、計測の事実確認は hp-loop の共有に依拠する、と先方が明言。＝<strong>効果検証（GSC/GA4 の読み取り）は本ループの担当として確定</strong>。</li>
+      </ul>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-2">② 提案ステータス（受け渡し中の主要 R-NNN）</h4>
+      <table class="w-full text-sm border-collapse">
+        <thead><tr class="text-left border-b border-gray-300 text-gray-700"><th class="py-1 pr-3">提案</th><th class="py-1 pr-3">内容</th><th class="py-1">状態</th></tr></thead>
+        <tbody class="align-top text-gray-700">
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-014a</td><td class="py-1 pr-3">/price/basic.html title/meta を料金クエリ最適化</td><td class="py-1 text-emerald-700">✅ 本番反映済（Cycle 007）</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-014b</td><td class="py-1 pr-3">/price/basic.html 総額目安＋料金FAQ</td><td class="py-1 text-emerald-700">✅ 本番反映確認（Cycle 009）</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-014c</td><td class="py-1 pr-3">料金系ブログ→/price/ 内部リンク</td><td class="py-1 text-amber-700">🔧 継続（web-hanasaka 着手待ち）</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-019/R-020</td><td class="py-1 pr-3">coder募集・固定ページ title/meta</td><td class="py-1 text-emerald-700">✅ 本番反映済（Cycle 007）</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-022</td><td class="py-1 pr-3">GA4 新規作成</td><td class="py-1 text-rose-700">❌ 中止（相互合意・GA4稼働中）</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-023</td><td class="py-1 pr-3">既存GA4のCVイベント正規化＋キーイベント化</td><td class="py-1 text-amber-700">🔧 進行（先方実装＋社長コンソール）</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-mono">R-018</td><td class="py-1 pr-3">ローカルSEO（対応エリア・地域タグ・MEO）</td><td class="py-1 text-amber-700">🔧 継続（テンプレ影響範囲の確定待ち）</td></tr>
+          <tr><td class="py-1 pr-3 font-mono">R-021</td><td class="py-1 pr-3">人気記事末尾に制作相談CTA＋関連リンク</td><td class="py-1 text-amber-700">🔧 継続</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-500 mt-2">→ <strong>title/meta の即効施策は出尽くし、本番反映も完了</strong>。残るは「コンテンツ・内部リンク（R-014c/R-021）」「ローカルSEO（R-018）」「計測基盤（R-023）」。新規の技術指摘は無し＝過剰提案を避け、本サイクルは新規 R を立てない。</p>
+    </div>
+
+    <div class="mb-4">
+      <h4 class="font-semibold text-gray-700 mb-1">③ 次の一手（効果測定への移行）</h4>
+      <p class="text-sm text-gray-700">即効の title/meta は反映済み・R-014b で料金の受け皿も整った。次のループの主眼は<strong>「順位・CTR・CVが実際に動いたかの定点観測」</strong>：①<span class="font-mono">gsc-fetch overview/queries</span> で「ホームページ制作 料金／料金表」など money keyword の<strong>順位・CTR 推移</strong>（2ページ目→1ページ目に動いたか）、②<span class="font-mono">ga4-fetch cv</span> で問い合わせ・見積CVの<strong>月次推移</strong>を施策前後で比較。<strong class="text-amber-700">ただし反映が ~06-18・GSCラグ2〜3日のため、効果が数値に乗るのは概ね 06-21 以降</strong>。それまでは R-023（CV正規化）の完了＝集計の信頼性確保が先決。</p>
+    </div>
+
+    <div class="border-t border-gray-200 pt-3">
+      <h4 class="font-semibold text-gray-700 mb-1">対応記録</h4>
+      <p class="text-sm text-gray-700"><span class="font-mono">from-president.md</span> に新規の手書き指示なし（最新は 06-18 の Cycle 006 報告＝処理済）。本サイクルはメールボックス thread <span class="font-mono">ycom-seo</span> の web-hanasaka ack（<span class="font-mono">M-20260618T163731</span>）を反映：<strong>R-014b を ✅本番反映確認（GET観測）し Q-010 を解決</strong>、<strong>R-022 中止・R-023 の既存GA4適用・UAタグ撤去・効果検証は本ループ担当を合意として確定</strong>。提案ステータス表で全体を可視化。施策は反映済みのため新規 R は立てず（過剰提案回避）、効果実測を次サイクルの主眼に据えた。test系メッセージ（president/yoshida-dev 疎通テスト）は done で <span class="font-mono">cur/</span> へ。</p>
+    </div>
+  </section>
 
   <!-- 1サイクル分のテンプレート（AIが Cycle ごとに、この section を先頭に追加していく） -->
 

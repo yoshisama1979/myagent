@@ -23,6 +23,97 @@
   <p class="text-gray-600 mb-1">作成：2026-06-16 ／ 対象：<a href="https://yoshida-smile.info" class="text-blue-600 hover:underline">yoshida-smile.info</a>（WordPress）</p>
   <p class="text-gray-700 mb-6 text-sm">これは <strong>サイトを構築・運用する実装エージェント向けの引き渡し資料</strong>。各提案は「着手できる粒度」で記述。社長⇄クライアント用の現状説明は <a href="../../clients/yoshida-shika/projects/corporate-site/meeting-prep-2026-06-17.html" class="text-blue-600 hover:underline">打ち合わせブリーフ</a> を参照。</p>
 
+  <!-- 🔔 社長への質問（未回答・最上部に集約） -->
+  <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-4 mb-4">
+    <p class="font-bold text-amber-900 mb-2">🔔 社長への質問（未回答）<span class="font-normal text-sm">— 回答は <span class="font-mono">data/hp-loop/yoshida/from-president.md</span> へ／Slackのよしだ歯科 日報スレッド返信でも可</span></p>
+    <ul class="list-disc list-inside text-sm text-amber-900 space-y-1.5">
+      <li><strong>Q-Y01（WEB問診の状況）</strong>：GA4でこの2週間 <span class="font-mono">question</span> 1件・<span class="font-mono">問診票_大人向けpdf</span> ダウンロード1件を観測。<strong>WEB問診は既に公開済みですか？</strong> R-Y01のWEB問診URLプレースホルダは確定値に差し替え可能ですか？（①公開済み・URL確定／②準備中／③未着手）</li>
+      <li><strong>Q-Y02（提案の引き渡し手段）</strong>：実装担当 <span class="font-mono">yoshida-dev</span> の mailbox トークンが<strong>未登録</strong>で、私から直接引き渡せません。当面は①社長が掲示板を手渡し／②トークン登録して直接引き渡しに切替、のどちらで進めますか？</li>
+      <li><strong>Q-Y03（既存提案 R-Y01〜Y05 の状況）</strong>：実装報告がまだ届いていません。<strong>着手済み／未着手／別ルートで進行中</strong>のどれですか？（特に症例集=hana-tools work_id 167 が期日超過 〜2026-05-30）</li>
+    </ul>
+  </div>
+
+  <!-- 📥 分析に欲しい情報 -->
+  <div class="border border-gray-300 bg-gray-50 rounded-lg p-4 mb-4 text-sm">
+    <p class="font-semibold text-gray-800 mb-1">📥 分析に欲しい情報（精度向上のため）</p>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5">
+      <li>WEB予約の「予約完了」厳密定義（<span class="font-mono">reservation</span> イベントは押下数か完了数か）。完了率を見たい。</li>
+      <li>yoshida-dev からの実装報告フォーマット（commit / 対応R-NNN / 認識合わせ）。再監査の起点にしたい。</li>
+      <li>症例集（R-Y04）のクライアント受領状況。データ構造の先行実装可否の判断材料。</li>
+    </ul>
+  </div>
+
+  <!-- ════════ サイクルログ（最新を上に積む） ════════ -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4 mt-8">📈 分析サイクルログ</h2>
+
+  <!-- Cycle 001 -->
+  <div class="border border-indigo-300 bg-indigo-50 rounded-lg p-5 mb-6">
+    <h3 class="text-xl font-bold text-indigo-900 mb-2">Cycle 001 — 2026-06-19（よしだ歯科・独立ループ初回）</h3>
+
+    <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">データ状況</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mb-3">
+      <li>GSC（<span class="font-mono">searchconsole_yoshida</span>）：<strong>1日分→3日分に増加</strong>（2026-06-14〜16）。clicks 124 / impressions 5,484 / CTR 2.26% / 平均掲載順位 5.8。※データラグ2〜3日・まだ「方向性の事実」。</li>
+      <li>GA4（<span class="font-mono">analytics_287348176</span>）：直近のCV＝<span class="font-mono">reservation</span> 93・<span class="font-mono">tel</span> 67・<span class="font-mono">instagram</span> 51・<span class="font-mono">line</span> 18・<span class="font-mono">初診の方へページに移動</span> 72（部分期間／日次テーブル3日＋intraday）。<strong>予約・電話CVは健全に発生中。</strong></li>
+      <li>on-page：<span class="font-mono">bin/hp-audit.sh</span> でトップ＋最大表示ページを監査（下記）。</li>
+    </ul>
+
+    <p class="text-sm font-semibold text-gray-800 mb-1">評価サマリ</p>
+    <p class="text-sm text-gray-700 mb-1">CVは健全。<strong>最大の取りこぼしは「最大表示ページが情報収集記事で、CTRが極端に低い」点</strong>。トップページの技術的な抜け（OGP無し・ズーム禁止・JSON-LD破損）は工数小で潰せるQuick win。来院意図ページは順位が高くCTRも良好で、伸ばす土台はある。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mb-3">
+      <li>✅ <strong>良い点</strong>：来院意図ページが好調＝<span class="font-mono">/cleaning/</span> 系・<span class="font-mono">/first/</span>(順位1.9) ・<span class="font-mono">/access/</span>(順位2.4・CTR4.1%)・指名検索（「箕面 よしだ歯科」等）はCTR5〜10%。CVも継続発生。</li>
+      <li>⚠️ <strong>課題</strong>：①最大表示の <span class="font-mono">blog/?p=5246</span>「痛い口内炎にはこれだ！」が<strong>1,466表示・CTR0.68%・全サイト表示の約27%</strong>＝情報層の巨大な未回収。②トップページに OGP/Twitterカードが無い（ブログ記事にはある＝<strong>テンプレ起因</strong>）。③viewport がズーム禁止。④JSON-LD が全ページで壊れている（パース失敗）。⑤トップ h1 が7個。</li>
+    </ul>
+
+    <p class="text-sm font-semibold text-gray-800 mb-1">既存提案 R-Y01〜Y05 の進捗追跡</p>
+    <p class="text-sm text-gray-700 mb-3">実装報告は<strong>未受領</strong>（yoshida-dev トークン未登録のため直接チャネルも無し）。全件 <strong>⏳未着手扱い</strong>として継続監視。状況は Q-Y03 で社長に確認中。R-Y04（症例集）は hana-tools work_id 167 が期日超過。</p>
+
+    <p class="text-sm font-semibold text-gray-800 mb-1">新規改善提案（技術＋コンテンツ）</p>
+
+    <div class="border-l-4 border-amber-400 bg-white rounded-r p-3 mb-2">
+      <p class="font-semibold text-sm mb-1">R-Y06：トップページに OGP / Twitterカードを付与（テンプレ起因） 🟡</p>
+      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
+        <li><strong>観察</strong>：hp-audit でトップは OGP 0件・Twitter 0件。一方ブログ記事(p=5246)は OGP 6件・Twitter 3件あり＝<strong>固定ページ/トップのテンプレだけ未設定</strong>。</li>
+        <li><strong>なぜ問題か</strong>：Instagram（月96クリック）・LINE（CV稼働）でトップURLが共有されると、画像・タイトル無しの素っ気ないリンクになり来院前の第一印象を損なう（推測：シェア経由の取りこぼし）。</li>
+        <li><strong>改善案</strong>：使用中SEOプラグインでサイト共通のOG画像・og:title/description・twitter:card を固定ページ/トップに付与。</li>
+        <li><strong>効果：中 ／ 工数：小 ／ 優先度：🟡</strong></li>
+      </ul>
+    </div>
+
+    <div class="border-l-4 border-amber-400 bg-white rounded-r p-3 mb-2">
+      <p class="font-semibold text-sm mb-1">R-Y07：viewport のズーム禁止を解除（アクセシビリティ） 🟡</p>
+      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
+        <li><strong>観察</strong>：トップの viewport が <span class="font-mono">maximum-scale=1.0, user-scalable=no</span>＝ピンチ拡大不可。</li>
+        <li><strong>なぜ問題か</strong>：歯科の患者層は高齢者を含み、文字・地図を拡大できないのは来院検討の妨げ（アクセシビリティ低下）。WCAG的にも非推奨。</li>
+        <li><strong>改善案</strong>：<span class="font-mono">maximum-scale</span>・<span class="font-mono">user-scalable=no</span> を削除し <span class="font-mono">width=device-width, initial-scale=1.0</span> に。1行修正・副作用ほぼ無し。</li>
+        <li><strong>効果：中（弱者配慮・離脱抑制） ／ 工数：小 ／ 優先度：🟡</strong></li>
+      </ul>
+    </div>
+
+    <div class="border-l-4 border-amber-400 bg-white rounded-r p-3 mb-2">
+      <p class="font-semibold text-sm mb-1">R-Y08：壊れた JSON-LD を修復（R-Y03 構造化データの前提） 🟡</p>
+      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
+        <li><strong>観察</strong>：hp-audit がトップ・ブログ両方で「JSON-LD パース失敗（壊れている疑い）」を検出（トップ1件・ブログ2件）。</li>
+        <li><strong>なぜ問題か</strong>：構造化データが正しく解釈されず、Dentist/LocalBusiness のリッチ表示・地域SEOの土台が効かない。R-Y03（ローカルSEO）を積む前提が崩れている。</li>
+        <li><strong>改善案</strong>：出力元プラグイン/テーマの JSON-LD を検証ツール（Rich Results Test 等）で確認し修復。R-Y03 と束ねて <span class="font-mono">Dentist / LocalBusiness</span> を正しく出す。</li>
+        <li><strong>効果：中 ／ 工数：小〜中 ／ 優先度：🟡</strong></li>
+      </ul>
+    </div>
+
+    <div class="border-l-4 border-emerald-500 bg-white rounded-r p-3 mb-2">
+      <p class="font-semibold text-sm mb-1">R-Y09：最大表示の症状記事(p=5246「口内炎の治し方」)を「情報→来院」回収の旗艦に（R-Y02/R-Y05 の的を絞る） 🟢→効果大</p>
+      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
+        <li><strong>観察</strong>：<span class="font-mono">blog/?p=5246</span> が単独で<strong>1,466表示（全サイトの約27%）・CTR0.68%・順位6.5</strong>。title 40字で長く、本文末の予約導線は未確認。情報収集層（口内炎）だが流入の母数が桁違い。</li>
+        <li><strong>なぜ問題か</strong>：これだけの可視性が「読まれて終わり」になっている。少しでも来院・相談へ回収できればCV寄与が大きい（推測：情報層→来院転換は一部だが母数が大）。</li>
+        <li><strong>改善案</strong>：①R-Y05の共通CTAブロックを<strong>この記事から最優先で適用</strong>（「痛みが続くなら当院へ／WEB予約」）。②title を「口内炎の治し方｜痛みが引かない時は箕面のよしだ歯科へ」等、ベネフィット＋医院名＋地域に再構成（R-Y02）。③関連症状記事・<span class="font-mono">/first/</span> への内部リンク。<strong>効果測定もこの1ページに絞ると変化が読みやすい。</strong></li>
+        <li><strong>効果：中〜高 ／ 工数：小 ／ 優先度：🟢（ただし費用対効果は最上位）</strong></li>
+      </ul>
+    </div>
+
+    <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">対応記録（from-president.md）</p>
+    <p class="text-sm text-gray-700">本サイクル時点で <span class="font-mono">data/hp-loop/yoshida/from-president.md</span> に新規指示なし（初回）。Q-Y01〜Y03 への回答を待つ。</p>
+  </div>
+  <!-- ════════ /サイクルログ ════════ -->
+
   <!-- 前提 -->
   <div class="border-2 border-sky-300 bg-sky-50 rounded-lg p-4 mb-6 text-sm">
     <p class="font-semibold text-sky-900 mb-1">前提・方針（実装前に把握）</p>

@@ -12,6 +12,24 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 
 ---
 
+## ⚑ マルチサイト読み替え（最重要・2026-06-19）
+
+本モードは **`/hp-loop <site>`（ycom / yoshida / fujisaka）でサイト別に独立して回る**。コマンド側で `data/hp-loop/config.md`（登録表）と `data/hp-loop/sites/<site>.md` を読んで現在のサイト固有値を確定してから本ルールに入る。**以降この文書中の固定値は、すべて「現在の `<site>` の値」に読み替える**：
+
+| 文書中の表記 | 読み替え（現在のサイト） |
+|---|---|
+| 掲示板 `site/hp-analysis/ycom/index.html` | `site/hp-analysis/<site>/index.html` |
+| 社長指示 `data/hp-loop/from-president.md` | ycom=同左／他=`data/hp-loop/<site>/from-president.md` |
+| mailbox 受信 `to: hp-loop` | `to: hp-loop-<site>`（**自サイト宛のみ**処理・他サイト宛は触らない） |
+| 実装担当 `web-hanasaka` | そのサイトの実装担当（ycom=web-hanasaka／yoshida=yoshida-dev／fujisaka=fujisaka-dev。トークン未登録なら送らず「登録待ち」と明示） |
+| Slack 日報 `post --as hp-loop` | `post --as hp-loop-<site>`／返信 `reply <ts> --as hp-loop-<site>` |
+| GSC/GA4 取得 | `--dataset <そのサイトの dataset>`（GA4 未確認サイトは「データ未取得」と明示） |
+| サイクル生データ `data/hp-loop/cycles/` | `data/hp-loop/cycles/<site>/`（任意） |
+
+YCOM 単独運用時代の記述が `ycom` 固定で残っているのは**例示**。実際の対象は常にコマンドで確定した `<site>`。
+
+---
+
 ## 役割と全体像
 
 対象サイトを定期的に分析し、**効果の高い改善提案と、社長への質問** を掲示板に積み、
