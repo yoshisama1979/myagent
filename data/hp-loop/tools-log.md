@@ -23,7 +23,8 @@
 ### T-001: hp-audit.sh（bin/hp-audit.sh）
 - 2026-06-11 / ✅運用中
 - 目的：オンページSEO信号の監査。Cycle 001 で手作業（curl + grep + python）で抽出した処理を決定論ツール化（カイゼン K-001 / K-005 への対応）
-- 使い方：`bash bin/hp-audit.sh <URL>`（人が読む要約）／ `bash bin/hp-audit.sh <URL> --json`（JSON）
+- 使い方：`bin/hp-audit.sh <URL>`（人が読む要約）／ `bin/hp-audit.sh <URL> --json`（JSON）／ `bin/hp-audit.sh <URL> --text`（本文テキスト抽出＝精読/実査用）
+  ※ 無人実行(cron/ヘッドレス)では allow パターンが `Bash(bin/hp-audit.sh:*)`＝**先頭 `bash ` を付けず `bin/hp-audit.sh ...` で呼ぶ**（`bash bin/...` は別コマンド扱いで未承認・要approval。2026-06-20 判明）。
 - 出力：HTTPステータス・title/description（文字数）・canonical・robots・viewport（ズーム禁止検出）・OGP/Twitter（**プレースホルダ検出**＝K-003）・JSON-LD（型・無効化検出）・見出しh1-h3（h1複数検出）・img/alt欠落・問い合わせ動線（tel/mailto/contact）・CMS。末尾に課題を ⚠️ で列挙
 - 関連：K-001（監査ツール化）／K-005（hp-loopでも手作業依存）／K-003（仮置き残存検出）。掲示板 Cycle 001 の所見を再現
 - メモ：HTTP GET のみ・読み取り専用（外部送信/書き込みなし）。1ページ単位（サイト全体クロールは未対応）。差分比較（前回JSONとの比較）は未実装＝K-006で別途
@@ -31,7 +32,8 @@
 - 既知の限界（社長指摘 2026-06-11）：(1)**静的HTMLのみ**。JS で後から再注入される meta（例：viewport の `user-scalable=no` 上書き）やJS描画後のDOMは見えない → 重要ページは目視/担当エージェント確認で補う。(2)**CMS判定はヒューリスティック**（`wp-content` 等の資産参照を見るだけ）。サイト全体の構成を断定しない
 - 更新 2026-06-11（Codexレビュー反映）：スキームを http/https に限定（`--proto`）／**取得失敗・非2xx・空body・サイズ超過(5MB)を「監査不能」として明示**（成功を装わない・exit 3）／複数URLガード／プレースホルダ語句を調整（準備中/lorem/dummy/noimage 追加・sample等は語境界化）
 - 今後の改善（Codex由来・次サイクル送り）：(a)属性解析を正規表現から `html.parser` 等の標準パーサに置換（シングルクォート/未引用/`rel="canonical alternate"`/属性順の取りこぼし対策）。(b)JSON-LD の `@graph` 内 `@type`・シングルクォート type 対応。(c)プレースホルダ判定を title/description/canonical/JSON-LD/画像URL にも適用。(d)空alt(装飾)の扱い方針を出力に明記
-
+- **更新 2026-06-20（CV要素の棚卸しを追加・fujisaka Cycle 003）**：JSON/要約に `cv` ブロックを**追加（既存フィールドは不変＝hp-diff 後方互換）**。検出するもの＝(1)`tel_numbers`（tel: の実電話番号）(2)`mailto`（mailto実値）(3)`line_present`/`line_hrefs`（LINE導線＝lin.ee・line.me・liff・line://・「友だち追加」文言）(4)`form_count`/`forms`（`<form>` の action/method）(5)`cv_anchors`（文言 or href が 見積/資料請求/予約/開栓/移転/修理/来店/問い合わせ/LINE/contact 等にマッチするアンカー・最大30件）。目的＝社長依頼「電話・問い合わせ以外で実装済みのCV候補（LINE・各種申込/受付フォーム・資料請求・見積・開栓/移転予約・mailto 等）が実在するか」を**捏造せず決定論で列挙**するため。`/hp-loop fujisaka` Cycle 003 で top/contact/hotwater を実査し「現状CVは電話+問い合わせフォームの2つのみ・LINE/mailto/専用フォームは無し」を確認。**既知の限界**：静的HTMLのみ（JS注入のLINEウィジェット/フォームは見えない＝T-001の(1)と同様。重要ページは目視/担当確認で補完）。
+- **更新 2026-06-20（`--text` 本文テキスト抽出モードを追加・fujisaka Cycle 004）**：`script/style/noscript`・HTMLコメントを除去し、ブロック要素境界を改行化してタグを剥がした**読めるページ本文**を出力（最大12000字・HTTP GETのみ・読み取り専用・既存の要約/JSON出力は不変）。目的＝**3サイクル連続でブロックされていた「本文の文言精読」**を、無人実行で `curl`/`WebFetch` が未承認でも hp-audit の内部 curl 経由で取得するため（社長 Q-F03「対応エリア・対応の速さをHP内情報から実査して拾え」に直接対応）。`/hp-loop fujisaka` Cycle 004 で top・hotwater を実査し、**サービスエリア9市町（大阪府5＋京都府4）・「15時までの連絡で当日対応」「年始3日以外無休」・実績数値（創業50年/20万件以上/お客様の声/有資格者多数）**を原文で取得（捏造ゼロ）。給湯器交換の**具体価格はサイト本文に記載なし**＝クライアント確認事項として確定。**限界**：静的HTMLのみ（JS描画後テキストは取れない）／本文をそのまま出すため長尺ページは12000字で打ち切り（必要なら個別ページ指定で再取得）。
 ### T-006: gsc-fetch.py（bin/gsc-fetch.py）
 - 2026-06-12 / ✅運用中
 - 目的：**Search Console の実データ取得**（Q-003 の本命解）。GSC「一括データエクスポート」が吐く BigQuery テーブルを読み、クエリ/ページ単位のクリック・表示回数・CTR・平均掲載順位を事実として取得。これまで未取得だった「どのクエリ/ページを伸ばすか」をデータで出せるようになった
@@ -86,6 +88,32 @@
 - メモ（制約・安全装置）：**読み取り専用**＝ローカルJSON2ファイルを読んで stdout に出すだけ（automation.md準拠）。ネットワーク・BigQuery・外部送信・ファイル書き込み・破壊的操作はしない（取得は gsc/ga4-fetch の役目＝役割分離）。
 - 既知の限界：(1)スナップショットは事前に gsc/ga4-fetch で保存しておく必要がある（差分は2ファイル前提）。(2)期間がズレた比較は注意（meta に旧/新の start/end を表示）。(3)GSCラグ2〜3日＝施策直後の新スナップは施策前値が混じる。
 - **検証済（2026-06-19）**：自己差分=全±0／合成「施策後」で 料金表 改善(▲)・料金 悪化(▼)・新規/消滅の検出・--json・section自動検出を確認。
+
+### T-010: hp-compete（bin/hp-compete.py）
+- 2026-06-21 / ✅運用可
+- 目的：**競合とのオンページSEO横並び比較**（社長のSEOワークフロー③「競合を超えるために何をするか」を決定論で支える＝レイヤーA）。SEOは相対評価＝自社単体を見るだけでは「勝てているか」が分からないため、競合と並べて**自社に無い／競合が勝っている構造シグナル**をギャップとして抽出する。coverage.md §5「競合対比」・§8定石レシピ#6・§9ツール候補#3 の実体化。
+- 使い方：`python3 bin/hp-compete.py <自社URL> <競合URL> [<競合URL> ...]`（人が読む横並び表＋ギャップ）／`--json`（機械可読）／`--self <URL> --rivals <URL,URL,...>` でも指定可
+  - 例：`python3 bin/hp-compete.py https://y-com.info/ https://競合A/ https://競合B/`
+  - 競合URLは社長が `data/hp-loop/<site>/competitors.md` に記入（②競合特定＝社長が実際の検索＝ローカルで正確。VPSからの自動SERPは検索地点違いで別competitorを拾うため使わない）
+- 出力：横並び表（title/desc長・canonical・OGP・構造化LD・h1・h2+h3（コンテンツの厚み近似）・リンク数・alt欠落・電話/LINE/フォーム/CV導線・課題数・容量）＋**ギャップ**（競合にあって自社に無い構造化データ型・適正長title/desc・OGP・canonical・コンテンツ量・CV導線）。`--json` で機械可読
+- 関連：coverage.md §0/§8/§9・競合リスト `data/hp-loop/ycom/competitors.md`。社長依頼（2026-06-21「競合との比較・参考を分析に入れる」）への対応
+- メモ（制約・安全装置）：**実行時読み取り専用**＝ネットワーク取得は hp-audit.sh(T-001・HTTP GET)に委譲し、本体は外部送信・ファイル書込・破壊的操作をしない（automation.md準拠・標準出力のみ）。取得失敗は握りつぶさず ⛔ 明示（成功を装わない）。比較可能サイトが2つ未満なら exit 3
+- 既知の限界：(1)**構造シグナルの対比のみ**＝実コンテンツの質・E-E-A-T・被リンク・**検索順位/SERP は対象外**（「誰が上か」は社長のSERP確認 or 有料API、見た目は hp-shot で補う）。(2)hp-audit と同じく静的HTMLのみ（JS描画後は見えない）。(3)コンテンツの厚みは h2+h3 件数の近似（本文語数ではない＝必要なら --text 連携を将来追加）。(4)競合URLは社長記入前提（推測しない）
+- **検証済（2026-06-21）**：y-com.info vs example.com で横並び表・ギャップ抽出（逆向きで6件発火）・不達URLの ⛔ 明示・exit 3 を確認
+
+### T-011: hp-serp（bin/hp-serp.mjs → bin/hp-serp.sh）
+- 2026-06-21 / ✅運用可
+- 目的：**検索結果(SERP)から競合・参考サイトのURLを自動取得**（社長のSEOワークフロー②「検索結果から競合を見つける」の自動化）。SEOは相対評価＝「狙うクエリで上位の競合を超える」のがゴール。取得したURLを T-010 hp-compete / T-008 hp-shot へ渡して③対比する。
+- **検索エンジン＝Yahoo! JAPAN（実測で決定・2026-06-21）**：このVPS（データセンターIP）からの実測で——**Google=HTTP429ボット判定でブロック（取得不能）**／**Bing=取れるが結果が無関係**（「ホーム」を住宅/不動産と誤解釈し制作会社が出ない）／**Yahoo!JAPAN=HTTP200・Googleインデックス採用で関連性が正しい・ブロックされない**。よって Yahoo!JAPAN を採用。Google順位に近く（同インデックス）、IP地域非依存（クエリに「大阪」等を入れればその地域が出る）＝社長方針「コンテンツ改善は地域非依存で十分／大阪固有が要るときだけ社長が渡す」に合致。
+- 仕組み：hp-shot(T-008) と同じ system Chrome × puppeteer-core ヘッドレス。`search.yahoo.co.jp/search?p=<クエリ>` を描画し、本文領域の結果アンカーから外部サイトURLを抽出。ハッシュ(`#:~:text=`)・トラッキングパラメータ除去、自社/検索エンジン/重複ドメインを除外しドメイン単位で上位を残す。
+- 使い方：`bin/hp-serp.sh "<検索クエリ>" [--top N] [--exclude ドメイン,…] [--json|--urls]`
+  - 例：`bin/hp-serp.sh "ホームページ制作 大阪 料金" --top 8 --exclude y-com.info`（人が読む表）
+  - 例（連鎖）：`python3 bin/hp-compete.py https://自社/ $(bin/hp-serp.sh "クエリ" --exclude y-com.info --urls)`
+  - 出力：上位サイト（rank/domain/title/url）。`--urls`＝URLを1行1件（hp-compete へ渡す用）。`--json`＝機械可読
+- 関連：T-010 hp-compete（③対比の相方）・competitors.md・coverage.md §8#6/§9。社長依頼（2026-06-21「競合比較を分析に入れる・自動化の恩恵を優先」）への対応
+- メモ（制約・安全装置）：**実行時読み取り専用**＝検索結果ページを描画して結果リンクを読むだけ。**競合サイト本体は取得しない**（hp-compete/hp-shotの役目＝役割分離）。非GET遮断・DL拒否・Chromeサンドボックス有効・使い捨てプロファイル（hp-shot と同じ多層防御・automation.md準拠）。取得先は search.yahoo.co.jp 固定（任意URLを踏まない）。**ボット判定/CAPTCHA・0件は握りつぶさず ⛔ 明示**（捏造しない・exit 3）。**低頻度・少量で使う**（週次・数クエリ想定＝検索エンジンへの礼儀／ブロック回避）
+- 既知の限界：(1)**SERPはGoogleそのものではない**（Yahoo!JAPAN＝Googleインデックスだが完全一致ではない・順位も近似）。Google実順位や大阪ローカル順位が厳密に要るときは社長がSERPを渡す（社長方針）。(2)Yahoo側のHTML構造変更で抽出が劣化し得る（0件は明示するので気付ける）。(3)結果には競合制作会社と並んで「料金相場の解説記事」も混じる（参考にはなるが競合企業ではない＝対比相手は人/ループが選ぶ）。(4)ToS配慮で低頻度運用。フル無人で大量に回すなら locale指定の有料SERP API（gl=jp）へ差し替える設計余地
+- **検証済（2026-06-21）**：「ホームページ制作 大阪 料金」「ホームページ制作 大阪」で関連性の高い実在の大阪Web制作会社（ok-design/hello-wave/studio-habit/株式会社ワイズ osaka-homepage.biz 等）を取得。end-to-end（hp-serp→hp-compete）で自社/price/ vs ワイズ料金ページを比較し「競合は構造化データ(LocalBusiness/BreadcrumbList)あり・自社の料金ページは無し」を検出＝実用的ギャップ。--urls/--json/自社除外/重複ドメイン排除を確認
 
 ---
 
