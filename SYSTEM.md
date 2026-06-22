@@ -40,6 +40,7 @@
 | **Overseer（統括）** | システム全体の整合・健全性を見張り改善提案 | `/overseer`（+`/loop`） | 本ファイル・各ルール・各掲示板・mailbox・git | `site/overseer/index.html`（AI追記・社長がWeb閲覧）・本ファイル保守（合意後） | ルール/本体改変は社長 | 社長 | [.claude/rules/overseer.md](.claude/rules/overseer.md)（0.1） |
 
 > **claude-rules/ はこのシステムの対象外。** 弊社がクライアント向けに使う汎用 Claude ルールの置き場であり、上記モード群とは別物（混同しない）。
+> **複数プロジェクトで共有・コピーして使う汎用テンプレ**なので、編集時は**固有値（エージェントID・サイト名・URL・DB名等）を本文に焼き込まず、各プロジェクトの `project-config.md` に置いて参照させる**（例：hp-loop 連携の宛先は `hp-loop-<site>` とし、実値は project-config.md。`hp-loop-ycom` 等を直書きしない）。
 
 ---
 

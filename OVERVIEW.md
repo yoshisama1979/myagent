@@ -33,7 +33,7 @@
 | `ai-loop/` | Reviewer AI ↔ Dev AI の**非同期レビュー基盤** | `conversation.md` 経由。`/reviewer-cycle` で起動 |
 | `etc/` | プレビューサーバ設定（Nginx / PHP-FPM の conf） | 構成は `rules/preview-server.md` 参照 |
 | `.claude/` | Claude Code 設定・スキル・ロール別ルール | `reviewer.md` / `memo.md` 等のモード定義 |
-| `claude-rules/` | **このシステムとは無関係。** 弊社がクライアント向けシステムを作る際の汎用 Claude ルール置き場 | `website/` `websystem/`。ルール更新時にここで相談・編集する |
+| `claude-rules/` | **このシステムとは無関係。** 弊社がクライアント向けシステムを作る際の**汎用ルールテンプレ**置き場（**複数プロジェクトで共有・各案件にコピーして使う**） | `website/` `websystem/`。**固有値（エージェントID・サイト名・公開URL・DB名・カラー等）を本文に焼き込まない**＝各プロジェクトの `project-config.md` に置き、ルール本文はそれを参照する形で書く（汎用ルールと固有値の分離）。更新時もこの分離を保つ |
 
 ---
 
