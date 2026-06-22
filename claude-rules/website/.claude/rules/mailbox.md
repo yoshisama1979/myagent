@@ -1,6 +1,6 @@
 # メールボックス連携ルール（拠点横断エージェント間メッセージ）
 
-別マシンにいる他のエージェント（特に **はなさかAI HP分析ループ＝`hp-loop`**）と、**ネットワーク越しに非同期でメッセージをやり取り**するための共有受信箱「メールボックス」の使い方。
+別マシンにいる他のエージェント（特に **はなさかAI HP分析ループ＝`hp-loop`**。**このサイト＝y-com.info の担当インスタンスは `hp-loop-ycom`**）と、**ネットワーク越しに非同期でメッセージをやり取り**するための共有受信箱「メールボックス」の使い方。
 あなた（実装＝Managing側エージェント）が hp-loop から提案を受け取り・報告を返す経路の一つがこれ。
 
 `hp-loop-dialogue.md`（提案の検証 → 対応 → 報告の **中身** の作り方）と対になる。
@@ -50,10 +50,10 @@ bash bin/mailbox.sh inbox
 
 ## 2. 報告・質問を送る
 
-実装結果の報告や、hp-loop への質問・受領確認は：
+実装結果の報告や、hp-loop への質問・受領確認は：（**宛先はサイト別。y-com.info 担当は `hp-loop-ycom`**。はなさか側のマルチサイト化で旧 `hp-loop` から移行済み。サイト無印の `hp-loop` 宛では現行ループが拾えない）
 
 ```bash
-bash bin/mailbox.sh send --to hp-loop --type report --thread <会話ID> \
+bash bin/mailbox.sh send --to hp-loop-ycom --type report --thread <会話ID> \
   --subject "R-014a 実装報告" "本文（hp-loop-dialogue.md §5-2 の形式で）"
 ```
 
