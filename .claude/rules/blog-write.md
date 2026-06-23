@@ -107,7 +107,9 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
   - **🔧 開発確認**（web-hanasaka が納品物・実装から答えられる）：サイトの機能・工夫・実装の特徴・技術的な対応範囲 等。→ **blog-loop が mailbox で web-hanasaka に質問**して回収する（blog-write は drafts-log に「開発確認」と書くだけ。自分で web-hanasaka に送らない＝対外的な対話は解析ループに集約）。
   - **👤 社長確認**（経営判断・固有数値）：料金方針・数値の実績成果・お客様の声の可否 等。→ from-president / Slack（社長へ）。
   - どちらに振っても、回答が来るまでは本文を**プレースホルダのまま**にし、勝手に埋めない。
-- **Phase 2 が有効（creds設定済＋合意済）なら**、WP REST API で `status=draft` 投稿し、ログに投稿先（下書きの編集URL）を残す。**creds 未設定／未合意なら投稿せず「保留」と明示**。
+- **Phase 2 の自動投稿は「事実が揃った記事だけ」（社長決定 2026-06-23）**：新規 `T` のドラフトが **`【要・社長確認】`／`【要確認】` を1つも含まない＝事実が埋まった状態**になって初めて、WP REST API で `status=draft` 投稿する（`bin/wp-draft.py post --client <client> --title … --html-file …`）。**プレースホルダが残るドラフトは投稿せず**、drafts-log に「⏳事実待ち」で残す（回答が来たら埋めて投稿）。creds 未設定／許可未付与なら投稿せず「保留」と明示（捏造・空振りしない）。
+  - **既存改善 `B` は自動投稿の対象外**：`wp-draft.py` は新規作成専用で既存記事を更新しない。`B` は「差分案」として drafts-log＋掲示板で web-hanasaka／人間に引き渡す（本番反映は人間）。
+  - **1サイクル＝最大1本投稿**（毎日1本供給。やり過ぎない）。投稿前に `wp-draft.py` が `status=draft` を検証し、`data/mailbox` 同様の重複（同タイトルの既投稿）に注意。
 
 > **fact質問の橋渡しは blog-loop が担う**：drafts-log に「🔧開発確認」と書いた事実は、blog-loop が次サイクルで web-hanasaka に mailbox 質問して回収し、回答を spec.html / 確定事実に記録する。blog-write はその確定事実を使って本文を埋め、下書きを更新する（[blog-loop.md](blog-loop.md)「開発エージェントへの fact 質問」）。
 

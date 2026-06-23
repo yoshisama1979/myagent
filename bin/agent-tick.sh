@@ -19,8 +19,10 @@
 #
 # 使い方（cron）:
 #   */10 * * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh                # 10分ごと：受信+対応
-#   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer  # 1日1回：overseer 精密診断を強制
-#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop   # 1日1回：HP解析を強制（Phase2で有効化）
+#   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer        # 1日1回：overseer 精密診断
+#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別）
+#   0 5   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom  # ブログ診断（B/T提案）
+#   30 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom # ブログ執筆→事実が揃った記事だけWP下書き投稿
 #
 # automation.md：外部送信は各モードのルールで社長専用チャンネルに限定。raw mv は使わず slack-poll done。
 set -uo pipefail
@@ -156,6 +158,10 @@ dispatch "overseer" "/overseer" "overseer"
 dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
 dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
 dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka"
+# ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
+# blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
+dispatch "blog-loop:ycom"   "/blog-loop ycom"   "blog-loop-ycom"
+dispatch "blog-write:ycom"  "/blog-write ycom"  "blog-write-ycom"
 
 # --- 3) ハートビート（毎回・Web可視・書き込み失敗も検知＝Codex🔴2） ---
 HB_LINE="agent-tick alive: $(now) | mode=$MODE force=${FORCE_AGENT:-none} | ${ACTIONS[*]:-none} | status=$(status_str)"

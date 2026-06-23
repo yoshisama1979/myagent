@@ -40,9 +40,10 @@
 | 1サイクルの提案数 | 既存改善 `B` 2〜3件＋新規テーマ `T` 2〜3件目安（過剰提案禁止。Quick win 優先） |
 | タイムゾーン | Asia/Tokyo |
 | 停止条件 | 社長の停止指示／未回答の質問が溜まったら一旦停止して回答待ち |
-| 実行方式 | **VPSローカル cron ＋ ヘッドレス `claude -p "/blog-loop <client>"`（無人・クライアント別日次）**。ディスパッチャ＝`bin/agent-tick.sh`（`daily blog-loop-<client>` で強制／`to: blog-loop-<client>` 新着で随時）。**cron化は手動テスト→社長合意の後**（automation.md：小さく作って手動検証→合意→自動化）。[[project_unattended-loop-cron]] |
-| cron（時刻案・合意後に登録） | HP分析と重ならない時刻に。例：`0 5 * * *`（毎日05:00）等。**未登録＝現状は手動 `/blog-loop ycom` で回す** |
-| 役割分担 | **本ループ＝診断・提案・構成案（アウトライン）まで。記事本文の執筆・公開はしない。** 提案は社長が対象クライアント担当の別エージェントに引き渡して記事化・公開 |
+| 実行方式 | **VPSローカル cron ＋ ヘッドレス `claude -p`（無人・クライアント別日次）**。ディスパッチャ＝`bin/agent-tick.sh`（`daily blog-loop-<client>`／`daily blog-write-<client>` で強制／blog-loop は `to: blog-loop-<client>` 新着で随時）。[[project_unattended-loop-cron]] |
+| cron（2本・別時刻・HP解析02-03時とずらす） | `0 5 * * * …/bin/agent-tick.sh daily blog-loop-ycom`（05:00 診断）／`30 5 * * * …/bin/agent-tick.sh daily blog-write-ycom`（05:30 執筆→**事実が揃った記事だけ**WP下書き投稿）。社長決定 2026-06-23。**crontab2行追加＋settings.local.json の post 許可は社長作業** |
+| 自動投稿の方針 | **「事実が揃った記事だけ」自動で WP `status=draft` 投稿**（プレースホルダ `【要・社長確認】` が残るうちは保留）。**公開(publish)は常に人間**。1日最大1本。 |
+| 役割分担 | **blog-loop＝診断・提案・構成案。blog-write＝完成原稿ドラフト生成＋（事実が揃えば）WP下書き投稿。公開は人間。** |
 
 ## スコープ
 
