@@ -161,10 +161,13 @@ ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 # local-send を出せるのは VPS 常駐モードのみ。president(人間)は不可。受け手は実在エージェントのみ。
 # 総称 hp-loop は複数サイト化で廃止：宛先は必ず hp-loop-<site>（消費する dispatch が存在する名のみ許可＝孤児化防止）。
 # 各サイトループ hp-loop-<site> は「最新レポートを実装担当へ流す」ために送信者にもなる（同一VPS常駐＝local-send）。
+# ブログ解析ループ blog-loop-<client> も同様（実装担当への配信＋fact質問の送信者）。VPS常駐＝local-send。
 SENDERS    = {"overseer", "hanasaka-main",
-              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka"}
+              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka",
+              "blog-loop-ycom"}
 RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev",
-              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka"}
+              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka",
+              "blog-loop-ycom"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
 if not ID.match(frm) or frm not in SENDERS:

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YCOM ブログ分析｜確定・仕様｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">YCOM（HP分析）</a>
+    <span class="mx-1">/</span>
+    <span>ブログ分析・確定/仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 YCOM ブログ分析 — 確定・仕様（前提・背景）</h1>
+  <p class="text-gray-600 mb-6">変わりにくい前提・背景の常設リファレンス。何かが<strong>確定したとき</strong>（前提変更・確定回答・恒久的な仕様）に更新します。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold">📐 確定・仕様（このページ）</span>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+    <a href="../index.html" class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 hover:bg-amber-200">📈 HP分析（サイト全体）へ</a>
+  </div>
+
+  <!-- ブログ前提 -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-3">ブログの前提</h2>
+    <table class="w-full text-sm border-collapse">
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold w-40">対象ブログ</td><td class="py-1"><a href="https://y-com.info/contents/" class="text-blue-600 hover:underline font-mono">https://y-com.info/contents/</a>（WordPress）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ブログ名</td><td class="py-1">YCOMのホームページの制作・運営に役立つブログ</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">ブログ経由のSEO流入＋<strong>問い合わせ（見積）への寄与</strong>。買い手意図クエリ（料金・選び方等）を取りに行く</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ターゲット</td><td class="py-1">対応エリア＝大阪・京都・兵庫(神戸)＋東京／業種不問／中規模程度まで（HP分析 ycom の確定値を流用）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">役割分担</td><td class="py-1">本ループ＝診断・提案・構成案（アウトライン）まで。<strong>記事の執筆・公開は別エージェント</strong>（web-hanasaka）。本ループは記事本文を書かない</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">SEO方針</td><td class="py-1"><strong>コンテンツベースで価値を上げる</strong>。地域キーワード詰め込み等の小手先SEOはしない（社長方針 2026-06-23）。地域固有の検索結果が要るときは社長に依頼</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- データソース -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6" id="datasources">
+    <h2 class="text-xl font-bold text-gray-800 mb-3">データソース・ツール</h2>
+    <table class="w-full text-sm border-collapse">
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold w-40">GSC</td><td class="py-1"><span class="font-mono">bin/gsc-fetch.py --dataset searchconsole_ycom</span>（T-006・BigQuery読み取り専用）。pages/queries/summary。データラグ2〜3日</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">GA4</td><td class="py-1"><span class="font-mono">bin/ga4-fetch.py</span>（T-007・dataset <span class="font-mono">analytics_265729912</span>）。記事→CV寄与</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">記事本文・on-page</td><td class="py-1"><span class="font-mono">bin/hp-audit.sh</span>（T-001）／<span class="font-mono">curl</span></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">競合発掘</td><td class="py-1"><span class="font-mono">bin/hp-serp.sh</span>（T-011・Yahoo!=Googleインデックス・読み取り専用）／対比 <span class="font-mono">bin/hp-compete.py</span>（T-010）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ビジュアル</td><td class="py-1"><span class="font-mono">bin/hp-shot.sh</span>（T-008・読み取り専用）。記事レイアウト確認用</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 確定した質問の回答 -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6" id="answered">
+    <h2 class="text-xl font-bold text-gray-800 mb-3">確定した質問の回答</h2>
+    <p class="text-sm text-gray-500">（まだありません。Q-001・Q-002 への回答が確定したらここに移します）</p>
+  </section>
+
+  <!-- 確定した観測事実 -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-3">計測の確定事実</h2>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li>ブログ流入の主力クエリは<strong>事業外の情報系</strong>（フリー素材・技術TIPS・Amazon受け取り）に偏重（2026-06-23 Cycle 001 観測）。買い手意図クエリは未獲得＝新規記事で取りに行く領域（<em>project_ycom-seo-traffic-quality と一致</em>）。</li>
+    </ul>
+  </section>
+
+  <p class="text-xs text-gray-400 mt-8">ブログ分析ループ（blog-loop）｜確定・仕様 ｜ 個別施策の完了履歴は <a href="archive.html" class="underline">アーカイブ</a>へ</p>
+
+</div>
+</body>
+</html>
