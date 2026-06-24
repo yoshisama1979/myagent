@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>アーカイブ（解決・完了）｜統括レポート｜株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">統括レポート</a>
+    <span class="mx-1">/</span>
+    <span>アーカイブ</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ（解決・完了）</h1>
+  <p class="text-gray-600 mb-2">解決済み・様子見に落ち着いた提案（<span class="font-mono">O-NNN</span>）と、過去のサイクルログを保管します。<strong>最新レポートを「今知るべきこと」だけに保つ</strong>ための置き場（履歴は消さない）。現在対応中のものは<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>へ。</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-24（Cycle 012・dev↔loop 往復切れ O-010/011/012 を解決として収容）</p>
+
+  <!-- 3ページの案内 -->
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 全体仕様</a>
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold">🗄️ アーカイブ（このページ）</span>
+  </div>
+
+  <!-- ===== 解決・決着した提案 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">解決・決着した提案（O-NNN）</h2>
+
+  <!-- O-010 / O-011 / O-012 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-010 / O-011 / O-012：dev↔loop の往復切れ（宛名移行の系統的未完）＝3サイトとも閉路化</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（Cycle 012）</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>経緯</strong>：Phase3 のマルチサイト化に伴い宛名を <span class="font-mono">hp-loop</span>→<span class="font-mono">hp-loop-&lt;site&gt;</span> へ移行した際、稼働中の各 dev（拠点PC）の送信先同期が遅れ、実装報告が旧称 <span class="font-mono">to: hp-loop</span> 宛で dispatcher に拾われず孤児化した（O-007→O-011→O-012 と症状を追い、Cycle 011 で「系統的未完」と名指し）。outbound 片道（loop→dev の受け手不在）を O-010 で並行追跡。</li>
+      <li><strong>結末（Cycle 012・2026-06-24 実体確認）</strong>：旧称宛 inbound は <span class="font-mono">new/</span> から消失（孤児ゼロ）。<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> 消化6通が出現し、<strong>web-hanasaka(13)／yoshida-dev(9)／fujisaka-dev(3) の3 dev すべて</strong>の報告が正規宛で届き処理されている。<strong>fujisaka-dev も 6/22 に稼働確認</strong>（O-010 の「未確認」を解消）。＝「提案→実装→報告→再監査」の戻り経路が3サイトとも機能。</li>
+      <li><strong>残る軽微</strong>：loop outbound の一部 <span class="font-mono">ack</span> が旧称 <span class="font-mono">from: hp-loop</span> ラベルのまま（<span class="font-mono">to:</span> は正しく届く＝実害なし）。最新レポートで「旧称宛 inbound の有無」を定点監視に格下げ。</li>
+      <li><strong>関連</strong>：<span class="font-mono">data/mailbox/cur/</span>／<span class="font-mono">bin/agent-tick.sh</span> L158-167／O-007（前段）／メモリ project_phase2-golive-pending・project_cross-machine-mailbox</li>
+    </ul>
+  </div>
+
+  <!-- O-007 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-007：実装側の返信が「宛名のズレ」で受信箱に死蔵（サイレント故障）</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（滞留解消）</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>観察</strong>：6/19 に <span class="font-mono">yoshida-dev → hp-loop</span>（R-Y01 認識合わせ）と <span class="font-mono">web-hanasaka → hp-loop</span>（Cycle010 応答）の2通が、総称宛 <span class="font-mono">to: hp-loop</span> を dispatcher が監視せず <span class="font-mono">new/</span> に滞留（Cycle 007 で発覚・Cycle 008 で原因特定＝宛名ズレ）。</li>
+      <li><strong>結末</strong>：Cycle 009（2026-06-21）で実体確認 ― 当該2通は <span class="font-mono">data/mailbox/cur/</span> に移動済み＝<strong>処理された</strong>。現時点で孤児宛の inbound はゼロ。＝個別の滞留は解消。</li>
+      <li><strong>残る論点</strong>：根本（送信側の <span class="font-mono">hp-loop-&lt;site&gt;</span> 宛統一＝Phase3 go-live）は未了。その<strong>裏返しの綻び</strong>（outbound レポートの受け手不在）を <strong>O-010</strong> として最新レポートで継続追跡。</li>
+      <li><strong>関連</strong>：<span class="font-mono">data/mailbox/cur/M-20260619T163456-yoshida-dev…</span>・<span class="font-mono">…T170157-web-hanasaka…</span>／<span class="font-mono">bin/agent-tick.sh</span>／O-010（Cycle 007 起票・008 原因特定・009 解決）</li>
+    </ul>
+  </div>
+
+  <!-- O-001 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-001：task-partner.md の版ヘッダが changelog と不一致</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 反映済み</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>観察</strong>：ファイル先頭は <span class="font-mono">version 0.2</span>。changelog には 0.3・0.4 の追記あり。</li>
+      <li><strong>結末</strong>：2026-06-18 社長承認「0.4で」→版ヘッダを 0.4 に更新。SYSTEM.md 版表と一致。</li>
+      <li><strong>関連</strong>：<span class="font-mono">.claude/rules/task-partner.md</span> / SYSTEM.md（Cycle 001 起票・Cycle 002 反映）</li>
+    </ul>
+  </div>
+
+  <!-- O-002 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-002：mailbox の恒久トークン表が未作成</h4>
+      <span class="text-xs font-bold text-white bg-sky-600 px-2 py-0.5 rounded">🟦 様子見（想定内）</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>観察</strong>：<span class="font-mono">data/secrets/mailbox-tokens.json</span> が未作成。検証は使い捨てトークン。</li>
+      <li><strong>結末</strong>：2026-06-18 社長「mailbox は開発中」＝想定内。実運用フェーズで対応（社長手元作業）。</li>
+      <li><strong>関連</strong>：mailbox.md / 各拠点 .env（Cycle 001 起票・Cycle 002 様子見化）</li>
+    </ul>
+  </div>
+
+  <!-- O-003 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-003：mailbox new/ にテストメッセージが滞留</h4>
+      <span class="text-xs font-bold text-white bg-sky-600 px-2 py-0.5 rounded">🟦 様子見（想定内）</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>観察</strong>：<span class="font-mono">data/mailbox/new/</span> にテストの残骸メッセージ。</li>
+      <li><strong>結末</strong>：2026-06-18 社長「mailbox は開発中」＝想定内。シード残骸は実運用前に整理。</li>
+      <li><strong>関連</strong>：data/mailbox/new/（Cycle 001 起票・Cycle 002 様子見化）</li>
+    </ul>
+  </div>
+
+  <!-- O-005 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-005：mailbox スライス3（承認導線）未実装で hold/ が機能しない</h4>
+      <span class="text-xs font-bold text-white bg-sky-600 px-2 py-0.5 rounded">🟦 様子見（想定内）</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>観察</strong>：<span class="font-mono">approve</span>（hold/→new/）は未実装でサーバが 501。社長用ブラウザビューも未作成。</li>
+      <li><strong>結末</strong>：2026-06-18 社長「mailbox は開発中」＝想定内。スライス3は開発計画の一部。</li>
+      <li><strong>関連</strong>：mailbox.md（段階導入スライス3）（Cycle 001 起票・Cycle 002 様子見化）</li>
+    </ul>
+  </div>
+
+  <!-- ===== 過去サイクルログ ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6 mt-12">過去サイクルログ</h2>
+
+  <!-- Cycle 011 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 011 — 2026-06-23（精密診断）</h3>
+    <p class="text-sm text-gray-700">統括ループ・Slack双方向・無人ティック（2分毎 <span class="font-mono">status=ok</span>・全 idle）・<span class="font-mono">hold/</span> 空を確認。<strong>O-012 を起票</strong>：yoshida-dev の実装報告（6/22・PC固定予約CTA／ブログ末尾CTA・本番反映済）が旧称 <span class="font-mono">to: hp-loop</span> 宛で <span class="font-mono">new/</span> に孤児化＝web-hanasaka に続く2例目で<strong>宛名移行の系統的未完</strong>と判明。これに伴い O-010 を訂正（yoshida-dev は稼働中／fujisaka-dev は当時着信痕跡なし＝未確認）、O-011 を O-012 へ統合。版ズレ（O-008）・未コミット（O-009・commit 1bdcd39 で一部前進）は据え置き。K-041 記録（同一故障が複数チャネルで出たら系統1件に束ねて根本を名指し）。→ <strong>Cycle 012（2026-06-24）で実体確認のうえ解決へ</strong>：旧称宛 inbound 消失・<span class="font-mono">cur/</span> に hp-loop-yoshida 消化6通・3 dev 全稼働（fujisaka-dev も確認）で往復が閉路化。O-010/011/012 を本アーカイブの「解決」へ収容。</p>
+  </div>
+
+  <!-- Cycle 010 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 010 — 2026-06-22（精密診断）</h3>
+    <p class="text-sm text-gray-700">統括ループ・Slack双方向・無人ティック（2分毎 <span class="font-mono">status=ok</span>・全 idle）・<span class="font-mono">hold/</span> 空を確認。<strong>O-011 を起票</strong>：web-hanasaka の実装報告（/works/ の title/meta 是正・h1 43→4・本番GET確認済）が旧称 <span class="font-mono">to: hp-loop</span> 宛で孤児化＝O-007 の inbound 再発。同日の軽い巡回で、当該滞留が 6/22 02:11 の ycom 日次ループに読まれ本番検証OKとして <span class="font-mono">cur/</span> へ移動したのを確認し O-011 を🟢へ格下げ（残＝再発防止）。O-010（yoshida/fujisaka の outbound 滞留・10通）・版ズレ（O-008）・未コミット（O-009）は社長判断待ちで据え置き。→ <strong>Cycle 011（精密診断）で根本原因の未解消が再び表面化</strong>：yoshida-dev の実装報告（6/22・本番反映済）が再び旧称宛で孤児化し、宛名移行の未完が web-hanasaka だけでなく yoshida-dev にも及ぶ<strong>系統的問題（O-012）</strong>と判明。O-011 の🟢格下げは症状ベースで早計だった（K-040 の再確認）。</p>
+  </section>
+
+  <!-- Cycle 009 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 009 — 2026-06-21（精密診断）</h3>
+    <p class="text-sm text-gray-700">統括ループ・Slack双方向・無人ティック（2分毎 <span class="font-mono">status=ok</span>）の正常を確認。<strong>O-007 を解決</strong>（6/19 の孤児 inbound 2通が <span class="font-mono">cur/</span> へ移動済み＝処理確認）し、裏返しの綻び <strong>O-010</strong>（yoshida/fujisaka 向け outbound レポートが受け手不在で滞留＝片道運用）を起票。地図の版ズレ（O-008）・未コミット（O-009）は社長判断待ちで据え置き。→ <strong>Cycle 010（精密診断）で O-007 の inbound 側が再発を確認</strong>：web-hanasaka の実装報告が旧称 <span class="font-mono">to: hp-loop</span> 宛で再び孤児化（O-011）。O-007 の「解決」は症状（古い滞留の移動）であって根本原因（宛名移行の未完）は未解消だったと判明。</p>
+  </section>
+
+  <!-- Cycle 008 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 008 — 2026-06-20（精密診断）</h3>
+    <p class="text-sm text-gray-700">統括ループ・Slack双方向・無人ティック正常を確認のうえ、<strong>O-007 の原因を特定</strong>：実装側返信の宛先が総称 <span class="font-mono">to: hp-loop</span> で、dispatcher（<span class="font-mono">agent-tick.sh</span>）は <span class="font-mono">hp-loop-&lt;site&gt;</span> を厳密一致でしか監視せず <strong>pending=0 に化けて起動しない</strong>サイレント故障と結論。あわせて地図の版ズレ（O-008）・未コミット蓄積（O-009）を起票。→ <strong>Cycle 009 で O-007 は滞留解消を確認し解決</strong>（裏返しの outbound 滞留を O-010 で継続）。</p>
+  </section>
+
+  <!-- Cycle 007 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 007 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-700">社長の Slack 返信「ルール化を残存課題として残して」を処理（O-006 を保留＝着手OK待ちに）。新規シグナルとして O-007 を起票：実装側 <span class="font-mono">web-hanasaka</span> の返信が hp-loop 受信箱で滞留（当時は<strong>原因未特定</strong>＝「ループ未稼働の可能性」と推測）。→ <strong>Cycle 008（精密診断）で原因を特定</strong>：宛名のズレ（<span class="font-mono">to: hp-loop</span> を dispatcher が監視せず pending=0 に化ける）。O-007 は最新レポートで更新・継続。</p>
+  </section>
+
+  <!-- Cycle 006 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 006 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-700">社長指示「レポートは知るべきものだけ・分かりやすく／完了はアーカイブ／全体仕様・最新・アーカイブで分ける／ルール化」を反映し、統括レポートを<strong>3ページに分割</strong>（<a href="spec.html" class="text-blue-600 hover:underline">全体仕様</a>／最新レポート／このアーカイブ）。新規の綻びなし。</p>
+  </section>
+
+  <!-- Cycle 005 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 005 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-700">社長の依頼「システムの全体構造・役割を整理してレポートに上げて」を反映し、常設「📐 システム全体構造・役割（早見）」をページ上部に新設（→ Cycle 006 で<a href="spec.html" class="text-blue-600 hover:underline">全体仕様ページ</a>へ独立）。新規の綻びなし。</p>
+  </section>
+
+  <!-- Cycle 004 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 004 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-700">社長の mailbox 指示「ループ動いていますか」を処理し、稼働中である旨を元スレッドへ返信。新規の綻びなし。</p>
+  </section>
+
+  <!-- Cycle 003 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 003 — 2026-06-18（軽い巡回）</h3>
+    <p class="text-sm text-gray-700">社長指示「O-004 は作ろうとしたが未完成。私の残存課題として今後も報告して」→ O-004 を「社長の残存課題」に位置づけ変更し継続トラッキングに。</p>
+  </section>
+
+  <!-- Cycle 002 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 002 — 2026-06-18（軽い巡回・初回ループ稼働）</h3>
+    <p class="text-sm text-gray-700">統括ループ稼働確認（毎時:07・Slack双方向 fetch/reply 正常）。社長の Slack 指示2件を処理：O-001 を 0.4 反映、O-002・O-003・O-005 を「様子見（想定内＝mailbox 開発中）」に変更。</p>
+  </section>
+
+  <!-- Cycle 001 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 001 — 2026-06-18（初回健康チェック・精密診断）</h3>
+    <p class="text-sm text-gray-700 mb-2"><strong>チェック範囲</strong>：全モードのルール参照パス実在性／版ヘッダ↔changelog 整合／mailbox の実体・滞留／未完の型（コマンド・スライス）／相互リンク。読み取りのみ。</p>
+    <p class="text-sm text-gray-700"><strong>健康サマリ</strong>：致命的な綻びは無し。最大の論点は mailbox が「作ったが、まだ実運用ループに入っていない」こと。提案 O-001〜O-005 を起票（→ いずれも上の「解決・決着した提案」に決着）。自己改善（K）：健康チェックの決定論部分（版ヘッダ照合・パス実在・mailbox 滞留）は <span class="font-mono">bin/system-health.sh</span> 化候補。</p>
+  </section>
+
+  <p class="text-xs text-gray-400 mt-10">※ 履歴は消さず保管します。詳細な当時の提案カード全文は git 履歴（<span class="font-mono">site/overseer/index.html</span> の Cycle 001〜005）からも参照できます。</p>
+
+</div>
+</body>
+</html>

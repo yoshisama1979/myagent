@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全体仕様（システム構造・役割）｜統括レポート｜株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">統括レポート</a>
+    <span class="mx-1">/</span>
+    <span>全体仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 全体仕様（システム構造・役割）</h1>
+  <p class="text-gray-600 mb-2">このAI作業環境は <strong>複数の半自律モードの集合体</strong>です。各モードは「一次情報源／出力先／承認ゲート／対話相手」を持ち、<strong>社長をハブに非同期で連携</strong>して案件を前へ進めます。変わりにくい<strong>構造</strong>をここに常設します（変わりやすい状態は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>へ）。</p>
+  <p class="text-sm text-gray-500 mb-8">一次資料：<span class="font-mono bg-gray-100 px-1 rounded">SYSTEM.md</span>（モード地図）・<span class="font-mono bg-gray-100 px-1 rounded">OVERVIEW.md</span>（ディレクトリ地図）・<span class="font-mono bg-gray-100 px-1 rounded">AI-INDEX.md</span>（site/中身の地図）。以下はその社長向け早見。</p>
+
+  <!-- 3ページの案内 -->
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-800 font-semibold">📐 全体仕様（このページ）</span>
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <!-- 土台原則 -->
+  <div class="bg-indigo-50 rounded p-4 mb-8">
+    <p class="text-sm font-semibold text-indigo-900 mb-1">土台原則（迷ったらこの順）</p>
+    <ol class="list-decimal list-inside text-sm text-gray-800 space-y-0.5">
+      <li><strong>安全が最優先</strong>（<span class="font-mono">rules/automation.md</span>）：外部送信・書き込み・破壊的操作・秘密情報は合意なしに自動実行しない。</li>
+      <li><strong>行動指針</strong>（<span class="font-mono">CLAUDE.md</span>）：結論ファースト・実務重視・確認してから動く・当事者意識。</li>
+      <li><strong>各モードのルール</strong>（<span class="font-mono">.claude/rules/*</span>）。</li>
+    </ol>
+    <p class="text-xs text-gray-600 mt-2">横断する設計思想：<strong>核と肉付けの二層</strong>（CLAUDE.md は最小核・詳細は外出し）／<strong>記録と反映の分離</strong>（気づきは記録し反映は社長判断でまとめて）／<strong>台帳を二重に持たない</strong>（一次情報源は1つ・ダッシュボードは都度生成）／<strong>責務分離</strong>（社長の領域とAIの領域を混ぜない）。</p>
+  </div>
+
+  <!-- モード一覧 -->
+  <p class="text-lg font-semibold text-gray-800 mb-2">8つのモード（役割と動き方）</p>
+  <div class="overflow-x-auto mb-5">
+    <table class="w-full text-xs border-collapse">
+      <thead>
+        <tr class="bg-gray-100 text-left">
+          <th class="border border-gray-300 px-2 py-1">モード</th>
+          <th class="border border-gray-300 px-2 py-1">目的</th>
+          <th class="border border-gray-300 px-2 py-1">起動</th>
+          <th class="border border-gray-300 px-2 py-1">一次情報源（読む）</th>
+          <th class="border border-gray-300 px-2 py-1">出力先（書く）</th>
+          <th class="border border-gray-300 px-2 py-1">対話相手</th>
+        </tr>
+      </thead>
+      <tbody class="align-top">
+        <tr>
+          <td class="border border-gray-300 px-2 py-1 font-semibold">Main（業務）</td>
+          <td class="border border-gray-300 px-2 py-1">蓄積記録を運用・実装に反映</td>
+          <td class="border border-gray-300 px-2 py-1">通常会話</td>
+          <td class="border border-gray-300 px-2 py-1">site/・data/・hana-tools</td>
+          <td class="border border-gray-300 px-2 py-1">site/各所・コード</td>
+          <td class="border border-gray-300 px-2 py-1">社長</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="border border-gray-300 px-2 py-1 font-semibold">Memo</td>
+          <td class="border border-gray-300 px-2 py-1">断片メモを精度高く記録（一次入力）</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/memo</span></td>
+          <td class="border border-gray-300 px-2 py-1">社長の口頭メモ</td>
+          <td class="border border-gray-300 px-2 py-1">notes.html・clients/*/memo.html</td>
+          <td class="border border-gray-300 px-2 py-1">社長</td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 px-2 py-1 font-semibold">Reviewer</td>
+          <td class="border border-gray-300 px-2 py-1">プロジェクトを俯瞰レビュー→改善提案</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/reviewer-cycle</span></td>
+          <td class="border border-gray-300 px-2 py-1">ai-loop/scope.md・exclusions.md</td>
+          <td class="border border-gray-300 px-2 py-1">ai-loop/conversation.md</td>
+          <td class="border border-gray-300 px-2 py-1">Dev AI（非同期）</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="border border-gray-300 px-2 py-1 font-semibold">hp-improve</td>
+          <td class="border border-gray-300 px-2 py-1">クライアントHPの診断→改善（単発）</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/hp-improve</span></td>
+          <td class="border border-gray-300 px-2 py-1">対象URL・hp-audit・GSC/GA4</td>
+          <td class="border border-gray-300 px-2 py-1">site/drafts/・site/clients/*</td>
+          <td class="border border-gray-300 px-2 py-1">社長</td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 px-2 py-1 font-semibold">hp-loop</td>
+          <td class="border border-gray-300 px-2 py-1">HPを定期診断→提案→非同期会話（YCOM自社）</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/hp-loop</span>＋<span class="font-mono">/loop</span></td>
+          <td class="border border-gray-300 px-2 py-1">config.md・from-president.md・hp-audit・GSC</td>
+          <td class="border border-gray-300 px-2 py-1">site/hp-analysis/ycom/</td>
+          <td class="border border-gray-300 px-2 py-1">社長＋実装側エージェント</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="border border-gray-300 px-2 py-1 font-semibold">hp-reply</td>
+          <td class="border border-gray-300 px-2 py-1">社長コメントを from-president.md へ代筆転記</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/hp-reply</span></td>
+          <td class="border border-gray-300 px-2 py-1">社長コメント</td>
+          <td class="border border-gray-300 px-2 py-1">data/hp-loop/from-president.md</td>
+          <td class="border border-gray-300 px-2 py-1">社長</td>
+        </tr>
+        <tr>
+          <td class="border border-gray-300 px-2 py-1 font-semibold">task-partner（進行管理）</td>
+          <td class="border border-gray-300 px-2 py-1">ToDo駆動で案件の進行を管理・橋渡し</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/task-partner</span>（未作成）</td>
+          <td class="border border-gray-300 px-2 py-1"><strong>hana-tools（ToDoが一次）</strong></td>
+          <td class="border border-gray-300 px-2 py-1">site/clients/*（補足）・site/drafts/</td>
+          <td class="border border-gray-300 px-2 py-1">社長＋プロジェクト側</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="border border-gray-300 px-2 py-1 font-semibold">Overseer（統括）</td>
+          <td class="border border-gray-300 px-2 py-1">システム全体の整合・健全性を見張り改善提案</td>
+          <td class="border border-gray-300 px-2 py-1"><span class="font-mono">/overseer</span>＋<span class="font-mono">/loop</span></td>
+          <td class="border border-gray-300 px-2 py-1">SYSTEM.md・各ルール・各掲示板・mailbox</td>
+          <td class="border border-gray-300 px-2 py-1">site/overseer/（このレポート）</td>
+          <td class="border border-gray-300 px-2 py-1">社長</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="text-xs text-gray-500 mb-8">※ いずれも「外部送信・本番改変・API書き込み」は<strong>社長合意がゲート</strong>。AIは提案・下ごしらえまでで、実行判断は社長。<span class="font-mono">claude-rules/</span> はクライアント向け汎用ルールの置き場で、この8モードとは別物。</p>
+
+  <!-- ハンドオフ -->
+  <p class="text-lg font-semibold text-gray-800 mb-2">連携の地図（誰がどのチャネルで非同期会話するか）</p>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+    <li><strong>Memo → Main</strong>：site/ のメモ追記を、後で Main が運用反映。</li>
+    <li><strong>Reviewer ⇄ Dev AI</strong>：<span class="font-mono">ai-loop/conversation.md</span>（提案↔人判断↔実装）。</li>
+    <li><strong>hp-loop ⇄ 実装側エージェント</strong>：掲示板 <span class="font-mono">site/hp-analysis/</span> ＋ from-president.md ＋ mailbox（社長が橋渡し）。</li>
+    <li><strong>task-partner ⇄ プロジェクト側</strong>：hana-tools の ToDo（一次）＋ 社長橋渡し。</li>
+    <li><strong>全拠点エージェント間</strong>：mailbox（VPS API・Tailscale・<span class="font-mono">hold/</span>＝社長承認ゲート）。</li>
+    <li><strong>社長 ⇄ 各エージェント</strong>：Slack 双方向（<span class="font-mono">slack-poll.py</span> ⇄ mailbox）。</li>
+  </ul>
+  <p class="text-sm font-semibold text-indigo-900 bg-indigo-50 rounded px-3 py-2 mb-8">🧭 社長 ＝ すべてのハブ。AIの提案は社長を介して相手へ渡り、報告は社長を介して戻る。</p>
+
+  <!-- この統括ループの回し方 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-8 bg-white">
+    <h2 class="text-lg font-semibold mb-3">この統括ループの回し方</h2>
+    <ol class="list-decimal list-inside space-y-1 text-sm text-gray-700">
+      <li>AI が <span class="font-mono bg-gray-100 px-1 rounded">SYSTEM.md</span>（モード地図）を読み、版ズレ・滞り・未完の型・リンク切れを<strong>実体で</strong>健康チェック</li>
+      <li>綻び・改善余地を <span class="font-mono bg-gray-100 px-1 rounded">O-NNN</span> 提案として<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>に積む（<strong>提案まで。勝手に直さない＝reviewer 型</strong>）</li>
+      <li>社長は<strong>「🔔 社長の判断・対応待ち」</strong>を見て、採用/却下/保留や手元作業を判断</li>
+      <li>採用分のみ、別途ルール/本体に反映（記録と反映の分離）</li>
+      <li>解決・完了した提案は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移し、最新レポートは「今まさに知るべきこと」だけに保つ</li>
+    </ol>
+    <p class="text-xs text-gray-500 mt-3">統括は個別モードの中の仕事はしません（HP診断・案件進行などは各モードの領分）。見るのは<strong>モード群のつなぎ目と運用</strong>です。</p>
+  </div>
+
+  <p class="text-xs text-gray-400">動作ルール：<span class="font-mono">.claude/rules/overseer.md</span>／地図：<span class="font-mono">SYSTEM.md</span>／起動：<span class="font-mono">/overseer</span></p>
+
+</div>
+</body>
+</html>
