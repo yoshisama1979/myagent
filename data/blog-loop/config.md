@@ -41,7 +41,8 @@
 | タイムゾーン | Asia/Tokyo |
 | 停止条件 | 社長の停止指示／未回答の質問が溜まったら一旦停止して回答待ち |
 | 実行方式 | **VPSローカル cron ＋ ヘッドレス `claude -p`（無人・クライアント別日次）**。ディスパッチャ＝`bin/agent-tick.sh`（`daily blog-loop-<client>`／`daily blog-write-<client>` で強制／blog-loop は `to: blog-loop-<client>` 新着で随時）。[[project_unattended-loop-cron]] |
-| cron（2本・別時刻・HP解析02-03時とずらす） | `0 5 * * * …/bin/agent-tick.sh daily blog-loop-ycom`（05:00 診断）／`30 5 * * * …/bin/agent-tick.sh daily blog-write-ycom`（05:30 執筆→**事実が揃った記事だけ**WP下書き投稿）。社長決定 2026-06-23。**crontab2行追加＋settings.local.json の post 許可は社長作業** |
+| cron（3本・別時刻・HP解析02-03時とずらす） | `0 5 * * * …daily blog-loop-ycom`（05:00 診断 B/T）／`30 5 * * * …daily blog-write-ycom`（05:30 **新規記事**→WP下書き）／`0 6 * * * …daily blog-improve-ycom`（06:00 **既存記事の改善版**を下書き複製で作成）。社長決定 2026-06-23。**crontab追加＋settings.local.json の許可は社長作業** |
+| 実行モード3本の役割 | **blog-loop=診断（B/T）／blog-write=新規記事(T)→新規下書き／blog-improve=既存記事(B)→元記事は読むだけ・改善版を下書き複製で作成（本番反映は人間）** |
 | 自動投稿の方針 | **下書きは毎サイクル WP に反映してレビューに供する**（社長決定 2026-06-23 改）。新規は `status=draft` で投稿しIDを記録、以降は **同じ下書きを `update`**（重複を作らずデザイン改訂・事実追記を反映）。**`【要・社長確認】` が残っていても投稿/更新**（社長が WP で見て指示・事実を返す）。**公開(publish)は常に人間**／`update` は draft 限定（公開済みは触らない）／新規は1日最大1本。 |
 | 役割分担 | **blog-loop＝診断・提案・構成案。blog-write＝完成原稿ドラフト生成＋（事実が揃えば）WP下書き投稿。公開は人間。** |
 

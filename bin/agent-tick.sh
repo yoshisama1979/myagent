@@ -6,8 +6,9 @@
 #
 #   1) slack-poll.py fetch … 社長Slackの新着を mailbox へ取り込む（純シェル・確実・低コスト）
 #   2) 宛先ごとに振り分け：
-#        to: hanasaka-main あり        → claude -p /chat     （社長との会話・スレッド返信）
-#        to: overseer あり / daily指定 → claude -p /overseer （統括）
+#        to: hanasaka-main あり        → claude -p /chat        （社長との会話・スレッド返信）
+#        daily memo（夜バッチ）        → claude -p /memo-intake （#memo の日常メモを notes.html へまとめて整理）
+#        to: overseer あり / daily指定 → claude -p /overseer    （統括）
 #      （--permission-mode acceptEdits ＝ 編集は自動承認／Bash は settings.local.json の許可リストのみ）
 #   3) ハートビート … 毎回 last-tick を記録（沈黙＝不明、を解消。Web からも確認可）
 #   4) 失敗時は社長Slackへ通知（1時間スロットル）＝「私が見てない間に壊れてた」を防ぐ
@@ -22,7 +23,9 @@
 #   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer        # 1日1回：overseer 精密診断
 #   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別）
 #   0 5   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom  # ブログ診断（B/T提案）
-#   30 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom # ブログ執筆→事実が揃った記事だけWP下書き投稿
+#   30 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom   # ブログ新規記事→WP下書き
+#   0 6   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom # ブログ既存記事の改善版を下書き複製で作成
+#   0 23  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily memo              # 日常メモ：#memo の当日分を notes.html へまとめて整理（夜バッチ）
 #
 # automation.md：外部送信は各モードのルールで社長専用チャンネルに限定。raw mv は使わず slack-poll done。
 set -uo pipefail
@@ -151,8 +154,11 @@ dispatch() {
   ACTIONS+=("$label:$pending:$action")
 }
 
-# --- 2) 各エージェントを振り分け（会話→統括の順。pending か daily 強制のときだけ起動） ---
+# --- 2) 各エージェントを振り分け（会話→メモ→統括の順。pending か daily 強制のときだけ起動） ---
 dispatch "chat"     "/chat"     "hanasaka-main"
+# メモ窓口：社長が #memo に投げた日常メモ（mailbox to: memo）を notes.html へ追記。
+# 日中は fetch が mailbox に貯めるだけ＝LLM起動せずトークン節約。夜の daily memo で1回だけまとめ処理する。
+[ "$MODE" = "daily" ] && dispatch "memo" "/memo-intake" "memo"
 dispatch "overseer" "/overseer" "overseer"
 # HP分析ループはサイト別に独立（mailbox to: hp-loop-<site> 新着 or daily hp-loop-<site> 強制で起動）
 dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
@@ -160,8 +166,10 @@ dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
 dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka"
 # ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
 # blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
-dispatch "blog-loop:ycom"   "/blog-loop ycom"   "blog-loop-ycom"
-dispatch "blog-write:ycom"  "/blog-write ycom"  "blog-write-ycom"
+dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"
+dispatch "blog-write:ycom"   "/blog-write ycom"   "blog-write-ycom"
+# 既存記事の改善（B）：元記事は触らず改善版を下書き複製で作る。新規(blog-write)とは別ループ・別時刻。
+dispatch "blog-improve:ycom" "/blog-improve ycom" "blog-improve-ycom"
 
 # --- 3) ハートビート（毎回・Web可視・書き込み失敗も検知＝Codex🔴2） ---
 HB_LINE="agent-tick alive: $(now) | mode=$MODE force=${FORCE_AGENT:-none} | ${ACTIONS[*]:-none} | status=$(status_str)"

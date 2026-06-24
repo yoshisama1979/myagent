@@ -82,6 +82,7 @@
 | `yoshida-dev` | よしだ歯科サイト実装エージェント | 拠点PC |
 | `web-hanasaka` | はなさか自社サイト（y-com.info）実装エージェント。hp-loop の提案を実装し、報告・質問を hp-loop へ返す | 拠点PC |
 | `hanasaka-main` | はなさか本体の業務エージェント＝**社長Slackの既定受け先**（`bin/slack-poll.py` の `DEFAULT_AGENT`）。新規トップレベル投稿＝社長との会話を `/chat` で受ける | 拠点PC / VPS |
+| `memo` | 日常メモ取り込み。社長が Slack **#memo（`SLACK_MEMO_CHANNEL_ID`）** に投げたトップ投稿を `slack-poll.py fetch` が `to: memo` で投函（日中は貯めるだけ）、**夜バッチ `daily memo`** の `/memo-intake` が当日分をまとめて `site/notes.html` へ追記し #memo に要約1本。**Slack 投函＋filesystem 読み＝HTTP API 不経由なのでトークン不要**（`$known_agents` 検証の対象外） | VPS |
 
 ---
 

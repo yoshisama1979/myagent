@@ -13,17 +13,26 @@
 
 トークン設計：初回は last-seen を「今」にして過去を読まない。毎回 新着だけ。0件ならほぼ0コスト。
 
+複数チャンネル（2026-06-24）:
+- 既定チャンネル SLACK_CHANNEL_ID … トップレベル投稿は会話担当(hanasaka-main)へ。
+- メモ専用チャンネル SLACK_MEMO_CHANNEL_ID（任意）… トップレベル投稿は memo へ（日常メモ窓口）。
+  未設定ならメモ窓口は無効（従来どおり1チャンネル運用）。last-seen はチャンネル別キーで保持。
+  追跡スレッドは threads.json に channel を記録し、返信走査を正しいチャンネルで行う。
+
 使い方:
-  slack-poll.py fetch            # 新着(トップ+スレッド返信)→mailbox→last-seen更新（既定）
-  slack-poll.py fetch --init     # last-seenを今にして終了（過去は読まない）
-  slack-poll.py post  [--as <agent>] "本文"      # トップ投稿（戻り値thread_ts・スレッド追跡に登録）
-  slack-poll.py reply <thread_ts> [--as <agent>] "本文"   # スレッドへ返信（本文は引数末尾 or 標準入力）
+  slack-poll.py fetch            # 全チャンネルの新着(トップ+スレッド返信)→mailbox→last-seen更新（既定）
+  slack-poll.py fetch --init     # 全チャンネルの last-seenを今にして終了（過去は読まない）
+  slack-poll.py post  [--as <agent>] [--channel main|memo|<C...>] "本文"   # トップ投稿（戻り値thread_ts）
+  slack-poll.py reply <thread_ts> [--as <agent>] [--channel main|memo|<C...>] "本文"  # スレッドへ返信
 
   --as <agent>：そのスレッドの持ち主（社長の返信先エージェント）を明示。無指定なら従来動作
                 （post=DEFAULT_AGENT / reply=既存スレッドの持ち主）＝後方互換。
+  --channel：投稿先チャンネル。alias（main/memo）または生のチャンネルID。無指定なら
+             reply は登録スレッドのチャンネル→既定、post は既定チャンネル。
 
-必要な .env: SLACK_BOT_TOKEN(xoxb-) / SLACK_CHANNEL_ID(C...)
+必要な .env: SLACK_BOT_TOKEN(xoxb-) / SLACK_CHANNEL_ID(C...)（メモ窓口を使うなら SLACK_MEMO_CHANNEL_ID も）
 読み取りは groups:history（非公開）/ channels:history（公開）、投稿は chat:write。
+Bot は対象チャンネル（#memo 含む）に招待しておくこと。
 """
 import json
 import os
@@ -47,6 +56,9 @@ JST = timezone(timedelta(hours=9))
 # overseer / hp-loop は自分の日報を post --as <自分> でスレッド化し、社長がそのスレッドに
 # 返信した時だけ各ループが拾う（スレッドの持ち主は threads.json に保持される）。
 DEFAULT_AGENT = "hanasaka-main"
+# メモ専用チャンネル（SLACK_MEMO_CHANNEL_ID）のトップレベル投稿の受け先。
+# 社長が #memo に投げた日常メモを /memo-intake が notes.html へ追記する。
+MEMO_AGENT = "memo"
 MAX_PER_POLL = 50
 
 
@@ -81,6 +93,37 @@ def _write_json(path, data):
     os.replace(tmp, path)
 
 
+def channels():
+    """走査対象 (channel_id, トップレベル投稿の受け先agent, トップ投稿をスレッド追跡するか) のリスト。
+
+    既定チャンネル→hanasaka-main（会話なので追跡する＝社長の返信を拾う）。
+    メモ専用チャンネル（任意）→memo（**追跡しない**：メモは夜バッチでまとめ処理するので、
+    投稿1件ごとに追跡スレッドを増やさない＝threads.json の肥大を防ぐ。社長への確認は
+    夜バッチが #memo に1本だけ立てる要約スレッドで受ける）。
+    メモが未設定なら従来どおり1チャンネルのみ。重複IDは1つに畳む。
+    """
+    out, seen = [], set()
+    main = get_env("SLACK_CHANNEL_ID")
+    if main:
+        out.append((main, DEFAULT_AGENT, True))
+        seen.add(main)
+    memo = get_env("SLACK_MEMO_CHANNEL_ID")
+    if memo and memo not in seen:
+        out.append((memo, MEMO_AGENT, False))
+    return out
+
+
+def _resolve_channel(val):
+    """--channel の値（alias main/memo または生ID）をチャンネルIDへ。未指定は None。"""
+    if not val:
+        return None
+    if val == "main":
+        return get_env("SLACK_CHANNEL_ID")
+    if val == "memo":
+        return get_env("SLACK_MEMO_CHANNEL_ID")
+    return val
+
+
 def _now_ts():
     return f"{datetime.now(JST).timestamp():.6f}"
 
@@ -99,14 +142,23 @@ def save_channel_seen(channel, ts):
     _write_json(LAST_SEEN, data)
 
 
-def register_thread(thread_ts, agent, last_seen):
-    """スレッドを追跡対象に登録（既存があれば agent は保持、last_seen は前進しない=据え置き）。"""
+def register_thread(thread_ts, agent, last_seen, channel=None):
+    """スレッドを追跡対象に登録（既存があれば agent/channel は保持、last_seen は据え置き）。
+
+    channel は返信走査(conversations_replies)を正しいチャンネルで行うために記録する。
+    未指定（既存仕様の呼び出し）なら省略＝走査時に既定チャンネルへフォールバック。
+    """
     data = _read_json(THREADS, {})
     cur = data.get(thread_ts)
     if cur is None:
-        data[thread_ts] = {"agent": agent, "last_seen": last_seen}
+        entry = {"agent": agent, "last_seen": last_seen}
+        if channel:
+            entry["channel"] = channel
+        data[thread_ts] = entry
     else:
         cur.setdefault("agent", agent)
+        if channel:
+            cur.setdefault("channel", channel)
     _write_json(THREADS, data)
 
 
@@ -163,41 +215,50 @@ def client():
 
 
 def cmd_fetch(args):
-    channel = get_env("SLACK_CHANNEL_ID")
-    if not channel:
+    # 既定チャンネルは必須（システム全体が前提）。未設定なら memo だけ設定でも進めない＝
+    # channel無しの旧threadが空チャンネルへフォールバックして走査失敗するのを防ぐ（後方互換の不変条件）。
+    if not get_env("SLACK_CHANNEL_ID"):
         sys.exit("ERROR: .env の SLACK_CHANNEL_ID が未設定です")
+    chans = channels()
     w = client()
     me = w.auth_test().get("user_id", "")
-
-    if "--init" in args or load_channel_seen(channel) is None:
-        save_channel_seen(channel, _now_ts())
-        print("初期化：last-seen を現在時刻に設定しました（過去履歴は読み込みません）。次回以降の新着のみ取得します。")
-        return
-
+    force_init = "--init" in args
     saved = []  # (msg_id, agent, preview)
 
-    # --- (a) 新着トップレベル ---
-    ch_seen = load_channel_seen(channel)
-    resp = w.conversations_history(channel=channel, oldest=ch_seen, inclusive=False, limit=MAX_PER_POLL)
-    tops = [m for m in resp.get("messages", []) if m.get("ts", "0") > ch_seen and _ingestable(m, me)]
-    tops.sort(key=lambda m: m["ts"])
-    newest_ch = ch_seen
-    for m in tops:
-        register_thread(m["ts"], DEFAULT_AGENT, m["ts"])  # 新規スレッドとして追跡開始
-        mid = write_mailbox(channel, m, DEFAULT_AGENT)
-        newest_ch = _max_ts(newest_ch, m["ts"])
-        if mid:
-            saved.append((mid, DEFAULT_AGENT, (m.get("text", "") or "")[:50]))
-    if newest_ch != ch_seen:
-        save_channel_seen(channel, newest_ch)
+    # --- (a) 各チャンネルの新着トップレベル（チャンネル別の受け先agentへ振り分け） ---
+    for channel, default_agent, track_tops in chans:
+        ch_seen = load_channel_seen(channel)
+        if force_init or ch_seen is None:
+            # 新規チャンネルは last-seen を現在に。過去履歴は読まない（メモ窓口を後から足しても暴発しない）。
+            save_channel_seen(channel, _now_ts())
+            print(f"初期化：channel {channel} の last-seen を現在時刻に設定（過去は読み込みません）。")
+            continue
+        resp = w.conversations_history(channel=channel, oldest=ch_seen, inclusive=False, limit=MAX_PER_POLL)
+        tops = [m for m in resp.get("messages", []) if m.get("ts", "0") > ch_seen and _ingestable(m, me)]
+        tops.sort(key=lambda m: m["ts"])
+        newest_ch = ch_seen
+        for m in tops:
+            if track_tops:
+                register_thread(m["ts"], default_agent, m["ts"], channel)  # 新規スレッドとして追跡開始
+            mid = write_mailbox(channel, m, default_agent)
+            newest_ch = _max_ts(newest_ch, m["ts"])
+            if mid:
+                saved.append((mid, default_agent, (m.get("text", "") or "")[:50]))
+        if newest_ch != ch_seen:
+            save_channel_seen(channel, newest_ch)
 
-    # --- (b) 追跡中スレッドの新着返信 ---
+    if force_init:
+        return
+
+    # --- (b) 追跡中スレッドの新着返信（スレッドごとに記録チャンネルで走査） ---
+    main_ch = get_env("SLACK_CHANNEL_ID")
     threads = _read_json(THREADS, {})
     for thread_ts, info in list(threads.items()):
         t_seen = info.get("last_seen", thread_ts)
         agent = info.get("agent", DEFAULT_AGENT)
+        t_channel = info.get("channel", main_ch)   # 旧データ（channel無し）は既定チャンネル
         try:
-            r = w.conversations_replies(channel=channel, ts=thread_ts, oldest=t_seen,
+            r = w.conversations_replies(channel=t_channel, ts=thread_ts, oldest=t_seen,
                                         inclusive=False, limit=MAX_PER_POLL)
         except Exception as e:  # noqa: BLE001 — スレッドが消えた等。スキップして継続
             print(f"[warn] replies取得失敗 thread={thread_ts}: {e}", file=sys.stderr)
@@ -207,7 +268,7 @@ def cmd_fetch(args):
         reps.sort(key=lambda m: m["ts"])
         newest_t = t_seen
         for m in reps:
-            mid = write_mailbox(channel, m, agent)
+            mid = write_mailbox(t_channel, m, agent)
             newest_t = _max_ts(newest_t, m["ts"])
             if mid:
                 saved.append((mid, agent, (m.get("text", "") or "")[:50]))
@@ -243,34 +304,59 @@ def _pop_as(args):
     return agent, out
 
 
+def _pop_channel(args):
+    """引数列から `--channel <alias|id>` を取り除き (値|None, 残りの引数) を返す。"""
+    out, chan, i = [], None, 0
+    args = list(args)
+    while i < len(args):
+        if args[i] == "--channel":
+            val = args[i + 1] if i + 1 < len(args) else ""
+            if not val or val.startswith("-"):
+                sys.exit("ERROR: --channel には main/memo またはチャンネルIDが必要です")
+            chan = val
+            i += 2
+            continue
+        out.append(args[i])
+        i += 1
+    return chan, out
+
+
 def _body_from(args):
     return " ".join(args) if args else sys.stdin.read()
 
 
 def cmd_post(args):
     as_agent, args = _pop_as(args)
-    channel = get_env("SLACK_CHANNEL_ID")
+    chan_arg, args = _pop_channel(args)
+    channel = _resolve_channel(chan_arg) or get_env("SLACK_CHANNEL_ID")
+    if not channel:
+        sys.exit("ERROR: 投稿先チャンネルが特定できません（--channel か .env を確認）")
     text = _body_from(args).strip()
     if not text:
         sys.exit("ERROR: 投稿本文が空です")
     ts = client().chat_postMessage(channel=channel, text=text).get("ts", "")
     if ts:
-        # 自分が立てたスレッドを「--as の主」で追跡（社長の返信を正しいエージェントへ振り分ける）
-        register_thread(ts, as_agent or DEFAULT_AGENT, ts)
+        # 自分が立てたスレッドを「--as の主」＋チャンネルで追跡（社長の返信を正しく振り分ける）
+        register_thread(ts, as_agent or DEFAULT_AGENT, ts, channel)
     print(ts)
 
 
 def cmd_reply(args):
     as_agent, args = _pop_as(args)
+    chan_arg, args = _pop_channel(args)
     if not args:
         sys.exit("ERROR: reply <thread_ts> [本文] が必要です")
     thread_ts = args[0]
     text = _body_from(args[1:]).strip()
     if not text:
         sys.exit("ERROR: 返信本文が空です")
-    channel = get_env("SLACK_CHANNEL_ID")
-    # 既存スレッドは持ち主を保持（register_thread が setdefault）。未知スレッドは --as で主を主張できる
-    register_thread(thread_ts, as_agent or agent_for_thread(thread_ts), thread_ts)
+    # チャンネルは --channel → 登録スレッドのchannel → 既定 の順で決める
+    info = _read_json(THREADS, {}).get(thread_ts, {})
+    channel = _resolve_channel(chan_arg) or info.get("channel") or get_env("SLACK_CHANNEL_ID")
+    if not channel:
+        sys.exit("ERROR: 返信先チャンネルが特定できません（--channel か .env を確認）")
+    # 既存スレッドは持ち主/チャンネルを保持（register_thread が setdefault）。未知スレッドは --as/--channel で主張
+    register_thread(thread_ts, as_agent or agent_for_thread(thread_ts), thread_ts, channel)
     r = client().chat_postMessage(channel=channel, text=text, thread_ts=thread_ts)
     print(f"OK: スレッド {thread_ts} に返信（ts={r.get('ts','')}）")
 
