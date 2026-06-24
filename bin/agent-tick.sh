@@ -7,7 +7,8 @@
 #   1) slack-poll.py fetch … 社長Slackの新着を mailbox へ取り込む（純シェル・確実・低コスト）
 #   2) 宛先ごとに振り分け：
 #        to: hanasaka-main あり        → claude -p /chat        （社長との会話・スレッド返信）
-#        daily memo（夜バッチ）        → claude -p /memo-intake （#memo の日常メモを notes.html へまとめて整理）
+#        to: memo あり（反応tick）     → claude -p /memo-triage （#memo の新着メモを軽く点検・曖昧点だけ確認→memo-stock へ退避）
+#        daily memo（夜バッチ）        → claude -p /memo-intake （memo-stock の当日メモを notes.html へまとめて整理）
 #        to: overseer あり / daily指定 → claude -p /overseer    （統括）
 #      （--permission-mode acceptEdits ＝ 編集は自動承認／Bash は settings.local.json の許可リストのみ）
 #   3) ハートビート … 毎回 last-tick を記録（沈黙＝不明、を解消。Web からも確認可）
@@ -156,9 +157,14 @@ dispatch() {
 
 # --- 2) 各エージェントを振り分け（会話→メモ→統括の順。pending か daily 強制のときだけ起動） ---
 dispatch "chat"     "/chat"     "hanasaka-main"
-# メモ窓口：社長が #memo に投げた日常メモ（mailbox to: memo）を notes.html へ追記。
-# 日中は fetch が mailbox に貯めるだけ＝LLM起動せずトークン節約。夜の daily memo で1回だけまとめ処理する。
-[ "$MODE" = "daily" ] && dispatch "memo" "/memo-intake" "memo"
+# メモ窓口は2層（社長決定 2026-06-24）。どちらも mailbox to: memo を見るが役割が違う：
+#  ・日中（反応tick=normal）：/memo-triage が新着メモを軽く点検し、曖昧点だけ #memo の当該メモの
+#    スレッドへ確認→点検済みは memo-stock/ へ退避（new/ が空に戻り再起動・再質問しない）。notes は書かない。
+#    → 「届いたその場で・社長が在席の日中に」確認して、ストックされる情報の質を上げる。小さな単位＝低トークン。
+#  ・夜（daily memo）：/memo-intake が memo-stock/ の当日分をまとめて notes.html へ清書＋#memo に要約1本。
+# normal 限定にして daily 実行中（overseer 等）に triage が誤起動しないようにする。
+[ "$MODE" = "normal" ] && dispatch "memo-triage" "/memo-triage" "memo"
+[ "$MODE" = "daily" ]  && dispatch "memo"        "/memo-intake" "memo"
 dispatch "overseer" "/overseer" "overseer"
 # HP分析ループはサイト別に独立（mailbox to: hp-loop-<site> 新着 or daily hp-loop-<site> 強制で起動）
 dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"

@@ -24,11 +24,21 @@
   slack-poll.py fetch --init     # 全チャンネルの last-seenを今にして終了（過去は読まない）
   slack-poll.py post  [--as <agent>] [--channel main|memo|<C...>] "本文"   # トップ投稿（戻り値thread_ts）
   slack-poll.py reply <thread_ts> [--as <agent>] [--channel main|memo|<C...>] "本文"  # スレッドへ返信
+  slack-poll.py done  <msg_id>      # 処理済みを cur/ へ（new/ または memo-stock/ から探す）
+  slack-poll.py stock <msg_id>      # triage済みメモを new/ → memo-stock/（夜の /memo-intake がまとめて処理）
+  slack-poll.py untrack <thread_ts> # 解決した確認スレッドを threads.json から外す（自己掃除）
 
   --as <agent>：そのスレッドの持ち主（社長の返信先エージェント）を明示。無指定なら従来動作
                 （post=DEFAULT_AGENT / reply=既存スレッドの持ち主）＝後方互換。
   --channel：投稿先チャンネル。alias（main/memo）または生のチャンネルID。無指定なら
              reply は登録スレッドのチャンネル→既定、post は既定チャンネル。
+
+メモ2層運用（2026-06-24）:
+- 日中：反応tickの /memo-triage が new/ のメモを軽く点検し、曖昧なら #memo のそのメモの
+  スレッドへ質問（reply で当該メモだけ追跡開始）。点検済みは stock で memo-stock/ へ退避
+  （new/ が空になり再起動・再質問しない）。社長の返信は (b) スレッド走査で to:memo に戻る。
+- 夜：daily の /memo-intake が memo-stock/ をまとめて notes.html へ清書し、done で cur/ へ。
+  解決した確認スレッドは untrack で外す（threads.json を有界に保つ）。
 
 必要な .env: SLACK_BOT_TOKEN(xoxb-) / SLACK_CHANNEL_ID(C...)（メモ窓口を使うなら SLACK_MEMO_CHANNEL_ID も）
 読み取りは groups:history（非公開）/ channels:history（公開）、投稿は chat:write。
@@ -47,6 +57,7 @@ ROOT = os.path.dirname(HERE)
 ENV_FILE = os.path.join(ROOT, ".env")
 MAILBOX_NEW = os.path.join(ROOT, "data", "mailbox", "new")
 MAILBOX_CUR = os.path.join(ROOT, "data", "mailbox", "cur")
+MAILBOX_STOCK = os.path.join(ROOT, "data", "mailbox", "memo-stock")  # triage済みメモを夜バッチまで保管
 SLACK_DIR = os.path.join(ROOT, "data", "slack")
 LAST_SEEN = os.path.join(SLACK_DIR, "last-seen.json")   # チャンネル単位（トップレベル走査用）
 THREADS = os.path.join(SLACK_DIR, "threads.json")        # 追跡スレッド {ts: {agent, last_seen}}
@@ -147,6 +158,10 @@ def register_thread(thread_ts, agent, last_seen, channel=None):
 
     channel は返信走査(conversations_replies)を正しいチャンネルで行うために記録する。
     未指定（既存仕様の呼び出し）なら省略＝走査時に既定チャンネルへフォールバック。
+
+    注：threads.json は read-modify-write でファイルロックはしていない。無人運用の書き手
+    （fetch/post/reply/untrack）は agent-tick.sh の flock で直列化されるため実害はない。
+    手動実行を並走させる場合は同時更新で取りこぼし得る点に留意（必要になれば flock 化する）。
     """
     data = _read_json(THREADS, {})
     cur = data.get(thread_ts)
@@ -193,8 +208,11 @@ def write_mailbox(channel, msg, agent):
                   "event_ts": ts, "user": msg.get("user", "")},
     }
     final = os.path.join(MAILBOX_NEW, f"{msg_id}.json")
-    if os.path.exists(final):
-        return None
+    # 重複防止：同一Slackイベント(=同一msg_id)が new/・memo-stock/・cur/ のどこかに既にあれば書かない。
+    # fetch投函→triage が memo-stock/ へ退避→last-seen保存前にクラッシュ→再fetch、でも二重投函しない。
+    for d in (MAILBOX_NEW, MAILBOX_STOCK, MAILBOX_CUR):
+        if os.path.exists(os.path.join(d, f"{msg_id}.json")):
+            return None
     tmp = os.path.join(MAILBOX_NEW, f".{msg_id}.tmp")
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
@@ -325,12 +343,26 @@ def _body_from(args):
     return " ".join(args) if args else sys.stdin.read()
 
 
+def _guard_memo_channel(agent, channel):
+    """memo エージェントは #memo（SLACK_MEMO_CHANNEL_ID）以外へ投稿させない。
+
+    日常メモの内容が社長メインチャンネル等へ暴発するのをコード側で物理的に防ぐ（許可リストや
+    プロンプト規約だけに頼らない＝automation.md「外部送信暴発を潰す」）。
+    """
+    if agent != MEMO_AGENT:
+        return
+    memo_ch = get_env("SLACK_MEMO_CHANNEL_ID")
+    if not memo_ch or channel != memo_ch:
+        sys.exit("ERROR: --as memo は #memo（SLACK_MEMO_CHANNEL_ID）へのみ投稿できます")
+
+
 def cmd_post(args):
     as_agent, args = _pop_as(args)
     chan_arg, args = _pop_channel(args)
     channel = _resolve_channel(chan_arg) or get_env("SLACK_CHANNEL_ID")
     if not channel:
         sys.exit("ERROR: 投稿先チャンネルが特定できません（--channel か .env を確認）")
+    _guard_memo_channel(as_agent or DEFAULT_AGENT, channel)
     text = _body_from(args).strip()
     if not text:
         sys.exit("ERROR: 投稿本文が空です")
@@ -355,23 +387,70 @@ def cmd_reply(args):
     channel = _resolve_channel(chan_arg) or info.get("channel") or get_env("SLACK_CHANNEL_ID")
     if not channel:
         sys.exit("ERROR: 返信先チャンネルが特定できません（--channel か .env を確認）")
-    # 既存スレッドは持ち主/チャンネルを保持（register_thread が setdefault）。未知スレッドは --as/--channel で主張
-    register_thread(thread_ts, as_agent or agent_for_thread(thread_ts), thread_ts, channel)
+    owner = as_agent or agent_for_thread(thread_ts)
+    _guard_memo_channel(owner, channel)
+    # 先に投稿し、成功してから追跡登録する（投稿失敗時に未質問のスレッドを threads.json に残さない）。
     r = client().chat_postMessage(channel=channel, text=text, thread_ts=thread_ts)
+    # 既存スレッドは持ち主/チャンネルを保持（register_thread が setdefault）。未知スレッドは owner/channel で主張
+    register_thread(thread_ts, owner, thread_ts, channel)
     print(f"OK: スレッド {thread_ts} に返信（ts={r.get('ts','')}）")
 
 
 def cmd_done(args):
-    """処理済みメッセージを new/ から cur/ へ原子的に移す（本文は編集しない・raw mv を避ける）。"""
+    """処理済みメッセージを cur/ へ原子的に移す（new/ または memo-stock/ から探す）。
+
+    本文は編集しない・raw mv を避ける（os.replace で atomic）。メモは triage が memo-stock/ に
+    退避するため、夜の /memo-intake が done するときは memo-stock/ 側にある。
+    """
     if not args:
         sys.exit("ERROR: done <msg_id> が必要です")
+    msg_id = args[0]
+    src = None
+    for d in (MAILBOX_NEW, MAILBOX_STOCK):
+        cand = os.path.join(d, f"{msg_id}.json")
+        if os.path.exists(cand):
+            src = cand
+            break
+    if src is None:
+        sys.exit(f"ERROR: {msg_id} は new/ にも memo-stock/ にも見つかりません")
+    os.makedirs(MAILBOX_CUR, exist_ok=True)
+    os.replace(src, os.path.join(MAILBOX_CUR, f"{msg_id}.json"))
+    print(f"done: {msg_id} → cur/")
+
+
+def cmd_stock(args):
+    """triage済みメモを new/ から memo-stock/ へ原子的に移す（夜の /memo-intake がまとめて処理）。
+
+    本文は編集しない。new/ から外すことで、反応tickの /memo-triage が同じメモで再起動・再質問
+    しないようにする（new/ の to:memo 件数が pending 判定の根拠なので0に戻す）。
+    """
+    if not args:
+        sys.exit("ERROR: stock <msg_id> が必要です")
     msg_id = args[0]
     src = os.path.join(MAILBOX_NEW, f"{msg_id}.json")
     if not os.path.exists(src):
         sys.exit(f"ERROR: {msg_id} は new/ に見つかりません")
-    os.makedirs(MAILBOX_CUR, exist_ok=True)
-    os.replace(src, os.path.join(MAILBOX_CUR, f"{msg_id}.json"))
-    print(f"done: {msg_id} → cur/")
+    os.makedirs(MAILBOX_STOCK, exist_ok=True)
+    os.replace(src, os.path.join(MAILBOX_STOCK, f"{msg_id}.json"))
+    print(f"stock: {msg_id} → memo-stock/")
+
+
+def cmd_untrack(args):
+    """解決した確認スレッドを threads.json から外す（追跡解除＝自己掃除）。
+
+    memo の確認スレッドは「未解決の質問」の間だけ追跡し、回答を受けて整理し終えたら外す。
+    これで threads.json が無限に膨らまない（メモ窓口導入時の肥大懸念への対処）。
+    """
+    if not args:
+        sys.exit("ERROR: untrack <thread_ts> が必要です")
+    thread_ts = args[0]
+    data = _read_json(THREADS, {})
+    if thread_ts in data:
+        del data[thread_ts]
+        _write_json(THREADS, data)
+        print(f"untrack: {thread_ts} を追跡解除しました")
+    else:
+        print(f"untrack: {thread_ts} は追跡対象にありません（スキップ）")
 
 
 def main():
@@ -386,8 +465,12 @@ def main():
         cmd_reply(rest)
     elif cmd == "done":
         cmd_done(rest)
+    elif cmd == "stock":
+        cmd_stock(rest)
+    elif cmd == "untrack":
+        cmd_untrack(rest)
     else:
-        sys.exit(f"不明なコマンド: {cmd}（fetch / post / reply / done）")
+        sys.exit(f"不明なコマンド: {cmd}（fetch / post / reply / done / stock / untrack）")
 
 
 if __name__ == "__main__":
