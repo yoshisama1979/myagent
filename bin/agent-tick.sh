@@ -170,6 +170,7 @@ dispatch "overseer" "/overseer" "overseer"
 dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
 dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
 dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka"
+dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii"
 # ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
 # blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
 dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"

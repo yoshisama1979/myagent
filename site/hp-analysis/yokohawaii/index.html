@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ヨーコハワイ HP分析｜最新レポート｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <span>ヨーコハワイ</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — ヨーコハワイ</h1>
+  <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。提案は実装エージェント（<span class="font-mono">yokohawaii-dev</span>）がそのまま着手できる粒度で書きます。</p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-25（<strong>Cycle 001 実施</strong>。サイト実査・hp-audit・スクショで初回診断。ゴール確定＝アクセス＋問い合わせ増）／対象サイト：<a href="https://www.yoko-hawaii.com/" class="text-blue-600 hover:underline font-mono">www.yoko-hawaii.com</a>（到達200）／ゴール：<strong>アクセス＋問い合わせ（予約）増</strong></p>
+
+  <!-- 3ページの案内 -->
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 font-semibold">📋 最新レポート（このページ）</span>
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 確定・仕様（前提・背景）</a>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ（完了したもの）</a>
+  </div>
+
+  <!-- ===== 🔔 社長への質問（未回答だけ） ===== -->
+  <div class="border-2 border-emerald-400 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-xl font-bold text-emerald-800 mb-3">🔔 社長への質問・連絡（未回答）</h2>
+    <p class="text-sm text-emerald-900 mb-3">回答は <span class="font-mono bg-emerald-100 px-1 rounded">data/hp-loop/yokohawaii/from-president.md</span> か Slack の本サイト日報スレッドへ。</p>
+    <ul class="space-y-3 text-sm text-emerald-900">
+      <li class="text-emerald-700">
+        <strong>✅ Q-K01｜GA4プロパティ＝解決</strong>：藤阪ガス等と同じく BigQuery 経由で確定。2026-06-25 にエクスポート設定済みだが、現時点では専用データセットが未生成（<code>analytics_*</code> 13個をホスト名照合 → <code>yoko-hawaii.com</code> は未出現＝<strong>データ蓄積待ち</strong>）。数日で現れ次第ホスト名で自動特定して登録します。それまでは「GA4データ未取得」として進めます。
+      </li>
+      <li class="text-emerald-700">
+        <strong>🔧 Q-K02｜実装担当 <code>yokohawaii-dev</code>＝専用機を立てる方針に決定</strong>（2026-06-25）。<strong>コード側の許可リストは登録済</strong>（<code>bin/mailbox.sh</code>：送信者 <code>hp-loop-yokohawaii</code>・受信者 <code>yokohawaii-dev</code>）。<strong>残るは社長の手元作業＝mailbox トークン設定</strong>：(1) VPS <code>data/secrets/mailbox-tokens.json</code> に <code>agent_id: yokohawaii-dev</code> を追加、(2) 拠点PCの <code>.env</code> に <code>MAILBOX_TOKEN</code>/<code>MAILBOX_URL</code>。<strong>トークン登録＋拠点機の稼働を確認するまでは配信を保留</strong>（提案は掲示板に積むだけ）。手順は社長へ別途お渡し済。
+      </li>
+      <li>
+        <strong>Q-K03｜固有情報の開示可否</strong>：物件ページ（コンドミニアム5室）の充実に、<strong>料金目安・最低宿泊数・定員/設備・予約の流れ</strong>を載せたいです。これらは公開してよい情報ですか？（実数値は捏造しません＝社長/クライアント確認の上で記載）<br>
+        選択肢：①公開OK・数値提供できる ／ ②一部のみ（公開可の範囲を指定） ／ ③価格は問い合わせ誘導のまま伏せる。
+      </li>
+    </ul>
+  </div>
+
+  <!-- ===== 📥 分析に欲しい情報（常設） ===== -->
+  <div class="border-2 border-sky-300 bg-sky-50 rounded-lg p-5 mb-8 text-sm">
+    <h2 class="text-xl font-bold text-sky-800 mb-2">📥 分析に欲しい情報（精度向上のため）</h2>
+    <ul class="list-disc list-inside text-sky-900 space-y-1">
+      <li><strong>GSC 実データ</strong>：<code>searchconsole_yokohawaii</code> はエクスポート設定済みだが実データ表が未生成＝蓄積待ち（数日〜）。入り次第、流入クエリ・順位・CTR を分析に使う。</li>
+      <li><strong>GA4プロパティ</strong>（Q-K01）。</li>
+      <li><strong>物件・料金の固有情報</strong>（Q-K03）。お客様の声・実績（リピート率・予約件数等）があれば信頼要素として活用。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 🔧 進行中の提案（未完了 R-NNN） ===== -->
+  <div class="border-2 border-amber-300 bg-amber-50 rounded-lg p-5 mb-8">
+    <h2 class="text-xl font-bold text-amber-800 mb-3">🔧 進行中の提案（未完了 R-NNN）</h2>
+    <table class="w-full text-sm border-collapse">
+      <thead>
+        <tr class="text-left text-amber-800 border-b border-amber-300">
+          <th class="py-1 pr-2">#</th><th class="py-1 pr-2">提案</th><th class="py-1 pr-2">観点</th><th class="py-1 pr-2">優先</th><th class="py-1 pr-2">状態</th>
+        </tr>
+      </thead>
+      <tbody class="align-top text-amber-900">
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K01</td><td class="py-1 pr-2">全ページ meta description を固有化（トップは現状「概要」2字＝実質未設定）</td><td class="py-1 pr-2">技術/SEO</td><td class="py-1 pr-2">🔴最優先</td><td class="py-1 pr-2">未着手</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K02</td><td class="py-1 pr-2">ファーストビューでUSP（仲介手数料0円・オーナー直接）を高コントラスト化＋fold内に予約CTAボタン</td><td class="py-1 pr-2">CV/導線</td><td class="py-1 pr-2">🔴最優先</td><td class="py-1 pr-2">未着手</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K03</td><td class="py-1 pr-2">OGP/Twitterカード・canonical 全ページ付与＋JSON-LD（宿泊施設）</td><td class="py-1 pr-2">技術/SNS</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K04</td><td class="py-1 pr-2">h1整理（4個→主題1）＋viewportズーム禁止解除＋alt欠落4補完</td><td class="py-1 pr-2">構造/A11y</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K05</td><td class="py-1 pr-2">各コンドミニアムに「料金目安・最低宿泊・定員/設備・予約の流れ・FAQ」を整理（固有数値はQ-K03で確認）</td><td class="py-1 pr-2">コンテンツ</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-amber-700 mt-3">※ <code>yokohawaii-dev</code> 未登録のため最新レポートの mailbox 配信は保留（配信先未登録）。Q-K02 確定後に配信開始。</p>
+  </div>
+
+  <!-- ===== サイクルログ ===== -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">サイクルログ</h2>
+
+  <!-- Cycle 001 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 001 — 2026-06-25（初回診断：技術・コンテンツ・ビジュアルの三本柱）</h3>
+
+    <p class="font-semibold text-gray-700 mb-1">データ状況</p>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-3">
+      <li>取得：サイト実査（<code>hp-audit.sh</code> オンページ信号）／トップのPC・SPスクショ（fold/full）を Read で確認／サイト内リンク構造。</li>
+      <li>未取得：<strong>GSC（蓄積待ち）</strong>・<strong>GA4（未確認＝Q-K01）</strong>。流入・順位・CV数は本サイクルでは扱わず（捏造しない）。サイト構造・コピー・技術信号からの診断。</li>
+    </ul>
+
+    <p class="font-semibold text-gray-700 mb-1">総評</p>
+    <p class="text-gray-700 mb-2">「オーナー直接契約＝仲介手数料0円・日本人オーナー」という<strong>明確で強いUSP</strong>を持つワイキキのコンドミニアム・バケーションレンタル。だが<strong>ファーストビューでそのUSPが弱く（低コントラスト・見出し画像に埋もれ）、予約への明確なボタンが無い</strong>。技術面は <strong>meta description が壊れている（トップ「概要」2字）・OGP/canonical/構造化データが全て無く</strong>、SNS共有・検索表示で取りこぼしている。コンテンツ資産（物件5室・ブログ）はあるが、料金/予約手順など<strong>意思決定に必要な情報が薄い</strong>。</p>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>✅ 良い点</strong>：USP が強い（仲介手数料0円・オーナー直接・日本人対応）／物件5室・ギャラリー・地図・オプショナル等コンテンツの幅がある／SPヘッダに TEL・MAIL・MENU が並び連絡導線は確保／TEL（808-282-0224）が常時上部。</li>
+      <li><strong>⚠️ 課題</strong>：meta description 壊れ（トップ2字）・OGP/Twitter/canonical/JSON-LD すべて無し／FVでUSP埋没・予約CTAボタン無し／viewportズーム禁止（高年齢層に不利）／h1が4個・alt欠落4／ブログ最終更新2024-11（鮮度低下）／物件ページの情報が薄い（料金・定員・予約手順）。</li>
+    </ul>
+
+    <p class="font-semibold text-gray-700 mb-1 mt-3">改善提案（詳細）</p>
+
+    <div class="border-l-4 border-red-400 pl-3 mb-3">
+      <p class="font-semibold">R-K01 🔴 全ページ meta description を固有化（技術/SEO・工数小）</p>
+      <p class="text-gray-700"><strong>観察</strong>：トップの meta description が「概要」2字（hp-audit）。実質未設定＝検索結果のスニペットが機能していない。<strong>なぜ問題か</strong>：検索結果でクリック理由を示せず CTR を落とす。<strong>改善案</strong>：各ページに固有の説明文（120字前後・クエリ＋ベネフィット）。例トップ：「ハワイ・ワイキキのコンドミニアムを日本人オーナーから直接レンタル。仲介手数料0円。予約・お問い合わせはこちら」。<strong>効果</strong>中〜高 ／ <strong>工数</strong>小。</p>
+    </div>
+
+    <div class="border-l-4 border-red-400 pl-3 mb-3">
+      <p class="font-semibold">R-K02 🔴 ファーストビューでUSP明確化＋予約CTAボタン（CV/導線・工数中）</p>
+      <p class="text-gray-700"><strong>観察</strong>：PC fold はヒーロー写真に重なる<strong>低コントラストのUSP文が途中で切れ</strong>、装飾的なコピーが散らばる。<strong>fold内に押せる予約ボタンが無く電話番号のみ</strong>。SPはヘッダ導線は良いがCTAボタンは無し。<strong>なぜ問題か</strong>：最強の差別化（仲介手数料0円）が3秒で伝わらず、次の一手（予約/問い合わせ）への明確な入口が無い＝CV機会損失。<strong>改善案</strong>：FV上部に「オーナー直接契約だから仲介手数料0円」を高コントラストで1行＋「空室を確認・予約する」ボタン（→ ./contact/）を配置。SPはヘッダの TEL/MAIL を活かしつつ追従CTA。<strong>効果</strong>高 ／ <strong>工数</strong>中。</p>
+    </div>
+
+    <div class="border-l-4 border-amber-400 pl-3 mb-3">
+      <p class="font-semibold">R-K03 🟡 OGP/Twitter/canonical/JSON-LD を全ページ付与（技術/SNS・工数小〜中）</p>
+      <p class="text-gray-700"><strong>観察</strong>：OGP 0・Twitterカード 0・canonical 無し・JSON-LD 0（hp-audit）。<strong>なぜ問題か</strong>：旅行・宿泊は SNS/LINE で共有されやすいのに、共有時にタイトル画像が出ず訴求を落とす。canonical 無しは重複URLの評価分散リスク。<strong>改善案</strong>：og:title/description/image・twitter:card を全ページ、canonical を自己参照で付与。物件ページに <code>LodgingBusiness</code> 構造化データ。<strong>効果</strong>中 ／ <strong>工数</strong>小〜中。</p>
+    </div>
+
+    <div class="border-l-4 border-amber-400 pl-3 mb-3">
+      <p class="font-semibold">R-K04 🟡 h1整理・viewportズーム禁止解除・alt補完（構造/A11y・工数小）</p>
+      <p class="text-gray-700"><strong>観察</strong>：h1 が4個／<code>viewport</code> に <code>maximum-scale=1.0, user-scalable=no</code>（ズーム禁止）／img の alt 欠落4・空1。<strong>なぜ問題か</strong>：h1複数は主題が曖昧（SEO）。ズーム禁止は<strong>シニア層の可読性</strong>を損なう（旅行検討層と相性が悪い）。alt 欠落は画像SEOとA11yの損。<strong>改善案</strong>：ページ主題のh1を1つに、他は h2/装飾へ。viewport から <code>maximum-scale/user-scalable</code> を除去。物件・ギャラリー画像に内容を表す alt。<strong>効果</strong>中 ／ <strong>工数</strong>小。</p>
+    </div>
+
+    <div class="border-l-4 border-amber-400 pl-3 mb-3">
+      <p class="font-semibold">R-K05 🟡 各コンドミニアムページの情報充実（コンテンツ・工数中）</p>
+      <p class="text-gray-700"><strong>観察</strong>：物件5室（アイランドコロニー／ハワイアンモナーク／ワイキキバニアン／アクアマリーナ／ワイキキタウンハウス）はあるが、<strong>料金目安・最低宿泊数・定員/設備・予約の流れ</strong>が薄い。ブログ最終更新2024-11で鮮度も落ちている。<strong>なぜ問題か</strong>：宿泊予約は「いくら・何人・どう予約」が決め手。情報不足は離脱と問い合わせ前の不安を生む。<strong>改善案</strong>：各物件に「料金目安・定員・設備・最低宿泊・予約の流れ・FAQ・周辺地図」を表で整理（読みやすく）。<strong>固有数値は捏造せず Q-K03 で社長/クライアント確認</strong>。<strong>効果</strong>中〜高 ／ <strong>工数</strong>中。</p>
+    </div>
+
+    <p class="font-semibold text-gray-700 mb-1 mt-3">次の一手（提案）</p>
+    <p class="text-gray-700 mb-2">Quick win の <strong>R-K01（meta description 固有化）</strong>と <strong>R-K02（FVのUSP＋予約CTA）</strong>から着手するのが効果的です。R-K01 は工数小で即効、R-K02 は CV に直結します。着手の可否、および Q-K01〜K03 の回答をお願いします。</p>
+
+    <p class="font-semibold text-gray-700 mb-1 mt-3">対応記録</p>
+    <p class="text-gray-700">from-president.md：新規指示なし（初回）。ゴール＝「アクセス＋問い合わせ増」を社長確定（2026-06-25）として spec に反映。</p>
+  </div>
+
+  <!-- Cycle 000 -->
+  <div class="border border-gray-200 rounded-lg p-5 mb-6 bg-white text-sm text-gray-600">
+    <h3 class="font-semibold mb-1">Cycle 000 — 2026-06-25（ループ登録）</h3>
+    <p>ヨーコハワイを <code>/hp-loop yokohawaii</code> として登録（config 登録表・<code>sites/yokohawaii.md</code>・<code>from-president.md</code>・本掲示板3層・ディスパッチャ <code>agent-tick.sh</code>）。対象URL・GSC dataset は hana-tools から取得。GSC は実データ蓄積待ち。</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -163,10 +163,10 @@ ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 # 各サイトループ hp-loop-<site> は「最新レポートを実装担当へ流す」ために送信者にもなる（同一VPS常駐＝local-send）。
 # ブログ解析ループ blog-loop-<client> も同様（実装担当への配信＋fact質問の送信者）。VPS常駐＝local-send。
 SENDERS    = {"overseer", "hanasaka-main",
-              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka",
+              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "blog-loop-ycom"}
-RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev",
-              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka",
+RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
+              "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "blog-loop-ycom"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"

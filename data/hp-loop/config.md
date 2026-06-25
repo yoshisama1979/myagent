@@ -14,6 +14,7 @@
 | `ycom` | はなさか自社(YCOM) | https://y-com.info/ | `searchconsole_ycom` | `web-hanasaka` | `hp-analysis/ycom/` | `hp-loop-ycom` | [sites/ycom.md](sites/ycom.md) |
 | `yoshida` | よしだ歯科 | https://yoshida-smile.info | `searchconsole_yoshida` | `yoshida-dev` | `hp-analysis/yoshida/` | `hp-loop-yoshida` | [sites/yoshida.md](sites/yoshida.md) |
 | `fujisaka` | 藤阪ガス | https://fujisakagas.com/ | `searchconsole_fujisaka` | `fujisaka-dev` | `hp-analysis/fujisaka/` | `hp-loop-fujisaka` | [sites/fujisaka.md](sites/fujisaka.md) |
+| `yokohawaii` | ヨーコハワイ | https://www.yoko-hawaii.com/ | `searchconsole_yokohawaii`（蓄積待ち） | `yokohawaii-dev`（トークン登録待ち） | `hp-analysis/yokohawaii/` | `hp-loop-yokohawaii` | [sites/yokohawaii.md](sites/yokohawaii.md) |
 
 > 各サイトは**独立したループ**として回る（mailbox `to: hp-loop-<site>`／Slack日報スレッド所有者 `hp-loop-<site>`／daily起動も別）。1回の実行を1サイトに限定し、ヘッドレス900秒タイムアウトを避ける。
 

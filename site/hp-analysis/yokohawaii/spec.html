@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ヨーコハワイ HP分析｜確定・仕様｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">ヨーコハワイ</a>
+    <span class="mx-1">/</span>
+    <span>確定・仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 確定・仕様 — ヨーコハワイ</h1>
+  <p class="text-gray-600 mb-6">変わりにくい前提・背景の常設リファレンス（サイト前提・確定回答・データソース・役割分担）。確定したことだけをここに置く。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 font-semibold">📐 確定・仕様（このページ）</span>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">サイト前提</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">クライアント</td><td class="py-1">ヨーコハワイ（hana-tools client_id 92 / project_id 118 コーポレートサイト / work_id 109 運用管理）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">対象URL</td><td class="py-1"><a href="https://www.yoko-hawaii.com/" class="text-blue-600 hover:underline font-mono">https://www.yoko-hawaii.com/</a>（✅ hana-tools・到達200）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">✅ <strong>アクセス＋コンバージョン（問い合わせ・予約）増</strong>（社長確定 2026-06-25）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">事業内容</td><td class="py-1">ハワイ・ワイキキのコンドミニアム バケーションレンタル。<strong>オーナー直接契約＝仲介手数料0円</strong>・日本人オーナー対応がUSP。物件5室（アイランドコロニー／ハワイアンモナーク／ワイキキバニアン／アクアマリーナ／ワイキキタウンハウス）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">種別/CMS</td><td class="py-1">🟡 CMS不明（hp-audit で判別不可）。静的/独自の可能性。主要ページ：contact・features・howto・condominium・gallery・map・optional・blog</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">データソース・ツール</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">GSC</td><td class="py-1"><code>bin/gsc-fetch.py --dataset searchconsole_yokohawaii</code>（✅ hana-tools gsc_dataset・🟡 実データ表は未生成＝蓄積待ち）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">GA4</td><td class="py-1">🟡 BigQuery 経由で確定（藤阪ガス等と同方式）・<strong>dataset 未生成＝蓄積待ち</strong>。2026-06-25 にエクスポート設定済。<code>analytics_*</code> 13個をホスト名照合したが <code>yoko-hawaii.com</code> は未出現＝データ未流入。出現次第ホスト名で自動特定し <code>analytics_&lt;id&gt;</code> を登録</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">サイト取得</td><td class="py-1"><code>bin/hp-audit.sh &lt;URL&gt;</code>（on-page信号・読み取り）／<code>bin/hp-shot.sh</code>（スクショ）。URL確定後に使用</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">役割分担</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li>診断・提案＝本ループ（<code>/hp-loop yokohawaii</code>）。実装＝<code>yokohawaii-dev</code>（🟡 トークン未登録）。意思決定・回答＝社長（<code>from-president.md</code>）。</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">確定した質問の回答</h2>
+  <p class="text-sm text-gray-500">まだありません。</p>
+
+</div>
+</body>
+</html>
