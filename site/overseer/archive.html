@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ（解決・完了）</h1>
   <p class="text-gray-600 mb-2">解決済み・様子見に落ち着いた提案（<span class="font-mono">O-NNN</span>）と、過去のサイクルログを保管します。<strong>最新レポートを「今知るべきこと」だけに保つ</strong>ための置き場（履歴は消さない）。現在対応中のものは<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>へ。</p>
-  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-24（Cycle 012・dev↔loop 往復切れ O-010/011/012 を解決として収容）</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-26（Cycle 014・Cycle 013 のサイクルログを収容／往復切れ O-010/011/012 の再発を追記＝O-013 で継続追跡）</p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -35,8 +35,10 @@
   <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
     <div class="flex items-center justify-between mb-2">
       <h4 class="font-bold">O-010 / O-011 / O-012：dev↔loop の往復切れ（宛名移行の系統的未完）＝3サイトとも閉路化</h4>
-      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（Cycle 012）</span>
+      <span class="text-xs font-bold text-white bg-amber-500 px-2 py-0.5 rounded">⚠️ 再発（Cycle 014・→O-013）</span>
     </div>
+    <p class="text-xs text-amber-700 mb-2">⚠️ <strong>2026-06-26 追記</strong>：Cycle 012 で「解決」としたが <strong>Cycle 014（2026-06-26）で再発</strong>。yoshida-dev の実装報告（R-Y06/R-Y15・本番デプロイ済）が再び旧称 <span class="font-mono">to: hp-loop</span> 宛で <span class="font-mono">new/</span> に孤児化。＝Cycle 012 の「解決」は症状（孤児ゼロの観測）であって根本（外部 dev の送信先同期）は未確立だった（K-040 の再々確認）。継続追跡は最新レポートの <strong>O-013</strong> へ。</p>
+    <p class="text-xs text-emerald-700 mb-2">✅ <strong>2026-06-26 続報（Cycle 015）</strong>：O-013 は<strong>実害なく解決</strong>。当該報告は本日02:37 に <span class="font-mono">hp-loop-yoshida</span> が拾い本番GET再監査まで完了済み（孤児の原本は <span class="font-mono">cur/</span> へ処理済み）。社長も「再発時に再調査」で合意し、恒久策（送信側統一 or 受信側フォールバック）は<strong>保留</strong>。統括は旧称 <span class="font-mono">to: hp-loop</span> 孤児の<strong>定点監視を継続</strong>し、次の再発時に根本切り分けへ踏み込む。</p>
     <ul class="text-sm space-y-1 text-gray-700">
       <li><strong>経緯</strong>：Phase3 のマルチサイト化に伴い宛名を <span class="font-mono">hp-loop</span>→<span class="font-mono">hp-loop-&lt;site&gt;</span> へ移行した際、稼働中の各 dev（拠点PC）の送信先同期が遅れ、実装報告が旧称 <span class="font-mono">to: hp-loop</span> 宛で dispatcher に拾われず孤児化した（O-007→O-011→O-012 と症状を追い、Cycle 011 で「系統的未完」と名指し）。outbound 片道（loop→dev の受け手不在）を O-010 で並行追跡。</li>
       <li><strong>結末（Cycle 012・2026-06-24 実体確認）</strong>：旧称宛 inbound は <span class="font-mono">new/</span> から消失（孤児ゼロ）。<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> 消化6通が出現し、<strong>web-hanasaka(13)／yoshida-dev(9)／fujisaka-dev(3) の3 dev すべて</strong>の報告が正規宛で届き処理されている。<strong>fujisaka-dev も 6/22 に稼働確認</strong>（O-010 の「未確認」を解消）。＝「提案→実装→報告→再監査」の戻り経路が3サイトとも機能。</li>
@@ -113,6 +115,18 @@
 
   <!-- ===== 過去サイクルログ ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6 mt-12">過去サイクルログ</h2>
+
+  <!-- Cycle 013 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 013 — 2026-06-25（精密診断）</h3>
+    <p class="text-sm text-gray-700">統括ループ・Slack双方向・無人ティック（2分毎 <span class="font-mono">status=ok</span>・全 idle）・<span class="font-mono">hold/</span> 空を確認。<strong>往復切れ（O-010/011/012）の再発なし</strong>＝旧称 <span class="font-mono">to: hp-loop</span> 孤児 inbound ゼロを継続（<span class="font-mono">new/</span> 14通はすべて loop→dev outbound）。<strong>O-008 をさらに拡大</strong>：<span class="font-mono">grep memo-triage SYSTEM.md</span>＝0件＝memo 2層サブシステム（<span class="font-mono">/memo-triage</span> v0.3／<span class="font-mono">/memo-intake</span> v0.4・エージェント <span class="font-mono">memo</span>）も地図に未記載と判明（blog 3モード・版ズレに加えて）。<strong>O-009</strong> 未コミット38件に増加。K-074 記録（地図 vs 実態 grep ドリフト検出を毎精密診断の定石ドリルに固定化）。→ <strong>Cycle 014（2026-06-26）で往復切れが再発</strong>：yoshida-dev の R-Y06/R-Y15 報告が旧称宛で孤児化（O-013）。地図ドリフトは yokohawaii（4サイト目）も未記載と判明し O-008 さらに拡大。</p>
+  </div>
+
+  <!-- Cycle 012 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 012 — 2026-06-24（精密診断）</h3>
+    <p class="text-sm text-gray-700">統括ループ・Slack双方向・無人ティック（2分毎 <span class="font-mono">status=ok</span>・全 idle／blog 系も配線済）・<span class="font-mono">hold/</span> 空を確認。<strong>O-010/O-011/O-012 を解決</strong>：旧称 <span class="font-mono">to: hp-loop</span> 孤児 inbound が <span class="font-mono">new/</span> から消失、<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> 消化6通が出現し、web-hanasaka(13)／yoshida-dev(9)／fujisaka-dev(3) の3 dev すべての報告が正規宛で届き処理されている＝往復が3サイトとも閉路化（fujisaka-dev も 6/22 稼働確認）。残る旧称 <span class="font-mono">from</span> ラベル4通は配送に実害なしの様子見へ格下げ。<strong>O-008 を拡大</strong>：<span class="font-mono">grep blog SYSTEM.md</span>＝0件＝blog サブシステム全体（3モード・cron 4本・<span class="font-mono">blog-loop-ycom</span>）が地図に未記載と判明（版ズレ hp-loop v0.5/overseer v0.2 vs 地図 v0.1 も継続）。K-063 記録（既報の系統的故障は定点シグナルで逆向き確認し速やかにアーカイブ／地図 vs 実態の grep ドリフト検出を健康チェックに追加）。→ <strong>Cycle 013（2026-06-25）で O-008 がさらに拡大</strong>：memo 2層サブシステム（memo-triage/memo-intake）も地図に未記載と判明。</p>
+  </div>
 
   <!-- Cycle 011 -->
   <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">

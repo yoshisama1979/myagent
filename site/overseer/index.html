@@ -17,7 +17,7 @@
 
   <h1 class="text-3xl font-bold mb-2">🛰️ 統括レポート（Overseer）</h1>
   <p class="text-gray-600 mb-2">このシステム全体を俯瞰し、<strong>整合・健全性・安全</strong>の綻びを見つけて改善提案を積む統括ループ。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。</p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-24（精密診断 Cycle 012・dev↔loop の往復が閉路化＝O-010/011/012 を解決へ・fujisaka-dev も稼働確認）</p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-26（軽い巡回 Cycle 016・<strong>O-008 解決</strong>＝社長承認で <span class="font-mono">SYSTEM.md</span> を v0.2 に同期＝blog 3モード・memo 2層・chat・hp-loop 4サイト/v0.5・overseer v0.2・ディスパッチャ/cron を地図へ反映／<strong>O-013 もアーカイブ収容</strong>／未解決は O-009 未コミット・O-004/O-006）</p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -29,82 +29,127 @@
   <!-- ===== 🔔 社長の判断・対応待ち（未処理だけ） ===== -->
   <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-5 mb-8">
     <h2 class="text-xl font-bold text-amber-800 mb-3">🔔 社長の判断・対応待ち</h2>
-    <div class="border border-emerald-300 bg-emerald-50 rounded p-3 mb-4 text-sm text-emerald-900">
-      <strong>✅ 朗報（今回いちばんの変化）</strong>：長く追ってきた <strong>dev↔loop の往復切れ（O-010/O-011/O-012）が閉じました</strong>。旧名 <span class="font-mono">hp-loop</span> 宛の孤児報告は受信箱から消え、<span class="font-mono">cur/</span> に <span class="font-mono">hp-loop-yoshida</span> 宛の消化履歴（6通）が出現。<strong>web-hanasaka・yoshida-dev・fujisaka-dev の3 dev すべてが報告を送り、本ループが受領・本番GET検証まで回す状態</strong>になりました（fujisaka-dev も 6/22 に稼働確認＝未確認だった点を解消）。3件は<a href="archive.html" class="underline">アーカイブ</a>へ。<strong>社長対応は不要</strong>です。
-    </div>
     <ul class="space-y-3 text-sm text-amber-900">
-      <li><strong>🟡 O-008（最重要・拡大／地図の更新・要承認）</strong>：システムの地図 <span class="font-mono">SYSTEM.md</span>（v0.1）が<strong>実態から大きく遅れています</strong>。①hp-loop を「単一サイト・v0.1」と記載＝実際はマルチサイト・<strong>v0.5</strong>／overseer も v0.1 記載＝実際 v0.2。②さらに<strong>ブログのサブシステム全体（<span class="font-mono">/blog-loop</span>・<span class="font-mono">/blog-write</span>・<span class="font-mono">/blog-improve</span>＝3モード・cron 4本・新エージェント <span class="font-mono">blog-loop-ycom</span> 等）が地図に1行も載っていません</strong>（dispatcher・cron には配線済で稼働中）。新規参入者・統括が地図だけ見ると存在に気づけません。更新案を用意できます。<strong>「直してよい」のお声がけ</strong>で反映します（地図編集は社長ゲート）。</li>
-      <li><strong>🟢 O-009（バックアップのお願い）</strong>：統括レポートの恒久ページ <span class="font-mono">site/overseer/spec.html</span>・<span class="font-mono">archive.html</span>、<strong>ブログ系の新ルール／コマンド一式</strong>（<span class="font-mono">.claude/rules/blog-*.md</span>・<span class="font-mono">.claude/commands/blog-*.md</span>）はじめ<strong>多数が git 未追跡／未コミット</strong>です。区切りの良いところで <strong>commit / push</strong> をご検討ください（統括は commit しません＝責務外）。</li>
+      <li><strong>🟢 O-009（バックアップのお願い・増加中）</strong>：未コミットが <strong>45件（変更37＋未追跡8）</strong>に増えました。統括の恒久ページ（<span class="font-mono">spec.html</span>・<span class="font-mono">archive.html</span>）、<strong>ブログ系・メモ2層系の新ルール／コマンド一式</strong>（<span class="font-mono">.claude/rules/blog-*.md</span>・<span class="font-mono">memo-triage.md</span>・<span class="font-mono">memo-intake.md</span> ほか）、各 HP/ブログ掲示板、bin スクリプト等が未保存です（<strong>本日の <span class="font-mono">SYSTEM.md</span> v0.2 同期と統括掲示板の更新もこれに含まれます</strong>）。区切りの良いところで <strong>commit / push</strong> をご検討ください（統括は commit しません＝責務外）。</li>
       <li><strong>O-004（社長の残存課題・継続報告）</strong>：<span class="font-mono">/task-partner</span> コマンドは社長が着手したが未完成。<strong>社長本人のタスクとして継続トラッキング</strong>（2026-06-18 確認）。状況変化なし。</li>
       <li><strong>O-006（残存課題＝着手OK待ち）</strong>：3ページ構成の <span class="font-mono">.claude/rules/overseer.md</span> 恒久ルール化（v0.2）は社長指示で保留中。着手OKのお声がけで反映します。状況変化なし。</li>
     </ul>
-    <p class="text-xs text-amber-800 mt-3">これ以外に、いま社長の対応を待っている項目はありません。決着済みの提案は <a href="archive.html" class="underline">アーカイブ</a> に保管しています。回答・指示は <strong>Slack でも可</strong>（毎時ループが拾います）。</p>
+    <p class="text-xs text-amber-800 mt-3"><strong>※ 連絡（軽微）</strong>：本巡回は <span class="font-mono">slack-poll.py</span> 系の権限承認が下りず、O-008/O-013 への <strong>Slack 返信が送れていません</strong>（社長メッセージ2通は <span class="font-mono">new/</span> に残置・このレポートで報告済み）。次の承認付きループで返信＋<span class="font-mono">done</span> を行います。これ以外に社長の対応を待つ項目はありません（決着済みは <a href="archive.html" class="underline">アーカイブ</a>）。回答・指示は <strong>Slack でも可</strong>（ループが拾います）。</p>
   </div>
 
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
 
-  <!-- ===== Cycle 012 ===== -->
+  <!-- ===== Cycle 016 ===== -->
   <section class="mb-10">
-    <h3 class="text-xl font-bold mb-1">Cycle 012 — 2026-06-24（精密診断）</h3>
-    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（前回＝Cycle 011・2026-06-23＝当日でないため切替）。<strong>チェック範囲</strong>：Slack fetch（新着なし）／自分宛受信箱（overseer 宛なし）／mailbox <span class="font-mono">new/</span>（17通）・<span class="font-mono">cur/</span>（67通）・<span class="font-mono">hold/</span>（空）の from/to を集計・実体確認／<span class="font-mono">cur/</span> の <span class="font-mono">to: hp-loop-yoshida</span> 消化履歴と3 dev の送信実績を照合／dispatcher（<span class="font-mono">agent-tick.sh</span>）の配線・<span class="font-mono">tick.log</span>（2分毎 status・01:00 日次起動）／SYSTEM.md と稼働モード（hp-loop/overseer/blog 群）の整合照合／rule version 照合。<strong>実体を Read/grep で確認</strong>。</p>
+    <h3 class="text-xl font-bold mb-1">Cycle 016 — 2026-06-26（軽い巡回・社長指示を反映）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（本日の精密診断＝Cycle 014 実施済み）。<strong>チェック範囲</strong>：自分宛受信箱（<span class="font-mono">to: overseer</span> 2通＝社長の O-008/O-013 指示）／旧称 <span class="font-mono">to: hp-loop</span> 孤児の定点監視（new/ に0件）／<span class="font-mono">hold/</span>（空）。<strong>※ Slack <span class="font-mono">fetch</span> は権限承認が下りず未実行</strong>（受信箱には既取得の2通あり）。</p>
 
     <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
-      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：統括ループ・Slack双方向・無人ティック（2分毎・<span class="font-mono">status=ok</span>・全 idle・blog 系も配線済）は<strong>正常稼働</strong>、<span class="font-mono">hold/</span> は空（承認待ちなし＝健全）。<strong>最大の変化＝O-010/O-011/O-012 の往復切れが閉路化</strong>：旧称 <span class="font-mono">hp-loop</span> 宛の孤児報告は <span class="font-mono">new/</span> から消え、<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> の消化履歴6通が出現。web-hanasaka(13)／yoshida-dev(9)／fujisaka-dev(3) の3 dev すべてが送信者として現れ報告が消化されている＝<strong>fujisaka-dev も 6/22 に稼働確認（未確認だった点を解消）</strong>。3件は解決として<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ。<strong>残課題は地図の遅れ（O-008・blog サブシステム未記載が判明し拡大）と未コミット（O-009）</strong>＝いずれも社長判断待ち。</p>
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：社長から2件の指示を受領し反映。<strong>①O-008（地図の遅れ）を解決</strong>＝「直してください」のご承認を受け、<span class="font-mono">SYSTEM.md</span> を <strong>v0.1→v0.2</strong> に更新し実態へ同期（新モード chat・memo-triage・memo-intake・blog-loop・blog-write・blog-improve を地図に追加／hp-loop を 4サイト・v0.5 に／overseer v0.2／無人ディスパッチャ＋cron 節を新設／ツール群・チャネル・健康シグナルを拡充）。<strong>②O-013（往復切れ）は社長の「映して再発時に再調査」方針で合意済</strong>＝実体は既に再監査完了（02:37）で実害なし、本サイクルでアーカイブ収容。未解決は <strong>O-009</strong>（未コミット）／O-004・O-006（状況変化なし）。</p>
     </div>
 
-    <!-- O-012/011/010 resolution -->
-    <div class="border border-emerald-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="border border-emerald-200 rounded-lg p-5 mb-4 bg-white">
       <div class="flex items-center justify-between mb-2">
-        <h4 class="font-bold">O-010 / O-011 / O-012：dev↔loop の往復切れ＝<span class="font-mono">3サイトとも閉路化</span>を確認（解決）</h4>
-        <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（→アーカイブ）</span>
+        <h4 class="font-bold">O-008（解決）：SYSTEM.md を v0.2 に同期＝地図が実態に追いついた</h4>
+        <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決</span>
       </div>
       <ul class="text-sm space-y-1 text-gray-700">
-        <li><strong>観察（事実・前回からの変化）</strong>：前回（Cycle 011）の決め手だった <span class="font-mono">yoshida-dev → hp-loop</span>（旧称）孤児報告は <span class="font-mono">new/</span> から消失。現在の <span class="font-mono">new/</span> 17通は<strong>すべて loop→dev の outbound レポート</strong>（<span class="font-mono">to:</span> は web-hanasaka／yoshida-dev／fujisaka-dev のみ＝旧称宛 inbound はゼロ）。</li>
-        <li><strong>観察（事実）</strong>：<span class="font-mono">cur/</span>（処理済67通）に <span class="font-mono">to: hp-loop-yoshida</span> 消化が<strong>6通</strong>（Cycle 011 時点は0通）。送信者集計では <strong>web-hanasaka 13／yoshida-dev 9／fujisaka-dev 3</strong> が消化済＝3 dev すべての報告が本ループに届き処理されている。<strong>fujisaka-dev は 6/22 に3通送信</strong>（10:52／16:00／17:29）＝前回「着信痕跡なし・未確認」を解消。</li>
-        <li><strong>なぜ解決と判断</strong>：「提案→実装→報告→再監査・効果検証」の戻り経路が、3サイトとも正規宛（<span class="font-mono">hp-loop-&lt;site&gt;</span>）で機能していることを実体で確認。Cycle 011 で名指しした「旧称宛が <span class="font-mono">new/</span> に滞留＝移行未完」シグナルが解消した。</li>
-        <li><strong>残る軽微な事象（様子見・社長対応不要）</strong>：loop 側 outbound の一部 <span class="font-mono">ack</span> が旧称 <span class="font-mono">from: hp-loop</span> ラベルのまま（6/20〜6/23・4通／<span class="font-mono">to:</span> は正しい dev）＝配送は <span class="font-mono">to:</span> 駆動なので<strong>届く・実害なし</strong>の表示ラベル残。outbound が <span class="font-mono">new/</span> に残るのは拠点 dev PC が間欠起動で未取得なだけ（想定内）。次サイクルも「旧称宛 inbound の有無」を定点監視する。</li>
-        <li><strong>関連</strong>：<span class="font-mono">data/mailbox/cur/</span>（to: hp-loop-yoshida ×6・fujisaka-dev 送信3通）／<span class="font-mono">bin/agent-tick.sh</span> L158-167／アーカイブ O-007／メモリ project_phase2-golive-pending</li>
-        <li><strong>ステータス</strong>：✅ 解決（アーカイブへ移動・定点監視のみ継続）</li>
-      </ul>
-    </div>
-
-    <!-- O-008 (expanded) -->
-    <div class="border border-amber-300 rounded-lg p-5 mb-4 bg-white">
-      <div class="flex items-center justify-between mb-2">
-        <h4 class="font-bold">O-008（拡大）：<span class="font-mono">SYSTEM.md</span>（地図）が実態から乖離＝blog サブシステム全体が未記載・版ズレも継続</h4>
-        <span class="text-xs font-bold text-white bg-amber-500 px-2 py-0.5 rounded">🟡 要承認（最重要）</span>
-      </div>
-      <ul class="text-sm space-y-1 text-gray-700">
-        <li><strong>観察（新規・拡大）</strong>：<span class="font-mono">grep blog SYSTEM.md</span>＝<strong>0件</strong>。実際には <span class="font-mono">/blog-loop</span>・<span class="font-mono">/blog-write</span>・<span class="font-mono">/blog-improve</span> の3モードがルール（<span class="font-mono">.claude/rules/blog-*.md</span>）・コマンド・dispatcher 配線（<span class="font-mono">agent-tick.sh</span> L164-167）・cron 4本（hp 00:00／blog-loop 05:00／blog-write 05:30／blog-improve 06:00）として<strong>稼働中</strong>、新エージェント <span class="font-mono">blog-loop-ycom</span> も実在。地図のモード表・ハンドオフ・チャネル表のいずれにも無い。</li>
-        <li><strong>観察（継続）</strong>：モード表が hp-loop＝「単一サイト・v0.1」（実 <strong>v0.5</strong>・マルチサイト）／overseer＝v0.1（実 v0.2）と版ズレ。</li>
-        <li><strong>なぜ問題か</strong>：SYSTEM.md は統括が毎回読む入口かつ新規参入の地図。実在する稼働サブシステムが載らないと、整合チェックの母集合から漏れ・二重実装や見落としを生む（地図の母集合 ＜ 実態）。</li>
-        <li><strong>推奨（誰が・何を）</strong>：統括が更新案（モード表に blog 3行追加・hp-loop/overseer の版更新・ハンドオフ図に blog 経路追記）を用意 →<strong>社長が「直してよい」</strong>で次サイクル反映（地図編集は社長ゲート＝勝手に直さない）。</li>
-        <li><strong>効果</strong>：中（地図の信頼性回復・健康チェックの網羅性）／<strong>工数</strong>：小／<strong>優先度</strong>：🟡</li>
-        <li><strong>関連</strong>：<span class="font-mono">SYSTEM.md</span>（モード表・ハンドオフ）／<span class="font-mono">bin/agent-tick.sh</span> L23-26,164-167／<span class="font-mono">.claude/rules/blog-loop.md</span>(0.1)・<span class="font-mono">blog-write.md</span>(0.1)・<span class="font-mono">blog-improve.md</span>(0.1)／メモリ project_blog-loop-skill</li>
-        <li><strong>ステータス</strong>：⏳ Pending（社長承認待ち）</li>
+        <li><strong>社長指示</strong>：「<strong>O-008については直してください</strong>」（2026-06-26 11:46・Slack）＝地図編集の社長ゲートを通過。</li>
+        <li><strong>反映内容</strong>：①新モード6つを地図に追加（<span class="font-mono">chat</span>／<span class="font-mono">memo-triage</span> 0.3／<span class="font-mono">memo-intake</span> 0.4／<span class="font-mono">blog-loop</span> 0.1／<span class="font-mono">blog-write</span> 0.1／<span class="font-mono">blog-improve</span> 0.1）。②版ズレ修正：<span class="font-mono">hp-loop</span> を <strong>マルチサイト4サイト（ycom/yoshida/fujisaka/yokohawaii）・v0.5</strong>、<span class="font-mono">overseer</span> を v0.2 に。③<strong>無人ディスパッチャ（<span class="font-mono">agent-tick.sh</span>）と cron スケジュール</strong>の節を新設。④エージェントID・トークン登録状況（<span class="font-mono">hp-loop-yokohawaii</span> 未登録／旧称 <span class="font-mono">hp-loop</span> 孤児の定点監視）を明記。⑤ツール群に <span class="font-mono">ga4-fetch/hp-shot/hp-serp/hp-compete/hp-diff/wp-draft/agent-tick</span> を追加。⑥チャネルマップに coverage 台帳・ブログ会話・#memo 2層を追加。⑦健康シグナルに往復切れ・地図ドリフト・流用整合を追加。</li>
+        <li><strong>検証</strong>：実体を grep/Read で確認（rule version 実測・config の登録サイト・dispatcher の配線・トークン表のエージェント名）。地図は実態と一致。</li>
+        <li><strong>関連</strong>：<span class="font-mono">SYSTEM.md</span>（v0.2・変更履歴に O-008 反映を追記）／受信 <span class="font-mono">M-20260626T114647-president</span></li>
+        <li><strong>ステータス</strong>：✅ 解決（社長承認・反映済）。<span class="font-mono">SYSTEM.md</span> の commit は O-009 の一括コミットに含める（統括は commit しない）。</li>
       </ul>
     </div>
 
     <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
-      <h4 class="font-bold mb-1 text-sm">継続中の提案（詳細は 🔔 ボックス参照）</h4>
+      <h4 class="font-bold mb-1 text-sm">O-013（解決確定）：社長合意＝アーカイブ収容</h4>
       <ul class="text-xs space-y-1 text-gray-600">
-        <li><strong>O-009</strong>（未コミット・🟢）：overseer/spec・archive、blog 系ルール/コマンド一式ほか多数が git 未追跡／未コミット。<strong>O-004/O-006</strong>：状況変化なし（社長タスク／着手OK待ち）。</li>
+        <li>社長指示（11:45）：「yoshida-dev は <span class="font-mono">hp-loop-yoshida</span> 宛に間違いなく送っていると確認した。一旦これを映して、また同じことがあれば再調査で」。→ 実体は既に 02:37 再監査完了で<strong>実害なし</strong>・<span class="font-mono">new/</span> 孤児0件のため再投函も不要。恒久策は保留、<strong>定点監視を継続</strong>（再発時に根本切り分け）で合意。次サイクルで O-013 カードをアーカイブへ移す。</li>
       </ul>
     </div>
 
     <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
       <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ</h4>
       <ul class="text-xs space-y-1 text-gray-600">
-        <li>Slack <span class="font-mono">fetch</span>＝新着なし。overseer 宛 mailbox＝なし。<span class="font-mono">hold/</span>＝空。tick.log は 2分毎 <span class="font-mono">status=ok</span>・全 idle（chat/overseer/hp-loop:ycom,yoshida,fujisaka/blog-loop:ycom/blog-write:ycom/blog-improve:ycom）、01:00 の日次 overseer 起動（本サイクル）を確認。</li>
-        <li>mailbox を集計確認：<span class="font-mono">new/</span> 17通＝すべて loop→dev outbound（旧称 <span class="font-mono">to: hp-loop</span> 孤児はゼロ）。<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> ×6・3 dev の送信消化（web-hanasaka13/yoshida9/fujisaka3）を確認 →<strong>O-010/011/012 を「解決」と判定しアーカイブへ移動</strong>。残る旧称 <span class="font-mono">from</span> ラベル4通は実害なしの様子見に格下げ。</li>
-        <li><span class="font-mono">grep blog SYSTEM.md</span>＝0件、dispatcher/cron には blog 3モード配線済を確認 →<strong>O-008 を拡大</strong>（版ズレ＋blog サブシステム未記載）。Cycle 011 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移動。</li>
-        <li>rule version 実測：hp-loop=v0.5／overseer=v0.2／blog-loop=v0.1。SYSTEM.md(0.1) との差を O-008 の証跡に反映。</li>
-        <li>自己改善：K-063 を <span class="font-mono">data/hp-improve/skill-kaizen.md</span> に記録（①既報の系統的故障が解消したかは「起票時の定点シグナル（旧称宛 inbound の有無）」で逆向きに確認し速やかに解決→アーカイブする＝古い 🔴 を惰性で残さない／②dispatcher・cron に在って SYSTEM.md に無いモード/エージェントを grep で突き合わせる「地図 vs 実態」ドリフト検出を健康チェックに追加）。</li>
+        <li>受信箱：<span class="font-mono">to: overseer</span> 2通（社長 O-013 回答・O-008 承認）を反映。<strong>Slack <span class="font-mono">fetch</span> は権限承認が下りず未実行</strong>＝この巡回での新規 Slack 取得はなし（既取得の2通で処理）。次の有人/承認時に fetch を回す。</li>
+        <li><span class="font-mono">hold/</span> 空・旧称 <span class="font-mono">to: hp-loop</span> 孤児 <span class="font-mono">new/</span> に0件（O-013 後の定点監視・正常）。</li>
+        <li>処理済みへの移動（<span class="font-mono">done</span>）と Slack スレッド返信（<span class="font-mono">reply --as overseer</span>）も <strong>slack-poll.py の権限承認が下りず未実行</strong>＝2通は <span class="font-mono">new/</span> に残置。<strong>O-NNN（運用）</strong>として下記に起票。</li>
+        <li>自己改善：K-096 を <span class="font-mono">data/hp-improve/skill-kaizen.md</span> に記録（無人/制限セッションで <span class="font-mono">slack-poll.py</span> 系が承認ゲートに掛かると done/reply が打てず受信箱が残る＝掲示板で処理を完遂し「未done」を明示、次tickは掲示板の解決状態で二重replyを防ぐ）。</li>
       </ul>
     </div>
   </section>
 
-  <p class="text-xs text-gray-400">地図：<span class="font-mono">SYSTEM.md</span>（O-008＝更新提案中）／動作ルール：<span class="font-mono">.claude/rules/overseer.md</span>（v0.2 ルール化は残存課題＝O-006）／起動：<span class="font-mono">/overseer</span>（<span class="font-mono">/loop</span> 併用で定期巡回）。過去サイクルの詳細は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a> へ。</p>
+  <!-- ===== Cycle 015 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 015 — 2026-06-26（軽い巡回）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（本日の精密診断＝Cycle 014 は実施済みのため）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 1通＝社長の O-013 回答）／旧称 <span class="font-mono">to: hp-loop</span> 孤児の定点監視／<span class="font-mono">hold/</span>。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>O-013（往復切れ再発）は解決</strong>。Cycle 014 で🔴起票した yoshida-dev の孤児報告は、実は<strong>本日02:37 に hp-loop-yoshida が拾って本番GET再監査まで完了済み</strong>（社長の回答より前）。社長からも「一旦これを映して、再発したら再調査」のご方針をいただき、<strong>既に解決済みのため追加対応不要</strong>で合意。旧称 <span class="font-mono">to: hp-loop</span> 孤児は <span class="font-mono">new/</span> に<strong>0件</strong>に戻り、<span class="font-mono">hold/</span> 空。定点監視は継続。未解決は <strong>O-008</strong>（地図更新・要承認）／<strong>O-009</strong>（未コミット）／O-004・O-006。</p>
+    </div>
+
+    <div class="border border-emerald-200 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-013（解決）：往復切れ再発は実害なし＝報告は既に再監査完了済み</h4>
+        <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>実体</strong>：旧称宛(<span class="font-mono">to: hp-loop</span>)の yoshida-dev 報告（R-Y06/R-Y15/title NAP統一）は、<strong>2026-06-26 02:37</strong> に <span class="font-mono">hp-loop-yoshida</span> が拾い、本番GET再監査の <span class="font-mono">ack</span>（<span class="font-mono">M-20260626T023725-hp-loop-yoshida</span>）を生成済み＝<strong>title NAP統一・canonical(R-Y15)・トップOGP(R-Y06) は本番反映を確認しクローズ</strong>、残るは R-Y08（JSON-LD 空配列）の生ソース確認のみ。孤児の原本は <span class="font-mono">cur/</span> へ処理済みで <span class="font-mono">new/</span> の孤児は0件。＝Cycle 014 で懸念した「再監査が止まる」実害は出ていない。</li>
+        <li><strong>社長判断（2026-06-26）</strong>：「yoshida-dev は hp-loop-yoshida 宛に間違いなく送っていると確認した。一旦これを映して、今後また同じことがあれば再調査で」。→ 既に解決済みのため再投函は不要、<strong>恒久策は保留・再発時に根本切り分け</strong>で合意。統括は <span class="font-mono">to: hp-loop</span> 孤児の定点監視を継続。</li>
+        <li><strong>関連</strong>：<span class="font-mono">data/mailbox/new/M-20260626T023725-hp-loop-yoshida-b71407.json</span>（再監査ack）／<span class="font-mono">cur/M-20260625T180550-yoshida-dev…</span>（処理済み原本）／<a href="archive.html" class="text-blue-600 hover:underline">アーカイブの O-010/011/012</a>（再発元）</li>
+        <li><strong>ステータス</strong>：✅ 解決（社長合意・実害なし）→ 次サイクルでアーカイブへ収容</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 014 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 014 — 2026-06-26（精密診断）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（前回＝Cycle 013・2026-06-25＝当日でないため切替）。<strong>チェック範囲</strong>：Slack fetch（新着なし）／自分宛受信箱（overseer 宛なし）／mailbox <span class="font-mono">new/</span>（5通）・<span class="font-mono">hold/</span>（空）の from→to を集計／<strong>旧称 <span class="font-mono">to: hp-loop</span> 孤児 inbound の有無（往復切れ再発の定点監視）</strong>／dispatcher <span class="font-mono">tick.log</span>（2分毎 status・01:00 日次起動）／<strong>地図 vs 実態の grep ドリフト検出</strong>（<span class="font-mono">grep blog/memo-triage/yokohawaii SYSTEM.md</span>＝K-074 の定石ドリル）／rule version 照合／git 未コミット件数。<strong>実体を Read/grep で確認</strong>。</p>
+
+    <div class="border-l-4 border-amber-400 bg-amber-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：基盤の運用は<strong>正常</strong>（無人ティック 2分毎 <span class="font-mono">status=ok</span>・全 idle＝chat/memo-triage/overseer/hp-loop:<strong>4サイト</strong>/blog:3モード、01:00 の日次 overseer 起動を確認・<span class="font-mono">hold/</span> 空・overseer 宛 mailbox なし・Slack 新着なし）。ただし<strong>新規の綻びを1件検出＝O-013（🔴）</strong>：定点監視していた<strong>往復切れが再発</strong>。<span class="font-mono">yoshida-dev</span> の実装報告（R-Y06/R-Y15・本番デプロイ済）が旧称 <span class="font-mono">to: hp-loop</span> 宛で <span class="font-mono">new/</span> に孤児化し、yoshida ループに拾われていない（約1日滞留）。＝Cycle 012 で「解決」とした O-010/011/012 の根本（外部 dev の宛名同期）は未確立だった。あわせて <strong>O-008 をさらに拡大</strong>（HP分析4サイト目 <span class="font-mono">yokohawaii</span> も地図に未記載と判明）、<strong>O-009</strong> 未コミット45件に増加。</p>
+    </div>
+
+    <!-- O-013 (new) -->
+    <div class="border border-red-300 rounded-lg p-5 mb-4 bg-white">
+      <div class="flex items-center justify-between mb-2">
+        <h4 class="font-bold">O-013（新規）：dev→loop の往復切れが<strong>再発</strong>＝yoshida-dev の実装報告が旧称宛で孤児化</h4>
+        <span class="text-xs font-bold text-white bg-red-500 px-2 py-0.5 rounded">🔴 要対応</span>
+      </div>
+      <ul class="text-sm space-y-1 text-gray-700">
+        <li><strong>観察</strong>：<span class="font-mono">grep -l '"to": "hp-loop"' data/mailbox/new/</span>＝<strong>1件</strong>（前サイクルは0件）。中身は <span class="font-mono">yoshida-dev → to: hp-loop</span>（旧称・正しくは <span class="font-mono">hp-loop-yoshida</span>）の <span class="font-mono">type:report</span>「R-Y06/R-Y15＋title NAP統一 実装報告（本番デプロイ済み）」、2026-06-25 18:05 着で<strong>約1日 <span class="font-mono">new/</span> に滞留</strong>。dispatcher は <span class="font-mono">hp-loop-yoshida</span> を厳密一致で監視するため <span class="font-mono">pending=0</span> に化け、yoshida ループは存在を知らない。</li>
+        <li><strong>なぜ問題か</strong>：報告本文が「次サイクルでトップ/cleaning/first/kidskyousei の再GET検証をお願いします」と明示的に再監査を依頼している。孤児のままだと<strong>本番反映（canonical/OGP/医院名NAP）の再監査が永久に始まらない</strong>＝「提案→実装→報告→再監査」の戻り経路が yoshida で切れる。これは Cycle 012 で「解決」とした O-010/011/012（宛名移行の系統的未完）の<strong>再発</strong>で、根本＝外部 dev 拠点の送信先同期が確立していなかった（症状＝孤児ゼロの一時観測で解決判定したのは早計＝K-040 の再々確認）。</li>
+        <li><strong>推奨（誰が・何を）</strong>：①<strong>応急</strong>＝社長/Main がこの1通を <span class="font-mono">hp-loop-yoshida</span> 宛で再投函（統括は他モードの配送には手を出さない＝代行しない）。②<strong>恒久</strong>＝(a) 外部 yoshida-dev の送信先設定を <span class="font-mono">hp-loop-yoshida</span> に同期する／または (b) 各 hp-loop ループが旧称 <span class="font-mono">to: hp-loop</span> を本文のサイト手掛かりで判定して拾うフォールバックを実装。外部拠点の同期タイミングを我々が制御できないため (b) の方が堅牢。方針のお声がけで実装案を用意。</li>
+        <li><strong>効果</strong>：高（再監査の戻り経路の死活）／<strong>工数</strong>：応急=小／恒久=中／<strong>優先度</strong>：🔴</li>
+        <li><strong>関連</strong>：<span class="font-mono">data/mailbox/new/M-20260625T180550-yoshida-dev-95920e7ebb39a6f5.json</span>／<span class="font-mono">bin/agent-tick.sh</span>／<span class="font-mono">.claude/rules/hp-loop.md</span>（mailbox受信 <span class="font-mono">to: hp-loop-&lt;site&gt;</span>）／<a href="archive.html" class="text-blue-600 hover:underline">アーカイブの O-010/011/012</a>（再発元）</li>
+        <li><strong>ステータス</strong>：⏳ Pending（社長対応待ち＝応急の再投函 or 恒久策の方針）</li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">継続中の提案（詳細は 🔔 ボックス参照）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>O-008</strong>（地図の遅れ・🟡・さらに拡大）：<span class="font-mono">grep yokohawaii SYSTEM.md</span>＝0件＝HP分析<strong>4サイト目 yokohawaii</strong>（config登録・dispatcher配線・掲示板あり・稼働中）も地図に未記載。既報の blog 3モード＋memo 2モード＋版ズレ（hp-loop v0.5/overseer v0.2 vs 地図 v0.1）に加わる。社長承認で統括が更新案を反映。</li>
+        <li><strong>O-009</strong>（未コミット・🟢・増加中）：git 未コミットが <strong>45件（変更37＋未追跡8）</strong>。新ルール（blog 系・memo 2層）・各掲示板・bin・新ドラフト（T-003/T-004・blog improve・doyukai-keikyo・ai-chat-sales）等が未保存。<strong>O-004/O-006</strong>：状況変化なし（社長タスク／着手OK待ち）。</li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li>Slack <span class="font-mono">fetch</span>＝新着なし。overseer 宛 mailbox＝なし。<span class="font-mono">hold/</span>＝空。tick.log は 2分毎 <span class="font-mono">status=ok</span>・全 idle（chat/memo-triage/overseer/hp-loop:4サイト=ycom/yoshida/fujisaka/<strong>yokohawaii</strong>/blog:3モード）、01:00 の日次 overseer 起動（本サイクル）を確認。</li>
+        <li>mailbox 集計：<span class="font-mono">new/</span> 5通＝うち<strong>4通は正常な loop→dev outbound</strong>（hp-loop-fujisaka→fujisaka-dev ×3／hp-loop-ycom→web-hanasaka ×1）、<strong>1通が旧称 <span class="font-mono">to: hp-loop</span> 孤児 inbound</strong>（yoshida-dev）→<strong>O-013 を起票</strong>（往復切れ再発）。</li>
+        <li>地図ドリフト検出（K-074 の定石ドリル）：<span class="font-mono">grep blog/memo-triage/yokohawaii SYSTEM.md</span>＝いずれも0件 →<strong>O-008 をさらに拡大</strong>（yokohawaii 4サイト目も未記載）。Cycle 013 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移動し、再発に伴い archive の O-010/011/012 カードに「⚠️再発」注記を追記（履歴は消さず O-013 へ継続）。</li>
+        <li>rule version 実測：hp-loop=v0.5／overseer=v0.2／blog-loop=v0.1／memo-triage=v0.3／memo-intake=v0.4。SYSTEM.md(0.1) との差を O-008 の証跡に反映。git 未コミット＝45件（O-009 を増加として更新）。</li>
+        <li>Slack 投稿：今サイクルは<strong>投稿する</strong>（新規の綻び O-013 を検出＝社長に即時お知らせすべき新規事項。O-008/O-009 の単純な再掲ではない）。</li>
+        <li>自己改善：K-087 を <span class="font-mono">data/hp-improve/skill-kaizen.md</span> に記録（系統的故障を「症状の一時消失」で解決判定すると再発する＝K-040 の3度目。往復切れのような外部依存の故障は、症状の消失でなく<strong>根本の構造的担保（送信側統一 or 受信側フォールバック）が入るまでは「様子見」止まりにし、定点監視を続ける</strong>）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="text-xs text-gray-400">地図：<span class="font-mono">SYSTEM.md</span>（✅ v0.2 に同期済＝O-008 解決）／動作ルール：<span class="font-mono">.claude/rules/overseer.md</span>（v0.2 ルール化は残存課題＝O-006）／起動：<span class="font-mono">/overseer</span>（<span class="font-mono">/loop</span> 併用で定期巡回）。過去サイクルの詳細は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a> へ。</p>
 
 </div>
 </body>
