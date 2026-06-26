@@ -4,6 +4,7 @@
 # 使い方:
 #   bash bin/hp-audit.sh <URL>            # 人が読む要約（⚠️で課題を表示）
 #   bash bin/hp-audit.sh <URL> --json     # JSON出力（/hp-loop の一次情報・差分比較用）
+#   bash bin/hp-audit.sh <URL> --text     # ページ本文テキストを抽出して出力（本文精読・実査用）
 #
 # 取得する信号: HTTPステータス / title / meta description・keywords / canonical / robots /
 #   viewport(ズーム禁止検出) / OGP・Twitterカード(プレースホルダ検出) / JSON-LD(型・無効化検出) /
@@ -18,15 +19,17 @@ command -v python3 >/dev/null 2>&1 || { echo "ERROR: python3 が必要です" >&
 
 URL=""
 JSON=0
+TEXT=0
 for a in "$@"; do
   case "$a" in
     --json) JSON=1 ;;
+    --text) TEXT=1 ;;
     -*)     echo "ERROR: 不明なオプション: $a" >&2; exit 1 ;;
     *)      if [ -n "$URL" ]; then echo "ERROR: URLは1つだけ指定してください（複数指定: '$URL' と '$a'）" >&2; exit 1; fi
             URL="$a" ;;
   esac
 done
-[ -z "$URL" ] && { echo "使い方: bash bin/hp-audit.sh <URL> [--json]" >&2; exit 1; }
+[ -z "$URL" ] && { echo "使い方: bash bin/hp-audit.sh <URL> [--json|--text]" >&2; exit 1; }
 
 # URLスキームは http/https のみ許可（HTTP GET 要件。file:// 等を弾く）
 case "$URL" in
@@ -46,7 +49,7 @@ http_meta="$(curl -sSL \
   -A 'Mozilla/5.0 (hanasaka-hp-audit; +internal-analysis)' \
   -o "$tmp" -w '%{http_code}\t%{url_effective}\t%{size_download}\t%{time_total}' "$URL")" || curl_exit=$?
 
-URL="$URL" HTTP_META="$http_meta" CURL_EXIT="$curl_exit" JSON_OUT="$JSON" python3 - "$tmp" <<'PY'
+URL="$URL" HTTP_META="$http_meta" CURL_EXIT="$curl_exit" JSON_OUT="$JSON" TEXT_OUT="$TEXT" python3 - "$tmp" <<'PY'
 import os, sys, re, json
 
 path = sys.argv[1]
@@ -63,6 +66,7 @@ size      = hm[2] if len(hm) > 2 else ''
 ttime     = hm[3] if len(hm) > 3 else ''
 curl_exit = os.environ.get('CURL_EXIT', '0')
 json_out  = os.environ.get('JSON_OUT') == '1'
+text_out  = os.environ.get('TEXT_OUT') == '1'
 
 # --- 取得失敗の明示扱い（成功を装って空ページを監査しない） ---
 # curl 異常終了（タイムアウト/DNS/プロトコル違反/サイズ超過）・非2xx・空body は監査不能とする
@@ -84,6 +88,31 @@ if fetch_err:
         print(f"  ⛔ 監査不能：{fetch_err}")
         print(f"  HTTP {http_code or '—'} / curl_exit={curl_exit} / final={final_url or '—'}")
     sys.exit(3)
+
+# ---- 本文テキスト抽出モード（--text・読み取り専用・本文精読/実査用・2026-06-20追加） ----
+# script/style/noscript を除去し、タグを剥がして読めるテキストにする。
+# /hp-loop の「ページ本文の文言精読（対応エリア・対応の速さ・料金記載など）」を、
+# curl/WebFetch 未承認の無人実行でも hp-audit 経由（内部curl）で取得するため。HTTP GET のみ・捏造なし。
+if text_out:
+    import html as _htmlmod
+    body = html  # コメント除去済み
+    body = re.sub(r'<(script|style|noscript)\b[^>]*>.*?</\1>', ' ', body, flags=re.I | re.S)
+    # ブロック要素の終わりを改行に（段落を保つ）
+    body = re.sub(r'</(p|div|li|h[1-6]|tr|section|article|header|footer|nav|br|table|ul|ol)\s*>', '\n', body, flags=re.I)
+    body = re.sub(r'<br\s*/?>', '\n', body, flags=re.I)
+    body = re.sub(r'<[^>]+>', ' ', body)           # 残りのタグを除去
+    body = _htmlmod.unescape(body)                 # &amp; 等を戻す
+    body = re.sub(r'[ \t　]+', ' ', body)      # 連続空白を1つに
+    body = re.sub(r'\n\s*\n\s*\n+', '\n\n', body)  # 連続改行を圧縮
+    lines = [ln.strip() for ln in body.splitlines()]
+    body = '\n'.join(ln for ln in lines if ln)
+    LIMIT = 12000
+    print(f"■ hp-audit --text: {url}  (HTTP {http_code} / {size}B)")
+    print(f"--- 本文テキスト（タグ除去・最大{LIMIT}字。HTTP GETのみ・読み取り専用） ---")
+    print(body[:LIMIT])
+    if len(body) > LIMIT:
+        print(f"\n…（{len(body)-LIMIT}字を省略）")
+    sys.exit(0)
 
 def metas(attr, key):
     # <meta {attr}="key" content="...">
@@ -163,6 +192,73 @@ mailto = len(re.findall(r'href\s*=\s*"mailto:', html, re.I))
 contact_links = len(re.findall(r'href\s*=\s*"[^"]*(contact|inquiry|toiawase|問[い]?合)', html, re.I))
 cms = 'WordPress' if re.search(r'wp-content|wp-includes', html, re.I) else first(metas('name', 'generator')) or '不明'
 
+# ---- CV（コンバージョン）要素の棚卸し（2026-06-20 追加・読み取り専用） ----
+# ゴール＝問い合わせ/電話 増。tel/mailto に加え LINE・フォーム・CV系アンカー文言を列挙し、
+# 「実装済みでCVになりうる要素」を漏れなく拾う（/hp-loop fujisaka 社長依頼）。
+def uniq(seq, n=20):
+    out = []
+    for x in seq:
+        if x and x not in out:
+            out.append(x)
+        if len(out) >= n:
+            break
+    return out
+
+# 電話番号（tel: の実値）
+tel_numbers = uniq(re.findall(r'href\s*=\s*"tel:\s*([^"]+)"', html, re.I))
+mailto_addrs = uniq(re.findall(r'href\s*=\s*"mailto:\s*([^"?]+)', html, re.I))
+
+# LINE 導線（友だち追加・公式アカウント）。lin.ee / line.me / line:// / liff、文言「LINE」「友だち追加」
+line_hrefs = uniq(re.findall(r'href\s*=\s*"((?:https?:)?//(?:[^"]*\.)?(?:lin\.ee|line\.me|liff\.line\.me)[^"]*)"', html, re.I))
+line_scheme = uniq(re.findall(r'href\s*=\s*"(line://[^"]*)"', html, re.I))
+line_text_hits = len(re.findall(r'友[だ]?ち追加|友達追加|LINE で|LINEで|LINE公式|公式LINE', html, re.I))
+line_present = bool(line_hrefs or line_scheme or line_text_hits)
+
+# フォーム（action / method）。CV受付の実体
+forms = []
+for fm in re.finditer(r'<form\b[^>]*>', html, re.I | re.S):
+    t = fm.group(0)
+    act = re.search(r'\baction\s*=\s*"([^"]*)"', t, re.I)
+    mth = re.search(r'\bmethod\s*=\s*"([^"]*)"', t, re.I)
+    forms.append({'action': (act.group(1) if act else ''), 'method': (mth.group(1).lower() if mth else 'get')})
+
+# CV系アンカー（文言 or href が申込/見積/資料請求/予約/開栓/問い合わせ等にマッチ）
+CV_KW = re.compile(
+    r'見積|お見積|資料請求|ご?予約|お?申[しこ]?[込み]+|開栓|閉栓|移転|引[っ]?越|修理|点検|来店|来店予約'
+    r'|お?問[い]?合[わせ]*|無料相談|ご相談|友[だ]?ち追加|友達追加|LINE'
+    r'|contact|inquiry|toiawase|mitsumori|estimate|yoyaku|reserv|apply|entry|form|line', re.I)
+cv_anchors = []
+for am in re.finditer(r'<a\b([^>]*)>(.*?)</a>', html, re.I | re.S):
+    attrs, inner = am.group(1), am.group(2)
+    href_m = re.search(r'\bhref\s*=\s*"([^"]*)"', attrs, re.I)
+    href = href_m.group(1) if href_m else ''
+    text = re.sub(r'<[^>]+>', '', inner)
+    text = re.sub(r'\s+', ' ', text).strip()
+    if href.startswith('tel:') or href.startswith('mailto:'):
+        continue  # tel/mailto は別集計
+    if CV_KW.search(text) or CV_KW.search(href):
+        cv_anchors.append({'text': text[:40], 'href': href[:120]})
+# 重複排除（text+href）
+seen, cv_anchors_u = set(), []
+for a in cv_anchors:
+    k = (a['text'], a['href'])
+    if k in seen:
+        continue
+    seen.add(k); cv_anchors_u.append(a)
+    if len(cv_anchors_u) >= 30:
+        break
+
+cv = {
+    'tel_numbers': tel_numbers,
+    'mailto': mailto_addrs,
+    'line_present': line_present,
+    'line_hrefs': line_hrefs + line_scheme,
+    'line_text_hits': line_text_hits,
+    'form_count': len(forms),
+    'forms': forms[:20],
+    'cv_anchors': cv_anchors_u,
+}
+
 # ---- 課題フラグ ----
 issues = []
 def L(v): return len(v) if v else 0
@@ -199,6 +295,7 @@ result = {
     'headings': {'h1': len(h1), 'h2': len(h2), 'h3': len(h3)},
     'images': {'total': img_total, 'no_alt': img_no_alt, 'empty_alt': img_empty_alt},
     'links': {'total': a_total, 'tel': tel, 'mailto': mailto, 'contact': contact_links},
+    'cv': cv,
     'commented_meta_tags': commented_meta,
     'issues': issues,
 }
@@ -220,6 +317,15 @@ print(f"  JSON-LD: {len(ldjson)}件 " + (str([l['types'] for l in ldjson]) if ld
 print(f"  見出し: h1={result['headings']['h1']} h2={result['headings']['h2']} h3={result['headings']['h3']}")
 print(f"  img: {img_total}件 (alt欠落 {img_no_alt} / alt空 {img_empty_alt})")
 print(f"  リンク: a={a_total} / tel={tel} mailto={mailto} contact={contact_links}")
+# CV要素の棚卸し
+print(f"  CV要素:")
+print(f"    電話(tel): {cv['tel_numbers'] or 'なし'}")
+print(f"    mailto: {cv['mailto'] or 'なし'}")
+print(f"    LINE: {'あり ' + str(cv['line_hrefs']) if cv['line_present'] else 'なし'}（文言ヒット {cv['line_text_hits']}）")
+print(f"    フォーム: {cv['form_count']}件 " + str([f['action'] or '(action空)' for f in cv['forms']]))
+print(f"    CV系アンカー: {len(cv['cv_anchors'])}件")
+for a in cv['cv_anchors']:
+    print(f"      - 「{a['text'] or '(文言なし/画像)'}」 → {a['href'] or '(href空)'}")
 if commented_meta:
     print(f"  ※ HTMLコメント内の meta/og タグ {commented_meta}件 は解析から除外（＝配信されていない）")
 print("")
