@@ -47,5 +47,18 @@
       "Bash(stat:*)",
       "Bash(date:*)"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/vpsuser/projects/myagent/bin/guard-unattended-edits.py"
+          }
+        ]
+      }
+    ]
   }
 }

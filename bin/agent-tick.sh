@@ -140,7 +140,10 @@ dispatch() {
     [ "$force" -eq 1 ] && action="daily" || action="handle($pending)"
     echo "$(now) [run] claude -p $slash 起動（label=$label pending=$pending force=$force）" >>"$LOG"
     # --kill-after：SIGTERM を無視されても30秒後に SIGKILL（子プロセス残留を始末＝Codex🔴4）
-    timeout --kill-after=30s 900s "$CLAUDE" -p "$slash" --permission-mode acceptEdits >>"$LOG" 2>&1
+    # MYAGENT_UNATTENDED=1：無人実行の目印。PreToolUse フック（guard-unattended-edits.py）が
+    # この時だけ社長ゲート対象ファイル（SYSTEM.md・CLAUDE.md・ルール/コマンド/設定）への
+    # Edit/Write を拒否する＝acceptEdits でも勝手に書けない（2026-06-26 地図自動編集の再発防止）。
+    MYAGENT_UNATTENDED=1 timeout --kill-after=30s 900s "$CLAUDE" -p "$slash" --permission-mode acceptEdits >>"$LOG" 2>&1
     rc=$?
     if [ "$rc" -ne 0 ]; then
       if [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
