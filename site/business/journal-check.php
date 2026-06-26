@@ -259,15 +259,32 @@ const CARD_DESC_DICT = [
     'ｴﾂｸｽｻ-ﾊﾞ-'        => 'エックスサーバー',
     'ｻｸﾗｲﾝﾀ-ﾈﾂﾄ'       => 'さくらインターネット',
     'ﾑ-ﾑ-ﾄﾞﾒｲﾝ'        => 'ムームードメイン',
-    'ｶ)ｼｰｴｽｱｰﾙ'         => 'カ）シーエスアール',
+    'ｶ)ｼｰｴｽｱｰﾙ'         => '株式会社CSR',
     'ｴﾌｲ-ﾙｳｵ-ﾀ-ﾏｲﾂｷﾊﾂｶｼﾞﾒ' => 'エフィールウォーター（毎月初日定期）',
     'ｶﾌﾞｼｷｶﾞｲｼｬｸﾗｳﾄﾞﾜｰｸｽ' => 'クラウドワークス',
     'CROWDWORKS'         => 'クラウドワークス',
+    'タイムズパーキング／ｉＤ'  => 'タイムズパーキング',
+    'ｽｲｶ(ｹ-ﾀｲｹﾂｻｲ)'    => 'スイカ',
+    'ＥＮＥＯＳ－ＳＳ／ｉＤ'    => 'ＥＮＥＯＳ－ＳＳ',
+    'ﾍﾟｲﾍﾟｲ ｹｲﾊﾝｼﾃｨﾓｰﾙ' => '京阪シティモール',
+    'ＭＩＣＲＯＳＯＦＴ－Ｇ１６１１６５２５９' => 'Microsoft',
+    'MICROSOFT#G154934155' => 'Microsoft',
+    'ＡＤＳ１５１２７８８３５６' => 'GoogleAds',
+    'AMAZON WEB SERVICES JAP' => 'AMAZON WEB SERVICES',
+    'ＡＭＡＺＯＮ　ＷＥＢ　ＳＥＲＶＩＣＥＳ' => 'AMAZON WEB SERVICES',
+];
+
+// 末尾にランダムなトークンが付き、literal置換では正規化できない明細用（str_replace後・かな正規化前に適用）
+const CARD_DESC_REGEX = [
+    '/^GOOGLE\*CLOUD\s+[A-Z0-9]+$/u' => 'GOOGLE CLOUD',
 ];
 
 function pretty_card_desc(string $desc): string {
     foreach (CARD_DESC_DICT as $from => $to) {
         $desc = str_replace($from, $to, $desc);
+    }
+    foreach (CARD_DESC_REGEX as $pat => $to) {
+        $desc = preg_replace($pat, $to, $desc);
     }
     return mb_convert_kana($desc, 'KV');
 }

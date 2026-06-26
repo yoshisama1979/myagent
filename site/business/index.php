@@ -136,6 +136,10 @@ const TOP_KPIS = [
       <h3 class="font-semibold text-blue-600 mb-1">社内会議</h3>
       <p class="text-sm text-gray-600">社内定例会議の議題・議事録</p>
     </a>
+    <a href="doyukai-keikyo.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
+      <h3 class="font-semibold text-blue-600 mb-1">同友会 景況調査 回答控え</h3>
+      <p class="text-sm text-gray-600">四半期ごとの景況調査の設問と回答メモ（固定回答を流用して入力を時短）</p>
+    </a>
     <a href="skill-sheet/index.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
       <h3 class="font-semibold text-blue-600 mb-1">skill-sheet/</h3>
       <p class="text-sm text-gray-600">社員教育・人事評価のスキル定義集（PC操作スキル他）</p>
