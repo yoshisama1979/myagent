@@ -21,7 +21,7 @@
 
   <h1 class="text-3xl font-bold mb-2">✍️ ブログ分析ループ — YCOM（はなさか自社・y-com.info/contents/）</h1>
   <p class="text-gray-600 mb-2">YCOMのブログ記事を定期的に分析し、<strong>①既存記事の改善案（B-NNN）</strong>と<strong>②新規記事のテーマ案＋構成案（T-NNN）</strong>、社長への質問を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。記事の<strong>執筆・公開は別エージェント</strong>（本ループは診断・構成案まで）。</p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-23（Cycle 001・手動テスト初回）／対象：<a href="https://y-com.info/contents/" class="text-blue-600 hover:underline font-mono">y-com.info/contents/</a>（WordPress）／ゴール：ブログ経由のSEO流入＋<strong>問い合わせ（見積）への寄与</strong>／関連：<a href="../index.html" class="text-blue-600 hover:underline">YCOM HP分析掲示板</a></p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-26（Cycle 007）／対象：<a href="https://y-com.info/contents/" class="text-blue-600 hover:underline font-mono">y-com.info/contents/</a>（WordPress）／ゴール：ブログ経由のSEO流入＋<strong>問い合わせ（見積）への寄与</strong>／関連：<a href="../index.html" class="text-blue-600 hover:underline">YCOM HP分析掲示板</a></p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -33,40 +33,58 @@
 
   <!-- ===== 🔔 社長への質問（未回答だけ・最上部に集約） ===== -->
   <div class="border-2 border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
-    <h2 class="text-xl font-bold text-emerald-800 mb-3">🔔 社長への質問（未回答）</h2>
+    <h2 class="text-xl font-bold text-emerald-800 mb-3">🔔 社長へ：ここが今ぜんぶ「社長の回答待ち」で止まっています（1回で4件解けます）</h2>
+    <p class="text-sm text-emerald-900 mb-3">Cycle 003 時点で、ブログのパイプラインは<strong>診断・ドラフト作りは終わっていて、あとは社長の判断・事実だけ</strong>が栓になっています（web-hanasaka も T-002 の事実は「社長に確認すべき」と差し戻してきました＝下記④）。下の <strong>4点に一度答えていただければ、T-001・T-002・B-001 がまとめて前に進みます</strong>。</p>
     <div class="text-sm text-emerald-900 space-y-3">
       <div>
-        <p class="font-semibold">Q-001：新規記事は「買い手意図（料金・選び方）」から着手してよいですか？</p>
-        <p class="mt-1">今回の分析で、ブログ流入は<strong>ほぼ全て事業外の情報系</strong>（フリー素材・技術TIPS・Amazon受け取り）で、買い手意図クエリの記事が無いと判明しました。CV（問い合わせ/見積）に効くのは <strong>T-001（費用相場）・T-002（選び方）</strong> です。</p>
-        <p class="mt-1">①そのとおり買い手意図の新規記事から着手 ／ ②まず既存記事のCTR・導線改善（B-001〜003）を優先 ／ ③両方並行、のどれが良いですか？</p>
+        <p class="font-semibold">① Q-001：新規記事は「買い手意図（料金・選び方）」から着手してよいですか？</p>
+        <p class="mt-1">CV（問い合わせ/見積）に効くのは <strong>T-001（費用相場）・T-002（選び方）</strong>。<strong>(a)買い手意図の新規記事から</strong> ／ (b)まず既存記事のCTR・導線改善（B系）を優先 ／ (c)両方並行、のどれで進めますか？<span class="text-xs text-emerald-700">（参考：GA4 上サイト全体で見積/問い合わせ系 CV は月30件前後発火＝買い手は実在。ブログ→受け皿の橋渡しで母数を増やせる）</span></p>
       </div>
       <div>
-        <p class="font-semibold">Q-002：T-001（費用記事）に載せる「料金レンジ・補助金情報」を提供いただけますか？</p>
-        <p class="mt-1">具体的な料金・補助金制度・実績数値は<strong>AIが捏造しません</strong>。`/price/` の実レンジや使える補助金があれば教えてください（無ければ「価格はケースバイケース」の枠で書き、`/price/` へ誘導します）。</p>
+        <p class="font-semibold">② Q-002：T-001（費用記事）の「料金レンジ・補助金」を教えていただけますか？<span class="text-rose-700">←今サイクルで「答える価値」が数字で裏取りできました</span></p>
+        <p class="mt-1">料金・補助金・実績数値は<strong>AIが捏造しません</strong>。<span class="font-mono">/price/</span> の実レンジ・使える補助金があれば教えてください（無ければ「価格はケースバイケース＋<span class="font-mono">/price/</span>へ誘導」の枠で書きます）。<strong>これが来るまで T-001 は着手保留</strong>。</p>
+        <p class="mt-1 text-xs bg-rose-50 border border-rose-200 rounded p-2 text-rose-900"><strong>📈 GSC新証拠（Cycle 006）</strong>：買い手ど真ん中のクエリ <span class="font-mono">「ホームページ制作 料金表」（月130表示・順位11.6位・CTR&nbsp;0%）</span>・<span class="font-mono">「ホームページ制作 料金」（月104表示・順位12.6位・CTR&nbsp;0%）</span>で、YCOM は<strong>2ページ目の底に沈み、クリック0＝月234表示の買い手需要を丸ごと取りこぼし</strong>ています。T-001（費用記事）は<strong>この需要を1ページ目で受ける唯一の弾</strong>。料金事実さえ来れば、捏造なしで投下できます。</p>
+      </div>
+      <div>
+        <p class="font-semibold">③ B-001（公開記事の改善版）のレビューをお願いします</p>
+        <p class="mt-1">p=2082「ロゴの変遷」の<strong>改善版が WP下書き <span class="font-mono">ID 8315</span> として出来ています</strong>（プレビュー <a href="https://y-com.info/contents/?p=8315" class="text-blue-600 hover:underline font-mono">y-com.info/contents/?p=8315</a>／<strong>元の公開記事 p=2082 は無傷</strong>）。見比べて、(a)この改善版で本番反映してよいか (b)meta の企業名は本文で実際に取り上げている社名（BMW・マクドナルド・Barbie・SHELL）に合わせる、の2点をご確認ください。</p>
+      </div>
+      <div>
+        <p class="font-semibold">④ Q-003【新規】：T-002（選び方記事・WP下書き ID 8311）に必要な事実をください</p>
+        <p class="mt-1">web-hanasaka が「これは開発の推測で確定できない＝社長に確認すべき」と<strong>差し戻してきました</strong>（捏造回避方針に同意のうえで）。次を教えていただければ T-002 を公開前まで仕上げられます：<br>
+        <span class="ml-3">・<strong>YCOMの得意分野・強み</strong>（選ばれる理由の核）<br>
+        ・<strong>公開後の運用・保守でできること</strong>（プランの有無・内容）<br>
+        ・<strong>制作で対応できる範囲</strong>（LP/コーポレート/EC/WordPress 等）<br>
+        ・<strong>料金体系の方式</strong>（一式見積 / プラン制 など。金額そのものは ② と共通でOK）<br>
+        ・<strong>関西の対応エリア</strong>（記事内の地域表現に使用）</span></p>
       </div>
     </div>
-    <p class="text-xs text-emerald-700 mt-3">回答は <span class="font-mono bg-emerald-100 px-1 rounded">/hp-reply</span>（または <span class="font-mono">data/blog-loop/ycom/from-president.md</span> に直接）でお願いします。次サイクルで反映します。</p>
+    <p class="text-xs text-emerald-700 mt-3">回答は <span class="font-mono bg-emerald-100 px-1 rounded">/hp-reply</span>（または <span class="font-mono">data/blog-loop/ycom/from-president.md</span> に直接）でお願いします。次サイクルで反映します。<strong>この4件が栓なので、新規提案は今サイクルも追加していません（過剰提案回避）。</strong></p>
   </div>
 
   <!-- ===== 🔧 進行中の提案（未完了の B・T／繰り越し） ===== -->
   <div class="border-2 border-violet-300 bg-violet-50 rounded-lg p-5 mb-6">
     <h2 class="text-xl font-bold text-violet-800 mb-3">🔧 進行中の提案（未完了の B・T）</h2>
+    <p class="text-xs text-violet-700 mb-2">「栓」列＝今この項目を止めているもの。<strong>🟦web-hanasaka着手可＝社長の入力なしで今すぐ実装に渡せる</strong>／🟥社長待ち＝社長の回答・事実が要る。</p>
     <table class="w-full text-sm border-collapse">
       <thead>
         <tr class="text-left border-b border-violet-300 text-violet-900">
-          <th class="py-1 pr-3">番号</th><th class="py-1 pr-3">内容</th><th class="py-1 pr-3">優先</th><th class="py-1">状態</th>
+          <th class="py-1 pr-3">番号</th><th class="py-1 pr-3">内容</th><th class="py-1 pr-3">優先</th><th class="py-1 pr-3">状態</th><th class="py-1">栓</th>
         </tr>
       </thead>
       <tbody class="align-top text-gray-700">
-        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-001</td><td class="py-1 pr-3">p=2082「ロゴの変遷」title/meta最適化（高順位・低CTR）</td><td class="py-1 pr-3">🔴</td><td class="py-1">🆕 新規（未着手）</td></tr>
-        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-002</td><td class="py-1 pr-3">制作系人気記事に文脈CTA・内部リンク（→サービス/実績/料金）</td><td class="py-1 pr-3">🟡</td><td class="py-1">🆕 新規（未着手）</td></tr>
-        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-003</td><td class="py-1 pr-3">p=3028「画像形式の選び方」加筆で2ページ目→1ページ目</td><td class="py-1 pr-3">🟡</td><td class="py-1">🆕 新規（未着手）</td></tr>
-        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-001</td><td class="py-1 pr-3">新規「ホームページ制作の費用相場【大阪・目的別】」</td><td class="py-1 pr-3">🔴</td><td class="py-1">🆕 新規（Q-001/002 確認待ち）</td></tr>
-        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-002</td><td class="py-1 pr-3">新規「失敗しない制作会社の選び方チェックリスト」</td><td class="py-1 pr-3">🟡</td><td class="py-1">🆕 新規（Q-001 確認待ち）</td></tr>
-        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-003</td><td class="py-1 pr-3">新規「自分で作る vs 制作会社に依頼｜費用と時間で比較」</td><td class="py-1 pr-3">🟢</td><td class="py-1">🆕 新規（未着手）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-001</td><td class="py-1 pr-3">p=2082「ロゴの変遷」title/meta最適化（高順位・低CTR）<br><span class="text-xs text-violet-700">実獲得クエリ確定＝「有名企業 ロゴ 一覧」「昔のロゴ」「ロゴ 変遷」（全て順位ほぼ1位）</span></td><td class="py-1 pr-3">🔴</td><td class="py-1 pr-3">✍️ <strong>改善版WP下書き ID 8315 実在</strong>・社長レビュー待ち<br><span class="text-xs">（元記事2082は無傷／blog-improve が作成）</span></td><td class="py-1 text-xs">🟥 社長レビュー（③）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-002</td><td class="py-1 pr-3">制作系人気記事に文脈CTA・内部リンク（→サービス/実績/料金）</td><td class="py-1 pr-3">🟡</td><td class="py-1 pr-3">🆕 未着手</td><td class="py-1 text-xs">🟦 web-hanasaka着手可（社長入力不要）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-003</td><td class="py-1 pr-3">p=3028「画像形式の選び方」の押し上げ<br><span class="text-xs text-rose-700">⚠️ Cycle 002 訂正：本命クエリ16〜51位＝Quick winではない</span></td><td class="py-1 pr-3">🟢</td><td class="py-1 pr-3">🔁 方針見直し（要・全面リライト判断）</td><td class="py-1 text-xs">🟥 投資判断</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-004</td><td class="py-1 pr-3">DIY技術記事群 → 「自作 vs 依頼」記事（T-003）への<strong>記事間内部リンク</strong></td><td class="py-1 pr-3">🟡</td><td class="py-1 pr-3">🟢 <strong>受け先 T-003 ドラフト完成</strong>＝着手可能性UP</td><td class="py-1 text-xs">🟦 web-hanasaka着手可（社長入力不要）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-001</td><td class="py-1 pr-3">新規「ホームページ制作の費用相場【大阪・目的別】」<br><span class="text-xs text-rose-700">📈 Cycle 006 裏取り：買い手クエリ「料金表/料金」で月234表示・順位11〜13位・CTR&nbsp;0%＝取りこぼしを実証。投資優先度を再確認</span></td><td class="py-1 pr-3">🔴</td><td class="py-1 pr-3">⏳ 事実待ち</td><td class="py-1 text-xs">🟥 料金事実（②Q-002）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-002</td><td class="py-1 pr-3">新規「失敗しない制作会社の選び方チェックリスト」</td><td class="py-1 pr-3">🟡</td><td class="py-1 pr-3">✅ WP下書き ID 8311（非公開）<br><span class="text-xs">web-hanasaka が事実を<strong>社長へ差し戻し</strong>（Cycle 003）＝公開前に事実待ち</span></td><td class="py-1 text-xs">🟥 事実（④Q-003）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-003</td><td class="py-1 pr-3">新規「自分で作る vs 制作会社に依頼｜費用と時間で比較」</td><td class="py-1 pr-3">🟢</td><td class="py-1 pr-3">✍️ <strong>ドラフト完成</strong>（blog-write・WP投稿はPhase1で保留）</td><td class="py-1 text-xs">🟥 営業方針（T-003残課題）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">T-004</td><td class="py-1 pr-3">新規「企業ロゴのリニューアル／ロゴ制作の依頼ガイド」（情報系ロゴ流入を買い手意図へ橋渡し）</td><td class="py-1 pr-3">🟢</td><td class="py-1 pr-3">✍️ <strong>ドラフト完成</strong>（blog-write・Cycle 005／WP投稿はPhase1で保留）</td><td class="py-1 text-xs">🟥 営業方針（T-004残課題）</td></tr>
+        <tr class="border-b border-violet-100"><td class="py-1 pr-3 font-mono">B-005</td><td class="py-1 pr-3 text-xs">p=2082「ロゴの変遷」（ほぼ1位・CTR≒0%の死蔵気味の情報系資産）→ <strong>T-004 への記事間内部リンク</strong>で買い手の薄い層を橋渡し（blog-write が Cycle 005 で発掘）</td><td class="py-1 pr-3">🟢</td><td class="py-1 pr-3 text-xs">🅿️ パーク（受け先 T-004 が下書き止まり＝公開URL未確定。B-004↔T-003 と同型）</td><td class="py-1 text-xs">― （T-004 公開が先）</td></tr>
       </tbody>
     </table>
-    <p class="text-xs text-violet-700 mt-2">完了（✅公開済み）になったものは <a href="archive.html" class="underline">アーカイブ</a>へ移します。未完了はここに繰り越して残します。</p>
+    <p class="text-xs text-violet-700 mt-2">完了（✅公開済み）になったものは <a href="archive.html" class="underline">アーカイブ</a>へ移します。未完了はここに繰り越して残します。Cycle 001・002 のサイクル記録（スナップショット）は <a href="archive.html" class="underline">アーカイブ</a>にあります。</p>
   </div>
 
   <!-- ===== 📥 分析に欲しい情報・データ・アクセス ===== -->
@@ -75,13 +93,15 @@
     <table class="w-full text-sm border-collapse">
       <thead>
         <tr class="text-left border-b border-sky-300 text-sky-900">
-          <th class="py-1 pr-3">欲しいもの</th><th class="py-1 pr-3">なぜ（何が分かる）</th><th class="py-1">優先</th>
+          <th class="py-1 pr-3">欲しいもの</th><th class="py-1 pr-3">なぜ（何が分かる）</th><th class="py-1">優先/状態</th>
         </tr>
       </thead>
       <tbody class="align-top text-gray-700">
-        <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold">記事URL×獲得クエリの紐付け</td><td class="py-1 pr-3">「この記事はどのクエリで来ているか」が分かると改善（title/加筆）が正確になる。現在は pages と queries を別々に取得＝突き合わせが手作業。<strong>2回目以降はツール化候補</strong>（GSC page+query 結合・読み取り専用）</td><td class="py-1">🟡</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold line-through text-gray-400">記事URL×獲得クエリの紐付け</td><td class="py-1 pr-3">「この記事はどのクエリで来ているか」。<strong>✅ Cycle 002 でツール化完了</strong>（<span class="font-mono">gsc-fetch.py page-queries --page '?p=NNNN'</span>＝T-006更新）。手作業の突き合わせは不要に。</td><td class="py-1">✅ 完了</td></tr>
         <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold">/price/ の実料金レンジ・補助金</td><td class="py-1 pr-3">T-001（費用記事）で数値を捏造しないため。提供あれば説得力が上がる（Q-002）</td><td class="py-1">🔴</td></tr>
-        <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold">記事末CTA・内部リンクの現状</td><td class="py-1 pr-3">B-002 の精度向上。web-hanasaka が現状のテンプレCTAを教えてくれると差分提案が早い</td><td class="py-1">🟢</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold">記事別の CV 寄与（GA4 ランディングページ別）</td><td class="py-1 pr-3">GA4 で CV 発火は確認できた（見積/問い合わせ 月30件前後）が、<strong>どの記事が CV に効いたか</strong>はランディングページ次元が要る。現 ga4-fetch にページ別 CV モードが無い＝次に効果検証するならツール化候補（読み取り専用）</td><td class="py-1">🟡</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold">記事末CTA・内部リンクの現状</td><td class="py-1 pr-3">B-002/B-004 の精度向上。web-hanasaka が現状のテンプレCTA・記事内リンク方針を教えてくれると差分提案が早い</td><td class="py-1">🟢</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 font-semibold">T-002 の信頼性事実（得意分野/運用保守/制作範囲/料金体系/エリア）</td><td class="py-1 pr-3"><strong>Cycle 003 で調達先が確定</strong>：web-hanasaka が「開発の推測では確定できない」と<strong>社長へ差し戻し</strong>＝👤社長確認に確定（🔧開発確認ではない）。上の <strong>④Q-003</strong> で社長へ集約済み</td><td class="py-1">🔴</td></tr>
       </tbody>
     </table>
   </div>
@@ -89,163 +109,52 @@
   <!-- ============================================================ -->
   <!-- ===================== 最新サイクル ========================= -->
   <!-- ============================================================ -->
-  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">Cycle 001 — 2026-06-23（YCOM ブログ・手動テスト初回）</h2>
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">Cycle 007 — 2026-06-26（YCOM ブログ・軽量サイクル：栓が変わらない以上、無駄打ちはしない＋進捗の取りこぼしを整理）</h2>
 
-  <!-- データ状況 -->
-  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
-    <h3 class="font-bold text-gray-800 mb-2">📊 データ状況</h3>
-    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-      <li>✅ GSC（BigQuery <span class="font-mono">searchconsole_ycom</span>・直近28日）：<span class="font-mono">/contents/</span> 配下のページ・クエリを取得（pages 上位80・queries 上位50）。データラグ2〜3日</li>
-      <li>✅ 記事本文：主要8記事のタイトルを <span class="font-mono">curl</span> で取得（暫定。記事URL×クエリ結合は手作業＝ツール化候補）</li>
-      <li>✅ 競合発掘：<span class="font-mono">hp-serp.sh「ホームページ制作 大阪 費用」</span>（Yahoo!＝Googleインデックス・読み取り専用）で上位8サイトを取得</li>
-      <li>🟡 GA4（記事→CV寄与）：今回は未取得（次サイクルで <span class="font-mono">ga4-fetch.py</span>＝記事経由の問い合わせ寄与を見る）</li>
+  <!-- 状況 -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">📊 状況（今サイクルの判断）</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>新しい入力なし</strong>：<span class="font-mono">from-president.md</span> は 2026-06-23 のまま・mailbox に <span class="font-mono">to: blog-loop-ycom</span> 新着なし。Cycle 003 以来の🔔4件（Q-001・Q-002・B-001レビュー・Q-003）は依然すべて未回答で繰り越し。</li>
+      <li><strong>本番に公開された変更はゼロ</strong>（B-001=下書き8315／T-002=下書き8311／T-003・T-004=ローカル草案）。＝効果実測のネタが無い。</li>
+      <li><strong>GSC/GA4 は再取得しない（意図的）</strong>：前サイクル（Cycle 006・2026-06-25）で直近28日を取得済。GSC はデータラグ2〜3日＋本番に変更なし＝<strong>1日後の今日に再取得しても Cycle 006 と同一値</strong>になり、トークンの無駄打ちになる。次に意味のある再取得は「何かが公開され、ラグ（2〜3日）を越えた後」＝効果実測のタイミングに予約する。</li>
     </ul>
   </div>
 
-  <!-- 評価サマリ -->
-  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
-    <h3 class="font-bold text-gray-800 mb-2">📝 評価サマリ</h3>
-    <p class="text-sm text-gray-700 mb-3"><strong>総評：</strong>YCOMブログは検索上位の記事を多数持ち、月間で大量の表示・クリックを得ている（上位記事は月4,000〜5,500表示）。SEOの基礎体力は高い。<strong>ただし流入クエリは上位50件すべてが事業外の情報系</strong>（フリー素材・CSS/SSD等の技術TIPS・Amazon受け取り）で、<strong>買い手意図（ホームページ制作の依頼・料金・選び方）のクエリが1つも無い</strong>。ゴール＝問い合わせ/見積寄与の観点では「<strong>量はあるが買い手がいない</strong>」状態。最大の打ち手は、(1) すでにある上位表示資産のCTR・導線改善（Quick win）と、(2) <strong>買い手意図の新規記事</strong>で受け皿（<span class="font-mono">/price/</span>・実績）へ繋ぐこと。競合（hp-serp）は「費用相場」「選び方」のブログ記事＋料金ページで買い手を獲得できている。</p>
-    <div class="grid md:grid-cols-2 gap-3 text-sm">
-      <div class="bg-emerald-50 border border-emerald-200 rounded p-3">
-        <p class="font-semibold text-emerald-800 mb-1">✅ 良い点</p>
-        <ul class="list-disc list-inside text-gray-700 space-y-1">
-          <li>多数の記事が安定して検索上位（平均4〜8位）＝記事資産・ドメイン評価が強い</li>
-          <li>タイトル設計が効いている例もある（p=7764 CTR 9.0%・p=8061 12.8%）</li>
-        </ul>
-      </div>
-      <div class="bg-amber-50 border border-amber-200 rounded p-3">
-        <p class="font-semibold text-amber-800 mb-1">⚠️ 課題</p>
-        <ul class="list-disc list-inside text-gray-700 space-y-1">
-          <li>流入クエリに買い手意図が皆無＝CV直結が弱い（<em>project_ycom-seo-traffic-quality と一致</em>）</li>
-          <li>高順位なのに低CTRの取りこぼし（p=2082：平均2.3位なのにCTR1.0%）</li>
-          <li>記事→受け皿ページ（料金・実績・問い合わせ）への内部リンク/CTAが弱い（推測）</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ① 既存記事の改善 -->
-  <h3 class="text-xl font-bold text-gray-800 mb-3 mt-8">① 既存記事の改善案（B-NNN）</h3>
-
-  <div class="bg-white border-l-4 border-rose-400 border border-gray-200 rounded-lg p-5 mb-4">
-    <p class="font-bold text-gray-900">B-001：p=2082「ロゴの変遷」のタイトル・メタ最適化　<span class="text-rose-600">🔴最優先</span></p>
-    <ul class="text-sm text-gray-700 mt-2 space-y-1">
-      <li><strong>対象</strong>：<a href="https://y-com.info/contents/?p=2082" class="text-blue-600 hover:underline font-mono">y-com.info/contents/?p=2082</a>（昔はこんなんだったんだ！…有名企業のロゴの変遷。）</li>
-      <li><strong>観点</strong>：タイトル・メタ（CTR）</li>
-      <li><strong>観察</strong>：掲載順位 <strong>平均2.3位</strong>（ほぼ1ページ目上部）なのに <strong>CTR 1.00%</strong>（月603表示→6クリック）。現タイトルは感嘆詞始まりで長い。</li>
-      <li><strong>なぜ問題か</strong>：上位表示という最大の資産をクリックに変換できていない。順位はもう取れているので、<strong>タイトル改善だけでCTRが数倍</strong>になり得る＝追加工数最小で効果最大のQuick win。</li>
-      <li><strong>改善案</strong>：GSCでこの記事の獲得クエリを確認し、クエリ語を先頭に寄せた簡潔タイトルへ（例「有名企業ロゴの変遷で見るデザイントレンド｜事例まとめ」）。感嘆詞を削る。meta description も検索意図に直結する要約に。<strong>本文は変えず title/meta のみ</strong>。</li>
-      <li><strong>効果</strong>：高　／　<strong>工数</strong>：小　／　<strong>優先度</strong>：🔴</li>
+  <!-- 今サイクルでやったこと -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">🔧 今サイクルの実質：進捗台帳の「取りこぼし」を2点修正（COMPOUND の進捗追跡）</h3>
+    <p class="mb-2">栓は社長の回答なので新しい分析より<strong>「すでに前進していたのに板に反映されていなかった事実」</strong>を拾って整合させました（掲示板＝判断の正本に合わせる）：</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>T-004 のステータスを「🆕未着手」→「✍️ドラフト完成」に訂正</strong>。blog-write が Cycle 005（2026-06-25）に T-004 のドラフト（<span class="font-mono">site/drafts/blog/ycom/T-004_logo-renewal-guide.html</span>／WP本文 <span class="font-mono">T-004_body.html</span>）を作成済でしたが、前サイクルの繰り越し表が古いままでした。残課題＝ロゴ制作の対応範囲・料金体系・実績・/service/ の該当ページ（👤社長確認）。</li>
+      <li><strong>新規 B-005 を追記（パーク）</strong>：blog-write が発掘した「p=2082『ロゴの変遷』（ほぼ1位・CTR≒0%の死蔵気味の情報系資産）→ T-004 への記事間内部リンク」。死蔵資産を買い手橋渡しに使う良い種ですが、<strong>受け先 T-004 が下書き止まり＝公開URL未確定</strong>のため、B-004↔T-003 と同型でパーク（T-004 公開後に着手が筋）。</li>
     </ul>
+    <p class="mt-2 text-xs text-gray-500">＝新規の「提案」は今回も増やしていません（バックログ十分・過剰提案回避）。やったのは<strong>既存の前進の反映と整理</strong>のみ。</p>
   </div>
 
-  <div class="bg-white border-l-4 border-amber-400 border border-gray-200 rounded-lg p-5 mb-4">
-    <p class="font-bold text-gray-900">B-002：制作系の人気記事に「文脈CTA・内部リンク」を設置　<span class="text-amber-600">🟡推奨</span></p>
-    <ul class="text-sm text-gray-700 mt-2 space-y-1">
-      <li><strong>対象</strong>：制作系の高表示記事（p=7306 フローティングボタン／p=6568 CSS疑似要素／p=7764 斜め背景CSS／p=3028 画像形式）</li>
-      <li><strong>観点</strong>：内部リンク・回遊→CV</li>
-      <li><strong>観察</strong>：これらは「自社サイトを良くしたい担当者・中小企業」も読む制作系TIPSで月数百〜千表示。だが記事から <span class="font-mono">/service/</span>・<span class="font-mono">/price/</span>・制作実績への文脈リンクや「自分で難しければプロに任せる選択肢」CTAが弱い（<strong>推測：</strong>記事末の定型CTAのみ／無し）。</li>
-      <li><strong>なぜ問題か</strong>：量のある情報系流入を、わずかでも検討層へ橋渡しできていない。DIY読者の一部は「結局プロに頼みたい」層。</li>
-      <li><strong>改善案</strong>：各制作系記事の本文末＋文脈に、テーマ連動の内部リンク（CSS記事→制作サービス/実績、画像形式→サイトリニューアル）と柔らかいCTAを追加。<strong>HP分析の R-021（人気記事末尾CTA）とブログ側で連動</strong>。</li>
-      <li><strong>効果</strong>：中　／　<strong>工数</strong>：中（記事数による）　／　<strong>優先度</strong>：🟡　／　<strong>関連</strong>：HP分析 R-021</li>
-    </ul>
-  </div>
-
-  <div class="bg-white border-l-4 border-amber-400 border border-gray-200 rounded-lg p-5 mb-4">
-    <p class="font-bold text-gray-900">B-003：p=3028「画像形式の選び方」を加筆して2ページ目→1ページ目へ　<span class="text-amber-600">🟡推奨</span></p>
-    <ul class="text-sm text-gray-700 mt-2 space-y-1">
-      <li><strong>対象</strong>：<a href="https://y-com.info/contents/?p=3028" class="text-blue-600 hover:underline font-mono">y-com.info/contents/?p=3028</a>（JPGとPNGの使い分け・画像形式の選び方）</li>
-      <li><strong>観点</strong>：検索意図充足・鮮度</li>
-      <li><strong>観察</strong>：平均 <strong>11.3位</strong>（2ページ目）・月730表示・CTR1.78%。制作系で網羅を厚くすれば1ページ目を狙える位置。</li>
-      <li><strong>なぜ問題か</strong>：あと一歩で1ページ目。2ページ目はクリックが激減するため、押し上げの費用対効果が高い。</li>
-      <li><strong>改善案</strong>：WebP対応・用途別の使い分け早見表・容量比較など、現行の検索意図に不足している要素を加筆（鮮度更新）。h2/h3で意図を構造化。画像最適化→制作/リニューアルへの内部リンク。</li>
-      <li><strong>効果</strong>：中　／　<strong>工数</strong>：中　／　<strong>優先度</strong>：🟡</li>
-    </ul>
-  </div>
-
-  <!-- ② 新規記事のテーマ案＋構成案 -->
-  <h3 class="text-xl font-bold text-gray-800 mb-3 mt-8">② 新規記事のテーマ案＋構成案（T-NNN）</h3>
-
-  <div class="bg-white border-l-4 border-rose-400 border border-gray-200 rounded-lg p-5 mb-4">
-    <p class="font-bold text-gray-900">T-001：「ホームページ制作の費用相場【大阪・2026年版】目的別の料金と内訳」　<span class="text-rose-600">🔴最優先</span></p>
-    <ul class="text-sm text-gray-700 mt-2 space-y-1">
-      <li><strong>想定読者</strong>：大阪で制作会社への依頼を検討中の中小企業・担当者（買い手）</li>
-      <li><strong>狙う検索意図／クエリ</strong>：ホームページ制作 大阪 費用／相場／見積もり／料金</li>
-      <li><strong>根拠</strong>：GSC上位クエリに買い手意図が皆無＝この領域は未獲得。hp-serpで「ホームページ制作 大阪 費用」上位は <em>f-creation /price/・valueagent /blog/費用相場・liskul 相場記事</em> 等＝<strong>競合は費用ブログ＋料金ページで買い手を取れている</strong>。YCOMブログに該当記事が無い。</li>
-      <li><strong>タイトル案</strong>：ホームページ制作の費用相場【大阪・2026年版】目的別の料金と内訳をプロが解説</li>
-      <li><strong>アウトライン（h2/h3）</strong>：
-        <ul class="list-disc list-inside ml-4 mt-1 space-y-0.5">
-          <li>h2 ホームページ制作費用の相場（目的別の早見表：名刺代わり／集客／EC）</li>
-          <li>h2 費用の内訳（企画・デザイン・コーディング・CMS・撮影・運用保守）<br><span class="ml-4">h3 なぜ同じ「制作」で価格差が出るのか</span></li>
-          <li>h2 大阪で依頼する場合の特徴・使える補助金（<strong>※制度内容は事実確認の上</strong>）</li>
-          <li>h2 失敗しない予算の決め方（安すぎ／高すぎのリスク）</li>
-          <li>h2 YCOMの料金例・制作の進め方（→ <span class="font-mono">/price/</span>・制作実績へ内部リンク）</li>
-        </ul>
-      </li>
-      <li><strong>内部リンク先</strong>：/price/basic.html・制作実績・問い合わせ　／　<strong>CTA</strong>：「概算見積もりを無料で」→問い合わせ</li>
-      <li><strong>捏造禁止</strong>：具体的料金・補助金制度・実績数値は社長／web-hanasaka が事実確認（AIは枠だけ）＝Q-002</li>
-      <li><strong>効果</strong>：高（買い手意図・/price/動線）　／　<strong>工数</strong>：中　／　<strong>優先度</strong>：🔴</li>
-    </ul>
-  </div>
-
-  <div class="bg-white border-l-4 border-amber-400 border border-gray-200 rounded-lg p-5 mb-4">
-    <p class="font-bold text-gray-900">T-002：「失敗しないホームページ制作会社の選び方チェックリスト」　<span class="text-amber-600">🟡推奨</span></p>
-    <ul class="text-sm text-gray-700 mt-2 space-y-1">
-      <li><strong>想定読者</strong>：依頼先を比較検討中（買い手・検討段階）</li>
-      <li><strong>狙うクエリ</strong>：ホームページ制作会社 選び方／比較／おすすめ 大阪</li>
-      <li><strong>根拠</strong>：hp-serpで bluemonkey「大阪のホームページ制作会社はどう選ぶ？」が上位＝選び方需要が顕在。YCOMに該当記事なし。</li>
-      <li><strong>タイトル案</strong>：失敗しないホームページ制作会社の選び方｜大阪の会社が教える比較チェックリスト</li>
-      <li><strong>アウトライン（h2/h3）</strong>：
-        <ul class="list-disc list-inside ml-4 mt-1 space-y-0.5">
-          <li>h2 制作会社選びでよくある失敗</li>
-          <li>h2 比較すべき7つのチェックポイント（実績／得意分野／料金体系／運用保守／SEO／連絡の取りやすさ／契約範囲）</li>
-          <li>h2 見積もりで確認すべきこと</li>
-          <li>h2 大阪で選ぶときの観点</li>
-          <li>h2 YCOMが選ばれる理由（→実績・サービスへ内部リンク）</li>
-        </ul>
-      </li>
-      <li><strong>内部リンク先</strong>：制作実績・/service/・/price/</li>
-      <li><strong>効果</strong>：高　／　<strong>工数</strong>：中　／　<strong>優先度</strong>：🟡</li>
-    </ul>
-  </div>
-
-  <div class="bg-white border-l-4 border-emerald-400 border border-gray-200 rounded-lg p-5 mb-4">
-    <p class="font-bold text-gray-900">T-003：「自分で作る vs 制作会社に依頼｜費用と時間で比較」　<span class="text-emerald-600">🟢余裕があれば</span></p>
-    <ul class="text-sm text-gray-700 mt-2 space-y-1">
-      <li><strong>想定読者</strong>：DIY（自作）を検討している層＝WordPress/CSS等の技術TIPS記事の読者</li>
-      <li><strong>狙う意図</strong>：自作を検討中の層を、外注検討へ「橋渡し」する</li>
-      <li><strong>根拠</strong>：流入の主力が制作系TIPS（DIY層）。その関心の延長線上で「結局プロに頼むべきか」を扱えば、<strong>既存流入と地続きで買い手意図に接続</strong>できる（B-002 と相互補完）。</li>
-      <li><strong>アウトライン（h2/h3）</strong>：
-        <ul class="list-disc list-inside ml-4 mt-1 space-y-0.5">
-          <li>h2 自分で作る場合にかかる費用・時間・スキル</li>
-          <li>h2 制作会社に頼む場合との比較（早見表）</li>
-          <li>h2 どっちが向いている？（判断フロー）</li>
-          <li>h2 「途中まで自分で→難しくて相談」も歓迎（→問い合わせ）</li>
-        </ul>
-      </li>
-      <li><strong>効果</strong>：中　／　<strong>工数</strong>：中　／　<strong>優先度</strong>：🟢</li>
+  <!-- 結論 -->
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-amber-800 mb-2">⛳ 結論：分析は出し切った。次に動くのは「社長の1回答」か「導線工事のGO」</h3>
+    <p class="mb-2">AI 側でできる前進（B-001 改善版8315／T-002 下書き8311／T-003・T-004 草案／買い手取りこぼしの定量化）は出し切り済みです。ここから先は<strong>2つの栓のどちらかを抜く</strong>だけ前に進みます：</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>最レバレッジ＝② Q-002（料金事実）</strong>：これ1つで、月234表示・クリック0の買い手需要（「料金表/料金」）に T-001（費用記事）を捏造なしでぶつけられます。</li>
+      <li><strong>社長の事実が一切要らない唯一の即GO＝B-002</strong>（既存の制作系・技術記事に、サービス/実績/料金への文脈CTA・内部リンクを足す導線工事）。Cycle 003 以来「web-hanasaka 着手可・GO待ち」のまま。<strong>GOだけいただければ web-hanasaka に引き渡せます。</strong></li>
     </ul>
   </div>
 
   <!-- 対応記録 -->
   <div class="bg-gray-100 border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
-    <h3 class="font-bold text-gray-800 mb-2">🔄 対応記録（from-president の指示への対応）</h3>
+    <h3 class="font-bold text-gray-800 mb-2">🔄 対応記録</h3>
     <ul class="list-disc list-inside space-y-1">
-      <li>2026-06-23 社長指示「YCOMブログで試す・既存改善＋新規テーマ・別タイミング日次・掲示板はhp-analysis内・複数クライアント前提・小手先SEOしない」→ <strong>本サイクル(Cycle 001)で着手</strong>。掲示板を <span class="font-mono">hp-analysis/ycom/blog/</span> に新設。買い手意図の新規記事はコンテンツベースで設計（地域キーワード詰め込みはしない）。</li>
+      <li>新規入力（from-president.md／mailbox <span class="font-mono">to: blog-loop-ycom</span>）なしを確認。🔔4件は未回答で繰り越し（from-president.md は編集していない＝社長の領域）。</li>
+      <li>GSC/GA4 は意図的に再取得せず（前サイクルと同一値になるため＝無駄打ち回避。再取得は本番公開後のラグ越えに予約）。新規 B/T 提案は追加せず（過剰提案回避）。</li>
+      <li>進捗の取りこぼしを2点反映：T-004 を「ドラフト完成」に訂正・B-005（p=2082→T-004 内部リンク）をパークで追記。</li>
+      <li>Cycle 006 のサイクル記録（スナップショット）は <a href="archive.html" class="underline">アーカイブ</a>へ移動。未完了の B/T・未回答 Q は繰り越し表（🔔／🔧／📥）で追跡継続。</li>
+      <li>本番改変・WP投稿・外部送信・local-send 配信はせず（着手物が増えていない＝鳴らさない方針を維持）。Slack日報は手動報告で代替。</li>
     </ul>
   </div>
 
-  <!-- 運用メモ -->
-  <div class="bg-white border border-dashed border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-600">
-    <h3 class="font-bold text-gray-800 mb-2">⚙️ 運用メモ（手動テスト段階）</h3>
-    <ul class="list-disc list-inside space-y-1">
-      <li>これは <strong>手動テストの初回サイクル</strong>。Slack日報・実装担当への mailbox 配信・cron化は<strong>社長合意後</strong>に有効化（automation.md：小さく作って手動検証→合意→自動化）。</li>
-      <li>最新レポートの実装担当（web-hanasaka）への配信は、<strong>ループ識別子 <span class="font-mono">blog-loop-ycom</span> が mailbox の許可リストに未登録のため保留</strong>。登録後に <span class="font-mono">local-send</span> を有効化（捏造・空振りしない）。</li>
-    </ul>
-  </div>
-
-  <p class="text-xs text-gray-400 mt-8">ブログ分析ループ（blog-loop）Cycle 001 ／ AIが作成・社長が読む ／ 回答は from-president.md または /hp-reply へ</p>
+  <p class="text-xs text-gray-400 mt-8">ブログ分析ループ（blog-loop）Cycle 007 ／ AIが作成・社長が読む ／ 回答は from-president.md または /hp-reply へ</p>
 
 </div>
 </body>

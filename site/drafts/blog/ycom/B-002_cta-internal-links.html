@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【ドラフト】B-002 既存記事の文脈CTA・内部リンク 導線工事（GSC根拠版）｜blog-write</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-3xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../hp-analysis/ycom/blog/index.html" class="text-blue-600 hover:underline">← ブログ分析掲示板へ戻る</a>
+  </nav>
+
+  <div class="bg-rose-50 border-2 border-rose-200 rounded-lg p-4 mb-6 text-sm">
+    <p class="font-bold text-rose-800">これは公開前のドラフト（実装ハンドオフ仕様）です</p>
+    <p class="text-rose-900 mt-1">blog-write が <strong>B-002</strong>（既存記事への文脈CTA・内部リンク追加＝導線工事）に対応して作成。本番反映は社長GO後に web-hanasaka が実装。Phase 1＝ローカル草案（本番には触れていません）。</p>
+  </div>
+
+  <h1 class="text-2xl font-bold mb-1">B-002：既存記事の「文脈CTA・内部リンク」導線工事 — 実装ハンドオフ仕様</h1>
+  <p class="text-gray-600 text-sm mb-4">観点：導線・CV／狙い：<strong>流入はあるのに受け皿（サービス/実績/料金/問い合わせ）へ繋がっていない既存記事に、文脈に合った内部リンクとCTAを足して回遊・問い合わせへ橋渡しする</strong>。新規記事を待たず、既存資産の流入を今すぐ活かす Quick win。</p>
+
+  <!-- ===== ⚠️ 前提の訂正（GSC実測で判明） ===== -->
+  <div class="bg-amber-50 border-2 border-amber-300 rounded-lg p-5 mb-6 text-sm">
+    <h2 class="font-bold text-amber-800 mb-2">⚠️ 重要：B-002 の前提を GSC 実測で訂正しました（「人気記事＝制作系」ではない）</h2>
+    <p class="text-amber-900 mb-2">B-002 は当初「<strong>制作系の人気記事</strong>にCTAを足す」想定でしたが、GSC（直近28日・<span class="font-mono">gsc-fetch page-queries</span>）で各上位記事の<strong>実獲得クエリ＝読者の本当の検索意図</strong>を確認したところ、<strong>クリック上位の記事の多くは制作・買い手とは無関係の情報目的</strong>でした。ここに一律で「ホームページ制作のご相談はこちら」を貼ると、<strong>読者の関心とズレた“ノイズCTA”</strong>になります（直帰を増やすだけ）。<strong>記事の意図ごとにCTAを出し分ける</strong>のが正解です（下表）。</p>
+    <table class="w-full border-collapse text-xs md:text-sm">
+      <thead>
+        <tr class="text-left border-b border-amber-300 text-amber-900">
+          <th class="py-1 pr-2">記事</th><th class="py-1 pr-2">クリック/28日</th><th class="py-1 pr-2">実獲得クエリ（＝読者の意図）</th><th class="py-1">制作・買い手との距離</th>
+        </tr>
+      </thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-amber-100"><td class="py-1 pr-2 font-mono">p=2117</td><td class="py-1 pr-2">281</td><td class="py-1 pr-2">「世界地図 フリー素材」「日本地図 svg 無料」</td><td class="py-1">遠い（無料素材探し）／※web制作者は使う＝弱い接点</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-2 font-mono">p=6141</td><td class="py-1 pr-2">159</td><td class="py-1 pr-2">「amazon コンビニ受け取り メール来ない」</td><td class="py-1 text-rose-700"><strong>無関係（CTA不要）</strong></td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-2 font-mono">p=7528</td><td class="py-1 pr-2">145</td><td class="py-1 pr-2">「ssd 交換 やり方」「ssd 換装」</td><td class="py-1 text-rose-700"><strong>無関係（DIY PC修理・CTA不要）</strong></td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-2 font-mono">p=5641</td><td class="py-1 pr-2">107</td><td class="py-1 pr-2">「css ページ内リンク 位置調整」「アンカーリンク」</td><td class="py-1 text-emerald-700"><strong>近い（サイトを作る/直す人）</strong></td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-2 font-mono">p=3028</td><td class="py-1 pr-2">15</td><td class="py-1 pr-2">「png jpeg 違い」「jpg png」（画像形式）</td><td class="py-1 text-emerald-700"><strong>近い（サイト運営者・web画像）</strong></td></tr>
+        <tr><td class="py-1 pr-2 font-mono">p=7306</td><td class="py-1 pr-2">—</td><td class="py-1 pr-2">「フローティングボタン」「追従ボタン」</td><td class="py-1 text-emerald-700"><strong>近い（CV改善UIを探す制作者/運営者）</strong></td></tr>
+      </tbody>
+    </table>
+    <p class="text-amber-800 text-xs mt-2">＝この数字は捏造でなく GSC 実測。CTA はこの「制作・買い手との距離」で出し分けます。</p>
+  </div>
+
+  <!-- ===== 実装①：再利用CTAブロック（web制作隣接の記事末に追加） ===== -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">実装①：記事末に足す「再利用CTAブロック」（プレビュー）</h2>
+    <p class="text-sm text-gray-600 mb-3">下記は <strong>web制作に隣接した技術記事</strong>（p=5641 / p=3028 / p=7306 等）の<strong>本文末</strong>に共通で足すブロック。固有の実績・料金は主張せず（捏造しない）、<strong>具体は受け皿ページへ誘導</strong>する設計。目的別の入口を表で示し、無機質な箇条書きにしない。</p>
+
+    <!-- 実際の見た目プレビュー -->
+    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+      <div class="bg-white border border-gray-200 rounded-lg p-5">
+        <p class="text-lg font-bold text-gray-800 mb-1">ホームページの制作・改修でお困りではありませんか？</p>
+        <p class="text-sm text-gray-700 leading-relaxed mb-4">「自分で手を入れるのが難しくなってきた」「直したい部分だけプロに頼みたい」——そんな段階からのご相談も歓迎です。<br>
+        YCOM（株式会社はなさか）は、コーポレートサイト・LP・WordPress の制作から公開後の運用・改修まで対応しています。まずは目的に合った入口からご覧ください。</p>
+        <table class="w-full border-collapse text-sm">
+          <tbody class="align-top">
+            <tr class="border-t border-gray-200">
+              <td class="py-2 pr-3 font-semibold text-gray-800 whitespace-nowrap">料金の目安を知りたい</td>
+              <td class="py-2"><a href="#" class="text-blue-600 underline">制作料金のご案内（/price/）→</a></td>
+            </tr>
+            <tr class="border-t border-gray-200">
+              <td class="py-2 pr-3 font-semibold text-gray-800 whitespace-nowrap">どんな仕事か見たい</td>
+              <td class="py-2"><a href="#" class="text-blue-600 underline">制作実績（/works/）→</a></td>
+            </tr>
+            <tr class="border-t border-gray-200">
+              <td class="py-2 pr-3 font-semibold text-gray-800 whitespace-nowrap">何を頼めるか知りたい</td>
+              <td class="py-2"><a href="#" class="text-blue-600 underline">サービス内容（/service/）→</a></td>
+            </tr>
+            <tr class="border-t border-b border-gray-200">
+              <td class="py-2 pr-3 font-semibold text-gray-800 whitespace-nowrap">相談・見積もりたい</td>
+              <td class="py-2"><a href="#" class="text-blue-600 underline">お問い合わせ →</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <p class="text-xs text-rose-700 mt-3">【要・社長確認】CTA本文は具体的な実績数値・料金・「選ばれる理由」を<strong>主張していません</strong>（捏造回避）。もし「公開後の運用・改修まで対応」を打ち出してよいか等、断定してよい営業文言があれば差し替えます。<br>
+    【要・確認（web-hanasaka）】リンク先の正式URL（/price/・/works/・/service/・お問い合わせ）と、<strong>既存記事に共通CTA/関連記事ブロックが既にあるか</strong>（あれば二重設置を避けて統合）。本仕様は<strong>追加（additive）</strong>前提。</p>
+  </section>
+
+  <!-- ===== 実装②：貼り付け用HTML（WordPress想定） ===== -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">実装②：貼り付け用HTML（web-hanasaka 向け・WordPress想定）</h2>
+    <p class="text-sm text-gray-600 mb-2">スマホで崩れない2列の素直な表。クラスは既存テーマに合わせて調整可。<span class="font-mono">href="#"</span> は正式URLに差し替え。</p>
+    <pre class="bg-gray-900 text-gray-100 rounded p-3 text-xs overflow-x-auto leading-relaxed">&lt;div class="ycom-cta"&gt;
+  &lt;h3&gt;ホームページの制作・改修でお困りではありませんか？&lt;/h3&gt;
+  &lt;p&gt;「自分で手を入れるのが難しくなってきた」「直したい部分だけプロに頼みたい」——そんな段階からのご相談も歓迎です。&lt;br&gt;
+  YCOM（株式会社はなさか）は、コーポレートサイト・LP・WordPress の制作から公開後の運用・改修まで対応しています。&lt;/p&gt;
+  &lt;table&gt;
+    &lt;tr&gt;&lt;th&gt;料金の目安を知りたい&lt;/th&gt;&lt;td&gt;&lt;a href="/price/"&gt;制作料金のご案内 →&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;どんな仕事か見たい&lt;/th&gt;&lt;td&gt;&lt;a href="/works/"&gt;制作実績 →&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;何を頼めるか知りたい&lt;/th&gt;&lt;td&gt;&lt;a href="/service/"&gt;サービス内容 →&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;th&gt;相談・見積もりたい&lt;/th&gt;&lt;td&gt;&lt;a href="/contact/"&gt;お問い合わせ →&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</pre>
+  </section>
+
+  <!-- ===== 実装③：記事ごとの出し分け（GSC根拠の優先ターゲット） ===== -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+    <h2 class="font-bold text-gray-800 mb-3">実装③：記事ごとの出し分け（どの記事に・どう足すか）</h2>
+    <table class="w-full border-collapse text-xs md:text-sm">
+      <thead>
+        <tr class="text-left border-b border-gray-300 text-gray-800">
+          <th class="py-1 pr-2">対象記事</th><th class="py-1 pr-2">記事の中身（GSC）</th><th class="py-1 pr-2">足すもの</th><th class="py-1">優先</th>
+        </tr>
+      </thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-2 font-mono">p=5641</td><td class="py-1 pr-2">CSS ページ内リンク位置調整（サイトを作る/直す人）</td>
+          <td class="py-1 pr-2">記事末に<strong>CTAブロック</strong>＋文脈リンク「サイトの細かな調整やリニューアルをプロに任せたいときは <span class="font-mono">/service/</span>」</td><td class="py-1">🔴</td>
+        </tr>
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-2 font-mono">p=3028</td><td class="py-1 pr-2">画像形式の選び方（サイト運営者・web画像）</td>
+          <td class="py-1 pr-2">記事末に<strong>CTAブロック</strong>＋文脈リンク「画像の最適化を含むサイト改善は <span class="font-mono">/service/</span> ／実績は <span class="font-mono">/works/</span>」</td><td class="py-1">🟡</td>
+        </tr>
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-2 font-mono">p=7306</td><td class="py-1 pr-2">フローティングボタン（CV改善UIを探す制作者/運営者）</td>
+          <td class="py-1 pr-2">記事末に<strong>CTAブロック</strong>＋文脈リンク「CVを上げる導線設計ごと相談したいなら <span class="font-mono">/service/</span>・<span class="font-mono">/works/</span>」</td><td class="py-1">🟡</td>
+        </tr>
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-2 font-mono">p=2117</td><td class="py-1 pr-2">地図フリー素材（web制作者は使うが買い手は弱い）</td>
+          <td class="py-1 pr-2"><strong>ハードCTAは出さない</strong>。素材文脈の軽い一文＋ <span class="font-mono">/works/</span> への“ついで”リンクのみ（押し売りにしない）</td><td class="py-1">🟢</td>
+        </tr>
+        <tr class="border-b border-gray-100">
+          <td class="py-1 pr-2 font-mono">p=6141 / p=7528</td><td class="py-1 pr-2">Amazon受け取り／SSD交換（制作と無関係）</td>
+          <td class="py-1 pr-2 text-rose-700"><strong>CTAを足さない</strong>（ノイズ・直帰増になる。導線工事の対象外）</td><td class="py-1">—</td>
+        </tr>
+        <tr>
+          <td class="py-1 pr-2 font-mono">p=2082</td><td class="py-1 pr-2">ロゴの変遷（情報資産・B-005で T-004 へ橋渡し予定）</td>
+          <td class="py-1 pr-2">B-005 として別管理（受け先 T-004 公開後）。本B-002のCTAブロックは未公開受け先に依存しないので<strong>先に設置可</strong></td><td class="py-1">🟢</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== 反映のしかた・限界 ===== -->
+  <div class="bg-gray-100 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
+    <p class="font-bold mb-1">反映のしかた・本仕様の限界（正直に）</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>本文の書き換えはしない</strong>。記事末への<strong>追加（CTAブロック＋文脈リンク1文）</strong>のみ。元の記事内容は無傷。</li>
+      <li><strong>限界：本サイクルは本番HTMLの取得（live fetch）ができなかった</strong>ため、「各記事に既にCTA/関連記事ブロックがあるか」は未確認。<strong>web-hanasaka が現物を確認し、既存があれば統合・なければ追加</strong>してください（＝現状確認は実装側に委譲）。意図・ターゲットは GSC 実測で裏取り済み（推測ではない）。</li>
+      <li>リンク先の正式URL（/price/・/works/・/service/・/contact/）は web-hanasaka が確認して確定。</li>
+      <li>反映後、blog-loop が次サイクル以降に GA4（記事→受け皿の回遊・CV寄与）で効果検証（データラグあり）。</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>

@@ -6,6 +6,7 @@
 | 日付 | B-NNN | 元記事(post id / URL) | 改善版draft id | 状態 | 変更点の要点 |
 |------|-------|----------------------|---------------|------|------------|
 | 2026-06-24 | B-001 | 2082 / https://y-com.info/contents/?p=2082（有名企業のロゴの変遷・publish・無傷確認済） | **8315**（プレビュー https://y-com.info/contents/?p=8315 ） | 🔁更新済（レビュー待ち） | タイトルを実獲得クエリ「有名企業 ロゴ 一覧／昔のロゴ／ロゴ 変遷」先頭へ／meta改善（人手設定）／本文：検索意図に直答する導入＋企業ごとの所感を比較テーブル化（BMW/マクドナルド/Barbie/SHELL＝原記事準拠・捏造なし）＋末尾に受け皿への内部リンクCTA。**2026-06-24 句点「。」後に `<br>` を入れる版に update（社長指示）**。草案 site/drafts/blog/ycom/improve/2082-logo-hensen.html |
+| 2026-06-25 | B-002 | 8299 / https://y-com.info/contents/?p=8299（サーチコンソール×GTM 所有者確認失敗・publish・読み取りのみ＝無傷） | **8321**（プレビュー https://y-com.info/contents/?p=8321 ） | ✍️改善版作成済（レビュー待ち） | 読みづらい1段落詰め込み＋空段落4つの技術メモを「症状／原因／解決／チェックポイント／CTA」に構造化／確認状態・設置位置を表(before→after)化／句点後`<br>`で短文化／タイトルに解決クエリ「原因と対処」＋結論「body直下」を追加／**記事末に文脈CTA＋`/service/`内部リンクを明示設置**（本番の壊れた`[RelService][Service]`ショートコード生テキストを置換する想定＝hp-loop既知課題）。技術的事実は原記事に忠実・YCOM固有事実の創作なし。読者層は同業/学習者寄り＝CTAはソフト。草案 site/drafts/blog/ycom/improve/8299-gtm-searchconsole.html |
 
 ## 運用メモ
 - 改善版draft が無い B → `wp-draft.py post`（新規下書き作成・タイトルに「【改善版】」）→ id を上表に記録。以降は `wp-draft.py update --id <改善版draft id>`。

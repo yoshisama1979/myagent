@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【改善版・草案】B-002 サーチコンソール×タグマネージャー所有者確認失敗（8299）｜blog-improve</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-3xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../../../hp-analysis/ycom/blog/index.html" class="text-blue-600 hover:underline">← ブログ分析掲示板へ戻る</a>
+  </nav>
+
+  <div class="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 mb-6 text-sm">
+    <p class="font-bold text-amber-800">これは「改善版・下書き複製」の草案です</p>
+    <p class="text-amber-900 mt-1"><strong>blog-improve</strong> が <strong>B-002</strong>（制作・運営系記事に文脈CTA・内部リンク）の最初の対象として作成。<strong>元の公開記事（8299）は読み取りのみ・一切変更していません。</strong>改善版は WordPress に<strong>別の新規下書き</strong>として投稿します。社長が WP 管理画面で見比べ、良ければ手動で本番反映してください（公開は人間）。</p>
+  </div>
+
+  <h1 class="text-2xl font-bold mb-1">B-002：既存記事の改善版（下書き複製）</h1>
+  <p class="text-gray-600 text-sm mb-4">対象記事：<a href="https://y-com.info/contents/?p=8299" class="text-blue-600 hover:underline font-mono">y-com.info/contents/?p=8299</a>（サーチコンソールでタグマネージャーを使った所有者確認に失敗する・<strong>status=publish</strong>）／観点：読みやすさ（構造化）＋検索意図の充足＋<strong>内部リンク・文脈CTA</strong>／読者層：<strong>同業・学習者寄り</strong>（GTM/GA4/Search Console の技術メモ）＝買い手ど真ん中ではないため、CTAは<strong>“将来の外注・運営相談”へのソフトな導線</strong>に留める</p>
+
+  <!-- 変更点サマリ -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-5">
+    <h2 class="font-bold text-gray-800 mb-3">変更点サマリ（before → after）</h2>
+    <table class="w-full border-collapse text-sm">
+      <thead><tr class="bg-gray-100">
+        <th class="text-left px-3 py-2 border border-gray-200 w-28">項目</th>
+        <th class="text-left px-3 py-2 border border-gray-200">変更前</th>
+        <th class="text-left px-3 py-2 border border-gray-200">変更後（改善版）</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200 font-semibold">タイトル</td>
+          <td class="px-3 py-2 border border-gray-200">サーチコンソールでタグマネージャーを使った所有者確認に失敗する</td>
+          <td class="px-3 py-2 border border-gray-200 bg-emerald-50"><strong>サーチコンソールの所有者確認がタグマネージャーで失敗する原因と対処｜GTMタグはbody直下に</strong><br><span class="text-xs text-gray-500">（「失敗 原因 対処」と解決クエリを補い、bodyタグ位置という結論をタイトルに出す）</span></td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200 font-semibold">meta description</td>
+          <td class="px-3 py-2 border border-gray-200">（未設定／自動生成のまま）</td>
+          <td class="px-3 py-2 border border-gray-200 bg-emerald-50">Googleタグマネージャー（GTM）を設置済みなのに、サーチコンソールの所有者確認が失敗する——原因はGTMタグの設置位置でした。bodyタグの直下に置き直して認証できた手順と、同じ症状のときのチェックポイントを実例で解説します。<br><span class="text-xs text-rose-700">【要・社長確認：AIOSEO等のメタ欄は人手で設定（REST下書きでは本文・タイトルのみ反映）】</span></td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200 font-semibold">本文構成</td>
+          <td class="px-3 py-2 border border-gray-200">2文の前置き＋画像＋原因＋1文に詰め込んだ長い経緯（読みづらい）＋空段落が4つ</td>
+          <td class="px-3 py-2 border border-gray-200 bg-emerald-50">①結論ファーストの導入を追加 ②「症状／原因／解決／チェックポイント／まとめ」を見出し(h2)で構造化 ③確認した状態・設置位置を<strong>表（before→after）</strong>で可視化 ④詰め込み文を句点で改行・短文化 ⑤末尾の空段落を削除 ⑥末尾に<strong>文脈CTA＋内部リンク</strong>を追加</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 border border-gray-200 font-semibold">内部リンク・CTA</td>
+          <td class="px-3 py-2 border border-gray-200">本文内リンクなし（記事末に <span class="font-mono">[RelService][Service]</span> ショートコードが<strong>未展開で生テキスト表示</strong>＝hp-loop Cycle 017 で検出済み）</td>
+          <td class="px-3 py-2 border border-gray-200 bg-emerald-50">記事末に「計測・運営のつまずきもまとめて相談を」という<strong>文脈に沿ったソフトCTA</strong>＋ <span class="font-mono">/service/</span> への内部リンクを明示的に設置（壊れたショートコードに依存しない実リンク）</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 要・社長確認 -->
+  <section class="bg-rose-50 border border-rose-200 rounded-lg p-5 mb-5 text-sm">
+    <h2 class="font-bold text-rose-800 mb-2">【要・社長確認 ／ web-hanasaka確認】</h2>
+    <ul class="list-disc list-inside space-y-1 text-rose-900">
+      <li><strong>内部リンク先（社長）</strong>：末尾CTAは <span class="font-mono">https://y-com.info/service/</span>（制作・運営サポート）にしています。問い合わせページや料金ページへ向けたい場合は差し替えてください（読者が同業・学習者寄りのため、あえて“相談・運営サポート”の入口にしています）。</li>
+      <li><strong>壊れたショートコード（web-hanasaka）</strong>：元記事 8299 の本番では記事末の <span class="font-mono">[RelService][Service]</span> が未展開で生テキスト表示されています（hp-loop で既知・local-send 済）。本番反映時はこの生テキストを削除し、本改善版の実リンクCTAに置き換えるのが安全です。</li>
+      <li><strong>画像</strong>：元記事の設置手順スクショ（wp-image-8300）はそのまま流用する想定でプレースホルダにしています。本番反映時に元画像を配置してください。</li>
+      <li><strong>事実方針</strong>：本文の技術的事実（GTM設置済み・テストOK・GA4設定OK・所有者確認のみ失敗・原因はbody用タグの位置・<code>&lt;body&gt;</code>直下で解決）は<strong>原記事の記述に忠実</strong>です。チェックポイントのhead用スニペット／コンテナ対応はGTMの一般的な確認事項として補足（YCOM固有の事実は創作していません）。</li>
+    </ul>
+  </section>
+
+  <!-- 改善後の本文プレビュー -->
+  <section class="bg-white border border-gray-200 rounded-lg p-5 mb-5">
+    <h2 class="font-bold text-gray-800 mb-3">改善後の本文プレビュー</h2>
+    <article class="prose prose-sm max-w-none">
+      <p>Googleタグマネージャー（GTM）を設置してから、サーチコンソールの所有者確認をGTM経由でおこなう方も多いと思います。普段からそうしているのですが、先日少しハマりかけたので、メモも兼ねて書いておきます。</p>
+      <p>結論から言うと、<strong>GTMはちゃんと動いているのに所有者確認だけが失敗する</strong>原因は、<strong>GTMタグ（body直下に置くスニペット）の設置位置</strong>でした。開始の <span class="font-mono">&lt;body&gt;</span> タグの直下（すぐ下）に置き直したら、あっさり認証できました。</p>
+      <h3 class="font-bold mt-4 mb-2">GTMは「OK」なのに、所有者確認だけ失敗する</h3>
+      <table class="w-full border-collapse text-sm">
+        <thead><tr class="bg-gray-100">
+          <th class="text-left px-3 py-2 border border-gray-200">確認した項目</th>
+          <th class="text-left px-3 py-2 border border-gray-200">状態</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="px-3 py-2 border border-gray-200">GTMの設置</td><td class="px-3 py-2 border border-gray-200">完了</td></tr>
+          <tr><td class="px-3 py-2 border border-gray-200">GTMのテスト</td><td class="px-3 py-2 border border-gray-200">「OK」・問題なし</td></tr>
+          <tr><td class="px-3 py-2 border border-gray-200">GA4の設定</td><td class="px-3 py-2 border border-gray-200">完了</td></tr>
+          <tr><td class="px-3 py-2 border border-gray-200">所有者確認</td><td class="px-3 py-2 border border-gray-200">❌ 失敗</td></tr>
+        </tbody>
+      </table>
+      <h3 class="font-bold mt-4 mb-2">原因はGTMタグの「位置」だった</h3>
+      <p>開始 <span class="font-mono">&lt;body&gt;</span> タグから3行目あたりに貼り付けていたのが原因。GTMのテストは通っていたので問題ないと思い込んでいました。<span class="font-mono">&lt;body&gt;</span> タグの直下に置き直したら認証が通りました。</p>
+      <h3 class="font-bold mt-4 mb-2">解決：開始bodyタグの「直下」に置き直す（before→after）</h3>
+      <table class="w-full border-collapse text-sm">
+        <thead><tr class="bg-gray-100">
+          <th class="text-left px-3 py-2 border border-gray-200">body用タグの位置</th>
+          <th class="text-left px-3 py-2 border border-gray-200">所有者確認</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="px-3 py-2 border border-gray-200">開始bodyタグから数行下</td><td class="px-3 py-2 border border-gray-200">❌ 失敗</td></tr>
+          <tr><td class="px-3 py-2 border border-gray-200">開始bodyタグの直下</td><td class="px-3 py-2 border border-gray-200">✅ 成功</td></tr>
+        </tbody>
+      </table>
+      <h3 class="font-bold mt-4 mb-2">同じ症状でつまずいたときのチェックポイント</h3>
+      <p>body用スニペットの位置／head用スニペットの位置／確認中プロパティとGTMコンテナの対応、を確認——という実用チェックリスト。</p>
+      <h3 class="font-bold mt-4 mb-2">計測やサイト運営のつまずきも、まとめてご相談ください（文脈CTA）</h3>
+      <p>GTM・GA4・サーチコンソールの設定や公開後の運用も支援している旨を、押し売りにならないトーンで案内し、<span class="font-mono">/service/</span> への内部リンクで受け皿へ誘導。</p>
+    </article>
+    <p class="text-xs text-gray-500 mt-3">※ WordPress 投稿用の本文HTMLは <span class="font-mono">site/drafts/blog/ycom/improve/8299_body.html</span>。これを <span class="font-mono">wp-draft.py post</span> で「【改善版】」タイトルの新規下書きとして投稿します。</p>
+  </section>
+
+</div>
+</body>
+</html>

@@ -40,6 +40,7 @@
         <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ターゲット</td><td class="py-1">対応エリア＝大阪・京都・兵庫(神戸)＋東京／業種不問／中規模程度まで（HP分析 ycom の確定値を流用）</td></tr>
         <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">役割分担</td><td class="py-1">本ループ＝診断・提案・構成案（アウトライン）まで。<strong>記事の執筆・公開は別エージェント</strong>（web-hanasaka）。本ループは記事本文を書かない</td></tr>
         <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">SEO方針</td><td class="py-1"><strong>コンテンツベースで価値を上げる</strong>。地域キーワード詰め込み等の小手先SEOはしない（社長方針 2026-06-23）。地域固有の検索結果が要るときは社長に依頼</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">事実の調達先</td><td class="py-1">記事の信頼性事実（<strong>得意分野・強み／運用保守でできること／制作の対応範囲／料金体系／対応エリア</strong>）は、<strong>開発（web-hanasaka）の推測では確定しない＝社長が source</strong>（2026-06-24 Cycle 003 で web-hanasaka が明示・差し戻し）。技術仕様・実装の特徴は開発確認、料金・実績数値・営業方針は社長確認</td></tr>
       </tbody>
     </table>
   </section>
@@ -49,8 +50,8 @@
     <h2 class="text-xl font-bold text-gray-800 mb-3">データソース・ツール</h2>
     <table class="w-full text-sm border-collapse">
       <tbody class="align-top text-gray-700">
-        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold w-40">GSC</td><td class="py-1"><span class="font-mono">bin/gsc-fetch.py --dataset searchconsole_ycom</span>（T-006・BigQuery読み取り専用）。pages/queries/summary。データラグ2〜3日</td></tr>
-        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">GA4</td><td class="py-1"><span class="font-mono">bin/ga4-fetch.py</span>（T-007・dataset <span class="font-mono">analytics_265729912</span>）。記事→CV寄与</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold w-40">GSC</td><td class="py-1"><span class="font-mono">bin/gsc-fetch.py --dataset searchconsole_ycom</span>（T-006・BigQuery読み取り専用）。pages/queries/summary。<strong>記事×獲得クエリは <span class="font-mono">page-queries --page '?p=NNNN'</span>（2026-06-24追加）</strong>で1コマンド取得。データラグ2〜3日</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">GA4</td><td class="py-1"><span class="font-mono">bin/ga4-fetch.py</span>（T-007・dataset <span class="font-mono">analytics_265729912</span>）。<span class="font-mono">cv</span> モードで CV イベント別件数。<strong>※記事別 attribution（ランディングページ別 CV）モードは未実装＝必要なら追加</strong></td></tr>
         <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">記事本文・on-page</td><td class="py-1"><span class="font-mono">bin/hp-audit.sh</span>（T-001）／<span class="font-mono">curl</span></td></tr>
         <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">競合発掘</td><td class="py-1"><span class="font-mono">bin/hp-serp.sh</span>（T-011・Yahoo!=Googleインデックス・読み取り専用）／対比 <span class="font-mono">bin/hp-compete.py</span>（T-010）</td></tr>
         <tr class="border-b border-gray-100"><td class="py-1 pr-3 font-semibold">ビジュアル</td><td class="py-1"><span class="font-mono">bin/hp-shot.sh</span>（T-008・読み取り専用）。記事レイアウト確認用</td></tr>
@@ -69,6 +70,8 @@
     <h2 class="text-xl font-bold text-gray-800 mb-3">計測の確定事実</h2>
     <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
       <li>ブログ流入の主力クエリは<strong>事業外の情報系</strong>（フリー素材・技術TIPS・Amazon受け取り）に偏重（2026-06-23 Cycle 001 観測）。買い手意図クエリは未獲得＝新規記事で取りに行く領域（<em>project_ycom-seo-traffic-quality と一致</em>）。</li>
+      <li><strong>サイト全体の CV は発火中</strong>（2026-06-24 Cycle 002・GA4 直近28日）：見積もりリクエスト/見積り系 月12件前後・問い合わせ系 月20件前後＝<strong>買い手 CV は実在</strong>。ただし件数最多は<strong>採用応募（コーダー/デザイナー）</strong>で営業ブログとは別系統。※記事別 attribution は未取得。</li>
+      <li><strong>記事×クエリの確定観測（2026-06-24）</strong>：p=2082「ロゴの変遷」の獲得クエリは「有名企業 ロゴ 一覧」「昔のロゴ」「ロゴ 変遷」等＝<strong>順位ほぼ1位だが情報系・買い手意図ゼロ</strong>。p=3028「画像形式」の本命クエリ（「png jpg 違い／使い分け」）は<strong>実順位16〜51位</strong>（集約平均11.3位は異質クエリによる見かけ＝Cycle 001 の「あと一歩で1ページ目」は誤りと訂正）。</li>
     </ul>
   </section>
 
