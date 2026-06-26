@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — ヨーコハワイ</h1>
   <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。提案は実装エージェント（<span class="font-mono">yokohawaii-dev</span>）がそのまま着手できる粒度で書きます。</p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-25（<strong>Cycle 001 実施</strong>。サイト実査・hp-audit・スクショで初回診断。ゴール確定＝アクセス＋問い合わせ増）／対象サイト：<a href="https://www.yoko-hawaii.com/" class="text-blue-600 hover:underline font-mono">www.yoko-hawaii.com</a>（到達200）／ゴール：<strong>アクセス＋問い合わせ（予約）増</strong></p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-26（<strong>Cycle 002＝変化検知（軽）</strong>。GSC/GA4とも蓄積待ち継続・社長回答待ち・実装未着手のため<strong>変化なし</strong>。Cycle 001 の5提案・3質問を繰り越し、回答が出るまで新規提案は意図的に保留）／対象サイト：<a href="https://www.yoko-hawaii.com/" class="text-blue-600 hover:underline font-mono">www.yoko-hawaii.com</a>（到達200）／ゴール：<strong>アクセス＋問い合わせ（予約）増</strong></p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -78,6 +78,29 @@
 
   <!-- ===== サイクルログ ===== -->
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">サイクルログ</h2>
+
+  <!-- Cycle 002 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 002 — 2026-06-26（変化検知・軽：変化なし／回答待ち）</h3>
+
+    <p class="font-semibold text-gray-700 mb-1">本日の確認（変化検知）</p>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-3">
+      <li><strong>GSC</strong>：<code>searchconsole_yokohawaii.searchdata_url_impression</code> は<strong>まだ未生成（404）</strong>＝実データ蓄積待ち継続。流入クエリ・順位・CTR は本サイクルでも扱えず。</li>
+      <li><strong>GA4</strong>：専用 dataset は本サイクルでは確認できず（自動列挙の実行が今回未許可）。Cycle 001 時点で <code>yoko-hawaii.com</code> を持つ <code>analytics_*</code> は未出現。<strong>引き続き「データ未取得」＝出現次第ホスト名照合で登録</strong>（手順は確立済）。</li>
+      <li><strong>社長回答</strong>：<code>from-president.md</code> に新規指示なし。Q-K01〜Q-K03 未回答のまま。</li>
+      <li><strong>実装</strong>：mailbox 新着なし（<code>to: hp-loop-yokohawaii</code> 0件）。R-K01〜R-K05 はすべて<strong>未着手</strong>（<code>yokohawaii-dev</code> トークン未登録のため配信も保留中）。</li>
+      <li><strong>サイト本体</strong>：実装担当が未稼働＝<strong>前回から変化なし</strong>。同一サイトの再 hp-audit/再スクショは Cycle 001 と同一結果になるため割愛（同じ指摘の繰り返しを避ける）。</li>
+    </ul>
+
+    <p class="font-semibold text-gray-700 mb-1">判断（なぜ新規提案を出さないか）</p>
+    <p class="text-gray-700 mb-2">Cycle 001 で出した <strong>5件の提案（R-K01〜R-K05）と3件の質問（Q-K01〜K03）がすべて未消化・未回答</strong>です。ここで新たな提案を重ねると、社長がまだ着手・回答していない案件が積み上がるだけで焦点がぼやけます（過剰提案の回避／停止条件「未回答が溜まったら回答待ち」）。<strong>本サイクルは意図的に新規提案を保留</strong>し、Cycle 001 の Quick win（R-K01 meta description・R-K02 FVのUSP＋予約CTA）への着手可否と Q-K01〜K03 の回答を待ちます。データ（GSC/GA4）が入り次第、効果測定と新規観点を再開します。</p>
+
+    <p class="font-semibold text-gray-700 mb-1 mt-3">次の一手（社長へ）</p>
+    <p class="text-gray-700 mb-2">①Quick win の <strong>R-K01・R-K02</strong> 着手OKか、②<strong>Q-K03</strong>（物件の料金・定員・予約手順を公開してよいか）、③<strong>yokohawaii-dev のトークン登録</strong>（配信開始の前提）。いずれか1つでも進めば次サイクルが動きます。</p>
+
+    <p class="font-semibold text-gray-700 mb-1 mt-3">対応記録</p>
+    <p class="text-gray-700">from-president.md：新規指示なし。本サイクルは変化検知のみ（軽）。掲示板の繰り越し（質問・進行中提案）は据え置き。</p>
+  </div>
 
   <!-- Cycle 001 -->
   <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">

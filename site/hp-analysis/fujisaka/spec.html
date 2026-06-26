@@ -36,7 +36,7 @@
       <tbody class="align-top text-gray-700">
         <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-44">対象サイト</td><td class="py-1">藤阪ガスセンター（<a href="https://fujisakagas.com/" class="text-blue-600 hover:underline font-mono">fujisakagas.com</a>）</td></tr>
         <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">アクセス＋コンバージョン（問い合わせ）増</td></tr>
-        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">種別／前提</td><td class="py-1">hp-audit で WordPress 検出。<strong>本文の精読は未実施＝種別・情報設計は要確認</strong>（初回サイクルで技術＋検索データのみ）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">種別／前提</td><td class="py-1"><strong>独自PHPテンプレート（メイン）＝<code>template/page_layout_new.php</code> の <code>CTemplateLayout</code> クラスで <code>.html</code> を PHP配信</strong>（2026-06-22 Cycle 010・実装担当 fujisaka-dev の認識合わせで確定・訂正）。<strong>WordPress は <code>/blog/</code> のみ</strong>。<span class="text-red-700">⚠️ 旧記載「hp-audit で WordPress 確定」は誤り＝hp-audit のトップ <code>CMS=WordPress</code> ヒントは共有アセット由来の誤検知（実際サブページは <code>CMS=不明</code>）。<strong>Yoast/AIOSEO 等の WordPress プラグイン前提の施策はメインページに不適合</strong>。canonical/OGP/構造化データ(LocalBusiness)・meta はテンプレート側で出力する。</span> <strong>大阪ガスの公式サービスショップ</strong>（大阪ガス系クエリで上位表示＝Cycle 002・GSC）。商品・サービス／リフォーム／FAQ／スタッフ／会社情報／採用ページを持つ。<strong>本文の文言精読は Cycle 004 で実施済</strong>（hp-audit <code>--text</code>。ビジュアルは Cycle 002）。</td></tr>
         <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ターゲット（推定）</td><td class="py-1">枚方市＋近隣の、給湯器交換・修理／ガス／水まわりの需要層。買い手意図の地域クエリ（「枚方市 給湯器交換」等）が中心。指名検索（「藤阪ガスセンター」）は既存客・強い。</td></tr>
         <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">案件管理（hana-tools）</td><td class="py-1">client_id 11「藤阪ガスセンター」／project_id 14「コーポレートサイト」／work_id 16「運用管理」</td></tr>
         <tr><td class="py-1 pr-3 font-semibold">案件記録</td><td class="py-1">Notion <span class="font-mono">dc2026246a2e46deacb64b8c294a2b56</span>（document_url）</td></tr>
@@ -52,19 +52,47 @@
       <tbody class="align-top text-gray-700">
         <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">Google Search Console</td><td class="py-1 pr-3"><span class="font-mono">bin/gsc-fetch.py --dataset searchconsole_fujisaka</span>（BigQuery読み取り・ヘッドレス可）</td><td class="py-1 text-emerald-700">✅ 取得可（データラグ2〜3日）</td></tr>
         <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">Google Analytics (GA4)</td><td class="py-1 pr-3"><span class="font-mono">bin/ga4-fetch.py --dataset analytics_316110295</span></td><td class="py-1 text-amber-700">🟡 2026-06-16設定・蓄積中（数日分・CV未定義）</td></tr>
-        <tr><td class="py-1 pr-3 font-semibold">オンページ監査</td><td class="py-1 pr-3"><span class="font-mono">bin/hp-audit.sh &lt;URL&gt;</span>（T-001・読み取り）</td><td class="py-1 text-emerald-700">✅ 運用中</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">オンページ監査</td><td class="py-1 pr-3"><span class="font-mono">bin/hp-audit.sh &lt;URL&gt;</span>（T-001・読み取り。<code>--json</code>＝差分用／<code>cv</code>＝CV棚卸し／<code>--text</code>＝本文テキスト抽出）</td><td class="py-1 text-emerald-700">✅ 運用中</td></tr>
       </tbody>
     </table>
-    <p class="text-xs text-gray-500 mt-2">本文の精読（コピー・事例・料金記載）は無人実行では curl/WebFetch 未承認のため未取得＝<a href="index.html" class="text-blue-600 hover:underline">最新レポートの📥</a>で要求中。</p>
+    <p class="text-xs text-gray-500 mt-2">✅ <strong>本文の精読は Cycle 004 で解禁</strong>：hp-audit <code>--text</code>（内部curl経由・読み取り専用）でページ本文テキストを抽出できる（無人実行で curl/WebFetch が未承認でも可）。<span class="text-gray-500">限界＝静的HTMLのみ（JS描画後テキストは不可）。呼び出しは <code>bin/hp-audit.sh ...</code>（先頭に <code>bash </code> を付けない＝allowパターンの都合）。</span></p>
   </div>
 
   <!-- 計測・技術の確定事実 -->
-  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">計測・技術の確定事実（Cycle 001 時点）</h2>
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">サイト本文の確定事実（Cycle 004・実査で原文取得）</h2>
   <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
-    <li><strong>オンページ技術は良好</strong>：title 29字・description 84字 適切、OGP・Twitterカードあり、<strong>JSON-LD(LocalBusiness)有効</strong>、canonical 設定、<strong>img alt 欠落 0/72件</strong>、問い合わせ動線（tel×5・contact×7）あり。</li>
-    <li><strong>GA4 は実質未計測</strong>：dataset は2026-06-16設定で数日分のみ。CVイベント未定義＝問い合わせの発生源・導線効果が測れない（R-F03 で定義予定）。</li>
-    <li><strong>ブランド検索が強い</strong>：「藤阪ガスセンター」順位2.1・CTR4.9%（全クリックの約23%）＝指名・既存客は取れている。新規獲得は買い手意図の地域クエリが鍵（R-F02）。</li>
-    <li><strong>viewport がズーム禁止</strong>（<code>user-scalable=no</code>）＝アクセシビリティ課題（R-F01）。</li>
+    <li><strong>対応エリア（サービスエリア）＝計9市町</strong>：大阪府（枚方市・交野市・寝屋川市・守口市・門真市）／京都府（京田辺市・八幡市・城陽市・精華町）。会社所在地＝大阪府枚方市藤阪元町3-32-10。</li>
+    <li><strong>対応の速さ</strong>：「スピード対応／お困りごとにはその日のうちに駆け付け」「<strong>15時までの連絡で当日中にお伺い</strong>」（※状況・サービスにより不可の注記あり）。営業＝「<strong>年始の3日間以外無休</strong>」（平日9:00〜18:00／土日祝9:00〜17:00・店頭は平日17:00まで日祝休み）。フリーダイヤル <code>0120-541-266</code>。</li>
+    <li><strong>金額（価格）＝サイトに記載なし</strong>：給湯器交換の具体額は未掲載。掲載は「お見積り・キャンセル無料」のみ。価格レンジを出すなら<strong>クライアント確認</strong>（捏造しない）。</li>
+    <li><strong>実績・信頼の数値＝サイトに実在（捏造不要）</strong>：「創業50年（1975年〜）」「20万件以上の作業実績」「お客様の声（給湯器の当日交換体験談を含む多数）」「有資格者多数（1級建築士・特定ガス消費機器設置工事監督者・各種ガス/水道資格）」「損害補償保険加入・クーリングオフ対応」「枚方・交野・京田辺 各市上下水道工事指定店」。→ R-F05 は要求でなく<strong>受け皿ページへの横展開</strong>。</li>
+    <li><strong>給湯器ページ（<code>/hotwater/</code>）の既存コンテンツ</strong>：工事の流れ（お問い合わせ→現場調査→ご提案・お見積り→交換・設置→アフターメンテナンス）／症状チェックリスト（水圧低下・異音・水漏れ等）／フルオート・ウルトラファインバブル等の機能解説／大阪ガス「まかせ得定額」「ほっ得定額」。ファーストビューは「お湯のある毎日を、もっと快適に」＝抽象（地域・即日・CTAは上部に薄い＝R-F02/R-F06）。</li>
+    <li><strong>給湯器ページ（<code>/hotwater/</code>）の title＝既に強い（Cycle 005 hp-shot/hp-audit）</strong>：「<strong>枚方市の給湯器交換・修理｜大阪ガス対応 藤阪ガスセンター</strong>」＝地域×サービス×買い手意図が揃っている。→ <strong>R-F04（title/description クリック誘発化）の対象から /hotwater/ は除外</strong>（他ページに注力）。</li>
+    <li><strong>/hotwater/ のモバイル表示（Cycle 005 hp-shot SP/PC・初回撮影）</strong>：✅ ヘッダーに <strong>TEL／CONTACT ボタンが常時表示</strong>＝モバイルのFV内にCTA有（トップより良い）。✅ <strong>レスポンシブの崩れなし</strong>（SP full 目視）。⚠️ ただしFVは抽象コピー「お湯のある毎日を快適に」が主で、<strong>対応エリア9市町・15時まで当日対応・お見積り無料・お客様の声・工事の流れ・実績バッジは fold より下〜ページ最下部</strong>に分散（＝R-F02）。<strong>ページが縦に非常に長く、大きな電話番号＋フォームのメインCTAはページ最下部のみ</strong>（＝R-F12）。</li>
+  </ul>
+
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">計測・技術の確定事実（Cycle 002 時点・更新）</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li><strong>オンページ技術は良好</strong>：title 29字・description 84字 適切、OGP・Twitterカードあり、<strong>JSON-LD(LocalBusiness)有効</strong>、canonical 設定、<strong>img alt 欠落 0/72件</strong>（うち空alt <code>alt=""</code> が50件）、問い合わせ動線（tel×5・contact×7）あり。<strong>Cycle 001→002 で技術的変化なし</strong>（2026-06-20 再監査）。</li>
+    <li><strong>ブログが「表示の主エンジン」</strong>：GSC pages 上位に <code>/blog/?p=…</code> が多数（100〜367表示）。情報系クエリ（補助金／ペットリフォーム／カワックとは 等）で集客するがCTR低・一部は3〜4ページ目（R-F07）。</li>
+    <li><strong>PDF が検索流入の着地点</strong>：<code>/pdf/toto_anshin.pdf</code> が表示数サイト4位（273表示）等。直着地は行き止まり（R-F08）。</li>
+    <li><strong>大阪ガス公式サービスショップ＝大阪ガス系クエリで上位</strong>：「大阪ガス 枚方」順位3.9・「大阪ガス 電話番号」順位3.5・「住み方プラス」135表示 等。ローカル意図の受け皿が機会（R-F09）。GBP（Googleビジネスプロフィール）経由 <code>?utm_medium=mybusiness</code> も 680表示・順位4.6・9clicks（Cycle 006 GSC 14日）＝地図露出が強い。</li>
+    <li><strong>商品カテゴリページがクリックの実エンジン（Cycle 006 GSC 14日）</strong>：<code>/lineup/</code>（商品ラインアップ）がクリック#3＝8clicks・CTR5.33%・順位5.1／<code>/gascooker/</code> も3clicks・順位5.2。実力ある受け皿だが、商品買い手意図クエリ（「ガスコンロ 交換」順位15.0・「ビルトイン浄水器 後付け」順位11.1・「給湯器」順位10.6）は2ページ目前後で取りこぼし＝R-F02 の型を横展開する余地（R-F13）。需要シグナル：「お問い合わせ メール ガス管工事 枚方」42表示・順位6.7・0クリック（ガス管工事の問い合わせ需要が未獲得）。</li>
+    <li><strong>ブランド検索が強い</strong>：「藤阪ガスセンター」順位2.1・CTR約5%（全クリックの2割超）＝指名・既存客は取れている。新規獲得は買い手意図の地域クエリが鍵（R-F02）。</li>
+    <li><strong>ファーストビューは抽象キャッチ＋公園写真</strong>（hp-shot 目視・Cycle 002）：「笑顔を創ります」等の世界観コピーが主で、サービス内容・地域・CTAは fold より下。買い手意図への橋渡しが弱い（R-F06）。</li>
+    <li><strong>GA4 は実質未計測</strong>：dataset <code>analytics_316110295</code> は蓄積中。CVイベント未定義＝問い合わせの発生源・導線効果が測れない（R-F03 で定義予定）。</li>
+    <li><strong>✅ viewport のズーム禁止＝解消済み（2026-06-22 Cycle 010・本番反映確認）</strong>：旧 <code>user-scalable=no, maximum-scale=1.0</code> → 新 <code>width=device-width, initial-scale=1.0</code>（共有テンプレ2本＝全ページ）。本ループが本番トップ hp-audit GET で検証（R-F01 完了）。</li>
+    <li><strong>実装済みのCV要素は2つだけ</strong>（Cycle 003・top/contact/hotwater を hp-audit CV棚卸しで実査）：①<strong>電話＝フリーダイヤル <code>tel:0120-541-266</code></strong>（全ページに4〜5箇所）②<strong>問い合わせフォーム＝<code>/contact/</code> の単一フォーム</strong>（サイト中の全CTAがここへ集約）。<strong>LINE導線・mailto・見積依頼/資料請求/開栓・移転予約/来店予約 等の専用フォームは未実装</strong>（hp-audit は静的HTMLのみ＝JS注入ウィジェットは見えない限界あり）。「お見積り無料」等は単一の <code>/contact/</code> フォームに集約され、独立CVではない。</li>
+    <li><strong>「h1 が複数」の正体＝共通ヘッダーのロゴ h1（2026-06-22 Cycle 012・fujisaka-dev 認識合わせで確定）</strong>：全ページの h1 のうち1つは<strong>共通ヘッダーのロゴ <code>&lt;h1 class="header__logo"&gt;</code></strong>（新旧テンプレ両方・全60ページ超に共通）。つまり各ページの正常形は<strong>「ロゴh1 ＋ ページ本文の主見出しh1」の2点構成（hp-audit で h1=2）</strong>。ロゴを h1 から外すかは全ページ影響の別課題として保留中（本文の主見出しが h1 として1つ立っていれば SEO 実害は小さい＝観察）。<strong>今後 hp-audit で「h1=2」を一律に課題として起票しない</strong>（=2 のうち1つはロゴ・想定内）。本文側に主見出し以外の余分な h1（例：空の <code>#mainvisual</code> h1・セクション見出しの h1）がある場合のみ整理対象とする。</li>
+    <li><strong>✅ <code>/voice/</code>（お客様の声）の description 固有化＝本番反映確認（2026-06-22 Cycle 012）</strong>：旧＝テンプレ汎用文84字 → 新＝固有文87字（お客様の声に即した内容・og:description 連動）。あわせて空の <code>#mainvisual</code> h1 を div 化し h1 を 3→2（ロゴ＋本文主見出し）に整理。本ループが本番GET（hp-audit）で検証済。効果（CTR）は GSCラグ経過後に測定予定。</li>
+  </ul>
+
+  <!-- 確定した質問の回答 -->
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">確定した質問の回答</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li><strong>Q-F01（CVの定義）→ 確定（2026-06-20 社長）</strong>：藤阪ガスの<strong>コンバージョン＝「問い合わせ（/contact/ フォーム送信）」と「電話（tel:0120-541-266 タップ）」の2つ</strong>。GA4 のCVイベント設計（R-F03）はこの2つを計測対象とする。実査の結果、これ以外に実装済みのCV要素は無い（上記「実装済みのCV要素は2つだけ」参照）。</li>
+    <li><strong>Q-F02（実装担当のトークン登録）→ 確定（2026-06-19 社長）</strong>：<code>fujisaka-dev</code> 登録済＝最新レポートを mailbox で直接配信可。</li>
+    <li><strong>Q-F03（給湯器ページの実情報）→ 確定（2026-06-20 社長＋Cycle 004 実査）</strong>：対応エリア・対応の速さは<strong>サイト本文から実査して取得</strong>（上記「サイト本文の確定事実」）。<strong>金額はサイトに記載がなくクライアント確認事項</strong>（捏造しない）。</li>
+    <li><strong>Q-F04（LINE公式アカウントの有無）→ 確定（2026-06-20 社長）</strong>：<strong>公式アカウント無し</strong>。CV候補から除外＝R-F10 中止。</li>
   </ul>
 
   <!-- 役割分担 -->
@@ -74,6 +102,12 @@
     <li><strong>実装担当＝<span class="font-mono">fujisaka-dev</span></strong>（拠点PC・<strong>mailbox トークン登録済＝直接引き渡し可</strong>）。最新レポートは mailbox（<span class="font-mono">to: fujisaka-dev</span>）でも配信する。</li>
     <li><strong>効果検証（GSC/GA4 の読み取り）は本ループ担当</strong>。</li>
     <li>社長の指示・回答＝<span class="font-mono">data/hp-loop/fujisaka/from-president.md</span>（社長の領域・AIは読むだけ）。</li>
+  </ul>
+
+  <!-- 現在の制約・保留 -->
+  <h2 class="text-xl font-bold border-b border-gray-300 pb-2 mb-3">現在の制約・保留事項</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li><strong>⏸ <code>/voice/</code>（お客様の声）の導線見直しは保留中</strong>（2026-06-22 Cycle 011・社長意向を fujisaka-dev 経由で受領）：社長が「voice は重要だが現在の導線を見直したい」とし、<strong>次回クライアント打ち合わせで方針確定</strong>。それまで <code>/voice/</code> の<strong>導線・統廃合に関わる大きな改変提案は出さない</strong>（保留）。<strong>ページ内SEO（description／h1 等）の改善は歓迎＝R-F14 は対象内で継続</strong>。<br>現在のリンク状況（fujisaka-dev コード確認）：<code>/voice/</code> はトップ「お客様からの声をもっと読む」・旧テンプレフッター・<code>/renovation/</code>・<code>/service/</code>・サイトマップから現役で到達可。<strong>新テンプレ（主要商品/サービスページ）のナビ/フッターには voice リンクなし</strong>（社長の「リンクされていない」印象はこの新テンプレ側と推測）。</li>
   </ul>
 
   <p class="text-xs text-gray-400 mt-10">動作ルール：<span class="font-mono">.claude/rules/hp-loop.md</span>／サイト設定：<span class="font-mono">data/hp-loop/sites/fujisaka.md</span>／起動：<span class="font-mono">/hp-loop fujisaka</span>。</p>

@@ -21,7 +21,7 @@
 
   <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — よしだ歯科（yoshida-smile.info）</h1>
   <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。提案は実装エージェント（<span class="font-mono">yoshida-dev</span>）がそのまま着手できる粒度で書きます。</p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-19（Cycle 001・独立ループ初回＝技術Quick win＋情報層回収の的を絞る）／対象サイト：<a href="https://yoshida-smile.info" class="text-blue-600 hover:underline font-mono">yoshida-smile.info</a>（WordPress）／ゴール：来院（WEB予約・電話）増</p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-26（Cycle 014・反応サイクル＝<strong>yoshida-dev の実装報告（R-Y06／R-Y15＋title医院名NAP統一・本番デプロイ済み）を本番GETで✅検証</strong>。トップ＝title NAP統一(スマイル会よしだ歯科｜託児所あり)・canonical・OGPフルセット＋twitter:card を確認／cleaning・first・kidskyousei＝title NAP統一・canonical を確認＝<strong>R-Y15・R-Y06(トップ)・title NAP の3点をクローズ</strong>（→アーカイブ）。<strong>重要＝R-Y08(JSON-LD空)の認識合わせに進展</strong>：当方の静的GET（JS非実行）でトップに <span class="font-mono">application/ld+json</span> は<strong>1ブロックのみ・空/parse失敗</strong>、有効な LocalBusiness は静的HTMLに不在。＝yoshida-dev の「空[[]]はGTM動的注入」説は<strong>静的GETに現れない＝説明不可</strong>と判明し、<strong>本番静的ソースが LocalBusiness を出力できていない疑い</strong>として、生ソース(Ctrl+U)確認を yoshida-dev に依頼（ack 送付済）。<span class="font-mono">yoshida-dev</span> は<strong>到達可能と判明</strong>（報告受信＝送受信成立／前サイクルの「トークン未登録で配信不可」は誤りと訂正・ack を local-send 済）。<strong>申し送り＝報告の宛名が legacy <span class="font-mono">hp-loop</span>（≠<span class="font-mono">hp-loop-yoshida</span>）で誤着</strong>＝宛名移行が未完。GSC last_date=06-23(デプロイ前)＝効果は未計測＝baseline 取得済・06-28以降のクリーン窓で実測。<strong>ループ律速＝(1) yoshida-dev/WP管理の Q-Y06(ブログmeta最大リーク)着手、(2) 社長判断 Q-Y01／Q-Y05、(3) R-Y16 残（住所『大阪府』追加・title統一スキーマ全展開・R-Y14 h1）</strong>／対象サイト：<a href="https://yoshida-smile.info" class="text-blue-600 hover:underline font-mono">yoshida-smile.info</a>（メイン＝独自PHPテンプレート＋ブログ・<strong>症例集 /jirei/ もメインテンプレート側</strong>）／ゴール：来院（WEB予約・電話）増</p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -35,10 +35,11 @@
     <h2 class="text-xl font-bold text-amber-800 mb-3">🔔 社長への質問（未回答）</h2>
     <p class="text-sm text-amber-800 mb-3">回答は <span class="font-mono bg-amber-100 px-1 rounded">data/hp-loop/yoshida/from-president.md</span> へ／Slackのよしだ歯科 日報スレッド返信でも可。</p>
     <ul class="space-y-3 text-sm text-amber-900">
-      <li><strong>Q-Y01（WEB問診の状況）</strong>：GA4でこの2週間 <span class="font-mono">question</span> 1件・<span class="font-mono">問診票_大人向けpdf</span> ダウンロード1件を観測。<strong>WEB問診は既に公開済みですか？</strong> R-Y01のWEB問診URLプレースホルダは確定値に差し替え可能ですか？（①公開済み・URL確定／②準備中／③未着手）</li>
-      <li><strong>Q-Y03（既存提案 R-Y01〜Y05 の状況）</strong>：実装報告がまだ届いていません。<strong>着手済み／未着手／別ルートで進行中</strong>のどれですか？（特に症例集=hana-tools work_id 167 が期日超過 〜2026-05-30）</li>
+      <li><strong>📣 連絡（宛名移行・取りこぼし防止）</strong>：yoshida-dev の今回の実装報告が <span class="font-mono">to: hp-loop</span>（旧名）宛で届きました（本来は <span class="font-mono">to: hp-loop-yoshida</span>）。無人の yoshida 日次は新名しか読まないため、このままだと将来の yoshida-dev 報告を取りこぼす恐れがあります。<strong>yoshida-dev に「送信先を <span class="font-mono">hp-loop-yoshida</span> に変える」よう一言お伝えいただけると確実です</strong>（今回は内容が明確だったので本ループが拾って処理・検証・ack 済）。</li>
+      <li><strong>Q-Y01（WEB問診のURL）＝yoshida-dev 再取次</strong>：yoshida-dev が R-Y10（PC常時予約CTA／追従CTA）に「WEB問診」ボタンを足すには<strong>遷移先URLが必須</strong>ですが、現状サイトに WEB問診への導線URLが存在しません（GA4でも <span class="font-mono">question</span> は6月1件＝実質未稼働）。<strong>WEB問診システムは導入予定／契約済みのサービスURLはありますか？</strong>（①近く取得→R-Y10に問診ボタンを組込み／②未定→予約・電話の2導線で先行し問診ボタンは保留／③導入見直し）</li>
+      <li><strong>Q-Y05（症例の公開予定・優先カテゴリ）＝来院に効くレバー</strong>：症例集 <span class="font-mono">/jirei/</span> は枠（矯正／虫歯・根管／インプラント／審美／赤ちゃん・こども／妊娠中・産前産後 の6カテゴリ）は完成していますが、<strong>全カテゴリが現在「症例が登録されていません」＝公開0件</strong>です（GSCでも /jirei/ はほぼ表示0）。<strong>(1) 最初の症例を公開する目処（時期）は？ (2) どのカテゴリから埋めますか？</strong>（おすすめ＝検索需要のある「矯正(インビザライン/こども予防矯正)」「インプラント」「審美(ホワイトニング)」から。月1打合せでクライアントに依頼する順番の参考に）</li>
     </ul>
-    <p class="text-xs text-amber-700 mt-3">✅ 回答済み：Q-Y02（<strong>yoshida-dev のトークン登録済＝直接引き渡し可</strong>・2026-06-19 社長確認）→ <a href="archive.html" class="underline">アーカイブ</a>へ。</p>
+    <p class="text-xs text-amber-700 mt-3">✅ 解決済み：<strong>Q-Y06（ブログ meta 自動生成是正・AIOSEO）</strong>＝社長が <strong>(a)+(b) 併用で進める</strong>と決定（2026-06-25。(a) AIOSEO 説明文テンプレ是正＋(b) 記事ごとに抜粋を月次記入）→ R-Y02 ブログ側として yoshida-dev/WP管理へ引き渡し（下記「進行中の提案」）。<strong>Q-Y04（症例集の実URL）</strong>＝<span class="font-mono">/jirei/</span>（2026-06-20）。Q-Y03（運用前提）・Q-Y02（引き渡し手段＝yoshida-dev 登録済）・R-Y01（SP固定CTAバー既設）は <a href="archive.html" class="underline">アーカイブ</a>。前提は <a href="spec.html" class="underline">確定・仕様</a> へ。</p>
   </div>
 
   <!-- ===== 📥 分析に欲しい情報・データ・ツール（常設・AIが書く） ===== -->
@@ -46,160 +47,73 @@
     <h2 class="text-xl font-bold text-sky-800 mb-2">📥 分析に欲しい情報（精度向上のため）</h2>
     <p class="text-sm text-sky-900 mb-3">より精度の高い分析のために AI が欲しいもの。提供できるものがあれば <span class="font-mono bg-sky-100 px-1 rounded">data/hp-loop/yoshida/from-president.md</span> で教えてください。</p>
     <ul class="list-disc list-inside text-sm text-sky-900 space-y-1">
+      <li><strong>症例の最初の公開予定（最優先・Q-Y05）</strong>：時期と優先カテゴリ。公開され次第、実物（症例ページ）の自動生成 title/メタ/構造化データを監査して具体化します。</li>
       <li>WEB予約の「予約完了」厳密定義（<span class="font-mono">reservation</span> イベントは押下数か完了数か）。完了率を見たい。</li>
-      <li>yoshida-dev からの実装報告フォーマット（commit / 対応R-NNN / 認識合わせ）。再監査の起点にしたい。</li>
-      <li>症例集（R-Y04）のクライアント受領状況。データ構造の先行実装可否の判断材料。</li>
+      <li>WEB問診サービスの確定URL（取得でき次第＝R-Y10 の問診ボタン差し込み先）。</li>
+      <li><strong>（取得済）</strong>症例集の実URL＝<span class="font-mono">/jirei/</span>（Q-Y04）／症例集の運用前提（Q-Y03＝クライアントが月1打合せで追加・カテゴリ別URL・自動生成）。yoshida-dev の実装報告フォーマット（commit / 対応R-NNN / 認識合わせ）。</li>
     </ul>
   </div>
 
   <!-- ===== 🔧 進行中の提案（未完了 R-NNN・最新レポートに繰り越し） ===== -->
   <div class="border-2 border-amber-300 bg-amber-50 rounded-lg p-5 mb-8">
     <h2 class="text-xl font-bold text-amber-800 mb-2">🔧 進行中の提案（未完了）</h2>
-    <p class="text-sm text-amber-900 mb-3">いま動いている提案だけをここに残します（完了・中止は <a href="archive.html" class="underline font-semibold">アーカイブ</a> へ移動）。実装は <span class="font-mono">yoshida-dev</span>、効果検証は本ループ。詳細は下の Cycle 001 を参照。</p>
+    <p class="text-sm text-amber-900 mb-3">いま動いている提案だけをここに残します（完了・中止は <a href="archive.html" class="underline font-semibold">アーカイブ</a> へ移動）。実装は <span class="font-mono">yoshida-dev</span>、効果検証は本ループ。<strong>実装手段は原則「メイン＝独自PHPテンプレート側」で対処</strong>（症例集 /jirei/ もメインテンプレート側。ブログのみ WordPress）。</p>
     <table class="w-full text-sm border-collapse">
       <thead><tr class="text-left border-b border-amber-300 text-amber-900"><th class="py-1 pr-3">提案</th><th class="py-1 pr-3">内容</th><th class="py-1">状態</th></tr></thead>
       <tbody class="align-top text-gray-700">
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y01</td><td class="py-1 pr-3">予約・WEB問診・電話の追従CTAを全ページに固定（SP最優先） 🔴</td><td class="py-1 text-amber-700">⏳ 未着手（報告未受領）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y02</td><td class="py-1 pr-3">高表示・低CTRページの title/meta 最適化（来院意図ページ優先） 🔴</td><td class="py-1 text-amber-700">⏳ 未着手（報告未受領）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y03</td><td class="py-1 pr-3">箕面×診療メニューのローカルSEO受け皿を強化 🟡</td><td class="py-1 text-amber-700">⏳ 未着手（報告未受領）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y04</td><td class="py-1 pr-3">症例集ページの実装（WP）🟡 <span class="text-red-600">※work_id 167 期日超過（〜2026-05-30）</span></td><td class="py-1 text-amber-700">⏳ 未着手（受領待ち）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y05</td><td class="py-1 pr-3">症状系ブログ記事→予約導線の共通CTA挿入 🟢</td><td class="py-1 text-amber-700">⏳ 未着手（R-Y01後）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y06</td><td class="py-1 pr-3">トップページに OGP/Twitterカードを付与（テンプレ起因） 🟡</td><td class="py-1 text-amber-700">🆕 新規（Cycle 001）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y07</td><td class="py-1 pr-3">viewport のズーム禁止を解除（アクセシビリティ） 🟡</td><td class="py-1 text-amber-700">🆕 新規（Cycle 001）</td></tr>
-        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y08</td><td class="py-1 pr-3">壊れた JSON-LD を修復（R-Y03 構造化データの前提） 🟡</td><td class="py-1 text-amber-700">🆕 新規（Cycle 001）</td></tr>
-        <tr><td class="py-1 pr-3 font-mono">R-Y09</td><td class="py-1 pr-3">最大表示の症状記事(p=5246)を「情報→来院」回収の旗艦に 🟢→効果大</td><td class="py-1 text-amber-700">🆕 新規（Cycle 001）</td></tr>
+        <tr class="border-b border-amber-100 bg-emerald-50"><td class="py-1 pr-3 font-mono">R-Y16</td><td class="py-1 pr-3"><strong>MEOベンダー指摘対応＝①title統一スキーマ ②TOP見出し階層 ③医院名NAP統一 ④住所『大阪府』追加</strong>。<strong class="text-emerald-700">③医院名NAP統一＝✅一部完了（2026-06-26 本番GET確認）：TOP/cleaning/first/kidskyousei の title が『…スマイル会よしだ歯科』へ。JSON-LD name/フッター/自動返信メールも統一済（yoshida-dev 報告）→アーカイブ。</strong>残：①フル title統一スキーマ『主題｜<strong>箕面市船場西の歯医者</strong>｜スマイル会よしだ歯科』を<strong>3ページ以外の全ページへ横展開</strong>（/treatment/ 等の古い接尾辞）。②h1直下h4ジャンプ是正＝<strong>R-Y14と統合</strong>。<strong class="text-rose-700">④住所に都道府県を追加（社長指示2026-06-25）：『〒562-0036 箕面市船場西2-19-22』→『〒562-0036 大阪府箕面市船場西2-19-22』＝今回の報告スコープ外で未着手。全NAP信号で統一＝フッター／/access/／JSON-LD(R-Y08) address／OGP(R-Y06)。R-Y08のソース是正・R-Y06全展開と同じhead改修で同時が最効率</strong> 🔴</td><td class="py-1 text-emerald-700">③一部✅／①②④は yoshida-dev 着手待ち</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y13</td><td class="py-1 pr-3"><strong>症例集の「空カテゴリ」対応＋公開計画</strong>：6カテゴリすべて0件＝薄い/空ページがindexされるリスク。canonical/index方針＋各カテゴリに固有リード文＋最初の症例公開を運用で前進 🔴（今いちばん効くレバー）</td><td class="py-1 text-amber-700">🆕 新規（Cycle 004）</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y11</td><td class="py-1 pr-3"><strong>症例ページの自動生成 title/メタ/構造化データ最適化</strong>。<strong class="text-emerald-700">※訂正：症例集トップ /jirei/ の title/メタは良好（挨拶文問題は当たらず）。症例が0件のため個別ページ未確認＝公開後に実物監査</strong>。狙いは「各症例に MedicalWebPage/Article・before/after の alt」 🟡</td><td class="py-1 text-amber-700">🔄 訂正・公開待ち（実物未生成）</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y02<br>（ブログ側）</td><td class="py-1 pr-3"><strong>ブログ症状記事の meta が「挨拶文」自動生成＝高表示・低CTR</strong>（p=5110 順位1.1でCTR0.20%・p=1022 CTR0.62%・p=5246 CTR0.87% 等＝サイト最大級のリーク）。<strong class="text-emerald-700">※社長方針確定（2026-06-25・Q-Y06）＝(a) AIOSEO 説明文自動生成テンプレを是正（挨拶文流用をやめる）＋(b) 記事ごとに抜粋(excerpt)へ要点1〜2文を月次で記入、の併用で進める。</strong>WP管理画面操作＝<strong>yoshida-dev／WP管理者の実装フェーズへ移行</strong>（コードでは不可）。効果検証は高表示ページ p=5246/1022/5110 のCTRで実測 🔴</td><td class="py-1 text-amber-700">▶️ 方針確定・実装待ち（yoshida-dev/WP管理）</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y14</td><td class="py-1 pr-3"><strong>見出し階層の是正（1ページ1h1＋飛ばさない順序）</strong>：<strong class="text-emerald-700">※2026-06-26 本番GET＝トップ h1=2</strong>（共有ヘッダーのロゴが h1 で全ページ出力＝全ページ影響と yoshida-dev 認識一致）。MEOベンダーの「h1直下h4」指摘と同根＝R-Y16①②と統合し、社長合意のうえ R-Y06全ページ展開・他head改修とまとめて実施予定（共通テンプレ側でロゴh1→p等・class維持で見た目不変） 🟢</td><td class="py-1 text-amber-700">⏳ 未着手（R-Y16へ統合・yoshida-dev が他head改修とまとめて予定）</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y09</td><td class="py-1 pr-3">最大表示の症状記事(blog/?p=5246・<strong>imp 3,675＝さらに拡大</strong>)を「情報→来院」回収の旗艦に。<strong class="text-emerald-700">※記事末尾CTAは R-Y05 で全 single 記事に共通設置済み（✅）→ R-Y09 は title/本文最適化に集中</strong>（現 title 40字・推奨超）。方針メモ（Cycle006）：「口内炎」系は非ローカル・情報目的で来院寄与は限定的＝Quick winの範囲で着実に拾う 🟢</td><td class="py-1 text-amber-700">⏳ 未着手（CTAは済・title/本文が残）</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y04</td><td class="py-1 pr-3">症例集ページ 🟡 <span class="text-emerald-700">※枠は完成（/jirei/・6カテゴリ）・現在0件。施策は R-Y13（空カテゴリ対応・公開計画）＋R-Y11（公開後の最適化）に展開</span></td><td class="py-1 text-amber-700">🔄 枠完成・中身待ち（R-Y13/R-Y11へ）</td></tr>
+        <tr class="border-b border-amber-100 bg-rose-50"><td class="py-1 pr-3 font-mono">R-Y08</td><td class="py-1 pr-3"><strong>JSON-LD（LocalBusiness）が本番に出ていない疑い＝認識合わせ中</strong>。<strong class="text-rose-700">2026-06-26 本番GET（静的・JS非実行）＝トップに <span class="font-mono">application/ld+json</span> は1ブロックのみ・空/parse失敗、有効な LocalBusiness は静的HTMLに不在</strong>。yoshida-dev は「ソース上は正常な LocalBusiness・空[[]]はGTM動的注入の疑い」と報告したが、<strong>GTM等の実行時注入は静的GETに現れない＝当方が静的で空ブロックを観測＝その空は生HTMLに実在</strong>。よって「本番静的ソースが LocalBusiness を出力できていない（テンプレ出力が空/プラグインが消す等）」疑いが濃厚。<strong>yoshida-dev へ生ソース(Ctrl+U)確認を依頼（ack 送付済 M-20260626T023725）</strong> 🟡</td><td class="py-1 text-rose-700">🔍 認識合わせ・生ソース確認待ち</td></tr>
+        <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono">R-Y06</td><td class="py-1 pr-3"><strong class="text-emerald-700">トップは✅完了（2026-06-26 本番GET＝OGPフルセット＋twitter:card 確認→アーカイブ）</strong>。残＝<strong>全ページ展開</strong>（per-page の og:title/description/image 設計が要る＝yoshida-dev がテンプレ per-page 出力を別途設計予定）。/jirei/ 等の固定ページもこの全展開で付与 🟡</td><td class="py-1 text-amber-700">トップ✅／全ページ展開は yoshida-dev 設計待ち</td></tr>
+        <tr><td class="py-1 pr-3 font-mono">R-Y03</td><td class="py-1 pr-3">箕面×診療メニューのローカルSEO受け皿を強化（R-Y08 修復が前提） 🟡</td><td class="py-1 text-amber-700">⏳ 未着手</td></tr>
       </tbody>
     </table>
-    <p class="text-xs text-amber-700 mt-2">→ まだ完了（✅実装済み）・中止（❌）の提案はありません。決着したら <a href="archive.html" class="underline">アーカイブ</a> へ移します。前提・背景は <a href="spec.html" class="underline">確定・仕様</a> へ。</p>
+    <p class="text-xs text-amber-700 mt-2">✅ 完了（→<a href="archive.html" class="underline">アーカイブ</a>）：<strong>R-Y15（canonical 全PHPページ）・R-Y06（トップ OGP/Twitterカード）・title 医院名NAP統一（TOP/cleaning/first/kidskyousei）＝2026-06-26 本番反映を確認</strong>／R-Y10（PC固定予約CTA）・R-Y05（ブログ記事末尾CTA）＝2026-06-23 確認／R-Y02（来院意図3ページの title/meta）・R-Y07（viewport ズーム禁止撤廃）・R-Y12 コード分＝2026-06-22 確認／R-Y01 SP固定CTAバー（既設）。前提・背景は <a href="spec.html" class="underline">確定・仕様</a> へ。</p>
   </div>
 
   <!-- ===== 最新サイクル ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
 
-  <!-- Cycle 001 -->
+  <!-- Cycle 014 -->
   <div class="border-2 border-cyan-500 bg-white rounded-lg p-5 mb-6">
-    <h3 class="text-xl font-bold text-indigo-900 mb-2">Cycle 001 — 2026-06-19（よしだ歯科・独立ループ初回）</h3>
+    <h3 class="text-xl font-bold text-indigo-900 mb-2">Cycle 014 — 2026-06-26（反応サイクル＝yoshida-dev 実装報告 R-Y06／R-Y15＋title医院名NAP統一 を本番GETで✅検証＋R-Y08 認識合わせに進展）</h3>
 
     <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">データ状況</p>
     <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mb-3">
-      <li>GSC（<span class="font-mono">searchconsole_yoshida</span>）：<strong>1日分→3日分に増加</strong>（2026-06-14〜16）。clicks 124 / impressions 5,484 / CTR 2.26% / 平均掲載順位 5.8。※データラグ2〜3日・まだ「方向性の事実」。</li>
-      <li>GA4（<span class="font-mono">analytics_287348176</span>）：直近のCV＝<span class="font-mono">reservation</span> 93・<span class="font-mono">tel</span> 67・<span class="font-mono">instagram</span> 51・<span class="font-mono">line</span> 18・<span class="font-mono">初診の方へページに移動</span> 72（部分期間／日次テーブル3日＋intraday）。<strong>予約・電話CVは健全に発生中。</strong></li>
-      <li>on-page：<span class="font-mono">bin/hp-audit.sh</span> でトップ＋最大表示ページを監査（下記）。</li>
+      <li>mailbox 受信：<strong>yoshida-dev の実装報告1通</strong>（<span class="font-mono">M-20260625T180550-yoshida-dev</span>・thread <span class="font-mono">yoshida-report</span>・「R-Y06／R-Y15＋title NAP統一 本番デプロイ済み」）。<strong>※宛名が legacy <span class="font-mono">hp-loop</span>（≠<span class="font-mono">hp-loop-yoshida</span>）で誤着＝宛名移行が未完</strong>＝本来 yoshida ループが拾えない位置。今回は内容が明確に yoshida 案件のため処理し、社長へ申し送り（下記）。処理後 <span class="font-mono">done</span> 済。</li>
+      <li><strong>本番GET検証（hp-audit・静的GET／K-014＝報告を鵜呑みにせず再GET）</strong>：トップ・cleaning・first・kidskyousei を実取得。Slack fetch＝新着なし・<span class="font-mono">from-president.md</span> 新規指示なし。</li>
+      <li><strong>GSC（30日・<span class="font-mono">searchconsole_yoshida</span>）</strong>：last_date=<strong>06-23</strong>＝06-25デプロイ<strong>前</strong>のため title/OGP の効果は未計測。退行なし（totals clicks318・imp16,684・CTR1.91%・pos5.9）。baseline 取得＝トップ CTR6.70%(imp1,880)・first 0.97%(imp310)・cleaning 4.17%(imp48)。</li>
     </ul>
 
-    <p class="text-sm font-semibold text-gray-800 mb-1">評価サマリ</p>
-    <p class="text-sm text-gray-700 mb-1">CVは健全。<strong>最大の取りこぼしは「最大表示ページが情報収集記事で、CTRが極端に低い」点</strong>。トップページの技術的な抜け（OGP無し・ズーム禁止・JSON-LD破損）は工数小で潰せるQuick win。来院意図ページは順位が高くCTRも良好で、伸ばす土台はある。</p>
-    <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5 mb-3">
-      <li>✅ <strong>良い点</strong>：来院意図ページが好調＝<span class="font-mono">/cleaning/</span> 系・<span class="font-mono">/first/</span>(順位1.9) ・<span class="font-mono">/access/</span>(順位2.4・CTR4.1%)・指名検索（「箕面 よしだ歯科」等）はCTR5〜10%。CVも継続発生。</li>
-      <li>⚠️ <strong>課題</strong>：①最大表示の <span class="font-mono">blog/?p=5246</span>「痛い口内炎にはこれだ！」が<strong>1,466表示・CTR0.68%・全サイト表示の約27%</strong>＝情報層の巨大な未回収。②トップページに OGP/Twitterカードが無い（ブログ記事にはある＝<strong>テンプレ起因</strong>）。③viewport がズーム禁止。④JSON-LD が全ページで壊れている（パース失敗）。⑤トップ h1 が7個。</li>
-    </ul>
-
-    <p class="text-sm font-semibold text-gray-800 mb-1">既存提案 R-Y01〜Y05 の進捗追跡</p>
-    <p class="text-sm text-gray-700 mb-3">実装報告は<strong>未受領</strong>（yoshida-dev トークン未登録のため直接チャネルも無し）。全件 <strong>⏳未着手扱い</strong>として継続監視。状況は Q-Y03 で社長に確認中。R-Y04（症例集）は hana-tools work_id 167 が期日超過。</p>
-
-    <p class="text-sm font-semibold text-gray-800 mb-1">新規改善提案（技術＋コンテンツ）</p>
-
-    <div class="border-l-4 border-amber-400 bg-white rounded-r p-3 mb-2">
-      <p class="font-semibold text-sm mb-1">R-Y06：トップページに OGP / Twitterカードを付与（テンプレ起因） 🟡</p>
-      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：hp-audit でトップは OGP 0件・Twitter 0件。一方ブログ記事(p=5246)は OGP 6件・Twitter 3件あり＝<strong>固定ページ/トップのテンプレだけ未設定</strong>。</li>
-        <li><strong>なぜ問題か</strong>：Instagram（月96クリック）・LINE（CV稼働）でトップURLが共有されると、画像・タイトル無しの素っ気ないリンクになり来院前の第一印象を損なう（推測：シェア経由の取りこぼし）。</li>
-        <li><strong>改善案</strong>：使用中SEOプラグインでサイト共通のOG画像・og:title/description・twitter:card を固定ページ/トップに付与。</li>
-        <li><strong>効果：中 ／ 工数：小 ／ 優先度：🟡</strong></li>
-      </ul>
+    <p class="text-sm font-semibold text-gray-800 mb-1">① 実装報告の検証＝3点クローズ（✅本番反映確認）</p>
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-3 mb-3 text-sm text-gray-700 space-y-2">
+      <p><strong>R-Y15（canonical）✅</strong>：トップ・cleaning・first とも <span class="font-mono">canonical なし→自URL</span>（全PHPテンプレページ）。<strong>R-Y06（トップOGP）✅</strong>：<span class="font-mono">og:type/site_name(スマイル会よしだ歯科)/title/description/url/image(2312×1108)/image:width/height</span>＋<span class="font-mono">twitter:card=summary_large_image</span>。<strong>title 医院名NAP統一 ✅</strong>：TOP「箕面市船場西の歯医者｜スマイル会よしだ歯科｜託児所あり」/cleaning/first/kidskyousei とも『…スマイル会よしだ歯科』＝R-Y02構造を維持し医院名のみGBP正式名へ。<strong>→ この3点をアーカイブへ移動。</strong></p>
     </div>
 
-    <div class="border-l-4 border-amber-400 bg-white rounded-r p-3 mb-2">
-      <p class="font-semibold text-sm mb-1">R-Y07：viewport のズーム禁止を解除（アクセシビリティ） 🟡</p>
-      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：トップの viewport が <span class="font-mono">maximum-scale=1.0, user-scalable=no</span>＝ピンチ拡大不可。</li>
-        <li><strong>なぜ問題か</strong>：歯科の患者層は高齢者を含み、文字・地図を拡大できないのは来院検討の妨げ（アクセシビリティ低下）。WCAG的にも非推奨。</li>
-        <li><strong>改善案</strong>：<span class="font-mono">maximum-scale</span>・<span class="font-mono">user-scalable=no</span> を削除し <span class="font-mono">width=device-width, initial-scale=1.0</span> に。1行修正・副作用ほぼ無し。</li>
-        <li><strong>効果：中（弱者配慮・離脱抑制） ／ 工数：小 ／ 優先度：🟡</strong></li>
-      </ul>
+    <p class="text-sm font-semibold text-gray-800 mb-1">② R-Y08（JSON-LD 空）の認識合わせ＝重要な切り分け</p>
+    <div class="border-l-4 border-rose-400 bg-rose-50 rounded-r p-3 mb-3 text-sm text-gray-700 space-y-2">
+      <p>yoshida-dev は「ソース上の JSON-LD は正常な LocalBusiness・トップで検出される空[[]]は GTM/Optimize 等の<strong>動的注入</strong>の疑い」と報告。<strong>しかし当方の hp-audit は静的GET（JS非実行・レンダ前の生HTML）</strong>。トップ再GET＝<span class="font-mono">application/ld+json</span> は<strong>1ブロックのみ・types=[]・parse失敗</strong>、有効な LocalBusiness は<strong>静的HTMLに不在</strong>。</p>
+      <p><strong>切り分けの肝</strong>：GTM等の実行時注入なら静的GETには現れない。当方が静的で空ブロックを観測＝<strong>その空ブロックは生HTMLに実在</strong>＝「空[[]]はGTM動的注入」では説明がつかない。＝<strong>デプロイ済み本番の静的ソースが、想定の LocalBusiness を出力できていない疑い</strong>（テンプレ出力が空配列／プラグイン・サーバ側で中身が消える／別の空ld+jsonが先頭 等）。yoshida-dev へ生ソース(Ctrl+U)で <span class="font-mono">application/ld+json</span> のブロック数・中身・前後文字列の共有を依頼（ack <span class="font-mono">M-20260626T023725-hp-loop-yoshida</span> 送付済）。</p>
+      <p><strong>当方の限界（正直に）</strong>：本セッションは hp-audit のみネットワーク許可（生バイト列の curl/python 取得は不可）。hp-audit は parse_ok/types のみ返すため、空ブロックの生中身までは見られない。だから生ソースの共有が一発の切り分けになる。</p>
     </div>
 
-    <div class="border-l-4 border-amber-400 bg-white rounded-r p-3 mb-2">
-      <p class="font-semibold text-sm mb-1">R-Y08：壊れた JSON-LD を修復（R-Y03 構造化データの前提） 🟡</p>
-      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：hp-audit がトップ・ブログ両方で「JSON-LD パース失敗（壊れている疑い）」を検出（トップ1件・ブログ2件）。</li>
-        <li><strong>なぜ問題か</strong>：構造化データが正しく解釈されず、Dentist/LocalBusiness のリッチ表示・地域SEOの土台が効かない。R-Y03（ローカルSEO）を積む前提が崩れている。</li>
-        <li><strong>改善案</strong>：出力元プラグイン/テーマの JSON-LD を検証ツール（Rich Results Test 等）で確認し修復。R-Y03 と束ねて <span class="font-mono">Dentist / LocalBusiness</span> を正しく出す。</li>
-        <li><strong>効果：中 ／ 工数：小〜中 ／ 優先度：🟡</strong></li>
-      </ul>
+    <p class="text-sm font-semibold text-gray-800 mb-1">③ yoshida-dev は到達可能と判明（前サイクルの訂正）＋申し送り</p>
+    <div class="border-l-4 border-gray-300 bg-gray-50 rounded-r p-3 mb-3 text-sm text-gray-700 space-y-2">
+      <p><strong>Cycle 012/013 の「yoshida-dev はトークン未登録で直接配信できない」は誤り</strong>＝今回 yoshida-dev から報告を受信（送受信成立）し、<span class="font-mono">local-send --from hp-loop-yoshida --to yoshida-dev</span> も許可リスト内。本サイクルで ack を local-send 済。<strong>spec の「✅登録済」が正</strong>。</p>
+      <p><strong>🔔 社長へ申し送り（宛名移行）</strong>：yoshida-dev の報告が <span class="font-mono">to: hp-loop</span>（legacy）で届いた＝<span class="font-mono">to: hp-loop-yoshida</span> への宛名移行が未完。無人の yoshida 日次は <span class="font-mono">to: hp-loop-yoshida</span> しか読まないため、このままだと将来の yoshida 報告を<strong>取りこぼす恐れ</strong>。yoshida-dev 側の送信先宛名を <span class="font-mono">hp-loop-yoshida</span> に直すよう連絡が要る（ack 本文では実装検証に集中したため、この宛名の件は社長から yoshida-dev へ伝えるのが確実）。</p>
     </div>
 
-    <div class="border-l-4 border-emerald-500 bg-white rounded-r p-3 mb-2">
-      <p class="font-semibold text-sm mb-1">R-Y09：最大表示の症状記事(p=5246「口内炎の治し方」)を「情報→来院」回収の旗艦に（R-Y02/R-Y05 の的を絞る） 🟢→効果大</p>
-      <ul class="list-disc list-inside text-xs text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：<span class="font-mono">blog/?p=5246</span> が単独で<strong>1,466表示（全サイトの約27%）・CTR0.68%・順位6.5</strong>。title 40字で長く、本文末の予約導線は未確認。情報収集層（口内炎）だが流入の母数が桁違い。</li>
-        <li><strong>なぜ問題か</strong>：これだけの可視性が「読まれて終わり」になっている。少しでも来院・相談へ回収できればCV寄与が大きい（推測：情報層→来院転換は一部だが母数が大）。</li>
-        <li><strong>改善案</strong>：①R-Y05の共通CTAブロックを<strong>この記事から最優先で適用</strong>（「痛みが続くなら当院へ／WEB予約」）。②title を「口内炎の治し方｜痛みが引かない時は箕面のよしだ歯科へ」等、ベネフィット＋医院名＋地域に再構成（R-Y02）。③関連症状記事・<span class="font-mono">/first/</span> への内部リンク。<strong>効果測定もこの1ページに絞ると変化が読みやすい。</strong></li>
-        <li><strong>効果：中〜高 ／ 工数：小 ／ 優先度：🟢（ただし費用対効果は最上位）</strong></li>
-      </ul>
-    </div>
+    <p class="text-sm text-gray-700 mb-3"><strong>着手順の推奨</strong>＝ <strong>R-Y02 ブログ側（Q-Y06＝最大リーク・<span class="font-mono">p=5110</span> 順位1.1でCTR0.16%・yoshida-dev/WP管理）</strong>→ <strong>R-Y08 生ソース確認＋ R-Y06全ページ展開・R-Y16①フルtitle統一・R-Y16④住所『大阪府』・R-Y14 h1 を同じhead改修でまとめて</strong>（yoshida-dev）→ <strong>Q-Y01／Q-Y05 への社長回答</strong>→ R-Y13（症例集公開）→ R-Y09。</p>
 
-    <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">既存提案 R-Y01〜Y05 の詳細（実装エージェント引き渡し用・着手できる粒度）</p>
+    <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">対応記録（from-president.md / mailbox）</p>
+    <p class="text-sm text-gray-700">yoshida-dev 報告（<span class="font-mono">M-20260625T180550</span>）を本番GET検証→ ack を <span class="font-mono">local-send --from hp-loop-yoshida --to yoshida-dev</span>（<span class="font-mono">M-20260626T023725</span>・thread <span class="font-mono">yoshida-report</span>・検証結果＋R-Y08 生ソース確認依頼＋住所NAP/全展開の認識合わせ）→ 報告を <span class="font-mono">slack-poll.py done</span> で <span class="font-mono">cur/</span> へ。<span class="font-mono">from-president.md</span> 新規指示なし・Slack fetch 新着なし。<strong>最新レポートの local-send 配信は見送り</strong>（新規 R なし＝既存提案の進捗/検証のみ＝1サイクル1通の無投函）。前回 Cycle 013 の記録は <a href="archive.html" class="underline">アーカイブ</a> へ移動。</p>
+  </div>
 
-    <div class="border-l-4 border-red-400 bg-white rounded-r p-4 mb-3 shadow-sm">
-      <p class="font-semibold mb-1">R-Y01：予約・WEB問診・電話の追従CTAを全ページに固定（SP最優先） 🔴</p>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：CVは電話タップ（GA4 `tel` 月89〜153）とWEB予約（`reservation` 月127〜204）に集中。WEB問診は導入<strong>決定済み</strong>だがサイト導線が未設置。予約アプリも導入予定。</li>
-        <li><strong>なぜ</strong>：歯科サイトのCV＝予約・来院。スマホで「電話／WEB予約／WEB問診」が常に押せる状態が来院に直結。</li>
-        <li><strong>実装</strong>：WPテーマに追従CTA群を実装。<strong>SP＝画面下固定バー</strong>（電話 <span class="font-mono">tel:</span> リンク・WEB予約・WEB問診）、<strong>PC＝ヘッダー常時表示</strong>。WEB問診はサービス名/URL確定後に差し込めるよう<strong>URLプレースホルダ</strong>を用意。タップ計測（GA4イベント）も維持/付与。</li>
-        <li><strong>効果：高 ／ 工数：小〜中 ／ 優先度：🔴</strong></li>
-      </ul>
-    </div>
-
-    <div class="border-l-4 border-red-400 bg-white rounded-r p-4 mb-3 shadow-sm">
-      <p class="font-semibold mb-1">R-Y02：高表示・低CTRページの title / meta description を最適化（来院意図ページ優先） 🔴</p>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：GSCで<strong>掲載1位でもクリック0のページが複数</strong>（例：「歯石と歯垢の違い」「歯垢と歯石の違い」、<span class="font-mono">blog/?p=5246</span> は455表示・CTR0.66%）。来院に近いページは健闘：<span class="font-mono">/cleaning/</span>(1.0位)・<span class="font-mono">/first/</span>(2.0位)・<span class="font-mono">/kidskyousei/</span>(5.0位・33表示・0クリック)。</li>
-        <li><strong>なぜ</strong>：検索結果でクリックされる文言になっていない。表示はあるので<strong>最小工数で効く</strong>。</li>
-        <li><strong>実装</strong>：WPのSEO設定（使用中プラグイン）で各ページの <span class="font-mono">&lt;title&gt;</span>・meta description を個別最適化。<strong>来院意図ページ（診療メニュー・/cleaning/・/first/・/kidskyousei/）を優先</strong>し、「クエリ語＋ベネフィット＋医院名＋箕面」を入れる。</li>
-        <li><strong>注意（事実と推測）</strong>：症状系（口内炎・歯石の違い等）は情報収集層で、CTRを上げても来院寄与は限定的（推測）。優先は来院意図ページ。症状系は R-Y05 で予約導線を拾う。</li>
-        <li><strong>効果：中 ／ 工数：小 ／ 優先度：🔴</strong></li>
-      </ul>
-    </div>
-
-    <div class="border-l-4 border-amber-400 bg-white rounded-r p-4 mb-3 shadow-sm">
-      <p class="font-semibold mb-1">R-Y03：箕面×診療メニューのローカルSEO受け皿を強化 🟡</p>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：主力KWは「箕面 歯医者」。地域×診療メニュー（矯正・ホワイトニング・小児・インプラント）が伸びしろ。<span class="font-mono">/kidskyousei/</span> は表示あるが0クリック。</li>
-        <li><strong>実装</strong>：各診療メニューページに<strong>対応エリア・アクセス・地域名</strong>を明記、<strong>構造化データ（Dentist / LocalBusiness）</strong>を整備、関連ページへの内部リンク。<strong>※GBP（Googleビジネスプロフィール）最適化・レビュー獲得はサイト外＝B項（運用側）</strong>。</li>
-        <li><strong>効果：中〜高 ／ 工数：中 ／ 優先度：🟡</strong></li>
-      </ul>
-    </div>
-
-    <div class="border-l-4 border-amber-400 bg-white rounded-r p-4 mb-3 shadow-sm">
-      <p class="font-semibold mb-1">R-Y04：症例集ページの実装（WP） 🟡 <span class="text-red-600 text-sm font-normal">※運用管理ToDo（work_id 167）が期日超過（〜2026-05-30）で未完</span></p>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：信頼要素＝来院の決め手。医療系（YMYL）はE-E-A-Tにも効く。律速は<strong>クライアントからの症例内容の受領</strong>。</li>
-        <li><strong>実装</strong>：カスタム投稿タイプ「症例」を設計（フィールド：症状／処置内容／期間／費用目安／注意点・リスク／写真）。一覧・詳細テンプレートを実装し、<strong>クライアントが自分で更新できる運用</strong>に。<strong>内容受領前でも、データ構造とテンプレートは先行実装可能</strong>。受領しやすいよう上記フィールドの<strong>入力テンプレ</strong>を用意して社長経由で渡す。</li>
-        <li><strong>効果：中〜高 ／ 工数：中 ／ 優先度：🟡</strong></li>
-      </ul>
-    </div>
-
-    <div class="border-l-4 border-emerald-400 bg-white rounded-r p-4 mb-6 shadow-sm">
-      <p class="font-semibold mb-1">R-Y05：症状系ブログ記事 → 予約導線の内部リンク／CTA を共通挿入 🟢</p>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-0.5">
-        <li><strong>観察</strong>：症状系クエリ（口内炎・歯石の違い・歯茎の腫れ 等）で大量表示。情報収集層だが、記事内に予約/相談導線があれば一部を来院へ回収できる。</li>
-        <li><strong>実装</strong>：ブログ記事テンプレ末尾に「気になる症状は当院へご相談ください／WEB予約」の<strong>共通CTAブロック</strong>を挿入（R-Y01の予約導線と接続）。</li>
-        <li><strong>効果：中 ／ 工数：小 ／ 優先度：🟢</strong></li>
-      </ul>
-    </div>
-
-    <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">推奨着手順</p>
-    <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1 mb-3">
-      <li><strong>R-Y01（追従CTA）</strong> … 効果大・工数小〜中。CVへ直結。WEB問診URLはプレースホルダ先行。</li>
-      <li><strong>R-Y02（title/meta）</strong> … 最小工数。来院意図ページから。</li>
-      <li><strong>R-Y04（症例集の構造・テンプレ先行）</strong> … 期日超過の解消。内容受領前でも基盤は作れる。</li>
-      <li><strong>R-Y03（ローカルSEO・構造化データ）</strong> … 中期。</li>
-      <li><strong>R-Y05（記事CTA）</strong> … R-Y01完了後に共通ブロックとして。</li>
-    </ol>
-
-    <p class="text-sm font-semibold text-gray-800 mt-3 mb-1">対応記録（from-president.md）</p>
-    <p class="text-sm text-gray-700">本サイクル時点で <span class="font-mono">data/hp-loop/yoshida/from-president.md</span> に新規指示なし（初回）。Q-Y01〜Y03 への回答を待つ。</p>
   </div>
 
   <!-- ===== 使い方（簡潔・常設） ===== -->
