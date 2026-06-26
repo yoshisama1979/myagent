@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — ヨーコハワイ</h1>
   <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。提案は実装エージェント（<span class="font-mono">yokohawaii-dev</span>）がそのまま着手できる粒度で書きます。</p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-26（<strong>Cycle 002＝変化検知（軽）</strong>。GSC/GA4とも蓄積待ち継続・社長回答待ち・実装未着手のため<strong>変化なし</strong>。Cycle 001 の5提案・3質問を繰り越し、回答が出るまで新規提案は意図的に保留）／対象サイト：<a href="https://www.yoko-hawaii.com/" class="text-blue-600 hover:underline font-mono">www.yoko-hawaii.com</a>（到達200）／ゴール：<strong>アクセス＋問い合わせ（予約）増</strong></p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-06-26（<strong>Cycle 003＝全ページ深掘り</strong>。トップ以外の全ページ（物件・問い合わせ・予約方法・特徴・ギャラリー・ブログ）を実査し、データ不要の<strong>新規改善を7件追加（R-K06〜R-K12）</strong>。前回提案の着手を待たず分析を継続）／対象サイト：<a href="https://www.yoko-hawaii.com/" class="text-blue-600 hover:underline font-mono">www.yoko-hawaii.com</a>（到達200・WordPress）／ゴール：<strong>アクセス＋問い合わせ（予約）増</strong></p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -71,13 +71,55 @@
         <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K03</td><td class="py-1 pr-2">OGP/Twitterカード・canonical 全ページ付与＋JSON-LD（宿泊施設）</td><td class="py-1 pr-2">技術/SNS</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手</td></tr>
         <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K04</td><td class="py-1 pr-2">h1整理（4個→主題1）＋viewportズーム禁止解除＋alt欠落4補完</td><td class="py-1 pr-2">構造/A11y</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手</td></tr>
         <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K05</td><td class="py-1 pr-2">各コンドミニアムに「料金目安・最低宿泊・定員/設備・予約の流れ・FAQ」を整理（固有数値はQ-K03で確認）</td><td class="py-1 pr-2">コンテンツ</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手</td></tr>
+        <tr class="border-b border-amber-200 bg-red-50"><td class="py-1 pr-2 font-mono">R-K06</td><td class="py-1 pr-2"><strong>【重大】主力の物件ページ <code>/condominium/</code> の title・meta が「写真ギャラリー」のまま（/gallery/ と完全重複＝コピペ事故）</strong>。最重要CVページが検索で「コンドミニアム」を取りに行けていない</td><td class="py-1 pr-2">技術/SEO</td><td class="py-1 pr-2">🔴最優先</td><td class="py-1 pr-2">未着手（新規）</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K07</td><td class="py-1 pr-2">5室が1ページ（アンカー <code>#anc_*</code>・h1=7）に同居→<strong>各室を独立ページに分割</strong>（物件名×エリア×ベッド数で個別title/meta/JSON-LD・料金/定員/最低宿泊/設備/予約/地図/FAQ）。＝ページを増やす施策</td><td class="py-1 pr-2">コンテンツ/SEO</td><td class="py-1 pr-2">🔴最優先</td><td class="py-1 pr-2">未着手（新規）</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K08</td><td class="py-1 pr-2">/gallery/ の画像39枚中<strong>37枚が alt 空</strong>。画像が主役のページなのに画像SEO・A11yを取りこぼし</td><td class="py-1 pr-2">構造/A11y</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手（新規）</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K09</td><td class="py-1 pr-2">/contact/ に meta description 無し＋<strong>ページ内に電話/メールのクリック導線が無い</strong>（フォームのみ）。意図が最高の場所で即アクションを逃す</td><td class="py-1 pr-2">CV/導線</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手（新規）</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K10</td><td class="py-1 pr-2">ブログが個人日記（「ヨーコのハワイ日記」最新=日本での話）・meta無し・更新停滞。<strong>検索意図を狙うコンテンツへ再設計</strong>（選び方／子連れ長期滞在／コンドミニアムvsホテル／自炊・周辺スーパー等）＝買い手意図の流入源に</td><td class="py-1 pr-2">コンテンツ/SEO</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手（新規）</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K11</td><td class="py-1 pr-2">/features/「選ばれる8つのポイント」が <strong>h1=10 で構造崩れ</strong>＋FVから導線が弱い。USPの根拠が詰まった良コンテンツが埋もれている→h1整理＋トップから誘導</td><td class="py-1 pr-2">構造/導線</td><td class="py-1 pr-2">🟡推奨</td><td class="py-1 pr-2">未着手（新規）</td></tr>
+        <tr class="border-b border-amber-200"><td class="py-1 pr-2 font-mono">R-K12</td><td class="py-1 pr-2"><strong>不足ページの新設</strong>：FAQ（予約・支払い・キャンセル・現地）／エリア・周辺ガイド／お客様の声・実績（信頼要素・固有数値は要確認）／ホテルとの違い。競合（LeaLea/キャプテンクック等）は軒並み保有</td><td class="py-1 pr-2">コンテンツ</td><td class="py-1 pr-2">🟢余裕</td><td class="py-1 pr-2">未着手（新規）</td></tr>
       </tbody>
     </table>
-    <p class="text-xs text-amber-700 mt-3">※ <code>yokohawaii-dev</code> 未登録のため最新レポートの mailbox 配信は保留（配信先未登録）。Q-K02 確定後に配信開始。</p>
+    <p class="text-xs text-amber-700 mt-3">※ <code>yokohawaii-dev</code> は mailbox トークン登録済（送受信の許可リストも疎通可）。<strong>最新レポートが未配信なのは、初回(Cycle 001)を未登録時に保留したまま登録後も流していないため</strong>（保留分の後追い配信ステップがループに無い＝改善対象）。Cycle 003 を配信して解消する。</p>
   </div>
 
   <!-- ===== サイクルログ ===== -->
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">サイクルログ</h2>
+
+  <!-- Cycle 003 -->
+  <div class="border border-cyan-400 rounded-lg p-5 mb-6 bg-cyan-50 text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 003 — 2026-06-26（全ページ深掘り：トップ以外を実査し新規提案7件）</h3>
+
+    <p class="font-semibold mt-2">なぜこのサイクルを回したか</p>
+    <p class="text-gray-700 mb-2">Cycle 002 は「前回提案が未着手・未回答だから新規提案を保留」として変化なしで終えたが、これは<strong>分析を止める理由にならない</strong>（社長指摘）。Cycle 001 はトップページ中心の診断で、<strong>下層ページ（物件・問い合わせ・予約方法・特徴・ギャラリー・ブログ）を個別に見ていなかった</strong>。GSC/GA4 が無くてもできるページ実査・競合比較を行い、データ不要の新規改善を洗い出した。</p>
+
+    <p class="font-semibold mt-3">本サイクルの確認（全ページ hp-audit ＋ 競合SERP）</p>
+    <ul class="list-disc list-inside space-y-1 text-gray-700 mb-2">
+      <li><strong>サイト構成</strong>：トップ／<code>/condominium/</code>（5室を1ページにアンカー集約）／<code>/contact/</code>／<code>/howto/</code>（予約〜空港到着ガイド・良コンテンツ）／<code>/features/</code>（選ばれる8つの理由）／<code>/gallery/</code>／<code>/optional/</code>（現状ほぼ「PCレンタル」のみ）／<code>/blog/</code>（個人日記）。CMS=WordPress。</li>
+      <li><strong>🔴重大な発見</strong>：主力の <code>/condominium/</code> の title が「ハワイの写真ギャラリー…」、meta も「写真ギャラリー…」で <code>/gallery/</code> と<strong>完全に同一（コピペ事故）</strong>。最重要のCVページが検索上「ギャラリー」になっており「ワイキキ コンドミニアム レンタル」等で取りに行けていない（＝R-K06）。</li>
+      <li><strong>物件情報</strong>：5室が1ページ同居（h1=7）。本文に「$1,100で滞在」「1ベッドルーム」等の断片はあるが、<strong>各室の料金目安・定員・最低宿泊・予約の流れが体系化されていない</strong>。競合（LeaLea by HIS／キャプテンクック等）は物件個別ページが標準（＝R-K07）。</li>
+      <li><strong>技術（全ページ共通）</strong>：canonical 0・OGP 0・Twitter 0・JSON-LD 0 は<strong>全ページで確認</strong>（Cycle 001 のトップ所見がサイト全体に及ぶことを裏取り）。旧式の meta keywords が残存。</li>
+      <li><strong>個別</strong>：/gallery/ は画像39枚中37枚 alt 空（R-K08）。/contact/ は meta 無し＋ページ内に tel/mailto リンク無し（R-K09）。/features/ は h1=10 で構造崩れ（R-K11）。ブログは「ヨーコのハワイ日記」＝検索意図を狙わない個人日記・meta 無し（R-K10）。</li>
+      <li><strong>競合の論点</strong>（"ワイキキ コンドミニアム レンタル" SERP上位）：LeaLeaバケーションレンタル（HIS）・キャプテンクック・Leihawaii 等。いずれも<strong>物件個別ページ・FAQ・エリア/特集記事</strong>を厚く持つ。ヨーコハワイの強み（オーナー直接=仲介手数料0円）は差別化十分だが、情報設計で負けている。</li>
+    </ul>
+
+    <p class="font-semibold mt-3">新規の改善提案（R-K06〜R-K12・すべてデータ不要で着手可能）</p>
+    <div class="space-y-2 text-gray-700 mb-2">
+      <p><strong>R-K06 🔴【最優先・重大】<code>/condominium/</code> の title・meta を物件ページ本来の内容に修正（工数小・効果高）</strong><br>観察：title「ハワイの写真ギャラリー…」・meta「写真ギャラリー…」が /gallery/ と完全重複。なぜ問題か：最重要CVページが検索で「ギャラリー」扱い＝「コンドミニアム/ワイキキ レンタル」の流入を丸ごと逃す＋重複でカニバリ。改善案：例 title「ワイキキのコンドミニアム5室をオーナー直接レンタル｜仲介手数料0円｜ヨーコハワイ」、meta は各室の特徴と予約導線。<strong>これは Cycle 001 がトップしか見ず見落としていた</strong>。</p>
+      <p><strong>R-K07 🔴 5室を独立ページに分割（コンテンツ/SEO・工数中〜大）</strong><br>観察：5室が <code>/condominium/</code> にアンカーで同居（h1=7）。なぜ問題か：物件名・部屋タイプ別の検索を取れず、per-property の meta・JSON-LD(LodgingBusiness) も打てない。改善案：各室に専用ページ（物件名×ワイキキ×ベッド数で。料金目安・定員・最低宿泊・設備・写真・地図・予約の流れ・FAQ）。＝社長の「ページを増やす」に直結。固有数値は Q-K03 で確認。</p>
+      <p><strong>R-K08 🟡 /gallery/ の alt 補完（構造/A11y・工数小）</strong><br>観察：39枚中37枚 alt 空。改善案：各画像に「物件名・部屋・眺望」を表す alt。画像検索流入とA11yを回収。</p>
+      <p><strong>R-K09 🟡 /contact/ の導線強化（CV/導線・工数小）</strong><br>観察：meta 無し＋ページ内に電話/メールのクリック導線が無い（フォームのみ）。改善案：固有 meta ＋ フォーム横に TEL（808-282-0224）・メール・LINE のワンタップ導線。</p>
+      <p><strong>R-K10 🟡 ブログを検索意図ベースに再設計（コンテンツ/SEO・工数中／blog-loop 連携）</strong><br>観察：「ヨーコのハワイ日記」＝個人日記・meta 無し・更新停滞。改善案：買い手意図テーマ（コンドミニアムの選び方／子連れ長期滞在／コンドミニアムvsホテル／自炊・周辺スーパー／ワイキキの過ごし方）に転換。<strong>yokohawaii を blog-loop（ブログ専用ループ）の対象に追加する提案</strong>。</p>
+      <p><strong>R-K11 🟡 /features/ の構造整理＋トップからの誘導（構造/導線・工数小）</strong><br>観察：「選ばれる8つのポイント」が h1=10。USPの根拠が詰まった良コンテンツが埋もれている。改善案：h1を主題1つに、各ポイントは h2。トップFVから「選ばれる理由」へ誘導。</p>
+      <p><strong>R-K12 🟢 不足ページの新設（コンテンツ・工数中）</strong><br>FAQ（予約・支払い・キャンセル・現地サポート）／エリア・周辺ガイド／お客様の声・実績（リピート率等＝信頼要素・固有数値は社長/クライアント確認）／「コンドミニアムとホテルの違い」。競合が軒並み持つ層。</p>
+    </div>
+
+    <p class="font-semibold mt-3">次の一手（社長へ）</p>
+    <p class="text-gray-700 mb-2">最優先は <strong>R-K06（物件ページの title/meta コピペ事故の修正）</strong>＝工数小で即効。次に R-K01・R-K02（前回 Quick win）と R-K07（物件個別ページ化）。<strong>「改善点が乏しい」のではなく、深掘りすれば毎サイクル新規に出せる</strong>ことが今回の実証です。固有数値が要る R-K05/K07/K12 は Q-K03 の回答待ち。</p>
+
+    <p class="font-semibold mt-3">対応記録</p>
+    <p class="text-gray-700">社長フィードバック「回答待ちでも改善余地は多いはず」を反映し、前回提案の消化を待たず<strong>下層ページの深掘り分析</strong>を実施（観点：ページ個別実査＋競合比較）。ループの「回答待ちで分析停止」挙動は <code>.claude/rules/hp-loop.md</code> の停止条件を見直し中（分析は継続・停止は実装引き渡しのみ）。</p>
+  </div>
 
   <!-- Cycle 002 -->
   <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
