@@ -16,14 +16,15 @@
 複数チャンネル（2026-06-24）:
 - 既定チャンネル SLACK_CHANNEL_ID … トップレベル投稿は会話担当(hanasaka-main)へ。
 - メモ専用チャンネル SLACK_MEMO_CHANNEL_ID（任意）… トップレベル投稿は memo へ（日常メモ窓口）。
+- 経営パートナー専用チャンネル SLACK_PARTNER_CHANNEL_ID（任意）… トップレベル投稿は partner へ（経営情報窓口）。
   未設定ならメモ窓口は無効（従来どおり1チャンネル運用）。last-seen はチャンネル別キーで保持。
   追跡スレッドは threads.json に channel を記録し、返信走査を正しいチャンネルで行う。
 
 使い方:
   slack-poll.py fetch            # 全チャンネルの新着(トップ+スレッド返信)→mailbox→last-seen更新（既定）
   slack-poll.py fetch --init     # 全チャンネルの last-seenを今にして終了（過去は読まない）
-  slack-poll.py post  [--as <agent>] [--channel main|memo|<C...>] "本文"   # トップ投稿（戻り値thread_ts）
-  slack-poll.py reply <thread_ts> [--as <agent>] [--channel main|memo|<C...>] "本文"  # スレッドへ返信
+  slack-poll.py post  [--as <agent>] [--channel main|memo|partner|<C...>] "本文"   # トップ投稿（戻り値thread_ts）
+  slack-poll.py reply <thread_ts> [--as <agent>] [--channel main|memo|partner|<C...>] "本文"  # スレッドへ返信
   slack-poll.py done  <msg_id>      # 処理済みを cur/ へ（new/ または memo-stock/ から探す）
   slack-poll.py stock <msg_id>      # triage済みメモを new/ → memo-stock/（夜の /memo-intake がまとめて処理）
   slack-poll.py untrack <thread_ts> # 解決した確認スレッドを threads.json から外す（自己掃除）
@@ -40,7 +41,7 @@
 - 夜：daily の /memo-intake が memo-stock/ をまとめて notes.html へ清書し、done で cur/ へ。
   解決した確認スレッドは untrack で外す（threads.json を有界に保つ）。
 
-必要な .env: SLACK_BOT_TOKEN(xoxb-) / SLACK_CHANNEL_ID(C...)（メモ窓口を使うなら SLACK_MEMO_CHANNEL_ID も）
+必要な .env: SLACK_BOT_TOKEN(xoxb-) / SLACK_CHANNEL_ID(C...)（メモ窓口は SLACK_MEMO_CHANNEL_ID・経営パートナー窓口は SLACK_PARTNER_CHANNEL_ID も）
 読み取りは groups:history（非公開）/ channels:history（公開）、投稿は chat:write。
 Bot は対象チャンネル（#memo 含む）に招待しておくこと。
 """
@@ -70,6 +71,9 @@ DEFAULT_AGENT = "hanasaka-main"
 # メモ専用チャンネル（SLACK_MEMO_CHANNEL_ID）のトップレベル投稿の受け先。
 # 社長が #memo に投げた日常メモを /memo-intake が notes.html へ追記する。
 MEMO_AGENT = "memo"
+# 経営パートナー専用チャンネル（SLACK_PARTNER_CHANNEL_ID）のトップレベル投稿の受け先。
+# 社長が #partner（経営パートナーch）に渡した経営情報を /partner が取り込む（毎朝の朝礼もこのchへ）。
+PARTNER_AGENT = "partner"
 MAX_PER_POLL = 50
 
 
@@ -122,6 +126,14 @@ def channels():
     memo = get_env("SLACK_MEMO_CHANNEL_ID")
     if memo and memo not in seen:
         out.append((memo, MEMO_AGENT, False))
+        seen.add(memo)
+    # 経営パートナー専用チャンネル（任意）→partner。memo と同じく fetch では追跡しない（False）：
+    # トップ投稿は to: partner として ingest し、会話を続けたいスレッドだけ partner が reply 経由で
+    # 追跡する（threads.json を肥大させない）。未設定なら従来どおり対象に含めない。
+    partner = get_env("SLACK_PARTNER_CHANNEL_ID")
+    if partner and partner not in seen:
+        out.append((partner, PARTNER_AGENT, False))
+        seen.add(partner)
     return out
 
 
@@ -133,6 +145,9 @@ def _resolve_channel(val):
         return get_env("SLACK_CHANNEL_ID")
     if val == "memo":
         return get_env("SLACK_MEMO_CHANNEL_ID")
+    if val == "partner":
+        # 経営パートナーch。未設定なら既定チャンネルへフォールバック（朝礼が宛先無しで失敗しない）。
+        return get_env("SLACK_PARTNER_CHANNEL_ID") or get_env("SLACK_CHANNEL_ID")
     return val
 
 
@@ -357,6 +372,19 @@ def _guard_memo_channel(agent, channel):
         sys.exit("ERROR: --as memo は #memo（SLACK_MEMO_CHANNEL_ID）へのみ投稿できます")
 
 
+def _guard_partner_channel(agent, channel):
+    """partner エージェントは #partner（SLACK_PARTNER_CHANNEL_ID）以外へ投稿させない。
+
+    未設定なら既定チャンネル(SLACK_CHANNEL_ID)のみ許可。経営情報が他チャンネルや生ID指定で
+    暴発するのをコード側で物理的に防ぐ（memo と対称・automation.md「外部送信暴発を潰す」）。
+    """
+    if agent != PARTNER_AGENT:
+        return
+    allowed = get_env("SLACK_PARTNER_CHANNEL_ID") or get_env("SLACK_CHANNEL_ID")
+    if not allowed or channel != allowed:
+        sys.exit("ERROR: --as partner は #partner（SLACK_PARTNER_CHANNEL_ID／未設定時は既定ch）へのみ投稿できます")
+
+
 def cmd_post(args):
     as_agent, args = _pop_as(args)
     chan_arg, args = _pop_channel(args)
@@ -364,6 +392,7 @@ def cmd_post(args):
     if not channel:
         sys.exit("ERROR: 投稿先チャンネルが特定できません（--channel か .env を確認）")
     _guard_memo_channel(as_agent or DEFAULT_AGENT, channel)
+    _guard_partner_channel(as_agent or DEFAULT_AGENT, channel)
     text = _body_from(args).strip()
     if not text:
         sys.exit("ERROR: 投稿本文が空です")
@@ -390,6 +419,7 @@ def cmd_reply(args):
         sys.exit("ERROR: 返信先チャンネルが特定できません（--channel か .env を確認）")
     owner = as_agent or agent_for_thread(thread_ts)
     _guard_memo_channel(owner, channel)
+    _guard_partner_channel(owner, channel)
     # 先に投稿し、成功してから追跡登録する（投稿失敗時に未質問のスレッドを threads.json に残さない）。
     r = client().chat_postMessage(channel=channel, text=text, thread_ts=thread_ts)
     # 既存スレッドは持ち主/チャンネルを保持（register_thread が setdefault）。未知スレッドは owner/channel で主張

@@ -41,6 +41,10 @@ def is_gated(rel: str) -> bool:
     for pre in (".claude/rules/", "rules/", ".claude/commands/"):
         if rel.startswith(pre):
             return True
+    # 各モードの from-president.md は社長の領域（責務分離）。無人で編集させない＝
+    # 分析/伴走ループが社長の指示・回答チャネルを書き換えるのを物理的に防ぐ。
+    if rel == "from-president.md" or rel.endswith("/from-president.md"):
+        return True
     return False
 
 
@@ -74,7 +78,7 @@ def main() -> int:
     if is_gated(rel):
         sys.stderr.write(
             f"⛔ 無人実行ではゲート対象ファイル（{rel}）を直接編集できません。\n"
-            "これは社長承認が必要な領域です（SYSTEM.md・CLAUDE.md・ルール/コマンド/設定）。\n"
+            "これは社長承認が必要な領域です（SYSTEM.md・CLAUDE.md・ルール/コマンド/設定・各モードの from-president.md）。\n"
             "編集する代わりに、変更内容を『更新案（具体的な差分）』として掲示板 O-NNN と\n"
             "Slack 日報に出し、社長の承認後に有人セッションで反映してください。\n"
             "（再発防止フック guard-unattended-edits.py による拒否）\n"

@@ -5,12 +5,22 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/../.env"
 
-# .env読み込み
+# .env読み込み（source せず、必要キーだけ安全に取り出す＝他行のクオート漏れ/スペースで壊れない）
 if [ ! -f "$ENV_FILE" ]; then
   echo '{"success": false, "message": ".envファイルが見つかりません"}' >&2
   exit 1
 fi
-source "$ENV_FILE"
+read_env() {  # $1=KEY を .env から取り出し、前後の引用符と末尾CRを除去（最初の一致のみ）
+  local v
+  v=$(grep -E "^[[:space:]]*$1=" "$ENV_FILE" 2>/dev/null | head -n1 | sed -E "s/^[[:space:]]*$1=//")
+  v="${v%$'\r'}"
+  v="${v#\"}"; v="${v%\"}"
+  v="${v#\'}"; v="${v%\'}"
+  printf '%s' "$v"
+}
+HANA_TOOLS_API_TOKEN="$(read_env HANA_TOOLS_API_TOKEN)"
+HANA_TOOLS_BASE_URL="$(read_env HANA_TOOLS_BASE_URL)"
+HANA_TOOLS_DEFAULT_USER_ID="$(read_env HANA_TOOLS_DEFAULT_USER_ID)"
 
 if [ -z "$HANA_TOOLS_API_TOKEN" ] || [ "$HANA_TOOLS_API_TOKEN" = "your-token-here" ]; then
   echo '{"success": false, "message": ".envにAPIトークンを設定してください"}' >&2
@@ -222,6 +232,16 @@ update_project_note() {
 
 command="$1"
 shift
+
+# 無人実行では書き込み系サブコマンドを物理的に拒否（automation.md：外部送信・共有書込・本番作用は
+# 社長合意の上で有人実行する）。ルールの規約だけに頼らず、無人 claude -p からの暴発を塞ぐ。
+if [ "${MYAGENT_UNATTENDED:-}" = "1" ]; then
+  case "$command" in
+    create-todo|update-todo|update-note|chatwork)
+      echo "{\"success\": false, \"message\": \"無人実行では書き込み系コマンド($command)は実行できません。実行案を有人セッション/社長合意に回してください。\"}" >&2
+      exit 2 ;;
+  esac
+fi
 
 case "$command" in
   clients)      get_clients ;;

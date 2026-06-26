@@ -22,6 +22,7 @@
 # 使い方（cron）:
 #   */10 * * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh                # 10分ごと：受信+対応
 #   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer        # 1日1回：overseer 精密診断
+#   0 7   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily partner         # 毎朝7:00：経営パートナーの朝礼ブリーフィング（手動テスト＋合意後に有効化）
 #   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別）
 #   0 5   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom  # ブログ診断（B/T提案）
 #   30 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom   # ブログ新規記事→WP下書き
@@ -169,6 +170,9 @@ dispatch "chat"     "/chat"     "hanasaka-main"
 [ "$MODE" = "normal" ] && dispatch "memo-triage" "/memo-triage" "memo"
 [ "$MODE" = "daily" ]  && dispatch "memo"        "/memo-intake" "memo"
 dispatch "overseer" "/overseer" "overseer"
+# 経営パートナー（右腕）：社長が #partner に渡した情報（mailbox to: partner）を反応tickで取り込み
+# その用件にスレッド返信する。毎朝の「朝礼ブリーフィング」は daily partner（07:00）で投稿する。
+dispatch "partner"  "/partner"  "partner"
 # HP分析ループはサイト別に独立（mailbox to: hp-loop-<site> 新着 or daily hp-loop-<site> 強制で起動）
 dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
 dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
