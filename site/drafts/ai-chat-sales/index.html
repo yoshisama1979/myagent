@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIチャット提案候補マトリクス（ドラフト） | 株式会社はなさか</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+<div class="max-w-5xl mx-auto px-4 py-8">
+
+  <nav class="text-sm text-gray-500 mb-6">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a> &gt;
+    <a href="../" class="text-blue-600 hover:underline">drafts</a> &gt;
+    AIチャット提案候補マトリクス
+  </nav>
+
+  <h1 class="text-2xl font-bold mb-2">AIチャット提案候補マトリクス（ドラフト）</h1>
+  <p class="text-sm text-gray-500 mb-6">作成: 2026-06-13（同日更新: 導入済み3社を反映）｜ データ源: hana-tools API（クライアント103社・案件150件）× 運用管理シート（有効契約48件）× 社長確認 ｜ <span class="font-semibold text-red-600">業種・適合度は名称からの推測。社長の肌感で修正する前提のたたき台</span></p>
+
+  <!-- 前提 -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-3">前提（FY2026 ストック目標より）</h2>
+    <ul class="list-disc list-inside text-sm space-y-1">
+      <li>AIチャット販売目標: <strong>7〜8件</strong>（月+20万円ストックの主力）</li>
+      <li>プラン: 月額1万円 / 月額2万円（2万円プランは実装済み・アップグレード導線は構築予定）</li>
+      <li>チャネル: <strong>既存顧客への直販が本命</strong>。代理店経由の契約は代理店に月5,000円</li>
+      <li>営業資料: ヘルプページをベースに整備中（hana-tools #143）</li>
+    </ul>
+  </div>
+
+  <!-- 評価軸 -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-3">評価軸</h2>
+    <table class="w-full text-sm">
+      <tbody>
+        <tr class="border-b"><td class="py-1 font-semibold w-32">接点の温度</td><td>🔥 運用管理契約あり（毎月接点）＞ 直接取引 ＞ 代理店経由（別動線）</td></tr>
+        <tr class="border-b"><td class="py-1 font-semibold">業種適合（推測）</td><td>サイト訪問者からの質問が多い業種ほど適合: クリニック・教室・宿泊・不動産・士業・BtoC サービス</td></tr>
+        <tr><td class="py-1 font-semibold">想定プラン</td><td>仮置き。FAQ中心=1万円 / 予約案内・多言語・高度連携=2万円</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 導入済み -->
+  <h2 class="text-xl font-bold mb-3">✅ 導入済み（2026-06-13 社長確認）</h2>
+  <div class="overflow-x-auto mb-4">
+    <table class="w-full text-sm bg-white border border-green-200 rounded-lg">
+      <thead class="bg-green-50">
+        <tr>
+          <th class="px-3 py-2 text-left">クライアント</th>
+          <th class="px-3 py-2 text-left">経路</th>
+          <th class="px-3 py-2 text-left">メモ</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr><td class="px-3 py-2 font-semibold">藤阪ガスセンター</td><td class="px-3 py-2">直接取引（運用プラン ¥50,000）</td><td class="px-3 py-2"><strong>チャット無料提供＝運用プラン（¥50,000）とセット</strong>。フック型の成功例</td></tr>
+        <tr class="bg-yellow-50"><td class="px-3 py-2 font-semibold">よしだ歯科 ★導入予定</td><td class="px-3 py-2">直接取引</td><td class="px-3 py-2">導入予定（2026-06-13 社長確認）。運用プラン加入によりチャット無料提供。クリニック型の事例第1号に</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">国民宿舎 箱根太陽山荘</td><td class="px-3 py-2">西中様経由</td><td class="px-3 py-2">宿泊業の導入事例（紹介者経由）</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">奈良県フォレスターアカデミー</td><td class="px-3 py-2">福岡様経由</td><td class="px-3 py-2">教育機関の導入事例（紹介者経由）</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">ふじや印刷株式会社</td><td class="px-3 py-2">直接取引（運用管理 ¥33,400）</td><td class="px-3 py-2">印刷業の導入事例。エンド5社を抱える＝代理店候補にもなり得る（推測）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- パイプライン -->
+  <h2 class="text-xl font-bold mb-3">🔥 動いている商談（パイプライン・2026-06-13 社長確認）</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm bg-white border border-blue-200 rounded-lg">
+      <thead class="bg-blue-50">
+        <tr>
+          <th class="px-3 py-2 text-left">相手</th>
+          <th class="px-3 py-2 text-left">ステージ</th>
+          <th class="px-3 py-2 text-left">状況</th>
+          <th class="px-3 py-2 text-left">次の一手</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr>
+          <td class="px-3 py-2 font-semibold">株式会社HEROES（東京）</td>
+          <td class="px-3 py-2"><span class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded">トライアル中</span></td>
+          <td class="px-3 py-2">興味あり・トライアル提供中。<strong>代理店としても活動見込み</strong>（エンド5社保有）</td>
+          <td class="px-3 py-2 font-semibold text-red-600">近日クロージング（最優先・ToDo #157 期日6/30）</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 font-semibold">株式会社HRAs</td>
+          <td class="px-3 py-2"><span class="bg-purple-100 text-purple-700 px-2 py-0.5 rounded">代理店候補</span></td>
+          <td class="px-3 py-2">代理店として動いてくれそう（社長確認）。LIXIL建具マニュアルAIの実績あり＝AI理解が深い。グループ（HRC・アースレイズ・マテリアル商事）への展開も</td>
+          <td class="px-3 py-2">代理店スキームの提案</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 font-semibold">株式会社VUELO</td>
+          <td class="px-3 py-2"><span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded">興味あり</span></td>
+          <td class="px-3 py-2">運用管理 ¥45,000（Vリーグチケット検索）の既存先</td>
+          <td class="px-3 py-2">提案アポ</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 font-semibold">株式会社サンヒル</td>
+          <td class="px-3 py-2"><span class="bg-purple-100 text-purple-700 px-2 py-0.5 rounded">代理店候補</span></td>
+          <td class="px-3 py-2">関係良好。<strong>トヨタ系（大阪トヨペット・カローラ大阪・滋賀トヨタ・テックス大阪）への展開が望める</strong></td>
+          <td class="px-3 py-2">代理店スキームの提案</td>
+        </tr>
+        <tr>
+          <td class="px-3 py-2 font-semibold">ユニバーサルバリュー</td>
+          <td class="px-3 py-2"><span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded">提案可能</span></td>
+          <td class="px-3 py-2">慈恵大学等の案件をくれる<strong>発注元</strong>（クライアントではないため現行APIで参照不可→会社情報API追加をToDo #158で登録済み）。多忙だが提案可能</td>
+          <td class="px-3 py-2">タイミングを見て提案</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- 相乗効果モデル -->
+  <div class="bg-green-50 border border-green-300 rounded-lg p-5 mb-4">
+    <h2 class="text-lg font-semibold mb-2">💡 収益モデルは2本立て（2026-06-13 社長確認）</h2>
+    <table class="w-full text-sm mb-2">
+      <thead><tr class="border-b border-green-200"><th class="py-1 text-left w-40">モデル</th><th class="py-1 text-left">中身</th><th class="py-1 text-left w-40">月額</th></tr></thead>
+      <tbody>
+        <tr class="border-b border-green-100"><td class="py-1 font-semibold">① 単体サブスク</td><td class="py-1">AIチャットを単品で販売</td><td class="py-1">¥10,000 / ¥20,000</td></tr>
+        <tr><td class="py-1 font-semibold">② 運用プランのフック</td><td class="py-1"><strong>チャット無料提供を入口に、HP運用プランへ誘導</strong>（藤阪ガス・よしだ歯科が実例）</td><td class="py-1 font-bold">¥50,000</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm">②は単価が①の2.5〜5倍。<strong>「チャットを売る」だけでなく「チャットで運用プランを売る」が本命筋になり得る</strong>。提案先ごとに、①で取るか②のフックにするかを使い分ける。</p>
+  </div>
+
+  <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-8 text-sm">
+    <p class="font-semibold mb-1">❓ 要確認（社長へ）</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>藤阪ガスの「無料提供」は判明（運用プラン¥50,000とセット）。<strong>太陽山荘・フォレスターアカデミー・ふじや印刷は有料？無料セット？</strong>（有料ならシートに行が見当たらない＝計上漏れの可能性）</li>
+      <li>太陽山荘・フォレスターアカデミーは紹介者経由 → 月5,000円スキームの対象？</li>
+      <li>導入済み・導入予定の各社を<strong>事例としてLP・営業資料（#143）に掲載してよいか</strong>（ガス住設・宿泊・教育・印刷・歯科＝事例の幅として強い）</li>
+    </ul>
+  </div>
+
+  <!-- Tier A -->
+  <h2 class="text-xl font-bold mb-3">Tier A — 最有力候補（直販・温度高×業種適合）</h2>
+  <p class="text-sm text-gray-500 mb-3">目標7〜8件はこの層だけでも射程。⚠️ 切り口はすべて推測ベース。（藤阪ガスは導入済みのため除外→9件）</p>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm bg-white border border-gray-200 rounded-lg">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-3 py-2 text-left">クライアント</th>
+          <th class="px-3 py-2 text-left">接点</th>
+          <th class="px-3 py-2 text-left">業種（推測）</th>
+          <th class="px-3 py-2 text-left">切り口（推測）</th>
+          <th class="px-3 py-2 text-left">想定プラン</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr><td class="px-3 py-2 font-semibold">おおひらレディスクリニック</td><td class="px-3 py-2">🔥 運用管理 ¥15,000</td><td class="px-3 py-2">産婦人科</td><td class="px-3 py-2">診療内容・予約方法・よくある質問の24時間応答。電話対応の負担軽減</td><td class="px-3 py-2">¥10,000→</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">株式会社メディコン（のぞみクリニック）</td><td class="px-3 py-2">🔥 運用管理 ¥4,000</td><td class="px-3 py-2">クリニック</td><td class="px-3 py-2">同上（クリニック横展開の型）</td><td class="px-3 py-2">¥10,000</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">S．S進学教室</td><td class="px-3 py-2">🔥 運用管理 ¥3,000</td><td class="px-3 py-2">学習塾</td><td class="px-3 py-2">入塾相談・料金・コースの質問対応。保護者は夜に調べる→24時間応答が効く</td><td class="px-3 py-2">¥10,000</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">リトルスターズ（ジンジン英語教室）</td><td class="px-3 py-2">🔥 運用管理 ¥3,000</td><td class="px-3 py-2">英語教室</td><td class="px-3 py-2">同上（教室系横展開の型）</td><td class="px-3 py-2">¥10,000</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">E&Cサポート株式会社（FunFunKids）</td><td class="px-3 py-2">🔥 運用管理 ¥30,000</td><td class="px-3 py-2">子ども向け教室・キッチン</td><td class="px-3 py-2">体験申込・対象年齢・料金の質問対応</td><td class="px-3 py-2">¥10,000→¥20,000</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">マエダ不動産株式会社</td><td class="px-3 py-2">🔥 運用管理 ¥100,000</td><td class="px-3 py-2">不動産（レジデンス）</td><td class="px-3 py-2">物件・内覧・空室の問い合わせ一次対応。月10万の保守先＝関係最深</td><td class="px-3 py-2">¥20,000</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">大場伸軌税理士事務所</td><td class="px-3 py-2">🔥 運用管理 ¥3,000</td><td class="px-3 py-2">税理士</td><td class="px-3 py-2">相談前のよくある質問（料金体系・対応範囲）応答</td><td class="px-3 py-2">¥10,000</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">門井社会保険労務士事務所</td><td class="px-3 py-2">🔥 運用管理 ¥3,000</td><td class="px-3 py-2">社労士</td><td class="px-3 py-2">同上（士業横展開の型）</td><td class="px-3 py-2">¥10,000</td></tr>
+        <tr class="bg-purple-50"><td class="px-3 py-2 font-semibold">株式会社HRAs ★代理店候補化</td><td class="px-3 py-2">🔥 運用管理 ¥141,400</td><td class="px-3 py-2">建材・DX</td><td class="px-3 py-2"><strong>代理店として活動見込み（社長確認）</strong>。LIXIL建具マニュアルAI実績あり → パイプライン参照</td><td class="px-3 py-2">¥20,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tier B -->
+  <h2 class="text-xl font-bold mb-3">Tier B — 可能性あり（直接取引だが温度・適合の確認要）</h2>
+  <div class="overflow-x-auto mb-8">
+    <table class="w-full text-sm bg-white border border-gray-200 rounded-lg">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-3 py-2 text-left">クライアント</th>
+          <th class="px-3 py-2 text-left">接点</th>
+          <th class="px-3 py-2 text-left">メモ（推測）</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr><td class="px-3 py-2">かもめクリニック / 越田クリニック / 麻布十番まなみウィメンズクリニック</td><td class="px-3 py-2">直接取引（運用管理は未確認）</td><td class="px-3 py-2">クリニック型の横展開先。<strong>よしだ歯科（導入予定）が事例になれば同じ提案書で回れる</strong></td></tr>
+        <tr class="bg-blue-50"><td class="px-3 py-2 font-semibold">学校法人慈恵大学</td><td class="px-3 py-2">ユニバーサルバリュー経由（8案件の大口）</td><td class="px-3 py-2"><strong>HPのボリュームが非常に多く目的のコンテンツを探すのが大変＝チャットの価値が高い</strong>（社長確認）。ただし大学病院＝AI導入に慎重な可能性。サイト内案内・コンテンツナビ特化の訴求で</td></tr>
+        <tr><td class="px-3 py-2">有限会社さざなみ（身元保証事業）</td><td class="px-3 py-2">直接取引</td><td class="px-3 py-2">制度の説明が複雑な事業＝チャットでの事前説明と相性良い可能性</td></tr>
+        <tr><td class="px-3 py-2">アイアール保険</td><td class="px-3 py-2">🔥 サーバー管理 ¥3,000</td><td class="px-3 py-2">保険＝質問が多い業種。サイトの問い合わせ動線次第</td></tr>
+        <tr><td class="px-3 py-2">有限会社アクア・テイラーズ</td><td class="px-3 py-2">直接取引</td><td class="px-3 py-2">BtoC（アクアリウム？）。商品・飼育の質問対応</td></tr>
+        <tr><td class="px-3 py-2">ヨーコハワイ / ベルサンテスタッフ / 株式会社ウェルカム</td><td class="px-3 py-2">直接〜運用管理</td><td class="px-3 py-2">事業内容の確認要</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tier C -->
+  <h2 class="text-xl font-bold mb-3">Tier C — 代理店経由（別動線：代理店に話を通す）</h2>
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-8 text-sm">
+    <p class="mb-3">エンド直販ではなく、<strong>代理店自身に「AIチャットを商材として持ちませんか」と話す</strong>のが筋。1社口説けばその先のクライアント群に一気に届く（月5,000円のインセンティブは設計済み）。</p>
+    <table class="w-full">
+      <thead class="bg-gray-100">
+        <tr><th class="px-3 py-2 text-left">代理店</th><th class="px-3 py-2 text-left">抱えるエンド（当社制作分）</th><th class="px-3 py-2 text-left">展開イメージ（推測）</th></tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <tr class="bg-purple-50"><td class="px-3 py-2 font-semibold">株式会社サンヒル ★商談中</td><td class="px-3 py-2">大阪トヨペット・カローラ大阪・滋賀トヨタ・トヨタテックス大阪 ほか（9案件超）</td><td class="px-3 py-2">関係良好（社長確認）。来店予約・車検・点検の質問対応はチャット適合が高い → パイプライン参照</td></tr>
+        <tr class="bg-purple-50"><td class="px-3 py-2 font-semibold">株式会社HEROES ★トライアル中</td><td class="px-3 py-2">ゼルネットワーク・コア・ジュノン・AUN・アビリティ（5社）</td><td class="px-3 py-2">自社導入のトライアル中＋代理店化の見込み → パイプライン参照</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">株式会社未来舎</td><td class="px-3 py-2">中小企業大学校・FPS・ベタープレイス・三ツ屋 ほか（6社）</td><td class="px-3 py-2">コーポレートサイト群への一括提案</td></tr>
+        <tr class="bg-green-50"><td class="px-3 py-2 font-semibold">ふじや印刷株式会社 ★自社導入済み</td><td class="px-3 py-2">創拓・シード・みずの・和や会（5社）＋自社</td><td class="px-3 py-2">自社で使っている＝エンドに勧めやすい。代理店化の打診候補（推測）</td></tr>
+        <tr><td class="px-3 py-2 font-semibold">株式会社ドライブ</td><td class="px-3 py-2">エマ美容室・小磯診療所</td><td class="px-3 py-2">美容室・クリニックはチャット適合業種</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 数字の試算 -->
+  <div class="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-3">📊 目標との照合</h2>
+    <ul class="list-disc list-inside text-sm space-y-1">
+      <li>導入済み4社（業種: ガス住設・宿泊・教育・印刷）＝<strong>事例として営業資料・LPの核になる資産</strong></li>
+      <li>パイプライン5件（HEROES・HRAs・VUELO・サンヒル・ユニバーサルバリュー）＝<strong>目標7〜8件の過半が既に商談化</strong></li>
+      <li>代理店候補が3本に（サンヒル=トヨタ系9案件・HEROES=5社・HRAs=グループ3社）。ふじや印刷（自社導入済み・エンド5社）も打診候補</li>
+      <li>残りを Tier A 9件から積めば、1万円×5 + 2万円×2 = <strong>月+¥90,000</strong> は現実的</li>
+      <li>運用管理 ¥30,000×4〜5件と合わせて月+20万目標の達成ライン</li>
+      <li><strong>フック型（モデル②）が決まれば1件¥50,000</strong>＝チャット2.5〜5件ぶん。藤阪ガス・よしだ歯科に続く3件目が出れば目標達成が大きく近づく</li>
+      <li>サンヒル（トヨタ系）・HEROES（5社）の代理店化が決まれば大きな上振れ要因。LPは新規向けの受け皿</li>
+    </ul>
+  </div>
+
+  <!-- 次のアクション -->
+  <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-5">
+    <h2 class="text-lg font-semibold mb-3">✋ 社長確認ポイント</h2>
+    <ol class="list-decimal list-inside text-sm space-y-1">
+      <li>導入済み3社のプラン・月額・シート記載状況（上記「要確認」）</li>
+      <li>Tier A の9件、肌感と合っているか（外す先・足す先）</li>
+      <li>クリニック系（Tier A 2件 + Tier B 4件）を「型」として最初に攻めるか</li>
+      <li>HRAs は特別扱い（AI実績あり）で最初の1件にするか</li>
+      <li>代理店への商材提案（Tier C）はいつ動くか（資料 #143 完成後？）</li>
+    </ol>
+  </div>
+
+  <p class="text-xs text-gray-400 mt-8">このページは社内検討用ドラフト。クライアント名・金額を含むため外部共有不可。</p>
+</div>
+</body>
+</html>

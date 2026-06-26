@@ -691,6 +691,33 @@ Claude Code が、その修正事項をもとに修正を実装</pre>
 
   <p class="text-sm text-gray-500">※ 「Hana ツール — AIチャット履歴がウィンドウサイズ変更で消える不具合」は <a href="clients/hanasaka/projects/hana-tool/backlog.html" class="text-blue-600 hover:underline">HANAツール backlog.html</a> に転記済み(2026-05-08)。</p>
 
+  <h2 class="text-2xl font-bold mb-4 mt-10">2026-06-24</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>HANAチャット：会話の回答スピードをもっと上げたい — 最適化が必要かを検討（実装の検討は Main モードへ）</li>
+    <li>今昔写語：古写真登録時に「第三者への貸し出し可否」をチェックさせ、その可否一覧を管理者が見られるようにしたい（機能要望。実装の検討は Main モードへ）</li>
+    <li>エージェントに「振り返りと蒸留」をさせる仕組みを検討
+      <ul class="list-disc list-inside ml-5 mt-1 space-y-1">
+        <li>きっかけ：YouTube で、1日の終わりにその日の会話で起きた問題を今後再発しないよう改善し、重要なことを記録する＝自己改善のための仕組みが語られていた</li>
+        <li>効果が高いのは「C」か（原文：「効果が高いのはC？」＝日中 triage が提示した選択肢のCを指すと思われる。Cが何を指すかは要確認）</li>
+      </ul>
+    </li>
+  </ul>
+  <!-- memo-ids: M-20260624T120222-president-461609 M-20260624T131832-president-368609 M-20260624T141632-president-248419 M-20260624T142135-president-818509 -->
+
+  <h2 class="text-2xl font-bold mb-4 mt-10">2026-06-25</h2>
+  <ul class="list-disc list-inside space-y-1 text-sm">
+    <li>「振り返りと蒸留」の仕組み（2026-06-24 メモの続き）— 前提が確定
+      <ul class="list-disc list-inside ml-5 mt-1 space-y-1">
+        <li>対象（確認済み：A＝全モード共通の仕組み）</li>
+        <li>狙い（確認済み：C＝両方）＝①既存の自己改善（skill-kaizen の K-NNN 追記）の強化 と、②会話で出た結論をメモリ等の置き場へ蒸留する新しい仕組み の両方</li>
+        <li>※ 前日メモの「効果が高いのは C？」の C は、上記②狙いの選択肢 C（＝両方）を指していた（確認済み）</li>
+      </ul>
+    </li>
+    <li>【気づき・要改善】セッションをまたぐ文脈の引き継ぎ：エージェントが最新メッセージしか読まないため、セッションが変わると過去のやり取りの文脈が伝わりにくい。過去のやり取りも読んだ上で回答する仕組みへ改善したい（実装の検討は Main モードへ）</li>
+    <li>【方針の明確化】トークン節約は主目的ではない — 正確に回答するために最適なアクションを優先する。メモの2層化（ストックする工程とまとめる工程を分ける）の狙いは、一行の情報をまとめるために全体のまとめ作業が毎回回る冗長さを避けること。トークン節約はその副次的効果にすぎない</li>
+  </ul>
+  <!-- memo-ids: M-20260624T232030-president-745349 M-20260625T073730-president-167329 M-20260625T074950-president-367079 M-20260625T081019-president-301459 -->
+
 </div>
 </body>
 </html>
