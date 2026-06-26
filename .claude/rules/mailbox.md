@@ -82,7 +82,7 @@
 | `yoshida-dev` | よしだ歯科サイト実装エージェント | 拠点PC |
 | `web-hanasaka` | はなさか自社サイト（y-com.info）実装エージェント。hp-loop の提案を実装し、報告・質問を hp-loop へ返す | 拠点PC |
 | `hanasaka-main` | はなさか本体の業務エージェント＝**社長Slackの既定受け先**（`bin/slack-poll.py` の `DEFAULT_AGENT`）。新規トップレベル投稿＝社長との会話を `/chat` で受ける | 拠点PC / VPS |
-| `memo` | 日常メモ取り込み（**2層**）。社長が Slack **#memo（`SLACK_MEMO_CHANNEL_ID`）** に投げたトップ投稿を `slack-poll.py fetch` が `to: memo` で投函→**日中は反応tickの `/memo-triage`** が軽く点検し曖昧点だけ #memo の当該メモのスレッドへ確認、点検済みを `data/mailbox/memo-stock/` へ退避→**夜バッチ `daily memo` の `/memo-intake`** が memo-stock の当日分をまとめて `site/notes.html` へ追記し #memo に要約1本。確認した曖昧メモだけ threads.json に追跡（解決後 `untrack`＝有界）。**Slack 投函＋filesystem 読み＝HTTP API 不経由なのでトークン不要**（`$known_agents` 検証の対象外） | VPS |
+| `memo` | 日常メモ取り込み（**2層**）。社長が Slack **#memo（`SLACK_MEMO_CHANNEL_ID`）** に投げたトップ投稿を `slack-poll.py fetch` が `to: memo` で投函→**日中は反応tickの `/memo-triage`** が**各メモに会話返信**（壁打ち感・曖昧なら同返信で確認）し、点検済みを `data/mailbox/memo-stock/` へ退避→**夜バッチ `daily memo` の `/memo-intake`** が memo-stock の当日分をまとめて `site/notes.html` へ追記し #memo に要約1本。triage は会話のため**返信した全メモのスレッドを日中は追跡**し、夜の intake が**当日メモスレッドをまとめて `untrack`**（threads.json は1日単位で有界・毎晩リセット／未解決は要約スレッドへ繰り越す）。**Slack 投函＋filesystem 読み＝HTTP API 不経由なのでトークン不要**（`$known_agents` 検証の対象外） | VPS |
 
 ---
 
