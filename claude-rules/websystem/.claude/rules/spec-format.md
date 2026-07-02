@@ -9,6 +9,7 @@
   - `documents/specs/admin/` — 運営管理者画面
   - `documents/specs/user/` — 一般ユーザー画面
   - 横断的な仕様（用語集・共通機能など）が必要になった場合は `documents/specs/common/` を作成
+- 見積もり・提案書は `documents/specs/proposals/` 配下（`estimation.md` 参照）
 - ファイル名は **kebab-case の英語**（例：`camera-link.html`、`order-history.html`）
 - 日本語・全角記号・スペースを含めない（リンク張り・URL に乗せやすくするため）
 

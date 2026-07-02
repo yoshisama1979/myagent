@@ -1,5 +1,5 @@
 `.claude/settings.local.json` の `permissions.allow` リストを整理してください。
-このプロジェクトは **Windows + XAMPP** 環境のウェブサイト制作プロジェクト。
+プロジェクトルート・OS・環境は `project-config.md` を参照すること。
 
 ## 手順
 
@@ -12,12 +12,11 @@
 
 ## 汎用パターン(これらは維持・推奨)
 
-ウェブサイト制作で典型的に必要になるパターン:
+ウェブサイト制作で典型的に必要になるパターン（`<プロジェクトルート>` は project-config.md の値に読み替える）:
 
 ```jsonc
 // ファイルアクセス(プロジェクト配下)
-"Read(c:/xampp/htdocs/**)"
-"Read(C:/xampp/htdocs/**)"
+"Read(<プロジェクトルート>/**)"
 
 // git 系
 "Bash(git status:*)"
@@ -27,11 +26,11 @@
 "Bash(git commit:*)"
 "Bash(git show:*)"
 
-// ディレクトリ・ファイル確認
+// ディレクトリ・ファイル確認(Unix系の場合)
 "Bash(ls:*)"
-"Bash(dir:*)"
 
-// PowerShell(Windows 標準)
+// ディレクトリ・ファイル確認 / PowerShell(Windows 環境の場合)
+"Bash(dir:*)"
 "PowerShell(Get-ChildItem:*)"
 "PowerShell(Get-Content:*)"
 
@@ -42,11 +41,11 @@
 
 ## 含めてはいけないもの(Don't)
 
-このプロジェクトでは AI 側で実行しない方針のもの:
+本テンプレートの既定方針として AI 側で実行しないもの（プロジェクトで異なる場合は project-config.md に明記）:
 
 - ❌ `Bash(sass:*)` `Bash(sass.bat:*)` — AIが手動でコンパイルを叩かないため不要。コンパイルは自動環境ならハーネスのフック（Bash権限ではなくフックが起動）・無ければ開発者が実施（`scss-autocompile.md`）
-- ❌ `Bash(npm:*)` `Bash(node:*)` — このプロジェクトでは Node.js を使わない
-- ❌ `Bash(php:*)` — XAMPP の Apache 経由で動作確認するため AI 実行不要
+- ❌ `Bash(npm:*)` `Bash(node:*)` — 既定では Node.js を使わない前提
+- ❌ `Bash(php:*)` — ローカルサーバ（例: XAMPP の Apache）経由で動作確認するため AI 実行不要
 
 将来 npm/Node 等が必要になった場合のみ、その時点でユーザー確認の上で追加する。
 
@@ -54,9 +53,9 @@
 
 - 上記の汎用パターンでカバーできる個別エントリは削除する
   - 例: `Bash(git status -uall)` → `Bash(git status:*)` でカバー済み → 削除
-  - 例: `Read(c:/xampp/htdocs/ycom/css/sass/_color.scss)` → `Read(c:/xampp/htdocs/**)` でカバー済み → 削除
+  - 例: `Read(<プロジェクトルート>/css/sass/_color.scss)` → `Read(<プロジェクトルート>/**)` でカバー済み → 削除
 - 汎用パターンでカバーできない独自のエントリは残す
-- `additionalDirectories` は `c:/xampp/htdocs/ycom` 配下のみに統一する
+- `additionalDirectories` は project-config.md のプロジェクトルート配下のみに統一する
 - 整理後の結果を報告する(削除数・残存数)
 
 ## 安全性チェック(集約時に必ず確認)
@@ -77,7 +76,7 @@
 
 ### 集約時の確認事項
 
-- **Read の範囲**: `Read(c:/xampp/htdocs/**)` は htdocs 配下の **全プロジェクト** を読み取り可にする。他サイトの機密情報が含まれる場合は `Read(c:/xampp/htdocs/ycom/**)` のように個別プロジェクトに絞ること
+- **Read の範囲**: プロジェクトルートの **親ディレクトリ**（例: `Read(<htdocs等の共有親>/**)`）まで広げると配下の **全プロジェクト** が読み取り可になる。他サイトの機密情報が含まれる場合は `Read(<プロジェクトルート>/**)` のように個別プロジェクトに絞ること
 - **git push の扱い**: push は明示確認運用とする(CLAUDE.md の方針)。誤って `Bash(git push:*)` を許可リストに入れない
 - **新しいパターンの追加**: 汎用パターンに含まれない新しいカテゴリのエントリがある場合、そのまま集約せずユーザーに「このパターンを追加してよいか」確認する
 

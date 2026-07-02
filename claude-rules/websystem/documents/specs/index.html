@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>仕様書 目次</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="max-w-4xl mx-auto px-6 py-8">
+
+    <h1 class="text-3xl font-bold mb-4">仕様書 目次</h1>
+    <p class="text-gray-600 mb-8">
+      このサイトの仕様書（`documents/specs/` 配下の HTML）の索引。
+      ページを追加・移動・削除したら、必ずこの目次を更新する（`.claude/rules/spec-format.md` 準拠）。
+    </p>
+
+    <!-- 運営管理者画面 -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold border-b pb-1 mb-3">運営管理者画面（admin）</h2>
+      <ul class="list-disc list-inside space-y-1 text-blue-600">
+        <!-- 例: <li><a href="admin/inventory.html" class="hover:underline">在庫管理</a></li> -->
+        <li class="text-gray-400 list-none">（ページを追加したらここにリンクを並べる）</li>
+      </ul>
+    </section>
+
+    <!-- ユーザー画面 -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold border-b pb-1 mb-3">ユーザー画面（user）</h2>
+      <ul class="list-disc list-inside space-y-1 text-blue-600">
+        <li class="text-gray-400 list-none">（ページを追加したらここにリンクを並べる）</li>
+      </ul>
+    </section>
+
+    <!-- 共通 -->
+    <section class="mb-8">
+      <h2 class="text-xl font-semibold border-b pb-1 mb-3">共通（common）</h2>
+      <ul class="list-disc list-inside space-y-1 text-blue-600">
+        <li class="text-gray-400 list-none">（用語集・共通機能などを追加したらここに並べる）</li>
+      </ul>
+    </section>
+
+  </div>
+</body>
+</html>

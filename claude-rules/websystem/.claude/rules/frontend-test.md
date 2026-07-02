@@ -14,7 +14,7 @@ alwaysApply: false
 
 | # | 対象 | 参照先 |
 |---|---|---|
-| 1 | **仕様書** | `documents/document.md` |
+| 1 | **仕様書** | `documents/specs/` 配下の該当HTML（specs/ 未整備で `document.md` しか無いプロジェクトはそれ） |
 | 2 | **テスト仕様書** | `documents/test.csv` |
 | 3 | **実装コード** | `next/src/` 配下の該当コンポーネント・関数 |
 
@@ -42,7 +42,7 @@ alwaysApply: false
 
 ### テストの根拠は仕様書
 
-- テストの期待値は **仕様書（documents/document.md）を正** とする
+- テストの期待値は **仕様書（`documents/specs/` 配下の該当HTML。specs/ 未整備で `document.md` しか無いプロジェクトはそれ）を正** とする
 - コードの現在の挙動をそのままテストにしない（コードにバグがある可能性がある）
 - 仕様書に記載がない挙動をテストする場合は、その旨をコメントに残す
 
@@ -55,10 +55,14 @@ alwaysApply: false
 
 ## テスト環境
 
-- フレームワーク: Vitest + React Testing Library + jsdom
-- 設定: `next/vitest.config.*`（拡張子はプロジェクトの ESM/CJS 構成に合わせる）
-- テストファイル配置: `next/src/__tests__/`
-- 使い方の詳細: `next/src/__tests__/README.md`
+具体値（フレームワーク・設定ファイル・配置・実行コマンド）は **`project-config.md`「フロントエンドテスト」欄を正とする**。以下は既定スタック（Next.js）の例：
+
+- フレームワーク（例）: Vitest + React Testing Library + jsdom
+- 設定（例）: `next/vitest.config.*`（拡張子はプロジェクトの ESM/CJS 構成に合わせる）
+- テストファイル配置（例）: `next/src/__tests__/`
+- 使い方の詳細（例）: `next/src/__tests__/README.md`
+
+> スタックが異なるプロジェクト（別ランナー・別配置）は project-config.md の欄を書き換え、本文の例はそれに読み替える。
 
 ---
 

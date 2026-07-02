@@ -10,9 +10,7 @@ alwaysApply: false
 
 - 実装後、ルールに沿っているか確認し、「ルールに沿っています」と入れる。
 
-- 毎回以下を参照
-  - @Laravel12
-  - @Next.js15.2
+- フレームワーク・バージョンは `project-config.md` を参照
 
 ## 共通
 
@@ -66,8 +64,7 @@ alwaysApply: false
 - 同じような実装の場合、コンポーネント化して共通化する。
 - 他の UI を必ず踏襲する
 - フォームで必須の場合は必須であることをわかるようにする
-- Button は mui を使う
-- アイコンは mui の IconButton でラップする
+- Button・アイコンは **project-config.md に定めた UI ライブラリ**で統一する（例: MUI なら Button + IconButton、shadcn なら components/ui の Button + lucide-react）
 - アイコンは統一する
   - 例：
     アカウント一覧の編集アイコンが pencil

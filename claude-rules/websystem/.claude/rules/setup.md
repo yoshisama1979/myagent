@@ -8,4 +8,8 @@ VS Code 拡張の **Live Sass Compiler** を使用してファイル監視・自
 
 - ユーザー・AI いずれの編集にも反応してコンパイルされる
 - VS Code のステータスバーから「Watch Sass」をクリックして監視を開始する
-- 対象ファイル: `public/css/users/sass/*.scss`, `public/css/admin/sass/*.scss`
+- 対象ファイル: project-config.md に記入した SCSS ディレクトリ
+
+### 注意
+
+- Live Sass Compiler はエディタの保存イベントで動くため、**AI のプログラム的な編集（Write/Edit）には反応しない場合がある**。反応しない場合は開発者が保存し直す・Watch を起動する等で補う

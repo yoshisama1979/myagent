@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[ページ名] | 仕様書</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <div class="max-w-4xl mx-auto px-6 py-8">
+
+    <!-- パンくずナビ: 目次 → セクション → ページ名 -->
+    <nav class="text-sm text-gray-500 mb-6">
+      <a href="../index.html" class="text-blue-600 hover:underline">目次</a>
+      <span class="mx-1">→</span>
+      <span>[セクション名（例: 運営管理者画面）]</span>
+      <span class="mx-1">→</span>
+      <span class="text-gray-700">[ページ名]</span>
+    </nav>
+
+    <!-- ページタイトル -->
+    <h1 class="text-3xl font-bold mb-4">[ページ名]</h1>
+
+    <!-- 概要: 1〜2文で「このページが扱う機能」を説明 -->
+    <p class="text-gray-600 mb-8">[このページが扱う機能の概要を1〜2文で記述する。]</p>
+
+    <!-- セクション -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold border-b border-gray-300 pb-2 mb-4">[セクション見出し]</h2>
+
+      <h3 class="text-lg font-semibold mt-6 mb-2">表示項目</h3>
+      <ul class="list-disc list-inside space-y-1 mb-4">
+        <li>[表示項目1]</li>
+        <li>[表示項目2]</li>
+      </ul>
+
+      <table class="w-full border-collapse border border-gray-300 text-sm mb-4">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-3 py-2 text-left">項目</th>
+            <th class="border border-gray-300 px-3 py-2 text-left">内容</th>
+            <th class="border border-gray-300 px-3 py-2 text-left">備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-gray-300 px-3 py-2">[項目名]</td>
+            <td class="border border-gray-300 px-3 py-2">[内容]</td>
+            <td class="border border-gray-300 px-3 py-2">[備考]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="text-lg font-semibold mt-6 mb-2">操作フロー</h3>
+      <ol class="list-decimal list-inside space-y-1 mb-4">
+        <li>[操作手順1]</li>
+        <li>[操作手順2]</li>
+        <li>[操作手順3]</li>
+      </ol>
+
+      <!-- 注意事項（黄色枠で強調） -->
+      <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4">
+        <p class="text-sm"><strong>注意:</strong> [注意事項を記述する。]</p>
+      </div>
+    </section>
+
+    <!-- 関連ページ（最後に置き、相互リンクで辿れるようにする） -->
+    <section class="mb-10">
+      <h2 class="text-2xl font-semibold border-b border-gray-300 pb-2 mb-4">関連ページ</h2>
+      <ul class="list-disc list-inside space-y-1">
+        <li><a href="[関連ページのパス]" class="text-blue-600 hover:underline">[関連ページ名]</a> — [関係の説明]</li>
+      </ul>
+    </section>
+
+  </div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 ## 対象ファイル
 
-- 仕様書: `documents/document.md`
+- 仕様書: `documents/specs/` 配下の該当HTML（specs/ 未整備で `document.md` しか無いプロジェクトはそれ）
 - テスト仕様書: `documents/test.csv`
 - 実装コード: 該当するソースファイル
 

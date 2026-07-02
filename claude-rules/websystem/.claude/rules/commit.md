@@ -62,6 +62,8 @@
 
 ### Conventional Commits（オプション）
 
+※本テンプレートの既定は後述の **`[領域]` ブラケット方式**。Conventional Commits を採用する場合は置き換え（併用しない）で、チーム合意の上で切り替える。
+
 タイトルの先頭に `<type>(<scope>): ` のプレフィックスを付ける形式。CI で自動分類・CHANGELOG 生成・semver 自動推定 に向く。
 
 ```
