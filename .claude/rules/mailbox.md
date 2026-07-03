@@ -84,6 +84,7 @@
 | `hanasaka-main` | はなさか本体の業務エージェント＝**社長Slackの既定受け先**（`bin/slack-poll.py` の `DEFAULT_AGENT`）。新規トップレベル投稿＝社長との会話を `/chat` で受ける | 拠点PC / VPS |
 | `partner` | 経営パートナー（右腕）。会社全体を毎朝見て「今日の一手」を出し実行まで伴走。社長が **#partner（`SLACK_PARTNER_CHANNEL_ID`）** に投げた経営情報を `slack-poll.py fetch` が `to: partner` で投函→**反応tickの `/partner`** が取り込み・スレッド返信、**毎朝7:00 の `daily partner`** が朝礼ブリーフィングを #partner と掲示板 `site/business/partner/` に出す。memo と同じく **Slack投函＋filesystem 読み＝トークン不要**（`$known_agents` 検証の対象外）。社長は朝礼スレッドへの返信／#partner への投函で情報を渡す | VPS |
 | `memo` | 日常メモ取り込み（**2層**）。社長が Slack **#memo（`SLACK_MEMO_CHANNEL_ID`）** に投げたトップ投稿を `slack-poll.py fetch` が `to: memo` で投函→**日中は反応tickの `/memo-triage`** が**各メモに会話返信**（壁打ち感・曖昧なら同返信で確認）し、点検済みを `data/mailbox/memo-stock/` へ退避→**夜バッチ `daily memo` の `/memo-intake`** が memo-stock の当日分をまとめて `site/notes.html` へ追記し #memo に要約1本。triage は会話のため**返信した全メモのスレッドを日中は追跡**し、夜の intake が**当日メモスレッドをまとめて `untrack`**（threads.json は1日単位で有界・毎晩リセット／未解決は要約スレッドへ繰り越す）。**Slack 投函＋filesystem 読み＝HTTP API 不経由なのでトークン不要**（`$known_agents` 検証の対象外） | VPS |
+| `rule-kaizen` | **テンプレ改善提案の受け口**（`claude-rules/` テンプレを使う **別マシンの開発エージェント**が、開発中に気づいたルールの改善を送る宛先）。**受信専用**＝誰もこの名で送らず・返信しない。中身は VPS の filesystem（`data/mailbox/new/` の `to: rule-kaizen`）を **有人の棚卸しセッションが直接読む**（memo/partner と同型の「filesystem 読み」）。ただし送信元が**別マシンからの HTTP `send`** なので、memo/partner と違い **宛先として `$known_agents` 検証を通る必要がある**＝トークン表に `agent_id: rule-kaizen` のエントリが要る（下記セットアップ）。処理は `claude-rules/README.md`「テンプレート自体の育て方」③＝受信→汎用性の選別→ `claude-rules/TEMPLATE-BACKLOG.md` へ起票→差分案→**社長承認→commit**（reviewer 型・自動反映しない） | VPS（受信箱） |
 
 ---
 
@@ -150,6 +151,20 @@ openssl rand -hex 24
 ```
 
 各拠点のマシンの `.env` には、**そのマシンが名乗るエージェントのトークンだけ**を `MAILBOX_TOKEN` に設定する（`MAILBOX_URL` も）。
+
+### `rule-kaizen`（テンプレ改善の受け口）を有効にする
+
+`claude-rules/` テンプレを使う開発エージェントからのテンプレ改善提案を受け取るには、**受信専用の宛先** `rule-kaizen` をトークン表に登録する（宛先として `$known_agents` 検証を通すため。**誰もこの名で認証しない**＝トークンは使われないが、宛先として存在させるために1エントリ要る）：
+
+```json
+  "<生成したトークン>": { "agent_id": "rule-kaizen", "role": "agent" }
+```
+
+- このトークンは**どのマシンの `.env` にも入れない**（rule-kaizen として送信・認証する主体はいない）。宛先を実在させるためだけの登録。
+- 登録後、別マシンの開発エージェントが `bash bin/mailbox.sh send --to rule-kaizen …` で送れるようになる。未登録のうちは送信側が `unknown_recipient` で弾かれる（テンプレ側はその場合 `rule-improvements.md` に残して社長に伝える設計＝空振りしない）。
+- 受信は VPS 常駐の local-send は経由しない（別マシンからの HTTP `send` が唯一の投函経路）。将来 VPS 内のモードから rule-kaizen へ流したくなったら `bin/mailbox.sh` の `RECIPIENTS` に追加する。
+- **処理済み化（棚卸し時）**：`rule-kaizen` は認証主体を持たないため、宛先本人としての `mailbox.sh done` はできない（サーバは「宛先本人か admin のみ done 可」）。棚卸しでは **president=admin トークンの `mailbox.sh done <id>`**、または VPS 上で当該 JSON を `new/`→`cur/` へ直接移動して処理済みにする（本文は編集しない）。これらは slack 由来でないため slack-poll の追跡状態はなく、filesystem 移動で整合が崩れない。
+- **トークン漏洩時の影響（自覚しておく）**：万一この登録トークンが漏れると、通常 agent 権限として `rule-kaizen` 宛 inbox の閲覧・`done`、および `from: rule-kaizen` を名乗る送信が可能になる。だから `.env` に置かず `data/secrets/` に留める（automation.md §2）。将来コードを触るなら「受信専用（`from` になれず認証もしない）sink ロール」を分離するとより堅い（現状は agent ロールで代用）。
 
 ---
 
