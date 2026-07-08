@@ -75,6 +75,26 @@ MEMO_AGENT = "memo"
 # 社長が #partner（経営パートナーch）に渡した経営情報を /partner が取り込む（毎朝の朝礼もこのchへ）。
 PARTNER_AGENT = "partner"
 MAX_PER_POLL = 50
+# 追跡スレッドの保持期限（日）。最終活動（作成 or 最後に見た返信）からこの日数を超えたスレッドは
+# fetch 冒頭で自動 untrack する。目的は2つ：
+#  (1) threads.json の無限成長を止める（memo は夜バッチが毎日掃除するが、hp-loop/blog 等の
+#      日報スレッドには掃除役がおらず1日1本ずつ永久に増えていた）
+#  (2) レート制限の解消：2分ごとの fetch が全追跡スレッドへ conversations.replies を一斉に
+#      叩くため、追跡数がAPI上限を超えると走査順の後ろ＝新しいスレッドほど毎回失敗し、
+#      社長の返信を拾い損ねていた（2026-07-08 に138スレッドで観測・修理）。
+# トレードオフ：期限超過の古い日報スレッドに社長が返信しても拾えない（その場合はトップレベルで
+# 投稿してもらう＝既定の会話窓口が受ける）。.env の SLACK_THREAD_RETENTION_DAYS で変更可。
+THREAD_RETENTION_DAYS = 14
+# 輪番走査：保持期限内でも全スレッドを毎tick走査すると conversations.replies の Tier 3 上限
+# （約50回/分）を超えるため、「最終活動が RECENT_WINDOW_H 時間以内＝毎tick走査」
+# 「それより古い＝SCAN_SHARDS 分の1ずつ輪番走査（thread_ts の剰余で機械的に分担）」にする。
+# 古いスレッドへの返信も通常 tick間隔×SCAN_SHARDS（既定 2分×5=10分）以内に拾える＝非同期設計上は十分
+# （tick が飛んだ回の担当シャードは次の巡回まで持ち越し）。
+RECENT_WINDOW_H = 24
+SCAN_SHARDS = 5
+# 1回の fetch での conversations.replies 呼び出し上限（Tier 3≒50回/分の安全マージン。
+# auth_test / conversations.history 数回分を除いて余裕を残す）。超過分は次tickの輪番に回る。
+MAX_REPLY_CALLS_PER_FETCH = 40
 
 
 def get_env(key):
@@ -284,19 +304,76 @@ def cmd_fetch(args):
     if force_init:
         return
 
-    # --- (b) 追跡中スレッドの新着返信（スレッドごとに記録チャンネルで走査） ---
-    main_ch = get_env("SLACK_CHANNEL_ID")
+    # --- (b0) 保持期限の判定（THREAD_RETENTION_DAYS 参照。削除はまだしない＝走査後） ---
+    # Codexレビュー反映（2026-07-08）：期限切れ候補を即削除すると、輪番の谷間（最大10分＋tick skip）に
+    # 届いた返信を走査前に消してしまう。候補は (b) で必ず強制走査し、新着が無かったものだけ (b2) で削除する。
+    try:
+        retention_days = float(get_env("SLACK_THREAD_RETENTION_DAYS") or THREAD_RETENTION_DAYS)
+    except ValueError:
+        retention_days = THREAD_RETENTION_DAYS
+    now_epoch = datetime.now(JST).timestamp()
+    cutoff = now_epoch - retention_days * 86400
     threads = _read_json(THREADS, {})
-    for thread_ts, info in list(threads.items()):
+
+    def _activity(thread_ts, info):
+        """(info_dict, last_activity, ts_broken) を返す。壊れた threads.json 値でも fetch を落とさない。"""
+        if not isinstance(info, dict):
+            info = {}
+        try:
+            ts_val = float(thread_ts)
+        except (TypeError, ValueError):
+            return info, 0.0, True   # ts 自体が壊れている＝Slackに問い合わせ不能・掃除対象
+        try:
+            seen_val = float(info.get("last_seen", ts_val))
+        except (TypeError, ValueError):
+            seen_val = ts_val        # last_seen だけ壊れている＝作成時刻にフォールバック（誤削除しない）
+        return info, max(ts_val, seen_val), False
+
+    expired_candidates = set()   # 期限超過（今tickで強制走査→新着なしなら削除）
+    broken_ts = set()            # ts が壊れていて走査不能（即削除）
+    for thread_ts, info in threads.items():
+        _, last_activity, ts_bad = _activity(thread_ts, info)
+        if ts_bad:
+            broken_ts.add(thread_ts)
+        elif last_activity < cutoff:
+            expired_candidates.add(thread_ts)
+
+    # --- (b) 追跡中スレッドの新着返信（新しい順に走査・古いものは輪番・1tickの呼び出し上限あり） ---
+    main_ch = get_env("SLACK_CHANNEL_ID")
+    shard = int(now_epoch // 120) % SCAN_SHARDS  # 2分tick前提のシャード番号。通常は最大 tick間隔×SCAN_SHARDS
+    #                                              （既定10分）で全巡回。tickが飛んだ回のシャードは次巡回まで持ち越し
+    skipped_rotation = 0
+    skipped_budget = 0
+    reply_calls = 0
+    scanned_ok = set()           # replies 走査が成功したスレッド（期限候補の削除判定に使う）
+    # 新しい順に走査：呼び出し上限で切れる場合も「返信が来やすい新しいスレッド」を優先する
+    ordered = sorted(threads.items(), key=lambda kv: _activity(kv[0], kv[1])[1], reverse=True)
+    for thread_ts, info in ordered:
+        info, last_activity, ts_bad = _activity(thread_ts, info)
+        if ts_bad:
+            continue  # (b2) で削除
+        is_expired = thread_ts in expired_candidates
+        if (not is_expired                                  # 期限候補は輪番に関係なく最後に1回見る
+                and now_epoch - last_activity > RECENT_WINDOW_H * 3600
+                and int(last_activity) % SCAN_SHARDS != shard):
+            skipped_rotation += 1  # 古いスレッドは今tickの担当シャードだけ走査（レート制限対策）
+            continue
+        if reply_calls >= MAX_REPLY_CALLS_PER_FETCH:
+            skipped_budget += 1    # 上限超過分は次tickへ（期限候補も削除されず持ち越し＝安全側）
+            continue
         t_seen = info.get("last_seen", thread_ts)
         agent = info.get("agent", DEFAULT_AGENT)
         t_channel = info.get("channel", main_ch)   # 旧データ（channel無し）は既定チャンネル
+        reply_calls += 1
         try:
             r = w.conversations_replies(channel=t_channel, ts=thread_ts, oldest=t_seen,
                                         inclusive=False, limit=MAX_PER_POLL)
-        except Exception as e:  # noqa: BLE001 — スレッドが消えた等。スキップして継続
-            print(f"[warn] replies取得失敗 thread={thread_ts}: {e}", file=sys.stderr)
+        except Exception as e:  # noqa: BLE001 — レート制限・スレッド消失等。スキップして継続
+            # SlackApiError は本文の error コード（ratelimited / thread_not_found 等）が原因特定の鍵。
+            code = (getattr(getattr(e, "response", None), "data", None) or {}).get("error", "")
+            print(f"[warn] replies取得失敗 thread={thread_ts}: {code or e}", file=sys.stderr)
             continue
+        scanned_ok.add(thread_ts)
         reps = [m for m in r.get("messages", [])
                 if m.get("ts", "0") > t_seen and _ingestable(m, me)]
         reps.sort(key=lambda m: m["ts"])
@@ -308,7 +385,19 @@ def cmd_fetch(args):
                 saved.append((mid, agent, (m.get("text", "") or "")[:50]))
         if newest_t != t_seen:
             set_thread_seen(thread_ts, newest_t)
+            expired_candidates.discard(thread_ts)  # 期限間際に返信あり＝活動再開なので削除しない
 
+    # --- (b2) 期限掃除の確定：強制走査で新着が無かった候補＋壊れた ts だけ削除 ---
+    to_remove = {t for t in expired_candidates if t in scanned_ok} | broken_ts
+    if to_remove:
+        threads = _read_json(THREADS, {})  # 走査中の set_thread_seen を上書きしないよう読み直す
+        for ts_ in to_remove:
+            threads.pop(ts_, None)
+        _write_json(THREADS, threads)
+        print(f"追跡期限切れ {len(to_remove)} 件を untrack（保持 {retention_days:g}日・残り {len(threads)} 件）")
+
+    if skipped_rotation or skipped_budget:
+        print(f"（輪番走査：古いスレッド {skipped_rotation} 件スキップ／呼び出し上限 {MAX_REPLY_CALLS_PER_FETCH} 超過 {skipped_budget} 件＝次tick以降で走査）")
     if not saved:
         print("新着なし")
         return
