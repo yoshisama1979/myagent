@@ -116,6 +116,15 @@
 - 既知の限界：(1)**SERPはGoogleそのものではない**（Yahoo!JAPAN＝Googleインデックスだが完全一致ではない・順位も近似）。Google実順位や大阪ローカル順位が厳密に要るときは社長がSERPを渡す（社長方針）。(2)Yahoo側のHTML構造変更で抽出が劣化し得る（0件は明示するので気付ける）。(3)結果には競合制作会社と並んで「料金相場の解説記事」も混じる（参考にはなるが競合企業ではない＝対比相手は人/ループが選ぶ）。(4)ToS配慮で低頻度運用。フル無人で大量に回すなら locale指定の有料SERP API（gl=jp）へ差し替える設計余地
 - **検証済（2026-06-21）**：「ホームページ制作 大阪 料金」「ホームページ制作 大阪」で関連性の高い実在の大阪Web制作会社（ok-design/hello-wave/studio-habit/株式会社ワイズ osaka-homepage.biz 等）を取得。end-to-end（hp-serp→hp-compete）で自社/price/ vs ワイズ料金ページを比較し「競合は構造化データ(LocalBusiness/BreadcrumbList)あり・自社の料金ページは無し」を検出＝実用的ギャップ。--urls/--json/自社除外/重複ドメイン排除を確認
 
+### T-012: clarity-fetch（bin/clarity-fetch.py）
+- 2026-07-08 / ✅運用可（社長がAPIトークン発行・実データで検証済み）
+- 目的：**Microsoft Clarity の実測行動データ**（スクロール到達・エンゲージメント時間・デッドクリック・レイジクリック・クイックバック・スクリプトエラー・人気ページ・流入元）を取得し、導線・CV提案の根拠を**推測→実測**にする。GSC=検索まで／hp-shot=見た目／**Clarity=サイト内で実際どう動いたか**、の三点測量が完成。
+- 前提：対象サイトに Clarity タグ設置済み＋ .env に `CLARITY_API_TOKEN_<SITE>`（ycom は両方済み・タグは HTML直書き・プロジェクト r7faz1ss9q）。他サイト展開はプロジェクト作成（社長）＋タグ設置（実装担当・社長ゲート）＋トークン追記で同型。
+- 使い方：`bin/.venv/bin/python3 bin/clarity-fetch.py [--site ycom] [--days 1-3] [--dim1 URL|Device|Country|Browser|OS|Source|Medium|Campaign|Channel] [--dim2 …] [--json] [--quota]`
+- **⚠️ 制約（最重要）：API は 1プロジェクト 1日10リクエストまで**。ツールがローカルで当日回数を記録し10回で拒否（`--quota` で残数確認・記録は `data/hp-loop/.clarity-quota/`）。**ループでの利用は1日1〜2回**（例：日次サイクルで `--days 1 --dim1 URL` を1回）。**データは直近1〜3日の集計のみ**＝長期トレンドは日次 JSON を `data/hp-loop/cycles/<site>/clarity/YYYY-MM-DD.json` に蓄積（gitignore済み）して比較する。
+- 安全：読み取り専用（HTTP GET のみ）・トークンは .env から必要キーだけ読み、ログ・エラーに出さない（automation.md §2）。
+- **検証済（2026-07-08・ycom 直近3日実データ）**：710セッション・平均スクロール到達 40.5%・デッドクリック発生セッション 16.8%・pages/session 1.31・人気ページ1位 /contents/(391)。初回スナップショット保存済み。
+
 ---
 
 ## 未着手・欲しいツール（権限非依存で書く＝作れるか否かに関わらず記録）
