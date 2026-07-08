@@ -23,10 +23,10 @@
 #   */10 * * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh                # 10分ごと：受信+対応
 #   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer        # 1日1回：overseer 精密診断
 #   0 7   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily partner         # 毎朝7:00：経営パートナーの朝礼ブリーフィング（手動テスト＋合意後に有効化）
-#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別）
+#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別。入力凍結ループ=rally/konjaku は週次・月曜＝2026-07-08 社長決定）
 #   0 5   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom  # ブログ診断（B/T提案）
-#   30 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom   # ブログ新規記事→WP下書き
-#   0 6   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom # ブログ既存記事の改善版を下書き複製で作成
+#   30 5  * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom   # ブログ新規記事→WP下書き（週次・月曜＝在庫凍結中の右サイズ化 2026-07-08）
+#   0 6   * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom # ブログ既存記事の改善版（週次・月曜＝同上）
 #   0 23  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily memo              # 日常メモ：#memo の当日分を notes.html へまとめて整理（夜バッチ）
 #
 # automation.md：外部送信は各モードのルールで社長専用チャンネルに限定。raw mv は使わず slack-poll done。
@@ -178,6 +178,8 @@ dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
 dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
 dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka"
 dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii"
+dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"
+dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"
 # ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
 # blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
 dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"
