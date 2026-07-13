@@ -72,6 +72,7 @@
 | [rules/partnership.md](rules/partnership.md) | 秘書＋パートナーとしての協働ルール |
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |
 | [rules/document-format.md](rules/document-format.md) | 記録ファイルのHTML出力ルール |
+| [.claude/rules/deck-format.md](.claude/rules/deck-format.md) | **スライド資料（提案書・営業デッキ）を作るとき**：HTML→ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
 | [rules/development.md](rules/development.md) | 開発・コミット時のルール |
 | [rules/automation.md](rules/automation.md) | 自動化・定期実行・外部送信（Slack等）・API連携を作る/動かすときの安全ルール |
 | [rules/preview-server.md](rules/preview-server.md) | プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用 |
@@ -119,12 +120,14 @@
 | `site/docs/` | ドキュメント類 |
 | `site/skill-sheets/` | スキルシート関連 |
 | `site/drafts/` | 草案・モック・検証用HTML |
+| `site/decks/` | プレゼン資料（提案書・営業デッキ）の置き場。1資料＝`decks/<案件名>/`（deck.html＋deck.pdf＋deck-images/）・ハブ `decks/index.html` に登録（[.claude/rules/deck-format.md](.claude/rules/deck-format.md)準拠） |
 
 ### Claude が新規HTMLを作るときの判断基準
 
 | 用途 | 出力先 |
 |------|--------|
 | クライアント・プロジェクトの記録（backlog/decisions/meeting-notes 等） | `site/clients/<client>/projects/<project>/` |
+| プレゼン資料（提案書・営業デッキ・スライド形式） | `site/decks/<案件名>/`（[.claude/rules/deck-format.md](.claude/rules/deck-format.md)に従い、ハブ `site/decks/index.html` にも行を追加） |
 | 経営関連の記録 | `site/business/` |
 | 横断メモ | `site/notes.html` に追記 |
 | 草案・LP案・モック・検証 | `site/drafts/` または `site/drafts/<案件名>/` |

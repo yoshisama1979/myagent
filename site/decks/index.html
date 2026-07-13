@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プレゼン資料（デッキ）置き場</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <span>プレゼン資料</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📽 プレゼン資料（デッキ）置き場</h1>
+  <p class="text-gray-600 mb-6">クライアント向けのスライド資料（提案書・営業デッキ・報告資料）を集約するハブ。1資料＝1フォルダ（<span class="font-mono bg-gray-100 px-1 rounded">decks/&lt;案件名&gt;/</span>）で、<strong>HTML（ブラウザで閲覧）と PDF（配布用）</strong>の両方をここからたどれます。作成ルール：<span class="font-mono bg-gray-100 px-1 rounded">.claude/rules/deck-format.md</span>（HTML→ヘッドレスChrome→A4横PDF）。</p>
+
+  <!-- ===== 資料一覧（新しい順に上へ追加） ===== -->
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">資料一覧</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <thead>
+      <tr class="text-left border-b-2 border-gray-300 text-gray-700">
+        <th class="py-2 pr-3">資料</th>
+        <th class="py-2 pr-3">クライアント／用途</th>
+        <th class="py-2 pr-3">状態</th>
+        <th class="py-2 pr-3">閲覧</th>
+        <th class="py-2">更新日</th>
+      </tr>
+    </thead>
+    <tbody class="align-top text-gray-700">
+      <!-- deck-rows -->
+      <!-- ↑ 新しい資料はこのマーカー直下に <tr> を追加（deck-format.md 手順・マーカー文字列は変更しない） -->
+      <tr>
+        <td class="py-2 pr-3 text-gray-400" colspan="5">（まだ資料はありません。最初のデッキを作るとここに載ります）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===== 運用メモ ===== -->
+  <div class="border border-gray-300 rounded-lg p-5 bg-white text-sm text-gray-700">
+    <h2 class="text-lg font-semibold mb-2">運用メモ</h2>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>状態</strong>の使い分け：✍️ 作成中 ／ 👀 社長レビュー待ち ／ ✅ 確定（配布可） ／ 📦 配布済み</li>
+      <li>HTML はブラウザでそのまま閲覧可（Tailscale 経由）。PDF は配布用の確定版。</li>
+      <li>スクリーンショット・画像は<strong>実データ混入の精査が済むまで gitignore</strong>（<span class="font-mono bg-gray-100 px-1 rounded">deck-format.md</span> の🚨節）。</li>
+      <li>このページは AI が資料作成時に行を追加します（append・既存行は消さない。配布済みの古い資料も履歴として残す）。</li>
+    </ul>
+  </div>
+
+  <p class="text-xs text-gray-400 mt-10">作成ルール：<span class="font-mono">.claude/rules/deck-format.md</span>／置き場の規約：1資料＝<span class="font-mono">site/decks/&lt;案件名&gt;/</span>（deck.html・deck.pdf・deck-images/）</p>
+
+</div>
+</body>
+</html>
