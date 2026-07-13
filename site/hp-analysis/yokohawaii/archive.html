@@ -28,7 +28,279 @@
     <span class="px-3 py-1 rounded-full bg-cyan-100 text-cyan-800 font-semibold">🗄️ アーカイブ（このページ）</span>
   </div>
 
-  <p class="text-sm text-gray-500">まだありません。最初のサイクルが回り、提案や質問が完了したらここに積まれます。</p>
+  <p class="text-sm text-gray-500 mb-6">※ 下記は過去サイクルの記録（スナップショット）。<strong>未完了の提案 R-NNN・未回答の質問 Q-NNN は最新レポート(index)の繰り越し表で引き続き追跡</strong>している（archive に落ちても見失わない）。完了・解決した提案/質問が出たらこの上に積む。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">過去サイクルの記録（スナップショット・新しい順）</h2>
+
+  <!-- Cycle 019 -->
+  <div class="border border-cyan-500 rounded-lg p-5 mb-6 bg-cyan-50 text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 019 — 2026-07-12（変化検知：<strong>成長継続</strong>＝clicks 41→44・imp 229・平均5.0位／<strong>【最重要】2本目の柱が跳ねた</strong>＝「ハワイ バケーションレンタル 日本人オーナー」3.3→2.7位・9→12clicks・CTR18.37→25.00%＝本丸(18clicks)に迫る第2の流入源に／<strong>R-K20 の期待値が上振れ</strong>（柱の語は title に無いまま伸びている＝一等地に置いたときの伸びしろが最大）／本丸は page 粒度で 1.7位・18clicks・CTR36.73%＝<strong>3窓連続 1.7位</strong>でベースライン確定／勝ち筋16サイクル連続で反証なし／<strong>新規レバーは起票せず</strong>（分析飽和・v0.8））</h3>
+
+    <p class="font-semibold mt-2">データ状況（変化検知）</p>
+    <ul class="list-disc list-inside space-y-1 text-gray-700 mb-2">
+      <li><strong>GSC 総計：成長継続</strong>。直近14日で first_date=<strong>2026-06-28</strong> / last_date=<strong>2026-07-09</strong> / <strong>clicks=44・impressions=229・CTR19.21%・平均5.0位</strong>（Cycle 018 は 41/229/17.90%/5.1位・窓 06-27〜07-08）。<strong>14日窓の前端が1日転がってなお clicks +3・CTR +1.3pt</strong>＝実装ゼロの複利成長は継続（clicks 6→14→17→21→23→25→27→29→35→40→39→41→<strong>44</strong>）。データラグで 07-10〜07-12 は未反映（捏造しない）。</li>
+      <li><strong>【変化・最重要】2本目の柱が跳ねた</strong>：「ハワイ バケーションレンタル 日本人オーナー」＝<strong>クエリ全体 48imp・12clicks・2.7位・CTR25.00%</strong>（Cycle 018 は 49/9/3.3位/18.37%）＝<strong>clicks +3・順位 3.3→2.7・CTR +6.6pt</strong>。page 粒度でも <code>/features/</code>×柱＝<strong>2.7位・11clicks・CTR23.40%（47imp）</strong>（C018 は 2.9位・8clicks・17.02%）＝集計・ページ実体の両方で前進＝窓ずれノイズでなく実質の改善（観察）。<strong>本丸 18clicks に対し柱 12clicks＝サイト全 clicks 44 の約68%をこの2クエリが占める</strong>。推測：柱の意図（バケーションレンタル＝貸切コンドミニアム）に対し <code>/features/</code> の本文が部分的に応えており、Google が評価を上げつつある。</li>
+      <li><strong>【示唆】R-K20（title 一等地に勝ち筋語）の期待値が上振れ</strong>：この柱の語「バケーションレンタル」は <strong><code>/features/</code> の title に語句として存在しない</strong>（Cycle 011 ライブ実査で確認済・勝ち筋語「日本人オーナー」も title に不在）。<strong>title に無いまま 2.7位・CTR25% まで来ている</strong>＝一等地に語を置いたときの伸びしろは（本丸・柱の両方で）これまでの見積もりより大きい（W-01＝「GSCで実証済みの勝ち筋語を最も効くページの title に置く」の適用先として、対象語が1語から2語に増えた形）。新レバーではなく<strong>既存 R-K20/R-K19 の証拠強化・期待値上振れ</strong>として記録（v0.8）。</li>
+      <li><strong>本丸＝3窓連続で 1.7位＝ベースライン確定</strong>：page-queries で <code>/features/</code>×「ハワイ コンドミニアム 日本人オーナー」＝<strong>1.7位・18clicks・CTR36.73%（49imp）</strong>。C017（1.7位・19clicks・40.43%/47imp）・C018（1.7位・19clicks・37.25%/51imp）から<strong>順位 1.7 が3窓不変・clicks 19/19/18</strong>＝#1圏は完全に定着。CTR の 40→37→36.7% の推移は imp 47→51→49 の窓ずれ希釈でクリック実数はほぼ不変＝<strong>退行と断定しない</strong>（M-05＝低母数・短窓のCTR差は参考値止まり）。R-K26 の物差しは信頼できると確定（PDCA の C）。クエリ全体集計は 1.9位・18clicks・57imp・CTR31.58%（他URL分散込みの見かけ＝M-01）。</li>
+      <li><strong>その他のページ・クエリは既知の構図を維持</strong>：<code>/features/</code> <strong>145imp・32clicks・3.4位</strong>（サイト clicks の73%＝一極集中）／トップ <code>/</code> 28imp・10clicks・CTR35.71%・2.9位（指名/ブランド系で安定・微増）／<code>/blog/</code> 10imp・2clicks・2.3位（R-K21）／<code>/blog/?p=5380</code> 1.6位・<code>/blog/?p=4557</code> 4.0位・<code>/blog/?p=881</code> 5.2位（page1 の発リンク元資産＝R-K21 で一括対応）／<code>/howto/</code> 9imp・<strong>25.3位</strong>・0click（3ページ目・R-K18 継続）／<code>/contact/</code> 19.7位・<code>/map/</code> 4.8位（navigational）／<code>/condominium/</code> <strong>1imp・11.0位で3サイクル横ばい</strong>（R-K24 監視継続）。「ハワイ島 コンドミニアム 日本人」<strong>13imp・12.3位・0click</strong>（横ばい・<strong>Q-K04 の回答価値は継続</strong>・R-K17）。</li>
+      <li><strong>可否の二値確定（v0.10）と実査状況</strong>：セッション冒頭に確定＝<strong>curl 本番GET は実行承認が得られず「未実施・未確認」</strong>（前回の決めつけでなく毎回試行）。<code>/condominium/</code> の R-K06 再確認は<strong>9サイクル連続未実施</strong>＝配信・実装時にまず本番URLを観測してから完了判定（K-014）。<strong>GSC（BigQuery・許可済）は取得成功</strong>（summary/queries/pages/page-queries）＝本サイクルの一次データ。<strong>社長回答</strong>：<code>from-president.md</code> 新規指示なし・Q-K03/Q-K04 未回答。<strong>実装</strong>：mailbox 新着なし（<code>to: hp-loop-yokohawaii</code> 0件）・R-K01〜R-K26 全て未着手（<strong>実装0件が12サイクル継続</strong>）・<code>yokohawaii-dev</code> トークン未登録で配信保留。</li>
+    </ul>
+
+    <p class="font-semibold mt-3">本サイクルの観点（PDCA：C＝柱の跳ねとベースライン3窓確定／A＝在庫飽和では新規番号でなく既存Rの証拠強化＝v0.8・K-206/K-208）</p>
+    <p class="text-gray-700 mb-2">今サイクルの核は<strong>「2本目の柱」の明確な前進</strong>——3.3→2.7位・9→12clicks・CTR+6.6pt は窓ずれで説明できない実質の改善で、本丸(18clicks)と合わせて<strong>サイト流入の約68%が「日本人オーナー」系2クエリ</strong>という構図がさらに濃くなった。ここで効くのは新しい発想ではなく、<strong>既に出ている一手の期待値が上がったという事実</strong>：柱の語も勝ち筋語も <code>/features/</code> の title に無いまま、この2クエリはページ実体で 1.7位／2.7位に立っている。＝<strong>title の一等地はまだ1度も使われていない</strong>（W-01 の未適用）。分析は19サイクルで飽和しており、v0.8（在庫が多い時は新規番号でなく既存Rの証拠深掘り・優先度の付け直し／K-206）に従い<strong>新レバーは起票しない</strong>。代わりに R-K20・R-K19 の期待値を新証拠で上振れさせ、R-K26 のベースラインを3窓で確定させた（実装が入った瞬間に効果を正しく帰属できる状態＝M-05）。</p>
+
+    <p class="font-semibold mt-3">新規の改善提案</p>
+    <p class="text-gray-700 mb-2"><strong>新規レバーの起票なし（意図的）</strong>。理由＝分析19サイクルで飽和・在庫26件（R-K01〜R-K26）が未実装のまま滞留しており、v0.8「在庫が多い時は新規番号でなく既存Rの証拠深掘り・優先度の付け直し」（K-206/K-208 の昇格）に従う。本サイクルの実質的な提案アウトプット＝<strong>①R-K20 の期待値上振れ</strong>（title 一等地に置くべき語が「日本人オーナー」1語から「＋バケーションレンタル」2語に＝柱が title 不在のまま 2.7位/CTR25% に伸びた証拠つき）＋<strong>②R-K19 の証拠強化</strong>（柱の受け皿定義の価値が上昇）＋<strong>③R-K26 のベースライン確定</strong>（1.7位が3窓不変＝実装効果の物差しが信頼できる）。＝「黙らない・ゼロにしない」を新番号の乱発でなく既存Rの解像度向上で満たす。</p>
+
+    <p class="font-semibold mt-3">次の一手（社長へ）</p>
+    <p class="text-gray-700 mb-2"><strong>結論：いま <code>/features/</code> の title を1回直すだけの価値が、先週よりさらに上がりました。</strong>本丸（1.7位・18clicks）に加えて2本目の柱が 2.7位・12clicks・CTR25% に伸び、この2クエリでサイト流入の約7割。<strong>にもかかわらず、両方の語（「日本人オーナー」「バケーションレンタル」）は title に1語も入っていません</strong>＝最も重い一等地が未使用のまま、ここまで来ています。二択は不変です：<strong>①本命＝<code>yokohawaii-dev</code> のトークン登録</strong>（Q-K02）で配信開通し実装を回す。<strong>②即効＝R-K25 の順序どおり社長ご自身が WordPress で <code>/features/</code> を1回だけ編集</strong>（R-K22・15分程度）＝R-K26 のベースライン（1.7位・約19clicks）が3窓で固まっているので<strong>効果がきれいに実測できます</strong>。<strong>Q-K04（ハワイ島物件の有無）</strong>も一言で R-K17 の判断が確定します（13imp で滞留中）。</p>
+
+    <p class="font-semibold mt-3">対応記録</p>
+    <p class="text-gray-700">from-president.md：新規指示なし。本サイクルは<strong>①成長継続の確認（clicks 41→44）＋②2本目の柱の跳ね（3.3→2.7位・9→12clicks・CTR+6.6pt＝集計とページ粒度の両方で前進＝窓ずれでない実質改善）＋③R-K20/R-K19 の期待値上振れ（柱の語も勝ち筋語も title に不在のまま伸びている＝W-01 の適用先が2語に）＋④R-K26 ベースラインの3窓確定（1.7位不変）</strong>。<strong>新規レバーは意図的に起票せず</strong>（分析飽和・v0.8／K-206・K-208）。セッション冒頭に可否を二値確定（v0.10）＝curl 本番GET は今回も承認得られず「未実施・未確認」（R-K06 は9サイクル連続未確認・配信/実装時 K-014）、GSC（許可済）のみ実施。spec.html の確定事実（16サイクル連続・柱の伸長・ベースライン3窓確定）を更新。配信は <code>yokohawaii-dev</code> トークン未登録のため引き続き保留。旧 Cycle 017 のスナップショットは archive.html へ移動（未完了の R-K/Q-K は本ページ繰り越し表で継続追跡）。</p>
+  </div>
+
+
+  <!-- Cycle 018 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 018 — 2026-07-11（変化検知：<strong>成長が再開</strong>＝clicks 39→41・imp 209→229（C017 の 40→39 は14日窓の前端転がりによる<strong>見かけの凹み＝ノイズと確定</strong>）／<strong>R-K26 ベースラインが第2窓で安定</strong>＝page-queries で <code>/features/</code>×本丸が<strong>1.7位・19clicks・CTR37.25%</strong>／勝ち筋15サイクル連続で反証なし／<strong>新規レバーは起票せず</strong>（分析飽和・v0.8）＝R-K21 を新証拠で深掘り）</h3>
+    <ul class="list-disc list-inside space-y-1 text-gray-700 mb-2">
+      <li><strong>GSC 総計：成長が再開</strong>。窓 2026-06-27〜07-08・<strong>clicks=41・impressions=229・CTR17.90%・平均5.1位</strong>（Cycle 017 は 39/209/18.66%/4.7位）。C017 の「40→39」は14日窓の前端転がりによる見かけの凹み＝ノイズと確定（前端をさらに落としてなお 39→41・imp +20）。平均順位 4.7→5.1 の見かけ悪化は低順位クエリの表示面増による希釈（M-01/M-03）。</li>
+      <li><strong>R-K26 ベースラインが第2窓で安定</strong>：<code>/features/</code>×本丸＝<strong>1.7位・19clicks・CTR37.25%（51imp）</strong>。C017（1.7位・19clicks・40.43%・47imp）から順位・clicks とも不変＝#1圏到達は一過性でない。CTR 低下は imp 47→51 の窓ずれ希釈（M-05）。</li>
+      <li><strong>2本目の柱は微改善で維持</strong>：クエリ全体 49imp・9clicks・3.3位・CTR18.37%。page 粒度 <code>/features/</code>×柱＝2.9位・8clicks・CTR17.02%。</li>
+      <li><strong>【R-K21 の証拠深掘り】既存ブログの page1 資産が具体化</strong>：<code>/blog/</code>（2.3位・2clicks）に加え <code>/blog/?p=5380</code>（1.6位）・<code>/blog/?p=4557</code>（4.0位）が page1 で顕在化＝テンプレ共通フッタを直せば全 page1 記事に一括で導線が乗る。</li>
+      <li><strong>その他・実査状況</strong>：「ハワイ島 コンドミニアム 日本人」13imp・12.3位（Q-K04 待ち）／<code>/condominium/</code> 1imp・11.0位で横ばい（R-K24 監視）／<code>/howto/</code> 25.3位（R-K18）。<strong>curl 本番GET・bq ls とも承認得られず未実施</strong>（R-K06 は8サイクル連続未確認）。<strong>実装</strong>：mailbox 0件・R-K01〜26 未着手（実装0件が11サイクル継続・トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点・対応記録</strong>：核は2つの「確認」＝(1) C017 で止まって見えた総clicks は窓ずれのノイズで成長は継続（39→41）、(2) #1圏到達（1.7位・19clicks）は一過性でなく第2窓でも同値＝R-K26 の物差しは信頼できる。分析は18サイクルで飽和し、v0.8 に従い新レバーは起票せず、GSC に page1 で顕在化した既存ブログ資産を R-K21 の発リンク元候補として具体化した。spec の確定事実を更新・旧 Cycle 016 は archive へ移動済・配信はトークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 017 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 017 — 2026-07-10（変化検知：総clicksは39と横ばい（14日窓の前端転がり＝実質維持〜微増）だが<strong>【#1圏到達をページ粒度で初観測】</strong>＝page-queries で <code>/features/</code>×本丸が<strong>1.7位・19clicks・CTR40.43%</strong>＝R-K23 仮説「#1のCTRは40%超」がそのまま実測／<code>/condominium/</code> が GSC 初出現（R-K24 監視シグナル）／勝ち筋14サイクル連続で反証なし／新規 R-K26＝#1判定と効果検証のベースライン固定（計測設計））</h3>
+    <ul class="list-disc list-inside space-y-1 text-gray-700 mb-2">
+      <li><strong>GSC 総計</strong>：窓 2026-06-26〜07-07・clicks=39・impressions=209・CTR18.66%・平均4.7位（Cycle 016 は 40/203/4.5位）。40→39 は14日窓の前端転がりによる見かけの凹み（後に Cycle 018 でノイズと確定）。</li>
+      <li><strong>【最重要】#1圏到達をページ粒度で初観測</strong>：<code>/features/</code>×「ハワイ コンドミニアム 日本人オーナー」＝<strong>1.7位・19clicks・CTR40.43%（47imp）</strong>。クエリ全体2.0位はURL分散込みの見かけ（M-01/M-03）。R-K23 の「#1のCTRは40%超」仮説が実測で裏付き（PDCA の C）。</li>
+      <li><strong>【新観測】<code>/condominium/</code> が GSC ページ一覧に初出現</strong>：1imp・11.0位（R-K24 の移行監視指標に採用）。</li>
+      <li><strong>2本目の柱</strong>：48imp・8clicks・3.4位・CTR16.67%（順位は維持）。<strong>その他</strong>：「ハワイ島 コンドミニアム 日本人」13imp・12.2位（Q-K04 待ち）／<code>/blog/</code> 1.9位／<code>/howto/</code> 28.4位。<strong>実査</strong>：curl 本番GET・bq ls とも承認得られず未実施（R-K06 再確認は7サイクル連続未実施）。<strong>実装</strong>：mailbox 0件・R-K01〜25 未着手（実装0件が10サイクル継続・トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点・対応記録</strong>：粒度を1段下げた（M-03）ことで「#1圏到達が既に起きていた」と判明。実装が入ると自然成長と実装効果が混ざるため、実装前の今しかできない一手＝<strong>R-K26（ベースライン固定・レバー別分離予約・🟡）</strong>を1件だけ起票（ベースラインは同サイクルで固定済）。spec の確定事実を更新・旧 Cycle 015 は archive へ移動済・配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 016 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 016 — 2026-07-09（変化検知：<strong>9サイクル連続の成長</strong>＝clicks 35→40・imp 193→203・平均5.0→4.5／<strong>本丸が#1目前＝2.0位に到達</strong>（2.6→2.3→2.0・18clicks・CTR36.00%＝13サイクルで最高）／2本目の柱5サイクル連続改善／トップの指名CTR45%／勝ち筋13サイクル連続で反証なし／新規 R-K25＝/features/ 刈り取りワンパス実装パッケージ（在庫統合））</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長が9サイクル連続</strong>。直近14日 first=2026-06-25/last=2026-07-06・<strong>clicks=40/imp=203/平均4.5位</strong>（Cycle 015 は 35/193/5.0位）。clicks 6→14→17→21→23→25→27→29→35→<strong>40</strong>。14日集計窓の前端が 06-25 に転がり前端1日分を落としてなお clicks +5・imp +10＝成長は実質（過小評価側）。</li>
+      <li><strong>【変化・最重要】本丸が#1目前＝2.0位に到達</strong>：「ハワイ コンドミニアム 日本人オーナー」<strong>2.0位・18clicks・CTR36.00%（50imp）</strong>（Cycle 015 は 2.3位・17clicks・34.69%・49imp）＝順位 2.6→2.3→2.0 と2サイクル連続で天井を割り、13サイクルで最高順位・最高CTR。R-K23 の仮説（#1到達で+clicks）が実装ゼロのまま裏付き（PDCA の C）。可視クリッククエリは Cycle 004→016 の13サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>2本目の柱が5サイクル連続の単調改善</strong>：「バケーションレンタル 日本人オーナー」48imp・9clicks・3.4位・CTR18.75%（5→6→7→8→9clicks・4.0→3.9→3.8→3.7→3.4位）。R-K20 の期待値を支持。</li>
+      <li><strong>【変化】トップの指名（ブランド）系が伸長</strong>：<code>/</code> 20imp・9clicks・CTR45.00%・3.4位（Cycle 015 は 19/6/31.58%/5.3位）。推測：指名検索の増加。<code>/contact/</code>・<code>/map/</code> 各6imp・1.0位（navigational）。</li>
+      <li><strong>その他維持</strong>：「ハワイ島 コンドミニアム 日本人」13imp・12.1位（5→13 と増＝Q-K04 の回答価値上昇・R-K17）／「yuki 長男」9imp・5.2位（p=881・R-K16）／<code>/blog/</code> 8imp・2clicks・1.9位（R-K21）／<code>/howto/</code> 8imp・29.4位（R-K18）。<strong>ライブ実査・GA4照合</strong>：実行承認の制約で未実施＝「未確認」（R-K06 再確認は6サイクル連続未実施・配信/実装時 K-014）。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜25 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点</strong>：本丸が 2.0位・CTR36% と#1目前に到達＝R-K23 の読みが2サイクル連続の自然改善で裏付き、「#1到達で +3〜4clicks/期」が最も確度の高い伸びしろに。実装ゼロ9サイクルの在庫を「1回の編集で最大の刈り取り」に束ねる新規 <strong>R-K25（在庫統合＝<code>/features/</code> ワンパス実装パッケージ・🟡）</strong>1件に絞る（R-K20 title・R-K13 内部リンク・R-K19 定義段落を同一ページの1編集で完結・R-K24 順序準拠）。<strong>対応記録</strong>：spec の確定事実（13サイクル連続・成長9連続・本丸2.0位）更新・旧 Cycle 014 は archive へ移動済・配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 015 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 015 — 2026-07-08（変化検知：<strong>8サイクル連続の成長</strong>＝clicks 29→35・imp 177→193・平均5.2→5.0／<strong>本丸が“順位の天井”を突き破り始めた</strong>＝2.6→2.3位・12→17clicks・CTR29.3→34.69%（12サイクルで最も#1に接近）／2本目の柱4サイクル連続改善／勝ち筋12サイクル連続で反証なし／新規 R-K24＝借り物順位のカニバリ回避・移行設計）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長8サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-07-05・<strong>clicks=35/imp=193/平均5.0位</strong>（Cycle 014 は 29/177/5.2位）。clicks 6→14→17→21→23→25→27→29→35＝実装ゼロの複利成長が継続・平均順位も 5.2→5.0 に微改善。</li>
+      <li><strong>【変化・最重要】本丸が“順位の天井”を突き破り始めた</strong>：「ハワイ コンドミニアム 日本人オーナー」<strong>2.3位・17clicks・CTR34.69%（49imp）</strong>（Cycle 014 は 2.6位・12clicks・29.3%・41imp）＝順位 2.6→2.3 で12サイクル最高・clicks +5・CTR +5.4pt。R-K23（天井）が実装ゼロのまま自然に割れ始めた＝#1到達で +clicks の仮説が裏付き（PDCA の C）。勝ち筋は12サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>2本目の柱が4サイクル連続改善</strong>：「バケーションレンタル 日本人オーナー」45imp・8clicks・3.7位・CTR17.78%（5→6→7→8clicks・4.0→3.9→3.8→3.7位）。CTR横ばいは表示増の自然な希釈。</li>
+      <li><strong>【観測継続】</strong><code>/blog/</code> 7imp・2clicks・2.0位・CTR28.6%（発リンク元として定着・R-K21）／指名系 <code>/contact/</code>・<code>/map/</code> 各5imp・1.0位・<code>/blog/?p=5380</code> 6imp・1.5位（推測：ブランド検索）。「ハワイ島 コンドミニアム 日本人」12.0位（R-K17・Q-K04待ち）・「yuki 長男」8imp（p=881・R-K16）・<code>/howto/</code> 33.9位（R-K18）。<strong>ライブ実査・GA4照合</strong>：実行承認の制約で未実施＝「未確認」（R-K06 再確認は5サイクル連続未実施・配信/実装時 K-014）。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜24 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点</strong>：本丸が12サイクルで初めて#1圏に肉薄＝R-K23 の仮説がコンテンツの複利だけで裏付いた。本質は不変＝流入は自走・律速は配信（トークン登録＝Q-K02）で実装8サイクル連続0件。新規は飽和領域の重複でなく、割れ始めた天井を実装時に確実に刈り取る<strong>「借り物順位の移行設計」R-K24（🟡）</strong>1件に絞る（<code>/features/</code>→<code>/condominium/</code> のカニバリ回避＝(1)完全一致アンカーの内部リンクで権威受け渡し (2)取引意図/比較意図で title/h1 を撃ち分け (3)必要なら段階移行）。<strong>対応記録</strong>：spec の確定事実（12サイクル連続・成長8連続・天井突破の初動）更新・旧 Cycle 013 は archive へ移動済・配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 014 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 014 — 2026-07-07（変化検知：<strong>7サイクル連続の成長</strong>＝clicks 27→29・imp 165→177・平均5.2維持／<strong>2本目の柱が3サイクル単調改善でトレンド確定</strong>（バケーションレンタル 6→7clicks・3.9→3.8位・CTR17.1→18.0%）／勝ち筋11サイクル連続で反証なし／新規 R-K23＝順位の天井の競合SERPギャップ分析）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長7サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-07-04・<strong>clicks=29/imp=177/平均5.2位</strong>（Cycle 013 は 27/165/5.2位）。clicks 6→14→17→21→23→25→27→29＝実装ゼロの複利成長が継続。</li>
+      <li><strong>本丸「ハワイ コンドミニアム 日本人オーナー」2.6位・12clicks・CTR29.3%（41imp）</strong>（Cycle 013 は 11clicks/37imp/2.4位/29.7%）＝クリック・表示が積み増し、順位 2.4→2.6 は表示増に伴う自然な希釈。可視でクリックを生むクエリは11サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>【変化・重要】2本目の柱がトレンドに昇格</strong>：「ハワイ バケーションレンタル 日本人オーナー」39imp・7clicks・3.8位・CTR18.0%＝clicks・順位・CTR とも3サイクル連続で単調改善（5→6→7clicks・4.0→3.9→3.8位・15.6→17.1→18.0%）＝R-K19/R-K20 の裏付けが確度を増した（PDCA の C）。</li>
+      <li><strong>【観測継続】</strong><code>/blog/</code> 7imp・2clicks・2.0位・CTR28.6%（発リンク元として定着・R-K21）／指名系 <code>/contact/</code>・<code>/map/</code> 各5imp・1.0位・<code>/blog/?p=5380</code> 6imp・1.5位（推測：ブランド検索）。「ハワイ島 コンドミニアム 日本人」12.0位（R-K17・Q-K04待ち）・「yuki 長男」8imp（p=881・R-K16）・<code>/howto/</code> 33.9位（R-K18）。<strong>ライブ実査・GA4照合</strong>：実行承認の制約で未実施＝「未確認」（R-K06 再確認は4サイクル連続未実施・配信/実装時 K-014）。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜23 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点</strong>：複利成長は既定路線・2本目の柱のトレンド確定が収穫。本質は11サイクルで不変＝流入は自走・律速は配信（トークン登録＝Q-K02）で実装7サイクル連続0件。新規は未踏の分析次元＝<strong>本丸が11サイクル 2.4〜2.6位から#1に届かない「順位の天井」の競合SERPギャップ分析 R-K23（🟡）</strong>1件に絞る（暫定仮説＝借り物順位の /features/ でなく正規の /condominium/ を R-K06+R-K07 で立て直す）。<strong>対応記録</strong>：spec の確定事実（11サイクル連続・成長7連続・2本目の柱トレンド化）更新・旧 Cycle 012 は archive へ移動済・配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 013 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 013 — 2026-07-06（変化検知：<strong>6サイクル連続の成長</strong>＝clicks 25→27・imp 156→165・平均5.3→5.2／<strong>2本目の柱が初めて改善</strong>＝バケーションレンタル 5→6clicks・4.0→3.9位・CTR15.6→17.1%／勝ち筋10サイクル連続で反証なし／新規 R-K22＝配信迂回の刈り取り前倒しパス）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長6サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-07-03・<strong>clicks=27/imp=165/平均5.2位</strong>（Cycle 012 は 25/156/5.3位）。clicks 6→14→17→21→23→25→27＝実装ゼロの複利成長が継続。平均順位も 5.3→5.2 に微改善。</li>
+      <li><strong>本丸「ハワイ コンドミニアム 日本人オーナー」2.4位・11clicks・CTR29.7%（37imp）</strong>（Cycle 012 は 10clicks/35imp/2.5位/28.6%）。可視でクリックを生むクエリは10サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>【変化・重要】2本目の柱が初めて改善</strong>：「ハワイ バケーションレンタル 日本人オーナー」35imp・6clicks・3.9位・CTR17.1%（Cycle 012 は 32imp・5clicks・4.0位・15.6%）＝横ばいだった2本目が clicks・順位・CTR とも初めて前進（R-K19/R-K20 の裏付け・PDCA の C）。</li>
+      <li><strong>【観測継続】</strong><code>/blog/</code> インデックス 7imp・2clicks・2.0位・CTR28.6%（発リンク元として定着・R-K21）／指名系 <code>/map/</code>・<code>/contact/</code> 各5imp・1.0位・<code>/blog/?p=5380</code> 6imp・1.5位（推測：ブランド検索）。「ハワイ島 コンドミニアム 日本人」11.9位（R-K17・Q-K04待ち）・「yuki 長男」7imp（p=881・R-K16）・<code>/howto/</code> 33.9位（R-K18）。<strong>GA4</strong>：dataset 未確認。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜22 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点</strong>：6サイクル連続成長で複利成長は既定路線。今サイクルの新規性は横ばいだった2本目の柱（バケーションレンタル）が初めて前進したこと＝R-K19/R-K20 の仮説を自然増が裏付けた。本質は不変＝流入は自走・律速は CV刈り取り（R-K13/R-K15/R-K20/R-K21）と配信（トークン登録＝Q-K02）で6サイクル連続実装0件。ならば次の価値は新規SEOでなく<strong>配信を待たず最小 quick-win（R-K20/R-K06 の1行修正）を社長が WordPress で直接適用する迂回策</strong>＝新規 R-K22（🔴）。<strong>対応記録</strong>：spec の確定事実（10サイクル連続・成長6連続・2本目に初動）更新・旧 Cycle 011 は archive へ移動済・配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 012 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 012 — 2026-07-05（変化検知：<strong>5サイクル連続の成長</strong>＝clicks 23→25・imp 141→156・平均5.5→5.3／<strong>新観測＝/blog/ インデックスが実クリック源に</strong>（2.0位）→新規 R-K21／勝ち筋9サイクル連続で反証なし）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長5サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-07-02・<strong>clicks=25/imp=156/平均5.3位</strong>（Cycle 011 は 23/141/5.5位）。clicks 6→14→17→21→23→25＝実装ゼロの複利成長が継続。平均順位も 5.5→5.3 に微改善（低順位クエリの表示面参入が一巡）。</li>
+      <li><strong>本丸「ハワイ コンドミニアム 日本人オーナー」2.5位・10clicks・CTR28.6%（35imp）</strong>（Cycle 011 は 9clicks/30imp/2.4位/30%）。可視でクリックを生むクエリは9サイクル連続で100%「日本人オーナー」系・反証なし。2本目「バケーションレンタル 日本人オーナー」は 32imp・5clicks・4.0位・CTR15.6% で横ばい（R-K19/R-K20）。</li>
+      <li><strong>【新観測・重要】<code>/blog/</code> インデックスが実クリック源に育った</strong>：7imp・<strong>2clicks・平均2.0位・CTR28.6%</strong>（前サイクルまで表示のみ）。個人日記の目次ながら1ページ目に定着した発リンク元。物件/予約への文脈内リンクが無く刈り取れていない→新規 <strong>R-K21</strong>（🟢・インデックス／テンプレ単位の恒常導線・R-K16 の個別記事救済とは別軸）。</li>
+      <li><strong>【観測継続】指名検索の芽（推測）</strong>：<code>/contact/</code>・<code>/map/</code>・<code>/blog/?p=5380</code> 各5imp・平均1.0位・0click（Cycle 011 は各4imp）。トップ17imp・CTR35.3%・5.0位。「ハワイ島 コンドミニアム 日本人」11.9位（R-K17・Q-K04待ち）・「yuki 長男」6imp（p=881 日記クエリ・R-K16）・<code>/howto/</code> 33.9位（R-K18）。<strong>GA4</strong>：dataset 未確認。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜21 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点</strong>：5サイクル連続成長で複利成長は既定路線。今サイクルの新規性は <code>/blog/</code> インデックスが2.0位で実クリック源に育ったこと＝「日記だから流入源価値は薄い」領域が1ページ目の発リンク元という別価値を帯びた。個別記事救済（R-K16）と切り分け、インデックス／テンプレ単位で常設の物件・予約導線を差せば2.0位資産を全記事に波及（R-K21）。本質は不変＝流入は自走・律速は CV刈り取り（R-K13/R-K15/R-K20/R-K21）と配信（トークン登録＝Q-K02）。<strong>新規提案</strong>：R-K21（🟢）1件に絞る（ゼロにしない）。<strong>対応記録</strong>：spec の確定事実（9サイクル連続・成長5連続・/blog/ click 源）更新・旧 Cycle 010 は archive へ移動済・配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 011 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 011 — 2026-07-04（変化検知：<strong>4サイクル連続の成長</strong>＝clicks 21→23・imp 117→141／<strong>ライブ実査で重要な訂正2件</strong>＝/features/ の title に勝ち筋語「日本人オーナー」が無い→新規 R-K20／CV導線は既に有り・欠落は物件リンク→R-K13 精緻化）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長が4サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-07-01・<strong>clicks=23/imp=141</strong>（Cycle 010 は 21/117・〜06-30）。クリック・表示とも4サイクル連続で増（clicks 6→14→17→21→23）＝実装ゼロの複利成長が継続。</li>
+      <li><strong>平均順位は 4.2→5.5 に見かけ悪化＝後退ではない</strong>：新規の低順位クエリ（「ハワイ 航空券 コンドミニアム」37.4位／<code>/howto/</code> 33.9位）が平均を押し下げただけで、本丸「ハワイ コンドミニアム 日本人オーナー」は<strong>2.4位・9clicks・CTR30%</strong>を維持＝表示面の拡大であって核の劣化ではない。</li>
+      <li><strong>2本目の柱が再び表示数トップ</strong>：「ハワイ バケーションレンタル 日本人オーナー」32imp（本丸30imp超）・5clicks・4.0位・CTR15.6%＝本丸に劣後（R-K19/R-K20）。可視でクリックを生むクエリは8サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>【ライブ実査1・訂正】<code>/features/</code> の現行 title に勝ち筋語「日本人オーナー」が無い</strong>：hp-audit 実測 title＝「ヨーコハワイが選ばれる８つのポイント | ハワイ・ワイキキのコンドミニアムレンタル。ヨーコハワイバケーション。」（55字）。「日本人オーナー」は description のみ・「バケーションレンタル」も語句として無い＝spec の「title 最適化済」を訂正し新規 <strong>R-K20</strong>（🔴 quick-win）を起票。</li>
+      <li><strong>【ライブ実査2・精緻化】<code>/features/</code> の CV導線は既に存在</strong>：tel 808-282-0224・mailto・「コンドミニアムのご予約／お問い合わせ」→<code>/contact/</code> の2アンカーあり。ただし物件ページ <code>/condominium/</code> への内部リンクは無い＝R-K13 を「CTA弱い」→「予約導線は有り・物件リンクが欠落」に精緻化。canonical/OGP/JSON-LD 無し・h1=10 も再確認（R-K03/R-K04/R-K11）。</li>
+      <li><strong>【新観測】指名検索の芽が強化（推測）</strong>：<code>/contact/</code>・<code>/map/</code>・<code>/blog/?p=5380</code> が各4imp・平均1.0位で継続（Cycle 010 は各3imp）。トップ14imp・CTR35.7%・5.4位。<strong>隣接意図「ハワイ 航空券 コンドミニアム」初出</strong>（7imp・37.4位・0click）＝深追いしない観察。p=881 は日記クエリ再確認（「yuki 長男」5imp・R-K16 発リンク元価値のみ）。<strong>GA4</strong>：dataset 未確認。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜19 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-700"><strong>観点</strong>：4サイクル連続成長で複利成長は既定路線。今サイクルの最大の価値は<strong>ライブ実査で「最適化済と信じていた title に最強の勝ち筋語が入っていなかった」ことを発見・訂正</strong>し、固有情報もトークンも要らない一等地 quick-win（R-K20）を確定した点。律速は依然 CV刈り取り（R-K13/R-K15）と配信（トークン登録）。<strong>新規提案</strong>：R-K20（🔴 /features/ title に勝ち筋語投入・title 1行差し替え）。<strong>対応記録</strong>：spec の title 記述訂正・R-K19 前提確認解決・R-K13 精緻化。旧 Cycle 009 は archive へ移動済。配信は <code>yokohawaii-dev</code> トークン未登録で保留。</p>
+  </div>
+
+  <!-- Cycle 010 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 010 — 2026-07-03（変化検知：<strong>3サイクル連続の成長</strong>＝clicks 17→21・imp 91→117／2本目の柱クエリが表示数で本丸を逆転→新規 R-K19／【事実訂正】R-K16 の p=881 は日記クエリと判明）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長が3サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-06-30・<strong>clicks=21/imp=117/平均4.2位</strong>（Cycle 009 は 17/91/4.9位）。全指標が3サイクル連続改善＝実装ゼロの複利成長が確定的。</li>
+      <li><strong>本丸「ハワイ コンドミニアム 日本人オーナー」2.5位・9clicks・CTR33%</strong>（/features/ 上1.8位）。クリックを生むクエリは7サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>【新観測1】2本目の柱が表示数で本丸を逆転</strong>：「ハワイ バケーションレンタル 日本人オーナー」29imp（本丸27imp超・サイト最多表示）・5clicks・4.0位・CTR17%＝順位/CTR劣後→新規 <strong>R-K19</strong>。</li>
+      <li><strong>【新観測2・事実訂正】<code>/blog/?p=881</code> の可視クエリは「yuki 長男」（日記系）のみ</strong>＝買い手意図でない。Cycle 009 の「R-K16 最優先ターゲット」評価を訂正（発リンク元価値のみ残す・🟢据え置き）。</li>
+      <li><strong>【新観測3】指名検索の芽（推測）</strong>：<code>/contact/</code>・<code>/map/</code>・<code>/blog/?p=5380</code> が各3imp・平均1.0位で新出現。トップ13imp・CTR30.8%・5.7位。</li>
+      <li><strong>主力は7サイクル連続 <code>/features/</code></strong>：80imp・15clicks・3.5位・CTR18.8%。<strong>GA4</strong>：dataset 未確認。<strong>社長回答</strong>：新規指示なし・Q未回答。<strong>実装</strong>：mailbox 0件・R-K01〜18 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">PDCA の C＝成長3連続で確度最大／A＝勝ち筋内部に序列（本丸ほぼ勝ち切り→伸びしろは2本目の柱へ・R-K19）＋自己訂正（p=881 の過大評価を格下げ）。律速は CV刈り取り（R-K13/R-K15）と配信（トークン登録）。未回答が溜まるため新規は1件（R-K19）に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 009 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 009 — 2026-07-02（変化検知：<strong>2サイクル連続の成長</strong>＝clicks 14→17・imp 72→91／勝ち筋を6サイクル連続で再追認／新観測2件＝/howto/ がGSC初出・既存ブログの1ページ目ターゲットを特定）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：成長が2サイクル連続</strong>。直近14日 first=2026-06-24/last=2026-06-29・<strong>clicks=17/imp=91/平均4.9位</strong>（Cycle 008 は 14/72/5.2位）。倍増したクリックがさらに積み上がり順位も改善＝上向き転換が本物であることを再確認。</li>
+      <li><strong>本丸クエリは最上位帯</strong>：「ハワイ コンドミニアム 日本人オーナー」<code>/features/</code> で 2.7位・7clicks・CTR33%。勝ち筋は6サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>主力は <code>/features/</code></strong>：60表示・平均4.0位・CTR20%・12clicks（R-K13 を6サイクル連続で再追認）。トップは12表示・6.1位・3clicks。</li>
+      <li><strong>【新観測1】<code>/howto/</code>（予約の流れ）が GSC 初出</strong>（23位・2表示）＝CV直結ページなのに主力に劣後→新規 <strong>R-K18</strong>。<strong>【新観測2】既存ブログの1ページ目ターゲットを特定</strong>：<code>/blog/?p=881</code> が5.8位・4表示（R-K16 の具体ターゲット化・後に Cycle 010 で日記クエリと訂正）。</li>
+      <li><strong>GA4</strong>：dataset 未出現。<strong>社長回答</strong>：新規指示なし・Q 未回答。<strong>実装</strong>：mailbox 0件・R-K01〜17 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">PDCA の C＝効果が2サイクル続いた＝成長は「日本人オーナー」コンテンツの複利。律速は(1)来た客のCV刈り取り（R-K13/R-K15）と(2)配信（トークン登録）だけ。固有情報・トークン不要の実弾（R-K16 具体ターゲット・R-K18 /howto/）が増えた。未回答が溜まるため新規は1件（R-K18）に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 008 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 008 — 2026-07-01（変化検知：<strong>初の明確な成長</strong>＝クリック倍増・本丸クエリが1位目前／勝ち筋を5サイクル連続で再追認／新規は2ページ目「あと一歩」を初めて名指し R-K17）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：初の明確な成長</strong>。直近14日 first=2026-06-24/last=2026-06-28・<strong>clicks=14/imp=72/平均5.2位</strong>（Cycle 007 は 6/42/6.5位）＝クリック倍増・順位改善。横ばい続きの構図が初めて上向いた。</li>
+      <li><strong>本丸クエリが1位目前</strong>：「ハワイ コンドミニアム 日本人オーナー」が <code>/features/</code> で <strong>1.7位・CTR37.5%・6clicks</strong>。「ハワイ バケーションレンタル 日本人オーナー」5.8位・3clicks。勝ち筋は5サイクル連続で100%「日本人オーナー」系・反証なし。</li>
+      <li><strong>主力は <code>/features/</code></strong>：46表示・平均4.0位・CTR19.6%（R-K13 再追認）。トップ9表示・7.7位。<strong>【新観測】<code>/blog/</code> が2.8位・CTR50%・2clicks</strong>（ただし可視クエリは個人名「yuki 長男」＝買い手意図でない）。<strong>【確認】/features/ の title/meta は既に本丸クエリに最適化済＝これが勝因</strong>（タイトル調整の重複提案を回避）。</li>
+      <li><strong>GA4</strong>：dataset 未出現。<strong>社長回答</strong>：新規指示なし・Q 未回答。<strong>実装</strong>：mailbox 0件・R-K01〜16 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">PDCA の C＝実装ゼロのまま「日本人オーナー」コンテンツが複利で効き始めた実証。蓄積で初めて2ページ目「あと一歩」クエリを名指せた→新規1件 <strong>R-K17</strong>（「ハワイ島 コンドミニアム 日本人」11.8位を1ページ目へ・ただしハワイ島物件の有無を Q-K04 で確認してから）。未回答が溜まるため新規は1件に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 007 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 007 — 2026-06-30（変化検知：GSC小幅増・勝ち筋を4サイクル連続で再追認／新観測＝既存ブログが GSC に出始めた → 既存資産の救済を新規提案 R-K16）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：小幅増・構図不変</strong>。直近14日 first=2026-06-24/last=2026-06-27・clicks=6/imp=42/平均6.5位（Cycle 006 は clicks=5/imp=27）。表示は約1.5倍だが絶対量はまだ小さい＝効果実測・「あと一歩」抽出は蓄積待ち。</li>
+      <li><strong>勝っているクエリは4サイクル連続で100%「日本人オーナー」系</strong>（追認）：「ハワイ コンドミニアム 日本人オーナー」(11表示/3.4位/CTR18%)・「ハワイ バケーションレンタル 日本人オーナー」(8表示/7.0位)・「ハワイ島 コンドミニアム 日本人」(4表示/12位)。新規クエリ・反証なし。</li>
+      <li><strong>【新観測】既存ブログが GSC に表示され始めた</strong>：<code>/blog/?p=1462</code>(9.0位)・<code>?p=5380</code>・<code>?p=2804</code>(26位)・<code>/blog/</code> が各1表示で出現（004〜006 では非表示）＝インデックス進行・既存資産の救済余地（R-K16 の根拠）。</li>
+      <li><strong>主力ページは <code>/features/</code></strong>：27表示・平均4.5位・CTR14.8%でサイト最多（R-K13 再追認）。トップは7表示・9.6位。</li>
+      <li><strong>GA4</strong>：dataset 未出現。<strong>社長回答</strong>：新規指示なし・Q-K01〜03 未回答。<strong>実装</strong>：mailbox 0件・R-K01〜15 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">構図は4サイクル連続で安定＝大型新規は積んでも動かない（実装0件）。そこでこの回初めて GSC に現れた既存ブログに着目→新規1件 <strong>R-K16</strong>（既にインデックス済の「あと一歩」記事に勝ち筋語での内部リンク＋予約CTAを後付け＝新規記事より低コスト・固有情報/トークン不要で着手可）。未回答が溜まるため新規は1件に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 006 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 006 — 2026-06-29（変化検知：GSC横ばいを再追認／実証された勝ち筋「日本人オーナー」をハブ化して資産化を新規提案）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：ほぼ横ばい・構図不変</strong>。直近14日 first=2026-06-24/last=2026-06-26・clicks=5/imp=27/平均6.4位（Cycle 005 は clicks=5/imp=25）。流入クエリは3サイクル連続で100%「日本人オーナー」系（追認）、新規クエリ・反証なし。効果実測・「あと一歩」抽出は蓄積待ち。</li>
+      <li><strong>主力ページは <code>/features/</code></strong>：15表示・平均5.1位・CTR20%でサイト最多。トップは5表示・CTR40%・7.6位。</li>
+      <li><strong>GA4</strong>：dataset 未出現。<strong>社長回答</strong>：新規指示なし・Q-K01〜03 未回答。<strong>実装</strong>：mailbox 0件・R-K01〜14 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">PDCA の C→A＝実証された需要に資源を寄せる。「クリックを生むクエリは例外なく『日本人オーナー』＝代理店競合が名乗れない固有の堀」を所与に、受け皿が薄い点に着目→新規1件 <strong>R-K15</strong>（日本人オーナー直接運営の信頼ハブを新設）。「勝っているクエリは100%日本人オーナー系」を spec の確定事実へ昇格。未回答が溜まるため新規は1件に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 005 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 005 — 2026-06-28（変化検知：GSC微増を追認／空きページ <code>/optional/</code> の活用を新規提案）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC：微増・構図不変</strong>。直近14日 first=2026-06-24/last=2026-06-25・clicks=5/imp=25/平均5.9位（Cycle 004 は clicks=2/imp=12）。量はまだ少なく効果実測・「あと一歩」抽出は蓄積待ち。流入クエリは全て「日本人オーナー」系（追認）、新規クエリ・反証なし。</li>
+      <li><strong>主力ページは <code>/features/</code></strong>：13表示・平均3.8位・CTR23%でサイト最多（R-K13 を追認）。トップは5表示・7.6位。</li>
+      <li><strong>GA4</strong>：dataset 未出現。<strong>社長回答</strong>：新規指示なし・Q-K01〜03 未回答。<strong>実装</strong>：mailbox 0件・R-K01〜13 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">COMPOUND で技術/コピーの再指摘は避け、「ナビにあるのに中身が薄い <code>/optional/</code>」に着目→新規1件 <strong>R-K14</strong>（オプション情報の充実で不安解消＋ロングテール）。未回答が溜まるため新規は1件に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 004 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 004 — 2026-06-27（GSC実データ稼働開始：実データで再優先＋新規1件）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>✅ GSC 稼働開始</strong>：Cycle 003 まで 404 だった <code>searchconsole_yokohawaii</code> に実データ流入（first=2026-06-24・直近14日 clicks=2/imp=12/平均8.5位）。量は少なく傾向把握まで。</li>
+      <li><strong>流入クエリは全て「日本人オーナー」系の買い手意図</strong>：「ハワイ コンドミニアム 日本人オーナー」(5表示/5.2位)・「ハワイ バケーションレンタル 日本人オーナー」(2表示/4.0位/CTR50%)等。＝USP（日本人オーナー直接）がそのまま検索需要になっていると実データが裏付け。</li>
+      <li><strong>主力ページは <code>/features/</code></strong>：8表示・平均3.6位・CTR25%でサイト最上位＝Cycle 003 の「埋もれている良コンテンツ」が<strong>実は既に検索で勝っている</strong>と判明。トップは12位（2ページ目）。</li>
+      <li><strong>推測</strong>：「ハワイ島 コンドミニアム」(Big Island) でトップ12位だが物件はワイキキ(オアフ)＝地理意図ミスマッチの可能性（標本薄・断定せず）。</li>
+    </ul>
+    <p class="text-gray-600 mb-1"><strong>PDCA（C→A）</strong>：R-K06/R-K01 は修正時に実証語「日本人オーナー」「ワイキキ コンドミニアム」を反映／R-K11 は /features/ が既に3.6位の資産＝トップからの導線強化の優先度を上げる。</p>
+    <p class="text-gray-600">新規1件 <strong>R-K13</strong>（既に上位・最多表示の /features/ に予約/物件CTAを設置してCV刈り取り＝既存提案より即効）。未回答が溜まるため新規は1件に絞る（ゼロにしない）。</p>
+  </div>
+
+  <!-- Cycle 003 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 003 — 2026-06-26（全ページ深掘り：トップ以外を実査し新規提案7件）</h3>
+
+    <p class="font-semibold mt-2">なぜこのサイクルを回したか</p>
+    <p class="text-gray-700 mb-2">Cycle 002 は「前回提案が未着手・未回答だから新規提案を保留」として変化なしで終えたが、これは<strong>分析を止める理由にならない</strong>（社長指摘）。Cycle 001 はトップページ中心の診断で、<strong>下層ページ（物件・問い合わせ・予約方法・特徴・ギャラリー・ブログ）を個別に見ていなかった</strong>。GSC/GA4 が無くてもできるページ実査・競合比較を行い、データ不要の新規改善を洗い出した。</p>
+
+    <p class="font-semibold mt-3">本サイクルの確認（全ページ hp-audit ＋ 競合SERP）</p>
+    <ul class="list-disc list-inside space-y-1 text-gray-700 mb-2">
+      <li><strong>サイト構成</strong>：トップ／<code>/condominium/</code>（5室を1ページにアンカー集約）／<code>/contact/</code>／<code>/howto/</code>（予約〜空港到着ガイド・良コンテンツ）／<code>/features/</code>（選ばれる8つの理由）／<code>/gallery/</code>／<code>/optional/</code>（現状ほぼ「PCレンタル」のみ）／<code>/blog/</code>（個人日記）。CMS=WordPress。</li>
+      <li><strong>🔴重大な発見</strong>：主力の <code>/condominium/</code> の title が「ハワイの写真ギャラリー…」、meta も「写真ギャラリー…」で <code>/gallery/</code> と<strong>完全に同一（コピペ事故）</strong>。最重要のCVページが検索上「ギャラリー」になっており「ワイキキ コンドミニアム レンタル」等で取りに行けていない（＝R-K06）。</li>
+      <li><strong>物件情報</strong>：5室が1ページ同居（h1=7）。本文に「$1,100で滞在」「1ベッドルーム」等の断片はあるが、<strong>各室の料金目安・定員・最低宿泊・予約の流れが体系化されていない</strong>。競合（LeaLea by HIS／キャプテンクック等）は物件個別ページが標準（＝R-K07）。</li>
+      <li><strong>技術（全ページ共通）</strong>：canonical 0・OGP 0・Twitter 0・JSON-LD 0 は<strong>全ページで確認</strong>（Cycle 001 のトップ所見がサイト全体に及ぶことを裏取り）。旧式の meta keywords が残存。</li>
+      <li><strong>個別</strong>：/gallery/ は画像39枚中37枚 alt 空（R-K08）。/contact/ は meta 無し＋ページ内に tel/mailto リンク無し（R-K09）。/features/ は h1=10 で構造崩れ（R-K11）。ブログは「ヨーコのハワイ日記」＝検索意図を狙わない個人日記・meta 無し（R-K10）。</li>
+      <li><strong>競合の論点</strong>（"ワイキキ コンドミニアム レンタル" SERP上位）：LeaLeaバケーションレンタル（HIS）・キャプテンクック・Leihawaii 等。いずれも<strong>物件個別ページ・FAQ・エリア/特集記事</strong>を厚く持つ。ヨーコハワイの強み（オーナー直接=仲介手数料0円）は差別化十分だが、情報設計で負けている。</li>
+    </ul>
+    <p class="text-gray-600 mt-2">→ 本サイクルの新規提案 R-K06〜R-K12（詳細は当時の最新レポート）。R-K06=最優先（コピペ事故修正・工数小で即効）。未完了分は index の繰り越し表で追跡中。</p>
+  </div>
+
+  <!-- Cycle 002 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 002 — 2026-06-26（変化検知・軽：変化なし／回答待ち）</h3>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>GSC</strong>：<code>searchdata_url_impression</code> はまだ未生成（404）＝実データ蓄積待ち継続。</li>
+      <li><strong>GA4</strong>：専用 dataset 未出現。引き続き「データ未取得」。</li>
+      <li><strong>社長回答</strong>：新規指示なし。Q-K01〜Q-K03 未回答。<strong>実装</strong>：mailbox 新着なし・R-K01〜R-K05 未着手（トークン未登録で配信保留）。</li>
+    </ul>
+    <p class="text-gray-600">本サイクルは意図的に新規提案を保留し回答待ちとした（※後に「回答待ち≠分析停止」と是正＝Cycle 003 で深掘り再開）。</p>
+  </div>
+
+  <!-- Cycle 001 -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-6 bg-white text-sm">
+    <h3 class="font-semibold text-base mb-2">Cycle 001 — 2026-06-25（初回診断：技術・コンテンツ・ビジュアルの三本柱）</h3>
+
+    <p class="font-semibold text-gray-700 mb-1">データ状況</p>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-3">
+      <li>取得：サイト実査（<code>hp-audit.sh</code> オンページ信号）／トップのPC・SPスクショ（fold/full）を Read で確認／サイト内リンク構造。</li>
+      <li>未取得：<strong>GSC（蓄積待ち）</strong>・<strong>GA4（未確認＝Q-K01）</strong>。流入・順位・CV数は本サイクルでは扱わず（捏造しない）。</li>
+    </ul>
+
+    <p class="font-semibold text-gray-700 mb-1">総評</p>
+    <p class="text-gray-700 mb-2">「オーナー直接契約＝仲介手数料0円・日本人オーナー」という<strong>明確で強いUSP</strong>を持つワイキキのコンドミニアム・バケーションレンタル。だが<strong>ファーストビューでそのUSPが弱く（低コントラスト・見出し画像に埋もれ）、予約への明確なボタンが無い</strong>。技術面は <strong>meta description が壊れている（トップ「概要」2字）・OGP/canonical/構造化データが全て無く</strong>、SNS共有・検索表示で取りこぼしている。コンテンツ資産（物件5室・ブログ）はあるが、料金/予約手順など<strong>意思決定に必要な情報が薄い</strong>。</p>
+    <ul class="list-disc list-inside text-gray-700 space-y-0.5 mb-2">
+      <li><strong>✅ 良い点</strong>：USP が強い（仲介手数料0円・オーナー直接・日本人対応）／物件5室・ギャラリー・地図・オプショナル等コンテンツの幅がある／SPヘッダに TEL・MAIL・MENU が並び連絡導線は確保／TEL（808-282-0224）が常時上部。</li>
+      <li><strong>⚠️ 課題</strong>：meta description 壊れ（トップ2字）・OGP/Twitter/canonical/JSON-LD すべて無し／FVでUSP埋没・予約CTAボタン無し／viewportズーム禁止（高年齢層に不利）／h1が4個・alt欠落4／ブログ最終更新2024-11（鮮度低下）／物件ページの情報が薄い（料金・定員・予約手順）。</li>
+    </ul>
+    <p class="text-gray-600 mt-2">→ 本サイクルの新規提案 R-K01（meta固有化）・R-K02（FVのUSP＋予約CTA）・R-K03（OGP/canonical/JSON-LD）・R-K04（h1/viewport/alt）・R-K05（物件ページ充実）。詳細は当時の最新レポート。未完了分は index の繰り越し表で追跡中。</p>
+  </div>
+
+  <!-- Cycle 000 -->
+  <div class="border border-gray-200 rounded-lg p-5 mb-6 bg-white text-sm text-gray-600">
+    <h3 class="font-semibold mb-1">Cycle 000 — 2026-06-25（ループ登録）</h3>
+    <p>ヨーコハワイを <code>/hp-loop yokohawaii</code> として登録（config 登録表・<code>sites/yokohawaii.md</code>・<code>from-president.md</code>・本掲示板3層・ディスパッチャ <code>agent-tick.sh</code>）。対象URL・GSC dataset は hana-tools から取得。GSC は実データ蓄積待ち。</p>
+  </div>
 
 </div>
 </body>
