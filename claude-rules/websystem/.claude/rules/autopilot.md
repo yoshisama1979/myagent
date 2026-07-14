@@ -390,7 +390,7 @@ Dialogue モードの Codex セカンドオピニオン（`dialogue-mode.md` Ste
 #### 手順
 
 1. **本ラウンドの累積差分を取得**する：`git diff <start_head>..HEAD`（`<start_head>` ＝ goals.md に記録した `autopilot_start_head`）。**`HEAD~N` は使わない**（他セッション・手動コミット・revert・paused/resumed でずれるため）。`autopilot_start_head` が無く起点が確定できない場合は、レビュー範囲不確定として **`paused` にしユーザーに確認**（推測の範囲でレビューしない）。
-2. **レビュー入力セットを渡す**（差分だけでは仕様不整合・波及を判断しきれない）。最低限：goals.md の **確定仕様/DoD**・`git diff --stat <start_head>..HEAD`・`git diff <start_head>..HEAD`・`git log --oneline <start_head>..HEAD`・**テスト実行結果**・既知の残課題。手段は `/codex-review` または `mcp__codex__codex`（`sandbox: read-only` / `approval-policy: never`）。観点＝**バグ・セキュリティ・確定仕様/DoD との不整合・既存機能への波及（regression）・データ整合性**。
+2. **レビュー入力セットを渡す**（差分だけでは仕様不整合・波及を判断しきれない）。最低限：goals.md の **確定仕様/DoD**・`git diff --stat <start_head>..HEAD`・`git diff <start_head>..HEAD`・`git log --oneline <start_head>..HEAD`・**テスト実行結果**・既知の残課題。手段は `/codex-review` または `mcp__codex__codex`（`sandbox: read-only` / `approval-policy: never`・`model` は指定せず実行環境の `~/.codex/config.toml` の既定に従う〔2026-07-14 時点の推奨既定＝`gpt-5.6-sol`。明示するならサフィックス無し系列〕。実使用モデル名を判断ログに明記）。観点＝**バグ・セキュリティ・確定仕様/DoD との不整合・既存機能への波及（regression）・データ整合性**。
 3. 結果を 🔴レビューCritical／🟡Warning／🟢Suggestion に分類し、**判断ログ**（7章フォーマット）に「**Codex 実装クロスレビュー（YYYY-MM-DD HH:MM）／対象範囲 `<start_head>..<reviewed_head>`**」として原文と Claude の見解（対応する／しない＋理由）を記録する。
 
 #### 🔴レビューCritical の定義と完了ブロック
