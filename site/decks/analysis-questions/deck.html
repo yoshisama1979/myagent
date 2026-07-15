@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>解析エージェントからの質問事項レポート（2026-07-15）</title>
+<style>
+/* ★ @page はトップレベル・実寸指定（deck-format.md 落とし穴1a/1b） */
+@page { size: 297mm 210mm; margin: 0; }
+
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", sans-serif;
+  color: #1e293b;
+  background: #64748b; /* 画面閲覧時のスライド間の地 */
+}
+.slide {
+  width: 297mm; height: 210mm;
+  box-sizing: border-box;
+  padding: 12mm 14mm;
+  background: #ffffff;
+  break-after: page;
+  page-break-after: always;
+  overflow: hidden;
+  position: relative;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+@media screen { .slide { margin: 8px auto; box-shadow: 0 2px 8px rgba(0,0,0,.35); } }
+
+/* 共通部品（意味が同じで、まとめて変えたくなるものだけ） */
+.slide-head { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 3px solid #0f766e; padding-bottom: 3mm; margin-bottom: 5mm; }
+.slide-head h2 { margin: 0; font-size: 17pt; color: #0f172a; }
+.slide-head .meta { font-size: 9.5pt; color: #64748b; }
+.badge { display: inline-block; font-size: 8.5pt; font-weight: bold; border-radius: 3px; padding: 0.5mm 2mm; vertical-align: middle; }
+.badge-red { background: #fee2e2; color: #b91c1c; }
+.badge-amber { background: #fef3c7; color: #b45309; }
+.badge-green { background: #d1fae5; color: #047857; }
+.badge-gray { background: #e2e8f0; color: #475569; }
+table.q { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 9.5pt; }
+table.q th { text-align: left; background: #0f766e; color: #fff; padding: 1.6mm 2mm; font-size: 9pt; }
+table.q td { border-bottom: 1px solid #cbd5e1; padding: 1.8mm 2mm; vertical-align: top; line-height: 1.45; }
+table.q tr:nth-child(even) td { background: #f8fafc; }
+.qno { font-family: "Consolas", monospace; font-weight: bold; color: #0f766e; }
+.opts { color: #334155; }
+.opts b { color: #0f172a; }
+.answer-to { position: absolute; bottom: 8mm; left: 14mm; right: 14mm; font-size: 9pt; color: #475569; background: #f1f5f9; border-left: 4px solid #0f766e; padding: 1.8mm 3mm; }
+.answer-to code, .mono { font-family: "Consolas", monospace; font-size: 8.5pt; background: #e2e8f0; padding: 0 1mm; border-radius: 2px; }
+.note { font-size: 8.5pt; color: #64748b; }
+.pagenum { position: absolute; bottom: 4mm; right: 8mm; font-size: 8pt; color: #94a3b8; }
+.lead { font-size: 10.5pt; color: #334155; margin: 0 0 3mm 0; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- ========== 1. 表紙 ========== -->
+<section class="slide" style="background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%); color: #fff; display: flex; flex-direction: column; justify-content: center;">
+  <p style="font-size: 11pt; letter-spacing: 2px; color: #5eead4; margin: 0 0 4mm 0;">株式会社はなさか — AI 解析システム</p>
+  <h1 style="font-size: 30pt; margin: 0 0 6mm 0; line-height: 1.3;">解析エージェントからの<br>質問事項レポート</h1>
+  <p style="font-size: 13pt; color: #ccfbf1; margin: 0 0 12mm 0;">全解析掲示板の「🔔 社長への質問・判断待ち」を1冊に集約 — このまま順に答えるだけで各ループが動きます</p>
+  <div style="display: flex; gap: 8mm; font-size: 10.5pt;">
+    <div style="background: rgba(255,255,255,.1); border-radius: 4px; padding: 4mm 7mm;"><div style="font-size: 20pt; font-weight: bold; color: #5eead4;">7</div>対象掲示板（HP解析6＋ブログ1）</div>
+    <div style="background: rgba(255,255,255,.1); border-radius: 4px; padding: 4mm 7mm;"><div style="font-size: 20pt; font-weight: bold; color: #fbbf24;">29</div>未回答の質問・判断待ち</div>
+    <div style="background: rgba(255,255,255,.1); border-radius: 4px; padding: 4mm 7mm;"><div style="font-size: 20pt; font-weight: bold; color: #f87171;">3</div>最優先（実装ルート停止・publish・GSC登録）</div>
+  </div>
+  <p style="position: absolute; bottom: 12mm; left: 14mm; font-size: 9.5pt; color: #94a3b8;">生成日：2026-07-15 ｜ 生成：/questions-deck（掲示板の 🔔 セクションから自動集約・毎回上書き再生成）</p>
+</section>
+
+<!-- ========== 2. サマリ ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>📋 全体サマリ — どこに何件・まず何を答えるか</h2><span class="meta">2026-07-15 時点</span></div>
+  <table class="q">
+    <colgroup><col style="width:16%"><col style="width:7%"><col style="width:47%"><col style="width:30%"></colgroup>
+    <thead><tr><th>掲示板（サイト）</th><th>件数</th><th>最重要の1件</th><th>回答先</th></tr></thead>
+    <tbody>
+      <tr><td><b>藤阪ガス</b>（fujisaka）</td><td>3</td><td><span class="badge badge-red">🚨最優先</span> 実装担当 fujisaka-dev が23日オフライン＝提案が誰にも届いていない。実装ルートの判断（3択）</td><td class="note">data/hp-loop/fujisaka/from-president.md ／ Slack日報返信</td></tr>
+      <tr><td><b>YCOM ブログ</b>（ycom/blog）</td><td>5</td><td><span class="badge badge-red">🚨最優先</span> 買い手向け記事を1本 publish（T-005 推奨・社長回答不要で公開可）。ブログ買い手CVは28日で0件と実測済み</td><td class="note">/hp-reply ／ data/blog-loop/ycom/from-president.md</td></tr>
+      <tr><td><b>今昔写語</b>（konjaku）</td><td>5</td><td><span class="badge badge-red">🚨最優先</span> ★Search Console 登録（約5分・社長だけで完結）＝他5サイトの勝ちパターン資産に接続できる唯一の関門</td><td class="note">data/hp-loop/konjaku/from-president.md ／ Slack日報返信</td></tr>
+      <tr><td><b>よしだ歯科</b>（yoshida）</td><td>4</td><td><span class="badge badge-amber">要確認</span> Q-Y07：電話タップCVが急減（週43→直近3日8件）。クライアントに実際の受電の増減を確認</td><td class="note">data/hp-loop/yoshida/from-president.md ／ Slack日報返信</td></tr>
+      <tr><td><b>ラリー</b>（rally）</td><td>7</td><td><span class="badge badge-amber">回答シート</span> Q-R02〜R06 は1行ずつ答えるだけの形に圧縮済み＋rally-dev トークン登録（13サイクル滞留）</td><td class="note">data/hp-loop/rally/from-president.md ／ Slack日報返信</td></tr>
+      <tr><td><b>ヨコハワイ</b>（yokohawaii）</td><td>3</td><td><span class="badge badge-amber">要判断</span> Q-K03：物件の料金・オーナー情報等の公開可否（3択）＋yokohawaii-dev トークン設定（手元作業）</td><td class="note">data/hp-loop/yokohawaii/from-president.md ／ Slack日報返信</td></tr>
+      <tr><td><b>YCOM 本体</b>（ycom）</td><td>2</td><td><span class="badge badge-green">余裕あれば</span> ④事例に出せる制作実績（許諾・数値・声）の指定 — コンテンツ5本ブリーフの最後の栓</td><td class="note">/hp-reply ／ Slack</td></tr>
+    </tbody>
+  </table>
+  <p class="lead" style="margin-top: 4mm;"><b>読み方</b>：件数の多さより <span class="badge badge-red">🚨最優先</span> の3件（藤阪ガス実装ルート／ブログ publish／今昔GSC登録）から。<b>3件とも「答え・作業とも数分」</b>で、それぞれ止まっているパイプライン全体が動き出します。質問ゼロの掲示板はありません。</p>
+  <div class="answer-to">💡 回答は<b>全部でなく1行でも前進します</b>。各スライド下部に回答先を明記しています。詳細な文脈は各掲示板 <span class="mono">http://100.123.104.87/hp-analysis/</span> の 🔔 セクション参照。</div>
+  <span class="pagenum">2</span>
+</section>
+
+<!-- ========== 3. 藤阪ガス ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>🔥 藤阪ガス（fujisakagas.com）— 3件</h2><span class="meta">HP解析 Cycle 035（2026-07-15）</span></div>
+  <table class="q">
+    <colgroup><col style="width:14%"><col style="width:48%"><col style="width:38%"></colgroup>
+    <thead><tr><th>件名</th><th>質問・お願い</th><th>選択肢／答え方</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-red">🚨最重要</span><br><span class="qno">実装ルート</span><br><span class="note">07-08 起票・継続</span></td>
+        <td>実装担当 <b>fujisaka-dev が23日間オフライン</b>（06-22 発の引き渡し3通が未受信のまま滞留）。掲示板の提案（R-F15・R-F18・R-F02 ほか）が<b>誰にも届いていません</b>。分析は続きますが、実装されなければ数字は動きません。</td>
+        <td class="opts">① fujisaka-dev を起動できる見込みはあるか<br>② 当面は社長が要点を手動で先方 web ご担当へ回す<br>③ web-hanasaka 等の別ルートで実装<br><span class="note">いずれでも「先方がそのまま着手できる粒度」のテキストを解析側が用意します</span></td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-amber">一声</span><br><span class="qno">R-F14</span><br><span class="note">06-22 ackから23日</span></td>
+        <td><span class="mono">/works/</span> だけ本番反映されていません（07-15 の本番GET再検証でも汎用 description のまま。対照の <span class="mono">/voice/</span> は反映済）＝<b>デプロイ漏れ／ビルド対象外／キャッシュ未更新が確定的</b>。GSC上は高順位維持＝反映できれば即CTR効果。</td>
+        <td class="opts">先方 web ご担当／fujisaka-dev へ<b>「works が本番に出ていない、デプロイ経路を確認して」と一声</b>いただくだけ（完了連絡で即・再GET検証します）</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-amber">確認</span><br><span class="qno">価格レンジ</span><br><span class="note">Q-F03関連・R-F02用</span></td>
+        <td>給湯器交換の<b>概算価格レンジ</b>がサイトに記載なし（「お見積り・キャンセル無料」のみ）。R-F02（給湯器ページ強化）で「費用の目安」を出すなら<b>クライアント確認が必要</b>（捏造しません）。</td>
+        <td class="opts">① クライアントに価格レンジを確認して共有<br>② 出せない → 「無料見積り」訴求のみで進める</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="answer-to">✍️ 回答先：<code>data/hp-loop/fujisaka/from-president.md</code> ／ Slack の fujisaka 日報スレッドに返信</div>
+  <span class="pagenum">3</span>
+</section>
+
+<!-- ========== 4. YCOM ブログ ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>📝 YCOM ブログ（y-com.info/contents/）— 5件</h2><span class="meta">ブログ解析 Cycle 030（2026-07-15）</span></div>
+  <p class="lead"><span class="badge badge-red">🚨最優先の1手</span> <b>買い手向け記事を1本 publish する（T-005 推奨・料金事実も社長回答も不要で公開可能）</b>。実測（GA4・28日）＝ブログは約2,500セッション集めて<b>買い手CV 0件</b>（読者が依頼者でないため）。買い手を連れて来られる完成済み記事 T-001/003/005/006/007 は<b>すべて未公開</b>です。</p>
+  <table class="q">
+    <colgroup><col style="width:11%"><col style="width:51%"><col style="width:38%"></colgroup>
+    <thead><tr><th>番号</th><th>質問</th><th>選択肢／答え方</th></tr></thead>
+    <tbody>
+      <tr><td><span class="qno">① Q-001</span></td><td>新規記事は「買い手意図（料金・選び方）」から着手してよいですか？（CVに効くのは T-001 費用相場・T-002 選び方）</td><td class="opts">(a) 買い手意図の新規から ／ (b) 既存記事のCTR・導線改善を優先 ／ (c) 両方並行</td></tr>
+      <tr><td><span class="qno">② Q-002</span></td><td>T-001（費用記事）の<b>料金レンジ・補助金</b>を教えてください。ドラフトは一般相場版で<b>完成済み</b>＝回答が来たら相場表を YCOM 料金に差し替えるだけで公開可。「ホームページ制作 料金表」月130表示・11.6位・CTR0% の需要を受ける弾です。</td><td class="opts">(a) 実レンジ・補助金を共有 ／ (b) 一般相場版のまま社長レビューで公開</td></tr>
+      <tr><td><span class="qno">③ B-001</span></td><td>公開記事「ロゴの変遷」（p=2082）の<b>改善版＝WP下書き ID 8315</b> のレビュー（元記事は無傷）。確認は WP管理画面 → 投稿一覧 → 下書き「【改善版】…」のプレビューから（URL直開きは500になります）。</td><td class="opts">(a) この改善版で本番反映してよいか ／ (b) meta の企業名を本文で扱う社名（BMW・マクドナルド等）に合わせてよいか</td></tr>
+      <tr><td><span class="qno">④ Q-003</span></td><td>T-002（選び方記事・WP下書き ID 8311）に必要な事実（web-hanasaka が「開発の推測では確定できない」と社長へ差し戻し）：<b>得意分野・強み／運用・保守でできること／制作の対応範囲／料金体系の方式／関西の対応エリア</b>の5点。</td><td class="opts">分かる範囲・ざっくりで可（金額そのものは②と共通でOK）</td></tr>
+      <tr><td><span class="qno">⑤ Q-005</span></td><td>「公開1本待ち」で状態が凍っている間、GSC の再確認を<b>毎日→週1回</b>に落としてよいですか？（5窓連続で結論が同じ＝毎日の再取得は新情報がほぼ無い。公開・新指示があれば即日復帰）</td><td class="opts">(a) 週1回に落とす〔おすすめ〕 ／ (b) 毎日のまま</td></tr>
+    </tbody>
+  </table>
+  <div class="answer-to">✍️ 回答先：<code>/hp-reply &lt;コメント&gt;</code> ／ <code>data/blog-loop/ycom/from-president.md</code>。publish は WP 管理画面から（または <span class="mono">bin/wp-draft.py post --client ycom … T-005_body.html</span> → WP で公開）</div>
+  <span class="pagenum">4</span>
+</section>
+
+<!-- ========== 5. 今昔写語 ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>📷 今昔写語（konjaku-photo.jp）— 5件</h2><span class="meta">HP解析 Cycle 013（2026-07-13・週次）</span></div>
+  <p class="lead"><span class="badge badge-red">🚨律速の1行</span> <b>★ Search Console に konjaku-photo.jp を登録する（約5分・社長だけで完結）</b>。分析の弾は満載（R-J01〜J12＝12本が引き渡し待ち）ですが、全社の勝ちパターン・ライブラリ収録の型は<b>すべて GSC データ前提</b>＝登録が「他5サイトの資産に接続できるかどうかの唯一の関門」です。画像検索（このサービスの本丸）の獲得状況も見えるようになります。</p>
+  <table class="q">
+    <colgroup><col style="width:11%"><col style="width:53%"><col style="width:36%"></colgroup>
+    <thead><tr><th>番号</th><th>質問</th><th>選択肢／答え方</th></tr></thead>
+    <tbody>
+      <tr><td><span class="qno">Q-J01</span></td><td>写真を投稿するのは誰ですか？「投稿ユーザー増」施策の前提が変わります。<span class="note">（推測：トップのコメント欄に一般ユーザー名が並び UGC に見えます→確定回答で R-J04・R-J06 の前提を固めます）</span></td><td class="opts">① 運営がキュレーション ／ ② 一般ユーザーのUGC ／ ③ 両方</td></tr>
+      <tr><td><span class="qno">Q-J02</span></td><td>個別の比較ページは<b>場所ごとにURLが分かれていますか</b>（例 <span class="mono">/photo/123</span>）？ 現状ギャラリーがJS描画で、各比較が検索に出るかの鍵。SSR/プリレンダの方針もここに関わります。</td><td class="opts">① URLが分かれている ／ ② 分かれていない（1ページ内切替）</td></tr>
+      <tr><td><span class="qno">Q-J03</span></td><td>掲載している<b>昔の写真の出典・権利</b>はクリアですか？ あわせて<b>利用規約・プライバシーポリシー・運営者情報・削除依頼窓口</b>の有無も（描画後トップにフッターが見当たらないことを確認済み→R-J12）。</td><td class="opts">① 権利クリア＋規約類あり（場所を教えてください） ／ ② 一部整備中 ／ ③ 未整備（→整備を提案）</td></tr>
+      <tr><td><span class="qno">Q-J04</span></td><td>GSC・GA4 はいつ接続予定ですか？ 特に <b>GSC の「画像」タブ</b>で画像検索の効果が見たい＝上の★登録だけでも先行を推奨。</td><td class="opts">① 今週やる（★5分） ／ ② 時期を指定 ／ ③ 当面しない</td></tr>
+    </tbody>
+  </table>
+  <p class="note">※ 残る2つのお願い（konjaku-dev のトークン登録／読み取りGET許可）は据え置き＝📥欄で静かに追跡中（付録参照）。動けば即フル分析に戻します。</p>
+  <div class="answer-to">✍️ 回答先：<code>data/hp-loop/konjaku/from-president.md</code> ／ Slack の konjaku 日報スレッドに返信</div>
+  <span class="pagenum">5</span>
+</section>
+
+<!-- ========== 6. よしだ歯科 ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>🦷 よしだ歯科 — 4件</h2><span class="meta">HP解析 Cycle 033（2026-07-15）</span></div>
+  <table class="q">
+    <colgroup><col style="width:12%"><col style="width:50%"><col style="width:38%"></colgroup>
+    <thead><tr><th>番号</th><th>質問・連絡</th><th>選択肢／答え方</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-amber">📣連絡</span></td>
+        <td>yoshida-dev の<b>実装報告が mailbox に届いていません</b>（R-Y17 の本番反映は実査で確認済みだが、報告が新旧どちらの宛名にも未着）。報告が無いと反映確認・効果検証の開始が遅れます。</td>
+        <td class="opts">yoshida-dev に<b>「実装報告は <span class="mono">to: hp-loop-yoshida</span> 宛で送る」</b>と一言お伝えください</td>
+      </tr>
+      <tr>
+        <td><span class="qno">Q-Y07</span><br><span class="badge badge-amber">要確認</span></td>
+        <td><b>電話タップCV（tel）が急減</b>：週次 43→28→22→15→直近3日8件（WEB予約は健全）。実査の結果、電話リンクは現存しイベントも発火継続＝<b>全損ではなく部分的な低下</b>（一部導線の計測漏れ or 実減の複合）。<b>実際の受電件数との突き合わせが決め手</b>です。</td>
+        <td class="opts">月1打合せ等でクライアントに「6月下旬〜7月の電話（新患・予約）が体感で減っているか」を確認：<br>① 実際に減っている → 原因究明へ（GBP・サイト外要因含む）<br>② 減っていない → 計測漏れ濃厚＝yoshida-dev の修理で解決</td>
+      </tr>
+      <tr>
+        <td><span class="qno">Q-Y01</span></td>
+        <td><b>WEB問診のURL</b>：yoshida-dev が R-Y10（PC常時予約CTA）に問診ボタンを足すには遷移先URLが必須ですが、現状サイトに導線がありません（GA4 でも実質未稼働）。WEB問診システムは導入予定／契約済みのURLはありますか？</td>
+        <td class="opts">① 近く取得 → R-Y10 に問診ボタンを組込み<br>② 未定 → 予約・電話の2導線で先行（問診ボタン保留）<br>③ 導入見直し</td>
+      </tr>
+      <tr>
+        <td><span class="qno">Q-Y05</span></td>
+        <td><b>症例の公開が始まった可能性</b>を検知：症例集 <span class="mono">/jirei/</span> の title/説明が「インプラントの症例紹介｜実際の症例写真と担当医のコメントを掲載」に変化（これまで枠のみ・公開0件）。</td>
+        <td class="opts">(1) 症例は公開が始まりましたか？（→済なら次サイクルで title/メタ/構造化データ監査）<br>(2) 続きはどのカテゴリから？（おすすめ＝矯正〔インビザライン/こども予防矯正〕・審美〔ホワイトニング〕）</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="answer-to">✍️ 回答先：<code>data/hp-loop/yoshida/from-president.md</code> ／ Slack のよしだ歯科 日報スレッドに返信</div>
+  <span class="pagenum">6</span>
+</section>
+
+<!-- ========== 7. ラリー ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>🎯 ラリー（rally）— 7件（1行ずつ答えるだけの回答シート）</h2><span class="meta">HP解析 Cycle 013（2026-07-13・週次）</span></div>
+  <p class="lead">掲示板側で「1枚の回答シート」に圧縮済み。<b>上から順に1行ずつ答えるだけで、対応する提案パックが動きます</b>（全部でなく1行でも可）。</p>
+  <table class="q">
+    <colgroup><col style="width:9%"><col style="width:56%"><col style="width:35%"></colgroup>
+    <thead><tr><th>番号</th><th>質問（一言で答えられる形）</th><th>答えると動く提案</th></tr></thead>
+    <tbody>
+      <tr><td><span class="qno">Q-R02</span></td><td>登録ボタン・ロゴ・ナビのアイコンが <b>□（豆腐）</b>に見えます。社長の実機でも□ですか？ → <b>① 実機でも□（実バグ）／② 実機は正常（当方の環境要因）</b></td><td>R-R03（登録ボタンの文字が読めない＝致命）</td></tr>
+      <tr><td><span class="qno">Q-R04</span></td><td>位置情報を許可しないとトップが<b>エラー表示</b>に。→ <b>① 位置情報を任意にして「エリア・テーマから探す」を第一手に〔推奨〕／② 必須のまま</b>。あわせて<b>メール登録の前にゲスト閲覧を挟んでよいか（はい／いいえ）</b></td><td>R-R08（初回CVの本丸）</td></tr>
+      <tr><td><span class="qno">Q-R05</span></td><td>プライバシーポリシー・利用規約・運営者情報・問い合わせは <b>① ある（場所：___）／② 無い</b>　<span class="note">※メールを取得する B2C サービスとしての前提確認</span></td><td>R-R09・R-R12</td></tr>
+      <tr><td><span class="qno">Q-R06</span></td><td>① 主な対象は誰？（観光する大人／家族連れ／子ども／インバウンド）　② 全ひらがなのトーンは意図的？（はい／再考可）　③ 掲載スポットの種類と規模（およそ□件・□エリア）</td><td>R-R10・R-R14・R-R07</td></tr>
+      <tr><td><span class="qno">Q-R01</span></td><td>SPA（JS描画）で検索エンジンが中身を読めない件 → <b>① SSR/プリレンダを入れる／② 当面は OGP・meta のみ／③ 別の優先がある</b></td><td>R-R01（SEO根治）</td></tr>
+      <tr><td><span class="qno">Q-R03</span></td><td>GSC・GA4 の接続予定は？ <b>Search Console の登録だけでも先行</b>すると、どのクエリで見られているかが分かります（15分・効果測定の土台）</td><td>R-R06＋効果検証の開通</td></tr>
+      <tr><td><span class="badge badge-red">手元</span></td><td><b><span class="mono">rally-dev</span> の mailbox トークン登録</b>（VPS <span class="mono">data/secrets/mailbox-tokens.json</span> ＋ 拠点PCの <span class="mono">.env</span>）。これが済むまで提案を実装担当へ配信できません（<b>13サイクル分の提案が滞留中</b>）</td><td>全提案の実装配信</td></tr>
+    </tbody>
+  </table>
+  <div class="answer-to">✍️ 回答先：<code>data/hp-loop/rally/from-president.md</code> ／ Slack の rally 日報スレッドに返信</div>
+  <span class="pagenum">7</span>
+</section>
+
+<!-- ========== 8. ヨコハワイ ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>🌺 ヨコハワイ（yoko-hawaii.com）— 3件</h2><span class="meta">HP解析（2026-07 時点の繰り越し）</span></div>
+  <table class="q">
+    <colgroup><col style="width:12%"><col style="width:50%"><col style="width:38%"></colgroup>
+    <thead><tr><th>番号</th><th>質問</th><th>選択肢／答え方</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="qno">Q-K03</span><br><span class="badge badge-amber">要判断</span></td>
+        <td><b>固有情報の開示可否</b>：物件ページ（コンドミニアム5室）の充実に <b>料金目安・最低宿泊数・定員/設備・予約の流れ</b>を載せたい。さらに信頼ハブ（R-K15）に<b>オーナー情報（顔・経歴・日本語サポート体制）・実績数値（予約/リピート等）</b>を載せたい。公開してよい情報ですか？（実数値は捏造せず、確認の上で記載）</td>
+        <td class="opts">① 公開OK・数値/オーナー情報を提供できる<br>② 一部のみ（公開可の範囲を指定）<br>③ 価格は問い合わせ誘導のまま伏せる</td>
+      </tr>
+      <tr>
+        <td><span class="qno">Q-K04</span></td>
+        <td><b>ハワイ島（ビッグアイランド）の物件は扱っていますか？</b>（R-K17 の前提確認）：GSC で「ハワイ島 コンドミニアム 日本人」が12.3位（2ページ目）・13表示で滞留。現状の5室はワイキキ＝オアフ島中心と認識。扱うなら専用ページを作る価値あり、扱わないなら深追いしません。</td>
+        <td class="opts">① ハワイ島物件もある → 専用ページ化を検討<br>② オアフ（ワイキキ）のみ → このクエリは深追いしない</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-red">手元</span><br><span class="qno">Q-K02</span></td>
+        <td><b>yokohawaii-dev の mailbox トークン設定（残るは社長の手元作業のみ）</b>：専用機を立てる方針は決定済み・コード側の許可リストも登録済。トークン登録＋拠点機の稼働確認までは<b>配信を保留</b>（提案は掲示板に積むだけ）。手順は別途お渡し済み。</td>
+        <td class="opts">(1) VPS <span class="mono">data/secrets/mailbox-tokens.json</span> に <span class="mono">agent_id: yokohawaii-dev</span> を追加<br>(2) 拠点PCの <span class="mono">.env</span> に TOKEN/URL を設定</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="answer-to">✍️ 回答先：<code>data/hp-loop/yokohawaii/from-president.md</code> ／ Slack の本サイト日報スレッドに返信</div>
+  <span class="pagenum">8</span>
+</section>
+
+<!-- ========== 9. YCOM 本体 ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>🏢 YCOM 本体（y-com.info）— 2件</h2><span class="meta">HP解析（Cycle 020 起票・残り1点＋伝言1点）</span></div>
+  <p class="lead">形式的な未回答 Q-NNN はありません（Q-001〜Q-010 は回答済み・確定内容は spec に記録済み）。残っているのは<b>コンテンツの「中身」を埋めるための情報提供のお願い</b>です。</p>
+  <table class="q">
+    <colgroup><col style="width:14%"><col style="width:50%"><col style="width:36%"></colgroup>
+    <thead><tr><th>件名</th><th>お願い</th><th>答え方</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-amber">残り1点</span><br><span class="qno">④ 事例</span><br><span class="note">R-031 /works/ 用</span></td>
+        <td>コンテンツ充実（R-029〜034）の統合チェックリストのうち、<b>①料金 ②補助金 ③強み ⑤期間・対応範囲は回答済み＝残りは④のみ</b>。<b>個別事例ページにしてよい制作実績</b>はどれですか（屋号17件のうち）。各事例で (a) 掲載可否（許諾の要否） (b) 出せる成果（数値 or 定性で可） (c) お客様の声の掲載可否。<span class="note">※機能・工夫・サイトの特徴は許諾不要で web-hanasaka が納品物から書けます＝社長判断は「許諾・数値・声」だけ</span></td>
+        <td class="opts">案件名と (a)(b)(c) をざっくりで可。これが来ると事例ブリーフ（R-031）が動き、5本のコンテンツブリーフが完結します</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-green">実害なし</span><br><span class="qno">📨 伝言</span><br><span class="note">web-hanasaka・06-25</span></td>
+        <td><b>ブログ記事へのカテゴリ付与（WP運用）</b>：トップのブログカードに出る記事の多くがカテゴリ未設定で「未分類」表示。主要記事にカテゴリ（例：制作Tips / SEO / WordPress）を設定すると、カード表記が具体的になり回遊も促せます（未対応でも実害なし）。</td>
+        <td class="opts">WordPress 管理画面でカテゴリを設定 → 一言連絡いただければ web-hanasaka が表示を確認</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="answer-to">✍️ 回答先：<code>/hp-reply &lt;コメント&gt;</code> ／ Slack。いただいた事実は spec（確定・仕様）に記録し、次サイクルで web-hanasaka／blog-loop へ事実込みで引き渡します</div>
+  <span class="pagenum">9</span>
+</section>
+
+<!-- ========== 10. 回答方法まとめ ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>✍️ 回答方法のまとめ — どこに・どう答えるか</h2><span class="meta">3チャネルどれでも可</span></div>
+  <table class="q">
+    <colgroup><col style="width:20%"><col style="width:45%"><col style="width:35%"></colgroup>
+    <thead><tr><th>チャネル</th><th>やり方</th><th>向いている場面</th></tr></thead>
+    <tbody>
+      <tr><td><b>Slack 日報スレッド返信</b>（一番手軽）</td><td>各サイトの日報スレッド（hp-loop-&lt;site&gt; / blog-loop-ycom）に<b>そのまま返信</b>。次サイクル（cron）が自動で拾って反映します。</td><td>外出先・スマホから／1行だけ答えたいとき</td></tr>
+      <tr><td><b>from-president.md に記入</b></td><td>各サイトの <span class="mono">data/hp-loop/&lt;site&gt;/from-president.md</span>（ブログは <span class="mono">data/blog-loop/ycom/</span>）に追記。社長専用ファイル＝AIは読むだけです。</td><td>複数の質問にまとめて答えるとき／長めの指示</td></tr>
+      <tr><td><b>/hp-reply（代筆転記）</b></td><td>VPS セッションで <span class="mono">/hp-reply &lt;口語コメント&gt;</span> と打つだけ。AI が該当の from-president.md へ転記します（YCOM系）。</td><td>PCで作業中・口語でさっと伝えたいとき</td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top: 5mm; display: flex; gap: 5mm;">
+    <div style="flex: 1; background: #fef2f2; border: 1px solid #fca5a5; border-radius: 4px; padding: 3mm 4mm;">
+      <p style="margin: 0 0 1.5mm 0; font-weight: bold; color: #b91c1c; font-size: 10.5pt;">🚨 まずこの3つ（各数分・効果最大）</p>
+      <ol style="margin: 0; padding-left: 5mm; font-size: 9.5pt; line-height: 1.6;">
+        <li><b>藤阪ガス</b>：実装ルートの判断（①②③のどれか1文字でも）</li>
+        <li><b>ブログ</b>：T-005 を WP で publish（回答不要・公開するだけ）</li>
+        <li><b>今昔写語</b>：Search Console 登録（約5分）</li>
+      </ol>
+    </div>
+    <div style="flex: 1; background: #f0fdf4; border: 1px solid #86efac; border-radius: 4px; padding: 3mm 4mm;">
+      <p style="margin: 0 0 1.5mm 0; font-weight: bold; color: #047857; font-size: 10.5pt;">💡 覚えておくと楽なこと</p>
+      <ul style="margin: 0; padding-left: 5mm; font-size: 9.5pt; line-height: 1.6;">
+        <li><b>全部答えなくてOK</b>＝1行でも該当パイプラインが前進します</li>
+        <li>選択肢の質問は「Q-R02は①」のような<b>番号だけの返信で通じます</b></li>
+        <li>回答済みのものは各ループが自動で消し込みます（このレポートは再生成で最新化）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="answer-to">🔄 このレポートの再生成：VPS セッションで <code>/questions-deck</code> と打つだけ（掲示板の最新状態から毎回作り直し・新しい解析サイトも自動で対象になります）</div>
+  <span class="pagenum">10</span>
+</section>
+
+<!-- ========== 11. 付録：📥 分析に欲しい情報 ========== -->
+<section class="slide">
+  <div class="slide-head"><h2>📥 付録：分析に欲しい情報（提供できるものがあれば）</h2><span class="meta">各掲示板の常設欄より・未解決のみ</span></div>
+  <p class="lead">「質問」ほど急ぎませんが、提供いただけると分析の精度が上がるもの。権限非依存で「あるべき姿」として書いています。</p>
+  <table class="q">
+    <colgroup><col style="width:14%"><col style="width:56%"><col style="width:30%"></colgroup>
+    <thead><tr><th>サイト</th><th>欲しいもの</th><th>優先</th></tr></thead>
+    <tbody>
+      <tr><td>YCOM 本体</td><td>表示速度/CWV の客観値（PageSpeed Insights 連携のツール化）— 画像WebP化（20MB→2.8MB）の効果実測に</td><td>🟢 低</td></tr>
+      <tr><td>YCOM ブログ</td><td>/price/ の実料金レンジ・補助金（Q-002 と共通）／T-002 の信頼性事実（Q-003 と共通）／記事末CTA・内部リンクの現状テンプレ（web-hanasaka から）</td><td>🔴（Q共通）／🟢</td></tr>
+      <tr><td>よしだ歯科</td><td>症例の最初の公開予定・優先カテゴリ（Q-Y05 と共通）／WEB予約 reservation イベントの厳密定義（押下数か完了数か）／WEB問診の確定URL（Q-Y01 と共通）</td><td>🟡</td></tr>
+      <tr><td>藤阪ガス</td><td>ga4-fetch.py の拡張可否：CV内訳（着地ページ別・流入元別）を読み取り専用のまま出せるようにする（現状は月次合計のみ）／給湯器交換の価格レンジ（🔔と共通）</td><td>🟡</td></tr>
+      <tr><td>ヨコハワイ</td><td>GA4 dataset の出現待ち（設定済み・蓄積待ち＝自動検知します）／物件・料金の固有情報（Q-K03 と共通）／本番へのライブ実査（curl / hp-audit）の実行許可 — 12サイクル連続で未実施</td><td>🟡</td></tr>
+      <tr><td>ラリー</td><td>GSC / GA4 の接続／「場所」データの規模・由来（運営登録/提携/UGC）／既存機能の有無（共有・招待／再訪メール・PWA／掲載窓口）／主要KPIの定義／<b>curl・hp-audit.sh・hp-shot.sh の実行許可リスト追加（統括案件・13サイクル実査停止中）</b></td><td>🟡〜🔴</td></tr>
+      <tr><td>今昔写語</td><td>GSC / GA4 の接続（★登録が最優先）／個別ページのURL構造／投稿モデルと昔写真の権利状況／主要KPIの定義／konjaku-dev のトークン登録・読み取りGET許可</td><td>🟡</td></tr>
+    </tbody>
+  </table>
+  <div class="answer-to">📖 詳細な文脈は各掲示板の 📥 欄へ：<code>http://100.123.104.87/hp-analysis/</code> ｜ このレポート＝読み取りビュー（回答の台帳は各 from-president.md と掲示板が正）</div>
+  <span class="pagenum">11</span>
+</section>
+
+</body>
+</html>

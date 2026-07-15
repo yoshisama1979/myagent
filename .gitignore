@@ -46,3 +46,10 @@ package-lock.json
 
 # HP分析ループの生データ・スクリーンショット（VPS-local・コミットしない＝大容量/再生成可）
 data/hp-loop/cycles/
+
+# decks: 安全確認まで PDF/画像は追跡しない（deck-format.md 🚨節）
+site/decks/ai-hisho/*.pdf
+site/decks/ai-hisho/deck-images/
+# decks: 質問事項レポートの PDF は /questions-deck で毎回再生成する生成物＝追跡しない
+site/decks/analysis-questions/*.pdf
+site/decks/analysis-questions/*/*.pdf
