@@ -6,6 +6,11 @@ blog-write モードの Phase 2 用。blog-loop/blog-write が作った記事ド
 WordPress REST API に **下書きとして** 投稿する（公開はしない）。
 
 設計（automation.md 準拠）:
+  - 本文は投稿前に Gutenberg ブロック化する（生HTMLのままだと WP が全体を「クラシック
+    (freeform)ブロック」に包み『非推奨のクラシックブロックを使おうとしています』の検証
+    エラー＋レイアウト崩れになるため）。属性なしの p / h1-h6 は native ブロック、
+    それ以外（スタイル付きの表・囲み等）は wp:html でレイアウトを変えず包む。
+    --no-blocks で無効化可（既に <!-- wp: --> を含む本文は二重変換しない）。
   - 書き込みは status=draft のみ。publish は不可（--status は draft 固定。他値はエラーで停止）。
   - 既存記事の本番上書きはしない（このスクリプトは新規 draft の作成だけ。post 更新機能は持たない）。
   - 秘密情報：ユーザー名・アプリパスワードは .env の <CLIENT>_WP_USER / <CLIENT>_WP_APP_PASSWORD を
@@ -36,6 +41,7 @@ import re
 import sys
 import urllib.error
 import urllib.request
+from html.parser import HTMLParser
 
 
 def err(msg):
@@ -193,6 +199,139 @@ def _extract_body(html):
     return content.strip()
 
 
+# --- Gutenberg ブロック化 --------------------------------------------------
+# 生HTMLをそのまま content で投げると、WP のブロックエディタが記事全体を1つの
+# 「クラシック(freeform)ブロック」に包み、『非推奨のクラシックブロックを使おうと
+# しています』の検証エラー＋レイアウト崩れになる。これを防ぐため、投稿前に
+# トップレベル要素をブロック区切り(<!-- wp:... -->)で包んでから送る。
+_VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input",
+              "link", "meta", "param", "source", "track", "wbr"}
+
+
+class _TopLevelSplitter(HTMLParser):
+    """HTML を「トップレベル要素」ごとの (start, end) スパンに分割する（stdlibのみ）。
+    ネストは depth で数え、depth が 0→1→…→0 に戻った所を1要素の境界とする。"""
+
+    def __init__(self, src):
+        super().__init__(convert_charrefs=False)
+        self.src = src
+        # 行頭の絶対オフセット表（getpos の (line,col) を絶対位置に直すため）
+        self.line_off = [0]
+        for i, ch in enumerate(src):
+            if ch == "\n":
+                self.line_off.append(i + 1)
+        self.depth = 0
+        self.cur_start = None
+        self.spans = []
+
+    def _off(self):
+        line, col = self.getpos()
+        return self.line_off[line - 1] + col
+
+    def _close_span_from(self, start):
+        # 終了タグ（`</tag>`＝属性を持たない）の位置から、その '>' の直後までを終端とする。
+        # 開始タグには使わない（属性値内に '>' があると誤って切れるため。_open_tag_span を使う）。
+        gt = self.src.find(">", start)
+        return (gt + 1) if gt != -1 else len(self.src)
+
+    def _open_tag_span(self):
+        # 開始タグ／自己終了タグは、その実テキスト長で終端を出す
+        # （属性値内の '>' 例: <img alt="変更前 > 変更後"> で切れないよう find('>') を使わない）。
+        s = self._off()
+        raw = self.get_starttag_text() or ""
+        return (s, s + len(raw))
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() in _VOID_TAGS:
+            if self.depth == 0:
+                self.spans.append(self._open_tag_span())
+            return
+        if self.depth == 0:
+            self.cur_start = self._off()
+        self.depth += 1
+
+    def handle_startendtag(self, tag, attrs):
+        if self.depth == 0:
+            self.spans.append(self._open_tag_span())
+
+    def handle_endtag(self, tag):
+        if self.depth == 0:
+            return  # 迷子の終了タグは無視
+        self.depth -= 1
+        if self.depth == 0 and self.cur_start is not None:
+            self.spans.append((self.cur_start, self._close_span_from(self._off())))
+            self.cur_start = None
+
+
+def _top_level_nodes(src):
+    """src を [("el", 要素HTML) | ("raw", 素の断片)] のトップレベル列に分割。"""
+    sp = _TopLevelSplitter(src)
+    sp.feed(src)
+    sp.close()
+    spans = sorted(sp.spans)
+    nodes, cursor = [], 0
+    for s, e in spans:
+        between = src[cursor:s]
+        if between.strip():
+            nodes.append(("raw", between))
+        nodes.append(("el", src[s:e]))
+        cursor = e
+    tail = src[cursor:]
+    if tail.strip():
+        nodes.append(("raw", tail))
+    return nodes
+
+
+def _wrap_block(html):
+    """1つのトップレベル要素を適切な Gutenberg ブロックで包む。
+    属性なしの p / h1-h6 だけ native ブロック（管理画面でリッチ編集可）に、
+    それ以外（スタイル付きの表・囲み・リスト等）は wp:html で verbatim に包む
+    （レイアウトを変えず・クラシック警告も検証エラーも出さない）。"""
+    body = html.strip()
+    # native 化は「厳密な <p> / <hN>（小文字・属性なし・余分な空白なし）」だけに限定する。
+    # <P>（大文字）・<p >（空白）・<p class=…>（属性）は Gutenberg の再生成マークアップと
+    # 差が出て検証エラーになり得るので、native にせず wp:html で verbatim に包む（安全側）。
+    m = re.match(r"<(p|h[1-6])>", body)
+    if m:
+        tag = m.group(1)
+        if tag == "p":
+            return "<!-- wp:paragraph -->\n%s\n<!-- /wp:paragraph -->" % body
+        level = int(tag[1])
+        meta = "" if level == 2 else ' {"level":%d}' % level  # 既定レベルは2
+        return "<!-- wp:heading%s -->\n%s\n<!-- /wp:heading -->" % (meta, body)
+    return "<!-- wp:html -->\n%s\n<!-- /wp:html -->" % body
+
+
+def to_gutenberg_blocks(content):
+    """生HTML本文を Gutenberg ブロックマークアップへ変換して返す。"""
+    nodes = _top_level_nodes(content)
+    if not nodes:
+        c = content.strip()
+        return "<!-- wp:html -->\n%s\n<!-- /wp:html -->" % c if c else ""
+    out = []
+    for kind, raw in nodes:
+        if kind == "raw":
+            # 説明用HTMLコメント等を除去し、実体が残るものだけ wp:html で包む
+            cleaned = re.sub(r"<!--.*?-->", "", raw, flags=re.S).strip()
+            if cleaned:
+                out.append("<!-- wp:html -->\n%s\n<!-- /wp:html -->" % cleaned)
+        else:
+            out.append(_wrap_block(raw))
+    return "\n\n".join(out)
+
+
+def _blockify(content, enable):
+    """投稿直前に content をブロック化。戻り値 (content, 説明ラベル)。
+    既にブロック区切りを含む場合と --no-blocks 指定時は変換しない。"""
+    if not enable:
+        return content, "スキップ(--no-blocks・生HTMLのまま=クラシックブロック警告の恐れ)"
+    if "<!-- wp:" in content:
+        return content, "変換なし(既にブロック区切りあり)"
+    blocks = to_gutenberg_blocks(content)
+    n = blocks.count("<!-- wp:")   # 開きデリミタ数＝ブロック数（"<!-- /wp:" は一致しない）
+    return blocks, "%d ブロックに変換(クラシックブロック回避)" % n
+
+
 def cmd_post(args):
     base, user, pw = load_creds(args.client)
     try:
@@ -206,16 +345,20 @@ def cmd_post(args):
     if not args.title.strip() or not content:
         err("ERROR: タイトルか本文が空です。")
         sys.exit(2)
+    content, block_note = _blockify(content, not args.no_blocks)
 
     posts_url = _endpoint(base, "/posts")   # 常にコレクション（/posts/<id> は作らない＝既存記事の更新に化けない）
     payload = {"title": args.title, "content": content, "status": "draft"}
     print(f"投稿先: {posts_url}")
     print(f"タイトル: {args.title}")
     print(f"本文: {len(content)} 文字（元HTML {len(raw)} 文字）/ status=draft（下書き・非公開）")
+    print(f"  ブロック化: {block_note}")
     if args.extract:
         print(f"  抽出(--extract)：<article>検出={had_article}")
     if args.dry_run:
         print("※ --dry-run のため送信しません。内容を確認してください。")
+        print("--- 変換後 content の先頭プレビュー（最大800字）---")
+        print(content[:800])
         return
 
     status, body = _request(posts_url, user, pw, "POST", payload)
@@ -299,14 +442,18 @@ def cmd_update(args):
     if not content:
         err("ERROR: 本文が空です。")
         sys.exit(2)
+    content, block_note = _blockify(content, not args.no_blocks)
     payload = {"content": content, "status": "draft"}   # status は draft を明示維持
     if args.title.strip():
         payload["title"] = args.title
     upd_url = _endpoint(base, f"/posts/{pid}")
     print(f"更新先: {upd_url}（現在 status=draft を確認済み）")
     print(f"本文: {len(content)} 文字 / status=draft 維持")
+    print(f"  ブロック化: {block_note}")
     if args.dry_run:
         print("※ --dry-run のため送信しません。")
+        print("--- 変換後 content の先頭プレビュー（最大800字）---")
+        print(content[:800])
         return
     status, body = _request(upd_url, user, pw, "POST", payload)
     if status not in (200, 201):
@@ -344,6 +491,8 @@ def main():
     pp.add_argument("--html-file", required=True)
     pp.add_argument("--extract", action="store_true",
                     help="HTMLから <article> の中身だけ抽出して投稿する")
+    pp.add_argument("--no-blocks", action="store_true",
+                    help="Gutenbergブロック化を無効化（生HTMLのまま投稿＝クラシックブロック警告の恐れ）")
     pp.add_argument("--dry-run", action="store_true", help="送信せず内容の要約だけ表示")
     pp.set_defaults(func=cmd_post)
 
@@ -354,6 +503,8 @@ def main():
     pu.add_argument("--html-file", required=True)
     pu.add_argument("--extract", action="store_true",
                     help="HTMLから <article> の中身だけ抽出して更新する")
+    pu.add_argument("--no-blocks", action="store_true",
+                    help="Gutenbergブロック化を無効化（生HTMLのまま更新＝クラシックブロック警告の恐れ）")
     pu.add_argument("--dry-run", action="store_true", help="送信せず内容の要約だけ表示")
     pu.set_defaults(func=cmd_update)
 
