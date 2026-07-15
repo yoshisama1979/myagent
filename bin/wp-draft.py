@@ -282,12 +282,139 @@ def _top_level_nodes(src):
     return nodes
 
 
+# img タグ全体を素直に拾う正規表現（属性値内の '>'・クオート違い・大文字 <IMG> に対応。
+# タグ名終端を (?=[\s/>]) で縛り <img-widget> 等のカスタム要素を誤マッチしない）。
+_IMG_TAG_RE = re.compile(r'''<img(?=[\s/>])(?:"[^"]*"|'[^']*'|[^>"'])*>''', re.I | re.S)
+
+
+def _tag_attr(tag, name):
+    """開始タグ文字列から属性値を取り出す。data-<name> 等の別属性を誤って拾わないよう、
+    属性名の直前が単語構成文字/ハイフンでないことを要求する。"""
+    a = (re.search(r'(?<![\w-])%s\s*=\s*"([^"]*)"' % name, tag, re.I)
+         or re.search(r"(?<![\w-])%s\s*=\s*'([^']*)'" % name, tag, re.I))
+    return a.group(1) if a else None
+
+
+def _img_class(tag):
+    return _tag_attr(tag, "class") or ""
+
+
+def _try_image_block(body):
+    """単独の <img>（メディアライブラリ添付＝class に wp-image-<id>）を native の
+    画像ブロック(core/image)にする。裸の <img> は display:inline で上下マージンが
+    付かず文章に食い込むため、figure.wp-block-image で包んでブロック要素化する
+    （テーマの block-library CSS で上下マージンが付く／編集画面で画像として編集可）。
+    単独 <img> でない・添付idを持たない場合は None（呼び出し側で wp:html にフォールバック）。"""
+    if not _IMG_TAG_RE.fullmatch(body):   # body 全体が1つの img タグだけ（属性値内の '>' も許容）
+        return None
+    src = _tag_attr(body, "src")
+    cls = _img_class(body)
+    alt = _tag_attr(body, "alt") or ""
+    mid = re.search(r"\bwp-image-(\d+)\b", cls)
+    if not src or not mid:
+        return None   # 添付idが無い＝安全に画像ブロック化できない → wp:html に回す
+    img_id = int(mid.group(1))
+    ms = re.search(r"\bsize-([a-z0-9_-]+)\b", cls)   # カスタム画像サイズのハイフンも許可
+    size_slug = ms.group(1) if ms else "full"
+    ma = re.search(r"\balign(left|center|right|wide|full)\b", cls)  # alignnone は無視（配置なし）
+    align = ma.group(1) if ma else None
+    attr_obj = {"id": img_id, "sizeSlug": size_slug, "linkDestination": "none"}
+    if align:
+        attr_obj["align"] = align
+    attr_json = json.dumps(attr_obj, ensure_ascii=False, separators=(",", ":"))
+    fig_cls = "wp-block-image" + (" align" + align if align else "") + " size-" + size_slug
+    # img は src/alt/class だけの正準形に（srcset 等は WP が id から再生成）
+    img_tag = '<img src="%s" alt="%s" class="wp-image-%d"/>' % (
+        src.replace('"', "&quot;"), alt.replace('"', "&quot;"), img_id)
+    return ('<!-- wp:image %s -->\n<figure class="%s">%s</figure>\n<!-- /wp:image -->'
+            % (attr_json, fig_cls, img_tag))
+
+
+# 本文画像を figure でブロック化する際、この祖先の中にある img は包まない
+# （figure は p/picture 等の中に置けず HTML が壊れる／リンク・見出し・ボタン内も配置対象外）。
+_NO_FIGURE_ANCESTORS = {"a", "p", "picture", "figure", "button",
+                        "h1", "h2", "h3", "h4", "h5", "h6"}
+
+
+class _ImageFigureWrapper(HTMLParser):
+    """本文中の「全幅・大サイズの添付画像（wp-image-<id> 付き）」を figure.wp-block-image で
+    包む位置を、祖先タグのスタックを見て安全に決める（前後の rfind でなく実際の入れ子で判定＝
+    p/picture/a/figure/見出し/ボタン内は除外）。get_starttag_text で大文字/属性値内 '>' にも対応。"""
+
+    def __init__(self, src):
+        super().__init__(convert_charrefs=False)
+        self.src = src
+        self.line_off = [0]
+        for i, ch in enumerate(src):
+            if ch == "\n":
+                self.line_off.append(i + 1)
+        self.stack = []
+        self.edits = []   # (start, end, replacement)
+
+    def _off(self):
+        line, col = self.getpos()
+        return self.line_off[line - 1] + col
+
+    def _consider_img(self):
+        raw = self.get_starttag_text() or ""
+        cls = _img_class(raw)
+        if not re.search(r"\bwp-image-\d+\b", cls):
+            return                                   # メディア添付でない＝触らない
+        ms = re.search(r"\bsize-(full|large)\b", cls)
+        if not ms:
+            return                                   # 全幅/大サイズ以外（小・インライン）は触らない
+        if any(t in _NO_FIGURE_ANCESTORS for t in self.stack):
+            return                                   # p/picture/a/figure/見出し/ボタン内は触らない
+        s = self._off()
+        self.edits.append(
+            (s, s + len(raw),
+             '<figure class="wp-block-image size-%s">%s</figure>' % (ms.group(1), raw)))
+
+    def handle_starttag(self, tag, attrs):
+        t = tag.lower()
+        if t == "img":
+            self._consider_img()
+        elif t not in _VOID_TAGS:
+            self.stack.append(t)
+
+    def handle_startendtag(self, tag, attrs):
+        if tag.lower() == "img":
+            self._consider_img()
+
+    def handle_endtag(self, tag):
+        t = tag.lower()
+        for i in range(len(self.stack) - 1, -1, -1):   # 末尾側から最も近い同名までポップ
+            if self.stack[i] == t:
+                del self.stack[i:]
+                break
+
+
+def _wrap_content_images(html):
+    """本文中の単独画像を figure.wp-block-image で包みブロック要素化して上下マージンを付ける
+    （裸の <img> は display:inline で文章に食い込むため）。リンク画像・p/picture/figure/見出し内・
+    小さい/インライン画像（size-full/large 以外）は対象外＝触らない。冪等。"""
+    p = _ImageFigureWrapper(html)
+    p.feed(html)
+    p.close()
+    if not p.edits:
+        return html
+    out = html
+    for s, e, rep in sorted(p.edits, reverse=True):   # 後ろから置換してオフセットを保つ
+        out = out[:s] + rep + out[e:]
+    return out
+
+
 def _wrap_block(html):
     """1つのトップレベル要素を適切な Gutenberg ブロックで包む。
-    属性なしの p / h1-h6 だけ native ブロック（管理画面でリッチ編集可）に、
-    それ以外（スタイル付きの表・囲み・リスト等）は wp:html で verbatim に包む
-    （レイアウトを変えず・クラシック警告も検証エラーも出さない）。"""
+    単独画像は native の画像ブロック(core/image)に、属性なしの p / h1-h6 は
+    native ブロック（管理画面でリッチ編集可）に、それ以外（スタイル付きの表・囲み・
+    リスト等）は wp:html で verbatim に包む（レイアウトを変えず・クラシック警告も
+    検証エラーも出さない）。styled div 等の中に埋もれた本文画像は figure.wp-block-image
+    でブロック要素化する（上下マージン）。"""
     body = html.strip()
+    img_block = _try_image_block(body)
+    if img_block is not None:
+        return img_block
     # native 化は「厳密な <p> / <hN>（小文字・属性なし・余分な空白なし）」だけに限定する。
     # <P>（大文字）・<p >（空白）・<p class=…>（属性）は Gutenberg の再生成マークアップと
     # 差が出て検証エラーになり得るので、native にせず wp:html で verbatim に包む（安全側）。
@@ -299,7 +426,7 @@ def _wrap_block(html):
         level = int(tag[1])
         meta = "" if level == 2 else ' {"level":%d}' % level  # 既定レベルは2
         return "<!-- wp:heading%s -->\n%s\n<!-- /wp:heading -->" % (meta, body)
-    return "<!-- wp:html -->\n%s\n<!-- /wp:html -->" % body
+    return "<!-- wp:html -->\n%s\n<!-- /wp:html -->" % _wrap_content_images(body)
 
 
 def to_gutenberg_blocks(content):
@@ -314,7 +441,7 @@ def to_gutenberg_blocks(content):
             # 説明用HTMLコメント等を除去し、実体が残るものだけ wp:html で包む
             cleaned = re.sub(r"<!--.*?-->", "", raw, flags=re.S).strip()
             if cleaned:
-                out.append("<!-- wp:html -->\n%s\n<!-- /wp:html -->" % cleaned)
+                out.append("<!-- wp:html -->\n%s\n<!-- /wp:html -->" % _wrap_content_images(cleaned))
         else:
             out.append(_wrap_block(raw))
     return "\n\n".join(out)
