@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>エージェントオフィス 3D</title>
+<style>
+  html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#1a1f2e;
+    font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif; }
+  #scene { position:fixed; inset:0; }
+  /* ---- HUD（HTMLオーバーレイ） ---- */
+  .hud { position:fixed; z-index:10; color:#e2e8f0; font-size:13px; }
+  #hud-top { top:12px; left:14px; background:rgba(15,23,42,.78); border:1px solid rgba(148,163,184,.25);
+    border-radius:10px; padding:10px 14px; backdrop-filter:blur(4px); max-width:min(520px, calc(100vw - 28px)); }
+  #hud-top h1 { margin:0 0 4px; font-size:16px; }
+  #hud-top .sub { color:#94a3b8; font-size:11.5px; line-height:1.6; }
+  #hud-top a { color:#7dd3fc; text-decoration:none; }
+  #legend { bottom:12px; left:14px; background:rgba(15,23,42,.7); border:1px solid rgba(148,163,184,.2);
+    border-radius:10px; padding:8px 12px; font-size:11.5px; color:#cbd5e1; line-height:1.8; }
+  #alert { top:12px; right:14px; background:rgba(127,29,29,.9); border:1px solid #ef4444;
+    border-radius:10px; padding:8px 14px; display:none; }
+  #tip { bottom:12px; right:14px; color:#64748b; font-size:11px; text-align:right; line-height:1.6; }
+  /* ---- メニュー（各ハブへの入口） ---- */
+  #menu-btn { cursor:pointer; user-select:none; display:inline-block; padding:2px 10px; margin-top:6px;
+    border:1px solid rgba(125,211,252,.45); border-radius:8px; color:#7dd3fc; font-size:12px; }
+  #menu-btn:hover { background:rgba(125,211,252,.12); }
+  #menu { display:none; margin-top:8px; border-top:1px solid rgba(148,163,184,.25); padding-top:8px;
+    columns:2; column-gap:18px; }
+  #menu.open { display:block; }
+  #menu a { display:block; color:#bae6fd; text-decoration:none; font-size:12.5px; line-height:2;
+    break-inside:avoid; }
+  #menu a:hover { color:#fff; text-decoration:underline; }
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+
+<div class="hud" id="hud-top">
+  <h1>🏢 はなさか エージェントオフィス</h1>
+  <div class="sub" id="tickline">読み込み中…</div>
+  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ 🗂 承認待ち <b id="holdN">-</b> 件 ／ ドラッグで回転・ホイールで拡大</div>
+  <span id="menu-btn">📁 メニュー ▾</span>
+  <nav id="menu">
+    <a href="../business/focus.html" target="_top">🎯 今日のフォーカス</a>
+    <a href="../hp-analysis/index.html" target="_top">📈 HP分析ハブ（6＋2サイト）</a>
+    <a href="../hp-analysis/ycom/blog/index.html" target="_top">✍️ ブログ分析（YCOM）</a>
+    <a href="../business/partner/index.html" target="_top">☀️ 経営パートナー朝礼</a>
+    <a href="../overseer/index.html" target="_top">🧭 統括レポート</a>
+    <a href="../decks/index.html" target="_top">📽 プレゼン資料</a>
+    <a href="../notes.html" target="_top">📝 横断メモ</a>
+    <a href="../business/" target="_top">🏢 経営トラッカー</a>
+    <a href="../clients/index.html" target="_top">👥 クライアント記録</a>
+    <a href="../drafts/index.html" target="_top">📄 ドラフト置き場</a>
+    <a href="../hub.html" target="_top">🗂 すべてのリンク（旧トップ）</a>
+  </nav>
+</div>
+<div class="hud" id="alert"></div>
+<div class="hud" id="legend">
+  🔨 働き中（画面が光りタイピング）　📬 仕事待ち（机に封筒の山）<br>
+  💤 待機（居眠り中・次の起床を待つ）　⚠️ 異常　🏢 ガラスの向こう＝別拠点の開発
+</div>
+<div class="hud" id="tip">データ：/tools/office/status.php（5秒ごと更新・読み取り専用）</div>
+
+<script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ============================================================
+ * 1. レイアウト定義（島＝ラグの上に机を並べる）
+ * ============================================================ */
+const ISLANDS = {
+  exec:       { name:'役員席',   rug:0x4c3a6e, accent:0xa78bfa, pos:[-8.5,  -5.5], cols:2 },
+  analysis:   { name:'解析島',   rug:0x1f4d3d, accent:0x34d399, pos:[-3.2,   3.0], cols:3 },
+  blog:       { name:'ブログ島', rug:0x5c2440, accent:0xfb7185, pos:[-8.5,   3.0], cols:1 },
+  office:     { name:'事務島',   rug:0x1e3a5f, accent:0x38bdf8, pos:[-3.2,  -5.5], cols:2 },
+  'dev-remote': { name:'開発ルーム（別拠点）', rug:0x2b3242, accent:0x94a3b8, pos:[7.2, -1.0], cols:1, remote:true },
+};
+const DESK_W = 2.0, DESK_D = 1.1, GAP_X = 2.6, GAP_Z = 3.0;
+
+/* ============================================================
+ * 2. シーン・ライト・床
+ * ============================================================ */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x151a28);
+scene.fog = new THREE.Fog(0x151a28, 34, 60);
+
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
+
+// 照明：夜のオフィスに月光＋室内灯
+scene.add(new THREE.AmbientLight(0x93a3c4, 0.75));
+const sun = new THREE.DirectionalLight(0xfff4e0, 1.3);
+sun.position.set(10, 16, 6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -18; sun.shadow.camera.right = 18;
+sun.shadow.camera.top = 18; sun.shadow.camera.bottom = -18;
+scene.add(sun);
+const fill = new THREE.DirectionalLight(0x99bbff, 0.3);
+fill.position.set(-8, 10, -10);
+scene.add(fill);
+
+// 床（フローリング）＋壁
+const floor = new THREE.Mesh(
+  new THREE.BoxGeometry(30, 0.3, 20),
+  new THREE.MeshStandardMaterial({ color: 0x8a6f52, roughness: 0.85 }));
+floor.position.y = -0.15; floor.receiveShadow = true;
+scene.add(floor);
+const wallMat = new THREE.MeshStandardMaterial({ color: 0x39415a, roughness: 0.95 });
+const wallB = new THREE.Mesh(new THREE.BoxGeometry(30, 6, 0.3), wallMat);
+wallB.position.set(0, 3, -10.15); wallB.receiveShadow = true; scene.add(wallB);
+const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 20), wallMat);
+wallL.position.set(-15.15, 3, 0); wallL.receiveShadow = true; scene.add(wallL);
+// 窓（奥の壁に明るい矩形）
+for (let i = 0; i < 3; i++) {
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 2.6),
+    new THREE.MeshBasicMaterial({ color: 0x27334f }));
+  win.position.set(-9 + i * 9, 3.4, -9.99);
+  scene.add(win);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(4.9, 2.9, 0.1),
+    new THREE.MeshStandardMaterial({ color: 0x222a3d }));
+  frame.position.set(-9 + i * 9, 3.4, -10.05);
+  scene.add(frame);
+}
+
+// 開発ルームのガラス壁（半透明・別拠点＝中がよく見えない演出）
+const glassMat = new THREE.MeshPhysicalMaterial({
+  color: 0xbcd8e8, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0,
+  side: THREE.DoubleSide });
+const glass = new THREE.Mesh(new THREE.BoxGeometry(0.12, 4.2, 13), glassMat);
+glass.position.set(4.6, 2.1, -1.0);
+scene.add(glass);
+const glassFrame = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.25, 13),
+  new THREE.MeshStandardMaterial({ color: 0x1f2637 }));
+glassFrame.position.set(4.6, 4.25, -1.0); scene.add(glassFrame);
+const glassBase = glassFrame.clone(); glassBase.position.y = 0.12; scene.add(glassBase);
+
+// 観葉植物（角にちょこん）
+function plant(x, z) {
+  const g = new THREE.Group();
+  const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.24, 0.4, 10),
+    new THREE.MeshStandardMaterial({ color: 0xb0603a, roughness: .9 }));
+  pot.position.y = 0.2; pot.castShadow = true; g.add(pot);
+  for (let i = 0; i < 5; i++) {
+    const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.34, 8, 8),
+      new THREE.MeshStandardMaterial({ color: 0x3f9d55, roughness: .8 }));
+    leaf.position.set(Math.sin(i*2.2)*0.22, 0.72 + (i%2)*0.24, Math.cos(i*2.2)*0.22);
+    leaf.castShadow = true; g.add(leaf);
+  }
+  g.position.set(x, 0, z); scene.add(g);
+}
+plant(-14, -9); plant(-14, 8.6); plant(14, 8.6); plant(2.2, -9);
+
+/* ============================================================
+ * 3. テキスト/絵文字スプライト（日本語ラベル・状態バッジ）
+ * ============================================================ */
+function makeTextSprite(text, { font = '600 30px "Noto Sans JP", sans-serif', pad = 14,
+    fg = '#f1f5f9', bg = 'rgba(15,23,42,0.82)', scale = 0.012 } = {}) {
+  const c = document.createElement('canvas'); const ctx = c.getContext('2d');
+  ctx.font = font;
+  const w = Math.ceil(ctx.measureText(text).width) + pad * 2, h = 52 + pad;
+  c.width = w * 2; c.height = h * 2; ctx.scale(2, 2);
+  ctx.font = font;
+  if (bg) { ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect(0, 0, w, h, 12); ctx.fill(); }
+  ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+  ctx.fillText(text, w / 2, h / 2 + 2);
+  const tex = new THREE.CanvasTexture(c); tex.anisotropy = 4;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+  sp.scale.set(w * scale, h * scale, 1);
+  return sp;
+}
+function makeEmojiSprite(emoji, size = 1.0) {
+  const c = document.createElement('canvas'); c.width = 128; c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.font = '96px "Noto Color Emoji", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(emoji, 64, 72);
+  const tex = new THREE.CanvasTexture(c);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+  sp.scale.set(size, size, 1);
+  return sp;
+}
+
+/* ============================================================
+ * 4. 机・モニタ・椅子・アバター・封筒
+ * ============================================================ */
+const M = {
+  desk:  new THREE.MeshStandardMaterial({ color: 0xd7b98c, roughness: .7 }),
+  deskLeg: new THREE.MeshStandardMaterial({ color: 0x5d6472, roughness: .6, metalness: .4 }),
+  chair: new THREE.MeshStandardMaterial({ color: 0x3a4256, roughness: .8 }),
+  monitor: new THREE.MeshStandardMaterial({ color: 0x252b3b, roughness: .5 }),
+  envelope: new THREE.MeshStandardMaterial({ color: 0xf5f0e6, roughness: .9 }),
+  envelopeLine: new THREE.MeshStandardMaterial({ color: 0xd9534f, roughness: .9 }),
+};
+
+function buildDesk(accent) {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.BoxGeometry(DESK_W, 0.09, DESK_D), M.desk);
+  top.position.y = 0.86; top.castShadow = true; top.receiveShadow = true; g.add(top);
+  for (const [sx, sz] of [[-1,-1],[1,-1],[-1,1],[1,1]]) {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.86, 0.08), M.deskLeg);
+    leg.position.set(sx*(DESK_W/2-0.1), 0.43, sz*(DESK_D/2-0.1)); leg.castShadow = true; g.add(leg);
+  }
+  // モニタ（screen は状態で発光させるので参照を残す）
+  const mon = new THREE.Group();
+  const bezel = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.6, 0.05), M.monitor);
+  bezel.position.y = 1.45; bezel.castShadow = true; mon.add(bezel);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.5),
+    new THREE.MeshStandardMaterial({ color: 0x0b0e16, emissive: 0x000000, roughness: .4 }));
+  screen.position.set(0, 1.45, 0.028); mon.add(screen);
+  const stand = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.28, 0.08), M.monitor);
+  stand.position.y = 1.03; mon.add(stand);
+  mon.position.z = -0.28; g.add(mon);
+  // 椅子
+  const seat = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.08, 0.62), M.chair);
+  seat.position.set(0, 0.5, 0.95); seat.castShadow = true; g.add(seat);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.66, 0.08), M.chair);
+  back.position.set(0, 0.86, 1.24); back.castShadow = true; g.add(back);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.5, 8), M.deskLeg);
+  pole.position.set(0, 0.25, 0.95); g.add(pole);
+  return { group: g, screen };
+}
+
+function buildAvatar(accent, remote) {
+  const g = new THREE.Group();
+  const bodyMat = new THREE.MeshStandardMaterial({
+    color: accent, roughness: .75,
+    transparent: remote, opacity: remote ? 0.42 : 1 });
+  const skinMat = new THREE.MeshStandardMaterial({
+    color: remote ? 0x8a93a5 : 0xffdfc4, roughness: .8,
+    transparent: remote, opacity: remote ? 0.42 : 1 });
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.3, 6, 12), bodyMat);
+  body.position.y = 0.78; body.castShadow = !remote; g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), skinMat);
+  head.position.y = 1.26; head.castShadow = !remote; g.add(head);
+  // 目（寝ると閉じ目に見えるよう、小さな黒点）
+  if (!remote) {
+    for (const sx of [-1, 1]) {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.023, 6, 6),
+        new THREE.MeshBasicMaterial({ color: 0x222222 }));
+      eye.position.set(sx * 0.07, 1.29, -0.175); g.add(eye);
+    }
+  }
+  // 腕（タイピングで揺らす）
+  const arms = [];
+  for (const sx of [-1, 1]) {
+    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.3, 4, 8), bodyMat);
+    arm.position.set(sx * 0.3, 0.85, -0.08);
+    arm.rotation.x = -1.1;
+    arm.castShadow = !remote; g.add(arm); arms.push(arm);
+  }
+  return { group: g, arms, head, body };
+}
+
+function buildEnvelopePile(n) {
+  const g = new THREE.Group();
+  const shown = Math.min(n, 8);
+  for (let i = 0; i < shown; i++) {
+    const env = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.045, 0.3), M.envelope);
+    env.position.set((Math.sin(i * 3.7) * 0.04), 0.925 + i * 0.052, (Math.cos(i * 2.9) * 0.04));
+    env.rotation.y = Math.sin(i * 5.3) * 0.35;
+    env.castShadow = true; g.add(env);
+    const line = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.012, 0.06), M.envelopeLine);
+    line.position.copy(env.position); line.position.y += 0.024; line.rotation.y = env.rotation.y;
+    g.add(line);
+  }
+  if (n > 0) {
+    const badge = makeTextSprite(`✉ ${n}`, { font: '700 26px "Noto Sans JP"', bg: 'rgba(180,83,9,0.92)', scale: 0.011 });
+    badge.position.y = 1.05 + shown * 0.052 + 0.25;
+    g.add(badge);
+  }
+  return g;
+}
+
+/* ============================================================
+ * 5. オフィスを組み立てる（島 → 机 → アバター）
+ * ============================================================ */
+const avatars = new Map();   // id -> {group, arms, screen, statusSprite, envelopeGroup, deskGroup, state, phase}
+
+function buildIslandRug(isl, count) {
+  const rows = Math.ceil(count / isl.cols);
+  const w = isl.cols * GAP_X + 0.8, d = rows * GAP_Z + 0.6;
+  const rug = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d),
+    new THREE.MeshStandardMaterial({ color: isl.rug, roughness: .95 }));
+  const cx = isl.pos[0] + ((isl.cols - 1) * GAP_X) / 2;
+  const cz = isl.pos[1] + ((rows - 1) * GAP_Z) / 2;
+  rug.position.set(cx, 0.03, cz); rug.receiveShadow = true;
+  scene.add(rug);
+  const label = makeTextSprite(isl.name, { font: '700 24px "Noto Sans JP"', bg: 'rgba(15,23,42,0.6)', fg: '#cbd5e1', scale: 0.010 });
+  label.position.set(cx, 0.35, cz + d / 2 + 0.55);
+  scene.add(label);
+}
+
+function addAgentDesk(agent, index) {
+  const isl = ISLANDS[agent.island] ?? ISLANDS.office;
+  const col = index % isl.cols, row = Math.floor(index / isl.cols);
+  const x = isl.pos[0] + col * GAP_X;
+  const z = isl.pos[1] + row * GAP_Z;
+
+  const root = new THREE.Group();
+  root.position.set(x, 0, z);
+  if (isl.remote) root.rotation.y = -Math.PI / 2;   // 開発ルームはガラス側（左）を向く
+
+  const desk = buildDesk(isl.accent);
+  root.add(desk.group);
+
+  const av = buildAvatar(isl.accent, !!isl.remote);
+  av.group.position.set(0, 0, 0.72);
+  root.add(av.group);
+
+  // 名札（頭上・カメラ常時正対）
+  const name = makeTextSprite(agent.label, { scale: 0.0078 });
+  name.position.set(0, 2.5, 0.3);
+  root.add(name);
+
+  // 状態バッジ（絵文字・状態変化で貼り替え）
+  const holder = new THREE.Group(); holder.position.set(0.0, 1.95, 0.72);
+  root.add(holder);
+
+  scene.add(root);
+  avatars.set(agent.id, {
+    root, desk, av, badgeHolder: holder, badge: null,
+    envelopeGroup: null, state: 'unknown', inbox: -1,
+    phase: Math.random() * Math.PI * 2,   // アニメの位相をばらす
+  });
+}
+
+// 社長の決裁トレイ（hold/）＝役員席そばの小机
+const holdTable = new THREE.Group();
+{
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.07, 20), M.desk);
+  top.position.y = 0.8; top.castShadow = true; holdTable.add(top);
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.8, 10), M.deskLeg);
+  leg.position.y = 0.4; holdTable.add(leg);
+  const lbl = makeTextSprite('🗂 社長の承認待ち', { font: '600 22px "Noto Sans JP"', scale: 0.010 });
+  lbl.position.y = 1.7; holdTable.add(lbl);
+  holdTable.position.set(-12.6, 0, -8.2);
+  scene.add(holdTable);
+}
+let holdPile = null;
+
+/* ============================================================
+ * 6. 状態の適用（APIレスポンス → 3D表現）
+ * ============================================================ */
+const BADGE = { working:'🔨', inbox:'📬', idle:'💤', error:'⚠️', remote:'🏢' };
+
+// HTMLへ流し込む動的値のエスケープ（サーバは台帳照合済みだが二重に守る＝Codex🔴XSS）
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g,
+    c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+// Three.js リソースの解放（作り直す前に必ず呼ぶ＝Codex🔴メモリリーク対策）。
+// 共有マテリアル（M.*）は解放せず、スプライト等が専有する map/material だけ破棄する。
+const SHARED_MATERIALS = new Set(Object.values(M));
+function disposeObject(obj) {
+  obj.traverse(o => {
+    if (o.geometry) o.geometry.dispose();
+    const mats = Array.isArray(o.material) ? o.material : (o.material ? [o.material] : []);
+    for (const m of mats) {
+      if (SHARED_MATERIALS.has(m)) continue;
+      if (m.map) m.map.dispose();
+      m.dispose();
+    }
+  });
+}
+
+function applyStatus(a, data) {
+  // 封筒の山（件数が変わったときだけ作り直す）
+  if (a.inbox !== data.inbox) {
+    if (a.envelopeGroup) { a.root.remove(a.envelopeGroup); disposeObject(a.envelopeGroup); }
+    a.envelopeGroup = data.inbox > 0 ? buildEnvelopePile(data.inbox) : null;
+    if (a.envelopeGroup) { a.envelopeGroup.position.set(0.62, 0, -0.05); a.root.add(a.envelopeGroup); }
+    a.inbox = data.inbox;
+  }
+  if (a.state === data.status) return;
+  a.state = data.status;
+  // バッジ貼り替え（旧バッジのテクスチャを破棄）
+  if (a.badge) { a.badgeHolder.remove(a.badge); disposeObject(a.badge); }
+  a.badge = makeEmojiSprite(BADGE[data.status] ?? '❓', 0.55);
+  a.badgeHolder.add(a.badge);
+  // モニタの発光
+  const scr = a.desk.screen.material;
+  if (data.status === 'working') { scr.emissive.setHex(0x2dd4bf); scr.emissiveIntensity = 1.0; }
+  else if (data.status === 'error') { scr.emissive.setHex(0xef4444); scr.emissiveIntensity = 0.9; }
+  else { scr.emissive.setHex(0x000000); scr.emissiveIntensity = 0; }
+}
+
+/* ============================================================
+ * 7. API ポーリング＋初回構築
+ * ============================================================ */
+let built = false, holdShown = -1;
+async function refresh() {
+  let d;
+  try {
+    const r = await fetch('../tools/office/status.php',
+      { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d = await r.json();
+  } catch (e) {
+    document.getElementById('tickline').textContent = '⚠️ status.php に接続できません';
+    return;
+  }
+  if (!d.ok || !Array.isArray(d.agents)) return;
+
+  // ?demo=1 …見た目確認用に状態を疑似上書き（実データではない・HUDに明示）
+  if (new URLSearchParams(location.search).get('demo') === '1') {
+    const fake = { 'hp-loop-ycom':'working', 'blog-loop-ycom':'working', 'hp-loop-yoshida':'error',
+                   'partner':'inbox', 'memo':'inbox' };
+    for (const ag of d.agents) {
+      if (fake[ag.id]) { ag.status = fake[ag.id]; if (ag.status === 'inbox' && !ag.inbox) ag.inbox = 3; }
+    }
+    d.tick.runningNow = 'hp-loop:ycom（デモ）';
+    d.hold = 2;
+  }
+
+  if (!built) {
+    // 島ごとに机を並べる（一度だけ）
+    const byIsland = {};
+    for (const ag of d.agents) (byIsland[ag.island] ??= []).push(ag);
+    for (const [key, list] of Object.entries(byIsland)) {
+      if (ISLANDS[key]) buildIslandRug(ISLANDS[key], list.length);
+      list.forEach((ag, i) => addAgentDesk(ag, i));
+    }
+    built = true;
+  }
+  for (const ag of d.agents) {
+    const a = avatars.get(ag.id);
+    if (a) applyStatus(a, ag);
+  }
+
+  // HUD（動的値は esc() を通す）
+  const t = d.tick;
+  document.getElementById('tickline').innerHTML =
+    `心拍 <b>${esc(t.lastSeen ?? '不明')}</b>（${esc(t.ageSec ?? '?')}秒前）` +
+    (t.runningNow ? `　🔨 実行中: <b style="color:#5eead4">${esc(t.runningNow)}</b>` : '　全員待機中');
+  document.getElementById('holdN').textContent = d.hold;
+  const alertEl = document.getElementById('alert');
+  if (t.stale) { alertEl.textContent = '⚠️ 心拍が5分以上停止（agent-tick 異常の可能性）'; alertEl.style.display = 'block'; }
+  else if (t.status && t.status !== 'ok') { alertEl.textContent = '⚠️ 直近 tick: ' + t.status; alertEl.style.display = 'block'; }
+  else alertEl.style.display = 'none';
+
+  // 決裁トレイの書類の山（件数が変わったときだけ作り直し・旧リソースは破棄＝Codex🔴）
+  if (holdShown !== d.hold) {
+    holdShown = d.hold;
+    if (holdPile) { holdTable.remove(holdPile); disposeObject(holdPile); }
+    holdPile = null;
+    if (d.hold > 0) {
+      holdPile = new THREE.Group();
+      for (let i = 0; i < Math.min(d.hold, 6); i++) {
+        const doc = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.36),
+          new THREE.MeshStandardMaterial({ color: 0xfff7d6, roughness: .9 }));
+        doc.position.set(0, 0.87 + i * 0.055, 0);
+        doc.rotation.y = Math.sin(i * 4.1) * 0.3; doc.castShadow = true;
+        holdPile.add(doc);
+      }
+      const n = makeTextSprite(`${d.hold} 件`, { font:'700 26px "Noto Sans JP"', bg:'rgba(180,83,9,0.92)', scale:0.011 });
+      n.position.y = 1.35; holdPile.add(n);
+      holdTable.add(holdPile);
+    }
+  }
+}
+// ポーリング：完了してから次を予約（応答遅延時の多重リクエストを防ぐ＝Codex🟡）
+(async function loop() {
+  try { await refresh(); } finally { setTimeout(loop, 5000); }
+})();
+
+// メニュー開閉（#menu 付きで開けば最初から開いた状態）
+document.getElementById('menu-btn').addEventListener('click', () => {
+  document.getElementById('menu').classList.toggle('open');
+});
+if (location.hash === '#menu') document.getElementById('menu').classList.add('open');
+
+/* ============================================================
+ * 8. カメラ操作（簡易オービット：ドラッグ回転・ホイールズーム）
+ * ============================================================ */
+const target = new THREE.Vector3(-0.5, 0.2, -0.2);
+let theta = -0.38, phi = 0.92, dist = 29;
+function updateCamera() {
+  phi = Math.max(0.25, Math.min(1.35, phi));
+  dist = Math.max(7, Math.min(38, dist));
+  camera.position.set(
+    target.x + dist * Math.sin(phi) * Math.sin(theta),
+    target.y + dist * Math.cos(phi),
+    target.z + dist * Math.sin(phi) * Math.cos(theta));
+  camera.lookAt(target);
+}
+let dragging = false, px = 0, py = 0;
+canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; py = e.clientY; });
+addEventListener('pointerup', () => dragging = false);
+addEventListener('pointermove', e => {
+  if (!dragging) return;
+  theta -= (e.clientX - px) * 0.0055; phi -= (e.clientY - py) * 0.0045;
+  px = e.clientX; py = e.clientY; updateCamera();
+});
+canvas.addEventListener('wheel', e => { e.preventDefault(); dist *= (1 + Math.sign(e.deltaY) * 0.08); updateCamera(); }, { passive:false });
+
+function resize() {
+  renderer.setSize(innerWidth, innerHeight);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+resize(); updateCamera();
+
+/* ============================================================
+ * 9. アニメーションループ（状態ごとの動き）
+ * ============================================================ */
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  for (const a of avatars.values()) {
+    const ph = a.phase;
+    if (a.state === 'working') {
+      // せっせとタイピング：腕が高速に交互、体が小刻みに揺れる
+      a.av.arms[0].rotation.x = -1.1 + Math.sin(t * 13 + ph) * 0.22;
+      a.av.arms[1].rotation.x = -1.1 + Math.sin(t * 13 + ph + Math.PI) * 0.22;
+      a.av.group.position.y = Math.abs(Math.sin(t * 6.5 + ph)) * 0.02;
+      a.av.head.rotation.x = Math.sin(t * 3 + ph) * 0.05;
+      a.badgeHolder.position.y = 1.95;
+    } else if (a.state === 'inbox') {
+      // 仕事待ち：そわそわ（体が弾む・バッジが跳ねる）
+      a.av.group.position.y = Math.abs(Math.sin(t * 3.2 + ph)) * 0.06;
+      a.av.arms[0].rotation.x = -0.7 + Math.sin(t * 3.2 + ph) * 0.1;
+      a.av.arms[1].rotation.x = -0.7 + Math.cos(t * 3.2 + ph) * 0.1;
+      a.badgeHolder.position.y = 1.95 + Math.abs(Math.sin(t * 3.2 + ph)) * 0.12;
+    } else if (a.state === 'error') {
+      // 異常：頭を抱えて左右に揺れる＋画面が点滅
+      a.av.group.rotation.z = Math.sin(t * 5 + ph) * 0.06;
+      a.desk.screen.material.emissiveIntensity = 0.5 + Math.abs(Math.sin(t * 4)) * 0.6;
+    } else {
+      // 待機＝居眠り：ゆっくり船を漕ぐ・バッジ（💤）がふわふわ
+      a.av.head.rotation.x = 0.32 + Math.sin(t * 1.1 + ph) * 0.09;
+      a.av.group.position.y = Math.sin(t * 1.1 + ph) * 0.012;
+      a.av.arms[0].rotation.x = -0.35; a.av.arms[1].rotation.x = -0.35;
+      a.badgeHolder.position.y = 1.95 + Math.sin(t * 1.4 + ph) * 0.07;
+      if (a.badge) a.badge.material.opacity = 0.72 + Math.sin(t * 1.4 + ph) * 0.25;
+    }
+  }
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</body>
+</html>

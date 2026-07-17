@@ -3,104 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>株式会社はなさか — プロジェクト記録</title>
-<script src="https://cdn.tailwindcss.com"></script>
+<title>株式会社はなさか — ダッシュボード</title>
+<style>
+  html, body { margin:0; padding:0; height:100%; overflow:hidden; background:#151a28; }
+  iframe { position:fixed; inset:0; width:100%; height:100%; border:0; }
+</style>
 </head>
-<body class="bg-gray-50 text-gray-900">
-<div class="max-w-4xl mx-auto p-6 md:p-10">
-
-  <h1 class="text-3xl font-bold mb-2">株式会社はなさか — プロジェクト記録</h1>
-  <p class="text-gray-600 mb-8">全プロジェクト・全社メモへの入口。各リンクから配下の記録に辿れます。</p>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-    <a href="business/focus.html" class="block border-2 border-red-500 bg-red-50 rounded-lg p-5 hover:bg-red-100 transition">
-      <h3 class="font-bold text-red-700 mb-1 text-lg">🎯 今日のフォーカス</h3>
-      <p class="text-sm text-gray-700">今週/今月「やる」「やった」「決める」を一画面で。毎日朝に開く。</p>
-    </a>
-    <a href="business/goals.html" class="block border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 hover:bg-emerald-100 transition">
-      <h3 class="font-bold text-emerald-700 mb-1 text-lg">🌳 目標ツリー</h3>
-      <p class="text-sm text-gray-700">経営目標→カテゴリ目標→サブ目標の樹形図。月初に見直す。</p>
-    </a>
-    <a href="overseer/index.html" class="block border-2 border-indigo-500 bg-indigo-50 rounded-lg p-5 hover:bg-indigo-100 transition">
-      <h3 class="font-bold text-indigo-700 mb-1 text-lg">🛰️ 統括レポート</h3>
-      <p class="text-sm text-gray-700">AI協働システム全体の健康チェックと改善提案（Overseer）。「🔔 社長の判断・対応待ち」を確認。</p>
-    </a>
-  </div>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">本業</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <a href="operations/index.html" class="block border-2 border-blue-400 bg-blue-50 rounded p-4 hover:bg-blue-100 transition">
-      <h3 class="font-semibold text-blue-700 mb-1">💼 業務</h3>
-      <p class="text-sm text-gray-700">HP制作フロー・チェックシート・手順書（本業の進め方）</p>
-    </a>
-  </div>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">経営トラッカー</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <a href="business/" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
-      <h3 class="font-semibold text-blue-600 mb-1">ビジネスダッシュボード</h3>
-      <p class="text-sm text-gray-600">経営方針・KPI・月次レビュー</p>
-    </a>
-    <a href="notes.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
-      <h3 class="font-semibold text-blue-600 mb-1">日常メモ</h3>
-      <p class="text-sm text-gray-600">横断的な気づき・思考メモ</p>
-    </a>
-  </div>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ツール・プレビュー</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <a href="tools/" class="block border-2 border-indigo-400 bg-indigo-50 rounded p-4 hover:bg-indigo-100 transition">
-      <h3 class="font-semibold text-indigo-700 mb-1">🛠 tools/ — ツールハブ</h3>
-      <p class="text-sm text-gray-700">PHPで動く社内ツール群（PHP-FPM + Nginx）</p>
-    </a>
-    <a href="drafts/index.html" class="block border border-gray-300 rounded p-4 hover:bg-gray-100 transition">
-      <h3 class="font-semibold text-blue-600 mb-1">drafts/</h3>
-      <p class="text-sm text-gray-600">作業中の草案・LP案・モックHTML（Tailscale経由のみ）</p>
-    </a>
-    <a href="decks/index.html" class="block border-2 border-rose-400 bg-rose-50 rounded p-4 hover:bg-rose-100 transition">
-      <h3 class="font-semibold text-rose-700 mb-1">📽 プレゼン資料（デッキ）</h3>
-      <p class="text-sm text-gray-700">クライアント向けスライド資料の置き場。HTML閲覧＋配布用PDF（HTML→ヘッドレスChrome→A4横PDF）</p>
-    </a>
-    <a href="hp-analysis/index.html" class="block border-2 border-emerald-400 bg-emerald-50 rounded p-4 hover:bg-emerald-100 transition">
-      <h3 class="font-semibold text-emerald-700 mb-1">📈 HP分析ハブ</h3>
-      <p class="text-sm text-gray-700">自社・クライアント各HPをGSC/GA4/広告で分析→改善提案・実装引き渡し。サイト別（YCOM／よしだ歯科…）。</p>
-    </a>
-  </div>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">クライアント・プロジェクト</h2>
-  <ul class="space-y-2 text-sm">
-    <li>
-      <a href="clients/index.html" class="text-blue-600 hover:underline font-semibold">クライアント一覧</a>
-      <span class="text-gray-600"> — 全クライアント（コーバーオール、アースレイズ、はなさか、ヒキタ工業、井上家具センター、箕面高校、NFA、大阪トヨペット、プライムステージ、Vリーグ、よしだ歯科）</span>
-    </li>
-  </ul>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">外部活動</h2>
-  <ul class="space-y-2 text-sm">
-    <li>
-      <a href="external-activities/index.html" class="text-blue-600 hover:underline font-semibold">外部活動</a>
-      <span class="text-gray-600"> — クライアント業務以外のコミットメント（商工会議所 担当例会 等）</span>
-    </li>
-  </ul>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">社内規程</h2>
-  <ul class="space-y-2 text-sm">
-    <li>
-      <a href="company/index.html" class="text-blue-600 hover:underline font-semibold">社内規程</a>
-      <span class="text-gray-600"> — 就業規則ほか労務・人事関連の社内規程</span>
-    </li>
-  </ul>
-
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ルール・運用ドキュメント</h2>
-  <p class="text-sm text-gray-500 mb-3">※ ルールファイルは Markdown 形式（AI内部参照用）。エディタで開いてください。</p>
-  <ul class="space-y-2 text-sm">
-    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code> — プロジェクト全体の指示書</li>
-    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/memo.md</code> — メモ運用ルール（4ファイル構成）</li>
-    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/document-format.md</code> — HTML出力ルール</li>
-    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/development.md</code> — 開発ルール（コミット・デプロイ）</li>
-    <li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/preview-server.md</code> — プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用</li>
-  </ul>
-
-</div>
+<body>
+<!-- ダッシュボード＝3Dエージェントオフィス（実体は office/index.html・二重管理しない） -->
+<iframe src="office/index.html" title="エージェントオフィス"></iframe>
 </body>
 </html>

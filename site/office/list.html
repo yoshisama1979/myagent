@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>エージェントオフィス（Phase 1・状態確認ビュー）</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100">
+<div class="max-w-5xl mx-auto p-6">
+
+  <nav class="text-sm text-slate-400 mb-4">
+    <!-- target="_top"：3Dビュー(iframe)内で開かれても入れ子にならず親ごと遷移する -->
+    <a href="../index.html" target="_top" class="text-sky-400 hover:underline">トップ</a>
+    <span class="mx-1">/</span><span>エージェントオフィス</span>
+  </nav>
+
+  <div class="flex items-end justify-between mb-1">
+    <h1 class="text-2xl font-bold">🏢 エージェントオフィス（一覧ビュー）</h1>
+    <a href="index.html" class="text-sm text-sky-400 hover:underline">🎮 3Dビューへ →</a>
+  </div>
+  <p id="tickline" class="text-sm text-slate-400 mb-5">読み込み中…</p>
+
+  <div id="alert" class="hidden mb-4 rounded-lg border border-red-500 bg-red-950 px-4 py-2 text-sm text-red-200"></div>
+
+  <div id="islands" class="space-y-6"></div>
+
+  <div class="mt-6 flex items-center gap-4 text-sm text-slate-300">
+    <span id="hold" class="rounded-lg border border-amber-500/40 bg-amber-950/40 px-3 py-1.5">🗂 社長の承認待ち（hold/）：<b>0</b> 件</span>
+    <span id="updated" class="text-xs text-slate-500"></span>
+  </div>
+
+  <div class="mt-8 text-xs text-slate-500 leading-relaxed border-t border-slate-700 pt-4">
+    状態の意味：🔨働き中（いまセッション実行中）／📬仕事待ち（受信箱にメールあり）／💤待機（次の起床を待っている）／⚠️異常（直近タイムアウト等）／🏢別拠点（VPS外＝中身は見えず受信箱の山だけ見える）。<br>
+    データ源：<span class="font-mono">/tools/office/status.php</span>（読み取り専用・5秒ごと自動更新）
+  </div>
+</div>
+
+<script>
+const ISLANDS = {
+  exec:       { name: '役員席（統括・経営パートナー）',      color: 'border-purple-500/40' },
+  analysis:   { name: '解析島（HP分析ループ）',              color: 'border-emerald-500/40' },
+  blog:       { name: 'ブログ島（分析・執筆・改善）',        color: 'border-rose-500/40' },
+  office:     { name: '事務島（会話窓口・メモ係）',          color: 'border-sky-500/40' },
+  'dev-remote': { name: '🏢 開発ルーム（別拠点・ガラス越し）', color: 'border-slate-500/60' },
+};
+const STATUS = {
+  working: { icon: '🔨', text: '働き中',   cls: 'bg-emerald-500/20 text-emerald-300 animate-pulse' },
+  inbox:   { icon: '📬', text: '仕事待ち', cls: 'bg-amber-500/20 text-amber-300' },
+  idle:    { icon: '💤', text: '待機中',   cls: 'bg-slate-600/30 text-slate-400' },
+  error:   { icon: '⚠️', text: '異常',     cls: 'bg-red-500/30 text-red-300 animate-pulse' },
+  remote:  { icon: '🏢', text: '別拠点',   cls: 'bg-slate-700/40 text-slate-400' },
+};
+function envelopes(n) { return n === 0 ? '' : '✉️'.repeat(Math.min(n, 8)) + (n > 8 ? `+${n-8}` : ''); }
+// HTMLへ流し込む動的値のエスケープ（サーバは台帳照合済みだが二重に守る）
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g,
+    c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+async function refresh() {
+  let d;
+  try {
+    const r = await fetch('../tools/office/status.php',
+      { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d = await r.json();
+  } catch (e) {
+    document.getElementById('tickline').textContent = '⚠️ status.php に接続できません：' + e.message;
+    return;
+  }
+  if (!d.ok || !Array.isArray(d.agents)) return;
+
+  // 心拍・実行中
+  const t = d.tick;
+  document.getElementById('tickline').innerHTML =
+    `心拍：<b>${esc(t.lastSeen ?? '不明')}</b>（${esc(t.ageSec ?? '?')}秒前・mode=${esc(t.mode ?? '?')}）` +
+    (t.runningNow ? ` ／ 🔨 いま実行中：<b class="text-emerald-300">${esc(t.runningNow)}</b>` : ' ／ 実行中セッションなし');
+  const alertEl = document.getElementById('alert');
+  if (t.stale) { alertEl.textContent = '⚠️ 心拍が5分以上止まっています（agent-tick が動いていない可能性）'; alertEl.classList.remove('hidden'); }
+  else if (t.status && t.status !== 'ok') { alertEl.textContent = '⚠️ 直近の tick 状態: ' + t.status; alertEl.classList.remove('hidden'); }
+  else alertEl.classList.add('hidden');
+
+  // 島ごとにカードを並べる
+  const wrap = document.getElementById('islands');
+  wrap.innerHTML = '';
+  for (const [key, isl] of Object.entries(ISLANDS)) {
+    const members = d.agents.filter(a => a.island === key);
+    if (!members.length) continue;
+    const sec = document.createElement('section');
+    sec.className = `rounded-xl border ${isl.color} bg-slate-800/50 p-4`;
+    sec.innerHTML = `<h2 class="text-sm font-semibold text-slate-300 mb-3">${isl.name}</h2>`;
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-2 md:grid-cols-4 gap-3';
+    for (const a of members) {
+      const s = STATUS[a.status] ?? STATUS.idle;
+      const card = document.createElement('div');
+      card.className = `rounded-lg p-3 ${s.cls}`;
+      card.innerHTML =
+        `<div class="text-2xl leading-none mb-1">${s.icon}</div>` +
+        `<div class="text-xs font-bold text-slate-100">${esc(a.label)}</div>` +
+        `<div class="text-[11px] mt-0.5">${s.text}${a.inbox ? `・受信箱 <b>${esc(a.inbox)}</b> 通` : ''}</div>` +
+        (a.inbox ? `<div class="text-sm mt-1">${envelopes(a.inbox)}</div>` : '') +
+        (a.nextWake && a.status === 'idle' ? `<div class="text-[10px] text-slate-500 mt-1">⏰ 次の起床 ${esc(a.nextWake)}</div>` : '');
+      grid.appendChild(card);
+    }
+    sec.appendChild(grid);
+    wrap.appendChild(sec);
+  }
+
+  document.getElementById('hold').innerHTML = `🗂 社長の承認待ち（hold/）：<b>${d.hold}</b> 件`;
+  document.getElementById('updated').textContent = '最終取得: ' + new Date().toLocaleTimeString('ja-JP');
+}
+// ポーリング：完了してから次を予約（応答遅延時の多重リクエストを防ぐ）
+(async function loop() {
+  try { await refresh(); } finally { setTimeout(loop, 5000); }
+})();
+</script>
+</body>
+</html>
