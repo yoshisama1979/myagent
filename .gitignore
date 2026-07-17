@@ -53,3 +53,24 @@ site/decks/ai-hisho/deck-images/
 # decks: 質問事項レポートの PDF は /questions-deck で毎回再生成する生成物＝追跡しない
 site/decks/analysis-questions/*.pdf
 site/decks/analysis-questions/*/*.pdf
+
+# ── クライアント分析は git 外＝VPS/Tailscale のみで保持（方針 2026-07-16 社長決定）──
+# 自社（ycom / rally / konjaku）は追跡継続。クライアントの掲示板・デッキ・sites設定・from-president は追跡しない。
+# ※既存クライアント（yoshida/fujisaka/yokohawaii）の過去分析は git 履歴に既出（本設定は今後の追跡停止。履歴の完全消去は別途）。
+site/hp-analysis/yoshida/
+site/hp-analysis/fujisaka/
+site/hp-analysis/yokohawaii/
+site/hp-analysis/shigatoyota/
+site/hp-analysis/osakatoyopet/
+site/decks/shigatoyota-hp-analysis/
+site/decks/osakatoyopet-hp-analysis/
+data/hp-loop/sites/yoshida.md
+data/hp-loop/sites/fujisaka.md
+data/hp-loop/sites/yokohawaii.md
+data/hp-loop/sites/shigatoyota.md
+data/hp-loop/sites/osakatoyopet.md
+data/hp-loop/yoshida/
+data/hp-loop/fujisaka/
+data/hp-loop/yokohawaii/
+data/hp-loop/shigatoyota/
+data/hp-loop/osakatoyopet/
