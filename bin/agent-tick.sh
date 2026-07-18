@@ -102,7 +102,9 @@ alert() {
 }
 
 # --- 1) 新着取り込み（純シェル・LLM不要・このスクリプトが fetch の唯一の所有者） ---
-if ! "$PY" bin/slack-poll.py fetch >>"$LOG" 2>&1; then
+# 出力は「» 」接頭辞つきで記録（Slack本文由来の改行が偽の制御マーカー行になるのを防ぐ＝claude出力と同じ理由）
+"$PY" bin/slack-poll.py fetch 2>&1 | sed 's/^/» /' >>"$LOG"
+if [ "${PIPESTATUS[0]}" -ne 0 ]; then
   echo "$(now) [warn] fetch失敗" >>"$LOG"
   fail "fetch-fail"
   alert "Slack新着の取り込み(fetch)に失敗しました。トークン/ネットワークを確認してください。"
@@ -144,8 +146,10 @@ dispatch() {
     # MYAGENT_UNATTENDED=1：無人実行の目印。PreToolUse フック（guard-unattended-edits.py）が
     # この時だけ社長ゲート対象ファイル（SYSTEM.md・CLAUDE.md・ルール/コマンド/設定）への
     # Edit/Write を拒否する＝acceptEdits でも勝手に書けない（2026-06-26 地図自動編集の再発防止）。
-    MYAGENT_UNATTENDED=1 timeout --kill-after=30s 900s "$CLAUDE" -p "$slash" --permission-mode acceptEdits >>"$LOG" 2>&1
-    rc=$?
+    # 出力は「» 」接頭辞つきで記録：制御マーカー（[run]/[tick]等の行頭タイムスタンプ行）を
+    # このスクリプトだけが書ける形にし、claude出力による状態偽装を防ぐ（Codex🔴 2026-07-17）
+    MYAGENT_UNATTENDED=1 timeout --kill-after=30s 900s "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
+    rc=${PIPESTATUS[0]}
     if [ "$rc" -ne 0 ]; then
       if [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
         fail "$label-timeout"; action="$action(TIMEOUT)"

@@ -112,20 +112,34 @@ if ($fp) {
     $size = is_array($st) ? (int)($st['size'] ?? 0) : 0;
     $tailLen = min($size, 65536);                // 末尾64KBだけ読む（ログは512KBで切り詰め運用）
     if ($tailLen > 0) {
-        fseek($fp, $size - $tailLen);
-        $tail = (string)fread($fp, $tailLen);
+        // 切り口の直前1バイトも読む＝切り口が行頭ぴったりか判定する（完全な行を誤って捨てない＝Codex🔴）
+        $extra = ($tailLen < $size) ? 1 : 0;
+        fseek($fp, $size - $tailLen - $extra);
+        $tail = (string)fread($fp, $tailLen + $extra);
+        if ($extra) {
+            if ($tail[0] === "\n") {
+                $tail = substr($tail, 1);          // 切り口＝行頭。先頭行は完全なので残す
+            } else {
+                // 欠け行を行ごと捨てる（バイト切りでUTF-8文字が割れていても一緒に除去される）
+                $nl = strpos($tail, "\n");
+                $tail = ($nl === false) ? '' : substr($tail, $nl + 1);
+            }
+        }
     } else {
         $tail = '';
     }
     fclose($fp);
     $LINE = '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \S+ ';
     $lastRunPos = -1; $lastRunLabel = null; $lastTickPos = -1;
-    if (preg_match_all('/' . $LINE . '\[run\] .*?label=(\S+?)\s+pending/mu', $tail, $mm, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
+    // /u は付けない（バイト指向で照合）：バイト切りの端やclaude出力に不正UTF-8が混ざると、
+    // /u は preg_match_all 全体が失敗し「実行中なし」に化ける（心拍誤警報の実バグ 2026-07-17）。
+    // 照合対象（タイムスタンプ・[run]/[tick]・label）はすべてASCIIなのでバイト照合で同じ結果になる。
+    if (preg_match_all('/' . $LINE . '\[run\] .*?label=(\S+?)\s+pending/m', $tail, $mm, PREG_OFFSET_CAPTURE | PREG_SET_ORDER)) {
         $last = end($mm);
         $lastRunPos = $last[0][1];
         $lastRunLabel = $last[1][0];
     }
-    if (preg_match_all('/' . $LINE . '\[tick\] /mu', $tail, $mm, PREG_OFFSET_CAPTURE)) {
+    if (preg_match_all('/' . $LINE . '\[tick\] /m', $tail, $mm, PREG_OFFSET_CAPTURE)) {
         $lastTickPos = end($mm[0])[1];
     }
     if ($lastRunPos >= 0 && $lastRunPos > $lastTickPos && $lastRunLabel !== null) {

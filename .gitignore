@@ -74,3 +74,6 @@ data/hp-loop/fujisaka/
 data/hp-loop/yokohawaii/
 data/hp-loop/shigatoyota/
 data/hp-loop/osakatoyopet/
+
+# ── 3Dオフィスの装飾画像（社長の私物・肖像/著作物を含むためコミットしない）──
+site/office/decor/

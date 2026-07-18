@@ -87,22 +87,23 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x151a28);
-scene.fog = new THREE.Fog(0x151a28, 34, 60);
+scene.background = new THREE.Color(0x9cc4e4);
+scene.fog = new THREE.Fog(0xbfd8ec, 45, 110);   // 昼の大気遠近（遠くほど空色に溶ける）
 
 const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
 
-// 照明：夜のオフィスに月光＋室内灯
-scene.add(new THREE.AmbientLight(0x93a3c4, 0.75));
-const sun = new THREE.DirectionalLight(0xfff4e0, 1.3);
-sun.position.set(10, 16, 6);
+// 照明：昼のオフィス（太陽光＋空と芝生からの照り返し）
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+scene.add(new THREE.HemisphereLight(0xcfe4f7, 0x86a878, 0.5));
+const sun = new THREE.DirectionalLight(0xfff6dc, 1.55);
+sun.position.set(14, 22, -8);   // 奥の空に見える太陽と同じ方角から差す
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 sun.shadow.camera.left = -18; sun.shadow.camera.right = 18;
 sun.shadow.camera.top = 18; sun.shadow.camera.bottom = -18;
 scene.add(sun);
-const fill = new THREE.DirectionalLight(0x99bbff, 0.3);
-fill.position.set(-8, 10, -10);
+const fill = new THREE.DirectionalLight(0xbcd4f0, 0.25);
+fill.position.set(-8, 10, 12);
 scene.add(fill);
 
 // 床（フローリング）＋壁
@@ -111,23 +112,156 @@ const floor = new THREE.Mesh(
   new THREE.MeshStandardMaterial({ color: 0x8a6f52, roughness: 0.85 }));
 floor.position.y = -0.15; floor.receiveShadow = true;
 scene.add(floor);
-const wallMat = new THREE.MeshStandardMaterial({ color: 0x39415a, roughness: 0.95 });
-const wallB = new THREE.Mesh(new THREE.BoxGeometry(30, 6, 0.3), wallMat);
-wallB.position.set(0, 3, -10.15); wallB.receiveShadow = true; scene.add(wallB);
-const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 20), wallMat);
-wallL.position.set(-15.15, 3, 0); wallL.receiveShadow = true; scene.add(wallL);
-// 窓（奥の壁に明るい矩形）
-for (let i = 0; i < 3; i++) {
-  const win = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 2.6),
-    new THREE.MeshBasicMaterial({ color: 0x27334f }));
-  win.position.set(-9 + i * 9, 3.4, -9.99);
-  scene.add(win);
-  const frame = new THREE.Mesh(new THREE.BoxGeometry(4.9, 2.9, 0.1),
-    new THREE.MeshStandardMaterial({ color: 0x222a3d }));
-  frame.position.set(-9 + i * 9, 3.4, -10.05);
-  scene.add(frame);
+// 壁紙（プロシージャル：縦ストライプ＋ダマスク風ひし形モチーフ）
+function makeWallpaperTexture(repeatX, repeatY) {
+  const c = document.createElement('canvas'); c.width = 256; c.height = 256;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#edebe4'; ctx.fillRect(0, 0, 256, 256);       // 白（オフホワイト）ベース
+  ctx.fillStyle = 'rgba(0,0,0,0.028)';                           // 淡い縦ストライプ
+  for (let x = 0; x < 256; x += 64) ctx.fillRect(x, 0, 32, 256);
+  const diamond = (cx, cy, r, style) => {
+    ctx.fillStyle = style;
+    ctx.beginPath(); ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r * 0.62, cy);
+    ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r * 0.62, cy); ctx.closePath(); ctx.fill();
+  };
+  for (let y = 0; y < 256; y += 64)                              // 主モチーフ（タイル内側のみ）
+    for (let x = 0; x < 256; x += 64) diamond(x + 32, y + 32, 20, 'rgba(150,140,118,0.22)');
+  for (let y = 0; y <= 256; y += 64)                             // 小モチーフ（端は両側に描いてシームレスに）
+    for (let x = 0; x <= 256; x += 64) diamond(x, y, 8, 'rgba(150,140,118,0.13)');
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(repeatX, repeatY);
+  tex.anisotropy = 4;
+  return tex;
 }
+const wallOutMat = new THREE.MeshStandardMaterial({ color: 0xd8d2c4, roughness: 0.9 });  // 外壁＝明るいクリーム
+const WP_TILE = 2.5;   // 壁紙パターンの実寸（m）＝分割壁でも柄の密度を揃える
+const wallpaperMats = [];   // decor/wallpaper.* での差し替え用に全セグメントを記録
+function wallpaperMat(w, h) {
+  const mat = new THREE.MeshStandardMaterial({ map: makeWallpaperTexture(w / WP_TILE, h / WP_TILE), roughness: 0.92 });
+  wallpaperMats.push({ mat, w, h });
+  return mat;
+}
+// 奥の壁＝窓の開口を実際に開けて組む（BoxGeometry 面順 [+x,-x,+y,-y,+z,-z]・+z＝室内側だけ壁紙）
+function wallSegment(w, h, cx, cy) {
+  const seg = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.3),
+    [wallOutMat, wallOutMat, wallOutMat, wallOutMat, wallpaperMat(w, h), wallOutMat]);
+  seg.position.set(cx, cy, -10.15); seg.receiveShadow = true; scene.add(seg);
+}
+const WIN_XS = [-9, 0, 9], WIN_W = 4.6, WIN_H = 2.6, WIN_Y = 3.4;   // 窓3つの中心と大きさ
+wallSegment(3.7, 6, -13.15, 3); wallSegment(4.4, 6, -4.5, 3);        // 窓間の柱（全高）
+wallSegment(4.4, 6, 4.5, 3);    wallSegment(3.7, 6, 13.15, 3);
+for (const wx of WIN_XS) {
+  wallSegment(WIN_W, WIN_Y - WIN_H / 2, wx, (WIN_Y - WIN_H / 2) / 2);            // 腰壁（窓の下）
+  wallSegment(WIN_W, 6 - (WIN_Y + WIN_H / 2), wx, (6 + WIN_Y + WIN_H / 2) / 2);  // 垂れ壁（窓の上）
+}
+// すりガラス（半透明＝外の空・芝生・木がうっすら透ける）＋白い窓枠
+const frostedMat = new THREE.MeshPhysicalMaterial({
+  color: 0xeef4f8, transparent: true, opacity: 0.42, roughness: 0.7, metalness: 0,
+  side: THREE.DoubleSide });
+const sashMat = new THREE.MeshStandardMaterial({ color: 0xf2efe6, roughness: 0.6 });
+for (const wx of WIN_XS) {
+  const pane = new THREE.Mesh(new THREE.PlaneGeometry(WIN_W, WIN_H), frostedMat);
+  pane.position.set(wx, WIN_Y, -10.15); scene.add(pane);
+  for (const [w2, h2, ox, oy] of [
+    [WIN_W + 0.24, 0.12, 0, WIN_H / 2 + 0.06], [WIN_W + 0.24, 0.12, 0, -(WIN_H / 2 + 0.06)],
+    [0.12, WIN_H + 0.24, -(WIN_W / 2 + 0.06), 0], [0.12, WIN_H + 0.24, WIN_W / 2 + 0.06, 0],
+    [0.08, WIN_H, 0, 0]]) {                                          // 上下左右の枠＋中桟
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(w2, h2, 0.34), sashMat);
+    bar.position.set(wx + ox, WIN_Y + oy, -10.15); scene.add(bar);
+  }
+}
+// 左の壁（窓なし・絵を掛ける）
+const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 20),
+  [wallpaperMat(20, 6), wallOutMat, wallOutMat, wallOutMat, wallOutMat, wallOutMat]);
+wallL.position.set(-15.15, 3, 0); wallL.receiveShadow = true; scene.add(wallL);
+// 巾木（壁の足元に白いライン＝壁紙を引き締める）
+const skirtMat = new THREE.MeshStandardMaterial({ color: 0xe8e4d8, roughness: 0.8 });
+const skirtB = new THREE.Mesh(new THREE.BoxGeometry(30, 0.32, 0.06), skirtMat);
+skirtB.position.set(0, 0.16, -9.96); scene.add(skirtB);
+const skirtL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.32, 20), skirtMat);
+skirtL.position.set(-14.96, 0.16, 0); scene.add(skirtL);
+// 額入りの絵（左の壁・抽象画をCanvasで描く）
+function painting(z, hue0, hue1) {
+  const c = document.createElement('canvas'); c.width = 128; c.height = 88;
+  const ctx = c.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 128, 88);
+  grad.addColorStop(0, hue0); grad.addColorStop(1, hue1);
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 88);
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.beginPath(); ctx.arc(92, 26, 12, 0, 7); ctx.fill();          // 太陽（月）
+  ctx.fillStyle = 'rgba(30,41,59,0.55)';                           // 山なみ
+  ctx.beginPath(); ctx.moveTo(0, 88); ctx.lineTo(42, 38); ctx.lineTo(78, 88); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(50, 88); ctx.lineTo(95, 50); ctx.lineTo(128, 88); ctx.closePath(); ctx.fill();
+  const g = new THREE.Group();
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.46, 2.06),
+    new THREE.MeshStandardMaterial({ color: 0x8a6c3c, roughness: 0.6 }));
+  g.add(frame);
+  const art = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.3),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c) }));
+  art.rotation.y = Math.PI / 2; art.position.x = 0.035; g.add(art);
+  g.position.set(-14.93, 3.2, z);
+  scene.add(g);
+  return { frame, art };
+}
+const paintingSlots = [
+  painting(-4.2, '#f59e0b', '#7c3aed'),
+  painting(3.4, '#38bdf8', '#166534'),
+];
 
+/* ---- 社長のカスタム装飾（site/office/decor/ に置くと差し替え・無ければ標準のまま） ----
+ *   art1.jpg|png   → 左壁・手前の額縁      art2.jpg|png → 左壁・奥の額縁
+ *   wallpaper.jpg|png → 室内の壁紙（タイル状に繰り返し）
+ */
+const texLoader = new THREE.TextureLoader();
+function loadDecor(base, onload) {
+  const tryExt = exts => {
+    if (!exts.length) return;   // 1つも無ければ標準デザインのまま
+    texLoader.load(`decor/${base}.${exts[0]}`,
+      tex => { tex.colorSpace = THREE.SRGBColorSpace; onload(tex); },
+      undefined, () => tryExt(exts.slice(1)));
+  };
+  tryExt(['jpg', 'png', 'jpeg']);
+}
+// 巨大画像対策：長辺 maxDim を超える画像は縮小してから使う（GPUメモリ枯渇・context loss 防止＝Codex🟡）
+function capTexture(tex, maxDim) {
+  const img = tex.image;
+  if (Math.max(img.width, img.height) <= maxDim) return tex;
+  const s = maxDim / Math.max(img.width, img.height);
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(img.width * s));
+  c.height = Math.max(1, Math.round(img.height * s));
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  tex.dispose();
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+  return t;
+}
+// 額縁：画像の縦横比に合わせて額のサイズも変形（基準高さ1.3m・最大幅2.7m）
+paintingSlots.forEach((slot, i) => loadDecor(`art${i + 1}`, tex => {
+  tex = capTexture(tex, 2048);
+  const aspect = tex.image.width / tex.image.height;
+  let h = 1.3, w = h * aspect;
+  if (w > 2.7) { w = 2.7; h = w / aspect; }
+  slot.art.material.map.dispose();
+  slot.art.material.map = tex; slot.art.material.needsUpdate = true;
+  slot.art.scale.set(w / 1.9, h / 1.3, 1);
+  slot.frame.scale.set(1, (h + 0.16) / 1.46, (w + 0.16) / 2.06);
+}));
+// 壁紙：全セグメントに貼り替え（セグメントごとにテクスチャ複製するため 512px に縮小してから）
+loadDecor('wallpaper', tex => {
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  c.getContext('2d').drawImage(tex.image, 0, 0, 512, 512);
+  tex.dispose();
+  for (const { mat, w, h } of wallpaperMats) {
+    const t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(w / WP_TILE, h / WP_TILE);
+    t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4;
+    mat.map.dispose();
+    mat.map = t; mat.needsUpdate = true;
+  }
+});
 // 開発ルームのガラス壁（半透明・別拠点＝中がよく見えない演出）
 const glassMat = new THREE.MeshPhysicalMaterial({
   color: 0xbcd8e8, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0,
@@ -155,6 +289,130 @@ function plant(x, z) {
   g.position.set(x, 0, z); scene.add(g);
 }
 plant(-14, -9); plant(-14, 8.6); plant(14, 8.6); plant(2.2, -9);
+
+/* ============================================================
+ * 2.5 屋外（芝生・小川・並木・月）
+ * ============================================================ */
+// 芝生（プロシージャルなまだら模様）
+function makeGrassTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#3d7a45'; ctx.fillRect(0, 0, 256, 256);
+  const tones = ['#356b3c', '#458a4f', '#4f9859', '#316138'];
+  for (let i = 0; i < 1600; i++) {
+    ctx.fillStyle = tones[i % 4];
+    ctx.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(24, 20);
+  return tex;
+}
+const lawn = new THREE.Mesh(new THREE.PlaneGeometry(110, 90),
+  new THREE.MeshStandardMaterial({ map: makeGrassTexture(), roughness: 1 }));
+lawn.rotation.x = -Math.PI / 2; lawn.position.set(4, -0.31, 0);
+lawn.receiveShadow = true; scene.add(lawn);
+
+// 小川（建物の右手を手前→奥へ。テクスチャをスクロールさせて流す）
+function makeWaterTexture() {
+  const c = document.createElement('canvas'); c.width = 128; c.height = 256;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#2b6f96'; ctx.fillRect(0, 0, 128, 256);
+  ctx.strokeStyle = 'rgba(210,240,255,0.32)'; ctx.lineWidth = 3;
+  for (let i = 0; i < 12; i++) {
+    const x0 = Math.random() * 108 + 10, y0 = Math.random() * 200 + 10;
+    ctx.beginPath(); ctx.moveTo(x0, y0);
+    ctx.bezierCurveTo(x0 + 14, y0 + 14, x0 - 10, y0 + 30, x0 + 6, y0 + 46);
+    ctx.stroke();
+  }
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(2, 7);
+  return tex;
+}
+const waterTex = makeWaterTexture();
+const river = new THREE.Mesh(new THREE.PlaneGeometry(7, 90),
+  new THREE.MeshStandardMaterial({ map: waterTex, roughness: 0.15, metalness: 0.1 }));
+river.rotation.x = -Math.PI / 2; river.position.set(23, -0.29, 0);
+scene.add(river);
+// 川岸（小石まじりの土手）と石
+const bankMat = new THREE.MeshStandardMaterial({ color: 0x77705e, roughness: 0.95 });
+for (const bx of [19.1, 26.9]) {
+  const bank = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.14, 90), bankMat);
+  bank.position.set(bx, -0.24, 0); scene.add(bank);
+}
+const stoneMat = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, roughness: 0.9 });
+for (const [sx, sz, r] of [[18.6, 5.2, .34], [19.4, -6.8, .26], [27.2, 1.5, .38], [26.6, 9.8, .24], [18.9, 11.5, .3]]) {
+  const stone = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), stoneMat);
+  stone.scale.y = 0.55; stone.position.set(sx, -0.24, sz); scene.add(stone);
+}
+
+// 並木（影カメラの範囲内だけ影を落とす）
+function tree(x, z, s = 1) {
+  const g = new THREE.Group();
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.14 * s, 0.2 * s, 1.1 * s, 8),
+    new THREE.MeshStandardMaterial({ color: 0x6b4a2e, roughness: 0.9 }));
+  trunk.position.y = 0.55 * s; g.add(trunk);
+  const leafMat = new THREE.MeshStandardMaterial({ color: 0x2f7a3f, roughness: 0.85 });
+  for (const [dx, dy, dz, r] of [[0, 1.7, 0, .85], [.5, 1.3, .2, .6], [-.45, 1.35, -.15, .55], [.05, 1.15, .5, .5]]) {
+    const leaf = new THREE.Mesh(new THREE.SphereGeometry(r * s, 10, 10), leafMat);
+    leaf.position.set(dx * s, dy * s, dz * s); g.add(leaf);
+  }
+  const inShadowRange = Math.abs(x) < 18 && Math.abs(z) < 18;
+  g.traverse(o => { if (o.isMesh) o.castShadow = inShadowRange; });
+  g.position.set(x, -0.3, z); scene.add(g);
+}
+tree(17.4, 8.4, 1.15); tree(16.8, -9.2, 0.9); tree(29.8, -6, 1.3); tree(30.6, 9.5, 1.0);
+tree(-18.8, -4, 1.2); tree(-19.6, 7.5, 0.95); tree(10.2, 14.2, 0.8); tree(-9.5, 14.8, 0.9);
+
+// アヒル（川をぷかぷか流れる）
+const ducks = [];
+function duck(offset) {
+  const g = new THREE.Group();
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xf7f4e8, roughness: 0.8 });
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.26, 10, 10), bodyMat);
+  body.scale.set(1, 0.8, 1.25); g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.13, 8, 8), bodyMat);
+  head.position.set(0, 0.26, 0.24); g.add(head);
+  const beak = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.14, 6),
+    new THREE.MeshStandardMaterial({ color: 0xe8912d, roughness: 0.7 }));
+  beak.rotation.x = Math.PI / 2; beak.position.set(0, 0.25, 0.38); g.add(beak);
+  scene.add(g); ducks.push({ g, offset });
+}
+duck(0); duck(0.42);
+
+// 空（グラデーションのドーム・霧の影響を受けない）
+const skyCanvas = document.createElement('canvas'); skyCanvas.width = 4; skyCanvas.height = 128;
+{ const ctx = skyCanvas.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, 0, 128);
+  g.addColorStop(0, '#3f86c9'); g.addColorStop(0.55, '#8fc0e8'); g.addColorStop(1, '#dcedf8');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 4, 128); }
+const sky = new THREE.Mesh(new THREE.SphereGeometry(85, 24, 16),
+  new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(skyCanvas), side: THREE.BackSide, fog: false }));
+scene.add(sky);
+
+// 太陽（DirectionalLight と同じ方角＝奥の空・光暈つき）
+const sunBall = new THREE.Mesh(new THREE.SphereGeometry(2.4, 16, 16),
+  new THREE.MeshBasicMaterial({ color: 0xfff4bc, fog: false }));
+sunBall.position.set(48, 20, -40); scene.add(sunBall);   // 奥の空・見上げれば見える高さ
+const glowC = document.createElement('canvas'); glowC.width = glowC.height = 128;
+{ const ctx = glowC.getContext('2d');
+  const g = ctx.createRadialGradient(64, 64, 8, 64, 64, 64);
+  g.addColorStop(0, 'rgba(255,246,205,0.95)'); g.addColorStop(1, 'rgba(255,246,205,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 128, 128); }
+const sunGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+  map: new THREE.CanvasTexture(glowC), transparent: true, depthWrite: false, fog: false }));
+sunGlow.scale.set(16, 16, 1); sunGlow.position.copy(sunBall.position); scene.add(sunGlow);
+
+// 雲（白いもこもこ）
+function cloud(x, y, z, s = 1) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.92, fog: false });
+  for (const [dx, dy, dz, r] of [[0,0,0,1.6],[1.5,.2,.3,1.2],[-1.5,.15,-.2,1.15],[.6,.7,0,1.0],[-.7,.6,.2,.9]]) {
+    const p = new THREE.Mesh(new THREE.SphereGeometry(r, 10, 8), mat);
+    p.position.set(dx, dy, dz); g.add(p);
+  }
+  g.scale.setScalar(s); g.position.set(x, y, z); scene.add(g);
+}
+cloud(-34, 17, -44, 1.5); cloud(10, 22, -52, 1.9); cloud(52, 14, -16, 1.2); cloud(-20, 19, 38, 1.4);
 
 /* ============================================================
  * 3. テキスト/絵文字スプライト（日本語ラベル・状態バッジ）
@@ -193,12 +451,29 @@ const M = {
   desk:  new THREE.MeshStandardMaterial({ color: 0xd7b98c, roughness: .7 }),
   deskLeg: new THREE.MeshStandardMaterial({ color: 0x5d6472, roughness: .6, metalness: .4 }),
   chair: new THREE.MeshStandardMaterial({ color: 0x3a4256, roughness: .8 }),
+  chairDark: new THREE.MeshStandardMaterial({ color: 0x2c3344, roughness: .7 }),
+  metalDark: new THREE.MeshStandardMaterial({ color: 0x4a4f5c, roughness: .5, metalness: .5 }),
   monitor: new THREE.MeshStandardMaterial({ color: 0x252b3b, roughness: .5 }),
+  kbSide: new THREE.MeshStandardMaterial({ color: 0x2b313f, roughness: .7 }),
+  paper: new THREE.MeshStandardMaterial({ color: 0xf7f4ec, roughness: .95 }),
+  mug: new THREE.MeshStandardMaterial({ color: 0xf3efe6, roughness: .6 }),
+  coffee: new THREE.MeshStandardMaterial({ color: 0x4a2c17, roughness: .9 }),
+  pot: new THREE.MeshStandardMaterial({ color: 0xb0603a, roughness: .9 }),
+  leaf: new THREE.MeshStandardMaterial({ color: 0x3f9d55, roughness: .8 }),
   envelope: new THREE.MeshStandardMaterial({ color: 0xf5f0e6, roughness: .9 }),
   envelopeLine: new THREE.MeshStandardMaterial({ color: 0xd9534f, roughness: .9 }),
 };
+// キーボードのキー配列（Canvasで1枚描いて全席で共有）
+{
+  const c = document.createElement('canvas'); c.width = 128; c.height = 48;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#2b313f'; ctx.fillRect(0, 0, 128, 48);
+  ctx.fillStyle = '#4a5265';
+  for (let y = 4; y < 40; y += 10) for (let x = 4; x < 120; x += 10) ctx.fillRect(x, y, 8, 8);
+  M.kbTop = new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(c), roughness: .8 });
+}
 
-function buildDesk(accent) {
+function buildDesk(accent, seed = 0) {
   const g = new THREE.Group();
   const top = new THREE.Mesh(new THREE.BoxGeometry(DESK_W, 0.09, DESK_D), M.desk);
   top.position.y = 0.86; top.castShadow = true; top.receiveShadow = true; g.add(top);
@@ -206,53 +481,173 @@ function buildDesk(accent) {
     const leg = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.86, 0.08), M.deskLeg);
     leg.position.set(sx*(DESK_W/2-0.1), 0.43, sz*(DESK_D/2-0.1)); leg.castShadow = true; g.add(leg);
   }
-  // モニタ（screen は状態で発光させるので参照を残す）
+  // モニタ（薄ベゼル＋円形台座。screen は状態で発光させるので参照を残す）
   const mon = new THREE.Group();
-  const bezel = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.6, 0.05), M.monitor);
-  bezel.position.y = 1.45; bezel.castShadow = true; mon.add(bezel);
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.85, 0.5),
+  const bezel = new THREE.Mesh(new THREE.BoxGeometry(0.98, 0.62, 0.035), M.monitor);
+  bezel.position.y = 1.47; bezel.castShadow = true; mon.add(bezel);
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.54),
     new THREE.MeshStandardMaterial({ color: 0x0b0e16, emissive: 0x000000, roughness: .4 }));
-  screen.position.set(0, 1.45, 0.028); mon.add(screen);
-  const stand = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.28, 0.08), M.monitor);
+  screen.position.set(0, 1.47, 0.02); mon.add(screen);
+  const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.26, 8), M.metalDark);
   stand.position.y = 1.03; mon.add(stand);
+  const standBase = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.025, 12), M.metalDark);
+  standBase.position.y = 0.917; mon.add(standBase);
   mon.position.z = -0.28; g.add(mon);
-  // 椅子
-  const seat = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.08, 0.62), M.chair);
+  // キーボード（上面だけキー柄）とマウス
+  const kb = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.03, 0.18),
+    [M.kbSide, M.kbSide, M.kbTop, M.kbSide, M.kbSide, M.kbSide]);
+  kb.position.set(0, 0.92, 0.08); g.add(kb);
+  const mouse = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), M.kbSide);
+  mouse.scale.set(1, 0.55, 1.35); mouse.position.set(0.38, 0.915, 0.1); g.add(mouse);
+  // マグカップ（コーヒー入り・把手つき）
+  const mug = new THREE.Group();
+  const cup = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.045, 0.1, 12), M.mug);
+  cup.castShadow = true; mug.add(cup);
+  const coffee = new THREE.Mesh(new THREE.CircleGeometry(0.042, 12), M.coffee);
+  coffee.rotation.x = -Math.PI / 2; coffee.position.y = 0.051; mug.add(coffee);
+  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.009, 6, 12), M.mug);
+  handle.position.set(0.055, 0, 0); mug.add(handle);
+  mug.position.set(-0.62, 0.955, 0.18); g.add(mug);
+  // 席ごとの小物（書類の山 or ミニ観葉植物＝seedで変化）
+  if (seed % 2 === 0) {
+    for (let i = 0; i < 2; i++) {
+      const sheet = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.008, 0.36), M.paper);
+      sheet.position.set(-0.34 + i * 0.03, 0.912 + i * 0.01, -0.2);
+      sheet.rotation.y = 0.25 - i * 0.4; g.add(sheet);
+    }
+  } else {
+    const mini = new THREE.Group();
+    const pot = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.04, 0.07, 8), M.pot);
+    pot.position.y = 0.035; mini.add(pot);
+    const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 8), M.leaf);
+    leaf.position.y = 0.11; mini.add(leaf);
+    mini.position.set(-0.38, 0.905, -0.25); g.add(mini);
+  }
+  // オフィスチェア（丸座面・背もたれ・肘掛け・5本脚キャスター）
+  const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.35, 0.09, 14), M.chair);
   seat.position.set(0, 0.5, 0.95); seat.castShadow = true; g.add(seat);
-  const back = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.66, 0.08), M.chair);
-  back.position.set(0, 0.86, 1.24); back.castShadow = true; g.add(back);
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.5, 8), M.deskLeg);
-  pole.position.set(0, 0.25, 0.95); g.add(pole);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.62, 0.07), M.chair);
+  back.position.set(0, 0.88, 1.25); back.rotation.x = 0.08; back.castShadow = true; g.add(back);
+  for (const sx of [-1, 1]) {
+    const armr = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.04, 0.3), M.chairDark);
+    armr.position.set(sx * 0.36, 0.68, 1.0); g.add(armr);
+    const armSup = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.16, 0.04), M.chairDark);
+    armSup.position.set(sx * 0.36, 0.58, 1.05); g.add(armSup);
+  }
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.36, 8), M.metalDark);
+  pole.position.set(0, 0.3, 0.95); g.add(pole);
+  for (let i = 0; i < 5; i++) {
+    const a = i * Math.PI * 2 / 5;
+    const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.025, 0.3), M.metalDark);
+    spoke.position.set(Math.sin(a) * 0.14, 0.12, 0.95 + Math.cos(a) * 0.14);
+    spoke.rotation.y = a; g.add(spoke);
+    const caster = new THREE.Mesh(new THREE.SphereGeometry(0.03, 6, 6), M.chairDark);
+    caster.position.set(Math.sin(a) * 0.27, 0.08, 0.95 + Math.cos(a) * 0.27); g.add(caster);
+  }
   return { group: g, screen };
 }
 
-function buildAvatar(accent, remote) {
+function buildAvatar(accent, remote, seed = 0, style = '') {
   const g = new THREE.Group();
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color: accent, roughness: .75,
-    transparent: remote, opacity: remote ? 0.42 : 1 });
-  const skinMat = new THREE.MeshStandardMaterial({
-    color: remote ? 0x8a93a5 : 0xffdfc4, roughness: .8,
-    transparent: remote, opacity: remote ? 0.42 : 1 });
-  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.21, 0.3, 6, 12), bodyMat);
-  body.position.y = 0.78; body.castShadow = !remote; g.add(body);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 16), skinMat);
-  head.position.y = 1.26; head.castShadow = !remote; g.add(head);
-  // 目（寝ると閉じ目に見えるよう、小さな黒点）
-  if (!remote) {
+  const alpha = remote ? 0.42 : 1;
+  const mk = (color, rough = 0.8) => new THREE.MeshStandardMaterial({
+    color, roughness: rough, transparent: remote, opacity: alpha });
+  const skin = mk(remote ? 0x8a93a5 : 0xffdfc4);
+  const shirt = mk(accent, 0.7);
+  const HAIR_COLORS = [0x40342a, 0x2e2c31, 0x6b4226, 0x8a6540, 0x54424e, 0x7b7168];
+  const hairMat = mk(remote ? 0x6e7788 : HAIR_COLORS[seed % HAIR_COLORS.length], 0.9);
+
+  // 胴体（シャツ）と首
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.2, 0.26, 8, 16), shirt);
+  body.position.y = 0.76; body.castShadow = !remote; g.add(body);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, 0.09, 8), skin);
+  neck.position.y = 1.0; g.add(neck);
+
+  // 頭＝グループ（頷き・居眠りの回転で髪・顔・小物ごと動く）。顔は -z 向き
+  const head = new THREE.Group(); head.position.y = 1.27; g.add(head);
+  const skull = new THREE.Mesh(new THREE.SphereGeometry(0.23, 20, 20), skin);
+  skull.castShadow = !remote; head.add(skull);
+  // 髪：頭頂キャップ＋seedで髪型が変わる（0=ショート／1=お団子／2=サイドの髪）
+  const hair = new THREE.Mesh(
+    new THREE.SphereGeometry(0.245, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.58), hairMat);
+  hair.rotation.x = 0.42;   // 後ろへ流して額を出す
+  head.add(hair);
+  const hairStyle = seed % 3;
+  if (hairStyle === 1) {
+    const bun = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 10), hairMat);
+    bun.position.set(0, 0.16, 0.18); head.add(bun);
+  } else if (hairStyle === 2) {
     for (const sx of [-1, 1]) {
-      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.023, 6, 6),
-        new THREE.MeshBasicMaterial({ color: 0x222222 }));
-      eye.position.set(sx * 0.07, 1.29, -0.175); g.add(eye);
+      const tuft = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), hairMat);
+      tuft.position.set(sx * 0.2, -0.05, 0.05); tuft.scale.set(0.7, 1.3, 1); head.add(tuft);
     }
   }
-  // 腕（タイピングで揺らす）
+
+  if (!remote) {
+    // 顔：白目＋瞳・眉・口（にっこり）・頬
+    for (const sx of [-1, 1]) {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.036, 10, 10), mk(0xffffff, 0.35));
+      eye.position.set(sx * 0.085, 0.015, -0.195); head.add(eye);
+      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.017, 8, 8), mk(0x26221f, 0.3));
+      pupil.position.set(sx * 0.085, 0.015, -0.227); head.add(pupil);
+      const brow = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.014, 0.01), hairMat);
+      brow.position.set(sx * 0.085, 0.09, -0.213); brow.rotation.z = sx * -0.1; head.add(brow);
+      const blush = new THREE.Mesh(new THREE.CircleGeometry(0.028, 10),
+        new THREE.MeshBasicMaterial({ color: 0xf2a094, transparent: true, opacity: 0.5 }));
+      blush.position.set(sx * 0.145, -0.055, -0.17);
+      blush.rotation.y = Math.PI + sx * 0.5; head.add(blush);
+    }
+    const mouth = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.009, 6, 12, Math.PI), mk(0xc4564d, 0.5));
+    mouth.position.set(0, -0.06, -0.21); mouth.rotation.z = Math.PI; head.add(mouth);
+
+    // 役職の小物：役員席＝ネクタイ／解析＝メガネ／ブログ＝ベレー帽／事務＝ヘッドセット
+    if (style === 'exec') {
+      const tieMat = mk(0x9e2f38, 0.6);
+      const knot = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.04, 0.02), tieMat);
+      knot.position.set(0, 0.93, -0.19); g.add(knot);
+      const tie = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.2, 4), tieMat);
+      tie.rotation.x = Math.PI; tie.rotation.y = Math.PI / 4;
+      tie.position.set(0, 0.81, -0.2); g.add(tie);
+    } else if (style === 'analysis') {
+      const rimMat = mk(0x2f3540, 0.4);
+      for (const sx of [-1, 1]) {
+        const rim = new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.007, 6, 14), rimMat);
+        rim.position.set(sx * 0.085, 0.015, -0.215); head.add(rim);
+      }
+      const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.008, 0.008), rimMat);
+      bridge.position.set(0, 0.02, -0.22); head.add(bridge);
+    } else if (style === 'blog') {
+      const beretMat = mk(0x8e3450, 0.85);
+      const beret = new THREE.Mesh(new THREE.SphereGeometry(0.19, 14, 10), beretMat);
+      beret.scale.set(1.15, 0.45, 1.15); beret.position.set(0.05, 0.17, 0.02);
+      beret.rotation.z = -0.18; head.add(beret);
+      const pip = new THREE.Mesh(new THREE.SphereGeometry(0.025, 6, 6), beretMat);
+      pip.position.set(0.07, 0.26, 0.02); head.add(pip);
+    } else if (style === 'office') {
+      const bandMat = mk(0x333a47, 0.5);
+      const band = new THREE.Mesh(new THREE.TorusGeometry(0.245, 0.016, 6, 16, Math.PI), bandMat);
+      band.position.y = 0.02; head.add(band);
+      for (const sx of [-1, 1]) {
+        const pad = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 8), bandMat);
+        pad.scale.set(0.55, 1, 1); pad.position.set(sx * 0.24, 0, 0); head.add(pad);
+      }
+      const micArm = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.18, 6), bandMat);
+      micArm.position.set(-0.19, -0.09, -0.12); micArm.rotation.set(0.9, 0, 0.9); head.add(micArm);
+      const mic = new THREE.Mesh(new THREE.SphereGeometry(0.022, 6, 6), bandMat);
+      mic.position.set(-0.12, -0.14, -0.2); head.add(mic);
+    }
+  }
+
+  // 腕（回転の規約は旧版と同じ＝アニメ側は無変更）＋手（腕の子＝一緒に振れる）
   const arms = [];
   for (const sx of [-1, 1]) {
-    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.3, 4, 8), bodyMat);
-    arm.position.set(sx * 0.3, 0.85, -0.08);
+    const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.28, 4, 8), shirt);
+    arm.position.set(sx * 0.28, 0.84, -0.08);
     arm.rotation.x = -1.1;
-    arm.castShadow = !remote; g.add(arm); arms.push(arm);
+    arm.castShadow = !remote;
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), skin);
+    hand.position.set(0, 0.21, 0); arm.add(hand);
+    g.add(arm); arms.push(arm);
   }
   return { group: g, arms, head, body };
 }
@@ -306,10 +701,13 @@ function addAgentDesk(agent, index) {
   root.position.set(x, 0, z);
   if (isl.remote) root.rotation.y = -Math.PI / 2;   // 開発ルームはガラス側（左）を向く
 
-  const desk = buildDesk(isl.accent);
+  // 個体差の種：エージェントIDのFNV-1aハッシュ（決定的＝リロードしても同じ見た目。文字コード和より衝突しにくい＝Codex🟢）
+  let seed = 2166136261;
+  for (const ch of agent.id) seed = Math.imul(seed ^ ch.charCodeAt(0), 16777619) >>> 0;
+  const desk = buildDesk(isl.accent, seed);
   root.add(desk.group);
 
-  const av = buildAvatar(isl.accent, !!isl.remote);
+  const av = buildAvatar(isl.accent, !!isl.remote, seed, agent.island);
   av.group.position.set(0, 0, 0.72);
   root.add(av.group);
 
@@ -480,8 +878,17 @@ if (location.hash === '#menu') document.getElementById('menu').classList.add('op
  * ============================================================ */
 const target = new THREE.Vector3(-0.5, 0.2, -0.2);
 let theta = -0.38, phi = 0.92, dist = 29;
+// ?cam=theta,phi,dist で初期アングル指定（検証・お気に入りビュー共有用）
+{
+  const q = new URLSearchParams(location.search).get('cam');
+  if (q) {
+    // 空要素は NaN 扱い（Number('')===0 で最小ズームに張り付くのを防ぐ＝Codex🟡）
+    const [a, b, c] = q.split(',').map(s => s.trim() === '' ? NaN : Number(s));
+    if (isFinite(a)) theta = a; if (isFinite(b)) phi = b; if (isFinite(c)) dist = c;
+  }
+}
 function updateCamera() {
-  phi = Math.max(0.25, Math.min(1.35, phi));
+  phi = Math.max(0.25, Math.min(1.5, phi));   // 1.5＝ほぼ水平まで見上げられる（空・太陽が見える）
   dist = Math.max(7, Math.min(38, dist));
   camera.position.set(
     target.x + dist * Math.sin(phi) * Math.sin(theta),
@@ -514,6 +921,17 @@ const clock = new THREE.Clock();
 function animate() {
   requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
+  // 川の流れ（テクスチャスクロール）とアヒルの漂流
+  waterTex.offset.y = -t * 0.05;
+  for (const dk of ducks) {
+    const z = ((t * 0.55 + dk.offset * 90) % 90) - 45;         // 手前→奥へ流れて周回
+    dk.g.position.set(
+      23 + Math.sin(t * 0.5 + dk.offset * 7) * 1.6,            // 左右にゆらゆら
+      -0.22 + Math.sin(t * 2.1 + dk.offset * 9) * 0.025,       // ぷかぷか
+      z);
+    dk.g.rotation.y = Math.sin(t * 0.5 + dk.offset * 7) * 0.4;
+    dk.g.rotation.z = Math.sin(t * 1.7 + dk.offset * 5) * 0.06;
+  }
   for (const a of avatars.values()) {
     const ph = a.phase;
     if (a.state === 'working') {
