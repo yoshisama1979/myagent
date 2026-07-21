@@ -62,6 +62,11 @@
 - **テスト配置**: （記入。例: `next/src/__tests__/`）
 - **実行コマンド**: （記入。例: `docker exec <next-container> npm test`）
 
+## スライド資料（デッキ）（`.claude/rules/deck-format.md` が参照）
+
+- **出力先**: （記入。既定: `documents/decks/<案件名>/`。変える場合のみ記入）
+- **Chrome 実パス**: （記入。例: `/usr/bin/google-chrome`／`C:\Program Files\Google\Chrome\Application\chrome.exe`）
+
 ## 仕様書の場所
 
 - **既定**: `documents/specs/`（HTML。`spec-format.md` 準拠）

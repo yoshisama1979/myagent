@@ -24,6 +24,11 @@
 - レガシー・バックアップファイルの命名パターン：（記入。例: `*_org.html` `*.BAK` `index_2017*.html`。`refactor.md` が「触らない対象」の判定に参照）
 - 共通テンプレート機構：（記入。例: PHP インクルード・テンプレートクラス。`refactor.md`／`page-build.md` が共通化の判定に参照）
 
+## スライド資料（デッキ）（`.claude/rules/deck-format.md` が参照）
+
+- **出力先**: （記入。既定: `documents/decks/<案件名>/`。変える場合のみ記入）
+- **Chrome 実パス**: （記入。例: `/usr/bin/google-chrome`／`C:\Program Files\Google\Chrome\Application\chrome.exe`）
+
 ## HP分析ループ連携（`.claude/rules/mailbox.md` / `.claude/rules/hp-loop-dialogue.md` が参照）
 
 > 外部の「はなさかAI HP分析ループ」とサイト別にやり取りするための固有ID。ループはマルチサイト化で `hp-loop-<site>` に分かれており、**無印 `hp-loop` 宛では現行ループが拾えない**。各サイトで下記を記入する。
