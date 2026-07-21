@@ -6,7 +6,7 @@
 | テンプレート | 対象 | 中身の骨子 |
 |---|---|---|
 | [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue） |
-| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、見積もり（estimation） |
+| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳） |
 
 ## 使い方（新規プロジェクトへの導入手順）
 
@@ -30,6 +30,7 @@
 
 - 運用中に気づいたルールの不足・乖離・矛盾は、そのプロジェクトの `documents/rule-improvements.md` に **その都度 `RI-NNN` で1行記録**する（開発を止めない・会話に埋もれさせない）。
 - そのうち「このプロジェクト固有でなく、**テンプレート全体に還元すべき**」と判断したものには **`[テンプレ還元]`** と印を付ける（プロジェクト固有の設定は `project-config.md`／`Design.md` 側の話で、テンプレ本文には持ち込まない）。
+- **現場で実際に使って問題を感じたものは「指示書」形式で書く**（2026-07-21 社長決定）：ルール開発エージェント（当該プロジェクトの文脈を知らない汎用エージェント）が**それだけ読んで修正作業に入れる自己完結の依頼文**（対象ファイル・該当記述の原文引用・現場で何が起きたか・変更案・なぜ・再現に必要なバージョン/コマンド/エラー）。書式は各配布物の `rule-improvements.md` 冒頭「指示書」節に定義済み。**運用は二段階**＝発見時は1行の仮記録でよく、送付・持ち帰りに出す前（還元状態を進める前）に指示書形式へ展開する。社長はこの指示書をそのまま myagent（ルール開発側）へ渡し、myagent は③のとおり**鵜呑みにせず検証**してから反映する。
 
 ### ② 送る（テンプレ級だけ・経路はテンプレで異なる）
 

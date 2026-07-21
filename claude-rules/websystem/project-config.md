@@ -25,12 +25,17 @@
 - **Next コンテナ名**: （記入。例: `myapp-next`。`frontend-test.md` が参照）
 - **その他コンテナ**: （記入。例: `laravel` / `mysql`）
 
-## 本番DB名の禁止リスト
+## テストDB 許可リスト／本番DB名の禁止リスト
 
-（記入。`testcode.md` の SafeTestCase が参照。テストで接続を拒否する DB 名を列挙する）
+（記入。`testcode.md` の SafeTestCase が参照。**許可リストが主防御**＝ここに載った DB 名と sqlite `:memory:` 以外への接続をテストは全拒否する）
 
-- 例: `myapp_production`
-- 例: `myapp_prod`
+- **許可リスト（`ALLOWED_TEST_DATABASES`・テスト専用 DB 名だけ）**:
+  - 例: `myapp_testing`
+  - sqlite `:memory:` だけで回すプロジェクトは「なし（sqlite のみ）」と明記
+- **禁止リスト（`FORBIDDEN_DATABASES`・保険。本番に加え「消えて困る開発 DB」も入れる）**:
+  - 例: `myapp_production`
+  - 例: `myapp_prod`
+  - 例: `myapp_dev`
 
 ## Authenticatable 種別・ロール一覧
 
