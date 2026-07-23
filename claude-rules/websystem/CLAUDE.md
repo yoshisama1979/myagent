@@ -5,7 +5,7 @@
 - 仕様書: `documents/specs/`（HTML + Tailwind CSS。詳細フォーマットは `.claude/rules/spec-format.md` を参照）
   - 目次: `documents/specs/index.html`
   - 旧仕様書: `documents/document.md`（既存案件の移行用。**新規プロジェクトは specs/ のみを使い、document.md は作らない**）
-- テスト仕様書: `documents/test.csv`
+- テスト仕様書: `documents/test.csv`（**人間が行う手動テストのみ**を書く。自動テストでカバーする項目は書かない＝テストコードが正。`.claude/rules/create-test.md` 参照）
 - 残存課題: `documents/pending-issues.md`
 - ルール改善メモ: `documents/rule-improvements.md`（ルールファイルへの気づき・改善案の記録先。下記「コラボレーションの原則 2」参照）
 - 見積もり台帳: `documents/estimate-log.md`（**採用された**見積もりの記録先。記録は**ユーザー確認後のみ**。`.claude/rules/quotation.md` §6 参照）
