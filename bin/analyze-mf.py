@@ -262,14 +262,27 @@ def report_bs(bs: Dict) -> None:
         print(f'\n**自己資本比率: {equity_ratio:.1f}%**（中小企業平均 約40%）')
 
     if bs['top_clients']:
-        print('\n### 売掛金 取引先別（年間回収額 上位）\n')
-        print('| クライアント | 年間回収額 | 期末売掛残 |')
-        print('|------|------|------|')
-        # 期間貸方金額（年間回収額）でソート
+        # ⚠️ 取引先名は出さない（data/financial/README.md「個別取引明細・取引先名の詳細は
+        #    集計結果からは除外する（数値のみで議論）」。2026-07-24 Codexレビューで
+        #    ここが方針の抜け穴になっていると判明＝出力の転記でgit/Slackへ漏れる経路だった）。
+        #    経営判断に要るのは「誰か」でなく「どれだけ1社に寄っているか」なので順位と比率で出す。
+        print('\n### 売掛金 依存度（取引先名は伏せる・順位と比率のみ）\n')
         sorted_clients = sorted(bs['top_clients'], key=lambda x: -x[2])
-        for name, debit, credit, end in sorted_clients[:10]:
-            if credit > 0:
-                print(f'| {name} | {yen(credit)} | {yen(end)} |')
+        total_credit = sum(c[2] for c in sorted_clients if c[2] > 0)
+        print('| 順位 | 年間回収額 | 全体比 | 期末売掛残 |')
+        print('|------|------|------|------|')
+        rank = 0
+        for _name, _debit, credit, end in sorted_clients[:10]:
+            if credit <= 0:
+                continue
+            rank += 1
+            share = f'{credit / total_credit * 100:.1f}%' if total_credit else '—'
+            print(f'| 第{rank}位 | {yen(credit)} | {share} | {yen(end)} |')
+        if total_credit and rank:
+            top3 = sum(c[2] for c in sorted_clients[:3] if c[2] > 0)
+            print(f'\n**集中度：上位1社 {sorted_clients[0][2] / total_credit * 100:.1f}%'
+                  f' / 上位3社 {top3 / total_credit * 100:.1f}%**'
+                  f'（回収先 {len([c for c in sorted_clients if c[2] > 0])} 社）')
 
 
 def find_pl_csv(data_dir: Path):

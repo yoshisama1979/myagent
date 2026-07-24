@@ -47,6 +47,7 @@ foreach (TARGET_FYS as $fy) {
 $pl_25 = $pl_by_fy[2025];
 $pl_26 = $pl_by_fy[2026];
 $forecast_26 = forecast($pl_26);
+$health_26 = input_health($pl_26, $pl_25);
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -68,6 +69,8 @@ $forecast_26 = forecast($pl_26);
     今期（FY2026）の途中までの実績から通年を単純按分予測し、前年（FY2025）と比較。<br>
     データソース：MFクラウド「損益計算書 PL」CSV（期間指定でエクスポート）
   </p>
+
+  <?= input_health_banner($health_26) ?>
 
   <?php if ($message): ?>
     <?php $bg = $message['type'] === 'success' ? 'bg-emerald-50 border-emerald-400 text-emerald-800' : ($message['type'] === 'mixed' ? 'bg-amber-50 border-amber-400 text-amber-800' : 'bg-red-50 border-red-400 text-red-800'); ?>
@@ -188,7 +191,9 @@ $forecast_26 = forecast($pl_26);
               <?php else: ?><span class="text-gray-300">—</span><?php endif; ?>
             </td>
             <td class="px-3 py-2 text-center">
-              <?php if ($pct !== null): $j = judge($pct, $is_expense); ?>
+              <?php if ($health_26['has_issue']): ?>
+                <span class="text-gray-400 text-xs">⏸ 判定保留</span>
+              <?php elseif ($pct !== null): $j = judge($pct, $is_expense); ?>
                 <span class="<?= $j['class'] ?>"><?= $j['icon'] ?> <?= h($j['label']) ?></span>
               <?php else: ?><span class="text-gray-300">—</span><?php endif; ?>
             </td>
@@ -242,7 +247,9 @@ $forecast_26 = forecast($pl_26);
               <?php else: ?><span class="text-gray-300">—</span><?php endif; ?>
             </td>
             <td class="px-3 py-2 text-center">
-              <?php if ($pct !== null): $j = judge($pct, true); ?>
+              <?php if ($health_26['has_issue']): ?>
+                <span class="text-gray-400 text-xs">⏸ 判定保留</span>
+              <?php elseif ($pct !== null): $j = judge($pct, true); ?>
                 <span class="<?= $j['class'] ?>"><?= $j['icon'] ?> <?= h($j['label']) ?></span>
               <?php else: ?><span class="text-gray-300">—</span><?php endif; ?>
             </td>
@@ -258,6 +265,7 @@ $forecast_26 = forecast($pl_26);
     <strong>判定基準</strong>
     <ul class="list-disc list-inside mt-1 space-y-0.5">
       <li><strong>売上系</strong>：前年比 +5%以上 = 🟢順調 / ±5%以内 = 🟡ほぼ同等 / -5%以下 = 🔴未達ペース</li>
+      <li><strong>⏸ 判定保留</strong>：経理の入力が未完（遅れ・費目欠落・未分類残高）のときは上の判定を出さない。費用が抜けた実績で「順調」と出すのを防ぐため（2026-07-24 追加）</li>
       <li><strong>経費系</strong>：前年比 -5%以下 = 🟢改善 / ±5%以内 = 🟡ほぼ同等 / +5%以上 = 🔴増加</li>
       <li>あくまで単純按分予測。季節要因（広告繁忙期・冬季賞与等）は反映していない</li>
     </ul>

@@ -5,6 +5,7 @@ require_once __DIR__ . '/_financial-lib.php';
 $pl_25 = load_pl(2025);
 $pl_26 = load_pl(2026);
 $forecast_26 = forecast($pl_26);
+$health_26 = input_health($pl_26, $pl_25);
 
 const TOP_KPIS = [
     '売上高合計' => ['label' => '売上高', 'icon' => '💰', 'role' => 'revenue'],
@@ -40,6 +41,8 @@ const TOP_KPIS = [
       <p class="text-sm text-gray-500 py-2">財務データ未投入。<a href="annual-forecast.php" class="text-blue-600 hover:underline">年度通年予測</a> から MFクラウドCSV をアップロードしてください。</p>
     <?php else: ?>
 
+      <?= input_health_banner($health_26) ?>
+
       <!-- データ状態バッジ -->
       <div class="flex flex-wrap gap-2 mb-3 text-xs">
         <?php if ($pl_25 !== null): ?>
@@ -74,7 +77,9 @@ const TOP_KPIS = [
             FY2025: <span class="font-semibold"><?= jpy($v25) ?></span>
           </div>
           <div class="mt-1">
-            <?php if ($pct !== null): $j = judge($pct); ?>
+            <?php if ($health_26['has_issue']): ?>
+              <span class="text-gray-400 text-xs">⏸ 判定保留（経理の入力が未完のため）</span>
+            <?php elseif ($pct !== null): $j = judge($pct); ?>
               <span class="<?= $j['class'] ?> text-sm"><?= $j['icon'] ?> <?= sprintf('%+.1f%%', $pct) ?> <?= h($j['label']) ?></span>
             <?php else: ?>
               <span class="text-gray-400 text-xs">前年比 算出不可</span>
