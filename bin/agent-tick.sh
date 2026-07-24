@@ -44,7 +44,8 @@ LOG="$PROJ/data/overseer/tick.log"
 LOG_MAX_BYTES=1048576                                # 1MB を超えたら末尾512KBに切り詰め
 HEARTBEAT_WEB="$PROJ/site/overseer/last-tick.txt"   # Web から生存確認できる場所
 LOCK="$PROJ/data/overseer/.tick.lock"
-LAST_ALERT="$PROJ/data/overseer/.last-alert"        # Slack通知のスロットル用
+LAST_ALERT="$PROJ/data/overseer/.last-alert"        # Slack通知のスロットル用（既定ch）
+PARTNER_ALERT="$PROJ/data/overseer/.last-alert-partner"  # #partner 向け警報のスロットル用（既定chとは独立）
 MAILBOX_NEW="$PROJ/data/mailbox/new"                # 受信箱（1ファイル=1メッセージ・JSON）
 mkdir -p "$PROJ/data/overseer"
 
@@ -101,6 +102,25 @@ alert() {
     && date +%s >"$LAST_ALERT"
 }
 
+# --- 朝礼(partner)の失敗を #partner にも通知（社長合意 2026-07-24・#2「今日いちばん効く」） ---
+# 従来 alert() は既定ch（ウェブ解析）だけに出るため、社長は #partner で朝礼が「無い」ことで
+# しか気づけなかった。伴走の中核なので、失敗を社長が普段見る #partner へ届ける（既定chの警報は
+# 従来どおり残す＝systemic な失敗ストリームを消さない）。スロットルは既定chと独立（互いに握り潰さない）。
+partner_alert() {
+  local msg="$1"
+  echo "$(now) [ALERT:partner] $msg" >>"$LOG"
+  if [ -f "$PARTNER_ALERT" ]; then
+    local last age
+    last=$(cat "$PARTNER_ALERT" 2>/dev/null || echo 0)
+    [[ "$last" =~ ^[0-9]+$ ]] || last=0
+    age=$(( $(date +%s) - last ))
+    [ "$age" -lt 3600 ] && return 0
+  fi
+  printf '⚠️ 朝礼ブリーフィングが正常に完了しませんでした\n%s\n（%s）\n※自動警報です（次の実行で自動再試行します）。\n生存確認: http://100.123.104.87/overseer/last-tick.txt' \
+    "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post --as partner --channel partner >>"$LOG" 2>&1 \
+    && date +%s >"$PARTNER_ALERT"
+}
+
 # --- 1) 新着取り込み（純シェル・LLM不要・このスクリプトが fetch の唯一の所有者） ---
 # 出力は「» 」接頭辞つきで記録（Slack本文由来の改行が偽の制御マーカー行になるのを防ぐ＝claude出力と同じ理由）
 "$PY" bin/slack-poll.py fetch 2>&1 | sed 's/^/» /' >>"$LOG"
@@ -141,22 +161,29 @@ dispatch() {
   action="idle"
   if [ "$pending" -gt 0 ] || [ "$force" -eq 1 ]; then
     [ "$force" -eq 1 ] && action="daily" || action="handle($pending)"
-    echo "$(now) [run] claude -p $slash 起動（label=$label pending=$pending force=$force）" >>"$LOG"
+    # 制限時間は全エージェント25分（社長合意 2026-07-24・15分→25分に統一）。
+    # 契機＝07-24 朝礼が15分タイムアウトで黙って落ちた件。台帳/掲示板を読む重いセッションは
+    # どのエージェントでも起こり得るため、朝礼だけの延長でなく一律に。暴走時も --kill-after で
+    # 25分で確実に止まる。反応tickは前回実行中スキップのため、重い実行中の新着処理は最大25分待ち。
+    local tmo=1500
+    echo "$(now) [run] claude -p $slash 起動（label=$label pending=$pending force=$force timeout=${tmo}s）" >>"$LOG"
     # --kill-after：SIGTERM を無視されても30秒後に SIGKILL（子プロセス残留を始末＝Codex🔴4）
     # MYAGENT_UNATTENDED=1：無人実行の目印。PreToolUse フック（guard-unattended-edits.py）が
     # この時だけ社長ゲート対象ファイル（SYSTEM.md・CLAUDE.md・ルール/コマンド/設定）への
     # Edit/Write を拒否する＝acceptEdits でも勝手に書けない（2026-06-26 地図自動編集の再発防止）。
     # 出力は「» 」接頭辞つきで記録：制御マーカー（[run]/[tick]等の行頭タイムスタンプ行）を
     # このスクリプトだけが書ける形にし、claude出力による状態偽装を防ぐ（Codex🔴 2026-07-17）
-    MYAGENT_UNATTENDED=1 timeout --kill-after=30s 900s "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
+    MYAGENT_UNATTENDED=1 timeout --kill-after=30s "${tmo}s" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
     rc=${PIPESTATUS[0]}
     if [ "$rc" -ne 0 ]; then
       if [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
         fail "$label-timeout"; action="$action(TIMEOUT)"
-        alert "ヘッドレス $label が15分でタイムアウトしました（pending=$pending force=$force）。"
+        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。"
+        [ "$to" = "partner" ] && partner_alert "朝礼が制限時間（$((tmo/60))分）内に終わりませんでした。台帳・掲示板が重くなっている可能性があります。"
       else
         fail "$label-fail($rc)"; action="$action(ERR$rc)"
         alert "ヘッドレス $label が異常終了しました（exit=$rc pending=$pending force=$force）。"
+        [ "$to" = "partner" ] && partner_alert "朝礼が異常終了しました（終了コード $rc）。生存確認リンクとログをご確認ください。"
       fi
     fi
   fi
