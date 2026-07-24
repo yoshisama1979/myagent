@@ -19,7 +19,7 @@ declare(strict_types=1);
  * 【スライス3以降・現在は 501】
  *   POST ?action=approve&id=<id>       社長(admin)だけ hold/ → new/
  *
- * 規約・メッセージ書式・needs_approval の運用は .claude/rules/mailbox.md を参照。
+ * 規約・メッセージ書式・needs_approval の運用は rules/modes/mailbox.md を参照。
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -54,7 +54,7 @@ $token = $m[1];
 
 if (!is_file($TOKENS_FILE)) {
     fail(503, 'token_file_not_configured',
-        ['hint' => 'data/secrets/mailbox-tokens.json を作成してください（.claude/rules/mailbox.md 参照）']);
+        ['hint' => 'data/secrets/mailbox-tokens.json を作成してください（rules/modes/mailbox.md 参照）']);
 }
 $tokens = json_decode((string)file_get_contents($TOKENS_FILE), true);
 if (!is_array($tokens) || !isset($tokens[$token]) || !is_array($tokens[$token])) {

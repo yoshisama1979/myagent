@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OVERVIEW — このリポジトリは何か — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">OVERVIEW.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">OVERVIEW — このリポジトリは何か</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">新しいスレッドの開始時や、全体像を見失ったときに読むファイル。<br>
+CLAUDE.md には「最低限の核」だけを置き、肉付けはここに集約する（毎ターン読まれる CLAUDE.md を軽く保つため）。</div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">一言で</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>株式会社はなさかの社長が、経営分析・戦略を AI と一緒に考えるための作業環境。</strong></p>
+<p class="text-sm mb-4 leading-relaxed">ここにある成果物（<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> の記録、<code class="bg-gray-100 px-1 rounded text-sm font-mono">_assistant/</code> のチャット等）は、すべて<br>
+<strong>社長（人間）が理解・判断しやすくするための補助ツール</strong> という位置づけ。<br>
+「AI に何かを自動で運用させるシステム」ではなく、「社長の思考と判断を支えるための足場」。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>主語は常に社長（人間）</strong>。AI は右腕・壁打ち相手であって、主役ではない。</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> … 社長が<strong>見やすいように</strong>記録を HTML で残す場所（Nginx + Tailscale で閲覧）。</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">_assistant/</code> … <strong>どこからでも（スマホ含め）確認できる</strong>ようにしたチャット入口。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ディレクトリ早見表</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">パス</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">何か</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">備考</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code></td><td class="px-3 py-2 border border-gray-200 align-top">プロジェクト規範（毎ターン読まれる核）</td><td class="px-3 py-2 border border-gray-200 align-top">詳細はこの OVERVIEW と <code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/</code> に外出し</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">SYSTEM.md</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>動くモード同士の地図</strong>（役割・一次情報源・承認ゲート・ハンドオフ）</td><td class="px-3 py-2 border border-gray-200 align-top">統括者の入口。OVERVIEW=ディレクトリ地図／SYSTEM=モード地図</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code></td><td class="px-3 py-2 border border-gray-200 align-top">ブラウザ閲覧用 HTML 全般（記録・トラッカー・スキルシート等）</td><td class="px-3 py-2 border border-gray-200 align-top">Nginx ドキュメントルート。Tailscale 経由のみ公開</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">_assistant/</code></td><td class="px-3 py-2 border border-gray-200 align-top">経営サポート用チャットアプリ（FastAPI、<strong>読み取り専用</strong>）</td><td class="px-3 py-2 border border-gray-200 align-top">詳細は <code class="bg-gray-100 px-1 rounded text-sm font-mono">_assistant/README.md</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">_assistant/PLAN.md</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/</code></td><td class="px-3 py-2 border border-gray-200 align-top">財務・案件・スキルシートの<strong>生成スクリプト群</strong>（Python）</td><td class="px-3 py-2 border border-gray-200 align-top">詳細は <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/README.md</code>。<code class="bg-gray-100 px-1 rounded text-sm font-mono">hana-api.sh</code> は hana-tools 連携</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/</code></td><td class="px-3 py-2 border border-gray-200 align-top">財務・機密データ（生成スクリプトの入出力ソース）</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>ブラウザ非公開</strong>。<code class="bg-gray-100 px-1 rounded text-sm font-mono">secrets/</code> あり、取り扱い注意</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/</code></td><td class="px-3 py-2 border border-gray-200 align-top">協働・運用ルール（partnership / memo / development 等）</td><td class="px-3 py-2 border border-gray-200 align-top">CLAUDE.md から参照される運用ルール本体</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">ai-loop/</code></td><td class="px-3 py-2 border border-gray-200 align-top">Reviewer AI ↔ Dev AI の<strong>非同期レビュー基盤</strong></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">conversation.md</code> 経由。<code class="bg-gray-100 px-1 rounded text-sm font-mono">/reviewer-cycle</code> で起動</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">etc/</code></td><td class="px-3 py-2 border border-gray-200 align-top">プレビューサーバ設定（Nginx / PHP-FPM の conf）</td><td class="px-3 py-2 border border-gray-200 align-top">構成は <code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/preview-server.md</code> 参照</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">.claude/</code></td><td class="px-3 py-2 border border-gray-200 align-top">Claude Code 設定・スキル・ロール別ルール</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">reviewer.md</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.md</code> 等のモード定義</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">claude-rules/</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>このシステムとは無関係。</strong> 弊社がクライアント向けシステムを作る際の<strong>汎用ルールテンプレ</strong>置き場（<strong>複数プロジェクトで共有・各案件にコピーして使う</strong>）</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">website/</code> <code class="bg-gray-100 px-1 rounded text-sm font-mono">websystem/</code>。<strong>固有値（エージェントID・サイト名・公開URL・DB名・カラー等）を本文に焼き込まない</strong>＝各プロジェクトの <code class="bg-gray-100 px-1 rounded text-sm font-mono">project-config.md</code> に置き、ルール本文はそれを参照する形で書く（汎用ルールと固有値の分離）。更新時もこの分離を保つ</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ルールファイルの設計方針（今後の指針）</h2>
+<p class="text-sm mb-4 leading-relaxed">ルール・ドキュメントを追加するときは、次の二層に分ける：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>誤解防止の核（3〜4行）</strong> … 読まなくても間違えないための最小限。CLAUDE.md に直接埋め込む。</li>
+<li><strong>肉付け（詳細）</strong> … 必要なときだけ読みに行く参照ファイルに外出しし、CLAUDE.md からはリンクで誘導する。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">CLAUDE.md は毎ターン丸ごとコンテキストに載るため、<strong>太らせない</strong>こと。<br>
+「リンクだけ」にもしない（タスクに必要と判断されないと読まれないため、核は必ず埋め込む）。</p>
+</div>
+</body>
+</html>

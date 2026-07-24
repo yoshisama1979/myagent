@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仕様書ビュー — 一覧</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../../index.html" class="text-blue-600 hover:underline">← サイトトップ</a></p>
+  <h1 class="text-3xl font-bold mb-2">仕様書ビュー（自動生成）</h1>
+  <p class="text-gray-600 mb-2 text-sm">このシステムの仕様書（Markdown 原本）をブラウザで読めるように変換したもの。生成: 2026-07-24 12:42</p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    原本は各 .md ファイル。編集は原本へ行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成する
+    （<code class="bg-gray-100 px-1 rounded font-mono">rules/development.md</code>「仕様書の更新」参照）。
+    ※ AI-INDEX.md（在処マップ）と .claude/commands/（スキル定義）は対象外。
+  </div>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">全体仕様（入口）</h2>
+<ul class="list-none"><li class="mb-2"><a href="OVERVIEW.html" class="text-blue-600 hover:underline font-semibold">OVERVIEW — このリポジトリは何か</a><span class="text-gray-400 text-xs ml-2">OVERVIEW.md</span><br><span class="text-sm text-gray-600">リポジトリ全体像・ディレクトリ早見表</span></li>
+<li class="mb-2"><a href="SYSTEM.html" class="text-blue-600 hover:underline font-semibold">SYSTEM — このシステムの「動くモードの地図」</a><span class="text-gray-400 text-xs ml-2">SYSTEM.md</span><br><span class="text-sm text-gray-600">動くモード同士の地図（役割・一次情報源・承認ゲート・ハンドオフ）</span></li>
+<li class="mb-2"><a href="CLAUDE.html" class="text-blue-600 hover:underline font-semibold">株式会社はなさか — ビジネスパートナー AI</a><span class="text-gray-400 text-xs ml-2">CLAUDE.md</span><br><span class="text-sm text-gray-600">AIの役割・会社概要・行動指針・出力先ルール（基本仕様）</span></li></ul><h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">横断ルール（rules/）</h2>
+<ul class="list-none"><li class="mb-2"><a href="rules/automation.html" class="text-blue-600 hover:underline font-semibold">自動化・システム開発の安全ルール</a><span class="text-gray-400 text-xs ml-2">rules/automation.md</span><br><span class="text-sm text-gray-600">スクリプト（bash/python）・定期実行（/loop・cron）・外部送信（Slack/Chatwork/メール）・</span></li>
+<li class="mb-2"><a href="rules/development.html" class="text-blue-600 hover:underline font-semibold">開発ルール</a><span class="text-gray-400 text-xs ml-2">rules/development.md</span><br><span class="text-sm text-gray-600">社内の開発作業における共通ルール。クライアント案件・自社案件問わず、すべての開発に適用する。</span></li>
+<li class="mb-2"><a href="rules/document-format.html" class="text-blue-600 hover:underline font-semibold">プロジェクト記録フォーマット（HTML）</a><span class="text-gray-400 text-xs ml-2">rules/document-format.md</span><br><span class="text-sm text-gray-600">本プロジェクトの 記録ファイル（backlog / decisions / project-info / client-info / memo / meetin</span></li>
+<li class="mb-2"><a href="rules/memo.html" class="text-blue-600 hover:underline font-semibold">プロジェクトメモ運用ルール</a><span class="text-gray-400 text-xs ml-2">rules/memo.md</span><br><span class="text-sm text-gray-600">クライアント・プロジェクト単位の記録は、以下の 4ファイル構成 で管理する。</span></li>
+<li class="mb-2"><a href="rules/partnership.html" class="text-blue-600 hover:underline font-semibold">秘書＋パートナーとしての協働ルール</a><span class="text-gray-400 text-xs ml-2">rules/partnership.md</span><br><span class="text-sm text-gray-600">社長との日々の協働で、私（AI）が「単なる作業者」ではなく「ビジネスを共に育てる相棒」として動くための指針。</span></li>
+<li class="mb-2"><a href="rules/preview-server.html" class="text-blue-600 hover:underline font-semibold">プレビューサーバ運用ルール</a><span class="text-gray-400 text-xs ml-2">rules/preview-server.md</span><br><span class="text-sm text-gray-600">VPS上のNginxとTailscaleを使った、社内専用のブラウザ閲覧環境の構成と運用ルール。</span></li></ul><h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">モード別ルール（rules/modes/）</h2>
+<ul class="list-none"><li class="mb-2"><a href="mode-rules/blog-improve.html" class="text-blue-600 hover:underline font-semibold">ブログ既存記事改善モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/blog-improve.md</span><br><span class="text-sm text-gray-600">version 0.2（2026-07-15）｜ changelog はファイル末尾。</span></li>
+<li class="mb-2"><a href="mode-rules/blog-loop.html" class="text-blue-600 hover:underline font-semibold">ブログ分析ループモード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/blog-loop.md</span><br><span class="text-sm text-gray-600">version 0.2（2026-06-26）｜ changelog はファイル末尾「変更履歴」を参照。</span></li>
+<li class="mb-2"><a href="mode-rules/blog-write.html" class="text-blue-600 hover:underline font-semibold">ブログ執筆（対応）モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/blog-write.md</span><br><span class="text-sm text-gray-600">version 0.1（2026-06-23・初版＝型）｜ changelog はファイル末尾「変更履歴」を参照。</span></li>
+<li class="mb-2"><a href="mode-rules/deck-format.html" class="text-blue-600 hover:underline font-semibold">スライド資料（デッキ）作成ルール — HTML → PDF</a><span class="text-gray-400 text-xs ml-2">rules/modes/deck-format.md</span><br><span class="text-sm text-gray-600">version 0.1（2026-07-13・初版）｜ changelog はファイル末尾「変更履歴」を参照。</span></li>
+<li class="mb-2"><a href="mode-rules/hp-improve.html" class="text-blue-600 hover:underline font-semibold">ホームページ改善モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/hp-improve.md</span><br><span class="text-sm text-gray-600">version 0.2（2026-06-08）｜ changelog はファイル末尾「変更履歴」を参照。</span></li>
+<li class="mb-2"><a href="mode-rules/hp-loop.html" class="text-blue-600 hover:underline font-semibold">HP分析ループモード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/hp-loop.md</span><br><span class="text-sm text-gray-600">version 0.14（2026-07-22）｜ changelog はファイル末尾「変更履歴」を参照。</span></li>
+<li class="mb-2"><a href="mode-rules/hp-prospect.html" class="text-blue-600 hover:underline font-semibold">見込み客HP単発解析（営業用レポート）モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/hp-prospect.md</span><br><span class="text-sm text-gray-600">version 0.1（2026-07-22・初版）｜ changelog はファイル末尾。</span></li>
+<li class="mb-2"><a href="mode-rules/mailbox.html" class="text-blue-600 hover:underline font-semibold">拠点横断メールボックス — 規約</a><span class="text-gray-400 text-xs ml-2">rules/modes/mailbox.md</span><br><span class="text-sm text-gray-600">version 0.2（スライス2＝読み取り＋投函/処理済み）（2026-06-17）｜ changelog はファイル末尾。</span></li>
+<li class="mb-2"><a href="mode-rules/memo-intake.html" class="text-blue-600 hover:underline font-semibold">メモ取り込み（Slack日常メモ窓口）モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/memo-intake.md</span><br><span class="text-sm text-gray-600">version 0.4（2026-06-24）｜ changelog はファイル末尾。</span></li>
+<li class="mb-2"><a href="mode-rules/memo-triage.html" class="text-blue-600 hover:underline font-semibold">メモ点検（Slack日常メモ・日中の軽量triage）モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/memo-triage.md</span><br><span class="text-sm text-gray-600">version 0.3（2026-06-24）｜ changelog はファイル末尾。</span></li>
+<li class="mb-2"><a href="mode-rules/memo.html" class="text-blue-600 hover:underline font-semibold">Memo モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/memo.md</span><br><span class="text-sm text-gray-600">このファイルは、Memo AI として動作する際の 厳守すべき制約・手順・出力フォーマット を定義する。</span></li>
+<li class="mb-2"><a href="mode-rules/overseer.html" class="text-blue-600 hover:underline font-semibold">Overseer（統括）モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/overseer.md</span><br><span class="text-sm text-gray-600">version 0.4（2026-07-08）｜ changelog はファイル末尾。</span></li>
+<li class="mb-2"><a href="mode-rules/partner.html" class="text-blue-600 hover:underline font-semibold">経営パートナー（右腕）モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/partner.md</span><br><span class="text-sm text-gray-600">version 0.2（2026-07-08）｜ changelog はファイル末尾「変更履歴」を参照。</span></li>
+<li class="mb-2"><a href="mode-rules/reviewer.html" class="text-blue-600 hover:underline font-semibold">Reviewer モード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/reviewer.md</span><br><span class="text-sm text-gray-600">このファイルは、Reviewer AI として動作する際の 厳守すべき制約・手順・出力フォーマット を定義する。</span></li>
+<li class="mb-2"><a href="mode-rules/task-partner.html" class="text-blue-600 hover:underline font-semibold">案件マネジメント（進行管理）パートナーモード — 動作ルール</a><span class="text-gray-400 text-xs ml-2">rules/modes/task-partner.md</span><br><span class="text-sm text-gray-600">version 0.4（2026-06-12）｜ changelog はファイル末尾「変更履歴」を参照。</span></li></ul>
+</div>
+</body>
+</html>

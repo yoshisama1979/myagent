@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>開発ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/development.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">開発ルール</h1>
+<p class="text-sm mb-4 leading-relaxed">社内の開発作業における共通ルール。クライアント案件・自社案件問わず、すべての開発に適用する。</p>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">スクリプト・定期実行（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>・cron）・外部送信（Slack等）・API連携を <strong>作る/動かす</strong> ときは、<br>
+本ファイル（デプロイ・コミット規律）に加えて <a href="automation.html" class="text-blue-600 hover:underline">automation.md</a>（自動化の安全ルール）を必ず参照する。</div>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ルール・ドキュメントファイルの設計方針</h2>
+<p class="text-sm mb-4 leading-relaxed">ルールやドキュメントを新設・拡張するときは、二層に分ける：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>誤解防止の核（3〜4行）</strong> … 読まなくても間違えないための最小限。<code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code> に直接埋め込む。</li>
+<li><strong>肉付け（詳細）</strong> … 必要なときだけ読みに行く参照ファイルに外出しし、<code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code> からリンクで誘導する。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">理由：<code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code> は毎ターン丸ごとコンテキストに載るため、太らせるとトークンを浪費し重要な行が埋もれる。<br>
+ただし「リンクだけ」にもしない（タスクに必要と判断されないと読まれないため、核は必ず埋め込む）。<br>
+全体像は <a href="../OVERVIEW.html" class="text-blue-600 hover:underline">OVERVIEW.md</a> に集約。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">仕様書の更新（機能追加とセット・必須）</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>機能を追加・変更したら、対応する仕様書・設計ドキュメントを必ず同じ作業内で更新する</strong>。コードだけ直して仕様書を置き去りにしない（版ズレは「読んだ人が古い仕様で判断する」事故の元）。</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">変更した内容</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">更新する仕様書</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">ディレクトリ構成・置き場の追加変更</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../OVERVIEW.html" class="text-blue-600 hover:underline">OVERVIEW.md</a></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">モードの新設・役割/連携の変更（ループ・cron・mailbox 等）</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../SYSTEM.html" class="text-blue-600 hover:underline">SYSTEM.md</a> ＋ 該当モードの <code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/modes/*.md</code>（version と変更履歴も上げる）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">AIの基本動作・出力先ルールの変更</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../CLAUDE.html" class="text-blue-600 hover:underline">CLAUDE.md</a>（核のみ・肉付けは参照ファイルへ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> ページ・<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/</code> の追加</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../AI-INDEX.md" class="text-blue-600 hover:underline">AI-INDEX.md</a>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/build-ai-index.py</code> で再生成）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">クライアント案件の機能追加</td><td class="px-3 py-2 border border-gray-200 align-top">その案件の仕様書・記録（<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/projects/&lt;project&gt;/</code> や spec.html 等）</td></tr></tbody></table></div>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>更新は<strong>機能追加と同じコミットに含める</strong>（後でまとめて、はやらない＝忘れる）</li>
+<li>仕様書（OVERVIEW/SYSTEM/CLAUDE/rules/・rules/modes/）の .md を更新したら、<strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/build-spec-html.py</code> を実行して HTMLビュー（<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/docs/spec/</code>・社長がブラウザで読む版）も再生成する</strong>。HTML側を直接編集しない（原本は常に .md・ビューは自動生成＝二重台帳にしない）</li>
+<li>どの仕様書に当たるか迷ったら、コミット前に確認する</li>
+<li>無人モード（cron 実行）は例外：ゲート対象ファイル（SYSTEM.md・CLAUDE.md・rules 等）を直接編集できないため、<strong>更新案を提案として残し</strong>、有人セッションで反映する（<a href="../mode-rules/overseer.html" class="text-blue-600 hover:underline">overseer.md</a> の運用と同じ）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">デプロイ・アップロード関連</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">1. コミットしたもののみアップ</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>コミット済みのファイルだけ</strong> をサーバーにアップロード（デプロイ）する</li>
+<li><strong>特に、ステージング前のファイルはアップしない</strong></li>
+<li>理由：</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>未コミットの変更がサーバーに反映されると、ローカルとサーバーの差分が追跡不能になる</li>
+<li>障害発生時に「いつの版が動いているか」を特定できなくなる</li>
+<li>別の担当者がデプロイしたとき、未コミット分が戻る・上書きされる事故が起きる</li>
+</ul>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">運用フロー</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>1. ローカルで作業
+2. git add（ステージング）
+3. git commit（コミット）
+4. その後にサーバーへアップロード</code></pre>
+<p class="text-sm mb-4 leading-relaxed">未確定の修正をサーバーで確認したい場合は、<strong>ステージング環境</strong> を使う（本番に直接上げない）。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">コミット時のルール</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">1. ステージング後に差分を確認してからコミットする</h3>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">git add</code>（ステージング）後、必ず <code class="bg-gray-100 px-1 rounded text-sm font-mono">git diff --staged</code> で差分を確認してから <code class="bg-gray-100 px-1 rounded text-sm font-mono">git commit</code> する。<strong>問題ないことを確認してからコミットする</strong>。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">確認項目</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>不足している情報がないか</strong> — 追加すべきファイル・記述が漏れていないか</li>
+<li><strong>差分による情報欠落がないか</strong> — 削除予定でない内容が消えていないか、上書きで失われた情報はないか</li>
+<li><strong>機密情報の混入がないか</strong> — APIキー・パスワード・個人情報等</li>
+<li><strong>コミットすべきでないファイルが含まれていないか</strong> — 一時ファイル・キャッシュ・自動生成物</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">コミットフロー</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>1. git status            … 変更内容を確認
+2. git add &lt;file&gt;        … 必要なファイルだけステージング
+3. git diff --staged     … 差分を確認
+4. 確認項目をチェック    … 不足・欠落・機密混入を再確認
+5. 問題なし → git commit
+   問題あり → 修正 or git restore --staged &lt;file&gt; → 2 に戻る</code></pre>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">次のアクション</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>各案件のサーバー情報に「本番／ステージング」の区分を <code class="bg-gray-100 px-1 rounded text-sm font-mono">project-info.md</code> に明記する</li>
+<li>ルール違反が起きやすいタイミング（急ぎの修正依頼等）でも、コミット → アップの順序を守る</li>
+</ul>
+</div>
+</body>
+</html>

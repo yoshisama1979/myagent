@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>見込み客HP単発解析（営業用レポート）モード — 動作ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/hp-prospect.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">見込み客HP単発解析（営業用レポート）モード — 動作ルール</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.1</strong>（2026-07-22・初版）｜ changelog はファイル末尾。<br>
+このモードは <strong>使いながら育てる</strong>。気づきは hp-loop と同じく <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に溜める。</div>
+<p class="text-sm mb-4 leading-relaxed">このファイルは、<strong>見込み客（まだ契約していない相手）のホームページを1回で解析し、社長が営業に使える「クライアント提示用レポート」を発行する</strong> 単発モードの <strong>手順・制約・出力・自己チェック</strong> を定義する。</p>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/hp-prospect &lt;URL&gt;</code> スラッシュコマンドから呼ばれる（<strong>手動・単発</strong>。cron/ループには載せない）。<br>
+土台は CLAUDE.md と <a href="../rules/automation.html" class="text-blue-600 hover:underline">rules/automation.md</a>（<strong>衝突したら automation.md 最優先</strong>）。評価観点は <a href="hp-improve.html" class="text-blue-600 hover:underline">hp-improve.md</a> を流用する（重複定義しない）。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">⚑ 位置づけ（hp-loop との違い・最初に把握）</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold"></th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">hp-loop（継続解析）</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">本モード（営業用単発）</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">対象</td><td class="px-3 py-2 border border-gray-200 align-top">登録済みサイト（自社・契約クライアント）</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>見込み客</strong>（未契約・データアクセスなし）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">データ</td><td class="px-3 py-2 border border-gray-200 align-top">GSC/GA4 実データ＋台帳の蓄積</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>公開情報のみ</strong>（本番GET・スクショ・検索結果）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">読者</td><td class="px-3 py-2 border border-gray-200 align-top">社長・実装担当（社内向け）</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>クライアント本人</strong>（です・ます調・専門用語に補足・ビジネスインパクト）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">目的</td><td class="px-3 py-2 border border-gray-200 align-top">改善の継続運用</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>「ここまで見える」を見せて継続解析サービスの受注につなげる</strong></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">頻度</td><td class="px-3 py-2 border border-gray-200 align-top">毎日</td><td class="px-3 py-2 border border-gray-200 align-top">1回きり（受注したら hp-loop / blog-loop へ正式登録＝卒業）</td></tr></tbody></table></div>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>レポート自体が営業ツール</strong>。網羅チェックリストではなく「この会社に頼むと違う」と思わせる<strong>具体的で刺さる指摘</strong>を厚くする。Codex クロスレビュー（別モデルの別視点）を標準組み込みにするのはそのため。</li>
+<li><strong>GSC/GA4 が無いことを弱点にせず営業導線にする</strong>：レポート末尾に「実データ（検索・アクセス解析）を接続すると、さらに◯◯が分かります」の節を必ず置く＝継続契約の提案へ橋渡し。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">厳守する制約</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">操作</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">可否</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">Read / Grep / Glob / git status・log・diff</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">対象サイトの<strong>読み取り取得</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-audit.sh</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">curl</code> GET・<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-shot.sh</code> スクショ・<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-serp.sh</code> 検索結果・<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-compete.py</code>）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（<strong>GETのみ・少ページ＝トップ＋主要5〜10ページ目安・連続アクセスは間隔を空ける</strong>）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">Codex MCP（<code class="bg-gray-100 px-1 rounded text-sm font-mono">mcp__codex__codex</code>）でのクロスレビュー（読み取り専用サンドボックス・素材はスクラッチパッドに隔離）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（利用不可なら「Codexレビュー未実施」と明記して続行＝ブロックしない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">Write: <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/prospects/&lt;domain&gt;/</code>（レポート・スクショ。<strong>gitignore 済</strong>＝クライアント分析はgit外）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（AIの担当）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">Write: <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/index.html</code> へのハブ行追加（prospects 節）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（VPS上のみ・既存行は消さない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>フォーム送信・ログイン試行・脆弱性スキャン・大量クロール</strong></td><td class="px-3 py-2 border border-gray-200 align-top">❌ 絶対不可（未契約の他社サイト。公開ページの通常GETだけ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">流入数・順位・CV数など<strong>実データが無い数値の推定・捏造</strong></td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（「実データ未接続のため未確認」と明示。一般論は「一般に」と明示）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">競合・他社への誹謗的表現／他社サイトのスクショをレポートに流用</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（競合比較は事実ベースの構造比較まで。スクショは対象サイト自身のみ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>レポートの外部送信・公開</strong>（メール・URL共有・Nginx一時公開）</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（提示は社長。共有が要る時は <a href="../rules/preview-server.html" class="text-blue-600 hover:underline">rules/preview-server.md</a> の一時公開を<strong>社長が</strong>判断）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">対象サイトの改変・営業メールの送信</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">git commit / push</td><td class="px-3 py-2 border border-gray-200 align-top">❌ このモードではしない（そもそも出力は gitignore 済）</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">手順（1回＝1レポート）</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 0: 前提確認</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>引数の URL を確認。<strong>URL が無ければ質問して終了</strong>。任意で聞けるなら：業種・商圏（地域）・サイトのゴール（問い合わせ/来店/EC等）・気にしている競合。<strong>不明でも止まらない</strong>＝サイトから読み取れる範囲で進め、推測は「推測：」と明示。</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;domain&gt;</code> を決め（例 <code class="bg-gray-100 px-1 rounded text-sm font-mono">example-co-jp</code>）、出力先 <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/prospects/&lt;domain&gt;/</code> を作る。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 1: データ取得（公開情報のみ・読み取り）</h3>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-audit.sh &lt;URL&gt; --json</code> でオンページ信号（title/meta/OGP/h構成/canonical/構造化データ）。</li>
+<li>トップ＋主要ページ（サービス・料金・実績・会社概要・問い合わせ等、サイト構成から5〜10ページ）を curl GET で取得。</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-shot.sh</code> で PC幅・SP幅 × fold/full を撮影（トップ＋主要2〜3ページ）→ <strong>PNG を Read で実際に見る</strong>。</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-serp.sh "&lt;主要と思われるクエリ&gt;"</code> を2〜3本（例：業種×地域）＝検索結果での見え方・競合の顔ぶれ。</li>
+<li>表示速度の外形観察（HTMLサイズ・画像重量・レンダリングブロック要素）。</li>
+</ol>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 2: Codex クロスレビュー（標準組み込み）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>取得素材（HTML・スクショ・SERP結果・hp-audit JSON）をスクラッチパッドの隔離フォルダにコピーし、Codex（読み取り専用サンドボックス）に「フレッシュアイズ監査」を依頼（2026-07-21 ycom 手動テストと同型のプロンプト：見逃し発掘・計測/実装視点・数字引用必須・捏造禁止）。</li>
+<li><strong>Codex の指摘は鵜呑みにしない</strong>：レポートに載せる前に必ず現物で裏取りする（裏取りできないものは載せないか「要確認」と明示）。</li>
+<li>Codex が使えない環境なら省略し、レポートの内部メモに「Codexレビュー未実施」と記録（クライアント向け本文には書かない）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 3: 分析（hp-improve の評価観点を流用）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><a href="hp-improve.html" class="text-blue-600 hover:underline">hp-improve.md</a> の観点表＋ビジュアル（スクショ）＋検索の見え方で、<strong>観察（事実）と推測を分離</strong>して気づきを集める。</li>
+<li><strong>出し惜しみしない（2026-07-22 社長指示）</strong>：1回の解析で分かったことは<strong>全件レポートに載せる</strong>。絞るのは「量」ではなく「強調」＝先頭に「見せられて刺さる TOP5〜7件」を厚く置き（①具体的（スクショ・現物引用つき）②ビジネスインパクトが言える ③直せば変わると想像できる、の3条件）、残りの指摘も<strong>観点別の詳細節で全件</strong>（観察→なぜ→改善の方向性の粒度で）書く。フラットな羅列にせず強弱をつける、が唯一の制約。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 4: レポート発行（クライアント提示用 HTML）</h3>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/prospects/&lt;domain&gt;/index.html</code> に単一HTMLで出力（Tailwind・印刷でも読める体裁）。<strong>です・ます調・専門用語に補足・ビジネスインパクト</strong>（CLAUDE.md クライアント向けルール）。構成：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>表紙ヘッダ</strong>：「ホームページ健康診断レポート」＋対象サイト・実施日。<strong>発行元の社名は書かない</strong>（2026-07-22 社長指示＝代理店の営業ツールとしても使うため。中立表記「AIウェブサイト診断サービス」等。本文中の「当社確認」等も「診断時実測」に言い換え、社名・自社特定表現を残さない）。<strong>表紙に注意書きを必ず置く</strong>（2026-07-22 社長指示）＝「公開情報のみに基づく初期診断であること」＋「サーチコンソール・GA4・Microsoft Clarity 等と連携すればより詳しいレポートを発行できること」を数行で。<strong>配色は対象サイトのメインカラーに合わせる</strong>（対象サイトのCSSから主要色を抽出し、ヘッダ・見出しバー・表ヘッダ等の基調色に使う。重要度バッジの赤/橙は意味色として維持）</li>
+<li><strong>総評</strong>（3〜4行・結論ファースト。良い点も必ず1つ以上＝欠点羅列にしない）</li>
+<li><strong>重要な指摘 TOP5〜7</strong>：各件＝現状（スクショ/現物引用）→ なぜ機会損失か（ビジネス言葉）→ 改善の方向性 → 期待できる効果（定性でよい・数値は捏造しない）</li>
+<li><strong>観点別サマリ表</strong>（ファーストビュー/導線/コンテンツ/SEO/モバイル/速度/信頼性…を ✅⚠️❌ で一覧）</li>
+<li><strong>すべての指摘（詳細）</strong>：TOP に入らなかった指摘も<strong>全件</strong>、観点別に「観察→なぜ→改善の方向性」の粒度で載せる（出し惜しみしない。ボリュームは制限しない＝単一HTMLに縦に長く載せてよい）</li>
+<li><strong>検索での見え方</strong>（主要クエリでの表示のされ方・競合の顔ぶれ＝事実ベース）</li>
+<li><strong>実データを接続すると、さらに分かること</strong>（<strong>GSC・GA4・Microsoft Clarity</strong> の3点セットで可能になる分析の予告＝<strong>継続解析サービスへの営業導線・必須</strong>。各ツールが何を明らかにするかを一言ずつ添える：GSC=検索語／GA4=来訪・問い合わせ数／Clarity=ヒートマップ・行動録画）</li>
+<li>免責注記（公開情報のみに基づく初期診断である旨）</li>
+</ol>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>スクショ・生データは同フォルダ（<code class="bg-gray-100 px-1 rounded text-sm font-mono">shots/</code> 等）に置く。ハブ <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/index.html</code> に prospects 行を追加（無ければ節を作る）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 5: 報告</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>社長に要約：総評・TOP指摘3件・レポートURL（<code class="bg-gray-100 px-1 rounded text-sm font-mono">http://100.123.104.87/hp-analysis/prospects/&lt;domain&gt;/</code>）・営業トークの示唆（どの指摘を入口にすると刺さりそうか）。</li>
+<li><strong>提示・送付は社長</strong>。PDF が要る場合は <a href="deck-format.html" class="text-blue-600 hover:underline">deck-format.md</a> の手順で <strong>A4縦の文書PDF</strong> として書き出す（依頼があれば）。<strong>PDF は紙印刷しない前提＝枚数を気にせず、見出し（縦バーつきセクション見出し）ごとに改ページする</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">main &gt; section { break-before: page }</code>）。<strong>カードは改ページ制御せずページをまたいで流し込む</strong>（切れてよい＝余白を作らない。画像だけは分割不可なので <code class="bg-gray-100 px-1 rounded text-sm font-mono">max-height</code> を1ページ内に抑える。2026-07-22 社長指示）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 6: 自己改善（軽く・毎回）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>「営業ツールとして足りなかったものは？」を <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に1行（無ければ「特記なし」）。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">やってはいけないこと</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">NG</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">なぜ</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ フォーム送信・ログイン・脆弱性スキャン・大量クロール</td><td class="px-3 py-2 border border-gray-200 align-top">未契約の他社サイト。公開ページの通常GETのみ</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 流入・順位・CVの数値を推定で書く</td><td class="px-3 py-2 border border-gray-200 align-top">捏造。信頼を壊す。「実データ未接続」を営業導線に変える</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 強弱のないフラットな羅列で終わる／逆に量を絞って出し惜しみする</td><td class="px-3 py-2 border border-gray-200 align-top">営業ツール。<strong>全件載せた上で</strong>刺さる TOP5〜7＋良い点を先頭に置き「頼みたい」と思わせる</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 社内向けの口調・略語のまま出す</td><td class="px-3 py-2 border border-gray-200 align-top">読者はクライアント。です・ます調・補足・ビジネスインパクト</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 競合の誹謗・他社スクショの流用</td><td class="px-3 py-2 border border-gray-200 align-top">法的/信頼リスク（deck-format 🚨と同根）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ レポートを勝手に外部送信・公開</td><td class="px-3 py-2 border border-gray-200 align-top">提示は社長の仕事。automation.md §3</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 出力を git 管理下に置く</td><td class="px-3 py-2 border border-gray-200 align-top">クライアント分析はgit外（2026-07-16 社長決定）。prospects/ は gitignore 済</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">自己チェック（レポート発行前に）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>[ ] 取得は GET のみ・少ページ・スクショは対象サイト自身のみか？</li>
+<li>[ ] Codex の指摘を現物で裏取りしてから載せたか？（未検証を載せていないか）</li>
+<li>[ ] 数値の捏造なし・一般論は「一般に」・不明は「未確認」か？</li>
+<li>[ ] 分かったことを<strong>全件</strong>載せたか？（出し惜しみなし）その上で TOP5〜7 を先頭で強調し、良い点を1つ以上入れ、TOP各件にスクショ/現物根拠があるか？</li>
+<li>[ ] です・ます調・専門用語補足・ビジネスインパクト表現か？</li>
+<li>[ ] 「実データを接続すると分かること」の営業導線の節はあるか？</li>
+<li>[ ] 出力先は <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/prospects/&lt;domain&gt;/</code>（gitignore済）でハブに行を追加したか？</li>
+<li>[ ] 外部送信・公開をしていないか？（提示は社長）</li>
+<li>[ ] skill-kaizen に1行残したか？編集ファイルを末尾にリンク一覧したか？</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">すべて ✅ なら発行、1つでも ❌ なら見直し。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-22</td><td class="px-3 py-2 border border-gray-200 align-top">初版（社長指示＝ウェブ解析をサービスとして売るため、見込み客サイトを単発解析し提示用レポートを発行する営業モード）。公開情報のみ・GETのみ・Codexクロスレビュー標準組み込み（2026-07-21 ycom 手動テストの型を流用）・レポートは です・ます調のクライアント提示用・「実データ接続で分かること」を営業導線として必須化・出力は gitignore 済の prospects/（クライアント分析はgit外方針）・受注後は hp-loop 登録へ卒業</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-22</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>出し惜しみ禁止に変更</strong>（社長指示「1回の解析で分かったことは全て出し惜しみせずに」）。「TOP5〜7に絞る」→「全件載せる・絞るのは量でなく強調」＝先頭に刺さるTOPを厚く、残りも観点別詳細節で全件（観察→なぜ→改善の方向性）。レポート構成に「5. すべての指摘（詳細）」を追加。※「Web1枚」は単一HTMLファイルの意（1ページに圧縮する意味ではない）</td></tr></tbody></table></div>
+</div>
+</body>
+</html>

@@ -131,7 +131,7 @@ Step 6 振り返り ──→ data/hp-improve/skill-kaizen.md に気づきを蓄
                   棚卸し：社長が採否判断
                           │
                           ▼（採用分のみ）
-            .claude/rules/hp-improve.md ／ commands/hp-improve.md を更新
+            rules/modes/hp-improve.md ／ commands/hp-improve.md を更新
             （version を上げ「変更履歴」に追記。台帳のステータスを ✅反映済み に）
 ```
 

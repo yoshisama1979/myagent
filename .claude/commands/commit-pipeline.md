@@ -25,7 +25,7 @@
 
 ステップ1で承認された変更内容について、以下のいずれかに該当する場合は **ユーザーに Codex レビュー依頼を提案** する：
 
-- ルール・設計ドキュメント（`CLAUDE.md` / `rules/` / `.claude/rules/` / `.claude/commands/`）の変更を含む
+- ルール・設計ドキュメント（`CLAUDE.md` / `rules/` / `rules/modes/` / `.claude/commands/`）の変更を含む
 - 100 行以上の追加、または 5 ファイル以上の変更
 - 公開 API・仕様書（`documents/specs/` 等）の変更
 - 設計判断（アーキテクチャ・データ構造・依存関係）を含む変更

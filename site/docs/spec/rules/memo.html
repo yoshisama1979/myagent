@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プロジェクトメモ運用ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/memo.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">プロジェクトメモ運用ルール</h1>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">概要</h2>
+<p class="text-sm mb-4 leading-relaxed">クライアント・プロジェクト単位の記録は、以下の <strong>4ファイル構成</strong> で管理する。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ファイル構成</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">ファイル</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">役割</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">いつ見る／書く</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>残存課題</strong>：要対応・要調査・要確認の項目</td><td class="px-3 py-2 border border-gray-200 align-top">普段の業務・着手判断はここを見る</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>既成事実</strong>：確定仕様・決定事項・既存実装の前提</td><td class="px-3 py-2 border border-gray-200 align-top">背景確認・前提把握の参照元</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>打ち合わせ生記録</strong>：議事録（後で decisions/backlog に展開）</td><td class="px-3 py-2 border border-gray-200 align-top">打ち合わせ中・直後</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.html</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>雑記帳</strong>：社長から内容のみ渡された無指示時のメモ</td><td class="px-3 py-2 border border-gray-200 align-top">棚卸しまでの一時置き場</td></tr></tbody></table></div>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">保存先</h2>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>site/clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/backlog.html
+site/clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/decisions.html
+site/clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/meeting-notes/YYYY-MM-DD.html
+site/clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/memo.html</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">命名規則</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>クライアント名・プロジェクト名は <strong>英小文字 + ハイフン区切り</strong>（例: <code class="bg-gray-100 px-1 rounded text-sm font-mono">earth-rays</code>, <code class="bg-gray-100 px-1 rounded text-sm font-mono">hikita-kogyo</code>）</li>
+<li>既存の <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/</code> 配下のディレクトリ命名と整合させる</li>
+<li>meeting-notes のファイル名は <strong>会議日付（YYYY-MM-DD.html）</strong> とする</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">関連ファイル</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">client-info.html</code>: クライアント単位の基本情報（<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/client-info.html</code>）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">project-info.html</code>: プロジェクト単位の基本情報（<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/projects/&lt;project&gt;/project-info.html</code>）</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">ファイルフォーマット</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>全てのプロジェクト記録は <strong>HTML5 + Tailwind CSS（CDN）</strong> で記述する</li>
+<li>詳細は <code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/document-format.md</code> 参照</li>
+<li>テンプレートは <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/_template/</code> 配下を参照</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">業務動線</h2>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>普段の作業</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> を見て次のアクションを判断</li>
+<li><strong>背景確認</strong>：必要時に <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> を参照（現状仕様・確定事項）</li>
+<li><strong>打ち合わせ</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code> に生記録 → 後で展開</li>
+<li><strong>雑多な記録</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.html</code> に書き殴り（後で棚卸し）</li>
+</ol>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">運用フロー（書き分け）</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">社長の指示・場面</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">書き先</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">打ち合わせ中・直後</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">「課題に追加」「不具合として残して」「要調査」等</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">「仕様として残して」「決定事項」「確定」等</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">「メモしておいて」「とりあえず残して」「（指示なし）」</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.html</code></td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">直接 decisions/backlog に書いて良い例外</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>単発の電話・チャットでの確認事項</li>
+<li>一人作業中の気づき（そもそも打ち合わせではない）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">打ち合わせ記録の流れ</h2>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>打ち合わせ中・直後</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code> に生記録（聞いた順・整理しすぎない）</li>
+<li><strong>打ち合わせ後の整理</strong>：</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>決まったこと → <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code></li>
+<li>要対応・要確認 → <code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code></li>
+</ul>
+<li><strong>meeting-notes は履歴として残す</strong>（削除しない）</li>
+<li>展開完了したら、meeting-notes の <strong>末尾に展開ステータス</strong> を記載</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>例：<code class="bg-gray-100 px-1 rounded text-sm font-mono">&gt; 2026-05-09 decisions.html / backlog.html に展開済み</code></li>
+</ul>
+</ol>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">棚卸し（定期作業）</h2>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.html</code> を読み返し、各項目を <code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> へ転記</li>
+<li>転記済み項目は <code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.html</code> から削除</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> の項目が完了・仕様化したら <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> へ <strong>日付付きで転記</strong> し、<code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> から削除</li>
+<li>未展開の <code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/</code> を確認し、展開漏れがあれば反映</li>
+</ol>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">書式</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6"><code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code></h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>種別ラベルで分類（<strong>不具合 / 要望 / 要調査 / 仕様未確定 / 実装タスク</strong> 等）</li>
+<li>各項目に「現状」「想定原因」「期待動作」「対応方針」を明記</li>
+<li>完了管理はチェックボックス可</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6"><code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code></h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>確定事項には <strong>決定日（YYYY-MM-DD）</strong> を併記</li>
+<li><strong>結論ファースト</strong> — 経緯ではなく結論を記載</li>
+<li>章立てで分類（仕様 / アーキテクチャ / 運用ルール / スコープ 等）</li>
+<li>出典の打ち合わせがあれば「2026-05-09 打ち合わせで決定」のように明記</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6"><code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code></h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>打ち合わせの <strong>生記録</strong>。整理しすぎない（後で展開する前提）</li>
+<li>出席者・日付を冒頭に記載</li>
+<li>末尾に展開ステータスを記載（展開後）</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6"><code class="bg-gray-100 px-1 rounded text-sm font-mono">memo.html</code></h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>自由記述（フォーマット不問）</li>
+<li>棚卸し時に空にする（残るのは「行き先未定」のみ）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">プロジェクト横断のメモ</h2>
+<p class="text-sm mb-4 leading-relaxed">特定のクライアント・プロジェクトに紐づかない日常的な思いつきは、<strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/notes.html</code></strong> に追記。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>新しいエントリは日付の新しい順（上が最新）で追加</li>
+<li>ある程度たまってプロジェクト化したら、該当 <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/projects/&lt;project&gt;/backlog.html</code> または <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> へ転記</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">記録ルール</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">1. 客観的に補足質問してから書く</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>社長が渡してくれる情報は <strong>当事者視点</strong> のため、第三者が読むと前提が抜けがち</li>
+<li>書き始める前に、以下のうち欠けているものを <strong>1〜3個に絞って</strong> 確認する</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>関係者（誰が依頼者・実行者・窓口か）</li>
+<li>目的・KPI</li>
+<li>期限・優先順位（確定 or 目安）</li>
+<li>予算・コスト負担者</li>
+<li>既存環境・前提条件</li>
+<li>フェーズ（提案中・受注済・進行中 等）</li>
+</ul>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">2. 確定情報と未確認情報を区別</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>未確認は「未記載」「目安」「要調査」等で示す</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> に書くのは確定情報のみ。未確定は <code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> に「要調査」として置く</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">3. 記録すべきでないこと</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>ソースコード由来で確認できる事実（CLAUDE.md・既存ファイルで参照可能なもの）</li>
+<li>機密性の高い個人情報・パスワード等</li>
+</ul>
+</div>
+</body>
+</html>

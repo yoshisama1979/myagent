@@ -16,6 +16,23 @@
 ただし「リンクだけ」にもしない（タスクに必要と判断されないと読まれないため、核は必ず埋め込む）。
 全体像は [OVERVIEW.md](../OVERVIEW.md) に集約。
 
+## 仕様書の更新（機能追加とセット・必須）
+
+**機能を追加・変更したら、対応する仕様書・設計ドキュメントを必ず同じ作業内で更新する**。コードだけ直して仕様書を置き去りにしない（版ズレは「読んだ人が古い仕様で判断する」事故の元）。
+
+| 変更した内容 | 更新する仕様書 |
+|---|---|
+| ディレクトリ構成・置き場の追加変更 | [OVERVIEW.md](../OVERVIEW.md) |
+| モードの新設・役割/連携の変更（ループ・cron・mailbox 等） | [SYSTEM.md](../SYSTEM.md) ＋ 該当モードの `rules/modes/*.md`（version と変更履歴も上げる） |
+| AIの基本動作・出力先ルールの変更 | [CLAUDE.md](../CLAUDE.md)（核のみ・肉付けは参照ファイルへ） |
+| `site/` ページ・`data/` の追加 | [AI-INDEX.md](../AI-INDEX.md)（`python3 bin/build-ai-index.py` で再生成） |
+| クライアント案件の機能追加 | その案件の仕様書・記録（`site/clients/<client>/projects/<project>/` や spec.html 等） |
+
+- 更新は**機能追加と同じコミットに含める**（後でまとめて、はやらない＝忘れる）
+- 仕様書（OVERVIEW/SYSTEM/CLAUDE/rules/・rules/modes/）の .md を更新したら、**`python3 bin/build-spec-html.py` を実行して HTMLビュー（`site/docs/spec/`・社長がブラウザで読む版）も再生成する**。HTML側を直接編集しない（原本は常に .md・ビューは自動生成＝二重台帳にしない）
+- どの仕様書に当たるか迷ったら、コミット前に確認する
+- 無人モード（cron 実行）は例外：ゲート対象ファイル（SYSTEM.md・CLAUDE.md・rules 等）を直接編集できないため、**更新案を提案として残し**、有人セッションで反映する（[overseer.md](modes/overseer.md) の運用と同じ）
+
 ## デプロイ・アップロード関連
 
 ### 1. コミットしたもののみアップ

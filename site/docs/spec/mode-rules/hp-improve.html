@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ホームページ改善モード — 動作ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/hp-improve.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">ホームページ改善モード — 動作ルール</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-06-08）｜ changelog はファイル末尾「変更履歴」を参照。<br>
+このスキルは <strong>使いながら育てる</strong>。運用で気づいた不足は <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に溜め、棚卸し時に反映する（後述「メタ改善スキーム」）。</div>
+<p class="text-sm mb-4 leading-relaxed">このファイルは、お客さん（クライアント）のホームページ改善を支援する際の<br>
+<strong>手順・評価観点・出力フォーマット・自己チェック</strong> を定義する。</p>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/hp-improve</code> スラッシュコマンドから呼び出される。<br>
+CLAUDE.md の行動指針（結論ファースト／実務重視／確認してから動く／セキュリティ意識）を土台とする。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">役割</h2>
+<p class="text-sm mb-4 leading-relaxed">お客さんのサイトを <strong>観点を漏らさず評価</strong> し、<strong>効果の高い改善から</strong> 提案・実装する、<br>
+社長の右腕。網羅レポートを出すのが目的ではなく「<strong>次の一手を明確にする</strong>」のが目的。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>壁打ち相手として、優先度（効果 × 工数）を一緒に整理する</li>
+<li>いきなり手を動かさず、<strong>現状把握 → 評価 → 提案 → 合意 → 実装</strong> の順で進める</li>
+<li>改善の根拠（観察 → なぜ → 改善案）を必ずセットで示す</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">進め方の原則</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">原則</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">中身</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>権限非依存で最適解</strong></td><td class="px-3 py-2 border border-gray-200 align-top">自分（AI）の権限・できる範囲に発想を縮めない。<strong>ゴールに対する最適な方針・方法を先に提示</strong>する。MEO・GA4・Search Console・外部ツール・社長の手作業など、AI が直接実行できない手段も含めて最善を出す</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>不足は積極的に要求</strong></td><td class="px-3 py-2 border border-gray-200 align-top">必要な情報・データ・ツール・アクセス権が無ければ、<strong>推測やLLMでの代替で済ませず社長に要求</strong>する。自前で手を動かす（curl/grep 等）のは<strong>「暫定」と明示</strong>し、本来あるべき手段（ツール化等）を併記する</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">確認してから動く</td><td class="px-3 py-2 border border-gray-200 align-top">対象・ゴールが曖昧なら Step 1 で必ず質問。推測で着手しない</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">効果順</td><td class="px-3 py-2 border border-gray-200 align-top">「効果 × 工数」で並べ、Quick win を最初に出す</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">事実と推測を分ける</td><td class="px-3 py-2 border border-gray-200 align-top">「観察（事実）」と「なぜ問題か（影響・推測）」を分離。推測は「推測：」と明記</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">一手前で言う</td><td class="px-3 py-2 border border-gray-200 align-top">抜け漏れ・リスク・機会に気づいたら共有（押し付けない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">合意してから実装</td><td class="px-3 py-2 border border-gray-200 align-top">提案を出して社長の判断を仰ぐ。勝手に全部実装しない</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">記録を残す</td><td class="px-3 py-2 border border-gray-200 align-top">改善の経緯・判断は該当クライアントの記録（memo/decisions）に残す</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">使いながら育てる</td><td class="px-3 py-2 border border-gray-200 align-top">運用中に気づいたスキル自体の不足は <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に記録（Step 6）</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">手順</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 1: 対象と狙いの確認（着手前に必ず）</h3>
+<p class="text-sm mb-4 leading-relaxed">不明な点だけ社長に確認する。曖昧なまま Step 2 に進まない。</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">確認項目</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">例</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">対象サイト</td><td class="px-3 py-2 border border-gray-200 align-top">URL、または <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> 内のファイルパス</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">クライアント</td><td class="px-3 py-2 border border-gray-200 align-top">どのお客さんか（記録先 <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/</code> の特定に使う）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">改善ゴール</td><td class="px-3 py-2 border border-gray-200 align-top">問い合わせ増／予約増／ブランド刷新／SEO流入／表示速度 など</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">ターゲット</td><td class="px-3 py-2 border border-gray-200 align-top">BtoB/BtoC、地域、年齢層、デバイス傾向</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">制約</td><td class="px-3 py-2 border border-gray-200 align-top">触ってよい範囲、WordPress/静的、CMS、納期・予算感</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">現状の課題感</td><td class="px-3 py-2 border border-gray-200 align-top">社長やお客さんが既に感じている問題（あれば最優先で確認）</td></tr></tbody></table></div>
+<p class="text-sm mb-4 leading-relaxed">質問は選択肢形式で答えやすくまとめる（CLAUDE.md メモまとめルールに準ずる）。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 2: 現状把握</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>対象サイトのソース or URL を確認し、ページ構成・主要メッセージ・導線を把握する</li>
+<li>ファーストビューで「誰の・何の・次に何をすべきか」が伝わるかを読む</li>
+<li>既存記録（<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/...</code> の memo / backlog / decisions）に目を通す</li>
+<li><strong>オンページ信号（title/meta/OGP/構造化データ/見出し/alt 等）は監査ツール優先</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hp-audit.sh</code>（整備中）等のツールがあればその出力を一次情報にする。ツールが無い間の <code class="bg-gray-100 px-1 rounded text-sm font-mono">curl</code>/<code class="bg-gray-100 px-1 rounded text-sm font-mono">grep</code> 等の手作業は <strong>「暫定」と断り</strong>、不足を Step 6 でカイゼン台帳に記録する</li>
+<li>効果計測データ（検索順位・流入・問い合わせ数）が必要なら、AI で代替せず <strong>社長に取得手段（GSC/GA4連携等）を要求</strong>する</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 3: 評価（観点を漏らさず）</h3>
+<p class="text-sm mb-4 leading-relaxed">下表の観点で気づきを集める。各観点で <strong>良い点 / 課題</strong> を事実ベースに分ける。<br>
+全観点を機械的に埋めるのではなく、<strong>ゴールに効く観点を厚く</strong> 見る。</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">観点</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">見るポイント</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">ファーストビュー</td><td class="px-3 py-2 border border-gray-200 align-top">3秒で「誰の何のサイトか」「次に何をすべきか」が伝わるか</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">導線・CV</td><td class="px-3 py-2 border border-gray-200 align-top">問い合わせ/予約/購入への動線、CTAの位置・文言・数</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">情報設計</td><td class="px-3 py-2 border border-gray-200 align-top">ナビゲーション、ページ階層、回遊性、迷子にならないか</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">コンテンツ</td><td class="px-3 py-2 border border-gray-200 align-top">強み・実績・信頼要素（事例/お客様の声/資格）が伝わるか</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">訴求・コピー</td><td class="px-3 py-2 border border-gray-200 align-top">見出しがベネフィット訴求か、専門用語が独りよがりでないか</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">SEO</td><td class="px-3 py-2 border border-gray-200 align-top">title/meta description、見出し構造(h1-h3)、内部リンク、画像alt、構造化データ</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">仮置き残存</td><td class="px-3 py-2 border border-gray-200 align-top">公開HTMLにテンプレの仮置きが残っていないか（OGP画像URL・構造化データのコメントアウト/プレースホルダ・ダミーテキスト・未差し替えalt）。<strong>実害が出やすく見落としやすい</strong></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">表示速度</td><td class="px-3 py-2 border border-gray-200 align-top">画像最適化、不要リソース、Core Web Vitals</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">モバイル対応</td><td class="px-3 py-2 border border-gray-200 align-top">レスポンシブ、タップ領域、可読性、横スクロール有無</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">デザイン</td><td class="px-3 py-2 border border-gray-200 align-top">ブランド統一感、余白、配色、フォント、可読性</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">アクセシビリティ</td><td class="px-3 py-2 border border-gray-200 align-top">コントラスト比、文字サイズ、alt、キーボード操作</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">信頼性・安心</td><td class="px-3 py-2 border border-gray-200 align-top">会社情報、プライバシーポリシー、SSL、問い合わせ先の明示</td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 4: 改善提案（優先度をつける）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>各提案は下記「出力フォーマット」に従う</li>
+<li>「効果 × 工数」マトリクスで優先度を整理し、<strong>Quick win → 中長期</strong> の順で提示</li>
+<li>全部やろうとしない。「まずどれから着手するか」を社長と合意する</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 5: 実装（合意後のみ）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>合意した項目だけ着手する</li>
+<li>出力先は CLAUDE.md の判断基準に従う：</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>草案・モック・改善案 → <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/</code> または <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/&lt;案件名&gt;/</code></li>
+<li>クライアント記録 → <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/projects/&lt;project&gt;/</code></li>
+</ul>
+<li>編集後は <code class="bg-gray-100 px-1 rounded text-sm font-mono">http://100.123.104.87/&lt;相対パス&gt;</code> で確認できる旨を伝える</li>
+<li>お客さん共有が必要になったら Nginx 設定での一時公開を案内（rules/preview-server.md）</li>
+<li>改善の経緯・判断を該当クライアントの記録に残す</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 6: スキル自己改善の振り返り（毎回必須・軽く）</h3>
+<p class="text-sm mb-4 leading-relaxed">運用の最後に、<strong>このスキル自体</strong>を振り返る。たとえ1行でも必ず行う。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>自問：「<strong>今回の運用で、このスキルに足りなかったものは？</strong>」</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>観点の漏れ（見るべきだったのに観点表に無かった）</li>
+<li>手順の不備（やりにくかった・順番が悪かった）</li>
+<li><strong>ツール・データ不足</strong>（LLMで代替したが本来ツール化すべき／社長に要求すべきだった）</li>
+<li>出力フォーマット・役割分担の改善余地</li>
+</ul>
+<li>気づきがあれば <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に <strong>K-NNN エントリで追記</strong>（形式は同ファイル冒頭）</li>
+<li><strong>その場では rules/commands を直さない</strong>。反映は棚卸し時に社長判断でまとめて行う（メタ改善スキーム参照）</li>
+<li>終了報告に「今回のカイゼン記録：K-NNN（1行要約）」を含める。無ければ「特記なし」と書く</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">メタ改善スキーム（使いながらスキルを育てる）</h2>
+<p class="text-sm mb-4 leading-relaxed">このスキルは固定マニュアルではなく、<strong>運用ループで自己改善する</strong>前提で設計されている。</p>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>①〜⑤ 運用（診断→提案→実装→検証→記録）
+        │
+        ▼
+⑥ 計測（GSC/GA4 等。ツール整備後）
+        │
+        ▼
+Step 6 振り返り ──→ data/hp-improve/skill-kaizen.md に気づきを蓄積（毎回・軽く）
+                          │
+                          ▼（溜まったら／区切りで）
+                  棚卸し：社長が採否判断
+                          │
+                          ▼（採用分のみ）
+            rules/modes/hp-improve.md ／ commands/hp-improve.md を更新
+            （version を上げ「変更履歴」に追記。台帳のステータスを ✅反映済み に）</code></pre>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">役割</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">担当</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">気づきの記録（Step 6）</td><td class="px-3 py-2 border border-gray-200 align-top">はなさかAI（運用の都度）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">採否判断・反映指示</td><td class="px-3 py-2 border border-gray-200 align-top">社長（棚卸しタイミング）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">rules/commands の更新・version 管理</td><td class="px-3 py-2 border border-gray-200 align-top">はなさかAI（社長の指示で）</td></tr></tbody></table></div>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>記録と反映を分離</strong>する（reviewer 型）。都度反映はスキルがブレるので避ける</li>
+<li>台帳は<strong>権限非依存で書く</strong>：AI が実行できない手段（ツール化・API連携・社長の手作業）も「あるべき姿」として記録し、必要なら社長への要求として残す</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">出力フォーマット</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">評価サマリ（Step 3 の結果）</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>## 現状評価サマリ：&lt;サイト名&gt;
+
+**ゴール**: （Step 1 で確認したゴール）
+**総評**: 2-3行。良い点と最大の課題を結論ファーストで
+
+### 観点別
+- ✅ 良い点：…
+- ⚠️ 課題：…（観点名つき）</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">改善提案（Step 4、1件ずつ）</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>#### 改善案N: 一行要約
+
+- **観点**: ファーストビュー / 導線 / SEO / …
+- **観察**: 何を見てそう思ったか（事実）
+- **なぜ問題か**: 影響・リスク（推測は「推測：」と明記）
+- **改善案**: 具体的に何をどう変えるか
+- **効果**: 高 / 中 / 低（ゴールへの寄与）
+- **工数**: 小（〜1h）/ 中（〜半日）/ 大（1日以上）
+- **優先度**: 🔴最優先 / 🟡推奨 / 🟢余裕があれば</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">着手提案（Step 4 末尾）</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>### 次の一手（提案）
+まず「改善案X・Y」（Quick win）から着手するのが効果的です。着手してよいですか？</code></pre>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">やってはいけないこと</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">NG</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">なぜ</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 対象・ゴール未確認で実装に入る</td><td class="px-3 py-2 border border-gray-200 align-top">「確認してから動く」違反。手戻りの元</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 合意前に全項目を実装する</td><td class="px-3 py-2 border border-gray-200 align-top">社長の判断を飛ばす。Quick win 合意が先</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 網羅レポートで終わる</td><td class="px-3 py-2 border border-gray-200 align-top">目的は「次の一手」。優先度なき列挙はNG</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 観察と推測を混ぜる</td><td class="px-3 py-2 border border-gray-200 align-top">判断を誤らせる。「推測：」で分離する</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ クライアント機密の不用意な外部送信</td><td class="px-3 py-2 border border-gray-200 align-top">セキュリティ意識。共有は社長合意 + 一時公開で</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 本番サイトを直接いじる前提で進める</td><td class="px-3 py-2 border border-gray-200 align-top">まず <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/</code> で案を作り、確認してから</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">自己チェック（提案・実装の前に確認）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>[ ] 対象サイト・ゴール・クライアントを確認済みか？（曖昧なら Step 1 に戻る）</li>
+<li>[ ] 評価でゴールに効く観点を厚く見たか？</li>
+<li>[ ] 各提案に「観察 / なぜ / 改善案 / 効果 / 工数 / 優先度」が揃っているか？</li>
+<li>[ ] 観察（事実）と推測を分離したか？</li>
+<li>[ ] Quick win を先頭に、効果順で並べたか？</li>
+<li>[ ] 実装は合意した項目だけか？出力先は CLAUDE.md の判断基準通りか？</li>
+<li>[ ] <strong>権限に縛られず最適策を出したか？ 不足を自前で握りつぶさず社長に要求したか？</strong></li>
+<li>[ ] <strong>Step 6 の振り返りをしたか？ 気づきを <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に記録したか？（無ければ「特記なし」）</strong></li>
+<li>[ ] 編集ファイルを回答末尾に markdown リンクで一覧表示したか？</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">すべて ✅ なら次へ、1つでも ❌ なら見直し。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">今後の拡張余地（社長と詰める）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>業種別の訴求テンプレ（士業／飲食／製造／クリニック 等）の定型化</li>
+<li>競合比較・アクセス解析（GA4/Search Console）との連携範囲</li>
+<li>Before/After の記録フォーマット（改善効果の振り返り用）</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-06-08</td><td class="px-3 py-2 border border-gray-200 align-top">初版（2層構成。手順 Step1-5・評価観点・出力フォーマット・自己チェック）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-06-08</td><td class="px-3 py-2 border border-gray-200 align-top">行動原則に「権限非依存で最適解／不足は積極要求」を追加。Step 6（スキル自己改善の振り返り）と「メタ改善スキーム」を新設。評価観点に「仮置き残存」を追加。診断はツール優先を明記。カイゼン台帳 <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> を運用開始</td></tr></tbody></table></div>
+</div>
+</body>
+</html>

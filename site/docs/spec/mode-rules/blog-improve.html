@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ブログ既存記事改善モード — 動作ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/blog-improve.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">ブログ既存記事改善モード — 動作ルール</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-07-15）｜ changelog はファイル末尾。<br>
+このモードは <strong>使いながら育てる</strong>。気づきは <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に溜める。</div>
+<p class="text-sm mb-4 leading-relaxed">このファイルは、<strong>ブログ分析ループ（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog-loop</code>）が出した「既存記事の改善 <code class="bg-gray-100 px-1 rounded text-sm font-mono">B-NNN</code>」に対応し、既存の公開記事の改善版を"下書き複製"として作る</strong> 実行モードの <strong>手順・制約・出力・自己チェック</strong> を定義する。</p>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog-improve &lt;client&gt;</code> スラッシュコマンドから呼ばれる（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog-write</code> の兄弟＝新規記事ではなく<strong>既存記事の改善</strong>側。<code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>・cron で別時刻に回す）。<br>
+土台は CLAUDE.md と <a href="../rules/automation.html" class="text-blue-600 hover:underline">rules/automation.md</a>（<strong>衝突したら automation.md 最優先</strong>）。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">⚑ 位置づけ（blog-write の兄弟・最初に把握）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>診断は <strong>blog-loop が B/T 両方</strong>を出す（共通）。実行を2本に分ける：<strong>blog-write＝新規記事(T)</strong>／<strong>本モード blog-improve＝既存記事の改善(B)</strong>。</li>
+<li><strong>公開境界の本質的な違い</strong>：新規(T)は「まだ無い記事の下書き」を作る＝低リスク。既存(B)は<strong>公開中の本番記事</strong>が対象＝高リスク。よって本モードは「<strong>既存の公開記事を一切編集しない</strong>」を絶対原則とする（社長決定 2026-06-23）。</li>
+<li><strong>適用モデル＝「下書き複製」</strong>：元の公開記事は <strong>読み取り専用(<code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py get</code>)</strong> で読むだけ。改善版は <strong>別の新規下書き</strong>として作成/更新し（<code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py post</code>／<code class="bg-gray-100 px-1 rounded text-sm font-mono">update</code>）、<strong>社長・web-hanasaka が見比べて手動で本番記事に反映</strong>する（AIは本番記事に書き込まない）。</li>
+<li><strong>重複定義しない</strong>：安全＝automation.md、読みやすさ・執筆品質＝<a href="blog-write.html" class="text-blue-600 hover:underline">blog-write.md</a>（表組み・無機質禁止 等）、評価観点＝<a href="hp-improve.html" class="text-blue-600 hover:underline">hp-improve.md</a>、クライアント固有値＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/blog-loop/clients/&lt;client&gt;.md</code>、診断の B-NNN ＝blog-loop 掲示板。本ファイルは <strong>既存記事改善の実行</strong>固有だけを定義する。</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">⚑ マルチクライアント読み替え</h2>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog-improve &lt;client&gt;</code> でクライアント別に動く。<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/blog-loop/config.md</code>＋<code class="bg-gray-100 px-1 rounded text-sm font-mono">clients/&lt;client&gt;.md</code> を読んで固有値を確定。読み替え表：</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">表記</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">読み替え</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">入力（改善提案）</td><td class="px-3 py-2 border border-gray-200 align-top">blog-loop 掲示板 <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/&lt;client&gt;/blog/index.html</code> の <code class="bg-gray-100 px-1 rounded text-sm font-mono">B-NNN</code>（＋ <code class="bg-gray-100 px-1 rounded text-sm font-mono">from-president.md</code>）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">改善版ドラフト出力先</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/blog/&lt;client&gt;/improve/</code>（ローカル草案）＋ WP の<strong>改善版下書き</strong>（元記事とは別の post）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">対応ログ</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/blog-loop/&lt;client&gt;/improve-log.md</code>（B-NNN／元記事post id／改善版draft id／状態）</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">公開の境界（絶対原則）</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">操作</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">可否</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">元の公開記事を <code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py get</code>（GET・読み取り）で読む</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（改善の素材）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">改善版を<strong>新規下書き</strong>として作る <code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py post</code>（status=draft）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（元記事とは別の post）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">自分が作った<strong>改善版下書き</strong>を <code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py update --id &lt;改善版draft id&gt;</code> で更新</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（draft限定ガードあり）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>元の公開記事（post）を編集・上書き・公開状態変更</strong></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>❌ 絶対不可</strong>。<code class="bg-gray-100 px-1 rounded text-sm font-mono">update</code> に<strong>元記事の id を渡さない</strong>（渡しても draft でないため tool 側で拒否されるが、運用上も渡さない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">本番記事の公開・削除</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（公開も差し替えも人間）</td></tr></tbody></table></div>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">二重の安全：①ルールで「元記事idをupdateに渡さない」②<code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py update</code> は対象が draft のときだけ実行（公開済みは拒否）。改善版は常に別draftなので、元の公開記事は不変。</div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">厳守する制約</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">操作</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">可否</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">Read / Grep / Glob / git status・log・diff</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">blog-loop 掲示板・from-president・clients/&lt;client&gt;.md・improve-log を読む</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（入力）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py get</code>（元記事の読み取り）／<code class="bg-gray-100 px-1 rounded text-sm font-mono">curl</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">hp-audit</code>（読み取り）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">Write: <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/blog/&lt;client&gt;/improve/</code>（改善版ローカル草案）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">Write: <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/blog-loop/&lt;client&gt;/improve-log.md</code>（対応ログ）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py post</code>／<code class="bg-gray-100 px-1 rounded text-sm font-mono">update --id &lt;改善版draft&gt;</code>（改善版下書きの作成/更新）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（status=draft 専用・公開しない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>元の公開記事の編集・公開・削除</strong></td><td class="px-3 py-2 border border-gray-200 align-top">❌ 絶対不可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">固有事実（料金・実績数値・お客様の声）の創作</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（<code class="bg-gray-100 px-1 rounded text-sm font-mono">【要・社長確認：…】</code> で要求）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">from-president.md</code>・blog-loop 掲示板の編集</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（責務分離。対応の事実は improve-log と報告で渡す）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">外部送信・<code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code>実値の表示・git commit/push</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（automation.md・社長判断）</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">手順（1サイクル）</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 0: 前提読み込み</h3>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/blog-loop/config.md</code>＋<code class="bg-gray-100 px-1 rounded text-sm font-mono">clients/&lt;client&gt;.md</code> を読む。<strong>未登録なら報告して終了</strong>。</li>
+<li>blog-loop 掲示板の未完了 <code class="bg-gray-100 px-1 rounded text-sm font-mono">B-NNN</code>（🔧進行中）を把握。<code class="bg-gray-100 px-1 rounded text-sm font-mono">from-president.md</code>（優先・回答済み事実）を読む。</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/blog-loop/&lt;client&gt;/improve-log.md</code>（あれば）を読み、<strong>対応済み・進行中を二重に作らない</strong>。</li>
+</ol>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 1: 対象 B を選ぶ</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>社長の優先指示があれば従う。無ければ blog-loop の優先度（🔴→🟡）順に <strong>1サイクル 1〜2件</strong>（やり過ぎない）。</li>
+<li>対象記事の <strong>post id</strong> を確定（GSC/掲示板の URL <code class="bg-gray-100 px-1 rounded text-sm font-mono">…?p=NNNN</code> の NNNN ＝ post id）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 2: 元記事を読む（読み取り専用）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/wp-draft.py get --client &lt;client&gt; --id &lt;元記事post id&gt;</code> で現行の title・本文（raw）を取得。必要なら GSC（<code class="bg-gray-100 px-1 rounded text-sm font-mono">gsc-fetch.py</code>）で当該記事の順位・CTR・獲得クエリを確認し、「何を直すと効くか」を事実で裏取り（惜しい順位/低CTR/鮮度落ち）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 3: 改善版を作る（本文まで・表組みで読みやすく）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>B-NNN の改善内容を適用：title/meta の改善・検索意図に不足した見出しの追記・内部リンク（受け皿ページへ）・鮮度更新・<strong>表組みで読みやすく</strong>（<a href="blog-write.html" class="text-blue-600 hover:underline">blog-write.md</a>「読みやすさの作り込み」を流用＝箇条書き羅列にしない）。</li>
+<li>元の良い部分は活かす（全書き換えにしない）。固有事実は <code class="bg-gray-100 px-1 rounded text-sm font-mono">【要・社長確認：…】</code>。</li>
+<li>ローカル草案 <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/blog/&lt;client&gt;/improve/&lt;slug&gt;.html</code> に保存（元記事ID・狙うクエリ・<strong>変更点サマリ</strong>＝何をどう直したか、をメタに明記）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 4: 改善版を「下書き複製」としてWPに反映</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>improve-log にこの B（元記事）の<strong>改善版draft id</strong> が無ければ <code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py post</code>（新規下書き作成）。<strong>タイトル先頭に「【改善版｜元&lt;元記事post id&gt;】」</strong>を付ける（例：<code class="bg-gray-100 px-1 rounded text-sm font-mono">【改善版｜元2082】…</code>）。元記事と区別する（誤公開・取り違え防止）のに加え、<strong>社長が投稿一覧で「どの記事の改善版か」を一目で判別できる</strong>ようにするため（2026-07-15 社長要望）。<code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;元記事post id&gt;</code> は Step 2 で <code class="bg-gray-100 px-1 rounded text-sm font-mono">get</code> した元記事の post id。返ってきた改善版 id を improve-log に記録。<strong>本番反映時はこの「【改善版｜元&lt;id&gt;】」プレフィックスを外して本来のSEOタイトルとして使う</strong>（＝プレフィックスはレビュー用マーカー）。</li>
+<li>既にあれば <code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py update --id &lt;改善版draft id&gt;</code>（同じ改善版下書きを更新）。<strong>元記事の id は絶対に使わない</strong>。</li>
+<li>creds/許可未整備なら投稿せず「保留」と明示（捏造・空振りしない）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 5: 報告</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>社長に1〜3行：対応した <code class="bg-gray-100 px-1 rounded text-sm font-mono">B-NNN</code>・元記事URL・<strong>改善版下書きのプレビューURL</strong>・変更点の要約・「見比べて手動で本番反映してください」。Slack日報は <code class="bg-gray-100 px-1 rounded text-sm font-mono">post --as blog-loop-&lt;client&gt;</code>（同じブログスレッドに相乗り。鳴らしすぎない）。</li>
+<li>停止条件：対象未確定／事実待ち／社長の停止指示 → 一旦停止。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 6: 自己改善（軽く）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>「今回足りなかったものは？」を <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に1行（無ければ「特記なし」）。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">出力フォーマット（改善版ローカル草案 + WP改善版下書き）</h2>
+<p class="text-sm mb-4 leading-relaxed">改善版草案 <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/blog/&lt;client&gt;/improve/&lt;slug&gt;.html</code>：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>メタ</strong>：対応 <code class="bg-gray-100 px-1 rounded text-sm font-mono">B-NNN</code>／元記事URL・post id／狙うクエリ／<strong>変更点サマリ</strong>（before→after の要点）／<code class="bg-gray-100 px-1 rounded text-sm font-mono">【要・社長確認】</code>の事実</li>
+<li><strong>改善後の本文</strong>（WordPress 貼り付け想定の素直なHTML・表組みで読みやすく）</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">WP には「<strong>【改善版｜元&lt;元記事post id&gt;】&lt;改善後タイトル&gt;</strong>」の形式（例：<code class="bg-gray-100 px-1 rounded text-sm font-mono">【改善版｜元2082】…</code>）で <code class="bg-gray-100 px-1 rounded text-sm font-mono">status=draft</code> 投稿。プレフィックスで元記事を判別（本番反映時に外す）。<strong>元記事は不変</strong>。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">やってはいけないこと</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">NG</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">なぜ</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 元の公開記事を編集・上書き・公開状態変更</td><td class="px-3 py-2 border border-gray-200 align-top">本番記事を来訪者が見ている。改善は別draftで作り人間が反映</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ <code class="bg-gray-100 px-1 rounded text-sm font-mono">update</code> に元記事の post id を渡す</td><td class="px-3 py-2 border border-gray-200 align-top">元記事を触る行為。改善版draftのidだけ使う（toolも公開済みは拒否）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 固有事実の創作</td><td class="px-3 py-2 border border-gray-200 align-top">捏造禁止。<code class="bg-gray-100 px-1 rounded text-sm font-mono">【要・社長確認】</code>で要求</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 全書き換えで元の良さを壊す</td><td class="px-3 py-2 border border-gray-200 align-top">改善であって作り直しではない</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ 箇条書きの羅列で無機質</td><td class="px-3 py-2 border border-gray-200 align-top">表組み・構造変化で読みやすく（blog-write 流用）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">❌ from-president/掲示板の編集・本番公開・外部送信を合意なく</td><td class="px-3 py-2 border border-gray-200 align-top">責務分離・automation.md</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">自己チェック（改善版を出す前に）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>[ ] config/掲示板(B)/from-president/improve-log を読んだか？二重作成していないか？</li>
+<li>[ ] 元記事を <code class="bg-gray-100 px-1 rounded text-sm font-mono">get</code> で読んでから改善したか？（現状を見ずに直さない）</li>
+<li>[ ] <strong>元記事の id を編集系に渡していないか？</strong> 改善版は別draftか？</li>
+<li>[ ] タイトルを「<strong>【改善版｜元&lt;元記事post id&gt;】</strong>」形式にしたか？（社長が投稿一覧でどの記事の改善版か判別できるように）</li>
+<li>[ ] 固有事実を創作せず <code class="bg-gray-100 px-1 rounded text-sm font-mono">【要・社長確認】</code> にしたか？表組みで読みやすくしたか？</li>
+<li>[ ] 変更点サマリ（before→after）を明記したか？</li>
+<li>[ ] improve-log に B-NNN／元記事id／改善版draft id／状態を記録したか？</li>
+<li>[ ] 本番記事の編集・公開・外部送信をしていないか？</li>
+<li>[ ] 編集ファイルを回答末尾に markdown リンクで一覧表示したか？</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">すべて ✅ なら出力、1つでも ❌ なら見直し。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-06-23</td><td class="px-3 py-2 border border-gray-200 align-top">初版。blog-write の兄弟＝既存記事改善(B)の実行モード。適用モデル＝「下書き複製」（元の公開記事は読み取りのみ・改善版は別draftで作成/更新・人間が手動で本番反映）。<code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py get</code>(読取)を追加。読みやすさ・品質は blog-write を流用</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-15</td><td class="px-3 py-2 border border-gray-200 align-top">改善版下書きのタイトル規約を「<strong>【改善版｜元&lt;元記事post id&gt;】&lt;タイトル&gt;</strong>」に変更（社長要望＝投稿一覧で「どの記事の改善版か」が判別できない問題の解消）。Step 4・出力フォーマット・自己チェックに反映。プレフィックスはレビュー用マーカーで本番反映時に外す。ツール改修は不要（<code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py --title</code> で指定）。あわせて <code class="bg-gray-100 px-1 rounded text-sm font-mono">wp-draft.py</code> に Gutenberg ブロック化を実装済（生HTML投稿時の「非推奨のクラシックブロック」警告＋レイアウト崩れの解消・2026-07-15）</td></tr></tbody></table></div>
+</div>
+</body>
+</html>

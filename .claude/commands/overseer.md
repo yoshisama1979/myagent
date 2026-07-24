@@ -4,13 +4,13 @@
 
 ## 必読ファイル（順番に読む）
 
-1. `.claude/rules/overseer.md` — Overseer モードの詳細ルール（制約・手順・出力フォーマット）
+1. `rules/modes/overseer.md` — Overseer モードの詳細ルール（制約・手順・出力フォーマット）
 2. `SYSTEM.md` — モード地図・ハンドオフ・健康シグナル候補（俯瞰の入口）
 3. `site/overseer/index.html` — 統括レポート掲示板（過去サイクルの所見・未解決の提案・社長判断）
 
 ## 実行
 
-上記を読んだら、`.claude/rules/overseer.md` の「手順」に従って Step 0 → Step 6 を実行する。
+上記を読んだら、`rules/modes/overseer.md` の「手順」に従って Step 0 → Step 6 を実行する。
 
 Step 0 ではまず **`bin/.venv/bin/python3 bin/slack-poll.py fetch`** で社長の Slack 新着を取り込み（last-seen 以降だけ・全履歴は読まない）、自分宛 `data/mailbox/new/`（`to: overseer`）の社長指示・回答を読んで最優先で反映する。各指示には元の Slack スレッドへ `slack-poll.py reply <thread_ts> --as overseer` で返信し、処理済みは `data/mailbox/cur/` へ移す（`--as overseer` でそのスレッドの持ち主を overseer に保ち、社長の返信が overseer に戻るようにする）。
 

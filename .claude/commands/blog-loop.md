@@ -20,9 +20,9 @@
 
 ## 必読ファイル（順番に読む）
 
-1. `.claude/rules/blog-loop.md` — 本モードの詳細ルール（2つの成果物・サイクル手順・掲示板プロトコル・責務分離・自己チェック）
-2. `.claude/rules/hp-improve.md` — 評価観点（コンテンツ部分）はこちらを流用する
-3. `.claude/rules/hp-loop.md` — 掲示板3層・mailbox配信・COMPOUND・責務分離の作法はこちらを流用する
+1. `rules/modes/blog-loop.md` — 本モードの詳細ルール（2つの成果物・サイクル手順・掲示板プロトコル・責務分離・自己チェック）
+2. `rules/modes/hp-improve.md` — 評価観点（コンテンツ部分）はこちらを流用する
+3. `rules/modes/hp-loop.md` — 掲示板3層・mailbox配信・COMPOUND・責務分離の作法はこちらを流用する
 4. `rules/automation.md` — 外部送信・本番改変・自動実行の安全ルール（既読なら省略可）
 5. `CLAUDE.md` — 行動指針・出力先の判断基準（既読なら省略可）
 
@@ -35,7 +35,7 @@
 
 ## 実行
 
-1. `.claude/rules/blog-loop.md` を読み、ルールを把握する
+1. `rules/modes/blog-loop.md` を読み、ルールを把握する
 2. その「手順」セクションに従って Step 0 〜 Step 7 を実行する（1サイクル＝/loop 1回分）
 3. **対象・ゴールが未確定なら、分析に入らず掲示板に「対象確認の質問」だけ出して終了**する
 

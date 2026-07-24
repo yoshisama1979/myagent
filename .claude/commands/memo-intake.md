@@ -6,8 +6,8 @@
 
 ## 必読ファイル（順番に読む）
 
-1. `.claude/rules/memo-intake.md` — このモードの詳細ルール（制約・手順・出力・自己チェック）
-2. `.claude/rules/memo.md` — Memo モードの清書ルール（流用：清書・notes.html 追記フォーマット・推測で補完しない原則）
+1. `rules/modes/memo-intake.md` — このモードの詳細ルール（制約・手順・出力・自己チェック）
+2. `rules/modes/memo.md` — Memo モードの清書ルール（流用：清書・notes.html 追記フォーマット・推測で補完しない原則）
 3. `rules/memo.md` — プロジェクトメモ運用ルール（保存先・ファイル構成）
 
 ## 実行
@@ -26,4 +26,4 @@
 - **書き込みは `site/notes.html`（追記のみ）と、明確にプロジェクト固有のときだけ該当 memo.html**。迷ったら notes.html＋「（案件：◯◯か）」と注記
 - **Slack は #memo の当日要約1本（post --as memo --channel memo）＋必要時その返信だけ**。他チャンネル・外部送信はしない
 - 実装・コード変更・他ファイル編集・git 操作は **禁止**（ロール越境しない。実装依頼は「Main モードへ」と notes に残す）
-- 詳細・自己チェックは `.claude/rules/memo-intake.md` を厳守
+- 詳細・自己チェックは `rules/modes/memo-intake.md` を厳守

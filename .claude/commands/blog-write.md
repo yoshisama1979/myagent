@@ -10,8 +10,8 @@
 
 ## 必読ファイル（順番に読む）
 
-1. `.claude/rules/blog-write.md` — 本モードの詳細ルール（公開の境界＝段階導入・手順・品質基準・自己チェック）
-2. `.claude/rules/hp-improve.md` — コンテンツ品質の評価観点を流用
+1. `rules/modes/blog-write.md` — 本モードの詳細ルール（公開の境界＝段階導入・手順・品質基準・自己チェック）
+2. `rules/modes/hp-improve.md` — コンテンツ品質の評価観点を流用
 3. `rules/automation.md` — 本番書き込み・外部送信・秘密情報の安全ルール（**衝突したら最優先**）
 4. `CLAUDE.md` — 行動指針・出力先の判断基準（既読なら省略可）
 
@@ -29,7 +29,7 @@
 
 ## 実行
 
-1. `.claude/rules/blog-write.md` を読み、ルールを把握する
+1. `rules/modes/blog-write.md` を読み、ルールを把握する
 2. その「手順」セクションに従って Step 0 〜 Step 6 を実行する
 3. **対象未確定／事実待ちで着手できないなら、対応に入らず質問・保留を報告**して終了
 

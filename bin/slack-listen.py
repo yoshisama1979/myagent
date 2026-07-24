@@ -5,7 +5,7 @@
 （data/mailbox/new/）に president 発のメッセージとして投函する。各エージェントは
 自分の /loop の先頭で受信箱を読んで対応する。
 
-設計（.claude/rules/mailbox.md / project_slack-two-way）:
+設計（rules/modes/mailbox.md / project_slack-two-way）:
 - 1チャンネル＋スレッド運用。スレッド↔エージェントの対応は data/slack/thread-map.json。
   対応が無いスレッド/トップ発言は既定で overseer（統括）へ回す。
 - Socket Mode なので外部公開不要（VPSからSlackへ常時接続）。Tailscale内VPSに適合。

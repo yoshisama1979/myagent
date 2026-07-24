@@ -99,7 +99,7 @@ bash bin/hp-audit.sh https://example.com/ --json
 
 別マシン（事務所・自宅・VPS）にいるエージェント同士が、Tailscale 経由で非同期にメッセージをやり取りする共有受信箱のクライアント。
 VPS の API（`site/tools/mailbox/`）を叩く。`.env` の `MAILBOX_URL` / `MAILBOX_TOKEN` を必要キーだけ抽出して使う（トークンは画面・ログに出さない）。
-規約・メッセージ書式・`needs_approval`ポリシーは [.claude/rules/mailbox.md](../.claude/rules/mailbox.md)。
+規約・メッセージ書式・`needs_approval`ポリシーは [rules/modes/mailbox.md](../rules/modes/mailbox.md)。
 
 ```bash
 # 自分宛の未読(new/)を取得

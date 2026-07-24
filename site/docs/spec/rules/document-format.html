@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プロジェクト記録フォーマット（HTML） — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/document-format.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">プロジェクト記録フォーマット（HTML）</h1>
+<p class="text-sm mb-4 leading-relaxed">本プロジェクトの <strong>記録ファイル</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">project-info</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">client-info</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">memo</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/*</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">notes</code>）は <strong>HTML5 + Tailwind CSS（CDN参照）</strong> で記述する。</p>
+<p class="text-sm mb-4 leading-relaxed">ルール対象外（Markdown 維持）：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/*.md</code>（AIが参照する内部ルール）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code>（プロジェクト指示）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">.claude/commands/*.md</code>（スキル）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">README.md</code>（GitHub等で表示するメタ情報）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">配置場所と拡張子</h2>
+<p class="text-sm mb-4 leading-relaxed">メモ運用ルール（<code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/memo.md</code>）の 4 ファイル構成・配置はそのまま、拡張子のみ <code class="bg-gray-100 px-1 rounded text-sm font-mono">.md</code> → <code class="bg-gray-100 px-1 rounded text-sm font-mono">.html</code> に置き換える。</p>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>clients/&lt;クライアント名&gt;/client-info.html
+clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/backlog.html
+clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/decisions.html
+clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/project-info.html
+clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/memo.html
+clients/&lt;クライアント名&gt;/projects/&lt;プロジェクト名&gt;/meeting-notes/YYYY-MM-DD.html
+notes.html                                    （プロジェクト横断メモ）</code></pre>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ページのフォーマット</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>HTML5</strong> 形式で記述する（Markdownは使わない）</li>
+<li><strong>言語属性</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;html lang="ja"&gt;</code></li>
+<li><strong>文字コード</strong>：UTF-8</li>
+<li>スタイリングは <strong>Tailwind CSS（CDN参照）</strong></li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;head&gt;</code> に <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</code> を入れる</li>
+<li>ビルド作業不要、ブラウザで直接開けることが必須要件</li>
+</ul>
+<li>テンプレート: <code class="bg-gray-100 px-1 rounded text-sm font-mono">clients/_template/</code> 配下のHTMLファイルをコピーして開始する</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ページ構造（必須要素）</h2>
+<p class="text-sm mb-4 leading-relaxed">各記録ページは以下の要素を持つ：</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">要素</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">用途</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;h1&gt;</code> ページタイトル</td><td class="px-3 py-2 border border-gray-200 align-top">ファイル種別＋対象プロジェクトを明記（例：「残存課題 — HANAツール」）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">概要文（<code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;p&gt;</code>）</td><td class="px-3 py-2 border border-gray-200 align-top">1〜2文でファイルの目的を説明</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">セクション見出し <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;h2&gt;</code> → サブ <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;h3&gt;</code></td><td class="px-3 py-2 border border-gray-200 align-top">階層構造で整理</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">表示項目は <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;table&gt;</code> または <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;ul&gt;</code></td><td class="px-3 py-2 border border-gray-200 align-top">スキャンしやすく</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">操作フロー・手順は <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;ol&gt;</code></td><td class="px-3 py-2 border border-gray-200 align-top">番号付きリスト</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">関連リンク節</td><td class="px-3 py-2 border border-gray-200 align-top">末尾に他ファイル（同プロジェクト内）への相互リンク</td></tr></tbody></table></div>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">デザイン規約（Tailwind クラス）</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">コンテナ</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>&lt;body class="bg-gray-50 text-gray-900"&gt;
+  &lt;div class="max-w-4xl mx-auto p-6 md:p-10"&gt;
+    ...
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">見出し</h3>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">要素</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">クラス</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;h1&gt;</code></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">text-3xl font-bold mb-2</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;h2&gt;</code></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;h3&gt;</code></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">text-lg font-semibold mb-3 mt-6</code></td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">テーブル</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>&lt;table class="w-full border-collapse text-sm mb-6"&gt;
+  &lt;thead&gt;
+    &lt;tr class="bg-gray-100"&gt;
+      &lt;th class="text-left px-3 py-2 border border-gray-200 font-semibold"&gt;項目&lt;/th&gt;
+      &lt;th class="text-left px-3 py-2 border border-gray-200 font-semibold"&gt;内容&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td class="px-3 py-2 border border-gray-200"&gt;...&lt;/td&gt;&lt;td class="px-3 py-2 border border-gray-200"&gt;...&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">状態・カテゴリ別の強調</h3>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">種別</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">クラス</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">注意・未確認</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">補足・参照</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bg-blue-50 border-l-4 border-blue-400 p-4 my-4</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">確定事項</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bg-green-50 border-l-4 border-green-400 p-4 my-4</code></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">不具合・要対応</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bg-red-50 border-l-4 border-red-400 p-4 my-4</code></td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">チェックボックス（backlog 用）</h3>
+<p class="text-sm mb-4 leading-relaxed">完了状態は記号で示す（インタラクティブにしない）：</p>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>&lt;ul class="space-y-2"&gt;
+  &lt;li class="flex items-start gap-2"&gt;
+    &lt;span class="text-gray-400"&gt;☐&lt;/span&gt;&lt;span&gt;未着手項目&lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li class="flex items-start gap-2"&gt;
+    &lt;span class="text-green-500"&gt;☑&lt;/span&gt;&lt;span class="line-through text-gray-500"&gt;完了項目&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">取り消し線</h3>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;s&gt;</code> または <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;span class="line-through text-gray-500"&gt;</code> を使う。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">コード・ファイルパス</h3>
+<p class="text-sm mb-4 leading-relaxed">インラインは <code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;code class="bg-gray-100 px-1 rounded text-sm font-mono"&gt;backlog.html&lt;/code&gt;</code></p>
+<h3 class="text-lg font-semibold mb-3 mt-6">相互リンク</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>&lt;a href="decisions.html" class="text-blue-600 hover:underline"&gt;decisions.html&lt;/a&gt;</code></pre>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ページ間リンク</h2>
+<p class="text-sm mb-4 leading-relaxed">HTMLの利点を活かし、関連ページは積極的にリンクで接続する：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> → <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code>（仕様の参照）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code> → <code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code>（決定の出典）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/YYYY-MM-DD.html</code> → 展開先の <code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code></li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">notes.html</code> → 該当プロジェクトの <code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">decisions.html</code></li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">インデックスページ（index.html）</h2>
+<p class="text-sm mb-4 leading-relaxed">各階層に <strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">index.html</code></strong> を置き、その階層の全ファイル・サブディレクトリへのリンクを集約する。リンクをたどるだけで全記録に到達できる状態を維持する。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">階層と配置</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>index.html                                               … プロジェクト全体の入口
+├── notes.html
+└── clients/
+    ├── index.html                                       … 全クライアント一覧
+    └── &lt;クライアント名&gt;/
+        ├── index.html                                   … クライアント単位の入口
+        ├── client-info.html
+        └── projects/
+            └── &lt;プロジェクト名&gt;/
+                ├── index.html                           … プロジェクト単位の入口
+                ├── project-info.html
+                ├── backlog.html
+                ├── decisions.html
+                ├── memo.html
+                └── meeting-notes/
+                    ├── index.html                       … 打ち合わせメモ一覧
+                    └── YYYY-MM-DD.html</code></pre>
+<h3 class="text-lg font-semibold mb-3 mt-6">index.html の必須要素</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>パンくず</strong>（ルート以外）：<code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;a href="../index.html"&gt;← 親階層&lt;/a&gt;</code> 形式で親階層へ戻れる</li>
+<li><strong>タイトル</strong>（h1）：階層名（例：「カバーオールオーナーズクラブ」「コーポレートサイト制作」）</li>
+<li><strong>概要</strong>：その階層が何を含むかを1〜2文で説明</li>
+<li><strong>リンク一覧</strong>：その階層の全ファイル・サブディレクトリへのリンク（カード or リスト）</li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>各リンクには簡潔な説明を添える</li>
+<li><strong>リンクの表示名は内容を表す日本語名にする</strong>（例：<code class="bg-gray-100 px-1 rounded text-sm font-mono">backlog.html</code> → 「残存課題」、<code class="bg-gray-100 px-1 rounded text-sm font-mono">meeting-notes/</code> → 「打ち合わせメモ」）。ファイル名・ディレクトリ名そのものを表示名にしない</li>
+</ul>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">更新タイミング</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>新規ファイル・ディレクトリを追加したら <strong>必ず該当階層の index.html を更新</strong></li>
+<li>削除した場合も同様に index.html から除外</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">レビュー観点</h2>
+<p class="text-sm mb-4 leading-relaxed">ファイルを作成・更新した際は以下を確認：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>ブラウザで開いて表示崩れがないか（Tailwind が読まれているか）</li>
+<li>リンク切れがないか（<code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;a href="..."&gt;</code> のパスが正しいか）</li>
+<li>内容が記録ルール（<code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/memo.md</code>）に沿っているか（backlog ＝ 残存課題、decisions ＝ 確定事項）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">例外</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>AI内部処理のメモは Markdown のまま</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/*.md</code>、<code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code>、<code class="bg-gray-100 px-1 rounded text-sm font-mono">.claude/commands/*.md</code>）</li>
+<li>ルール対象は <strong>人間が見る記録ファイル</strong> に限る</li>
+</ul>
+</div>
+</body>
+</html>

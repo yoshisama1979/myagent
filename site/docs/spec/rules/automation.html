@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>自動化・システム開発の安全ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/automation.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">自動化・システム開発の安全ルール</h1>
+<p class="text-sm mb-4 leading-relaxed">スクリプト（bash/python）・定期実行（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>・cron）・外部送信（Slack/Chatwork/メール）・<br>
+API 連携（hana-tools 等）を <strong>作る・動かす</strong> ときに従うルール。</p>
+<p class="text-sm mb-4 leading-relaxed">これまでの myagent は「HTML 記録・ドキュメント生成」が中心だったが、<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/</code> のツールや<br>
+定期通知のように <strong>実際に動いて外部へ作用するシステム</strong> を作る場面が出てきた。<br>
+記録物と違い、自動化は <strong>誤爆・スパム・秘密漏洩・暴走</strong> という固有のリスクを持つ。<br>
+このファイルはそのリスクを抑えるための作法を定める。</p>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">土台は CLAUDE.md の行動指針（結論ファースト／確認してから動く／セキュリティ意識／一手前で言う）。<br>
+websystem の開発ルール（クリティカル判断・秘密情報・安全装置）を myagent の実態に翻訳したもの。<br>
+コミット・デプロイの規律は <a href="development.html" class="text-blue-600 hover:underline">development.md</a> を併せて参照。</div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">0. 適用範囲</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">対象</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">例</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">スクリプト</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/*.sh</code>、<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/*.py</code>、ワンライナーでも繰り返し使うもの</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">定期実行</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>、cron、スケジュール起動するジョブ</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">外部送信</td><td class="px-3 py-2 border border-gray-200 align-top">Slack / Chatwork / メール / LINE 等への通知</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">外部 API</td><td class="px-3 py-2 border border-gray-200 align-top">hana-tools API（読み取り・<strong>書き込み</strong>）、その他 SaaS API</td></tr></tbody></table></div>
+<p class="text-sm mb-4 leading-relaxed">単発の読み取り（<code class="bg-gray-100 px-1 rounded text-sm font-mono">curl</code> で1回確認する等）は軽量に扱ってよい。<br>
+<strong>繰り返す・書き込む・外に送る</strong> ものほど、本ルールを厳格に適用する。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. 着手前に確定する（確認してから動く）</h2>
+<p class="text-sm mb-4 leading-relaxed">自動化は「動き続ける」ので、曖昧なまま作ると曖昧なまま暴走する。<strong>着手前に次を確定</strong>する。<br>
+不明なら推測で埋めず、選択肢形式で社長に確認する。</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">確定する項目</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">例</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">目的（何のために）</td><td class="px-3 py-2 border border-gray-200 align-top">ToDo の取りこぼし防止 / サイト死活監視</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">トリガー・頻度</td><td class="px-3 py-2 border border-gray-200 align-top">毎朝1回 / 5分おき / 手動実行のみ</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">送信先・宛先</td><td class="px-3 py-2 border border-gray-200 align-top">どの Slack チャンネルか、誰に届くか</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">停止条件</td><td class="px-3 py-2 border border-gray-200 align-top">いつ止めるか、どうなったら止めるか</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">失敗時の挙動</td><td class="px-3 py-2 border border-gray-200 align-top">黙って次へ / エラーを通知 / 止める</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">影響範囲</td><td class="px-3 py-2 border border-gray-200 align-top">書き込み先・上書き対象・課金が発生するか</td></tr></tbody></table></div>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>権限非依存で最適解を出す</strong>：自分が直接できる手段に縮めず、本来あるべき方法（ツール化・API連携・社長の手作業）も含めて最善を提示する。</li>
+<li><strong>技術アドバイザーとして</strong>：社長の指示をそのまま実装せず、より安全・確実な案があれば理由付きで推奨する（最終判断は社長）。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2. 秘密情報の扱い</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">ルール</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">中身</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> に集約</td><td class="px-3 py-2 border border-gray-200 align-top">API トークン・Webhook URL・パスワード等は <code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code>（gitignore 済み）に置く</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">ハードコード禁止</td><td class="px-3 py-2 border border-gray-200 align-top">スクリプト本体・HTML・コミットに秘密値を直書きしない</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env.example</code> に枠だけ</td><td class="px-3 py-2 border border-gray-200 align-top">新しい秘密情報を足したら、プレースホルダだけ <code class="bg-gray-100 px-1 rounded text-sm font-mono">.env.example</code> に追記する</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">出力に出さない</td><td class="px-3 py-2 border border-gray-200 align-top">ログ・通知本文・コミットメッセージ・エラー出力に秘密値を混ぜない（特に <code class="bg-gray-100 px-1 rounded text-sm font-mono">set -x</code> やフルURL の出力に注意）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">安全に読む</td><td class="px-3 py-2 border border-gray-200 align-top">スクリプトで <code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> を使うときは <strong>全体を <code class="bg-gray-100 px-1 rounded text-sm font-mono">source</code> せず、必要なキーだけ抽出</strong>する（<code class="bg-gray-100 px-1 rounded text-sm font-mono">source</code> は任意コード実行・変数汚染の温床）。<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/slack.sh</code> の <code class="bg-gray-100 px-1 rounded text-sm font-mono">get_env_value</code> を参考にする</td></tr></tbody></table></div>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> の実値は社長が設定する。AI は <strong>実値を読まない・表示しない・コミットしない</strong>。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">通知本文に載せてよい情報の分類</h3>
+<p class="text-sm mb-4 leading-relaxed">「秘密情報を漏らさない」だけでは足りない。チェック結果には顧客名・取引情報・個人情報・APIレスポンス断片が混ざりうる。<strong>Slack 等の外部チャンネルに送る本文は、以下を原則とする</strong>：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>送ってよい</strong>：件数・状態（OK/NG）・対象IDの一部・社内システムへの参照リンク・基準時刻</li>
+<li><strong>送らない</strong>：顧客名や個人情報そのもの・認証情報の断片・APIレスポンス本文・機密データの中身</li>
+<li>詳細が必要なときは <strong>本文を送らず、社内システム（hana-tools 等）側で参照させる</strong> 導線にする</li>
+<li>新しい通知を作るときは「この情報をそのチャンネルの全員が見てよいか」を必ず確認する</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">3. 外部送信・破壊的操作は「必ず確認 / 合意してから」</h2>
+<p class="text-sm mb-4 leading-relaxed">以下に該当する操作は、<strong>自動で勝手に実行しない</strong>。実行前に社長へ状況・選択肢・推奨を提示して合意を取る<br>
+（websystem autopilot の「クリティカル判断＝必ず止まる」を myagent 用に翻訳）。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">必ず止まるリスト</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>外部送信</strong>：Slack / Chatwork / メール / LINE 等への通知送信（テスト送信を除く初回稼働）</li>
+<li><strong>外部書き込み</strong>：hana-tools への登録・更新（<code class="bg-gray-100 px-1 rounded text-sm font-mono">create-todo</code> 等）、その他 API への書き込み</li>
+<li><strong>破壊的操作</strong>：ファイル/ディレクトリの大量削除・上書き、<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/</code> 配下の改変</li>
+<li><strong>本番反映・デプロイ</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> の公開・Nginx 設定変更・サーバ反映</li>
+<li><strong>課金リクエスト</strong>：有料 API の大量呼び出し</li>
+<li><strong>クライアント環境への接続・変更</strong></li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">自動ループから送信する場合（最重要）</h3>
+<p class="text-sm mb-4 leading-relaxed">定期実行で外部送信する仕組みは、誤爆すると <strong>繰り返しスパムする</strong>。次の順で進める：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>まず手動で1通テスト送信</strong> → 内容・宛先を社長と目視確認</li>
+<li><strong>頻度・宛先・本文フォーマットを明示合意</strong></li>
+<li><strong>重複送信防止と停止条件を実装</strong>（§4）してから</li>
+<li>はじめて <code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>・cron へスケジュール化する</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">「とりあえず回す」は禁止。<strong>小さく送って確認 → 合意 → 自動化</strong> の順を必ず守る。</p>
+<h4 class="text-base font-semibold mb-2 mt-4">通知先の取り違え防止（Webhook URL＝送信先権限）</h4>
+<p class="text-sm mb-4 leading-relaxed">Incoming Webhook は <strong>URL 自体が送信先の権限</strong>。開発用/本番用・社内用/外部共有チャンネルを取り違えると情報漏洩に直結する。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> に送信先を識別する <strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">SLACK_DESTINATION_LABEL</code></strong> を併せて持たせ、<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/slack.sh</code> は成功時・dry-run 時にラベルを表示する</li>
+<li>環境が分かれる場合は <strong>環境ごとに Webhook を分け</strong>、どの URL がどのチャンネルかを記録する</li>
+<li>本番の自動送信を開始する前に、<strong>dry-run で送信先ラベルを確認</strong>してから回す</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4. 自動化スクリプトの作法（確実性）</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">bash</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>先頭に <code class="bg-gray-100 px-1 rounded text-sm font-mono">set -euo pipefail</code>（未定義変数・パイプ失敗を検知）</li>
+<li>成否は <strong>終了コード</strong>で表す（成功 0 / 失敗 非0）。エラーは標準エラー(<code class="bg-gray-100 px-1 rounded text-sm font-mono">&gt;&amp;2</code>)へ</li>
+<li>必須の前提（<code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> の値・引数）が無ければ <strong>明示エラーで即終了</strong>（黙って続行しない）</li>
+<li>外部呼び出しは <strong>タイムアウト</strong>を付ける（ハング防止）</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">信頼性の作法</h3>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">作法</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">なぜ</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>冪等性</strong></td><td class="px-3 py-2 border border-gray-200 align-top">同じ入力で何度実行しても安全な結果にする（二重登録・多重通知を防ぐ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>dry-run 対応</strong></td><td class="px-3 py-2 border border-gray-200 align-top">送信・書き込み系は「送らずに内容だけ表示」モードを用意し、検証に使う</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>重複送信防止</strong></td><td class="px-3 py-2 border border-gray-200 align-top">「前回と同じ状態なら送らない」等の状態判定を持たせる（ループのスパム防止）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>レート制限</strong></td><td class="px-3 py-2 border border-gray-200 align-top">連続送信に上限・間隔を設ける</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>二重起動防止</strong></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">flock</code> 等でロックし、前回実行が終わっていなければ起動しない（cron と <code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code> の重複・前回の長時間化による多重送信/多重書き込みを防ぐ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>タイムゾーン</strong></td><td class="px-3 py-2 border border-gray-200 align-top">基準を <strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">Asia/Tokyo</code></strong> に固定（サーバTZ・cronのTZに依存しない）。通知本文には基準時刻を明示する</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>ログを残す</strong></td><td class="px-3 py-2 border border-gray-200 align-top">いつ・何を・成否を記録。<strong>保存場所・ローテーション・保存期間・マスク対象</strong>を決める（ログが機密の集積場所にならないよう、通知本文とログ本文を分け、秘密値はマスク）。cron 実行なら stdout/stderr の配送先も決める</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>キルスイッチ</strong></td><td class="px-3 py-2 border border-gray-200 align-top">プロジェクトルートに <code class="bg-gray-100 px-1 rounded text-sm font-mono">STOP</code> 系ファイルがあれば動かない等、止める手段を用意</td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">既存資産の踏襲</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>新規スクリプトは <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/</code> に置き、<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/README.md</code> に1行追記する</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> 読込・<code class="bg-gray-100 px-1 rounded text-sm font-mono">curl</code> の組み立て・JSON エスケープは <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hana-api.sh</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/slack.sh</code> のパターンに合わせる</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">5. 小さく作って検証してから回す</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>手動単発実行で検証</strong> → 出力を社長と確認 → それから <code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>・cron へ載せる</li>
+<li>ループ化する前に「暴走しない設計」を確認：<strong>最大回数・実行間隔・停止条件</strong>が決まっているか</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code> のセルフペース（間隔省略）は便利だが、<strong>外部送信を伴うものは間隔・停止条件を明示</strong>してから使う</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">6. 監視・定期通知ジョブの死活（サイレント故障対策）</h2>
+<p class="text-sm mb-4 leading-relaxed">定期チェックは「異常を通知する」だけだと、<strong>ジョブ自体が止まったことに気づけない</strong>。<br>
+スクリプト停止・cron 未実行・Webhook 失効・ネットワーク断などの <strong>サイレント故障</strong> に備える。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>ハートビート / 最終成功時刻の記録</strong>：実行成功のたびに「最終成功時刻」を残す（ファイル等）</li>
+<li><strong>更新が途絶えたら別経路でアラート</strong>：一定時間「最終成功」が更新されない場合に気づける仕組みを用意（社長への別チャンネル通知など）</li>
+<li><strong>送信失敗の可視化</strong>：Slack 送信自体が失敗したときに、その事実をどこに残すか（ログ・別経路）を決めておく</li>
+<li>「異常時だけ通知」より「<strong>正常も含め定期的に生存を示す</strong>」方が、止まったことに気づける</li>
+</ul>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">いきなり完全な死活監視を作る必要はない。まずは最低限「最終成功時刻を残す」から始め、必要に応じて強化する。</div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">7. コミット・デプロイの規律</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>コミット済みのものだけサーバへ反映、ステージング後に <code class="bg-gray-100 px-1 rounded text-sm font-mono">git diff --staged</code> で確認 → 詳細は <a href="development.html" class="text-blue-600 hover:underline">development.md</a></li>
+<li>秘密情報・一時ファイル・自動生成物をコミットに含めない</li>
+<li>1コミット1トピック。メッセージは「なぜ」を書く</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">8. 自己チェック（作る前・回す前に確認）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>[ ] 目的・トリガー・頻度・送信先・停止条件・失敗時挙動を確定したか？（曖昧なら §1 に戻る）</li>
+<li>[ ] 秘密情報は <code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> 集約・ハードコードなし・出力に漏れなしか？ <code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> は全体 source せず必要キーだけ抽出したか？（§2）</li>
+<li>[ ] 通知本文の情報分類は適切か？（顧客名・個人情報・機密データの中身を外部チャンネルに送っていないか）（§2）</li>
+<li>[ ] 外部送信／書き込み／破壊的操作を、社長合意なしに自動実行していないか？（§3）</li>
+<li>[ ] 自動ループ送信は「手動テスト → 合意 → 重複防止実装 → 自動化」の順か？ 送信先ラベルを確認したか？（§3）</li>
+<li>[ ] スクリプトは <code class="bg-gray-100 px-1 rounded text-sm font-mono">set -euo pipefail</code>・終了コード・エラー処理・タイムアウトを備えるか？（§4）</li>
+<li>[ ] 冪等性・重複送信防止・二重起動防止・タイムゾーン・ログ・キルスイッチを検討したか？（§4）</li>
+<li>[ ] 監視・定期通知ジョブのサイレント故障対策（最終成功時刻の記録等）を検討したか？（§6）</li>
+<li>[ ] 手動単発で検証してからスケジュール化したか？（§5）</li>
+<li>[ ] コミット規律（staged 確認・秘密混入なし）を守ったか？（§7）</li>
+<li>[ ] 編集ファイルを回答末尾に markdown リンクで一覧表示したか？</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">すべて ✅ なら次へ、1つでも ❌ なら見直し。</p>
+</div>
+</body>
+</html>

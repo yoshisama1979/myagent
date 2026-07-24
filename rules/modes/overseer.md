@@ -36,7 +36,7 @@
 | Write/Edit: `site/overseer/index.html`（統括レポート掲示板の追記） | ✅ 可（AIの担当・最新サイクルを上に積む） |
 | **Slack の他チャンネル・クライアント宛・Chatwork/メール等への送信** | ❌ 合意前は不可（automation.md §3。許可は社長専用チャンネルへの報告/返信のみ） |
 | Write/Edit: `SYSTEM.md`（地図の保守） | **⚠️ 社長合意後のみ**（構造変更の反映）。**無人実行では直接編集しない＝更新案を出すだけ**。反映は社長承認後に**有人セッション**で（下記フックで技術的にも強制） |
-| **他モードのルール（.claude/rules/*・rules/*）・CLAUDE.md・コマンド・settings の編集** | **⚠️ 社長合意後のみ**（記録と反映の分離。提案→合意→反映）。**無人実行では直接編集不可**（下記フックが拒否） |
+| **他モードのルール（rules/modes/*・rules/*）・CLAUDE.md・コマンド・settings の編集** | **⚠️ 社長合意後のみ**（記録と反映の分離。提案→合意→反映）。**無人実行では直接編集不可**（下記フックが拒否） |
 | **本番サイト・本番システムの改変** | ❌ 不可（草案は `site/drafts/`） |
 | **外部送信（Slack/Chatwork/メール）・API書き込み（ToDo登録等）** | ❌ 合意前は不可（automation.md §3） |
 | `bin/` への新規ツール作成 | **⚠️ 提案ベース**。作るなら automation.md 準拠の**読み取り専用**＋合意。小さく作って手動検証 |
@@ -90,7 +90,7 @@ SYSTEM.md「健康シグナル候補」を、**事実で**確認する。LLM の
 
 ### Step 4: 地図の保守（必要なら）
 - 構造が変わっていたら、SYSTEM.md の**更新案**を提示（具体的な差分を `O-NNN` として掲示板に出す＋Slackで承認を仰ぐ）。**無人実行では SYSTEM.md を直接編集しない**（hp-loop が本番を直接改変せず提案に留めるのと同型）。反映は**社長承認後に有人セッション**で行う。
-- これは技術的にも強制される：無人 cron は `MYAGENT_UNATTENDED=1` で起動し、PreToolUse フック [`bin/guard-unattended-edits.py`](../../bin/guard-unattended-edits.py) が無人時のゲート対象ファイル（`SYSTEM.md`・`CLAUDE.md`・`.claude/rules/**`・`rules/**`・`.claude/commands/**`・`settings`）への Edit/Write を拒否する（2026-06-26、統括ループが acceptEdits で地図を社長ゲート越しに自動編集した事例の再発防止）。
+- これは技術的にも強制される：無人 cron は `MYAGENT_UNATTENDED=1` で起動し、PreToolUse フック [`bin/guard-unattended-edits.py`](../../bin/guard-unattended-edits.py) が無人時のゲート対象ファイル（`SYSTEM.md`・`CLAUDE.md`・`rules/modes/**`・`rules/**`・`.claude/commands/**`・`settings`）への Edit/Write を拒否する（2026-06-26、統括ループが acceptEdits で地図を社長ゲート越しに自動編集した事例の再発防止）。
 
 ### Step 5: 報告
 - 社長に1〜3行で要約：チェック範囲・最重要の綻び1件・提案数（🔴🟡🟢内訳）・未回答/合意待ち件数。

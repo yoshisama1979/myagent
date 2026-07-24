@@ -4,8 +4,8 @@
 
 ## 必読ファイル（順番に読む）
 
-1. `.claude/rules/memo-triage.md` — このモードの詳細ルール（制約・手順・会話の作法と役割の境界・自己チェック）
-2. `.claude/rules/memo.md` — Memo モードの点検観点（流用：5W1H・矛盾・前提不足の見方／推測で補完しない原則）
+1. `rules/modes/memo-triage.md` — このモードの詳細ルール（制約・手順・会話の作法と役割の境界・自己チェック）
+2. `rules/modes/memo.md` — Memo モードの点検観点（流用：5W1H・矛盾・前提不足の見方／推測で補完しない原則）
 
 ## 実行
 
@@ -23,4 +23,4 @@
 - **`stock` まで（`done` しない）**：点検済みは `memo-stock/` へ退避。`done`（cur/ へ）は夜の intake が整理後に行う
 - **triage は untrack しない**：追跡解除は夜の intake が当日メモスレッドをまとめて実施（threads.json は1日有界）。日中に外すと会話の続きを取りこぼす
 - 実装・コード変更・他ファイル編集・外部送信・git 操作は **禁止**（ロール越境しない）
-- 詳細・自己チェックは `.claude/rules/memo-triage.md` を厳守
+- 詳細・自己チェックは `rules/modes/memo-triage.md` を厳守

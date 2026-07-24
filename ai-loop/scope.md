@@ -25,7 +25,7 @@
 | `site/drafts/` | 一時的な草案、変更頻度高くレビュー意義薄い |
 | `.git/`, `.env`, `.claude/settings.local.json` | 機密・Git内部 |
 | `ai-loop/` | 本基盤自体（メタループ防止） |
-| `.claude/commands/*`, `.claude/rules/*` | 既存スキル・ルール（必要時のみ、別途指示で対象に） |
+| `.claude/commands/*`, `rules/modes/*` | 既存スキル・ルール（必要時のみ、別途指示で対象に） |
 
 ## 観点（何を見るか）
 

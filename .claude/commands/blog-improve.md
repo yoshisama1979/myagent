@@ -8,9 +8,9 @@
 2. 未登録なら対応に入らず報告して終了。
 
 ## 必読（順番に）
-1. `.claude/rules/blog-improve.md` — 本モードの詳細（公開境界＝既存記事は読むだけ・改善版は下書き複製・手順・自己チェック）
-2. `.claude/rules/blog-write.md` — 読みやすさ・執筆品質（表組み・無機質禁止）を流用
-3. `.claude/rules/hp-improve.md` — 評価観点を流用
+1. `rules/modes/blog-improve.md` — 本モードの詳細（公開境界＝既存記事は読むだけ・改善版は下書き複製・手順・自己チェック）
+2. `rules/modes/blog-write.md` — 読みやすさ・執筆品質（表組み・無機質禁止）を流用
+3. `rules/modes/hp-improve.md` — 評価観点を流用
 4. `rules/automation.md` — 安全ルール（衝突したら最優先）
 
 ## 絶対原則（厳守）
@@ -21,7 +21,7 @@
 - `from-president.md`・blog-loop 掲示板は編集しない。git commit/push・外部送信はしない。
 
 ## 実行
-1. `.claude/rules/blog-improve.md` を読み、手順 Step 0〜6 を実行。
+1. `rules/modes/blog-improve.md` を読み、手順 Step 0〜6 を実行。
 2. 対象 `B-NNN` の元記事 post id を確定 → `get` で読む → 改善版を作る → 「下書き複製」として WP に反映 → improve-log 記録 → 報告。
 3. 対象・事実が未確定なら対応に入らず保留を報告して終了。
 4. 編集ファイルは回答末尾に markdown リンクで一覧表示する。

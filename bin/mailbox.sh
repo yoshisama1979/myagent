@@ -30,7 +30,7 @@
 # 【スライス3以降・現在サーバが 501】
 #   bin/mailbox.sh approve <id>      社長(admin)だけ hold/ → new/
 #
-# 規約・書式は .claude/rules/mailbox.md を参照。
+# 規約・書式は rules/modes/mailbox.md を参照。
 
 set -euo pipefail
 
@@ -164,9 +164,12 @@ ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 # ブログ解析ループ blog-loop-<client> も同様（実装担当への配信＋fact質問の送信者）。VPS常駐＝local-send。
 SENDERS    = {"overseer", "hanasaka-main",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
+              "hp-loop-rally", "hp-loop-konjaku",
               "blog-loop-ycom"}
 RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
+              "rally-dev", "konjaku-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
+              "hp-loop-rally", "hp-loop-konjaku",
               "blog-loop-ycom"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"

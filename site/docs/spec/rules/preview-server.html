@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プレビューサーバ運用ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-07-24 12:42）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/preview-server.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">プレビューサーバ運用ルール</h1>
+<p class="text-sm mb-4 leading-relaxed">VPS上のNginxとTailscaleを使った、社内専用のブラウザ閲覧環境の構成と運用ルール。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">構成概要</h2>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>[プロジェクトルート]
+/home/vpsuser/projects/myagent/
+├── site/          ← Nginxのドキュメントルート（公開対象）
+└── rules/, bin/, data/, CLAUDE.md, ... ← 公開しない
+
+[Nginx]
+listen 100.123.104.87:80
+↑ Tailscale IPのみ待ち受け（公開IPからは到達不可）
+
+[ブラウザ]
+http://100.123.104.87/&lt;相対パス&gt;
+↑ Tailscale ONのデバイスのみアクセス可</code></pre>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>VPS</strong>: x210-131-217-220（Ubuntu）</li>
+<li><strong>Tailscale IP</strong>: <code class="bg-gray-100 px-1 rounded text-sm font-mono">100.123.104.87</code></li>
+<li><strong>Webサーバ</strong>: Nginx</li>
+<li><strong>ドキュメントルート</strong>: <code class="bg-gray-100 px-1 rounded text-sm font-mono">/home/vpsuser/projects/myagent/site/</code></li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">ディレクトリ構成</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">パス</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">用途</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/index.html</code></td><td class="px-3 py-2 border border-gray-200 align-top">サイトトップ（全プロジェクトへの入口）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/notes.html</code></td><td class="px-3 py-2 border border-gray-200 align-top">プロジェクト横断メモ</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/business/</code></td><td class="px-3 py-2 border border-gray-200 align-top">経営トラッカー（戦略・KPI・レビュー・スキルシート）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/</code></td><td class="px-3 py-2 border border-gray-200 align-top">クライアント・プロジェクトの記録（<a href="memo.html" class="text-blue-600 hover:underline">memo.md</a> 準拠）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/docs/</code></td><td class="px-3 py-2 border border-gray-200 align-top">一般ドキュメント</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/skill-sheets/</code></td><td class="px-3 py-2 border border-gray-200 align-top">スキルシート関連の素材</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/</code></td><td class="px-3 py-2 border border-gray-200 align-top">草案・LP案・モック・検証用HTML</td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">site/ 配下に置かないもの</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code>, <code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/</code>：AI協働用ルール（AI内部参照）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/</code>：開発用スクリプト</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/</code>：データソース（一部機密、<code class="bg-gray-100 px-1 rounded text-sm font-mono">.gitignore</code> 対象）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code>、<code class="bg-gray-100 px-1 rounded text-sm font-mono">.git/</code>：機密・Git内部</li>
+<li>→ これらは <strong>Nginxの公開対象外</strong> なのでブラウザでは見えない</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">アクセス方法</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">自分・社内スタッフが見るとき</h3>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li>Tailscale が ON になっていることを確認</li>
+<li>ブラウザで <code class="bg-gray-100 px-1 rounded text-sm font-mono">http://100.123.104.87/</code> にアクセス</li>
+<li>サイトトップから目的のページへ</li>
+</ol>
+<h3 class="text-lg font-semibold mb-3 mt-6">URL例</h3>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>http://100.123.104.87/                                              ← トップ
+http://100.123.104.87/business/kpi.html                             ← 経営KPI
+http://100.123.104.87/notes.html                                    ← 横断メモ
+http://100.123.104.87/clients/hanasaka/projects/hana-tool/backlog.html ← プロジェクト課題
+http://100.123.104.87/drafts/                                       ← 草案一覧</code></pre>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">クライアント共有の運用方針</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>「ファイルは動かさない、URLは固定、Nginx設定で公開可否を切り替える」</strong> が基本方針。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">フェーズ1：自分でドラフト作成</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/&lt;案件名&gt;/</code> 配下に作成（例：<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/yamada-corp/lp.html</code>）</li>
+<li>アクセス：Tailscale経由のみ</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">フェーズ2：クライアントレビュー（Basic認証付き公開）</h3>
+<p class="text-sm mb-4 leading-relaxed"><strong>前提条件</strong>：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>独自ドメイン取得（例：<code class="bg-gray-100 px-1 rounded text-sm font-mono">preview.hanasaka.co.jp</code>）</li>
+<li>Let's Encrypt で HTTPS化（HTTP上のBasic認証はパスワード平文流出のため必須）</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed"><strong>Nginx設定例（追加するserverブロック）</strong>：</p>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>server {
+    listen 公開IP:443 ssl;
+    server_name preview.hanasaka.co.jp;
+
+    # 既定はすべて遮断
+    location / { return 403; }
+
+    # 特定の案件ディレクトリのみ Basic認証で公開
+    location /drafts/yamada-corp/ {
+        root /home/vpsuser/projects/myagent/site;
+        auth_basic "山田商事レビュー";
+        auth_basic_user_file /etc/nginx/yamada.htpasswd;
+    }
+}</code></pre>
+<p class="text-sm mb-4 leading-relaxed"><strong>運用フロー</strong>：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li>クライアントに <code class="bg-gray-100 px-1 rounded text-sm font-mono">https://preview.hanasaka.co.jp/drafts/yamada-corp/lp.html</code> + ID/PW を共有</li>
+<li>修正は元ファイルを更新するだけ（コピーは作らない）</li>
+<li>レビュー終了 → Nginxのlocationブロックを削除して閉鎖</li>
+</ol>
+<h3 class="text-lg font-semibold mb-3 mt-6">フェーズ3：完全公開（公開LP・公開ポートフォリオ）</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>認証を外したlocationブロックで公開</li>
+<li>公開対象は機密性のないものに限定</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">セキュリティ設計</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">Nginx 設定の要点</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">listen 100.123.104.87:80</code> で Tailscale IP のみ待ち受け（公開IP では一切待ち受けない）</li>
+<li>公開IPからのHTTPアクセスはTCPレベルで届かない</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">権限設定</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">/home/vpsuser</code> は <code class="bg-gray-100 px-1 rounded text-sm font-mono">drwxr-x--x</code>（others に traverse のみ、list は不可）</li>
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> 配下は <code class="bg-gray-100 px-1 rounded text-sm font-mono">drwxrwxr-x</code>（Nginxが読める）</li>
+<li>このVPSは単一ユーザー（vpsuser）のため、<code class="bg-gray-100 px-1 rounded text-sm font-mono">o+x</code> でも実害なし</li>
+<li>将来複数ユーザーを作成する場合は ACL 方式（<code class="bg-gray-100 px-1 rounded text-sm font-mono">setfacl -m u:www-data:x</code>）への移行を検討</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Tailscale の利点</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>各デバイスに固定の Tailscale IP（100.x.x.x）が割り当てられる</li>
+<li>実IP（ISP/キャリアの動的IP）が変わってもアクセス継続</li>
+<li>NAT越えを Tailscale が自動処理（ポート開放・ルーター設定不要）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">運用上の注意</h2>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> 配下のファイルは原則 Git 管理する</strong></li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>社内ドラフト・社則・提案書なども含めて、Git履歴に残せる内容に留める</li>
+<li>パスワード・APIキー・個人情報など、<strong>Git に乗せたくない情報は <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> に置かない</strong>（別途 <code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> や Git管理外のディレクトリに置く）</li>
+</ul>
+<li><strong>公開対象を増やしたい場合は、まず <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> 配下に置く</strong></li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> 外に置いたファイルはNginxから見えない（CLAUDE.mdやrules/などは意図的に外している）</li>
+</ul>
+<li><strong>Tailscale のログイン状態を定期的に確認</strong></li>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>スマホアプリは OFF になっていることがある</li>
+</ul>
+<li><strong>VPS の Nginx ログ</strong>: <code class="bg-gray-100 px-1 rounded text-sm font-mono">/var/log/nginx/myagent-preview.access.log</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">.error.log</code></li>
+</ol>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">トラブルシューティング</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">症状</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">原因</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">対処</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">ブラウザがタイムアウト</td><td class="px-3 py-2 border border-gray-200 align-top">Tailscale OFF</td><td class="px-3 py-2 border border-gray-200 align-top">デバイスの Tailscale を ON にする</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">403 Forbidden</td><td class="px-3 py-2 border border-gray-200 align-top">パーミッション不足</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/home/vpsuser</code> の <code class="bg-gray-100 px-1 rounded text-sm font-mono">o+x</code> を確認</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">404 Not Found</td><td class="px-3 py-2 border border-gray-200 align-top">パス間違い／ファイル未配置</td><td class="px-3 py-2 border border-gray-200 align-top">ディレクトリ一覧（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/</code>）で確認</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">Nginx 起動失敗</td><td class="px-3 py-2 border border-gray-200 align-top">設定文法ミス</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">sudo nginx -t</code> で確認</td></tr></tbody></table></div>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">関連ファイル</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>Nginx設定: <code class="bg-gray-100 px-1 rounded text-sm font-mono">/etc/nginx/sites-available/myagent-preview</code></li>
+<li>ドキュメントルート: <code class="bg-gray-100 px-1 rounded text-sm font-mono">/home/vpsuser/projects/myagent/site/</code></li>
+<li>アクセスログ: <code class="bg-gray-100 px-1 rounded text-sm font-mono">/var/log/nginx/myagent-preview.access.log</code></li>
+<li>エラーログ: <code class="bg-gray-100 px-1 rounded text-sm font-mono">/var/log/nginx/myagent-preview.error.log</code></li>
+</ul>
+</div>
+</body>
+</html>
