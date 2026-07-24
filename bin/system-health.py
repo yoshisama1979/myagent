@@ -100,6 +100,43 @@ def tick_failures(days=7):
             "heartbeat_missing": not os.path.exists(hb), "heartbeat_age_min": hb_age_min,
             "last_control_line": last_ts.isoformat() if last_ts else None}
 
+FAILLOG = os.path.join(ROOT, "data/overseer/failures.jsonl")
+
+def failure_counts(days=7):
+    """agent-tick.sh の fail() が追記する failures.jsonl から正確な7日集計を得る
+    （tick.log は1MB切り詰めで約1.5日分しか残らないため＝Codex指摘の恒久対応）。
+    ファイルが無い・読めない場合は None（呼び元が tick.log 計数へfallback）。"""
+    if not os.path.exists(FAILLOG):
+        return None
+    cutoff = datetime.datetime.now() - datetime.timedelta(days=days)
+    n_timeout = n_err = broken = 0
+    oldest = None
+    try:
+        with open(FAILLOG, encoding="utf-8", errors="replace") as fh:
+            for ln in fh:
+                try:
+                    ev = json.loads(ln)
+                    ts = datetime.datetime.fromisoformat(ev["ts"]).replace(tzinfo=None)
+                    tag = str(ev.get("fail", ""))
+                except Exception:
+                    broken += 1
+                    continue
+                if oldest is None or ts < oldest:
+                    oldest = ts
+                if ts < cutoff:
+                    continue
+                if tag.startswith("__"):
+                    continue   # 開始マーカー等＝期間の起点にだけ使い件数に数えない
+                if "-timeout" in tag:
+                    n_timeout += 1
+                else:
+                    n_err += 1
+    except OSError:
+        return None
+    covered = round((datetime.datetime.now() - oldest).total_seconds() / 86400, 1) if oldest else 0.0
+    return {"days": days, "covered_days": min(covered, float(days)), "truncated": False,
+            "timeout": n_timeout, "err": n_err, "broken": broken, "source": "failures.jsonl"}
+
 # ── 4) 故障：mailbox 滞留 ───────────────────────────────────────────────
 def mailbox_backlog():
     out = {}
@@ -149,26 +186,30 @@ def load_prev(days_back=6):
         return None
     return best
 
-def rotate_log(keep_days=400):
-    """🟡2: jsonl の無期限成長を防ぐ（保持期間より古い行を落として書き戻す）。"""
-    if not os.path.exists(LOG):
+def rotate_jsonl(path, keep_days):
+    """jsonl の無期限成長を防ぐ（保持期間より古い行を落として書き戻す）。"""
+    if not os.path.exists(path):
         return
     cutoff = datetime.datetime.now() - datetime.timedelta(days=keep_days)
     kept = []
     try:
-        with open(LOG, encoding="utf-8", errors="replace") as fh:
+        with open(path, encoding="utf-8", errors="replace") as fh:
             for ln in fh:
                 try:
-                    if datetime.datetime.fromisoformat(json.loads(ln)["ts"]) >= cutoff:
+                    ts = datetime.datetime.fromisoformat(json.loads(ln)["ts"]).replace(tzinfo=None)
+                    if ts >= cutoff:
                         kept.append(ln)
                 except Exception:
                     kept.append(ln)   # 判定できない行は捨てない（履歴を消さない）
     except OSError:
         return
-    tmp = LOG + ".tmp"
+    tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as fh:
         fh.writelines(kept)
-    os.replace(tmp, LOG)
+    os.replace(tmp, path)
+
+def rotate_log(keep_days=400):
+    rotate_jsonl(LOG, keep_days)
 
 def main():
     no_log = "--no-log" in sys.argv
@@ -179,7 +220,18 @@ def main():
         b = size(path)
         if b is not None:
             states.append({"path": path, "bytes": b, "threshold": th, "source": src})
-    fails = tick_failures()
+    tick = tick_failures()
+    fc = failure_counts()
+    if fc is not None and not tick.get("error"):
+        # 正確な7日集計（failures.jsonl）＋ tick.log 由来の heartbeat/alert を合成
+        fails = dict(tick)
+        fails.update({k: fc[k] for k in ("days", "covered_days", "truncated", "timeout", "err")})
+        fails["fail_source"] = "failures.jsonl"
+        if fc.get("broken"):
+            fails["bad_ts"] = fails.get("bad_ts", 0) + fc["broken"]
+    else:
+        fails = tick
+        fails.setdefault("fail_source", "tick.log(fallback)")
     mbox = mailbox_backlog()
     snap = {"ts": now.isoformat(timespec="seconds"), "autoload": al,
             "states": [{"path": s["path"], "bytes": s["bytes"]} for s in states],
@@ -206,14 +258,14 @@ def main():
         warns.append(f"🚨 診断不能: {fails['error']}")
     else:
         cov, dys = fails.get("covered_days"), fails.get("days")
-        if fails.get("truncated"):
-            warns.append(f"tick.log の保持が {cov}日分しかない（{dys}日を要求）＝切り詰めで故障件数を取りこぼしている可能性（下の件数は{cov}日分）")
+        if fails.get("truncated") and fails.get("fail_source") != "failures.jsonl":
+            warns.append(f"tick.log の保持が {cov}日分しかない（{dys}日を要求・failures.jsonl 未生成＝故障ゼロが続くと未生成のまま）＝下の件数は{cov}日分")
         if fails.get("timeout"):
             warns.append(f"タイムアウト {fails['timeout']} 回（読めた{cov}日分）")
         if fails.get("err"):
             warns.append(f"異常終了 {fails['err']} 回（読めた{cov}日分）")
-        if fails.get("alert"):
-            warns.append(f"警報 {fails['alert']} 回（読めた{cov}日分）＝何かが社長に通知されている")
+        if fails.get("alert") and fails.get("fail_source") != "failures.jsonl":
+            warns.append(f"警報 {fails['alert']} 回（読めた{cov}日分）＝何かが社長に通知されている")   # jsonl経路では timeout/err が同じ事象を正確に拾うため二重警告しない
         if fails.get("bad_ts"):
             warns.append(f"tick.log に日付が壊れた行 {fails['bad_ts']} 件（ログ破損の疑い）")
         if fails.get("heartbeat_missing"):
@@ -268,6 +320,7 @@ def main():
         with open(LOG, "a", encoding="utf-8") as fh:
             fh.write(json.dumps(snap, ensure_ascii=False) + "\n")
         rotate_log()
+        rotate_jsonl(FAILLOG, keep_days=60)
 
 if __name__ == "__main__":
     main()
