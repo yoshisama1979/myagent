@@ -97,6 +97,10 @@ const TOP_KPIS = [
       <h3 class="font-bold text-emerald-700 mb-1 text-lg">🌳 goals.html — 目標ツリー</h3>
       <p class="text-sm text-gray-700">経営目標→カテゴリ目標→サブ目標の樹形図。各ノードに数値目標。</p>
     </a>
+    <a href="journey.html" class="block border-2 border-teal-500 bg-teal-50 rounded-lg p-5 hover:bg-teal-100 transition md:col-span-2">
+      <h3 class="font-bold text-teal-700 mb-1 text-lg">🏔 journey.html — 歩みの記録</h3>
+      <p class="text-sm text-gray-700">北極星に向かってどれだけ登ってきたかの振り返り。雛型誕生から50節目を before→after で。月初に経営パートナーが更新。</p>
+    </a>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

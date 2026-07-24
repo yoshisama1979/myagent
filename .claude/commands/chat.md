@@ -19,7 +19,7 @@ Slack は **社長からの入力窓口**、`/hp-loop` が **解析エンジン*
 
 1. `data/mailbox/new/` のうち `"to": "hanasaka-main"` の JSON — 社長が Slack で投げたメッセージ（＝今回 answer/溜める対象）
 2. 溜める判断のときは `site/hp-analysis/ycom/index.html` の「🔔 社長への質問」を見て、コメントが特定の `Q-NNN` への回答なら番号を頭につける
-3. 必要なら関連ファイルを Read で参照して、事実に基づいて答える（在処に迷ったら `AI-INDEX.md`）
+3. 必要なら関連ファイルを Read で参照して、事実に基づいて答える（在処に迷ったら `AI-INDEX.md`＝git外のローカル生成物・無ければ `python3 bin/build-ai-index.py`）
 
 ## 手順（1サイクル）
 

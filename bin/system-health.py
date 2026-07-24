@@ -40,6 +40,7 @@ def autoload():
 STATE_FILES = [
     # (path, 閾値bytes, 出典)   ★=出典なしの提案既定値
     ("data/partner/ledger.md",            70 * KB, "partner.md v0.3"),
+    ("data/partner/milestones.md",       500 * KB, "★提案既定値（cold store＝毎朝読まない追記専用台帳。超過時はローテでなく年度別ファイルへの追記先切替を提案・過去行の削除改変は不可）"),
     ("data/hp-improve/skill-kaizen.md",  100 * KB, "★提案既定値（archive 分離済みの共有台帳）"),
     ("site/notes.html",                  200 * KB, "★提案既定値"),
     ("site/overseer/index.html",          80 * KB, "hp-loop.md v0.11 と同型"),

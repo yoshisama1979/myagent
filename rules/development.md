@@ -25,7 +25,7 @@
 | ディレクトリ構成・置き場の追加変更 | [OVERVIEW.md](../OVERVIEW.md) |
 | モードの新設・役割/連携の変更（ループ・cron・mailbox 等） | [SYSTEM.md](../SYSTEM.md) ＋ 該当モードの `rules/modes/*.md`（version と変更履歴も上げる） |
 | AIの基本動作・出力先ルールの変更 | [CLAUDE.md](../CLAUDE.md)（核のみ・肉付けは参照ファイルへ） |
-| `site/` ページ・`data/` の追加 | [AI-INDEX.md](../AI-INDEX.md)（`python3 bin/build-ai-index.py` で再生成） |
+| `site/` ページ・`data/` の追加 | `AI-INDEX.md`（VPSローカル生成物・git外。無ければ `python3 bin/build-ai-index.py` で生成） |
 | クライアント案件の機能追加 | その案件の仕様書・記録（`site/clients/<client>/projects/<project>/` や spec.html 等） |
 
 - 更新は**機能追加と同じコミットに含める**（後でまとめて、はやらない＝忘れる）

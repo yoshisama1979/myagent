@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歩みの記録（Journey）— 株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .badge { display:inline-block; padding:1px 8px; border-radius:12px; font-size:0.7rem; font-weight:600; white-space:nowrap; }
+  .b-g0 { background:#d1fae5; color:#065f46; }
+  .b-np { background:#ccfbf1; color:#115e59; }
+  .b-g1 { background:#dbeafe; color:#1e40af; }
+  .b-g2 { background:#fef3c7; color:#92400e; }
+  .b-g3 { background:#ede9fe; color:#5b21b6; }
+  .b-free { background:#ffe4e6; color:#9f1239; }
+  .tl-item { border-left:2px solid #e5e7eb; }
+  .tl-item:hover { border-left-color:#10b981; background:#f9fafb; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">← 株式会社はなさか</a> &gt;
+    <a href="index.php" class="text-blue-600 hover:underline">ビジネスダッシュボード</a>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🏔 歩みの記録（Journey）</h1>
+  <p class="text-gray-600 mb-1">北極星（<a href="goals.html" class="text-blue-600 hover:underline">目標ツリー</a>＝FY2026 標準¥33M・ストック収益20%）に向かって、<strong>どれだけ登ってきたか</strong>を振り返るページ。</p>
+  <p class="text-sm text-gray-500 mb-6">日々の仕事は進んでいないように見える。しかし記録は嘘をつかない——<strong>2026-03-30 のエージェント雛型誕生から 116日（約4ヶ月）で 50 の節目</strong>。書き方は原則「〜できなかった会社が、〜できる会社になった」の before→after。毎月初に経営パートナーが更新する（源泉＝<code class="text-xs bg-gray-100 px-1 rounded">data/partner/milestones.md</code>）。</p>
+
+  <!-- この4ヶ月の総括 -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-bold mb-3">📜 この4ヶ月で、会社はこう変わった</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><span class="badge b-g0">G0 財務・ストック</span> 目標が無かった会社が、<strong>3段階の売上目標・ストック20%・月次の物差し（¥2.75M・実入金ベース）を持つ会社</strong>になった。ストックは感覚値→実額48契約・月¥837Kで可視化。</li>
+      <li><span class="badge b-np">新商品</span> 受託だけの会社が、<strong>自社商品を設計→原価実測→ダメなら出荷前に止める（1号保留）→次を決める（2号ウェブ解析）まで回せる会社</strong>になった。原価割れは対外に出る前に検知。</li>
+      <li><span class="badge b-g2">G2 受注・営業</span> 営業先が頭の中だった会社が、<strong>ターゲットマップ・面談成功・営業デッキ「送るだけ」まで下ごしらえされる会社</strong>になった。HPは思いつき改善→解析起点で起票から約1日で本番反映まで実証。</li>
+      <li><span class="badge b-g3">G3 社内基盤</span> AIが単発ツールだった会社が、<strong>無人ループ6サイト日次・ツール18本・Slackだけで会話できるエージェント群・自己点検の計測層まで持つ会社</strong>になった。</li>
+      <li><span class="badge b-free">解放</span> 社長が全部抱えていた会社が、<strong>採用1名＋初借入＋週1定例で「社長を開発から売りに戻す」布石を打った会社</strong>になった。</li>
+    </ul>
+  </div>
+
+  <!-- 北極星への申し送り -->
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 text-sm text-gray-700">
+    <strong>🔭 北極星への申し送り（レンズが見つけた欠け）</strong>：この4ヶ月で最も太い実績群＝新商品（秘書AI・ウェブ解析エージェント）は、目標ツリーに受け皿の枝が無い（G1はHANAチャット専用）。<strong>「新商品開発」枝の新設</strong>を月初の振り返りで提案する。※つながらない動きを捨てるのではなく、北極星側を育てる材料にする（レンズ≠フィルタ）。
+  </div>
+
+  <!-- タイムライン -->
+  <h2 class="text-xl font-bold mb-4">📅 タイムライン（50節目・古い順）</h2>
+
+  <h3 class="text-base font-bold text-gray-500 mt-6 mb-2">2026年3月〜4月 — 誕生</h3>
+  <div class="space-y-1">
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">03-30</span> <span class="badge b-g3">G3</span> AIとの協働環境が存在しなかった→エージェント雛型リポジトリが誕生し、会社の仕事をAIと一緒に進める「場」ができた</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">04-07</span> <span class="badge b-g3">G3</span> AIが単発の作業ツールだった→「社長の右腕・ビジネスパートナーAI」に再定義し、経営全域を任せられる役割設計になった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">04-10</span> <span class="badge b-g3">G3</span> 社内基幹システムのデータをAIが見られなかった→hana-tools API連携でToDo・案件・クライアント情報を直接読めるようになった</div>
+  </div>
+
+  <h3 class="text-base font-bold text-gray-500 mt-6 mb-2">2026年5月 — 経営方針の大転換と目標の確定</h3>
+  <div class="space-y-1">
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">05-08</span> <span class="badge b-g0">G0.2</span> 受託HP制作中心だった→<strong>経営方針を大転換</strong>：システム制作・運用メイン／ストック収益基盤の確立へ重心移動を確定</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">05-16</span> <span class="badge b-g3">G3</span> 記録が散在しAIの成果物を追えなかった→経営トラッカー（site/business/）で社長がブラウザで確認できる記録基盤ができた</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">05-24</span> <span class="badge b-g3">G3</span> 成果物はローカルでしか見られなかった→VPS+Nginx+Tailscaleのプレビューサーバでどこからでも確認できるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">05-26</span> <span class="badge b-g0">G0.1</span> FY2026の売上目標が無かった→<strong>3段階で確定</strong>：保守¥30M／標準¥33M／ストレッチ¥37M（FY2025実績 売上¥26.67Mを踏まえ設定）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">05-28</span> <span class="badge b-g3">G3</span> 経営数値の把握が手作業だった→Sheets API連携でストック収益を可視化・案件2,910件のダッシュボードが動くようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">05-29</span> <span class="badge b-g3">G3</span> AI協働ノウハウが本体に閉じていた→配布用ルールテンプレ claude-rules/ でクライアント開発環境へ横展開できるようになった</div>
+  </div>
+
+  <h3 class="text-base font-bold text-gray-500 mt-6 mb-2">2026年6月前半 — 数字とツールの武装</h3>
+  <div class="space-y-1">
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-01</span> <span class="badge b-g3">G3</span> 単独AIの判断だけで出していた→Codexセカンドオピニオン必須化で二つのAIのクロスレビュー体制ができた</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-05</span> <span class="badge b-g3">G3</span> AI対話はCLIに限られていた→Web UIアシスタントでブラウザから業務データを引けるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-07</span> <span class="badge b-g3">G3</span> AIが毎回リポジトリを手探りしていた→OVERVIEW.md＋AI-INDEX自動生成でAIが作業環境の地図を持てるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-07</span> <span class="badge b-g0">G0.2</span> ストック収益が感覚値だった→<strong>実額で可視化</strong>：48契約・月¥837,300／年¥10.05M（契約値では20%目標達成水準と判明）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-07</span> <span class="badge b-g0">G0.2</span> ストック積み増し目標 月+¥20万（年度末に固定費の約93%をストックで賄う）＋HANAチャットのプラン体系・既存客直販チャネルを確定</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-11</span> <span class="badge b-g3">G3</span> HP改善が思いつきベースだった→定期分析ループ /hp-loop＋監査ツールT-001で継続診断→改善提案の仕組みができた</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-12</span> <span class="badge b-g3">G3</span> SEO分析が推測頼みだった→GSC実データ連携（BigQuery）＋GA4連携でクエリ順位からCVまで実数で分析できるようになった</div>
+  </div>
+
+  <h3 class="text-base font-bold text-gray-500 mt-6 mb-2">2026年6月後半 — 無人化と実行の始まり</h3>
+  <div class="space-y-1">
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-18</span> <span class="badge b-g3">G3</span> 別マシンのエージェント同士に連絡手段がなかった→拠点横断メールボックスで非同期にやり取りできるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-18</span> <span class="badge b-g3">G3</span> AIはSSHでしか動かせなかった→Slack双方向＋cron無人運用＋統括Overseerが誕生し、社長がSlackだけでエージェント群と会話できるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-19</span> <span class="badge b-g2">G2</span> YCOM料金ページ改善が本番反映：料金クエリ最適化title/meta＋総額目安＋料金FAQ公開（6/18〜19）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-19</span> <span class="badge b-g3">G3</span> HP分析は人が起動しないと回らなかった→日次cron無人ループgo-live＋複数サイト化＝人手ゼロで毎日分析が回るようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-19</span> <span class="badge b-g3">G3</span> AIはタグ解析しかできなかった→hp-shot（実際に「見て」評価）＋hp-diffで施策のbefore/after効果検証までできるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-21</span> <span class="badge b-g3">G3</span> 自社サイト単体しか見られなかった→競合分析（hp-compete＋hp-serp）でSERP上位競合とのギャップを自動抽出できるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-22</span> <span class="badge b-g2">G2</span> money pages（/works/・/price/）に構造化データJSON-LDを整備＋料金ページの英語タイポ修正が本番反映</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-23</span> <span class="badge b-g3">G3</span> ブログのコンテンツSEOは手つかずだった→blog-loop／blog-writeが誕生し、記事分析からWP下書き投稿までAIが担えるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-23〜</span> <span class="badge b-g2">G2</span> ブログSEO体系を設計：買い手意図の新規テーマ9本（ピラー＋スポーク）＋既存改善2本のドラフト完成・1本はWP下書き投稿済（〜7/20）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-24</span> <span class="badge b-g3">G3</span> 社長の思いつきメモの受け皿がなかった→Slack日常メモ窓口＋blog-improveが誕生し、雑なメモが構造化記録に蒸留されるようになった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-24</span> <span class="badge b-g2">G2</span> 死にURL /contact/designer/ のHTTP 500を解消＋生フォーム4件をPHP8堅牢化（本番検証済み）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-26</span> <span class="badge b-g3">G3</span> 経営の優先度判断・督促は社長一人の仕事だった→<strong>経営パートナー（右腕）go-live</strong>：毎朝7:00の朝礼と#partner双方向の実行伴走が始まった</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-26</span> <span class="badge b-g0">G0.1</span> 経営の物差しが無かった→月次進捗目安＝月¥2.75M・ストック評価は実入金ベースを確定</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-26</span> <span class="badge b-g2">G2</span> HEROESへ成約に向けた打診連絡を宣言当日に実行</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-27</span> <span class="badge b-g2">G2</span> 営業先が頭の中だけだった→営業ターゲットマップ確定：代理店候補5社（うち4社は既存保守客と裏取り）＋直接契約候補2社</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-27</span> <span class="badge b-g2">G2</span> AI伴走の売り方を確定：「いきなり売り込まず、まず自分が使っている姿を語る」・HRAsを本命に決定</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-29</span> <span class="badge b-g2">G2</span> HRAs面談成功：「ぜひ一度触ってみたい」＋7月の営業先2件決定＝商品化の「複数の欲しい」ゲートを通過</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-29</span> <span class="badge b-np">新商品</span> AI伴走の料金モデル方向を確定：初期費用ゼロ＋月額（最低数万）＋実戦事例ピッチ完成</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-30</span> <span class="badge b-free">解放</span> <strong>社長解放の2本柱を決定</strong>：開発者1名採用（事業継続の「保険」）＋国金初借入（黒字のうちに信用履歴づくり・採用と別建て）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">06-30</span> <span class="badge b-g3">G3</span> スキルシート制度の設計完了（6シート310項目・5段階評価・半期サイクル）→社長が運用開始を決定</div>
+  </div>
+
+  <h3 class="text-base font-bold text-gray-500 mt-6 mb-2">2026年7月 — 商品化の試行錯誤と自己点検</h3>
+  <div class="space-y-1">
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-01</span> <span class="badge b-np">新商品</span> 事業の方向を確定：<strong>業務効率化そのものを商品化</strong>・秘書AI＝1号商品・Web制作はフット・イン・ザ・ドアへ＋立ち上げ工数は1社約1週間と判明</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-01</span> <span class="badge b-np">新商品</span> HRAs社内スタッフへ秘書AIデモ渡し完了＝「語る」→「実物が先方で稼働」へ前進</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-08</span> <span class="badge b-g3">G3</span> 各サイトの学びがループごとに閉じていた→勝ちパターン共有ライブラリ（8件蓄積）で6サイト横断の知見再利用＋ユーザー行動実測（Clarity）も開始</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-13</span> <span class="badge b-g3">G3</span> 分析ループがゴール不在で網羅に流れがちだった→<strong>北極星ファースト</strong>（ゴールはフィルタでなくレンズ）を全ループに導入</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-14→21</span> <span class="badge b-g2">G2</span> 料金ページ「具体数字クエリ」施策R-035が本番反映され初動でクリック発生を観測（母数極小のため参考値）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-17</span> <span class="badge b-g3">G3</span> エージェント群の稼働が見えなかった→3Dエージェントオフィスでひと目で可視化</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-17</span> <span class="badge b-g2">G2</span> 買い手クエリの受け皿を提携募集ページが握る意図違いを特定→運用代行ページ刷新R-030第二弾が本番反映</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-21→22</span> <span class="badge b-g2">G2</span> 1ページ目なのに0クリックの真因（titleに語が無い）を特定→R-036が起票から約1日で本番反映＝<strong>解析→実装連携の最短実証</strong></div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-22</span> <span class="badge b-np">新商品</span> 2号商品の実物＝無料HP診断レポート3社分を作成・原価実測1本約10分（保守48社に毎月出しても月約8時間と確定）</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-23</span> <span class="badge b-np">新商品</span> 1号商品（秘書AI）のAPI原価が実測で確定：月¥30,000以上/社＝売価¥10,000では原価割れ→<strong>対外に出る前に</strong>1号保留・金額提示凍結・資料訂正</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-23</span> <span class="badge b-np">新商品</span> 次商品＝<strong>2号「ウェブ解析エージェント」を確定</strong>（1号は捨てず保留）・原価は自社Claude定額枠内＝原価割れが構造的に起きないことも確認</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-23</span> <span class="badge b-g2">G2</span> 2号の初営業先＝スタープライドを商品決定から2時間半で確定（既存客への2品目販売に戦略転換）・営業デッキ13p＋メール文面「送るだけ」まで完成</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-23→24</span> <span class="badge b-free">解放</span> 週1で顔を合わせる場がゼロだった→週1定例会議を確定（毎週火曜11:00・全員3名・15分3項目）し第1回を前倒し実施</div>
+    <div class="tl-item pl-4 py-2 text-sm"><span class="text-gray-400 font-mono text-xs">07-24</span> <span class="badge b-g3">G3</span> システムの肥大・故障は事故と目視でしか発覚しなかった→計測層system-health（固定費と故障だけを計測）＝<strong>データで自己点検する体制</strong>になった</div>
+  </div>
+
+  <!-- 器の説明 -->
+  <div class="mt-10 pt-6 border-t border-gray-200 text-xs text-gray-500 space-y-1">
+    <p>📖 <strong>このページの仕組み</strong>：源泉は <code class="bg-gray-100 px-1 rounded">data/partner/milestones.md</code>（追記専用の積み上げ台帳）。約束・一手が完了した瞬間に経営パートナーが1行刻み、<strong>毎月初の朝礼</strong>でこのページに反映する（四半期末・年度末はより大きな振り返り）。ルール＝rules/modes/partner.md v0.5「積み上げを刻む」。</p>
+    <p>凡例：<span class="badge b-g0">G0 財務・ストック</span> <span class="badge b-g1">G1 HANAチャット</span> <span class="badge b-np">新商品（枝の候補）</span> <span class="badge b-g2">G2 受注・営業</span> <span class="badge b-g3">G3 社内基盤</span> <span class="badge b-free">解放（社長を売りに戻す）</span>（枝＝<a href="goals.html" class="text-blue-600 hover:underline">目標ツリー</a>）</p>
+    <p id="last-updated">最終更新: 2026-07-24｜反映済み: 〜2026-07-24｜Slack報告済み分: 〜2026-06（初回の月次報告は2026-08月初・7月分から）｜創刊: 2026-07-24（過去分は台帳アーカイブ・git履歴155コミット・各掲示板から一括発掘）</p>
+  </div>
+
+</div>
+</body>
+</html>

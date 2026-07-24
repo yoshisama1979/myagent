@@ -24,6 +24,13 @@ data/monthly/
 data/overseer/
 data/slack/
 site/overseer/last-tick.txt
+# 3Dオフィスが参照する hana-tools オフィス状況の30秒キャッシュ
+# （クライアント名・作業内容が入る実行時データ＝クライアント情報はgit外の方針に従う）
+data/office/
+
+# AI-INDEX: 自動生成の在処マップ。git外のクライアント分析ページの見出しを含むため追跡しない
+# （原本ページの .gitignore 方針が索引経由で漏れる抜け穴の封鎖。`python3 bin/build-ai-index.py` で再生成）
+AI-INDEX.md
 
 # Windows のファイル属性メタデータ（NTFS Zone.Identifier）
 *Zone.Identifier
@@ -50,6 +57,8 @@ data/hp-loop/cycles/
 # decks: 安全確認まで PDF/画像は追跡しない（deck-format.md 🚨節）
 site/decks/ai-hisho/*.pdf
 site/decks/ai-hisho/deck-images/
+site/decks/ai-web-analysis/*.pdf
+site/decks/ai-web-analysis/deck-images/
 # decks: 質問事項レポートの PDF は /questions-deck で毎回再生成する生成物＝追跡しない
 site/decks/analysis-questions/*.pdf
 site/decks/analysis-questions/*/*.pdf
@@ -62,6 +71,8 @@ site/hp-analysis/fujisaka/
 site/hp-analysis/yokohawaii/
 site/hp-analysis/shigatoyota/
 site/hp-analysis/osakatoyopet/
+# 見込み客の単発解析レポート（/hp-prospect）＝クライアント分析と同扱いで git 外
+site/hp-analysis/prospects/
 site/decks/shigatoyota-hp-analysis/
 site/decks/osakatoyopet-hp-analysis/
 data/hp-loop/sites/yoshida.md
