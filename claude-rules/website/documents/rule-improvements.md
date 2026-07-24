@@ -1,6 +1,6 @@
 # ルール改善メモ（rule-improvements）
 
-ルールファイル（`CLAUDE.md` ・`.claude/rules/` 配下のルール定義 等）について **気づいた改善点・気になった点** の記録先。
+ルールファイル（`CLAUDE.md`・`.claude/rules/`・`rules/modes/` 配下のルール定義 等）について **気づいた改善点・気になった点** の記録先。
 `CLAUDE.md`「コラボレーションの原則 2. ルールファイル自体の改善も提案する」準拠。
 
 **ユーザーが明確な回答をしなかった場合も、気づきはその都度ここに記録する**（記録と反映を分離）。
@@ -39,7 +39,7 @@
 
 ### `[テンプレ還元]` 印のものはテンプレ更新側へ送る
 
-`[テンプレ還元]` と判断した気づきは、**テンプレートを更新する側（はなさかAI）へ届ける**とテンプレ自体が良くなる。送り方は [`.claude/rules/mailbox.md`](../.claude/rules/mailbox.md)「2-3. テンプレ改善提案を送る（`rule-kaizen` 宛）」に従う（`bash bin/mailbox.sh send --to rule-kaizen …`）。mailbox 未設定・受け口未整備なら送らず、ここに残して社長に伝える（記録は消さない）。
+`[テンプレ還元]` と判断した気づきは、**テンプレートを更新する側（はなさかAI）へ届ける**とテンプレ自体が良くなる。送り方は [`rules/modes/mailbox.md`](../rules/modes/mailbox.md)「2-3. テンプレ改善提案を送る（`rule-kaizen` 宛）」に従う（`bash bin/mailbox.sh send --to rule-kaizen …`）。mailbox 未設定・受け口未整備なら送らず、ここに残して社長に伝える（記録は消さない）。
 
 ---
 

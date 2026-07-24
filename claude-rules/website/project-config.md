@@ -19,21 +19,21 @@
 - コンパイル手段：（記入。例: standalone dart-sass ／ sass.bat ／ 開発者依頼）
 - コンパイル済み `.css` をコミットに含めるか：（記入。既定: 含めない。`staging.md`／`commit-pipeline.md` が参照）
 
-## 資産の癖（`.claude/rules/refactor.md` / `page-build.md` が参照）
+## 資産の癖（`rules/modes/refactor.md` / `rules/modes/page-build.md` が参照）
 
-- レガシー・バックアップファイルの命名パターン：（記入。例: `*_org.html` `*.BAK` `index_2017*.html`。`refactor.md` が「触らない対象」の判定に参照）
-- 共通テンプレート機構：（記入。例: PHP インクルード・テンプレートクラス。`refactor.md`／`page-build.md` が共通化の判定に参照）
+- レガシー・バックアップファイルの命名パターン：（記入。例: `*_org.html` `*.BAK` `index_2017*.html`。`rules/modes/refactor.md` が「触らない対象」の判定に参照）
+- 共通テンプレート機構：（記入。例: PHP インクルード・テンプレートクラス。`rules/modes/refactor.md`／`rules/modes/page-build.md` が共通化の判定に参照）
 
-## スライド資料（デッキ）（`.claude/rules/deck-format.md` が参照）
+## スライド資料（デッキ）（`rules/modes/deck-format.md` が参照）
 
 - **出力先**: （記入。既定: `documents/decks/<案件名>/`。変える場合のみ記入）
 - **Chrome 実パス**: （記入。例: `/usr/bin/google-chrome`／`C:\Program Files\Google\Chrome\Application\chrome.exe`）
 
-## HP分析ループ連携（`.claude/rules/mailbox.md` / `.claude/rules/hp-loop-dialogue.md` が参照）
+## HP分析ループ連携（`rules/modes/mailbox.md` / `rules/modes/hp-loop-dialogue.md` が参照）
 
 > 外部の「はなさかAI HP分析ループ」とサイト別にやり取りするための固有ID。ループはマルチサイト化で `hp-loop-<site>` に分かれており、**無印 `hp-loop` 宛では現行ループが拾えない**。各サイトで下記を記入する。
 >
-> ⚠️ **未記入のまま放置しない**：ここが空欄だと、開発エージェントは報告の宛先（`hp-loop-<site>`）を確定できずメールボックス送信が成立しない（[.claude/rules/mailbox.md](.claude/rules/mailbox.md) §2 が「未記入なら社長に確認」と指示する）。このマシンの担当サイトが決まったら**最初に埋める**。
+> ⚠️ **未記入のまま放置しない**：ここが空欄だと、開発エージェントは報告の宛先（`hp-loop-<site>`）を確定できずメールボックス送信が成立しない（[rules/modes/mailbox.md](rules/modes/mailbox.md) §2 が「未記入なら社長に確認」と指示する）。このマシンの担当サイトが決まったら**最初に埋める**。
 
 - サイト識別子 `<site>`：（記入。例：ycom / yoshida / fujisaka）
 - 対になる分析ループのID（報告の宛先）：（記入。`hp-loop-<site>` 形式。例：hp-loop-ycom）

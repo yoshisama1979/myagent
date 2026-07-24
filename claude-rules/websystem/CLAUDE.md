@@ -5,10 +5,10 @@
 - 仕様書: `documents/specs/`（HTML + Tailwind CSS。詳細フォーマットは `.claude/rules/spec-format.md` を参照）
   - 目次: `documents/specs/index.html`
   - 旧仕様書: `documents/document.md`（既存案件の移行用。**新規プロジェクトは specs/ のみを使い、document.md は作らない**）
-- テスト仕様書: `documents/test.csv`（**人間が行う手動テストのみ**を書く。自動テストでカバーする項目は書かない＝テストコードが正。`.claude/rules/create-test.md` 参照）
+- テスト仕様書: `documents/test.csv`（**人間が行う手動テストのみ**を書く。自動テストでカバーする項目は書かない＝テストコードが正。`rules/modes/create-test.md` 参照）
 - 残存課題: `documents/pending-issues.md`
 - ルール改善メモ: `documents/rule-improvements.md`（ルールファイルへの気づき・改善案の記録先。下記「コラボレーションの原則 2」参照）
-- 見積もり台帳: `documents/estimate-log.md`（**採用された**見積もりの記録先。記録は**ユーザー確認後のみ**。`.claude/rules/quotation.md` §6 参照）
+- 見積もり台帳: `documents/estimate-log.md`（**採用された**見積もりの記録先。記録は**ユーザー確認後のみ**。`rules/modes/quotation.md` §6 参照）
 - プロジェクト固有の定義（スタック・アカウント種別・ディレクトリ等）: `project-config.md`
 
 ## 残存課題の記録ルール
@@ -24,47 +24,55 @@
 
 プロジェクトルートやコマンド実行方法は `project-config.md` を参照すること。
 
-## ルールファイル (.claude/rules/)
+## ルールファイル（3層構成）
 
 **方針**: トークン消費を抑えるため、ルールファイルは**タスクに関連するもののみ必要に応じて読み込む**（全件を先読みしない）。作業のフェーズに入った時点で、下表から該当するファイルを選んで読み込むこと。
 
+置き場所は**読み込まれ方**で3層に分かれる（2026-07-24 再編）：
+
+| 層 | 置き場所 | 読み込まれ方 |
+|---|---|---|
+| 常時 | `.claude/rules/`（フロントマター無し） | セッション開始時に自動ロード（`.claude/rules/dev.md`・`.claude/rules/private.md` の極小2本のみ） |
+| 条件付き | `.claude/rules/`（`paths:` フロントマター付き） | **globに合致するファイルを扱うときだけ自動適用**（読み忘れが起きない） |
+| 読み込み式 | `rules/modes/` | 自動ロードされない。下表の「いつ参照するか」に該当したら **Read で読む** |
+
 | ファイル | いつ参照するか |
 |---------|--------------|
-| `agent.md` | 常に（実装フロー・共通原則・モード判定の入口） |
-| `dialogue-mode.md` | **仕様策定モード**。ゴール記録ファイル無し / `status: dialogue` / ユーザーが仕様検討意図を示したとき |
-| `autopilot.md` | **自走モード**。`mode: autopilot` かつ `status: active`/`paused` の goals.md があるとき。`status: completed` の goals.md は原則作業対象外（追加要望なら Dialogue で再定義） |
-| `inbox-mode.md` | **Inbox モード（並走型）**。`/inbox` スラッシュコマンドで起動。開発エージェント稼働中の裏で別セッションを立て、ユーザーの「次やってほしいこと」を `documents/inbox.md` に追記。実装・仕様策定には踏み込まない |
-| `dev.md` | 実装時（開発規約）※スタック（Laravel/Next.js 等）・UIライブラリは `project-config.md` を正とする |
-| `tdd.md` | テスト作成時（BDDシナリオ・RGBCサイクル・三者整合性チェック） |
-| `testcode.md` | バックエンドテスト作成時 |
-| `frontend-test.md` | フロントエンドテスト作成時 ※テストランナー・コンテナ名等のスタック固有値は `project-config.md` を正とする |
-| `create-test.md` | テスト仕様書（CSV）作成時 |
-| `spec-format.md` | 仕様書（`documents/specs/`配下のHTML）を作成・更新するとき |
-| `refactoring.md` | リファクタリング時 |
-| `coding.md` | コーディング時（CSS/Sass・HTML・PHP定数の規約）※素PHP+Sass 構成のプロジェクトのみ（スタックは `project-config.md` 参照） |
-| `setup.md` | 初回セットアップ時のみ（SCSS自動コンパイル等の環境構築）※Live Sass Compiler を使うプロジェクトのみ |
-| `ui-design.md`     | UI/デザインを実装・変更するとき。`Design.md`=SSOT の扱い方・UI実装原則・アクセシビリティ最低ライン・Do/Don't ※UIライブラリ・カラーコードは `Design.md`（あれば）→ `project-config.md` の順で正とする |
-| `design-replication.md` | **デザインカンプ／モックアップ（特にAI生成画像）を渡されてUIを再現する時。** 推測を実測に変え、実ブラウザ描画で照合する周回（色の実測・同一幅スクショ・寸法は意図から設計しSSOTに記録） |
-| `ui-check.md` | **UI実装を終えて確認するとき**（`agent.md` Step 8 動作確認・Autopilot 達成判定の前）。動作・アクセシビリティ・レスポンシブ・一貫性の目視品質ゲート（自動テストとは別物） |
-| `commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン）／**ブランチ運用方針：単一AI × `develop` 直接コミット**（feature ブランチを切らない・PR とマージはユーザー手動） |
-| `estimation.md` | 新機能のタスク抽出・見積もり（難易度評価）を行うとき |
-| `quotation.md` | **顧客向けの見積書**（工数・費用・但し書き）を作成・提示するとき。内部のタスク抽出は estimation.md、見積書への仕立ては quotation.md |
-| `deck-format.md` | **クライアント向けスライド資料（提案書・報告デッキ）を HTML→PDF で作るとき**。ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
-| `private.md` | 環境固有の実行メモ（各マシン・各プロジェクトで記入。テンプレ時点は雛形） |
+| `rules/modes/agent.md` | 常に（実装フロー・共通原則・モード判定の入口） |
+| `rules/modes/dialogue-mode.md` | **仕様策定モード**。ゴール記録ファイル無し / `status: dialogue` / ユーザーが仕様検討意図を示したとき |
+| `rules/modes/autopilot.md` | **自走モード**。`mode: autopilot` かつ `status: active`/`paused` の goals.md があるとき。`status: completed` の goals.md は原則作業対象外（追加要望なら Dialogue で再定義） |
+| `rules/modes/inbox-mode.md` | **Inbox モード（並走型）**。`/inbox` スラッシュコマンドで起動。開発エージェント稼働中の裏で別セッションを立て、ユーザーの「次やってほしいこと」を `documents/inbox.md` に追記。実装・仕様策定には踏み込まない |
+| `.claude/rules/dev.md`（常時） | 実装時（開発規約）※スタック（Laravel/Next.js 等）・UIライブラリは `project-config.md` を正とする |
+| `rules/modes/tdd.md` | テスト作成時（BDDシナリオ・RGBCサイクル・三者整合性チェック） |
+| `.claude/rules/testcode.md`（paths自動） | バックエンドテスト作成時 |
+| `.claude/rules/frontend-test.md`（paths自動） | フロントエンドテスト作成時 ※テストランナー・コンテナ名等のスタック固有値は `project-config.md` を正とする |
+| `rules/modes/create-test.md` | テスト仕様書（CSV）作成時 |
+| `.claude/rules/spec-format.md`（paths自動） | 仕様書（`documents/specs/`配下のHTML）を作成・更新するとき |
+| `rules/modes/refactoring.md` | リファクタリング時 |
+| `.claude/rules/coding.md`（paths自動） | コーディング時（CSS/Sass・HTML・PHP定数の規約）※素PHP+Sass 構成のプロジェクトのみ（スタックは `project-config.md` 参照） |
+| `rules/modes/setup.md` | 初回セットアップ時のみ（SCSS自動コンパイル等の環境構築）※Live Sass Compiler を使うプロジェクトのみ |
+| `.claude/rules/ui-design.md`（paths自動） | UI/デザインを実装・変更するとき。`Design.md`=SSOT の扱い方・UI実装原則・アクセシビリティ最低ライン・Do/Don't ※UIライブラリ・カラーコードは `Design.md`（あれば）→ `project-config.md` の順で正とする |
+| `rules/modes/design-replication.md` | **デザインカンプ／モックアップ（特にAI生成画像）を渡されてUIを再現する時。** 推測を実測に変え、実ブラウザ描画で照合する周回（色の実測・同一幅スクショ・寸法は意図から設計しSSOTに記録） |
+| `rules/modes/ui-check.md` | **UI実装を終えて確認するとき**（`rules/modes/agent.md` Step 8 動作確認・Autopilot 達成判定の前）。動作・アクセシビリティ・レスポンシブ・一貫性の目視品質ゲート（自動テストとは別物） |
+| `rules/modes/commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン）／**ブランチ運用方針：単一AI × `develop` 直接コミット**（feature ブランチを切らない・PR とマージはユーザー手動） |
+| `rules/modes/estimation.md` | 新機能のタスク抽出・見積もり（難易度評価）を行うとき |
+| `rules/modes/quotation.md` | **顧客向けの見積書**（工数・費用・但し書き）を作成・提示するとき。内部のタスク抽出は rules/modes/estimation.md、見積書への仕立ては rules/modes/quotation.md |
+| `rules/modes/deck-format.md` | **クライアント向けスライド資料（提案書・報告デッキ）を HTML→PDF で作るとき**。ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
+| `.claude/rules/private.md`（常時） | 環境固有の実行メモ（各マシン・各プロジェクトで記入。テンプレ時点は雛形） |
 
 ## スラッシュコマンド (.claude/commands/)
 
 | コマンド | 用途 |
 |---------|------|
 | `/staging` | 変更ファイルを個別に `git add` する（`git add .` は使わない。領域が混ざる場合は分けてステージ） |
-| `/commit` | ステージ済み差分を確認し、`.claude/rules/commit.md` の規約に沿ったコミットメッセージを提案する |
+| `/commit` | ステージ済み差分を確認し、`rules/modes/commit.md` の規約に沿ったコミットメッセージを提案する |
 | `/commit-pipeline` | staging → Codex クロスレビュー → コミット → リファクタリング を一括で実行するパイプライン |
-| `/refactor` | ステージ済み差分に対し `refactoring.md` に従ってリファクタリングを実施する |
+| `/refactor` | ステージ済み差分に対し `rules/modes/refactoring.md` に従ってリファクタリングを実施する |
 | `/consistency-check` | 仕様書・テスト仕様書（test.csv）・実装コードの三者整合性チェックを行う |
-| `/inbox` | Inbox モード（`inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する |
+| `/inbox` | Inbox モード（`rules/modes/inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する |
 | `/cleanup-permissions` | `.claude/settings.local.json` の permissions.allow リストを汎用パターンに整理する |
 
-> 注記: Autopilot 自走中のコミットは `autopilot.md` の規律で自動的に行われるためコマンド不要。これらは主に都度承認モードで使う。
+> 注記: Autopilot 自走中のコミットは `rules/modes/autopilot.md` の規律で自動的に行われるためコマンド不要。これらは主に都度承認モードで使う。
 
 ## デザインルールの単一の真実の源 (Design.md)
 
@@ -90,7 +98,7 @@
 
 ## ルールファイルの出自と改善ループ（全体像）
 
-この `CLAUDE.md`・`.claude/rules/` 配下のルール一式は、**はなさか側の「ルール開発エージェント」が管理する共通テンプレート（`claude-rules/`）から配布されたもの**。ルールはテンプレート側で一元的に開発・改善され、各開発プロジェクト（＝あなた）へ配布されて使われる。
+この `CLAUDE.md`・`.claude/rules/`・`rules/modes/` 配下のルール一式は、**はなさか側の「ルール開発エージェント」が管理する共通テンプレート（`claude-rules/`）から配布されたもの**。ルールはテンプレート側で一元的に開発・改善され、各開発プロジェクト（＝あなた）へ配布されて使われる。
 
 ```
 （ルール開発エージェント）共通テンプレートを開発・改善
@@ -148,4 +156,4 @@
 3. **今回やったこと** … この作業で何を進めたか
 4. **次にすべきこと** … 次の一手・提案（あれば）
 
-長い経緯の再説明はせず、切り替えに必要な最小限に絞る（**冗長にしない**）。フェーズごとの詳細報告（agent.md の実装フロー等）とは別に、区切りで俯瞰を渡す位置づけ。軽微なやり取りには不要。
+長い経緯の再説明はせず、切り替えに必要な最小限に絞る（**冗長にしない**）。フェーズごとの詳細報告（rules/modes/agent.md の実装フロー等）とは別に、区切りで俯瞰を渡す位置づけ。軽微なやり取りには不要。

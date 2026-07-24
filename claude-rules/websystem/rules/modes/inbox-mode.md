@@ -12,8 +12,8 @@
 
 | モード | 役割 | タイミング |
 |--------|------|----------|
-| **Dialogue モード**（`dialogue-mode.md`） | 仕様策定・合意形成 | 開発の入口 |
-| **Autopilot モード**（`autopilot.md`） | 自走実装 | 仕様確定後の本実装 |
+| **Dialogue モード**（`rules/modes/dialogue-mode.md`） | 仕様策定・合意形成 | 開発の入口 |
+| **Autopilot モード**（`rules/modes/autopilot.md`） | 自走実装 | 仕様確定後の本実装 |
 | **Inbox モード**（このファイル） | **やることリストの受け口** | **開発エージェント稼働中の裏で並走** |
 
 ### 解決したい課題
@@ -270,7 +270,7 @@ Inbox モード（`/inbox`）が新規エントリを追記し、
 
 ### Autopilot モードからの参照
 
-`autopilot.md` 9章（達成報告）の手順に **inbox 確認** が組み込まれている：
+`rules/modes/autopilot.md` 9章（達成報告）の手順に **inbox 確認** が組み込まれている：
 
 1. 達成報告を出す直前に `documents/inbox.md` を Read
 2. **現在ステータス**を各 ID について算出：「最後の更新ブロック」の結果 or 更新ブロックが無ければ「登録時ステータス」

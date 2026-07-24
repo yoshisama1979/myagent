@@ -1,3 +1,16 @@
+---
+paths:
+  - "**/*.css"
+  - "**/*.scss"
+  - "**/*.tsx"
+  - "**/*.jsx"
+  - "**/*.vue"
+  - "**/*.blade.php"
+  - "**/tailwind.config.*"
+  - "Design.md"
+  - "**/components/**"
+---
+
 # UI / デザインルール
 
 ## デザインの単一の真実の源（Design.md）

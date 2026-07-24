@@ -15,6 +15,7 @@
 3. website の場合：`Design.sample.md` を参考に、そのプロジェクトの `Design.md` を作る（`start.md` §1 の手順。Design.sample.md 自体は記入例なのでコピー先に持ち込まなくてよい）
 4. `documents/pending-issues.md`・`documents/rule-improvements.md` は **空の状態から**運用を始める
 5. websystem の場合：`documents/specs/_template.html` を起点に仕様書を作る（`document.md` は新規プロジェクトでは作らない）
+6. **配布先の Claude Code のバージョンを確認する**（2026-07-24 のルール3層化以降）：ルールは「常時＝`.claude/rules/`（フロントマター無し）／条件付き＝同（`paths:` フロントマター）／読み込み式＝`rules/modes/`」の3層。**`paths:` による条件付き適用は比較的新しい機能**なので、配布先の Claude Code が古いと条件付き層が常時ロードに縮退する（動作は壊れないがトークン節約が効かない）。`claude update` で最新化しておく
 
 ## テンプレートの設計原則（編集時に守ること）
 
@@ -34,9 +35,9 @@
 
 ### ② 送る（テンプレ級だけ・経路はテンプレで異なる）
 
-- **website**：拠点PCの実装エージェントは mailbox を持つ。`[テンプレ還元]` 印の気づきを **`bash bin/mailbox.sh send --to rule-kaizen`** で送る（`thread: website-kaizen`／`subject: [website/<ファイル名>] 要旨`）。手順は website の `.claude/rules/mailbox.md`「テンプレ改善提案を送る」節。
+- **website**：拠点PCの実装エージェントは mailbox を持つ。`[テンプレ還元]` 印の気づきを **`bash bin/mailbox.sh send --to rule-kaizen`** で送る（`thread: website-kaizen`／`subject: [website/<ファイル名>] 要旨`）。手順は website の `rules/modes/mailbox.md`「テンプレ改善提案を送る」節。
 - **websystem**：mailbox インフラを前提にしない。`[テンプレ還元]` 印は `rule-improvements.md` に残し、**棚卸し時に社長が myagent へ持ち帰る**（人手キャリーバック）。プロジェクトが mailbox を配線済みなら website と同じく `rule-kaizen` へ送ってよい。
-- 受け口 `rule-kaizen` は myagent VPS の **受信専用の宛先**。有効化には myagent 側でトークン表に1エントリ登録が要る（`myagent/.claude/rules/mailbox.md`「`rule-kaizen` を有効にする」）。未登録なら送信側は空振りせず `rule-improvements.md` に残す。
+- 受け口 `rule-kaizen` は myagent VPS の **受信専用の宛先**。有効化には myagent 側でトークン表に1エントリ登録が要る（`myagent/rules/modes/mailbox.md`「`rule-kaizen` を有効にする」）。未登録なら送信側は空振りせず `rule-improvements.md` に残す。
 
 ### ③ 選別・起票・反映（myagent 側・reviewer 型・社長ゲート必須）
 

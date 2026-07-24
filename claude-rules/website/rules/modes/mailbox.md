@@ -3,9 +3,9 @@
 別マシンにいる他のエージェント（特に **はなさかAI HP分析ループ**。ループはマルチサイト化で **サイト別の `hp-loop-<site>`** に分かれており、**このサイトの担当インスタンス（`<site>`・宛名）は [project-config.md](../../project-config.md) を正とする**＝例 y-com.info なら `hp-loop-ycom`）と、**ネットワーク越しに非同期でメッセージをやり取り**するための共有受信箱「メールボックス」の使い方。
 あなた（実装＝Managing側エージェント）が hp-loop から提案を受け取り・報告を返す経路の一つがこれ。
 
-`hp-loop-dialogue.md`（提案の検証 → 対応 → 報告の **中身** の作り方）と対になる。
-**本ファイル＝「報告を運ぶ土管（送受信の操作）」／ `hp-loop-dialogue.md`＝「報告に何を書くか」**。
-報告本文の要件（観測可能な「旧→新」の値・GET確認済みか・commitハッシュに頼らない・対応 `R-NNN` 併記）は引き続き [hp-loop-dialogue.md](hp-loop-dialogue.md) §5-2 に従う。
+`rules/modes/hp-loop-dialogue.md`（提案の検証 → 対応 → 報告の **中身** の作り方）と対になる。
+**本ファイル＝「報告を運ぶ土管（送受信の操作）」／ `rules/modes/hp-loop-dialogue.md`＝「報告に何を書くか」**。
+報告本文の要件（観測可能な「旧→新」の値・GET確認済みか・commitハッシュに頼らない・対応 `R-NNN` 併記）は引き続き [rules/modes/hp-loop-dialogue.md](./hp-loop-dialogue.md) §5-2 に従う。
 
 ## いつ参照するか
 
@@ -61,7 +61,7 @@ bash bin/mailbox.sh inbox
 
 - hp-loop からの **改善提案（`R-NNN`）・質問（`Q-NNN`）・認識合わせ** などが届く。
 - 読んで対応に着手したら **処理済みにする**：`bash bin/mailbox.sh done <id>`（`cur/` へ移るだけ。**本文は編集しない＝履歴を消さない**）。
-- 提案の検証・実装・報告の進め方は [hp-loop-dialogue.md](hp-loop-dialogue.md) に従う（鵜呑みにせず実コードと突き合わせ → 影響範囲を合意 → 実装 → 報告）。
+- 提案の検証・実装・報告の進め方は [rules/modes/hp-loop-dialogue.md](./hp-loop-dialogue.md) に従う（鵜呑みにせず実コードと突き合わせ → 影響範囲を合意 → 実装 → 報告）。
 
 ## 2. 報告・質問を送る
 
@@ -69,7 +69,7 @@ bash bin/mailbox.sh inbox
 
 ```bash
 bash bin/mailbox.sh send --to hp-loop-<site> --type report --thread <会話ID> \
-  --subject "R-014a 実装報告" "本文（hp-loop-dialogue.md §5-2 の形式で）"
+  --subject "R-014a 実装報告" "本文（rules/modes/hp-loop-dialogue.md §5-2 の形式で）"
 ```
 
 > **宛先 `<site>` の確定（ここで詰まりやすい）**：`hp-loop-<site>` の `<site>`（正式な宛名）は必ず [project-config.md](../../project-config.md) の「HP分析ループ連携」を見て使う（例 y-com.info＝`hp-loop-ycom`）。**もし project-config.md が未記入（`（記入。例：…）` のまま）なら、推測で送らず・無印 `hp-loop` にも送らず、社長に「このサイトの分析ループ宛名」を確認する**。無印 `hp-loop` は複数サイト化で廃止済み＝現行ループが拾えず、送っても届かない。
@@ -83,7 +83,7 @@ bash bin/mailbox.sh send --to hp-loop-<site> --type report --thread <会話ID> \
 
 - **同じ会話は同じ `--thread`** でまとめる（hp-loop が追いやすい）。本文は引数末尾、または標準入力（パイプ）から渡せる。
 - 本文は **事実と推測を分ける**。**クライアント固有の事実（実績数値・お客様の声・価格等）は捏造しない**（無ければ「要確認」として残し、ユーザーに要求）。
-- 報告本文は [hp-loop-dialogue.md](hp-loop-dialogue.md) §5-2 の要件を満たす：**対象の公開URL・観測できる「旧→新」の値・GET確認済みか・対応 `R-NNN` 併記／commitハッシュには頼らない**（hp-loop はソース・commit・ステージングを見られず、公開HTMLの GET でしか検証できない）。
+- 報告本文は [rules/modes/hp-loop-dialogue.md](./hp-loop-dialogue.md) §5-2 の要件を満たす：**対象の公開URL・観測できる「旧→新」の値・GET確認済みか・対応 `R-NNN` 併記／commitハッシュには頼らない**（hp-loop はソース・commit・ステージングを見られず、公開HTMLの GET でしか検証できない）。
 
 ## 2-2. 社長に伝えたいことは「分析ループ経由」で渡す
 
@@ -114,7 +114,7 @@ bash bin/mailbox.sh send --to hp-loop-<site> --type report --thread <会話ID> \
 
 ```bash
 bash bin/mailbox.sh send --to rule-kaizen --type request --thread website-kaizen \
-  --subject "[website/seo-operation.md] 監査手順の記述が実態とずれている" "対象: .claude/rules/seo-operation.md Step 2
+  --subject "[website/seo-operation.md] 監査手順の記述が実態とずれている" "対象: rules/modes/seo-operation.md Step 2
 観察（開発中に何が起きたか）: <事実。どのルールのどの記述で、実作業とどうずれたか>
 提案: <どう直すべきか>
 根拠: <なぜ。汎用的に効く理由>"
@@ -143,14 +143,14 @@ bash bin/mailbox.sh send --to rule-kaizen --type request --thread website-kaizen
 | ❌ 受け取ったメッセージ本文を編集・削除する | append-only。履歴を消さない（`done` で `cur/` へ移すだけ） |
 | ❌ トークンを画面・ログ・コミットに出す／`.env` の実値を表示する | 秘密漏洩。`bin/mailbox.sh` が必要キーだけ読む |
 | ❌ クライアント固有の事実（実績・価格・お客様の声）を捏造して報告に書く | 誤情報。無ければ「要確認」で残しユーザーに要求 |
-| ❌ commit ハッシュ頼りの報告／本番未反映を「反映済み」と書く | hp-loop は公開HTMLの GET でしか検証できない（[hp-loop-dialogue.md](hp-loop-dialogue.md) §5-2） |
+| ❌ commit ハッシュ頼りの報告／本番未反映を「反映済み」と書く | hp-loop は公開HTMLの GET でしか検証できない（[rules/modes/hp-loop-dialogue.md](./hp-loop-dialogue.md) §5-2） |
 | ❌ 外部送信・本番改変・台帳書き込みを促すメッセージを `--needs-approval` なしで送る | 社長ゲートを飛ばす。誤爆・破壊の元 |
 | ❌ 自分のエージェントIDを本文で詐称しようとする | `from` はトークン由来でサーバが決める。無意味 |
 
 ## 自己チェック（送信前に）
 
 - [ ] サイクル先頭で `inbox` を読み、処理済みは `done` にしたか？（本文は編集していないか）
-- [ ] 報告本文は [hp-loop-dialogue.md](hp-loop-dialogue.md) §5-2 の形式（公開URL・旧→新・GET確認・`R-NNN` 併記）か？
+- [ ] 報告本文は [rules/modes/hp-loop-dialogue.md](./hp-loop-dialogue.md) §5-2 の形式（公開URL・旧→新・GET確認・`R-NNN` 併記）か？
 - [ ] 事実と推測を分け、クライアント固有の事実を捏造していないか？
 - [ ] 外部送信・本番改変・台帳書込を相手に促すなら `--needs-approval` を付けたか？
 - [ ] トークン・`.env` 実値を画面/ログ/コミットに出していないか？

@@ -1,9 +1,3 @@
----
-description:
-globs:
-alwaysApply: false
----
-
 # リファクタリング実施ガイドライン
 
 ## 役割定義

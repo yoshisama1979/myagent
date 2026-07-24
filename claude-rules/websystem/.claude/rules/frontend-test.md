@@ -1,7 +1,8 @@
 ---
-description:
-globs:
-alwaysApply: false
+paths:
+  - "**/*.test.{js,jsx,ts,tsx}"
+  - "**/*.spec.{js,jsx,ts,tsx}"
+  - "**/e2e/**"
 ---
 
 # フロントエンド自動テスト作成ルール

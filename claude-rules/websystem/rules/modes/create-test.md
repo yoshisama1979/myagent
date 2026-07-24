@@ -1,9 +1,3 @@
----
-description:
-globs:
-alwaysApply: false
----
-
 # テスト仕様書作成ルール
 
 ## 基本方針

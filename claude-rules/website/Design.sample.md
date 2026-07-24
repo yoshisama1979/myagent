@@ -3,7 +3,7 @@
 > ⚠️ **これは「記入例（サンプル）」です。** YCOM の実値で `Design.md` を書くとこうなる、という見本。
 > **各プロジェクトでは、このファイルを `Design.md` としてコピーし、自分のプロジェクトの値に置き換えて使ってください。**
 > ここに並ぶ色 hex・フォント・1000px幅・`1rem=1px`換算・`$m_tpl` 等は **YCOM固有の値** であり、そのまま流用しないこと。
-> デザイン規約の「汎用ルール（何を守るか）」は [.claude/rules/design.md](.claude/rules/design.md)、作成手順は [.claude/rules/start.md](.claude/rules/start.md) を参照。
+> デザイン規約の「汎用ルール（何を守るか）」は [.claude/rules/design.md](.claude/rules/design.md)、作成手順は [rules/modes/start.md](rules/modes/start.md) を参照。
 
 株式会社はなさか / YCOM (https://www.y-com.info) のデザインルール集。
 **AIコーディングエージェント(Claude Code 等)と人間の両方が、UIを足し引きする前に必ず読むファイル。**
@@ -255,7 +255,7 @@ sass.bat            ← コンパイルスクリプト
 - `!important` を新規で書かない(既存の上書きが必要なら SCSS の specificity で対処)
 - `rem` 値を 16px換算で書かない(このサイトは 1rem = 1px)
 - **コンパイル済みの `.css` ファイルを直接編集しない**(`.scss` を編集する。自動コンパイル環境でも不変)
-- **`sass.bat` などのコンパイルコマンドを AI が手動で実行しない**。コンパイルは **自動環境ならハーネスのフック**・無ければ **開発者** が行う([scss-autocompile.md](.claude/rules/scss-autocompile.md))
+- **`sass.bat` などのコンパイルコマンドを AI が手動で実行しない**。コンパイルは **自動環境ならハーネスのフック**・無ければ **開発者** が行う([.claude/rules/scss-autocompile.md](.claude/rules/scss-autocompile.md))
 
 ---
 

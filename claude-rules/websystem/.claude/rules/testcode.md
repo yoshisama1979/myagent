@@ -1,7 +1,8 @@
 ---
-description:
-globs:
-alwaysApply: false
+paths:
+  - "**/tests/**/*.php"
+  - "**/*Test.php"
+  - "**/phpunit.xml"
 ---
 
 ## 自動テストの実装について

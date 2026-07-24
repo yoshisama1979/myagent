@@ -1,9 +1,3 @@
----
-description:
-globs:
-alwaysApply: false
----
-
 ## 原則
 
 - まず、このファイルを参照したら、「ルールを確認しました」と前置きを挟む

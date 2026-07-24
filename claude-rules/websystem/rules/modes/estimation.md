@@ -132,7 +132,7 @@
 
 ### HTML（クライアント提示や仕様の記録を兼ねる場合）
 
-- `documents/specs/proposals/` 配下に配置する（`rules/spec-format.md` のフォーマットに準じる）
+- `documents/specs/proposals/` 配下に配置する（`.claude/rules/spec-format.md` のフォーマットに準じる）
 - リスク・難易度は色バッジ等で視認性を上げる
 - タスク一覧・見積もり前の要確認事項・推奨実装順序を含める
 
