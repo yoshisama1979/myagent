@@ -67,6 +67,15 @@
 - **出力先**: （記入。既定: `documents/decks/<案件名>/`。変える場合のみ記入）
 - **Chrome 実パス**: （記入。例: `/usr/bin/google-chrome`／`C:\Program Files\Google\Chrome\Application\chrome.exe`）
 
+## hana-tools プロジェクトメモ連携（`rules/modes/hana-memo.md` が参照）
+
+> 残存課題・重要仕様を hana-tools のプロジェクトメモへ登録する連携（`/hana-memo`）。使わないプロジェクトは空欄のままでよい。
+
+- **ベースURL**: （記入。例: `https://stg.hana-tools.com`。本番へ書く場合は本番URL）
+- **project_id**: （記入。調べ方は `rules/modes/hana-memo.md` §5。一度調べたらここに記録し毎回問い合わせない）
+- **visibility 既定**: （記入。既定: `shared`＝全体共有）
+- **API トークンの置き場**: （記入。例: 環境変数 `HANASAKA_API_TOKEN`。**実値をこのファイル・リポジトリに書かない**）
+
 ## 仕様書の場所
 
 - **既定**: `documents/specs/`（HTML。`.claude/rules/spec-format.md` 準拠）

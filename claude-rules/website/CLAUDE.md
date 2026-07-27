@@ -49,6 +49,7 @@
 | `rules/modes/hp-loop-dialogue.md` | **外部の分析ループ（はなさかAI HP分析ループ）から改善提案を受け取った時**。検証→対応→提案元への報告の標準フロー（R-NNN/Q-NNN の扱い、提案元の限界の理解、報告文の作り方） |
 | `rules/modes/mailbox.md` | **hp-loop など別マシンのエージェントとメールボックス（共有受信箱）でやり取りする時**。受信箱を読む／報告・質問を送る操作と、社長承認ゲート（`--needs-approval`）。報告の中身は `rules/modes/hp-loop-dialogue.md` に従う＝こちらは送受信の土管 |
 | `rules/modes/deck-format.md` | **クライアント向けスライド資料（提案書・報告デッキ）を HTML→PDF で作るとき**。ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
+| `rules/modes/hana-memo.md` | **hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新するとき**（`/hana-memo`）。API仕様・全置換の鉄則（GET→統合→POST）・HTMLサニタイズ制約。固有値（ベースURL・project_id）は `project-config.md` を正とする |
 
 ※ コーディング規約等のルールは必要に応じて追加していくこと。
 
@@ -62,6 +63,7 @@
 | `/commit` | ステージング差分をチェックし、日本語コミットメッセージを提案 |
 | `/commit-pipeline` | staging → 差分確認 → Design.md整合チェック → Codexクロスレビュー → コミット → リファクタ提案 のフルパイプライン |
 | `/refactor` | `rules/modes/refactor.md` に従ってリファクタリング候補を列挙 |
+| `/hana-memo` | hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新（`rules/modes/hana-memo.md` 準拠。**POST は全置換**のため GET→統合→POST を厳守・送信前にユーザー承認） |
 | `/cleanup-permissions` | `.claude/settings.local.json` の permissions を整理 |
 
 ## デザインルールの単一の真実の源 (Design.md)

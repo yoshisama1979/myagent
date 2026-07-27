@@ -58,6 +58,7 @@
 | `rules/modes/estimation.md` | 新機能のタスク抽出・見積もり（難易度評価）を行うとき |
 | `rules/modes/quotation.md` | **顧客向けの見積書**（工数・費用・但し書き）を作成・提示するとき。内部のタスク抽出は rules/modes/estimation.md、見積書への仕立ては rules/modes/quotation.md |
 | `rules/modes/deck-format.md` | **クライアント向けスライド資料（提案書・報告デッキ）を HTML→PDF で作るとき**。ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
+| `rules/modes/hana-memo.md` | **hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新するとき**（`/hana-memo`）。API仕様・全置換の鉄則（GET→統合→POST）・HTMLサニタイズ制約。固有値（ベースURL・project_id）は `project-config.md` を正とする |
 | `.claude/rules/private.md`（常時） | 環境固有の実行メモ（各マシン・各プロジェクトで記入。テンプレ時点は雛形） |
 
 ## スラッシュコマンド (.claude/commands/)
@@ -70,6 +71,7 @@
 | `/refactor` | ステージ済み差分に対し `rules/modes/refactoring.md` に従ってリファクタリングを実施する |
 | `/consistency-check` | 仕様書・テスト仕様書（test.csv）・実装コードの三者整合性チェックを行う |
 | `/inbox` | Inbox モード（`rules/modes/inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する |
+| `/hana-memo` | hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新する（`rules/modes/hana-memo.md` 準拠。**POST は全置換**のため GET→統合→POST を厳守・送信前にユーザー承認） |
 | `/cleanup-permissions` | `.claude/settings.local.json` の permissions.allow リストを汎用パターンに整理する |
 
 > 注記: Autopilot 自走中のコミットは `rules/modes/autopilot.md` の規律で自動的に行われるためコマンド不要。これらは主に都度承認モードで使う。
