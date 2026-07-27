@@ -15,8 +15,14 @@
 | `yoshida` | よしだ歯科 | https://yoshida-smile.info | `searchconsole_yoshida` | `yoshida-dev` | `hp-analysis/yoshida/` | `hp-loop-yoshida` | [sites/yoshida.md](sites/yoshida.md) |
 | `fujisaka` | 藤阪ガス | https://fujisakagas.com/ | `searchconsole_fujisaka` | `fujisaka-dev` | `hp-analysis/fujisaka/` | `hp-loop-fujisaka` | [sites/fujisaka.md](sites/fujisaka.md) |
 | `yokohawaii` | ヨーコハワイ | https://www.yoko-hawaii.com/ | `searchconsole_yokohawaii`（蓄積待ち） | `yokohawaii-dev`（トークン登録待ち） | `hp-analysis/yokohawaii/` | `hp-loop-yokohawaii` | [sites/yokohawaii.md](sites/yokohawaii.md) |
+| `rally` | 全国スタンプラリー（自社） | https://check-rally.com/ | 未連携（要設定） | `rally-dev`（トークン登録待ち） | `hp-analysis/rally/` | `hp-loop-rally` | [sites/rally.md](sites/rally.md) |
+| `konjaku` | 今昔写語（自社） | https://konjaku-photo.jp/ | 未連携（要設定） | `konjaku-dev`（トークン登録待ち） | `hp-analysis/konjaku/` | `hp-loop-konjaku` | [sites/konjaku.md](sites/konjaku.md) |
+| `shigatoyota` | 滋賀トヨタ（受託） | https://shigatoyota.co.jp/ | 未連携（後日設定） | `shigatoyota-dev`（トークン登録待ち） | `hp-analysis/shigatoyota/` | `hp-loop-shigatoyota` | [sites/shigatoyota.md](sites/shigatoyota.md) |
+| `osakatoyopet` | 大阪トヨペット（受託） | https://www.osaka-toyopet.jp/ | 未連携（後日設定） | `osakatoyopet-dev`（トークン登録待ち） | `hp-analysis/osakatoyopet/` | `hp-loop-osakatoyopet` | [sites/osakatoyopet.md](sites/osakatoyopet.md) |
 
 > 各サイトは**独立したループ**として回る（mailbox `to: hp-loop-<site>`／Slack日報スレッド所有者 `hp-loop-<site>`／daily起動も別）。1回の実行を1サイトに限定し、ヘッドレス900秒タイムアウトを避ける。
+>
+> ⚠️ **クライアントのサイト設定ファイル（yoshida / fujisaka / yokohawaii / shigatoyota / osakatoyopet）は git 追跡外＝VPSのみ**（「クライアント分析はgit外」方針・2026-07-16 社長決定）。リポジトリのチェックアウトでは上表のリンクが切れて見えるが**意図的**。git に入るのは自社分（ycom / rally / konjaku）だけ。
 
 ---
 
@@ -28,6 +34,7 @@
 |--------|---------|--------------|------|
 | Google Search Console | 検索クエリ・表示回数・CTR・掲載順位・インデックス | `bin/.venv/bin/python3 bin/gsc-fetch.py`（BigQuery読み取り専用・**ヘッドレス/cron でも実行可**＝settings.local.json許可済・認証は.env自前ロード）。**`--dataset <サイトのGSC dataset>` 必須**（`sites/<site>.md` 参照：ycom/yoshida/fujisaka） | ✅ 取得可 |
 | Google Analytics (GA4) | 流入・流入経路・滞在・離脱・CV | `bin/.venv/bin/python3 bin/ga4-fetch.py`（BigQuery読み取り専用・ヘッドレス可）。**GA4 dataset はサイト別**（ycom=`analytics_265729912` 稼働／yoshida・fujisaka は要確認＝無ければ「データ未取得」と明示し社長へ要求） | 🟡 サイト別 |
+| Google 広告 | 費用・クリック・CV・検索語（無駄配信）・**CVアクション別内訳（計測健全性の検査）** | `bin/.venv/bin/python3 bin/ads-fetch.py`（T-022・BigQuery読み取り専用・ヘッドレス可）。**`--account <customer_id>` で絞る**（値は `sites/<site>.md` の「広告アカウント」行。行が無いサイトは対象外）。データ源＝`YCOM_MCC`（MCC転送・毎日稼働・前日分まで）／MCC外のアカウントは将来 `--dataset` 切替で単独対応 | 🟡 サイト別（ycom/yoshida 連携済・2026-07-27） |
 | サイトアクセス（HTML/レスポンス） | ファーストビュー・導線・on-page信号・速度・モバイル | `curl`/`bin/hp-audit.sh`（運用中）で取得可 | ✅ 取得可 |
 
 > **原則**：GSC/GA4 は BigQuery 経由で**ヘッドレス（cron）でも取得可**＝「承認待ち/未整備で回せない」は誤り。効果計測が要る提案では実データを引く（捏造しない）。ただし **GSC はデータラグ 2〜3日**・施策反映直後は“施策前”値しか出ないので、効果の実測はラグを見越して次サイクルに予約してよい。サイトのソース取得（curl 等）は hp-audit を一次にする。

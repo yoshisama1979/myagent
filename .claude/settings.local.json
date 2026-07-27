@@ -49,6 +49,8 @@
       "Bash(bash bin/mailbox.sh local-send:*)",
       "Bash(bash bin/hp-audit.sh:*)",
       "Bash(bin/.venv/bin/python3 bin/ga4-fetch.py:*)",
+      "Bash(bin/.venv/bin/python3 bin/ads-fetch.py:*)",
+      "Bash(bin/.venv/bin/python bin/ads-fetch.py:*)",
       "Bash(bin/hp-serp.sh:*)",
       "Bash(bin/.venv/bin/python3 bin/hp-compete.py:*)",
       "Bash(bin/.venv/bin/python3 bin/wp-draft.py check:*)",
