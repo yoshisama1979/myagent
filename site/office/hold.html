@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社長の承認待ち（hold/）</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100">
+<div class="max-w-3xl mx-auto p-6">
+
+  <nav class="text-sm text-slate-400 mb-4">
+    <!-- target="_top"：3Dビュー(iframe)内で開かれても入れ子にならず親ごと遷移する -->
+    <a href="../index.html" target="_top" class="text-sky-400 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="list.html" target="_top" class="text-sky-400 hover:underline">エージェントオフィス</a>
+    <span class="mx-1">/</span><span>承認待ち</span>
+  </nav>
+
+  <div class="flex items-end justify-between mb-1">
+    <h1 class="text-2xl font-bold">🗂 社長の承認待ち（hold/）</h1>
+    <button id="reload" class="text-sm text-sky-400 hover:underline">🔄 更新</button>
+  </div>
+  <p class="text-sm text-slate-400 mb-5">
+    外部送信・本番改変など、社長の承認があるまで止まっているメッセージの一覧です（閲覧専用）。
+  </p>
+
+  <div id="items" class="space-y-4"><p class="text-slate-400 text-sm">読み込み中…</p></div>
+
+  <div class="mt-8 text-xs text-slate-500 leading-relaxed border-t border-slate-700 pt-4">
+    承認の実行（hold/ → new/ へ動かす）はブラウザからはまだできません（mailbox スライス3で実装予定）。<br>
+    現状の承認方法：VPS 上で該当メッセージを <span class="font-mono">data/mailbox/hold/</span> から
+    <span class="font-mono">new/</span> へ移すか、AIセッションに「M-… を承認して」と指示してください。<br>
+    データ源：<span class="font-mono">/tools/office/status.php</span>（本文は冒頭1200字まで表示）
+  </div>
+</div>
+
+<script>
+// HTMLへ流し込む動的値のエスケープ（メッセージ本文は自由記述＝必ず通す）
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g,
+    c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+const TYPE_BADGE = {
+  request: 'bg-amber-500/20 text-amber-300', report: 'bg-sky-500/20 text-sky-300',
+  ack: 'bg-emerald-500/20 text-emerald-300', fyi: 'bg-slate-600/40 text-slate-300',
+};
+async function load() {
+  const wrap = document.getElementById('items');
+  let d;
+  try {
+    const r = await fetch('../tools/office/status.php', { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d = await r.json();
+  } catch (e) {
+    wrap.innerHTML = `<p class="text-red-300 text-sm">⚠️ 取得に失敗しました：${esc(e.message)}</p>`;
+    return;
+  }
+  const items = Array.isArray(d.holdItems) ? d.holdItems : [];
+  if (!items.length) {
+    wrap.innerHTML = `<div class="rounded-xl border border-emerald-500/40 bg-emerald-950/30 p-6 text-center">
+      <div class="text-3xl mb-2">🎉</div>
+      <p class="text-emerald-200">いま承認待ちはありません</p></div>`;
+    return;
+  }
+  wrap.innerHTML = '';
+  for (const it of items) {
+    const badge = TYPE_BADGE[it.type] ?? TYPE_BADGE.fyi;
+    const card = document.createElement('div');
+    card.className = 'rounded-xl border border-amber-500/30 bg-slate-800/60 p-4';
+    card.innerHTML =
+      `<div class="flex items-start justify-between gap-3">
+         <h2 class="font-bold text-slate-100">${esc(it.subject)}</h2>
+         <span class="shrink-0 rounded px-2 py-0.5 text-xs ${badge}">${esc(it.type)}</span>
+       </div>
+       <div class="text-xs text-slate-400 mt-1">
+         ${esc(it.from)} → ${esc(it.to)}　｜　${esc(String(it.ts ?? '').slice(0, 16).replace('T', ' '))}
+         　｜　<span class="font-mono">${esc(it.id)}</span>
+       </div>` +
+      (it.preview ? `<pre class="mt-3 whitespace-pre-wrap break-words text-sm text-slate-300 bg-slate-900/70 rounded-lg p-3 max-h-72 overflow-y-auto" style="font-family:inherit">${esc(it.preview)}</pre>` : '');
+    wrap.appendChild(card);
+  }
+}
+document.getElementById('reload').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>

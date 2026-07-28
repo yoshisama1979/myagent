@@ -12,11 +12,14 @@ declare(strict_types=1);
  *     - data/overseer/tick.log        … 末尾だけ読む（実行中 [run] の検知・直近の timeout/fail）
  *     - data/mailbox/new/*.json       … 宛先(to)別の未読件数（本文・件名は返さない）
  *     - data/mailbox/hold/*.json      … 社長の承認待ち件数
+ *     - hana-tools /api/external/office-status … 人間の社員の在席・作業（読み取り専用・5分キャッシュ）
  *
- *   認証: なし（返すのは件数と状態だけ・秘密情報ゼロ。網境界＝Tailscale。
- *         last-tick.txt が既に同条件で公開されているのと同レベル）
+ *   認証: なし（網境界＝Tailscale。last-tick.txt が既に同条件で公開されているのと同レベル）
+ *         ※ hold の件名・社員の作業内容にはクライアント名が含まれる。Tailscale 内限定・社長の
+ *           内部ダッシュボード専用という前提で返している（外部公開しないこと）。
+ *           API トークンはサーバサイドで .env から読むだけで、レスポンスには一切出さない。
  *
- *   返却: {"ok":true,"ts":...,"tick":{...},"hold":N,"agents":[{id,label,island,kind,status,...}]}
+ *   返却: {"ok":true,"ts":...,"tick":{...},"hold":N,"agents":[...],"employees":[...]}
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -58,6 +61,16 @@ $REMOTE_AGENTS = [
     'fujisaka-dev' => '開発｜藤阪ガス',
 ];
 
+// ── 人間の社員（hana-tools users.id → 3Dオフィスの表示）─────────────────────
+// office-status API は在籍者を全員返す（テスト用アカウント・サブアカウントも含む）。
+// ここに載せた id だけ 3D に机を出す＝誰を出すかは社長が決める（増やすときはこの表に1行足す）。
+// note は台帳側の補足（APIからは分からない事情）。状況が変わったらこの行を直す。
+$STAFF = [
+    34 => ['label' => '社長',  'role' => 'president', 'note' => null],       // 松田 祥宗
+    37 => ['label' => '長谷',  'role' => 'staff',     'note' => null],       // 長谷 優里奈
+    36 => ['label' => '渡邉',  'role' => 'staff',     'note' => '休職中'],   // 渡邉 有沙（復職したら note を null に）
+];
+
 /** JSONを1階層だけ安全に読んで "to" を返す（壊れたファイル・巨大ファイル・symlink は無視） */
 function mail_to(string $file): ?string {
     if (!is_file($file) || is_link($file)) return null;
@@ -74,6 +87,109 @@ foreach (array_slice(glob($MAILBOX . '/new/*.json') ?: [], 0, 500) as $f) {   //
     if ($to !== null) $inbox[$to] = ($inbox[$to] ?? 0) + 1;
 }
 $holdCount = count(glob($MAILBOX . '/hold/*.json') ?: []);
+// 承認待ちの中身（3Dポップアップ・hold.html 用＝社長要望 2026-07-18）。閲覧のみで承認操作は無い。
+// Tailscale内限定の前提で件名＋本文冒頭を返す（本文は1200字で打ち切り・走査20件上限・mail_to と同じ防御）
+// mtime降順に並べてから20件に絞る＝21件以上あっても「最新20件」を保証（Codexレビュー 2026-07-28）
+$holdItems = [];
+$holdFiles = glob($MAILBOX . '/hold/*.json') ?: [];
+usort($holdFiles, fn($a, $b) => (@filemtime($b) ?: 0) <=> (@filemtime($a) ?: 0));
+foreach (array_slice($holdFiles, 0, 20) as $f) {
+    if (!is_file($f) || is_link($f)) continue;
+    $sz = @filesize($f);
+    if ($sz === false || $sz > 65536) continue;
+    $j = json_decode((string)@file_get_contents($f), true);
+    if (!is_array($j)) continue;
+    $s = fn($k) => is_string($j[$k] ?? null) ? $j[$k] : '';
+    $holdItems[] = [
+        'id'      => $s('id') !== '' ? $s('id') : basename($f, '.json'),
+        'from'    => $s('from'), 'to' => $s('to'), 'type' => $s('type'), 'ts' => $s('ts'),
+        'subject' => mb_substr($s('subject') !== '' ? $s('subject') : '(件名なし)', 0, 120),
+        'preview' => mb_substr($s('body'), 0, 1200),
+    ];
+}
+usort($holdItems, fn($a, $b) => strcmp($b['ts'], $a['ts']));   // 新しい順
+
+// ── 1.5) 解析掲示板の「🔔 社長への質問」────────────────────────────────
+// 各掲示板 index.html の 🔔 セクションから ID 付きの未対応項目（Q-NNN / Q-Y07 / PI-009 等）を抽出。
+// ✅/解決/回答済 の文脈にある ID は除外。番号なしの質問は拾えない（制約＝UI側にも明示）。
+// 'agent' ＝ 3Dオフィスでその質問を吹き出しで知らせるキャラクター（$AGENTS の id）。
+// tick に登場しないサイト（滋賀トヨタ・大阪トヨペット）はキャラ不在＝null（コルクボードのみ）。
+$QUESTION_BOARDS = [
+    ['key' => 'ycom',        'label' => '解析｜自社YCOM',     'file' => 'site/hp-analysis/ycom/index.html',       'url' => '/hp-analysis/ycom/',       'agent' => 'hp-loop-ycom'],
+    ['key' => 'yoshida',     'label' => '解析｜よしだ歯科',   'file' => 'site/hp-analysis/yoshida/index.html',    'url' => '/hp-analysis/yoshida/',    'agent' => 'hp-loop-yoshida'],
+    ['key' => 'fujisaka',    'label' => '解析｜藤阪ガス',     'file' => 'site/hp-analysis/fujisaka/index.html',   'url' => '/hp-analysis/fujisaka/',   'agent' => 'hp-loop-fujisaka'],
+    ['key' => 'yokohawaii',  'label' => '解析｜ヨーコハワイ', 'file' => 'site/hp-analysis/yokohawaii/index.html', 'url' => '/hp-analysis/yokohawaii/', 'agent' => 'hp-loop-yokohawaii'],
+    ['key' => 'rally',       'label' => '解析｜スタンプラリー', 'file' => 'site/hp-analysis/rally/index.html',    'url' => '/hp-analysis/rally/',      'agent' => 'hp-loop-rally'],
+    ['key' => 'konjaku',     'label' => '解析｜今昔写語',     'file' => 'site/hp-analysis/konjaku/index.html',    'url' => '/hp-analysis/konjaku/',    'agent' => 'hp-loop-konjaku'],
+    ['key' => 'shigatoyota', 'label' => '解析｜滋賀トヨタ',   'file' => 'site/hp-analysis/shigatoyota/index.html', 'url' => '/hp-analysis/shigatoyota/', 'agent' => null],
+    ['key' => 'osakatoyopet','label' => '解析｜大阪トヨペット', 'file' => 'site/hp-analysis/osakatoyopet/index.html', 'url' => '/hp-analysis/osakatoyopet/', 'agent' => null],
+    ['key' => 'ycom-blog',   'label' => 'ブログ｜YCOM',       'file' => 'site/hp-analysis/ycom/blog/index.html',  'url' => '/hp-analysis/ycom/blog/',  'agent' => 'blog-loop-ycom'],
+];
+function board_questions(string $path): array {
+    if (!is_file($path) || is_link($path)) return [];
+    $sz = @filesize($path);
+    if ($sz === false || $sz > 400000) return [];
+    $html = (string)@file_get_contents($path);
+    // 🔔 見出し（コメント行でなく本文側）からセクション末尾（次の ===== コメント）までを切り出す
+    $pos = strpos($html, '🔔');
+    if ($pos === false) return [];
+    $next = strpos($html, '🔔', $pos + 4);            // 1つ目がHTMLコメントのことが多い→2つ目を優先
+    if ($next !== false && $next - $pos < 400) $pos = $next;
+    $end = strpos($html, '<!-- =====', $pos + 10);
+    $slice = substr($html, $pos, ($end !== false ? $end - $pos : 14000));
+    // タグ除去→エンティティ復元（&lt;等の二重表示防止。表示側で再エスケープされるので安全）→空白圧縮
+    $text = html_entity_decode(strip_tags($slice), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    $text = preg_replace('/\s+/u', ' ', $text) ?? '';
+    // ID付き項目を拾い、「解決済みの言及」を除外する（掲示板は散文なのでヒューリスティック）：
+    //   (a) 直前180バイト（約60字）に解決系キーワード … 「✅ Q-001 確定」型。バイト窓のため
+    //       UTF-8の途中切りが起き得る＝正規表現は /u を付けない（不正UTF-8で判定不能に落ちない）
+    //   (b) IDの直後30字（mb）に解決系キーワード      … 「Q-J05（…）は解決済み」型
+    //   (c) スニペット90字内に「アーカイブ」           … 「Q-Y02・Q-Y03…は アーカイブ」型の列挙
+    //   seen は「未対応として採用した時だけ」立てる＝先に解決済み言及があっても、後方に同IDの
+    //   未対応項目があれば拾う（Codexレビュー 2026-07-28）
+    $items = [];
+    if (preg_match_all('/(?:Q|PI)-[A-Z]{0,3}\d{1,4}/u', $text, $mm, PREG_OFFSET_CAPTURE)) {
+        $seen = [];
+        $done = '✅|解決|解消|決着|完了|クローズ|回答済|対応済|アーカイブ';
+        foreach ($mm[0] as [$id, $bytePos]) {
+            if (isset($seen[$id])) continue;
+            $before = substr($text, max(0, $bytePos - 180), min(180, $bytePos));
+            if (preg_match('/' . $done . '/', $before)) continue;
+            $snippet = mb_substr(substr($text, $bytePos), 0, 90);
+            $head = mb_substr($snippet, 0, 30);
+            if (preg_match('/' . $done . '|確定|登録済/u', $head)) continue;
+            if (mb_strpos($snippet, 'アーカイブ') !== false) continue;
+            $seen[$id] = true;
+            $items[] = ['id' => $id, 'text' => $snippet];
+        }
+    }
+    return $items;
+}
+$qBoards = []; $qTotal = 0;
+foreach ($QUESTION_BOARDS as $b) {
+    $items = board_questions($ROOT . '/' . $b['file']);
+    $qTotal += count($items);
+    $qBoards[] = ['key' => $b['key'], 'label' => $b['label'], 'url' => $b['url'],
+                  'agent' => $b['agent'], 'count' => count($items), 'items' => $items];
+}
+
+// ── 1.6) Chatwork整理板（Comms モード）: 台帳から社長のボール数を数える ──────────
+// data/comms/chatwork/ledger.md（source of truth）の C-NNN 行を状態絵文字で集計するだけ。
+// 件名・ルーム名（クライアント名を含む）はここでは返さない＝件数とリンクのみ（詳細は /comms/ で見る）。
+// 台帳が無い（未導入・蒸留前）は null＝画面には「—」を出す（0件と偽らない）。
+$comms = null;
+$commsLedger = $ROOT . '/data/comms/chatwork/ledger.md';
+if (is_file($commsLedger) && !is_link($commsLedger)) {
+    $sz = @filesize($commsLedger);
+    if ($sz !== false && $sz < 200000) {
+        $md = (string)@file_get_contents($commsLedger);
+        $red   = preg_match_all('/^C-\d+\s*\|\s*🔴/mu', $md);
+        $green = preg_match_all('/^C-\d+\s*\|\s*🟢/mu', $md);
+        $updated = null;
+        if (preg_match('/蒸留済み:\s*([0-9]{4}-[0-9]{2}-[0-9]{2}[ 0-9:]*)/u', $md, $m)) $updated = trim($m[1]);
+        $comms = ['red' => (int)$red, 'green' => (int)$green, 'updated' => $updated];
+    }
+}
 
 // ── 2) heartbeat: エージェント別の pending / action ──────────────────────
 // 形式: agent-tick alive: <ts> | mode=.. force=.. | label:pending:action ... | status=..
@@ -197,6 +313,205 @@ foreach ($REMOTE_AGENTS as $id => $label) {
     ];
 }
 
+// ── 5) hana-tools オフィス状況（人間の社員の在席・作業）──────────────────────
+// 読み取り専用 GET。トークンは .env からサーバサイドで読むだけで、返却JSONには出さない。
+// hana-tools に毎回叩きに行かないよう 5 分キャッシュ（社長方針 2026-07-23：負荷軽減）。
+// 取得できないときは直前のキャッシュを stale 付きで返す（数字を捏造しない＝「未取得」を明示）。
+
+/** .env から必要キーだけ安全に取り出す（source しない・他行のクオート崩れに巻き込まれない） */
+function env_value(string $key, string $envFile): string {
+    if (!is_file($envFile)) return '';
+    $fp = @fopen($envFile, 'rb');
+    if (!$fp) return '';
+    $val = '';
+    while (($line = fgets($fp)) !== false) {
+        if (!preg_match('/^\s*' . preg_quote($key, '/') . '=(.*)$/', $line, $m)) continue;
+        $v = rtrim($m[1], "\r\n");
+        $v = trim($v);
+        if (strlen($v) >= 2 && (($v[0] === '"' && substr($v, -1) === '"') || ($v[0] === "'" && substr($v, -1) === "'"))) {
+            $v = substr($v, 1, -1);
+        }
+        $val = $v;
+        break;                                   // 最初の一致のみ（hana-api.sh と同じ規約）
+    }
+    fclose($fp);
+    return $val;
+}
+
+/** hana-tools の読み取りGETを1本にまとめる。戻り: ['json'=>array|null, 'error'=>string|null] */
+function hana_api_get(string $path, string $root, int $timeout = 5): array {
+    $envFile = $root . '/.env';
+    $token = env_value('HANA_TOOLS_API_TOKEN', $envFile);
+    $base  = env_value('HANA_TOOLS_BASE_URL', $envFile);
+    if ($base === '') $base = 'https://stg.hana-tools.com';
+    if ($token === '' || $token === 'your-token-here') return ['json' => null, 'error' => 'no_token'];
+    if (!function_exists('curl_init'))                 return ['json' => null, 'error' => 'no_curl'];
+
+    $ch = curl_init(rtrim($base, '/') . $path);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_HTTPHEADER     => ['X-API-TOKEN: ' . $token],
+        CURLOPT_CONNECTTIMEOUT => 3,
+        CURLOPT_TIMEOUT        => $timeout,   // ダッシュボードのポーリングを詰まらせない
+        CURLOPT_SSL_VERIFYPEER => false,      // hana-api.sh の -k と同条件（stg 証明書）
+        CURLOPT_SSL_VERIFYHOST => 0,
+    ]);
+    $body = curl_exec($ch);
+    $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $cerr = curl_error($ch);
+    curl_close($ch);
+    if ($body === false || $cerr !== '') return ['json' => null, 'error' => 'network'];
+    if ($code !== 200)                   return ['json' => null, 'error' => 'http_' . $code];
+    $j = json_decode((string)$body, true);
+    return is_array($j) ? ['json' => $j, 'error' => null] : ['json' => null, 'error' => 'bad_payload'];
+}
+
+/**
+ * キャッシュ付きの取得。$fetch は ['payload'=>..,'error'=>..] を返すクロージャ。
+ * 失敗時は直前の payload を stale で返し、fetchedAt は進める（＝APIが落ちている間、
+ * 毎リクエストがタイムアウト待ちにならないバックオフ）。数字は決して作らない。
+ */
+function hana_cached(string $cacheFile, int $ttl, callable $fetch): array {
+    $now = time();
+    $cached = null;
+    if (is_file($cacheFile) && !is_link($cacheFile)) {
+        $j = json_decode((string)@file_get_contents($cacheFile), true);
+        if (is_array($j) && array_key_exists('payload', $j)) $cached = $j;
+    }
+    $cachedAt = $cached ? (int)($cached['fetchedAt'] ?? 0) : 0;
+    if ($cached && ($now - $cachedAt) < $ttl) {
+        return ['payload' => $cached['payload'], 'fetchedAt' => $cachedAt,
+                'stale' => (bool)($cached['stale'] ?? false), 'error' => $cached['error'] ?? null];
+    }
+    $r = $fetch();
+    $payload = ($r['error'] === null) ? $r['payload'] : ($cached['payload'] ?? null);
+    $rec = ['fetchedAt' => $now, 'payload' => $payload,
+            'stale' => ($r['error'] !== null && $payload !== null), 'error' => $r['error']];
+    // アトミック書き込み（読み手が壊れた JSON を掴まない）。書けなくても致命ではない＝無視して続行
+    $dir = dirname($cacheFile);
+    if (!is_dir($dir)) @mkdir($dir, 0775, true);   // 置き場が無い環境で毎回API直叩きになるのを防ぐ
+    $tmp = $cacheFile . '.tmp' . getmypid();
+    if (@file_put_contents($tmp, json_encode($rec, JSON_OPT | JSON_INVALID_UTF8_SUBSTITUTE)) !== false) {
+        @rename($tmp, $cacheFile);
+    } else {
+        @unlink($tmp);
+    }
+    return ['payload' => $payload, 'fetchedAt' => $now, 'stale' => $rec['stale'], 'error' => $r['error']];
+}
+
+/** office-status（在席・作業）を5分キャッシュで取得（社長方針 2026-07-23：負荷軽減） */
+function hana_office_status(string $root): array {
+    return hana_cached($root . '/data/office/hana-office-status.json', 300, function () use ($root) {
+        $r = hana_api_get('/api/external/office-status', $root);
+        if ($r['error'] !== null) return ['payload' => null, 'error' => $r['error']];
+        $j = $r['json'];
+        if (!isset($j['employees']) || !is_array($j['employees'])) return ['payload' => null, 'error' => 'bad_payload'];
+        return ['payload' => $j, 'error' => null];
+    });
+}
+
+/**
+ * 全社の未完了ToDoを1回だけ取得し、そこから
+ *   ・担当者別の未完了／期日超過件数
+ *   ・進行中の案件数（未完了ToDoを抱える work のうち status=in_progress の実数）
+ *   ・全社合計
+ * をまとめて算出する。**API呼び出しは1本**（担当者ごとに叩かない＝負荷軽減）。
+ * TTL 30分（社長方針 2026-07-23：件数はリアルタイムでなくてよい）。
+ *
+ * 担当者の決め方：assignee_user_id が null のものは「作成者が担当」＝user_id に寄せる
+ * （hana-tools 側の正規化仕様。bin/hana-api.sh の get_todos と同じ扱い）。
+ * 期日は JST の日付で比較（due_date は UTC ISO8601 で返る）。
+ * 「進行中の案件」は work.status を唯一の情報源とする（projects API は work の status を返さないため、
+ * 未完了ToDoが1件も無い案件は数に入らない＝ボード上もその定義を明記する）。
+ */
+function hana_todo_counts(string $root): array {
+    return hana_cached($root . '/data/office/hana-todo-counts.json', 1800, function () use ($root) {
+        $r = hana_api_get('/api/external/todos?status=incomplete', $root, 8);
+        if ($r['error'] !== null) return ['payload' => null, 'error' => $r['error']];
+        $items = $r['json']['data'] ?? null;
+        if (!is_array($items)) return ['payload' => null, 'error' => 'bad_payload'];
+
+        $jst = new DateTimeZone('Asia/Tokyo');
+        $today = (new DateTime('now', $jst))->format('Y-m-d');
+        $per = []; $works = []; $open = 0; $overdue = 0;
+        foreach ($items as $t) {
+            if (!is_array($t)) continue;
+            $uid = (int)($t['assignee_user_id'] ?? 0);
+            if ($uid === 0) $uid = (int)($t['user_id'] ?? 0);
+            if (!isset($per[$uid])) $per[$uid] = ['open' => 0, 'overdue' => 0];
+            $per[$uid]['open']++; $open++;
+            $due = $t['due_date'] ?? null;
+            if (is_string($due) && $due !== '') {
+                $dt = date_create_immutable($due);
+                if ($dt && $dt->setTimezone($jst)->format('Y-m-d') < $today) {
+                    $per[$uid]['overdue']++; $overdue++;
+                }
+            }
+            $w = is_array($t['work'] ?? null) ? $t['work'] : null;
+            if ($w && ($w['status'] ?? null) === 'in_progress' && !empty($w['id'])) $works[(int)$w['id']] = true;
+        }
+        return ['payload' => [
+            'perUser'        => $per,
+            'activeProjects' => count($works),
+            'total'          => ['open' => $open, 'overdue' => $overdue],
+        ], 'error' => null];
+    });
+}
+
+$hana = hana_office_status($ROOT);
+$todo = hana_todo_counts($ROOT);
+$todoPer = (is_array($todo['payload']) && is_array($todo['payload']['perUser'] ?? null))
+    ? $todo['payload']['perUser'] : null;
+$employees = [];
+$empSource = ['ok' => ($hana['error'] === null), 'stale' => $hana['stale'], 'error' => $hana['error'],
+              'generatedAt' => null,
+              'todo' => ['ok' => ($todo['error'] === null), 'stale' => $todo['stale'], 'error' => $todo['error']]];
+if (is_array($hana['payload'])) {
+    $empSource['generatedAt'] = is_string($hana['payload']['generated_at'] ?? null)
+        ? $hana['payload']['generated_at'] : null;
+    foreach ($hana['payload']['employees'] as $e) {
+        if (!is_array($e)) continue;
+        $id = (int)($e['id'] ?? 0);
+        if (!isset($STAFF[$id])) continue;                    // 台帳に載せた人だけ机を出す
+        $working = (bool)($e['working'] ?? false);
+        $task = (is_array($e['task'] ?? null)) ? $e['task'] : null;
+        $str = function ($v): ?string {
+            return (is_string($v) && $v !== '') ? mb_substr($v, 0, 80) : null;
+        };
+        // 経過分（開始時刻から現在まで）。パースできなければ null＝画面には出さない
+        $elapsed = null;
+        if ($working && $task && is_string($task['started_at'] ?? null)) {
+            $st = date_create_immutable($task['started_at']);
+            if ($st) $elapsed = max(0, (int)floor((time() - $st->getTimestamp()) / 60));
+        }
+        $employees[] = [
+            'id'      => $id,
+            'label'   => $STAFF[$id]['label'],
+            'name'    => $str($e['name'] ?? null) ?? $STAFF[$id]['label'],
+            'role'    => $STAFF[$id]['role'],
+            'note'    => $STAFF[$id]['note'] ?? null,   // 台帳側の補足（休職中 等）
+            'working' => $working,
+            'status'  => ($working ? 'working' : 'off'),
+            'todayMinutes' => (int)($e['today_minutes'] ?? 0),
+            'elapsedMin'   => $elapsed,
+            'task'    => $task ? [
+                'title'   => $str($task['title'] ?? null),
+                'client'  => $str($task['client'] ?? null),
+                'project' => $str($task['project'] ?? null),
+            ] : null,
+            // 担当ToDo（未完了・期日超過）。全社取得が成功していれば、その人の分が0件でも 0 を出す。
+            // 取得自体ができていなければ null＝画面には出さない（0件と偽らない）
+            'todos'   => ($todoPer === null) ? null : [
+                'open'    => (int)($todoPer[(string)$id]['open'] ?? 0),
+                'overdue' => (int)($todoPer[(string)$id]['overdue'] ?? 0),
+            ],
+        ];
+    }
+    // 台帳の並び順（社長→社員）で安定させる
+    $order = array_keys($STAFF);
+    usort($employees, fn($a, $b) => array_search($a['id'], $order, true) <=> array_search($b['id'], $order, true));
+}
+
 $out = json_encode([
     'ok'    => true,
     'ts'    => (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format(DATE_ATOM),
@@ -210,8 +525,21 @@ $out = json_encode([
         'stale'    => (($hbAgeSec === null || $hbAgeSec > 300) && $runningLabel === null),
     ],
     'hold'  => $holdCount,                       // 社長の承認待ちトレイ
+    'holdItems' => $holdItems,                   // 承認待ちの中身（新しい順・閲覧専用）
+    'questions' => ['total' => $qTotal, 'boards' => $qBoards],   // 解析掲示板の社長への質問（ID付きのみ）
+    'comms' => $comms,                           // Chatwork整理板（red=社長のボール/green=相手ボール/updated=蒸留時刻。未導入はnull）
     'unknownInbox' => $unknownInbox,             // 台帳に無い宛先の滞留（内容は出さず件数だけ）
     'agents'=> $agents,
+    'employees' => $employees,                   // 人間の社員（hana-tools タイマー由来）
+    'employeeSource' => $empSource,              // 取得できたか／古いか（捏造しないための状態）
+    // 全社ボード（進行中の案件・未完了ToDo合計）。取得できていなければ null＝数字を出さない
+    'company' => is_array($todo['payload']) ? [
+        'activeProjects' => (int)($todo['payload']['activeProjects'] ?? 0),
+        'todoOpen'       => (int)($todo['payload']['total']['open'] ?? 0),
+        'todoOverdue'    => (int)($todo['payload']['total']['overdue'] ?? 0),
+        'stale'          => $todo['stale'],
+        'fetchedAt'      => $todo['fetchedAt'],
+    ] : null,
 ], JSON_OPT | JSON_INVALID_UTF8_SUBSTITUTE);
 if ($out === false) {                            // 不正UTF-8等での空200を防ぐ（Codex🟡）
     http_response_code(500);

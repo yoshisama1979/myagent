@@ -30,6 +30,25 @@
   #menu a { display:block; color:#bae6fd; text-decoration:none; font-size:12.5px; line-height:2;
     break-inside:avoid; }
   #menu a:hover { color:#fff; text-decoration:underline; }
+  /* ---- 承認待ちポップアップ（書類の山クリックで開く） ---- */
+  #holdPopup { display:none; top:50%; left:50%; transform:translate(-50%,-52%);
+    width:min(560px, calc(100vw - 40px)); max-height:72vh; overflow-y:auto;
+    background:rgba(15,23,42,.96); border:1px solid rgba(251,191,36,.5); border-radius:14px;
+    padding:16px 18px; backdrop-filter:blur(6px); box-shadow:0 20px 60px rgba(0,0,0,.5); }
+  #holdPopup.open { display:block; }
+  #holdPopup h2 { margin:0 0 10px; font-size:15px; color:#fbbf24; }
+  #holdPopup .item { border:1px solid rgba(148,163,184,.25); border-radius:10px; padding:10px 12px; margin-bottom:10px; }
+  #holdPopup .subject { font-weight:700; font-size:13px; }
+  #holdPopup .meta { color:#94a3b8; font-size:11px; margin-top:4px; }
+  #holdPopup pre { white-space:pre-wrap; word-break:break-word; font-family:inherit; font-size:12px;
+    color:#cbd5e1; background:rgba(30,41,59,.6); border-radius:8px; padding:8px 10px; margin:8px 0 0;
+    max-height:180px; overflow-y:auto; }
+  #holdPopup .btns { display:flex; gap:10px; margin-top:12px; }
+  #holdPopup .btns a, #holdPopup .btns button { flex:1; text-align:center; padding:8px 0; border-radius:9px;
+    font-size:13px; cursor:pointer; border:1px solid rgba(125,211,252,.45); color:#7dd3fc;
+    background:none; text-decoration:none; font-family:inherit; }
+  #holdPopup .btns a:hover, #holdPopup .btns button:hover { background:rgba(125,211,252,.12); }
+  #holdPopup .empty { color:#94a3b8; font-size:13px; }
 </style>
 </head>
 <body>
@@ -38,13 +57,15 @@
 <div class="hud" id="hud-top">
   <h1>🏢 はなさか エージェントオフィス</h1>
   <div class="sub" id="tickline">読み込み中…</div>
-  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ 🗂 承認待ち <b id="holdN">-</b> 件 ／ ドラッグで回転・ホイールで拡大</div>
+  <div class="sub" id="staffline">👥 社員の稼働：読み込み中…</div>
+  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ <a href="hold.html" target="_top">🗂 承認待ち <b id="holdN">-</b> 件</a> ／ <span id="qLink" style="cursor:pointer;color:#7dd3fc;text-decoration:underline dotted">🔔 質問 <b id="qN">-</b> 件</span> ／ ドラッグで回転（書類の山・コルクボード・吹き出しをクリックで詳細）</div>
   <span id="menu-btn">📁 メニュー ▾</span>
   <nav id="menu">
     <a href="../business/focus.html" target="_top">🎯 今日のフォーカス</a>
     <a href="../hp-analysis/index.html" target="_top">📈 HP分析ハブ（6＋2サイト）</a>
     <a href="../hp-analysis/ycom/blog/index.html" target="_top">✍️ ブログ分析（YCOM）</a>
     <a href="../business/partner/index.html" target="_top">☀️ 経営パートナー朝礼</a>
+    <a href="../comms/" target="_top">💬 Chatwork整理板（🔴 <span id="cwN">—</span>）</a>
     <a href="../overseer/index.html" target="_top">🧭 統括レポート</a>
     <a href="../decks/index.html" target="_top">📽 プレゼン資料</a>
     <a href="../notes.html" target="_top">📝 横断メモ</a>
@@ -55,11 +76,16 @@
   </nav>
 </div>
 <div class="hud" id="alert"></div>
+<div class="hud" id="holdPopup"></div>
 <div class="hud" id="legend">
   🔨 働き中（画面が光りタイピング）　📬 仕事待ち（机に封筒の山）<br>
-  💤 待機（居眠り中・次の起床を待つ）　⚠️ 異常　🏢 ガラスの向こう＝別拠点の開発
+  💤 待機（居眠り中・次の起床を待つ）　⚠️ 異常　🏢 ガラスの向こう＝別拠点の開発<br>
+  <span style="color:#fcd34d">⌨️ 社員が作業中（頭上に作業内容＋経過時間）　🏠 退勤中＝席が空　🏝 休職中</span>
+  <span style="color:#93c5fd">｜机の前のバッジ＝ ⏱ 本日の合計　📋 ToDo件数　⏰ 期日超過</span><br>
+  🏢 奥の壁＝全社ボード（進行中の案件・未完了ToDo）　※人の稼働は5分ごと・件数は30分ごとに更新<br>
+  <span style="color:#6ee7b7">💬 社長の頭上＝Chatworkで返すべきボール（クリックで整理板へ・2時間ごと更新）</span>
 </div>
-<div class="hud" id="tip">データ：/tools/office/status.php（5秒ごと更新・読み取り専用）</div>
+<div class="hud" id="tip">データ：/tools/office/status.php（読み取り専用）<br>AIの状態＝5秒ごと／社員の稼働＝5分ごと／ToDo・案件数＝30分ごと</div>
 
 <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
 <script type="module">
@@ -68,12 +94,26 @@ import * as THREE from 'three';
 /* ============================================================
  * 1. レイアウト定義（島＝ラグの上に机を並べる）
  * ============================================================ */
+/* 島の配置（フロア実寸に合わせて格子状に整列）
+ *   床 x -15〜15 / z -10〜10、左壁 x=-15.15、奥壁 z=-10.15、開発ルームのガラス壁 x=4.6（z -7.5〜4.5）
+ *   ラグ幅＝cols*gapX+0.8・奥行＝rows*3.0+0.6 で、cols2 と cols3 は pos.x を揃えると
+ *   ラグの左端が一致する（＝奥列と中列が縦にきれいに揃う）。
+ *
+ *      奥  (z -6.0)   [役員席]      [事務島]
+ *      中  (z  2.0)   [ブログ島]    [解析島]    ‖ガラス‖ [開発ルーム]
+ *      手前(z  7.0)                                      [社員席（人）]
+ */
 const ISLANDS = {
-  exec:       { name:'役員席',   rug:0x4c3a6e, accent:0xa78bfa, pos:[-8.5,  -5.5], cols:2 },
-  analysis:   { name:'解析島',   rug:0x1f4d3d, accent:0x34d399, pos:[-3.2,   3.0], cols:3 },
-  blog:       { name:'ブログ島', rug:0x5c2440, accent:0xfb7185, pos:[-8.5,   3.0], cols:1 },
-  office:     { name:'事務島',   rug:0x1e3a5f, accent:0x38bdf8, pos:[-3.2,  -5.5], cols:2 },
-  'dev-remote': { name:'開発ルーム（別拠点）', rug:0x2b3242, accent:0x94a3b8, pos:[7.2, -1.0], cols:1, remote:true },
+  exec:       { name:'役員席',   rug:0x4c3a6e, accent:0xa78bfa, pos:[-11.5, -6.0], cols:2 },
+  office:     { name:'事務島',   rug:0x1e3a5f, accent:0x38bdf8, pos:[ -3.2, -6.0], cols:2 },
+  blog:       { name:'ブログ島', rug:0x5c2440, accent:0xfb7185, pos:[-11.5,  2.0], cols:2 },
+  analysis:   { name:'解析島',   rug:0x1f4d3d, accent:0x34d399, pos:[ -3.2,  2.0], cols:3 },
+  // 開発ルームはガラスの内側（x>4.6・z -7.5〜4.5）に収める＝机がガラスからはみ出さない
+  'dev-remote': { name:'開発ルーム（別拠点）', rug:0x2b3242, accent:0x94a3b8, pos:[7.2, -4.0], cols:1, remote:true },
+  // 人間の社員席（hana-tools の作業タイマー由来。AIエージェントとは別島にして人/AIを混同させない）
+  // ガラス壁の手前（z>4.5＝仕切りの無い本社フロア側）に置き、開発ルームに紛れ込ませない
+  // 3席を1列に（2列にすると奥行 6.6m で床の手前端 z=10 をはみ出すため）
+  staff:      { name:'社員席（人）', rug:0x6b4f2a, accent:0xfbbf24, pos:[6.5, 7.0], cols:3, gapX:3.05, human:true },
 };
 const DESK_W = 2.0, DESK_D = 1.1, GAP_X = 2.6, GAP_Z = 3.0;
 
@@ -432,6 +472,41 @@ function makeTextSprite(text, { font = '600 30px "Noto Sans JP", sans-serif', pa
   sp.scale.set(w * scale, h * scale, 1);
   return sp;
 }
+// 吹き出しスプライト（キャラ頭上のお知らせ用・下向きのしっぽ付き）
+// text は文字列 or 複数行の配列（社員の作業内容＝作業名／クライアント・案件 の2行に使う）
+function makeBubbleSprite(text, { fill = 'rgba(255,251,235,0.97)', stroke = 'rgba(202,138,4,0.95)',
+    fg = '#78350f', scale = 0.0066 } = {}) {
+  const lines = Array.isArray(text) ? text.filter(s => s) : [text];
+  const font = '700 30px "Noto Sans JP", sans-serif';
+  const sub  = '600 24px "Noto Sans JP", sans-serif';   // 2行目以降は少し小さく
+  const pad = 16, tail = 22, lh = 34;
+  const c = document.createElement('canvas'); const ctx = c.getContext('2d');
+  let w = 0;
+  lines.forEach((s, i) => { ctx.font = i ? sub : font; w = Math.max(w, Math.ceil(ctx.measureText(s).width)); });
+  w += pad * 2;
+  const h = 18 + lines.length * lh + pad;
+  c.width = w * 2; c.height = (h + tail) * 2; ctx.scale(2, 2);
+  ctx.fillStyle = fill;
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(2, 2, w - 4, h - 4, 16); ctx.fill(); ctx.stroke();
+  ctx.beginPath();                                     // しっぽ（本体下辺の中央から下へ）
+  ctx.moveTo(w / 2 - 12, h - 3); ctx.lineTo(w / 2, h + tail - 3); ctx.lineTo(w / 2 + 12, h - 3);
+  ctx.closePath(); ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = fill;                                // しっぽ付け根の枠線を消して一体化
+  ctx.fillRect(w / 2 - 10, h - 6, 20, 5);
+  ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+  lines.forEach((s, i) => {
+    ctx.font = i ? sub : font;
+    ctx.fillStyle = i ? 'rgba(120,53,15,0.78)' : fg;
+    ctx.fillText(s, w / 2, 18 + lh * i + lh / 2);
+  });
+  const tex = new THREE.CanvasTexture(c); tex.anisotropy = 4;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+  sp.scale.set(w * scale, (h + tail) * scale, 1);
+  return sp;
+}
 function makeEmojiSprite(emoji, size = 1.0) {
   const c = document.createElement('canvas'); c.width = 128; c.height = 128;
   const ctx = c.getContext('2d');
@@ -547,13 +622,15 @@ function buildDesk(accent, seed = 0) {
   return { group: g, screen };
 }
 
-function buildAvatar(accent, remote, seed = 0, style = '') {
+function buildAvatar(accent, remote, seed = 0, style = '', role = '') {
   const g = new THREE.Group();
   const alpha = remote ? 0.42 : 1;
   const mk = (color, rough = 0.8) => new THREE.MeshStandardMaterial({
     color, roughness: rough, transparent: remote, opacity: alpha });
   const skin = mk(remote ? 0x8a93a5 : 0xffdfc4);
-  const shirt = mk(accent, 0.7);
+  // 人間の社員は島アクセント（琥珀）でなく服の色で描く＝AIエージェントと見分けやすくする
+  const HUMAN_SHIRT = { president: 0x33415c, staff: 0xd8dee9 };
+  const shirt = mk((style === 'staff' && HUMAN_SHIRT[role]) ? HUMAN_SHIRT[role] : accent, 0.7);
   const HAIR_COLORS = [0x40342a, 0x2e2c31, 0x6b4226, 0x8a6540, 0x54424e, 0x7b7168];
   const hairMat = mk(remote ? 0x6e7788 : HAIR_COLORS[seed % HAIR_COLORS.length], 0.9);
 
@@ -635,6 +712,29 @@ function buildAvatar(accent, remote, seed = 0, style = '') {
       micArm.position.set(-0.19, -0.09, -0.12); micArm.rotation.set(0.9, 0, 0.9); head.add(micArm);
       const mic = new THREE.Mesh(new THREE.SphereGeometry(0.022, 6, 6), bandMat);
       mic.position.set(-0.12, -0.14, -0.2); head.add(mic);
+    } else if (style === 'staff') {
+      // 人間：社長＝スーツの襟とネクタイ／社員＝社員証のストラップ
+      if (role === 'president') {
+        const lapel = mk(0x27354d, 0.75);
+        for (const sx of [-1, 1]) {
+          const v = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.16, 0.02), lapel);
+          v.position.set(sx * 0.07, 0.88, -0.185); v.rotation.z = sx * 0.28; g.add(v);
+        }
+        const tieMat = mk(0xb0413c, 0.6);
+        const knot = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.04, 0.02), tieMat);
+        knot.position.set(0, 0.93, -0.19); g.add(knot);
+        const tie = new THREE.Mesh(new THREE.ConeGeometry(0.04, 0.2, 4), tieMat);
+        tie.rotation.x = Math.PI; tie.rotation.y = Math.PI / 4;
+        tie.position.set(0, 0.81, -0.2); g.add(tie);
+      } else {
+        const cordMat = mk(0x2f6f9e, 0.8);
+        for (const sx of [-1, 1]) {
+          const cord = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.2, 0.012), cordMat);
+          cord.position.set(sx * 0.07, 0.9, -0.19); cord.rotation.z = sx * 0.22; g.add(cord);
+        }
+        const card = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.07, 0.012), mk(0xf8fafc, 0.5));
+        card.position.set(0, 0.76, -0.2); g.add(card);
+      }
     }
   }
 
@@ -678,11 +778,12 @@ function buildEnvelopePile(n) {
 const avatars = new Map();   // id -> {group, arms, screen, statusSprite, envelopeGroup, deskGroup, state, phase}
 
 function buildIslandRug(isl, count) {
+  const gx = isl.gapX ?? GAP_X;                 // 島ごとに机の間隔を広げられる（既定は共通の GAP_X）
   const rows = Math.ceil(count / isl.cols);
-  const w = isl.cols * GAP_X + 0.8, d = rows * GAP_Z + 0.6;
+  const w = isl.cols * gx + 0.8, d = rows * GAP_Z + 0.6;
   const rug = new THREE.Mesh(new THREE.BoxGeometry(w, 0.06, d),
     new THREE.MeshStandardMaterial({ color: isl.rug, roughness: .95 }));
-  const cx = isl.pos[0] + ((isl.cols - 1) * GAP_X) / 2;
+  const cx = isl.pos[0] + ((isl.cols - 1) * gx) / 2;
   const cz = isl.pos[1] + ((rows - 1) * GAP_Z) / 2;
   rug.position.set(cx, 0.03, cz); rug.receiveShadow = true;
   scene.add(rug);
@@ -724,8 +825,158 @@ function addAgentDesk(agent, index) {
   avatars.set(agent.id, {
     root, desk, av, badgeHolder: holder, badge: null,
     envelopeGroup: null, state: 'unknown', inbox: -1,
+    qCount: 0, qBubble: null,
     phase: Math.random() * Math.PI * 2,   // アニメの位相をばらす
   });
+}
+
+/* ---- 人間の社員（hana-tools の作業タイマー由来）------------------------------
+ * AIエージェントと同じ机だが、状態は working / off の2値だけ（タイマーに休憩の概念が無い）。
+ * 稼働中＝アバターが座ってタイピング＋頭上に「いまの作業」／退勤中＝席が空になる（居眠りではない）。
+ */
+const staffAvatars = new Map();   // employee id -> 表示状態
+
+function addEmployeeDesk(emp, index) {
+  const isl = ISLANDS.staff;
+  const col = index % isl.cols, row = Math.floor(index / isl.cols);
+  const root = new THREE.Group();
+  root.position.set(isl.pos[0] + col * (isl.gapX ?? GAP_X), 0, isl.pos[1] + row * GAP_Z);
+
+  let seed = 2166136261;                       // AI側と同じ決定的ハッシュ（見た目を固定）
+  for (const ch of ('staff-' + emp.id)) seed = Math.imul(seed ^ ch.charCodeAt(0), 16777619) >>> 0;
+  const desk = buildDesk(isl.accent, seed);
+  root.add(desk.group);
+
+  const av = buildAvatar(isl.accent, false, seed, 'staff', emp.role);
+  av.group.position.set(0, 0, 0.72);
+  root.add(av.group);
+
+  // 「社長（松田 祥宗）」／姓を役職名にしている人は氏名だけ（「長谷（長谷 優里奈）」の重複を避ける）
+  const nameText = (emp.name && !emp.name.includes(emp.label))
+    ? `${emp.label}（${emp.name}）` : (emp.name || emp.label);
+  const name = makeTextSprite(nameText,
+    { scale: 0.0078, bg: 'rgba(69,39,10,0.85)', fg: '#fde68a' });
+  name.position.set(0, 2.5, 0.3);
+  root.add(name);
+
+  const holder = new THREE.Group(); holder.position.set(0, 1.95, 0.72);
+  root.add(holder);
+
+  scene.add(root);
+  staffAvatars.set(emp.id, {
+    root, desk, av, badgeHolder: holder, badge: null,
+    bubble: null, bubbleKey: '', badgeRow: null, rowKey: '',
+    todoPile: null, todoKey: '',
+    state: 'unknown', phase: Math.random() * Math.PI * 2,
+  });
+}
+
+// 担当ToDoの山（未完了の書類＋件数バッジ・期日超過は赤で警告）
+function buildTodoPile(open) {
+  const g = new THREE.Group();
+  const shown = Math.min(open, 10);
+  for (let i = 0; i < shown; i++) {
+    const doc = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.04, 0.34),
+      new THREE.MeshStandardMaterial({ color: 0xfdf6e3, roughness: 0.9 }));
+    doc.position.set(Math.sin(i * 3.1) * 0.05, 0.925 + i * 0.045, Math.cos(i * 2.2) * 0.05);
+    doc.rotation.y = Math.sin(i * 4.1) * 0.3;
+    doc.castShadow = true; g.add(doc);
+  }
+  // 件数の文字は机手前のプレート行（低い位置）に出す＝頭上の吹き出し・名札に隠れないようにする
+  return g;
+}
+
+// 分 → 「2時間5分」（0分は「0分」）。今日の作業時間の表示用
+function fmtMinutes(min) {
+  const m = Math.max(0, Math.floor(Number(min) || 0));
+  return m >= 60 ? `${Math.floor(m / 60)}時間${m % 60}分` : `${m}分`;
+}
+
+/* 机の手前に並べる小さなバッジ列（アイコン＋値）。
+ * 幅を実測して横に詰めて並べるので、文言が伸びてもバッジ同士が重ならない。 */
+function buildBadgeRow(items, y = 0.45, z = 1.35, gap = 0.1) {
+  const g = new THREE.Group();
+  const sprites = items.map(it => makeTextSprite(it.text,
+    { font: '700 24px "Noto Sans JP"', scale: 0.0066, pad: 12, bg: it.bg, fg: it.fg }));
+  const total = sprites.reduce((s, sp) => s + sp.scale.x, 0) + gap * (sprites.length - 1);
+  let x = -total / 2;
+  for (const sp of sprites) {
+    sp.position.set(x + sp.scale.x / 2, y, z);
+    x += sp.scale.x + gap;
+    g.add(sp);
+  }
+  return g;
+}
+
+function applyEmployeeStatus(a, emp) {
+  // 状態（稼働中／退勤中。台帳に note があれば休職などの事情を優先して示す）
+  if (a.state !== emp.status) {
+    a.state = emp.status;
+    const working = emp.status === 'working';
+    a.av.group.visible = working;              // 退勤中は席を空ける（居眠りではない＝人は帰っている）
+    if (a.badge) { a.badgeHolder.remove(a.badge); disposeObject(a.badge); }
+    a.badge = makeEmojiSprite(working ? '⌨️' : (emp.note ? '🏝' : '🏠'), 0.55);
+    a.badgeHolder.add(a.badge);
+    const scr = a.desk.screen.material;
+    if (working) { scr.emissive.setHex(0xfbbf24); scr.emissiveIntensity = 0.95; }
+    else { scr.emissive.setHex(0x000000); scr.emissiveIntensity = 0; }
+  }
+
+  // いまの作業（吹き出し）：内容が変わったときだけ作り直す
+  const clip = (s, n) => (s && s.length > n) ? s.slice(0, n - 1) + '…' : (s || '');
+  const t = emp.task || {};
+  const sub = clip([t.client, t.project].filter(Boolean).join('／'), 26);
+  // 経過＝このタスクを開始してからの時間（机の ⏱ バッジ＝本日の合計 とは別物なので「経過」と明示）
+  const el = (emp.elapsedMin === null || emp.elapsedMin === undefined) ? null : fmtMinutes(emp.elapsedMin);
+  const key = emp.status === 'working' ? `${t.title || '作業中'}|${sub}|${el ?? ''}` : '';
+  if (a.bubbleKey !== key) {
+    a.bubbleKey = key;
+    if (a.bubble) { a.root.remove(a.bubble); disposeObject(a.bubble); a.bubble = null; }
+    if (key) {
+      const lines = [`💼 ${clip(t.title, 18) || '作業中'}`, sub];
+      if (el) lines.push(`⏱ 経過 ${el}`);
+      a.bubble = makeBubbleSprite(lines,
+        { fill: 'rgba(255,247,237,0.97)', stroke: 'rgba(217,119,6,0.95)', fg: '#7c2d12', scale: 0.0058 });
+      a.bubble.position.set(0, 2.95, 0.4);
+      a.root.add(a.bubble);
+    }
+  }
+
+  // 机の手前のバッジ列：⏱ 作業時間／📋 ToDo件数／⏰ 期日超過（アイコン＋値のみ）
+  // 時間とToDoを1列に横並びにするので、以前のように上下のプレートが重なることがない。
+  const td = emp.todos || null;
+  const rowKey = [emp.status, emp.todayMinutes, emp.note ?? '',
+                  td ? td.open : '-', td ? td.overdue : '-'].join('|');
+  if (a.rowKey !== rowKey) {
+    a.rowKey = rowKey;
+    if (a.badgeRow) { a.root.remove(a.badgeRow); disposeObject(a.badgeRow); a.badgeRow = null; }
+    const working = emp.status === 'working';
+    const items = [];
+    if (!working && emp.note) {                       // 休職中などの事情（台帳由来）
+      items.push({ text: `🏝 ${emp.note}`, bg: 'rgba(88,28,135,0.85)', fg: '#e9d5ff' });
+    }
+    items.push({ text: `⏱ ${fmtMinutes(emp.todayMinutes)}`,
+      bg: working ? 'rgba(180,83,9,0.9)' : 'rgba(15,23,42,0.8)',
+      fg: working ? '#fde68a' : '#94a3b8' });
+    if (td) {                                          // 取得できたときだけ（0件と偽らない）
+      items.push({ text: `📋 ${td.open}`, bg: 'rgba(30,58,138,0.85)', fg: '#bfdbfe' });
+      if (td.overdue > 0) items.push({ text: `⏰ ${td.overdue}`, bg: 'rgba(153,27,27,0.9)', fg: '#fecaca' });
+    }
+    a.badgeRow = buildBadgeRow(items);
+    a.root.add(a.badgeRow);
+  }
+
+  // 担当ToDoの山（机の上・件数が変わったときだけ作り直す）
+  const todoKey = td ? String(td.open) : '';
+  if (a.todoKey !== todoKey) {
+    a.todoKey = todoKey;
+    if (a.todoPile) { a.root.remove(a.todoPile); disposeObject(a.todoPile); a.todoPile = null; }
+    if (td && td.open > 0) {
+      a.todoPile = buildTodoPile(td.open);
+      a.todoPile.position.set(-0.7, 0, -0.05);   // 机の左側＝モニタ・キーボードを避ける
+      a.root.add(a.todoPile);
+    }
+  }
 }
 
 // 社長の決裁トレイ（hold/）＝役員席そばの小机
@@ -737,10 +988,105 @@ const holdTable = new THREE.Group();
   leg.position.y = 0.4; holdTable.add(leg);
   const lbl = makeTextSprite('🗂 社長の承認待ち', { font: '600 22px "Noto Sans JP"', scale: 0.010 });
   lbl.position.y = 1.7; holdTable.add(lbl);
-  holdTable.position.set(-12.6, 0, -8.2);
+  holdTable.position.set(-12.6, 0, -8.9);   // 役員席ラグ（z -7.8まで）の奥・壁際に寄せる
   scene.add(holdTable);
 }
 let holdPile = null;
+
+// 質問掲示板（コルクボード）＝解析部門から社長への質問。付箋の数＝未回答の質問数
+const qBoard = new THREE.Group();
+{
+  for (const sx of [-1, 1]) {
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 1.9, 8), M.deskLeg);
+    leg.position.set(sx * 0.75, 0.95, 0); qBoard.add(leg);
+  }
+  const frameB = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.25, 0.045),
+    new THREE.MeshStandardMaterial({ color: 0x7a5a33, roughness: 0.8 }));
+  frameB.position.set(0, 1.55, -0.012); qBoard.add(frameB);
+  const cork = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.15, 0.06),
+    new THREE.MeshStandardMaterial({ color: 0xc9a76a, roughness: 0.95 }));
+  cork.position.y = 1.55; cork.castShadow = true; qBoard.add(cork);
+  const lbl = makeTextSprite('🔔 社長への質問', { font: '600 22px "Noto Sans JP"', scale: 0.010 });
+  lbl.position.y = 2.45; qBoard.add(lbl);
+  qBoard.position.set(-9.0, 0, -9.0);       // 同上（役員席の背後の壁際）
+  qBoard.rotation.y = 0.35;   // 部屋の中心を向ける
+  scene.add(qBoard);
+}
+let qNotes = null, qShown = -1;
+
+/* ---- 全社ボード（奥の壁・窓と窓の間の柱に掛ける）------------------------------
+ * 会社全体の数字を1枚で見せる掲示板。中身は hana-tools 由来（30分ごと更新）。
+ * 数字が取れないときは「未取得」と描く＝0件と偽らない。 */
+const companyBoard = new THREE.Group();
+let companyPanel = null, companyKey = '';
+{
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(3.62, 2.18, 0.1),
+    new THREE.MeshStandardMaterial({ color: 0x4a3a26, roughness: 0.8 }));
+  frame.position.z = -0.04; companyBoard.add(frame);
+  companyPanel = new THREE.Mesh(new THREE.PlaneGeometry(3.44, 2.0),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 }));
+  companyPanel.position.z = 0.025; companyBoard.add(companyPanel);
+  companyBoard.position.set(-4.5, 2.6, -9.92);   // 壁(z=-10.15,厚0.3)の室内面より少し手前
+  scene.add(companyBoard);
+}
+
+// ボードの盤面をCanvasで描いてテクスチャに（rows = [{label, value, unit, note, color}]）
+function paintCompanyBoard(rows, footer) {
+  const W = 1032, H = 600;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  x.fillStyle = '#0f172a'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = 'rgba(148,163,184,0.35)'; x.lineWidth = 4;
+  x.strokeRect(14, 14, W - 28, H - 28);
+  x.fillStyle = '#fbbf24'; x.font = '700 46px "Noto Sans JP", sans-serif';
+  x.textBaseline = 'middle'; x.textAlign = 'left';
+  x.fillText('🏢 全社ボード', 48, 68);
+  x.strokeStyle = 'rgba(251,191,36,0.5)'; x.lineWidth = 3;
+  x.beginPath(); x.moveTo(48, 108); x.lineTo(W - 48, 108); x.stroke();
+
+  let y = 190;
+  for (const r of rows) {
+    x.fillStyle = '#cbd5e1'; x.font = '600 40px "Noto Sans JP", sans-serif'; x.textAlign = 'left';
+    x.fillText(r.label, 56, y);
+    x.textAlign = 'right';
+    x.fillStyle = r.color || '#f8fafc'; x.font = '800 78px "Noto Sans JP", sans-serif';
+    const vw = x.measureText(r.value).width;
+    x.fillText(r.value, W - 130, y + 4);
+    x.fillStyle = '#94a3b8'; x.font = '600 34px "Noto Sans JP", sans-serif';
+    x.fillText(r.unit || '', W - 60, y + 18);
+    if (r.note) {
+      x.fillStyle = '#fca5a5'; x.font = '600 30px "Noto Sans JP", sans-serif';
+      x.fillText(r.note, W - 130 - vw - 24, y + 18);
+    }
+    y += 118;
+  }
+  x.fillStyle = '#64748b'; x.font = '500 26px "Noto Sans JP", sans-serif'; x.textAlign = 'left';
+  x.fillText(footer, 56, H - 54);
+  const tex = new THREE.CanvasTexture(c); tex.anisotropy = 4;
+  return tex;
+}
+
+function updateCompanyBoard(co) {
+  const key = co ? `${co.activeProjects}|${co.todoOpen}|${co.todoOverdue}|${co.stale ? 1 : 0}` : 'none';
+  if (companyKey === key) return;
+  companyKey = key;
+  const rows = co ? [
+    { label: '進行中の案件', value: String(co.activeProjects), unit: '件', color: '#5eead4' },
+    { label: '未完了ToDo', value: String(co.todoOpen), unit: '件',
+      note: co.todoOverdue > 0 ? `⏰超過 ${co.todoOverdue}` : '', color: '#93c5fd' },
+  ] : [
+    { label: '進行中の案件', value: '—', unit: '', color: '#94a3b8' },
+    { label: '未完了ToDo', value: '—', unit: '', color: '#94a3b8' },
+  ];
+  const footer = co
+    ? `hana-tools より（30分ごと更新）${co.stale ? '　※データが古い可能性' : ''}`
+    : 'hana-tools から取得できませんでした';
+  const tex = paintCompanyBoard(rows, footer);
+  const old = companyPanel.material.map;
+  companyPanel.material.map = tex;
+  companyPanel.material.needsUpdate = true;
+  if (old) old.dispose();
+}
 
 /* ============================================================
  * 6. 状態の適用（APIレスポンス → 3D表現）
@@ -791,7 +1137,7 @@ function applyStatus(a, data) {
 /* ============================================================
  * 7. API ポーリング＋初回構築
  * ============================================================ */
-let built = false, holdShown = -1;
+let built = false, staffBuilt = false, holdShown = -1;
 async function refresh() {
   let d;
   try {
@@ -813,7 +1159,26 @@ async function refresh() {
       if (fake[ag.id]) { ag.status = fake[ag.id]; if (ag.status === 'inbox' && !ag.inbox) ag.inbox = 3; }
     }
     d.tick.runningNow = 'hp-loop:ycom（デモ）';
-    d.hold = 2;
+    d.hold = 4;
+    d.holdItems = [
+      { id: 'M-DEMO-1', from: 'hp-loop-ycom', to: 'web-hanasaka', type: 'request', ts: '2026-07-18T09:00:00+09:00',
+        subject: '【デモ】本番反映の承認依頼：/price/ 料金表の更新', preview: 'R-036 の料金表更新を本番に反映してよいかの承認依頼です。\n（これはデモ表示のサンプルです）' },
+      { id: 'M-DEMO-2', from: 'partner', to: 'hanasaka-main', type: 'request', ts: '2026-07-18T08:30:00+09:00',
+        subject: '【デモ】クライアントへの提案文送付の承認', preview: 'A社への提案文ドラフトを送付してよいかの承認です。\n（これはデモ表示のサンプルです）' },
+      { id: 'M-DEMO-3', from: 'blog-loop-ycom', to: 'web-hanasaka', type: 'request', ts: '2026-07-18T07:45:00+09:00',
+        subject: '【デモ】記事公開の承認：ドメイン・サーバー費用の記事', preview: '（デモ）' },
+      { id: 'M-DEMO-4', from: 'overseer', to: 'hanasaka-main', type: 'fyi', ts: '2026-07-17T23:10:00+09:00',
+        subject: '【デモ】SYSTEM.md 更新案の承認', preview: '（デモ）' },
+    ];
+    d.questions = { total: 5, boards: [
+      { key: 'ycom', label: '解析｜自社YCOM', url: '/hp-analysis/ycom/', agent: 'hp-loop-ycom', count: 2, items: [
+        { id: 'Q-007', text: 'Q-007（デモ）事例の掲載可否と成果数値のご確認' },
+        { id: 'PI-009', text: 'PI-009（デモ）ブログ記事へのカテゴリ付与のお願い' } ] },
+      { key: 'yoshida', label: '解析｜よしだ歯科', url: '/hp-analysis/yoshida/', agent: 'hp-loop-yoshida', count: 3, items: [
+        { id: 'Q-Y07', text: 'Q-Y07（デモ）電話の実件数の確認' },
+        { id: 'Q-Y01', text: 'Q-Y01（デモ）WEB問診のURL' },
+        { id: 'Q-Y05', text: 'Q-Y05（デモ）症例の続きと費用記載の方針' } ] },
+    ] };
   }
 
   if (!built) {
@@ -831,6 +1196,64 @@ async function refresh() {
     if (a) applyStatus(a, ag);
   }
 
+  updateCompanyBoard(d.company || null);   // 全社ボード（進行中の案件・未完了ToDo）
+
+  // 人間の社員（hana-tools）。初回だけ島と机を作り、以降は状態だけ反映する
+  const emps = Array.isArray(d.employees) ? d.employees : [];
+  if (!staffBuilt && emps.length) {
+    buildIslandRug(ISLANDS.staff, emps.length);
+    emps.forEach((e, i) => addEmployeeDesk(e, i));
+    staffBuilt = true;
+  }
+  for (const e of emps) {
+    const a = staffAvatars.get(e.id);
+    if (a) applyEmployeeStatus(a, e);
+  }
+  // 社員の稼働をHUDに1行（取得できていない・古いときは正直に出す＝数字を作らない）
+  const src = d.employeeSource || {};
+  const staffEl = document.getElementById('staffline');
+  if (staffEl) {
+    if (!emps.length) {
+      staffEl.innerHTML = src.error
+        ? `👥 社員の稼働：<span style="color:#fca5a5">取得できません（${esc(src.error)}）</span>`
+        : '👥 社員の稼働：データなし';
+    } else {
+      const working = emps.filter(e => e.working);
+      const body = working.length
+        ? working.map(e => `<b style="color:#fcd34d">${esc(e.label)}</b> 稼働中${e.task && e.task.title ? `（${esc(e.task.title)}）` : ''}`).join('　')
+        : '全員 退勤中';
+      // 担当ToDo（未完了／期日超過）。取得できていない人は出さない＝0件と偽らない
+      const withTodo = emps.filter(e => e.todos);
+      const todoTxt = withTodo.length
+        ? '　📋 ' + withTodo.map(e => `${esc(e.label)} ${e.todos.open}件` +
+            (e.todos.overdue > 0 ? `<span style="color:#fca5a5">（超過${e.todos.overdue}）</span>` : '')).join('／')
+        : (src.todo && src.todo.error ? '　<span style="color:#fca5a5">📋ToDo取得できず</span>' : '');
+      staffEl.innerHTML = `👥 社員：${body}${todoTxt}` + (src.stale ? '　<span style="color:#fca5a5">※データが古い可能性</span>' : '');
+    }
+  }
+
+  // Chatwork整理板（Comms）：社長が「返すべきボール」を頭上バッジ＋メニューに反映
+  // d.comms が null（台帳未導入・蒸留前）はメニューに「—」＝0件と偽らない
+  const cw = d.comms || null;
+  const cwEl = document.getElementById('cwN');
+  if (cwEl) cwEl.textContent = cw ? String(cw.red) : '—';
+  {
+    const pres = emps.find(x => x.role === 'president');
+    const pa = pres ? staffAvatars.get(pres.id) : null;
+    const n = cw ? cw.red : 0;
+    if (pa && pa.cwCount !== n) {
+      pa.cwCount = n;
+      if (pa.cwBubble) { pa.root.remove(pa.cwBubble); disposeObject(pa.cwBubble); pa.cwBubble = null; }
+      if (n > 0) {
+        pa.cwBubble = makeBubbleSprite([`💬 返すボール ${n}件`, 'クリックで整理板へ'],
+          { fill: 'rgba(236,253,245,0.97)', stroke: 'rgba(5,150,105,0.95)', fg: '#064e3b', scale: 0.0058 });
+        pa.cwBubble.userData.comms = true;
+        pa.cwBubble.position.set(0, 3.95, 0.4);  // 作業吹き出し(2.95・2行+経過で高くなる)より上＝重ならない
+        pa.root.add(pa.cwBubble);
+      }
+    }
+  }
+
   // HUD（動的値は esc() を通す）
   const t = d.tick;
   document.getElementById('tickline').innerHTML =
@@ -842,6 +1265,52 @@ async function refresh() {
   else if (t.status && t.status !== 'ok') { alertEl.textContent = '⚠️ 直近 tick: ' + t.status; alertEl.style.display = 'block'; }
   else alertEl.style.display = 'none';
 
+  // 承認待ち・質問の中身を保持（クリックのポップアップ用）。開いていれば表示も更新
+  holdItemsCache = Array.isArray(d.holdItems) ? d.holdItems : [];
+  holdTotalCache = Number(d.hold) || 0;   // 総数（holdItems は最新20件まで＝見出しで食い違いを出さない）
+  qCache = (d.questions && Array.isArray(d.questions.boards)) ? d.questions : { total: 0, boards: [] };
+  document.getElementById('qN').textContent = qCache.total;
+  if (popupMode) renderPopup();
+
+  // キャラ頭上の吹き出し（担当ボードに未回答質問がある子だけ・件数が変わったときだけ貼り替え）
+  const qPerAgent = {};
+  for (const b of qCache.boards) if (b.agent && b.count) qPerAgent[b.agent] = (qPerAgent[b.agent] || 0) + b.count;
+  for (const [id, a] of avatars) {
+    const n = qPerAgent[id] || 0;
+    if (a.qCount === n) continue;
+    a.qCount = n;
+    if (a.qBubble) { a.root.remove(a.qBubble); disposeObject(a.qBubble); a.qBubble = null; }
+    if (n > 0) {
+      a.qBubble = makeBubbleSprite(`🔔 質問 ${n}件`);
+      a.qBubble.userData.agentId = id;
+      a.qBubble.position.set(0, 3.05, 0.4);
+      a.root.add(a.qBubble);
+    }
+  }
+
+  // 質問掲示板の付箋（件数が変わったときだけ作り直し・旧リソースは破棄）
+  if (qShown !== qCache.total) {
+    qShown = qCache.total;
+    if (qNotes) { qBoard.remove(qNotes); disposeObject(qNotes); }
+    qNotes = null;
+    if (qCache.total > 0) {
+      qNotes = new THREE.Group();
+      const NOTE_COLORS = [0xfff176, 0xf8b4c0, 0xa5d8ff, 0xb9f6ca, 0xffd59e];
+      const shown = Math.min(qCache.total, 12);
+      for (let i = 0; i < shown; i++) {
+        const note = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.3),
+          new THREE.MeshStandardMaterial({ color: NOTE_COLORS[i % 5], roughness: 0.9, side: THREE.DoubleSide }));
+        note.position.set(-0.6 + (i % 4) * 0.4, 1.95 - Math.floor(i / 4) * 0.38, 0.045);
+        note.rotation.z = Math.sin(i * 3.3) * 0.12;
+        qNotes.add(note);
+      }
+      const badge = makeTextSprite(`${qCache.total} 件`,
+        { font: '700 26px "Noto Sans JP"', bg: 'rgba(202,138,4,0.92)', scale: 0.011 });
+      badge.position.y = 2.2; qNotes.add(badge);
+      qBoard.add(qNotes);
+    }
+  }
+
   // 決裁トレイの書類の山（件数が変わったときだけ作り直し・旧リソースは破棄＝Codex🔴）
   if (holdShown !== d.hold) {
     holdShown = d.hold;
@@ -849,19 +1318,76 @@ async function refresh() {
     holdPile = null;
     if (d.hold > 0) {
       holdPile = new THREE.Group();
-      for (let i = 0; i < Math.min(d.hold, 6); i++) {
-        const doc = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.36),
+      const shown = Math.min(d.hold, 10);
+      for (let i = 0; i < shown; i++) {
+        const doc = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.045, 0.36),
           new THREE.MeshStandardMaterial({ color: 0xfff7d6, roughness: .9 }));
-        doc.position.set(0, 0.87 + i * 0.055, 0);
-        doc.rotation.y = Math.sin(i * 4.1) * 0.3; doc.castShadow = true;
+        doc.position.set(Math.sin(i * 3.1) * 0.06, 0.87 + i * 0.05, Math.cos(i * 2.2) * 0.06);
+        doc.rotation.set(0, Math.sin(i * 4.1) * 0.35, Math.sin(i * 2.3) * 0.05);
+        doc.castShadow = true;
         holdPile.add(doc);
       }
       const n = makeTextSprite(`${d.hold} 件`, { font:'700 26px "Noto Sans JP"', bg:'rgba(180,83,9,0.92)', scale:0.011 });
-      n.position.y = 1.35; holdPile.add(n);
+      n.position.y = 1.0 + shown * 0.05 + 0.35; holdPile.add(n);
       holdTable.add(holdPile);
     }
   }
 }
+
+/* ---- ポップアップ（hold＝承認待ちの書類の山／q＝質問コルクボード のクリックで開閉） ---- */
+let holdItemsCache = [], holdTotalCache = 0, qCache = { total: 0, boards: [] }, popupMode = null, qFilterAgent = null;
+function renderPopup() {
+  const el = document.getElementById('holdPopup');
+  let html = '';
+  if (popupMode === 'hold') {
+    html = `<h2>🗂 社長の承認待ち（全 ${holdTotalCache} 件${holdTotalCache > holdItemsCache.length ? `・最新 ${holdItemsCache.length} 件を表示` : ''}）</h2>`;
+    if (!holdItemsCache.length) html += `<div class="empty">いま承認待ちはありません 🎉</div>`;
+    for (const it of holdItemsCache) {
+      html += `<div class="item"><div class="subject">${esc(it.subject)}</div>` +
+        `<div class="meta">${esc(it.from)} → ${esc(it.to)}｜${esc(it.type)}｜${esc(String(it.ts ?? '').slice(0, 16).replace('T', ' '))}</div>` +
+        (it.preview ? `<pre>${esc(it.preview)}</pre>` : '') + `</div>`;
+    }
+    html += `<div class="btns"><a href="hold.html" target="_top">📄 一覧ページで見る</a>` +
+            `<button id="popupClose">✕ 閉じる</button></div>`;
+  } else {
+    // 吹き出しから開いたときは、その担当プロジェクトの板だけに絞る
+    const boards = qFilterAgent ? qCache.boards.filter(b => b.agent === qFilterAgent) : qCache.boards;
+    const total = qFilterAgent ? boards.reduce((n, b) => n + b.count, 0) : qCache.total;
+    const title = (qFilterAgent && boards.length === 1) ? `${boards[0].label} の質問` : '質問';
+    html = `<h2>🔔 ${esc(title)}（${total} 件）</h2>`;
+    if (!total) html += `<div class="empty">いま未回答の質問はありません 🎉</div>`;
+    for (const b of boards) {
+      if (!b.count) continue;
+      html += `<div class="item"><div class="subject">${esc(b.label)}（${b.count}件）　` +
+        `<a href="${esc(b.url)}" target="_top" style="color:#7dd3fc;font-weight:400;font-size:12px">掲示板へ →</a></div>`;
+      for (const it of b.items) html += `<div class="meta" style="margin-top:6px">📌 ${esc(it.text)}…</div>`;
+      html += `</div>`;
+    }
+    html += `<div class="meta" style="margin-top:8px">※ 各掲示板の🔔欄からID付き項目を自動抽出（番号なしの質問は拾えません）。` +
+            `回答は各掲示板の案内どおり Slack日報スレッド返信・/hp-reply で。</div>`;
+    html += `<div class="btns"><a href="../hp-analysis/index.html" target="_top">📄 HP分析ハブへ</a>` +
+            (qFilterAgent ? `<button id="popupAll">🔔 すべての質問（${qCache.total} 件）</button>` : '') +
+            `<button id="popupClose">✕ 閉じる</button></div>`;
+  }
+  el.innerHTML = html;
+  el.querySelector('#popupClose').addEventListener('click', closePopup);
+  const allBtn = el.querySelector('#popupAll');
+  if (allBtn) allBtn.addEventListener('click', () => { qFilterAgent = null; renderPopup(); });
+}
+function openPopup(mode, filterAgent = null) {
+  popupMode = mode; qFilterAgent = filterAgent; renderPopup();
+  document.getElementById('holdPopup').classList.add('open');
+}
+function closePopup() {
+  popupMode = null;
+  document.getElementById('holdPopup').classList.remove('open');
+}
+{
+  const sp = new URLSearchParams(location.search);
+  const p = sp.get('popup');
+  if (p === 'hold' || p === 'q') openPopup(p, p === 'q' ? sp.get('pj') : null);
+}
+document.getElementById('qLink').addEventListener('click', () => openPopup('q'));
 // ポーリング：完了してから次を予約（応答遅延時の多重リクエストを防ぐ＝Codex🟡）
 (async function loop() {
   try { await refresh(); } finally { setTimeout(loop, 5000); }
@@ -896,14 +1422,33 @@ function updateCamera() {
     target.z + dist * Math.sin(phi) * Math.cos(theta));
   camera.lookAt(target);
 }
-let dragging = false, px = 0, py = 0;
-canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; py = e.clientY; });
-addEventListener('pointerup', () => dragging = false);
+let dragging = false, px = 0, py = 0, movedPx = 0;
+canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; py = e.clientY; movedPx = 0; });
+addEventListener('pointerup', e => {
+  // ほぼ動かさずに離した＝クリック → 承認待ちトレイ（書類の山）ならポップアップ
+  if (dragging && movedPx < 6 && e.target === canvas) pickHold(e);
+  dragging = false;
+});
 addEventListener('pointermove', e => {
   if (!dragging) return;
+  movedPx += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
   theta -= (e.clientX - px) * 0.0055; phi -= (e.clientY - py) * 0.0045;
   px = e.clientX; py = e.clientY; updateCamera();
 });
+const raycaster = new THREE.Raycaster(), pointerV = new THREE.Vector2();
+function pickHold(e) {
+  pointerV.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  raycaster.setFromCamera(pointerV, camera);
+  const bubbles = [];
+  for (const a of avatars.values()) if (a.qBubble) bubbles.push(a.qBubble);
+  for (const a of staffAvatars.values()) if (a.cwBubble) bubbles.push(a.cwBubble);   // 社長のChatworkボール
+  const hitBubble = bubbles.length ? raycaster.intersectObjects(bubbles, false)[0] : null;
+  if (hitBubble && hitBubble.object.userData.comms) location.href = '../comms/';
+  else if (hitBubble) openPopup('q', hitBubble.object.userData.agentId);
+  else if (raycaster.intersectObject(holdTable, true).length) openPopup('hold');
+  else if (raycaster.intersectObject(qBoard, true).length) openPopup('q');
+  else if (popupMode) closePopup();   // 他をクリックしたら閉じる
+}
 canvas.addEventListener('wheel', e => { e.preventDefault(); dist *= (1 + Math.sign(e.deltaY) * 0.08); updateCamera(); }, { passive:false });
 
 function resize() {
@@ -934,6 +1479,7 @@ function animate() {
   }
   for (const a of avatars.values()) {
     const ph = a.phase;
+    if (a.qBubble) a.qBubble.position.y = 3.05 + Math.sin(t * 1.8 + ph) * 0.06;
     if (a.state === 'working') {
       // せっせとタイピング：腕が高速に交互、体が小刻みに揺れる
       a.av.arms[0].rotation.x = -1.1 + Math.sin(t * 13 + ph) * 0.22;
@@ -958,6 +1504,22 @@ function animate() {
       a.av.arms[0].rotation.x = -0.35; a.av.arms[1].rotation.x = -0.35;
       a.badgeHolder.position.y = 1.95 + Math.sin(t * 1.4 + ph) * 0.07;
       if (a.badge) a.badge.material.opacity = 0.72 + Math.sin(t * 1.4 + ph) * 0.25;
+    }
+  }
+  // 人間の社員：稼働中＝タイピング／退勤中＝席が空（バッジだけふわふわ）
+  for (const a of staffAvatars.values()) {
+    const ph = a.phase;
+    if (a.bubble) a.bubble.position.y = 2.95 + Math.sin(t * 1.6 + ph) * 0.05;
+    if (a.state === 'working') {
+      a.av.arms[0].rotation.x = -1.1 + Math.sin(t * 11 + ph) * 0.2;
+      a.av.arms[1].rotation.x = -1.1 + Math.sin(t * 11 + ph + Math.PI) * 0.2;
+      a.av.group.position.y = Math.abs(Math.sin(t * 5.5 + ph)) * 0.018;
+      a.av.head.rotation.x = Math.sin(t * 2.6 + ph) * 0.05;
+      a.badgeHolder.position.y = 1.95;
+      if (a.badge) a.badge.material.opacity = 1;
+    } else {
+      a.badgeHolder.position.y = 1.5 + Math.sin(t * 1.2 + ph) * 0.06;
+      if (a.badge) a.badge.material.opacity = 0.6 + Math.sin(t * 1.2 + ph) * 0.15;
     }
   }
   renderer.render(scene, camera);
