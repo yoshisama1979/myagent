@@ -353,8 +353,8 @@ function hana_api_get(string $path, string $root, int $timeout = 5): array {
         CURLOPT_HTTPHEADER     => ['X-API-TOKEN: ' . $token],
         CURLOPT_CONNECTTIMEOUT => 3,
         CURLOPT_TIMEOUT        => $timeout,   // ダッシュボードのポーリングを詰まらせない
-        CURLOPT_SSL_VERIFYPEER => false,      // hana-api.sh の -k と同条件（stg 証明書）
-        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_SSL_VERIFYPEER => true,       // stg 証明書は現在有効（2026-07-28 実測）＝検証を無効化しない
+        CURLOPT_SSL_VERIFYHOST => 2,
     ]);
     $body = curl_exec($ch);
     $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
