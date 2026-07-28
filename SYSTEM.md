@@ -3,7 +3,7 @@
 > **統括者（overseer）が毎ループ冒頭に読む入口。** 変わりにくい**構造**だけをここに置く。
 > 滞り・版ズレ・未回答などの**変わりやすい状態は保存しない**（統括者が都度生成する＝[rules/modes/overseer.md](rules/modes/overseer.md)）。
 > 役割分担：`OVERVIEW.md`＝ディレクトリの地図／`AI-INDEX.md`＝site/中身の地図／**本ファイル＝動くモード同士の関係の地図**。
-> version 0.2（2026-06-26）｜ changelog は末尾。
+> version 0.3（2026-07-28）｜ changelog は末尾。
 
 ---
 
@@ -46,6 +46,7 @@
 | **blog-improve** | blog-loop の既存改善 B に対応。元記事は読むだけ・改善版を**下書き複製**で作成（本番反映は人間） | `/blog-improve <client>`（daily 06:00） | blog-loop 掲示板の B／元記事（`wp-draft.py get`・読取）／GSC | `site/drafts/blog/<client>/improve/`・`improve-log`・WP 改善版draft | **元の公開記事は不変**・公開は人間 | 執筆対象（人間レビュー） | [rules/modes/blog-improve.md](rules/modes/blog-improve.md)（0.1） |
 | **task-partner（進行管理）** | ToDo駆動で案件の進行を管理・橋渡し | `/task-partner`（**仮・コマンド未作成**） | **hana-tools（ToDoが一次）** | `site/clients/*/`（補足追記）・`site/drafts/` | ToDo書込/通知/本番は社長 | 社長＋プロジェクト側エージェント | [rules/modes/task-partner.md](rules/modes/task-partner.md)（0.4） |
 | **Comms（Chatwork蒸留）** | Chatwork新着を4分類（🔴自分ボール/🟢相手ボール/📌確定記録/✅完了→archive）で台帳化し掲示板で見える化 | `bin/comms-tick.sh`（2hおき 6-22時・**新着ゼロならclaude不起動**の純シェルガード→`daily comms`） | `data/comms/chatwork/raw/*.jsonl`（`chatwork-fetch.py poll` が2hおき自動蓄積・読取専用）・台帳 | `data/comms/chatwork/{ledger.md,archive.md}`（台帳が正）・`site/comms/index.html`（ビュー）＝**全て git外** | 外部送信なし（Slack/CW書込禁止）・ルール編集は社長 | 社長（掲示板閲覧・訂正） | [rules/modes/comms.md](rules/modes/comms.md)（0.3） |
+| **Finance（経理）** | 財務データの取り込み検証・集計・経費棚卸し・仕訳案・財務の気づき起票（**登録・支払はしない＝提案と記録まで**） | `/finance`（手動）＋**サブエージェント委任**（Main/partner が Agent ツールで `finance` を起動＝`.claude/agents/finance.md`） | `data/financial/`（PL/BS・仕訳帳・カード明細・journal-rules）・`bin/finance-snapshot.py`・`bin/analyze-mf.py` | `data/financial/ledger.md`（**F-NNN 台帳が正・気づきは報告本文だけに残さない**）・`site/drafts/partner/monthly-cost-review.html`・`site/business/reviews/`（数値のみ）＝台帳は git外 | MF登録・支払・外部送信は社長 | 社長・委任元（partner/Main） | [rules/modes/finance.md](rules/modes/finance.md)（0.1） |
 | **Overseer（統括）** | システム全体の整合・健全性を見張り改善提案 | `/overseer`（+`/loop`・daily 01:00） | 本ファイル・各ルール・各掲示板・mailbox・git・Slack | `site/overseer/index.html`（AI追記・社長がWeb閲覧）・本ファイル保守（合意後） | ルール/本体改変は社長 | 社長 | [rules/modes/overseer.md](rules/modes/overseer.md)（0.2） |
 
 > **マルチサイト/マルチクライアント**：hp-loop は4サイト（`ycom`＝はなさか自社／`yoshida`＝よしだ歯科／`fujisaka`＝藤阪ガス／`yokohawaii`＝ヨーコハワイ）が各々独立日次で回る。blog 系は現状 `ycom` のみ。登録表は各 config（`data/hp-loop/config.md`・`data/blog-loop/config.md`）が一次。
@@ -163,4 +164,5 @@ task-partner ⇄ プロジェクト側     … hana-tools の ToDo（一次）�
 | version | 日付 | 内容 |
 |---------|------|------|
 | 0.1 | 2026-06-18 | 初版。モード地図・ハンドオフトポロジ・チャネル/一次情報マップ・ツール一覧・健康シグナル候補・保守責任を定義 |
+| 0.3 | 2026-07-28 | **Finance（経理）モード追加（社長合意・同日）**＝`/finance`＋サブエージェント委任（`.claude/agents/finance.md`・本システム初のサブエージェント型）。台帳 `data/financial/ledger.md`（F-NNN・git外）新設。partner との棲み分け＝数字の整備・検証=finance／経営判断への翻訳・督促=partner。報告は4部構成（結論/根拠/🔍気づき/記録）＝サブエージェントの見聞をメインへ確実に伝える設計 |
 | 0.2 | 2026-06-26 | **O-008 反映（社長承認）＝地図を実態に同期**。①新モード追加：chat・memo-triage(0.3)・memo-intake(0.4)・blog-loop(0.1)・blog-write(0.1)・blog-improve(0.1)。②版ズレ修正：hp-loop 0.1→**0.5（マルチサイト4サイト ycom/yoshida/fujisaka/yokohawaii）**・overseer 0.1→0.2。③無人ディスパッチャ（agent-tick.sh）と cron スケジュール節を新設。④エージェントID/トークン登録状況・旧称hp-loop孤児の定点監視を明記。⑤ツール群に ga4-fetch/hp-shot/hp-serp/hp-compete/hp-diff/wp-draft/agent-tick を追加。⑥チャネルマップに coverage台帳・ブログ会話・#memo 2層を追加。⑦健康シグナルに往復切れ・地図ドリフト・流用整合を追加 |

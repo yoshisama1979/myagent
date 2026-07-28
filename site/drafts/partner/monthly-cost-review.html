@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>月額費（サブスク・クラウド）棚卸し表【完全版】｜経営パートナー</title>
+<script src="https://cdn.tailwindcss.com/3.4.16" integrity="sha384-mS5Uq7sE90lgbBDN8xgf34ibEgbZo4gB3tfLY40ZRle+M188BQw8onzNHg6GUZaA" crossorigin="anonymous"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-5xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../../business/partner/index.html" class="text-blue-600 hover:underline">経営パートナー 朝礼</a>
+    <span class="mx-1">/</span>
+    <span>月額費の棚卸し表</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">💸 月額費（サブスク・クラウド）棚卸し表【完全版】</h1>
+  <p class="text-gray-600 mb-1">2026-07-28 作成・同日夜 <strong>完全版に更新</strong>（経理データ受領後）｜社長のご投函「月額の支払いを抑えるのは、今の会社の規模からすると比較的簡単に利益につながる。一度見直したい」（7/28 09:41）対応。</p>
+  <p class="text-sm text-gray-500 mb-2">使い方＝<strong>右端の「判断」欄に ◎（継続）／○（見直す・確認する）／×（解約）をつけるだけ</strong>です。番号で「C-3 は×」のようにご返信いただければ、こちらで消し込み・次の一歩に落とします。</p>
+  <p class="text-xs text-emerald-800 bg-emerald-50 border border-emerald-300 rounded p-2 mb-6">🆕 <strong>7/28 夜＝経理データ（PL/BS・仕訳帳〜7/24・カード明細4〜7月）を受領し、6月・7月を追加した完全版に更新しました。</strong>①Cursor＝<strong>解約を明細で確認</strong>（6/2 の月額$20が最後・従量の後請求なし・7月ゼロ）②前版で読めなかった「〜/M」の引き落とし＝<strong>エックスサーバーの月払いと判明</strong>（明細の再出力で文字が読めるようになりました）。</p>
+
+  <!-- 前提 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-4 mb-6 text-sm">
+    <h2 class="font-bold mb-2">📌 データの範囲（正直に）</h2>
+    <ul class="list-disc list-inside space-y-1 text-gray-700">
+      <li>出典＝<strong>りそなデビット（4/1〜7/28）＋住信SBIデビット（4〜7月）＋仕訳帳（〜7/24）＋PL/BS（7月入力分まで）</strong>。</li>
+      <li>月の区切りは<strong>カードの引き落とし日ベース</strong>です（GCP・Google広告は前月利用分が翌月頭に落ちる方式）。</li>
+      <li>7月は <strong>Atlassian（月末請求・約¥8.8千）が未着</strong>、さくら¥40,018 は「未確定」段階＝7月合計は少し増える見込みです。</li>
+      <li>店舗決済・飲食・出張など<strong>サブスクでない変動購入は対象外</strong>にしています（私的な支出の詮索はしません）。</li>
+      <li>カードに写らない固定費（口座振替・請求書払い）は仕訳帳から <strong>F. カード外の固定費</strong> に載せました。</li>
+    </ul>
+  </div>
+
+  <!-- サマリー -->
+  <div class="bg-indigo-50 border-2 border-indigo-400 rounded-lg p-4 mb-6 text-sm">
+    <h2 class="font-bold text-indigo-900 mb-2">📊 まず全体感（4〜7月・カード実測）</h2>
+    <div class="overflow-x-auto">
+    <table class="w-full text-sm bg-white rounded border border-indigo-200 mb-2">
+      <tr class="bg-indigo-100 text-left"><th class="p-2">分類</th><th class="p-2 text-right">4月</th><th class="p-2 text-right">5月</th><th class="p-2 text-right">6月</th><th class="p-2 text-right">7月</th><th class="p-2">メモ</th></tr>
+      <tr class="border-t"><td class="p-2">Google 広告（2アカウント）</td><td class="p-2 text-right">¥97,159</td><td class="p-2 text-right">¥104,238</td><td class="p-2 text-right">¥104,887</td><td class="p-2 text-right">¥104,527</td><td class="p-2 text-xs">月10万で安定（質の改善が先・A-1）</td></tr>
+      <tr class="border-t bg-red-50"><td class="p-2">Google Cloud（GCP）</td><td class="p-2 text-right">¥38,344</td><td class="p-2 text-right">¥53,100</td><td class="p-2 text-right">¥63,125</td><td class="p-2 text-right font-bold text-red-700">¥95,525</td><td class="p-2 text-xs"><strong>🔴 4ヶ月で2.5倍・直近は+3.2万/月に加速</strong></td></tr>
+      <tr class="border-t"><td class="p-2">AI・開発ツール</td><td class="p-2 text-right">¥60,308</td><td class="p-2 text-right">¥168,472</td><td class="p-2 text-right">¥134,015</td><td class="p-2 text-right">¥135,949</td><td class="p-2 text-xs">Cursor は消えたが Claude が増加（B-2）</td></tr>
+      <tr class="border-t"><td class="p-2">デザイン・業務ツール</td><td class="p-2 text-right">¥24,438</td><td class="p-2 text-right">¥25,736</td><td class="p-2 text-right">¥65,924</td><td class="p-2 text-right">¥25,736</td><td class="p-2 text-xs">6月は新顔2件（ラクス¥26千・ウォーター¥14千）</td></tr>
+      <tr class="border-t"><td class="p-2">サーバ・ドメイン</td><td class="p-2 text-right">¥154,109</td><td class="p-2 text-right">¥76,103</td><td class="p-2 text-right">¥123,738</td><td class="p-2 text-right">¥171,500</td><td class="p-2 text-xs">毎月大口あり＝台帳化・保守料との突合が本筋（D）</td></tr>
+      <tr class="border-t bg-indigo-50 font-bold"><td class="p-2">合計</td><td class="p-2 text-right">¥374,358</td><td class="p-2 text-right">¥427,649</td><td class="p-2 text-right">¥491,689</td><td class="p-2 text-right">¥533,237</td><td class="p-2 text-xs">4ヶ月計 ¥182.7万＝<strong>年548万ペース</strong></td></tr>
+    </table>
+    </div>
+    <p class="text-xs text-indigo-900 mb-1"><strong>結論＝「削りたい」とおっしゃっている間に、毎月約5万円ずつ増えています（4月→7月で+42%）。</strong>増分の主因は ①GCP（+5.7万）②Claude（+8.7万）③サーバ年払いの集中。②は AI 稼働の心臓部（意図した投資）ですが、①と③は「中身を1度見る」だけで削れる可能性が高い部分です。</p>
+    <p class="text-xs text-indigo-900">FY2025 の営業利益は ¥79万。このカード経費だけで年548万ペースなので、<strong>1割削るだけで利益が年55万円＝前期営業利益の7割相当が動きます</strong>。</p>
+  </div>
+
+  <!-- A. Google -->
+  <h2 class="text-xl font-bold mb-2">A. Google（月20万円＝最大のかたまり）</h2>
+  <div class="overflow-x-auto">
+  <table class="w-full text-sm bg-white rounded border border-gray-300 mb-2">
+    <tr class="bg-gray-100 text-left"><th class="p-2">#</th><th class="p-2">サービス</th><th class="p-2 text-right">4月</th><th class="p-2 text-right">5月</th><th class="p-2 text-right">6月</th><th class="p-2 text-right">7月</th><th class="p-2">私のメモ</th><th class="p-2 w-14">判断</th></tr>
+    <tr class="border-t"><td class="p-2">A-1</td><td class="p-2">Google 広告（主アカウント）</td><td class="p-2 text-right">¥78,692</td><td class="p-2 text-right">¥82,336</td><td class="p-2 text-right">¥82,084</td><td class="p-2 text-right">¥81,642</td><td class="p-2 text-xs"><strong>金額より「質」の問題が確定済み</strong>＝7/28 朝の実測で、自社(y-com)の CV 779件の8割超がスクロール計測・CV0の検索語に費用の46%。管理画面の作業4点（提起済み）をやれば<strong>同じ月8万でも中身が数倍濃くなります</strong>。減額はその後の判断が得です。</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">A-3</td><td class="p-2">GOOGLE JAPAN ¥18→23千の系列<br>（前版では Workspace と推定）</td><td class="p-2 text-right">¥18,467</td><td class="p-2 text-right">¥21,902</td><td class="p-2 text-right">¥22,803</td><td class="p-2 text-right">¥22,885</td><td class="p-2 text-xs">🆕 <strong>7月明細では「ADS1836645282」＝広告アカウント名義で落ちています</strong>＝Workspace ではなく<strong>2つ目の Google 広告アカウントの可能性が高い</strong>（毎月増加中）。どの媒体・どのサイトの広告か、管理画面でのご確認をお願いします。※だとすると Workspace の支払いがカードに見当たらない＝別経路（口座振替等）かも一緒に確認</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-red-50"><td class="p-2">A-2</td><td class="p-2">Google Cloud（GCP）</td><td class="p-2 text-right">¥38,344</td><td class="p-2 text-right">¥53,100</td><td class="p-2 text-right">¥63,125</td><td class="p-2 text-right font-bold text-red-700">¥95,525</td><td class="p-2 text-xs"><strong>🟡 原因判明（7/28 社長ご報告）＝Google マップ設置サイトのアクセス急増による Maps API 課金。通常運用でないサイトのためマップを撤去済み＝一次対応完了</strong>。残る確認は2つ＝①<strong>効果確認：8月頭の請求（7月利用分）で下がったか</strong>を私が明細で確認します ②<strong>再発防止：APIキーに「HTTPリファラ制限＋1日あたりの上限（クォータ）」を設定（5分）</strong>＝制限なしのキーは第三者に流用されても課金される穴です。アクセス急増が bot/不正流用だった可能性も内訳でわかるので、余裕があればプロジェクト別内訳＋予算アラート設定もおすすめします。※4月¥38千→6月¥63千のなだらかな増加分はマップ以前からの傾向＝BigQuery（私の解析基盤）等の切り分けは内訳を見たときに</td><td class="p-2"></td></tr>
+  </table>
+  </div>
+
+  <!-- B. AI・開発 -->
+  <h2 class="text-xl font-bold mb-2 mt-6">B. AI・開発ツール（月13〜14万円）</h2>
+  <div class="overflow-x-auto">
+  <table class="w-full text-sm bg-white rounded border border-gray-300 mb-2">
+    <tr class="bg-gray-100 text-left"><th class="p-2">#</th><th class="p-2">サービス</th><th class="p-2 text-right">4月</th><th class="p-2 text-right">5月</th><th class="p-2 text-right">6月</th><th class="p-2 text-right">7月</th><th class="p-2">私のメモ</th><th class="p-2 w-14">判断</th></tr>
+    <tr class="border-t bg-emerald-50"><td class="p-2">B-1</td><td class="p-2">Cursor</td><td class="p-2 text-right">¥3,321</td><td class="p-2 text-right">¥67,136</td><td class="p-2 text-right">¥3,337</td><td class="p-2 text-right">¥0</td><td class="p-2 text-xs"><strong>✅ 解約を明細で確認しました</strong>＝6/2 の月額 $20 が最後・懸念していた従量の後請求もなし・7月はゼロ。5月の ¥67千スパイクは単発で終了＝<strong>この件は完了です</strong></td><td class="p-2 font-bold text-emerald-700">×済</td></tr>
+    <tr class="border-t"><td class="p-2">B-2</td><td class="p-2">Claude（Anthropic）※複数契約</td><td class="p-2 text-right">¥11,358</td><td class="p-2 text-right">¥55,770</td><td class="p-2 text-right">¥66,581</td><td class="p-2 text-right font-bold">¥98,174</td><td class="p-2 text-xs">7月の内訳＝<strong>$220×2本＋$110×1本＋$22×2本</strong>（Claude Code 契約分を含む＝Cursor の置き換えなので実質増は差し引きで見るのが公平です）。会社の AI 稼働（私・各解析ループ・開発）の心臓部＝2号商品の原価を兼ねるので「削る」でなく<strong>「誰が何契約か」の台帳化</strong>を推奨。<strong>$22×2本が用途重複していないかだけ</strong>ご確認を</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">B-3</td><td class="p-2">ChatGPT（OpenAI）</td><td class="p-2 text-right">¥7,174</td><td class="p-2 text-right">¥7,130</td><td class="p-2 text-right font-bold">¥25,140</td><td class="p-2 text-right">¥7,308</td><td class="p-2 text-xs"><strong>$22/月×2契約は6・7月も両方継続中</strong>（引き落とし日 14日と21日・カード別）＝Claude 上位プランがある今、1本にすれば<strong>年▲4.3万円</strong>。🆕 さらに <strong>6/30 に $110（¥17,896）の単発課金</strong>あり＝Pro プラン等の心当たりはありますか？（7月には出ていないので単月で止まっています）</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">B-4</td><td class="p-2">TINY TECHNOLOGIES（TinyMCE）</td><td class="p-2 text-right">¥25,841</td><td class="p-2 text-right">¥25,826</td><td class="p-2 text-right">¥26,200</td><td class="p-2 text-right">¥26,514</td><td class="p-2 text-xs"><strong>$155/月＝年32万円で継続中</strong>。エディタ部品のライセンス。<strong>どの案件で使っているか・無償プランや代替で足りないか</strong>の確認価値が大きいです【要・開発確認】</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">B-5</td><td class="p-2">Atlassian</td><td class="p-2 text-right">¥8,703</td><td class="p-2 text-right">¥8,702</td><td class="p-2 text-right">¥8,824</td><td class="p-2 text-right text-gray-400">未着</td><td class="p-2 text-xs">$52.2/月（Jira/Confluence等）。hana-tools 移行後も使っているか・ユーザー数は適正か。7月分は月末請求でこれから落ちます</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">B-6</td><td class="p-2">GitHub</td><td class="p-2 text-right">¥1,833</td><td class="p-2 text-right">¥1,830</td><td class="p-2 text-right">¥1,855</td><td class="p-2 text-right">¥1,875</td><td class="p-2 text-xs">$11/月。開発の基盤＝そのままで良いと思います</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">B-7</td><td class="p-2">Microsoft</td><td class="p-2 text-right">¥2,078</td><td class="p-2 text-right">¥2,078</td><td class="p-2 text-right">¥2,078</td><td class="p-2 text-right">¥2,078</td><td class="p-2 text-xs">Microsoft 365 と推定。台数・要否の確認のみ</td><td class="p-2"></td></tr>
+  </table>
+  </div>
+
+  <!-- C. デザイン・業務 -->
+  <h2 class="text-xl font-bold mb-2 mt-6">C. デザイン・業務ツール（新顔3件あり）</h2>
+  <div class="overflow-x-auto">
+  <table class="w-full text-sm bg-white rounded border border-gray-300 mb-2">
+    <tr class="bg-gray-100 text-left"><th class="p-2">#</th><th class="p-2">サービス</th><th class="p-2 text-right">4月</th><th class="p-2 text-right">5月</th><th class="p-2 text-right">6月</th><th class="p-2 text-right">7月</th><th class="p-2">私のメモ</th><th class="p-2 w-14">判断</th></tr>
+    <tr class="border-t"><td class="p-2">C-1</td><td class="p-2">Adobe</td><td class="p-2 text-right">¥7,780</td><td class="p-2 text-right">¥9,080</td><td class="p-2 text-right">¥9,080</td><td class="p-2 text-right">¥9,080</td><td class="p-2 text-xs">5月から ¥9,080 で安定＝プラン変更か値上げ。制作の必需なら◎で終わりです</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">C-2</td><td class="p-2">Zoom</td><td class="p-2 text-right">¥4,968</td><td class="p-2 text-right">¥4,968</td><td class="p-2 text-right">¥4,968</td><td class="p-2 text-right">¥4,968</td><td class="p-2 text-xs">有料プラン。Zoom型解析サービスの商談にも使うので当面◎が自然</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">C-3</td><td class="p-2">写真AC</td><td class="p-2 text-right">¥1,172</td><td class="p-2 text-right">¥1,172</td><td class="p-2 text-right">¥1,172</td><td class="p-2 text-right">¥1,172</td><td class="p-2 text-xs">素材サイト。制作で使用中なら◎</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">C-4</td><td class="p-2">Apple（COM BILL）</td><td class="p-2 text-right">¥3,580</td><td class="p-2 text-right">¥3,580</td><td class="p-2 text-right">¥3,580</td><td class="p-2 text-right">¥3,580</td><td class="p-2 text-xs">iCloud＋App系の月額と推定（¥400〜¥2,080 の複数口）。中身の確認のみ</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">C-5</td><td class="p-2">🆕 シーエスアール（C S R）</td><td class="p-2 text-right">¥6,938</td><td class="p-2 text-right">¥6,936</td><td class="p-2 text-right">¥6,936</td><td class="p-2 text-right">¥6,936</td><td class="p-2 text-xs"><strong>毎月 ¥6,936＝年8.3万円。何のサービスか私には特定できませんでした</strong>（複合機・セキュリティ等？）。心当たりを一言ください</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">C-6</td><td class="p-2">🆕 ラクスライトクラウド</td><td class="p-2 text-right">—</td><td class="p-2 text-right">—</td><td class="p-2 text-right">¥26,400</td><td class="p-2 text-right">—</td><td class="p-2 text-xs">6/20 に単発 ¥26,400＝<strong>年払いの可能性</strong>（配配メール等のメール配信サービスの会社です）。何の契約か・使っているかをご確認ください</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">C-7</td><td class="p-2">🆕 エフィールウォーター</td><td class="p-2 text-right">—</td><td class="p-2 text-right">—</td><td class="p-2 text-right">¥13,788</td><td class="p-2 text-right">—</td><td class="p-2 text-xs">6/21「毎月20日締め」名義＝事務所のウォーターサーバーと推定。6月のみ写っているのは支払方法変更の可能性＝<strong>月1.4万なら年17万</strong>＝本数・プランの確認価値あり</td><td class="p-2"></td></tr>
+  </table>
+  </div>
+
+  <!-- D. インフラ -->
+  <h2 class="text-xl font-bold mb-2 mt-6">D. サーバ・ドメイン（4ヶ月で¥52.6万＝想定より大きい）</h2>
+  <div class="overflow-x-auto">
+  <table class="w-full text-sm bg-white rounded border border-gray-300 mb-2">
+    <tr class="bg-gray-100 text-left"><th class="p-2">#</th><th class="p-2">サービス</th><th class="p-2 text-right">4月</th><th class="p-2 text-right">5月</th><th class="p-2 text-right">6月</th><th class="p-2 text-right">7月</th><th class="p-2">私のメモ</th><th class="p-2 w-14">判断</th></tr>
+    <tr class="border-t"><td class="p-2">D-1</td><td class="p-2">エックスサーバー（多数契約）</td><td class="p-2 text-right">¥89,546</td><td class="p-2 text-right">¥26,464</td><td class="p-2 text-right">¥17,059</td><td class="p-2 text-right font-bold">¥118,342</td><td class="p-2 text-xs">🆕 前版で読めなかった「〜/M」＝エックスサーバー月払いと判明＝<strong>実額は前版の想定よりずっと大きい（4ヶ月計¥25.1万）</strong>。7月は年払い更新が集中（¥21,600×3・¥12千台×3 等）。<strong>クライアントサイト用が混ざっているはず＝「削る」でなく「保守料で回収できているか」の突合が本筋</strong>＝サーバーパネルの契約一覧を出していただければ保守48契約と突き合わせます</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">D-2</td><td class="p-2">さくらインターネット</td><td class="p-2 text-right">¥57,486</td><td class="p-2 text-right">¥37,158</td><td class="p-2 text-right">¥64,878</td><td class="p-2 text-right">¥41,778</td><td class="p-2 text-xs"><strong>🔴 「年額更新の月だけ膨らむ」ではなく毎月3〜6万の大口が出ています</strong>（4/24 ¥47千・5/26 ¥33千・6/25 ¥61千・7/28 ¥40千※未確定）＝4ヶ月計¥20.1万・年60万ペース。<strong>契約一覧の棚卸しを最優先でおすすめします</strong>（使っていない契約の自動更新が混ざっている典型パターンです）</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">D-3</td><td class="p-2">AWS（2口）</td><td class="p-2 text-right">¥4,905</td><td class="p-2 text-right">¥4,774</td><td class="p-2 text-right">¥4,894</td><td class="p-2 text-right">¥4,825</td><td class="p-2 text-xs">¥650前後と¥4,200前後の2アカウントで安定。何が動いているかの確認【要・開発確認】</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">D-4</td><td class="p-2">ムームードメイン</td><td class="p-2 text-right">¥2,172</td><td class="p-2 text-right">¥7,707</td><td class="p-2 text-right font-bold">¥36,907</td><td class="p-2 text-right">¥6,555</td><td class="p-2 text-xs">6月にドメイン更新が集中（¥2,176×多数＋¥4,365×3＋¥8,429）。<strong>D-1・D-2 と合わせてドメイン台帳で棚卸しを</strong>＝どのドメインが客先請求できているか</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">D-5</td><td class="p-2">クラウドワークス</td><td class="p-2 text-right">¥11,000</td><td class="p-2 text-right">¥22,000</td><td class="p-2 text-right">¥11,000</td><td class="p-2 text-right">¥11,000</td><td class="p-2 text-xs">毎月 ¥11,000 が固定で出ています＝<strong>外注の実費でなく定額オプションの可能性</strong>＝契約内容だけご確認を</td><td class="p-2"></td></tr>
+  </table>
+  </div>
+
+  <!-- F. カード外固定費 -->
+  <h2 class="text-xl font-bold mb-2 mt-6">F. カードに写らない固定費（仕訳帳より・🆕完全版で追加）</h2>
+  <div class="overflow-x-auto">
+  <table class="w-full text-sm bg-white rounded border border-gray-300 mb-2">
+    <tr class="bg-gray-100 text-left"><th class="p-2">#</th><th class="p-2">項目</th><th class="p-2 text-right">月額</th><th class="p-2">私のメモ</th><th class="p-2 w-14">判断</th></tr>
+    <tr class="border-t"><td class="p-2">F-1</td><td class="p-2">地代家賃（事務所）</td><td class="p-2 text-right">¥176,498</td><td class="p-2 text-xs">毎月一定。固定費の柱ですが「削る」対象ではないと思います＝把握のための記載</td><td class="p-2"></td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">F-2</td><td class="p-2">トヨタファイナンス（車両）</td><td class="p-2 text-right">¥51,100〜¥61,391</td><td class="p-2 text-xs">4月 ¥51,100×2回・7/2 ¥61,391（いずれも仕訳未確定の「★要確認」内）。<strong>5・6月に引き落としが見えない＋7月に増額</strong>＝リース/ローンの内容と、5・6月分がどこから落ちているかをご確認ください</td><td class="p-2"></td></tr>
+    <tr class="border-t"><td class="p-2">F-3</td><td class="p-2">水道光熱費</td><td class="p-2 text-right">¥13〜22千</td><td class="p-2 text-xs">季節変動の範囲。対応不要</td><td class="p-2"></td></tr>
+  </table>
+  </div>
+  <p class="text-xs text-gray-500 mb-6">※給料・法定福利費（人件費）は経費見直しの対象外として載せていません。通信回線・保険らしき口座振替は仕訳帳に見当たりませんでした＝別口座からの引き落としがあれば、その通帳データも入れていただくと本当の完全版になります。</p>
+
+  <!-- G. 経理メモ -->
+  <div class="bg-sky-50 border border-sky-300 rounded-lg p-4 text-sm mb-6">
+    <h2 class="font-bold text-sky-900 mb-2">🧾 経理データを拝見して（会計側の連絡事項・4件）</h2>
+    <ol class="list-decimal list-inside space-y-1 text-gray-800 text-xs">
+      <li><strong>未分類「★要確認」が ¥1,429,255・159件</strong>（6月¥60.9万・7月¥55.7万）＝中身はほぼ本表のカード引き落としです。4・5月分は「通信費」等に仕訳済みなので、<strong>同じルールで6・7月分を流し込めば解消します</strong>＝仕訳案の一覧は私が作れます（MFへの登録はご確認後・税理士さんの領域は侵しません）。</li>
+      <li><strong>役員報酬が今期ゼロ</strong>（前年は年¥120万）＝意図した変更か、入力待ちかだけご確認ください。減価償却費・保険料も今期未計上（決算一括なら問題ありません）。</li>
+      <li><strong>現預金 866万→1,670万（+804万）・売掛金 415万→339万</strong>＝先週懸念した「売上が現金になっていない」状態は<strong>解消していました。良いニュースです</strong>（大口の入金があった模様）。</li>
+      <li><strong>次回のPL/BS書き出しは「期間＝4/1〜直近月末」で</strong>お願いします＝今回は終了月が2027-03-31 指定のため、経過月数の自動判定（annual-forecast 等）が「12ヶ月入力済み」と誤認します。</li>
+    </ol>
+  </div>
+
+  <!-- 次の一歩 -->
+  <div class="bg-emerald-50 border-2 border-emerald-400 rounded-lg p-4 text-sm mb-6">
+    <h2 class="font-bold text-emerald-900 mb-2">👣 次の一歩（優先順）</h2>
+    <ol class="list-decimal list-inside space-y-1 text-gray-800">
+      <li><del class="text-gray-400">GCP の請求内訳を見る</del> → <strong class="text-emerald-700">✅ 原因判明＝マップ設置サイトのアクセス急増・マップ撤去済み（7/28 ご報告）</strong>。残り＝<strong>Maps APIキーにリファラ制限＋クォータ上限を設定（5分・再発防止）</strong>。8月頭の請求で下がったかは私が確認します（A-2）。</li>
+      <li><strong>この表に ◎○× を番号でご返信（5分）</strong>＝特に🆕の要確認3件（C-5 シーエスアール・C-6 ラクス・C-7 ウォーター）と B-3 ChatGPT 2契約の一本化。</li>
+      <li><strong>さくら・エックスサーバー・ムームーの契約一覧を出す（10分）</strong>＝3社で4ヶ月¥50.6万。私が保守48契約と突き合わせて「回収できていない契約」を洗い出します（D-1・D-2・D-4）。</li>
+      <li><strong>未分類159件の仕訳＝私が仕訳案を作成</strong>（ご指示があれば着手・登録はご確認後）。</li>
+    </ol>
+    <p class="text-xs text-emerald-900 mt-2">🧭 北極星との結線＝<strong>G0.1（想定営業利益）に直結</strong>。売上を1円も増やさずに利益側から目標に近づける、数少ない「確実に効く」レバーです。いま年548万ペース×増加中なので、<strong>止血（GCP上限・重複解約）だけで年20〜50万規模</strong>が現実的に見えています。</p>
+  </div>
+
+  <p class="text-xs text-gray-500">作成：経営パートナーAI（2026-07-28 完全版）。出典＝りそな・住信SBIデビット明細（4〜7月）＋仕訳帳（〜7/24）＋PL/BS の実測のみ・推測で埋めた金額はありません。名称が推定のものは（推定）と明記しています。決済不可（リトライ）行は集計から除外済み・二重計上はありません。</p>
+
+</div>
+</body>
+</html>

@@ -118,6 +118,7 @@
 | `bin/hana-api.sh`（todos / projects / project notes / clients / search の**読み取り**） | ✅ 可（案件・ToDo・期日超過の把握。書き込み系は不可＝下記） |
 | 財務の読み取り（`site/business/` の集計・`data/financial/` の PL/BS・recurring-revenue） | ✅ 可（**実値・取引明細を Slack/掲示板に不用意に出さない**。経営判断に要る粒度の数字に留める） |
 | `python3 bin/finance-snapshot.py`（経理入力状況＋財務スナップショット・T-019） | ✅ 可（**読み取り専用**＝書き込み・外部送信なし。週1の取得。`--no-fetch` で Sheets を叩かない・`--json` で機械処理） |
+| 財務の深掘り調査・明細検証・仕訳案を **finance サブエージェントへ委任**（Agent ツール・agent type `finance`。2026-07-28 社長合意） | ✅ 可（明細レベルの調査は自分で潜らず委任が既定。結果の🔍気づきは経理台帳 `data/financial/ledger.md`（F-NNN）が正＝朝礼で拾うときは台帳を読む。委任してもA-NNNの責任は本モードに残る） |
 | Write: `site/business/reviews/YYYY-MM.html`（月次財務レビュー）＋ `reviews/index.html` への行追加 | ✅ 可（AIの担当・月初のみ。**過去月の遡り一括作成はしない**＝当時の判断を後から捏造しない） |
 | 各ループ掲示板・notes.html・mailbox 自分宛（`to: partner`）を読む／処理後 `done` で `cur/` へ | ✅ 可（本文は編集しない・履歴を消さない） |
 | `bin/mailbox.sh local-send --from partner --to <相手>`（下ごしらえ・引き渡し＝純粋な内部調整） | ✅ 可（`needs_approval:false`。外部送信・本番改変・hana書込を**相手に促す**ものだけ `--needs-approval`＝`hold/`） |
