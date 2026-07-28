@@ -180,7 +180,9 @@ dispatch() {
     # Edit/Write を拒否する＝acceptEdits でも勝手に書けない（2026-06-26 地図自動編集の再発防止）。
     # 出力は「» 」接頭辞つきで記録：制御マーカー（[run]/[tick]等の行頭タイムスタンプ行）を
     # このスクリプトだけが書ける形にし、claude出力による状態偽装を防ぐ（Codex🔴 2026-07-17）
-    MYAGENT_UNATTENDED=1 timeout --kill-after=30s "${tmo}s" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
+    # MYAGENT_AGENT：エージェント別の追加制限用（comms＝外部入力を読むため書き込み先を
+    # data/comms/・site/comms/ に限定し外部送信系 Bash を拒否＝2026-07-28 Codexレビュー反映）
+    MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
     rc=${PIPESTATUS[0]}
     if [ "$rc" -ne 0 ]; then
       if [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
@@ -224,6 +226,9 @@ dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"
 dispatch "blog-write:ycom"   "/blog-write ycom"   "blog-write-ycom"
 # 既存記事の改善（B）：元記事は触らず改善版を下書き複製で作る。新規(blog-write)とは別ループ・別時刻。
 dispatch "blog-improve:ycom" "/blog-improve ycom" "blog-improve-ycom"
+# Chatwork蒸留：daily強制専用キー（mailbox受信なし）。起動は bin/comms-tick.sh の新着ガード経由
+# （2hおき 6-22時・前回蒸留以降の raw 新着ゼロなら claude を起動しない＝2026-07-27 社長合意）
+dispatch "comms" "/comms" "comms"
 
 # --- 3) ハートビート（毎回・Web可視・書き込み失敗も検知＝Codex🔴2） ---
 HB_LINE="agent-tick alive: $(now) | mode=$MODE force=${FORCE_AGENT:-none} | ${ACTIONS[*]:-none} | status=$(status_str)"

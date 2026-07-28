@@ -163,6 +163,37 @@ def mailbox_backlog():
                         "oldest_days": {k: round(v, 1) for k, v in oldest.items()}}
     return out
 
+# ── 5) 故障：comms（Chatwork蒸留）の無言停止 ───────────────────────────
+def comms_health():
+    """poll カーソルの停滞・state破損・蒸留の遅れを見る（2026-07-28 Codexレビュー反映）。
+    data/comms/ が無い環境（未導入）では None＝何も言わない。マーカーの単純な古さは
+    見ない（新着ゼロの日はマーカーが動かないのが正常）＝「新しい raw があるのに
+    マーカーが追いつかない」だけを遅れとする。"""
+    d = os.path.join(ROOT, "data/comms/chatwork")
+    if not os.path.isdir(d):
+        return None
+    out = {"state_broken": False, "poll_age_h": None, "distill_lag_h": None}
+    now_ts = datetime.datetime.now().timestamp()
+    st = os.path.join(d, "state.json")
+    if os.path.exists(st):
+        try:
+            j = json.load(open(st, encoding="utf-8"))
+            lp = j.get("last_poll")
+            if isinstance(lp, (int, float)):
+                out["poll_age_h"] = round((now_ts - lp) / 3600, 1)
+            else:
+                out["state_broken"] = True
+        except Exception:
+            out["state_broken"] = True
+    raws = glob.glob(os.path.join(d, "raw", "*.jsonl"))
+    if raws:
+        newest_raw = max(os.path.getmtime(f) for f in raws)
+        mark = os.path.join(d, ".last-distill")
+        mark_ts = os.path.getmtime(mark) if os.path.exists(mark) else 0
+        if newest_raw > mark_ts:
+            out["distill_lag_h"] = round((now_ts - newest_raw) / 3600, 1)
+    return out
+
 # ── スナップショット・トレンド ─────────────────────────────────────────
 def load_prev(days_back=6):
     """days_back 日以上前のスナップショットのうち **時刻が最も新しい** ものを返す
@@ -234,9 +265,10 @@ def main():
         fails = tick
         fails.setdefault("fail_source", "tick.log(fallback)")
     mbox = mailbox_backlog()
+    comms = comms_health()
     snap = {"ts": now.isoformat(timespec="seconds"), "autoload": al,
             "states": [{"path": s["path"], "bytes": s["bytes"]} for s in states],
-            "failures": fails}
+            "failures": fails, "comms": comms}
     prev = load_prev()
     prev_states = {s["path"]: s["bytes"] for s in prev["states"]} if prev else {}
 
@@ -273,6 +305,14 @@ def main():
             warns.append("🚨 ハートビートファイルが存在しない（tick 停止の疑い）")
         elif fails.get("heartbeat_age_min") is not None and fails["heartbeat_age_min"] > 10:
             warns.append(f"ハートビートが {fails['heartbeat_age_min']} 分更新なし（tick 停止の疑い）")
+    # 故障：comms（poll 停滞・state破損・蒸留の遅れ＝無言停止の検知。未導入環境では鳴らない）
+    if comms is not None:
+        if comms["state_broken"]:
+            warns.append("🚨 comms state.json が壊れている（poll が毎回失敗している＝poll.log 確認）")
+        if comms["poll_age_h"] is not None and comms["poll_age_h"] > 26:
+            warns.append(f"comms poll が {comms['poll_age_h']}h 停滞（2hおき 6-22時 cron が止まっている疑い）")
+        if comms["distill_lag_h"] is not None and comms["distill_lag_h"] > 6:
+            warns.append(f"comms 蒸留が新着 raw から {comms['distill_lag_h']}h 遅れ（/comms の失敗が続いている疑い＝distill.log 確認）")
     # 故障：mailbox（欠損・壊れたJSONも故障）
     for d, info in mbox.items():
         if info.get("missing"):
@@ -304,6 +344,10 @@ def main():
             continue
         tot = sum(info["per_to"].values())
         print(f"- mailbox {d}/: {tot}件 {info['per_to'] if tot else ''}")
+    if comms is not None:
+        lag = f"{comms['distill_lag_h']}h" if comms["distill_lag_h"] is not None else "なし"
+        print(f"- comms: 最終poll {comms['poll_age_h']}h前 / 蒸留の未処理遅れ {lag}"
+              + (" / 🚨 state破損" if comms["state_broken"] else ""))
     print()
     if warns:
         print("## ⚠️ 閾値超え・悪化トレンド（統括の起票対象はここだけ）")

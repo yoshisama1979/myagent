@@ -232,3 +232,12 @@
 - **使い方**: `python3 bin/system-health.py`（スナップショットを data/overseer/system-health.jsonl に追記＝トレンド比較用）／`--no-log` で表示のみ。
 - **設計原則（最重要）**: 思考・探索の変動費（実行中のトークン量）は**測らない・閾値を設けない・警報しない**（2026-07-24 社長決定＝コストが品質の代理指標に化けて探索を殺すのを防ぐ。北極星レンズと同型）。
 - **限界**: 閾値の一部は出典なしの提案既定値（★印・起票時に「要合意」と明記）／故障計数は failures.jsonl（agent-tick fail() が追記・60日ローテ）が一次で正確・未生成時のみ tick.log の簡易計数に fallback／リモート拠点の mailbox 滞留は拠点PCの稼働状況に依存（滞留＝故障とは限らない・報告して社長判断）。
+
+## T-023 — `bin/chatwork-fetch.py`（Chatwork 新着の差分取得＝Comms モードの一次データ源）
+
+- **作成**：2026-07-27（社長要望＝「Chatwork/メールの要点だけ履歴で残したい。ボールの所在・確定事項・完了で分類したい」。メールは後回し＝Chatworkで型を作ってから横展開）
+- **目的**: `poll`＝前回以降の新着メッセージを `data/comms/chatwork/raw/YYYY-MM.jsonl` へ差分追記（cron 2hおき 6-22時）／`tasks`＝自分の未完了タスク横断取得／`rooms`＝ルーム一覧要約。蒸留（4分類台帳化）は /comms モード（rules/modes/comms.md）が担当＝取得と解釈を分離。
+- **区分**: **読み取り専用**（GET のみ・書き込み系エンドポイントは呼ばない）。トークンは .env の `CHATWORK_API_TOKEN`。
+- **限界**: ①Chatwork API はルームごと**最新100件まで**しか返さない＝取りこぼしは⚠️で自己申告（2h間隔なら実用上問題なし・過去の遡り取得は不可＝forward-only は社長合意 2026-07-27）②1回の poll で叩くのは更新ルーム上位60件まで（レート制限マージン・超過は⚠️申告）③初回 poll は基準点を置くだけで何も取得しない。
+- **堅牢化（2026-07-28 Codexレビュー反映）**: ルーム単位カーソル（message_id 比較）＝取得失敗・上限超過ルームはカーソル未前進で次回自動再取得・秒境界の欠落と重複追記なし／poll 全体を flock 排他／state は atomic 書き込み・破損時は勝手に初期化せず非0終了／raw に from_account_id（ボール判定はIDが正）／poll 停滞・state 破損・蒸留の遅れは system-health.py が監視。あわせて /comms 実行時は guard-unattended-edits.py が書き込み先を data/comms/・site/comms/ に機械的に限定し外部送信系 Bash を拒否（Chatwork 本文＝外部入力のインジェクション対策）。
+- **出力の秘密**: raw・台帳・掲示板はクライアント名/やり取り実体を含むため **data/comms/ と site/comms/ ごと gitignore**（クライアント分析はgit外の方針と同じ）。

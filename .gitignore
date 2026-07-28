@@ -17,6 +17,10 @@ __pycache__/
 # 拠点横断メールボックスのメッセージ実体（クライアント情報を含み得る・git非追跡）
 data/mailbox/
 
+# Chatwork/メールの取得ログ・蒸留履歴（クライアント名・やり取り実体を含む・git非追跡）
+data/comms/
+site/comms/
+
 # 月次アップロードデータ（売上・コスト等）
 data/monthly/
 

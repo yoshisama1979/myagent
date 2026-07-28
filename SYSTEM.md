@@ -45,6 +45,7 @@
 | **blog-write** | blog-loop の新規テーマ T に対応し**完成原稿ドラフト（本文まで）**を作成→WP下書き(draft)投稿 | `/blog-write <client>`（daily 05:30・強制専用） | blog-loop 掲示板の T／`from-president.md`／競合・既存記事（読取） | `site/drafts/blog/<client>/`・`drafts-log`・WP `status=draft`（合意・creds後） | **公開(publish)は人間**・WP書込は合意/creds後 | 執筆対象（人間レビュー） | [rules/modes/blog-write.md](rules/modes/blog-write.md)（0.1） |
 | **blog-improve** | blog-loop の既存改善 B に対応。元記事は読むだけ・改善版を**下書き複製**で作成（本番反映は人間） | `/blog-improve <client>`（daily 06:00） | blog-loop 掲示板の B／元記事（`wp-draft.py get`・読取）／GSC | `site/drafts/blog/<client>/improve/`・`improve-log`・WP 改善版draft | **元の公開記事は不変**・公開は人間 | 執筆対象（人間レビュー） | [rules/modes/blog-improve.md](rules/modes/blog-improve.md)（0.1） |
 | **task-partner（進行管理）** | ToDo駆動で案件の進行を管理・橋渡し | `/task-partner`（**仮・コマンド未作成**） | **hana-tools（ToDoが一次）** | `site/clients/*/`（補足追記）・`site/drafts/` | ToDo書込/通知/本番は社長 | 社長＋プロジェクト側エージェント | [rules/modes/task-partner.md](rules/modes/task-partner.md)（0.4） |
+| **Comms（Chatwork蒸留）** | Chatwork新着を4分類（🔴自分ボール/🟢相手ボール/📌確定記録/✅完了→archive）で台帳化し掲示板で見える化 | `bin/comms-tick.sh`（2hおき 6-22時・**新着ゼロならclaude不起動**の純シェルガード→`daily comms`） | `data/comms/chatwork/raw/*.jsonl`（`chatwork-fetch.py poll` が2hおき自動蓄積・読取専用）・台帳 | `data/comms/chatwork/{ledger.md,archive.md}`（台帳が正）・`site/comms/index.html`（ビュー）＝**全て git外** | 外部送信なし（Slack/CW書込禁止）・ルール編集は社長 | 社長（掲示板閲覧・訂正） | [rules/modes/comms.md](rules/modes/comms.md)（0.3） |
 | **Overseer（統括）** | システム全体の整合・健全性を見張り改善提案 | `/overseer`（+`/loop`・daily 01:00） | 本ファイル・各ルール・各掲示板・mailbox・git・Slack | `site/overseer/index.html`（AI追記・社長がWeb閲覧）・本ファイル保守（合意後） | ルール/本体改変は社長 | 社長 | [rules/modes/overseer.md](rules/modes/overseer.md)（0.2） |
 
 > **マルチサイト/マルチクライアント**：hp-loop は4サイト（`ycom`＝はなさか自社／`yoshida`＝よしだ歯科／`fujisaka`＝藤阪ガス／`yokohawaii`＝ヨーコハワイ）が各々独立日次で回る。blog 系は現状 `ycom` のみ。登録表は各 config（`data/hp-loop/config.md`・`data/blog-loop/config.md`）が一次。
@@ -67,6 +68,8 @@
 | daily hp-loop | `0 2`(ycom)／`0 2:30`(yoshida)／`0 3`(fujisaka)／yokohawaii（蓄積待ち） | `/hp-loop <site>`（サイト別に強制起動） |
 | daily blog | `0 5`(blog-loop)／`30 5`(blog-write)／`0 6`(blog-improve)・ycom | ブログ診断→新規記事下書き→既存改善下書き |
 | daily memo | `0 23 * * *` | `/memo-intake`（#memo 当日分を notes.html へまとめ） |
+| chatwork取得 | `0 6-22/2 * * *`（純Python・claude不使用） | `chatwork-fetch.py poll`（新着を raw へ差分蓄積） |
+| daily comms | `10 6-22/2 * * *`（ガード経由） | `comms-tick.sh`＝新着rawが無ければ即終了／あれば `/comms`（蒸留→台帳→掲示板） |
 
 > daily は取りこぼすと「毎日忘れず」の規律が崩れるためロックを最大60分待つ。normal は前回稼働中なら静かにスキップ（次tickで拾う）。crontab 追加・`settings.local.json` 許可は社長作業。
 
@@ -124,6 +127,8 @@ task-partner ⇄ プロジェクト側     … hana-tools の ToDo（一次）�
 | `hp-diff.py` | サイクル間の差分（効果検証・変化検知） | 読取専用（T-009） |
 | `wp-draft.py` | WordPress 下書き(draft)の get/post/update/check（blog-write/improve 用・公開はしない） | 外部書込（draft限定・creds/合意後） |
 | `check-ssl.sh` | SSL有効期限チェック | 読取専用 |
+| `chatwork-fetch.py` | Chatwork 新着の差分取得（poll/tasks/rooms・2hおき 6-22時 cron）→ `data/comms/chatwork/raw/` | 読取専用（T-023・出力はgit外） |
+| `comms-tick.sh` | Comms 蒸留の起動ガード（新着rawゼロなら claude 不起動→あれば `daily comms` へ委譲） | 起動制御（純シェル） |
 | `mailbox.sh` | 拠点横断メールボックス client（inbox/send/done／同一VPSは local-send） | 内部書込（hold/で社長ゲート） |
 | `slack.sh` | Slack Incoming Webhook 送信 | **外部送信**（automation.md準拠） |
 | `slack-poll.py` | 社長Slackの双方向（fetch=新着→mailbox／post・reply=投稿・返信／stock・done・untrack=メモ運用） | 読取＋社長チャンネルへの内部報告。last-seenで新着だけ |
