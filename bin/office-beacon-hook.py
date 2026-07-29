@@ -12,9 +12,13 @@
     コンテキストを汚さない（UserPromptSubmit の stdout は会話に注入されるため特に）。
   - task は下の表の固定ラベルのみ。生のプロンプト・依頼文・Bashコマンド・クライアント実名を
     ビーコンに渡さない（Codexレビュー 2026-07-29 🟡＝task はダッシュボードAPIにそのまま載る）。
-  - 無人セッション（MYAGENT_UNATTENDED=1）では会話窓口を点灯しない（cron の /comms 等が
-    「社長と会話中」に化けるのを防ぐ）。委任点灯は無人でも行う＝partner が finance に
-    委任した瞬間が見えるのはむしろ本命（依頼元は MYAGENT_AGENT から取る）。
+  - 会話窓口を点灯する条件は「無人かどうか」ではなく「相手が誰か」で見る（2026-07-29 修正）。
+    Slack で社長が話しかけたときも agent-tick.sh はヘッドレス起動（MYAGENT_UNATTENDED=1）
+    なので、無人だからと抑止すると *社長との会話中こそ机が光らない* という逆の穴になる。
+    ＝ MYAGENT_AGENT が会話窓口（hanasaka-main）の実行、または有人セッションのときだけ点灯し、
+    それ以外の無人実行（cron の /comms・/overseer 等）では点灯しない。
+  - 委任点灯は無人でも行う＝partner が finance に委任した瞬間が見えるのはむしろ本命
+    （依頼元は MYAGENT_AGENT から取る）。
 """
 import json
 import os
@@ -57,8 +61,11 @@ def main():
         else:
             run_beacon(["stop", desk[0], key])
     elif mode == "prompt":
-        if os.environ.get("MYAGENT_UNATTENDED") == "1":
-            return                      # 無人セッションは「社長と会話中」ではない
+        # 有人セッション、または Slack 経由の会話窓口（ヘッドレスだが相手は社長）だけ点灯。
+        # 他の無人実行（/comms・/overseer 等）は「社長と会話中」ではないので点灯しない。
+        unattended = os.environ.get("MYAGENT_UNATTENDED") == "1"
+        if unattended and os.environ.get("MYAGENT_AGENT") != CONVERSATION_DESK[0]:
+            return
         run_beacon(["start", CONVERSATION_DESK[0], CONVERSATION_DESK[1], "", key])
 
 
