@@ -41,7 +41,7 @@ const ISLANDS = {
   exec:       { name: '役員席（統括・経営パートナー）',      color: 'border-purple-500/40' },
   analysis:   { name: '解析島（HP分析ループ）',              color: 'border-emerald-500/40' },
   blog:       { name: 'ブログ島（分析・執筆・改善）',        color: 'border-rose-500/40' },
-  office:     { name: '事務島（会話窓口・メモ係）',          color: 'border-sky-500/40' },
+  office:     { name: '事務島（会話窓口・メモ係・経理・会話整理）', color: 'border-sky-500/40' },
   'dev-remote': { name: '🏢 開発ルーム（別拠点・ガラス越し）', color: 'border-slate-500/60' },
 };
 const STATUS = {
@@ -101,6 +101,7 @@ async function refresh() {
         `<div class="text-xs font-bold text-slate-100">${esc(a.label)}</div>` +
         `<div class="text-[11px] mt-0.5">${s.text}${a.inbox ? `・受信箱 <b>${esc(a.inbox)}</b> 通` : ''}</div>` +
         (a.inbox ? `<div class="text-sm mt-1">${envelopes(a.inbox)}</div>` : '') +
+        (a.live && a.live.task ? `<div class="text-[10px] text-emerald-200/90 mt-1">💬 ${esc(a.live.task)}${a.live.from ? `<span class="text-slate-400">（依頼元: ${esc(a.live.from)}）</span>` : ''}</div>` : '') +
         (a.nextWake && a.status === 'idle' ? `<div class="text-[10px] text-slate-500 mt-1">⏰ 次の起床 ${esc(a.nextWake)}</div>` : '');
       grid.appendChild(card);
     }

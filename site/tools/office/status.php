@@ -39,6 +39,8 @@ $VPS_AGENTS = [
     // tickラベル            id(=mailbox宛先)      表示名                       島          daily起床
     'chat'              => ['id' => 'hanasaka-main',      'label' => '会話窓口',             'island' => 'office',   'wake' => null],
     'memo-triage'       => ['id' => 'memo',               'label' => 'メモ係',               'island' => 'office',   'wake' => '23:00'],
+    'comms'             => ['id' => 'comms',              'label' => '会話整理｜Chatwork',   'island' => 'office',   'wake' => '2時間おき 6-22時'],
+    'finance'           => ['id' => 'finance',            'label' => '経理',                 'island' => 'office',   'wake' => null],
     'overseer'          => ['id' => 'overseer',           'label' => '統括',                 'island' => 'exec',     'wake' => '01:00'],
     'partner'           => ['id' => 'partner',            'label' => '経営パートナー',        'island' => 'exec',     'wake' => '07:00'],
     'hp-loop:ycom'      => ['id' => 'hp-loop-ycom',       'label' => '解析｜自社YCOM',        'island' => 'analysis', 'wake' => '02:00'],
@@ -191,6 +193,35 @@ if (is_file($commsLedger) && !is_link($commsLedger)) {
     }
 }
 
+// ── 1.7) 在席ビーコン: 呼ばれて動くサブエージェント・会話窓口のリアルタイム在席 ─────
+// bin/office-beacon.sh が data/office/live/<id>/<key>.json（リース）を書く（働いている間は更新され続ける）。
+// リース方式＝同じ id に複数セッションが並行しても、各自のリースが別ファイルなので互いに消し合わない。
+// 「有効なリースが1件でもあれば働き中」・表示（task/from）は最新のリースを採る（Codexレビュー 2026-07-29 🔴反映）。
+// 走査は台帳（$VPS_AGENTS）の既知 id のディレクトリだけ＝未知 id・ゴミ蓄積で正規ビーコンが漏れない（同🟡反映）。
+// mtime が TTL 以上古い・未来すぎるものは期限切れ＝落ちたセッションの残骸として無視（消しはしない＝ここは読み取り専用）。
+$live = [];                                     // id => ['task'=>?, 'from'=>?]
+foreach (array_column($VPS_AGENTS, 'id') as $lid) {
+    $best = null; $bestMt = -1;
+    foreach (array_slice(glob($ROOT . '/data/office/live/' . $lid . '/*.json') ?: [], 0, 20) as $f) {
+        if (!is_file($f) || is_link($f)) continue;
+        $sz = @filesize($f);
+        if ($sz === false || $sz > 8192) continue;
+        $j = json_decode((string)@file_get_contents($f), true);
+        if (!is_array($j)) continue;
+        $ttl = max(60, min(is_numeric($j['ttl'] ?? null) ? (int)$j['ttl'] : 600, 3600));
+        $mt = @filemtime($f);
+        if ($mt === false) continue;
+        $age = time() - $mt;
+        if ($age >= $ttl || $age < -60) continue;   // 期限切れ・大きな未来mtimeは拒否（Codex🟢）
+        if ($mt > $bestMt) {
+            $s = fn($k, $n) => is_string($j[$k] ?? null) ? mb_substr($j[$k], 0, $n) : null;
+            $best = ['task' => $s('task', 120), 'from' => $s('from', 40)];
+            $bestMt = $mt;
+        }
+    }
+    if ($best !== null) $live[$lid] = $best;
+}
+
 // ── 2) heartbeat: エージェント別の pending / action ──────────────────────
 // 形式: agent-tick alive: <ts> | mode=.. force=.. | label:pending:action ... | status=..
 $hb = @file_get_contents($HEARTBEAT);
@@ -279,7 +310,10 @@ foreach ($VPS_AGENTS as $tickLabel => $meta) {
         || str_contains((string)$tickStatus, $tickLabel . '-timeout')
         || str_contains((string)$tickStatus, $tickLabel . '-fail');
 
+    // 在席ビーコン＝「今この瞬間、実際に動いている」ので過去の失敗表示より優先する
+    $liveRec = $live[$meta['id']] ?? null;
     if ($runningLabel === $tickLabel)              $status = 'working';
+    elseif ($liveRec !== null)                     $status = 'working';
     elseif ($failed)                               $status = 'error';
     elseif ($pend > 0)                             $status = 'inbox';
     else                                           $status = 'idle';
@@ -292,6 +326,7 @@ foreach ($VPS_AGENTS as $tickLabel => $meta) {
         'status'   => $status,
         'inbox'    => $pend,
         'nextWake' => $meta['wake'],
+        'live'     => $liveRec,                  // 在席ビーコン（task/from）。無ければ null
     ];
 }
 // 別拠点：台帳にある既知の宛先だけ机を出す。未知の宛先は昇格させず件数だけ集約する
