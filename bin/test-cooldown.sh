@@ -144,13 +144,22 @@ grep -q 'date +%F' "$SRC" \
   && ok "順延の印は日付つき（古い借金を溜め込まない）" \
   || ng "順延の印は日付つき"
 
-# 全異常終了にバックオフ（Codex🔴4）＝rc の分岐より前で1回だけ cooldown_set を呼ぶ形になっているか
-CD_SET_LINE=$(grep -n 'cd_n=\$(cooldown_set "\$label")' "$SRC" | head -1 | cut -d: -f1)
+# 全異常終了にバックオフ（Codex🔴4）＝rc の分岐より前で1回だけ冷却を進める形になっているか
+CD_SET_LINE=$(grep -n 'cd_msg=\$(cooldown_apply "\$label")' "$SRC" | head -1 | cut -d: -f1)
 OOM_BRANCH=$(grep -n 'if \[ "\$rc" -eq 137 \]' "$SRC" | head -1 | cut -d: -f1)
 if [ -n "$CD_SET_LINE" ] && [ -n "$OOM_BRANCH" ] && [ "$CD_SET_LINE" -lt "$OOM_BRANCH" ]; then
   ok "タイムアウト以外の異常終了にも冷却がかかる"
 else
   ng "タイムアウト以外の異常終了にも冷却がかかる" "分岐の内側でしか呼ばれていない（cd=$CD_SET_LINE oom=$OOM_BRANCH）"
+fi
+
+# 冷却を進める経路は必ず通知文を伴う（cooldown_apply に集約＝片方だけ書き忘れる経路を作らない）
+APPLY_N=$(grep -c 'cooldown_apply "\$label"' "$SRC")
+SET_N=$(grep -c 'cooldown_set "\$1"' "$SRC")
+if [ "$APPLY_N" -ge 3 ] && [ "$SET_N" -eq 1 ]; then
+  ok "冷却の設定と通知文の組み立てが1箇所に集約されている（$APPLY_N 経路）"
+else
+  ng "冷却の設定と通知文が集約されている" "apply=$APPLY_N set=$SET_N（cooldown_set の直接呼び出しが残っている）"
 fi
 
 # 無進捗の検知（Codex🔴5）
@@ -173,7 +182,8 @@ else
   ng "クールダウン判定は claude 起動より前" "cd=$CD_LINE run=$RUN_LINE"
 fi
 
-grep -q 'cooldown_set "\$label"' "$SRC" && ok "タイムアウト／OOM で冷却を設定している" \
+sed -n '/if \[ "\$rc" -ne 0 \]/,/^    else$/p' "$SRC" | grep -q 'cooldown_apply' \
+  && ok "タイムアウト／OOM で冷却を設定している" \
   || ng "タイムアウト／OOM で冷却を設定している"
 grep -q 'cooldown_clear "\$label"' "$SRC" && ok "完走でリセットしている" \
   || ng "完走でリセットしている"

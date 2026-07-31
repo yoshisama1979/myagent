@@ -300,6 +300,14 @@ cooldown_note() {
   [ "$w" -ge 3600 ] && printf '%d時間' "$((w / 3600))" || printf '%d分' "$((w / 60))"
 }
 
+# 冷却を1つ進め、通知文に添える一文を返す。失敗の種類ごとに同じ組み立てを書き写すと、
+# ある経路だけ「冷やしたのに通知に書き忘れる／通知したのに冷やしていない」がすり抜ける。
+# ★状態を進める副作用がある＝1回の失敗につき1回だけ呼ぶこと（表示用の関数ではない）。
+cooldown_apply() {
+  local n; n=$(cooldown_set "$1")
+  printf '連続%d回目＝%s冷ましてから再挑戦します' "$n" "$(cooldown_note "$n")"
+}
+
 # --- 反応起動の対象を数える（2026-07-31 社長承認）---
 # 従来は「自分宛の未読が1通でもあれば起動」＝中身を見ずに鳴る呼び鈴だった。実際 07-31 は開発
 # エージェントからの受領確認（type=ack「了解しました」）2通で25分のフル解析が2本走り、サーバが
@@ -449,8 +457,7 @@ dispatch() {
     if [ -f "$inflight" ]; then
       rm -f "$inflight" 2>/dev/null || true
       fail "$label-died"; action="$action(DIED)"
-      local cd_d; cd_d=$(cooldown_set "$label")
-      alert "ヘッドレス $label は前回、終了処理まで到達せずに消えていました（監督プロセスごと OOM で殺された・強制終了・再起動などの可能性）。連続${cd_d}回目＝$(cooldown_note "$cd_d")冷ましてから再挑戦します。"
+      alert "ヘッドレス $label は前回、終了処理まで到達せずに消えていました（監督プロセスごと OOM で殺された・強制終了・再起動などの可能性）。$(cooldown_apply "$label")。"
       ACTIONS+=("$label:$pending:$action")
       return 0
     fi
@@ -498,8 +505,7 @@ dispatch() {
       oom_post=$(oom_kill_count)
       # タイムアウト以外の異常終了にも冷却をかける（Codex🔴4）＝「24分走って exit 1」の繰り返しも
       # タイムアウトと同じ負荷になる。ここで一度だけ進め、分岐は通知文の出し分けに専念する。
-      local cd_n; cd_n=$(cooldown_set "$label")
-      local cd_msg="連続${cd_n}回目＝$(cooldown_note "$cd_n")冷ましてから再挑戦します"
+      local cd_msg; cd_msg=$(cooldown_apply "$label")
       if [ "$rc" -eq 137 ] && [[ "${oom_pre:-}" =~ ^[0-9]+$ ]] && [[ "${oom_post:-}" =~ ^[0-9]+$ ]] \
          && [ "$oom_post" -gt "$oom_pre" ]; then
         fail "$label-oomkill"; action="$action(OOMKILL)"
@@ -529,8 +535,7 @@ dispatch() {
       fi
       if [ "$progressed" -eq 0 ]; then
         fail "$label-noprogress"; action="$action(NOPROG)"
-        local cd_n2; cd_n2=$(cooldown_set "$label")
-        alert "ヘッドレス $label は正常終了しましたが、起動の引き金になった便が1件も処理されていません（new/ に残ったまま＝このままだと次の tick で同じ処理が再起動します）。連続${cd_n2}回目＝$(cooldown_note "$cd_n2")冷ましてから再挑戦します。"
+        alert "ヘッドレス $label は正常終了しましたが、起動の引き金になった便が1件も処理されていません（new/ に残ったまま＝このままだと次の tick で同じ処理が再起動します）。$(cooldown_apply "$label")。"
       else
         # 一度こけただけの重い日を、以後ずっと引きずらない
         cooldown_clear "$label" || true
