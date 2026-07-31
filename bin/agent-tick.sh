@@ -225,8 +225,17 @@ fi
 COOLDOWN_1ST=1800     # 30分（★提案既定値）
 COOLDOWN_NTH=21600    # 6時間（★提案既定値）
 COOLDOWN_RESET=86400  # 前回の冷却明けからこれ以上経っていれば「連続」とみなさず1回目に戻す（★提案既定値）
+# 待ち時間の決定はここ1箇所。cooldown_set（実際の待ち）と cooldown_note（通知文）が同じ分岐を
+# 各自に持つと、片方だけ直したとき「30分待つのに6時間と通知する」ような食い違いが静かに生まれる。
+cooldown_wait_for() { [ "${1:-1}" -ge 2 ] && echo "$COOLDOWN_NTH" || echo "$COOLDOWN_1ST"; }
 cooldown_file()   { printf '%s/data/overseer/.cooldown-%s'   "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
 daily_due_file()  { printf '%s/data/overseer/.daily-due-%s'  "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
+# 実行中の印（Codex🔴6）：クールダウンは「終了後」にしか書けないため、監督している側（この
+# スクリプトの bash 自体・timeout・パイプライン）が OOM で殺されたり VPS が落ちたりすると、
+# 何も記録されないまま次の tick が即再実行できてしまう。起動の【前】に印を置き、メインロックを
+# 取れたのに印が残っていたら「前回は最後まで走れなかった」と判断する（ロックがある以上、
+# 他の tick が実行中という可能性はない）。印を書けないときは起動しない＝fail-closed。
+inflight_file()   { printf '%s/data/overseer/.inflight-%s'   "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
 
 # 残り秒を返す（0＝待ち不要）。壊れたファイルは削除して0＝止めっぱなしにしない
 cooldown_remain() {
@@ -267,7 +276,7 @@ cooldown_set() {
     count=0
   fi
   count=$((count + 1))
-  [ "$count" -ge 2 ] && wait_s=$COOLDOWN_NTH || wait_s=$COOLDOWN_1ST
+  wait_s=$(cooldown_wait_for "$count")
   until=$((now_s + wait_s))
   if ! { printf '%s %s\n' "$count" "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; }; then
     rm -f "$f.tmp" 2>/dev/null || true
@@ -285,8 +294,11 @@ cooldown_clear() {
   return 1
 }
 
-# 通知文で使う待ち時間の表記（cooldown_set の連続回数と同じ分岐＝食い違わせない）
-cooldown_note() { [ "${1:-1}" -ge 2 ] && printf '%d時間' "$((COOLDOWN_NTH / 3600))" || printf '%d分' "$((COOLDOWN_1ST / 60))"; }
+# 通知文で使う待ち時間の表記（待ち時間そのものは cooldown_wait_for が正＝定義を二重に持たない）
+cooldown_note() {
+  local w; w=$(cooldown_wait_for "${1:-1}")
+  [ "$w" -ge 3600 ] && printf '%d時間' "$((w / 3600))" || printf '%d分' "$((w / 60))"
+}
 
 # --- 反応起動の対象を数える（2026-07-31 社長承認）---
 # 従来は「自分宛の未読が1通でもあれば起動」＝中身を見ずに鳴る呼び鈴だった。実際 07-31 は開発
@@ -304,25 +316,70 @@ cooldown_note() { [ "${1:-1}" -ge 2 ] && printf '%d時間' "$((COOLDOWN_NTH / 36
 #   ack は定義上「受け取りました」で、応答も分析も要らない。ただし社長からの便は type によらず
 #   起動対象に残す＝取りこぼす側でなく余分に起動する側へ倒す。
 # 数えるだけの純粋な関数にしてあるのは、この判定を単体でテストできるようにするため。
+#
+# ★JSON は grep でなく実際にパースする（Codex🔴2）：grep だと (a)`"to" : "x"`（コロン前の空白）や
+#   タブ・改行での整形を取りこぼし、(b)本文に `"from": "president"` という文字列が含まれるだけで
+#   社長便と誤認する。実際 07-31 は dispatch が pending=1 で起動したのにエージェント本人は
+#   「実ファイル0件」と記録しており、数え方が食い違っていた。python3 で1tickに1回だけ全便を読み、
+#   「宛先 送り主 種別 パス」のタブ区切り索引にしてから awk で引く（プロセスは毎分1つ・誤認ゼロ）。
+#   壊れた／書き込み途中の JSON は件数だけ数えて通知する＝黙って無視しない。
+MAILBOX_INDEX="$PROJ/data/overseer/.mailbox-index"
+MAILBOX_INVALID=0
+
+build_mailbox_index() {
+  local out rc
+  out=$("$PY" - "$MAILBOX_NEW" <<'PYEOF'
+import json, os, sys
+d = sys.argv[1]
+rows, bad = [], 0
+try:
+    names = sorted(os.listdir(d))
+except OSError:
+    sys.exit(3)
+for n in names:
+    if not n.endswith(".json"):
+        continue
+    p = os.path.join(d, n)
+    if not os.path.isfile(p):
+        continue
+    if "\t" in p or "\n" in p:      # 索引の区切りを壊す名前は扱わない（無視でなく不正として数える）
+        bad += 1
+        continue
+    try:
+        with open(p, encoding="utf-8") as f:
+            o = json.load(f)
+        if not isinstance(o, dict):
+            raise ValueError("not an object")
+    except Exception:
+        bad += 1                    # 書き込み途中・破損。宛先が読めない以上ここでは振り分けられない
+        continue
+    rows.append("\t".join(str(o.get(k, "")) for k in ("to", "from", "type")) + "\t" + p)
+# 1行目は必ず不正件数。宛先名と衝突しない印にしてあるので、以降の awk では素通りする
+print("#invalid\t%d\t\t" % bad)
+sys.stdout.write("\n".join(rows) + ("\n" if rows else ""))
+PYEOF
+) ; rc=$?
+  [ "$rc" -eq 0 ] || return 1       # 呼び出し側が MAILBOX_OK=0 にする（idle に化けさせない）
+  if ! { printf '%s\n' "$out" >"$MAILBOX_INDEX.tmp" && mv -f "$MAILBOX_INDEX.tmp" "$MAILBOX_INDEX"; }; then
+    rm -f "$MAILBOX_INDEX.tmp" 2>/dev/null || true
+    return 1
+  fi
+  MAILBOX_INVALID=$(awk -F'\t' '$1=="#invalid" {print $2; exit}' "$MAILBOX_INDEX" 2>/dev/null)
+  [[ "${MAILBOX_INVALID:-}" =~ ^[0-9]+$ ]] || MAILBOX_INVALID=0
+  return 0
+}
 
 # 宛先 to の便すべて（件数表示用）
-mailbox_all() {
-  find "$MAILBOX_NEW" -maxdepth 1 -type f -name '*.json' \
-    -exec grep -l "\"to\": *\"$1\"" {} + 2>/dev/null
-}
+mailbox_all() { awk -F'\t' -v t="$1" '$1==t {print $4}' "$MAILBOX_INDEX" 2>/dev/null; }
 
 # 反応起動の引き金になる便のパス（改行区切り）。無進捗の検知でも同じ集合を使う＝判定を食い違わせない
 mailbox_triggers() {
-  local to="$1" urgent_only="${2:-0}" files
-  files=$(mailbox_all "$to")
-  [ -n "$files" ] || return 0
+  local to="$1" urgent_only="${2:-0}"
   if [ "$urgent_only" = "1" ]; then
-    printf '%s\n' "$files" | xargs -r -d '\n' grep -l '"from": *"president"' 2>/dev/null
-    return 0
+    awk -F'\t' -v t="$to" '$1==t && $2=="president" {print $4}' "$MAILBOX_INDEX" 2>/dev/null
+  else
+    awk -F'\t' -v t="$to" '$1==t && ($3!="ack" || $2=="president") {print $4}' "$MAILBOX_INDEX" 2>/dev/null
   fi
-  { printf '%s\n' "$files" | xargs -r -d '\n' grep -L '"type": *"ack"' 2>/dev/null
-    printf '%s\n' "$files" | xargs -r -d '\n' grep -l '"from": *"president"' 2>/dev/null
-  } | sort -u
 }
 
 # 返り値＝「起動対象の件数 待機に回した件数」（スペース区切り1行）
@@ -332,6 +389,7 @@ count_pending() {
   u=$(mailbox_triggers "$to" "$urgent_only" | grep -c '[^[:space:]]')
   printf '%s %s\n' "$u" "$((n - u))"
 }
+
 
 # --- 振り分け：宛先 mailbox に未読があれば（または daily で強制されていれば）当該モードを起動 ---
 # 引数：表示ラベル / スラッシュコマンド / mailbox 宛先(to) / [社長便だけで起動するか(1)]
@@ -373,18 +431,36 @@ dispatch() {
     # pending は消費せず残す＝待つだけで、仕事そのものは取りこぼさない。
     local cd_left; cd_left=$(cooldown_remain "$label")
     if [ "$cd_left" -gt 0 ]; then
-      action="cooldown($(( (cd_left + 59) / 60 ))分)"
+      local cd_min=$(( (cd_left + 59) / 60 ))   # 切り上げ。表示とログで同じ値を使う
+      action="cooldown(${cd_min}分)"
       # daily は「後で必ずやる」印を残してから見送る＝その日の解析を落とさない（Codex🔴1）
       if [ "$force" -eq 1 ]; then
         action="$action(daily順延)"
         printf '%s\n' "$(date +%F)" >"$due_file" 2>/dev/null \
           || echo "$(now) [warn] $label の daily順延の記録に失敗＝今日の定時実行が落ちます" >>"$LOG"
       fi
-      echo "$(now) [cooldown] $label は直前が異常終了＝あと $(( (cd_left + 59) / 60 ))分 待ってから再挑戦します（pending=$pending・仕事は消していません）" >>"$LOG"
+      echo "$(now) [cooldown] $label は直前が異常終了＝あと ${cd_min}分 待ってから再挑戦します（pending=$pending・仕事は消していません）" >>"$LOG"
       ACTIONS+=("$label:$pending:$action")
       return 0
     fi
     [ "$force" -eq 1 ] && action="daily" || action="handle($pending)"
+    # 前回の実行が「終了処理まで到達できずに消えた」痕跡（上部の定義参照）
+    local inflight; inflight=$(inflight_file "$label")
+    if [ -f "$inflight" ]; then
+      rm -f "$inflight" 2>/dev/null || true
+      fail "$label-died"; action="$action(DIED)"
+      local cd_d; cd_d=$(cooldown_set "$label")
+      alert "ヘッドレス $label は前回、終了処理まで到達せずに消えていました（監督プロセスごと OOM で殺された・強制終了・再起動などの可能性）。連続${cd_d}回目＝$(cooldown_note "$cd_d")冷ましてから再挑戦します。"
+      ACTIONS+=("$label:$pending:$action")
+      return 0
+    fi
+    if ! printf '%s %s\n' "$$" "$(now)" >"$inflight" 2>/dev/null; then
+      # 状態を保存できないまま重い処理を始めると、失敗しても記録が残らず毎分再実行になる
+      fail "$label-inflight-write"; action="$action(NOSTATE)"
+      alert "ヘッドレス $label の実行中マーカーを書けませんでした（$inflight）。記録できない状態で重い処理は始めないため、今回は起動を見送ります。"
+      ACTIONS+=("$label:$pending:$action")
+      return 0
+    fi
     # 起動の引き金になった便を控えておく＝完走後に1件も減っていなければ「無進捗」として冷やす（Codex🔴5）。
     # これが無いと、exit 0 で返しつつ受信箱を処理しないループが毎分25分ジョブを起動し続ける。
     local trig_before; trig_before=$(mailbox_triggers "$to" "$urgent_only")
@@ -413,6 +489,7 @@ dispatch() {
     # 書けない可能性が高く、この安全機構そのものが効かなくなる。ログに書けないので Slack で鳴らす。
     local -a pipe_rc; pipe_rc=("${PIPESTATUS[@]}")
     rc=${pipe_rc[0]}
+    rm -f "$inflight" 2>/dev/null || true   # ここまで来た＝終了処理に到達した（結果の良し悪しは以降で判定）
     if [ "${pipe_rc[1]:-0}" -ne 0 ]; then
       fail "$label-logwrite"
       alert "ヘッドレス $label の実行ログを記録できませんでした（ディスク満杯・権限などの可能性）。クールダウン等の状態も書けない恐れがあります。"
@@ -465,6 +542,19 @@ dispatch() {
   [ "$defer" -gt 0 ] && [ "$action" = "idle" ] && action="defer($defer)"
   ACTIONS+=("$label:$pending:$action")
 }
+
+# --- 索引を作る。作れなければ受信箱を不健全として扱う＝「未読ゼロ」に化けさせない（Codex🔴3） ---
+if [ "$MAILBOX_OK" -eq 1 ]; then
+  if ! build_mailbox_index; then
+    MAILBOX_OK=0
+    fail "mailbox-index"
+    alert "mailbox の索引を作成できませんでした（$MAILBOX_NEW）。今回の tick は受信処理をスキップします。"
+  elif [ "$MAILBOX_INVALID" -gt 0 ]; then
+    # 宛先が読めない便は誰にも振り分けられない＝黙って消えるのを防ぐため必ず鳴らす
+    fail "mailbox-invalid($MAILBOX_INVALID)"
+    alert "mailbox に読めない便が $MAILBOX_INVALID 件あります（JSON の破損か書き込み途中）。宛先が判定できないため、どのエージェントにも振り分けられていません。"
+  fi
+fi
 
 # --- 2) 各エージェントを振り分け（会話→メモ→統括の順。pending か daily 強制のときだけ起動） ---
 dispatch "chat"     "/chat"     "hanasaka-main"

@@ -27,12 +27,27 @@ MB="$T/new"; mkdir -p "$MB"
 awk '/^# --- 反応起動の対象を数える/,/^# --- 振り分け：宛先 mailbox/' "$SRC" | sed '$d' > "$T/block.sh"
 grep -q 'count_pending()' "$T/block.sh" || { echo "❌ 抽出失敗：count_pending が無い（マーカーが変わった？）" >&2; exit 2; }
 
+# PROJ も渡す：抽出したブロックの先頭で MAILBOX_INDEX が "$PROJ/..." として組み立てられるため、
+# ここを一時ディレクトリに向けないと本物の data/overseer に索引を書いてしまう。
+mkdir -p "$T/data/overseer"
 cat >"$T/harness.sh" <<EOS
+PROJ="$T"
 MAILBOX_NEW="$MB"
+MAILBOX_INVALID=0
+PY="\$(command -v python3)"
 EOS
 grep -q "$MB" "$T/harness.sh" || { echo "❌ 置換失敗：本物の mailbox を触る危険があるため中止" >&2; exit 2; }
+# 索引の書き先が一時ディレクトリ内であることを実際に確認してから流す
+IDX=$( ( set -u; . "$T/harness.sh"; . "$T/block.sh"; printf '%s' "$MAILBOX_INDEX" ) )
+case "$IDX" in
+  "$T"/*) ;;
+  *) echo "❌ 索引の書き先が一時ディレクトリの外：$IDX（本物を壊す恐れがあるため中止）" >&2; exit 2 ;;
+esac
 
-count() { ( set -u; . "$T/harness.sh"; . "$T/block.sh"; count_pending "$1" "${2:-0}" ); }
+# 索引は毎回作り直す（本番と同じ経路を通す＝索引の作り方ごとテストする）
+count() { ( set -u; . "$T/harness.sh"; . "$T/block.sh"; build_mailbox_index || exit 9; count_pending "$1" "${2:-0}" ); }
+triggers() { ( set -u; . "$T/harness.sh"; . "$T/block.sh"; build_mailbox_index || exit 9; mailbox_triggers "$1" "${2:-0}" ); }
+invalid_count() { ( set -u; . "$T/harness.sh"; . "$T/block.sh"; build_mailbox_index >/dev/null || exit 9; echo "$MAILBOX_INVALID" ); }
 
 # msg <ファイル名> <to> <from> <type>
 msg() {
@@ -94,8 +109,27 @@ eq "実装完了報告だけでは起動しない" "0 2" "$(count hp-loop-ycom 1
 clear_mb
 msg t1 hp-loop-ycom president   request
 msg t2 hp-loop-ycom web-hanasaka report
-eq "引き金の一覧は社長便だけ（絞り込みあり）" "$MB/t1.json" \
-   "$( ( set -u; . "$T/harness.sh"; . "$T/block.sh"; mailbox_triggers hp-loop-ycom 1 ) )"
+eq "引き金の一覧は社長便だけ（絞り込みあり）" "$MB/t1.json" "$(triggers hp-loop-ycom 1)"
+
+# 5c) JSON をパースしている＝grep では取りこぼす／誤認する形も正しく扱う（Codex🔴2）
+clear_mb
+printf '{ "id":"g1", "to" : "hp-loop-ycom",\n  "from"\t: "president",\n  "type": "request" }\n' >"$MB/g1.json"
+eq "コロン前の空白・タブ・改行で整形された便も拾う" "1 0" "$(count hp-loop-ycom 1)"
+
+clear_mb
+printf '{"id":"g2","to":"hp-loop-ycom","from":"web-hanasaka","type":"report",\n "body":"社長の便は \\"from\\": \\"president\\" と書きます"}\n' >"$MB/g2.json"
+eq "本文に社長の名が書かれていても社長便と誤認しない" "0 1" "$(count hp-loop-ycom 1)"
+
+clear_mb
+printf '{"id":"g3","to":"other-agent","from":"president","type":"request",\n "body":"転送先は \\"to\\": \\"hp-loop-ycom\\" です"}\n' >"$MB/g3.json"
+eq "本文に他人の宛先が書かれていても自分宛と誤認しない" "0 0" "$(count hp-loop-ycom 1)"
+
+# 5d) 壊れた便は黙って捨てず、件数として数える（通知の材料にする）
+clear_mb
+msg ok1 hp-loop-ycom president request
+printf '{"to": "hp-loop-ycom", "from":' >"$MB/broken.json"   # 書き込み途中を模した不完全な JSON
+eq "壊れた便があっても正常な便は数える" "1 0" "$(count hp-loop-ycom 1)"
+eq "壊れた便は不正件数として数える" "1" "$(invalid_count)"
 
 # 6) 種別ではなく送り主で判断している（社長の ack でも起動する＝取りこぼさない側に倒す）
 clear_mb

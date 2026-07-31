@@ -30,7 +30,7 @@ trap 'rm -rf "$T"' EXIT
 mkdir -p "$T/data/overseer"
 
 # --- 実ソースからクールダウンのブロックだけ抜き出す ---
-awk '/^# --- 連続タイムアウトのクールダウン/,/^# --- 振り分け：宛先 mailbox/' \
+awk '/^# --- 連続タイムアウトのクールダウン/,/^# --- 反応起動の対象を数える/' \
     "$PROJ_REAL/bin/agent-tick.sh" | sed '$d' > "$T/block.sh"
 
 grep -q 'cooldown_set()'    "$T/block.sh" || { echo "❌ 抽出失敗：cooldown_set が無い（マーカーが変わった？）" >&2; exit 2; }
