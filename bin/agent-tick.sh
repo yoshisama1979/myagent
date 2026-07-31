@@ -96,6 +96,11 @@ alert() {
     && date +%s >"$throttle"
 }
 
+# --- proc 読み取りヘルパー（OOM検知と137判別で共用）---
+# 同じ awk を3箇所に散らすと、片方だけ直して静かに食い違う（例：vmstat の項目名が変わったとき）。
+oom_kill_count() { awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true; }
+mem_avail_mb()   { awk '/^MemAvailable/{printf "%dMB", $2/1024}' /proc/meminfo 2>/dev/null; }
+
 # --- OOM kill の検知（2026-07-31 社長承認・Codexレビュー反映でメインロックの外へ）---
 # 契機＝07-30/07-31 の2回、メモリ枯渇でカーネルが社長のログインセッションを殺し tmux が全滅したが、
 # 誰も気づかず社長が手元で異変に気づくまで分からなかった。/proc/vmstat の oom_kill は起動時0からの
@@ -111,7 +116,7 @@ alert() {
 #   二度と通知されない。Slack 投稿が失敗した回は据え置いて次の tick で再試行する。
 # ★カウンタが減ったら再起動＝差分を取らず値だけ更新（負の差分で鳴らさない）。
 OOM_COUNT="$PROJ/data/overseer/.oom-count"
-oom_now=$(awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true)
+oom_now=$(oom_kill_count)
 if [[ "${oom_now:-}" =~ ^[0-9]+$ ]]; then
   exec 8>"$PROJ/data/overseer/.oom.lock"
   if flock -n 8; then
@@ -125,7 +130,7 @@ if [[ "${oom_now:-}" =~ ^[0-9]+$ ]]; then
     if [ -n "$oom_prev" ] && [ "$oom_now" -gt "$oom_prev" ]; then
       fail "oom-kill($((oom_now - oom_prev)))"
       # スロットルは独立（fetch失敗等の日常的な警報に最重要の OOM を握り潰させない）
-      alert "メモリ枯渇でカーネルがプロセスを $((oom_now - oom_prev)) 件強制終了しました（OOM kill）。tmux やヘッドレス実行が落ちている可能性があります。空きメモリ: $(awk '/^MemAvailable/{printf "%dMB", $2/1024}' /proc/meminfo 2>/dev/null)" \
+      alert "メモリ枯渇でカーネルがプロセスを $((oom_now - oom_prev)) 件強制終了しました（OOM kill）。tmux やヘッドレス実行が落ちている可能性があります。空きメモリ: $(mem_avail_mb)" \
         "$PROJ/data/overseer/.last-alert-oom" || oom_save=0
     fi
     if [ "$oom_save" -eq 1 ]; then
@@ -246,15 +251,15 @@ dispatch() {
     # choom -n 800 を付けた結果、この claude は OOM の第一候補になった＝137=OOM の経路が現実的になり、
     # 素朴に 137=タイムアウトと決め打つと「25分でタイムアウト」と誤報して原因調査を誤らせる。
     local oom_pre oom_post
-    oom_pre=$(awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true)
+    oom_pre=$(oom_kill_count)
     MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
     rc=${PIPESTATUS[0]}
     if [ "$rc" -ne 0 ]; then
-      oom_post=$(awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true)
+      oom_post=$(oom_kill_count)
       if [ "$rc" -eq 137 ] && [[ "${oom_pre:-}" =~ ^[0-9]+$ ]] && [[ "${oom_post:-}" =~ ^[0-9]+$ ]] \
          && [ "$oom_post" -gt "$oom_pre" ]; then
         fail "$label-oomkill"; action="$action(OOMKILL)"
-        alert "ヘッドレス $label がメモリ不足で強制終了されました（OOM kill・実行中に oom_kill が $((oom_post - oom_pre)) 件増加）。タイムアウトではありません。空きメモリ: $(awk '/^MemAvailable/{printf "%dMB", $2/1024}' /proc/meminfo 2>/dev/null)" \
+        alert "ヘッドレス $label がメモリ不足で強制終了されました（OOM kill・実行中に oom_kill が $((oom_post - oom_pre)) 件増加）。タイムアウトではありません。空きメモリ: $(mem_avail_mb)" \
           "$PROJ/data/overseer/.last-alert-oom"
         [ "$to" = "partner" ] && partner_alert "朝礼がメモリ不足で強制終了されました（OOM kill）。時間切れではなくメモリ側の問題です。"
       elif [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then

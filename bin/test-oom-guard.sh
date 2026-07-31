@@ -111,8 +111,10 @@ fi
 echo
 echo "③-B agent-tick.sh：OOM kill の即時検知（実ソースからブロックを抽出して実行）"
 BLOCK="$T/oom-block.sh"
-awk '/^# --- OOM kill の検知/,/^# --- 多重起動防止/' "$PROJ/bin/agent-tick.sh" \
+# ヘルパー定義（oom_kill_count / mem_avail_mb）ごと取り出す＝スタブで代用せず実装を検証する
+awk '/^# --- proc 読み取りヘルパー/,/^# --- 多重起動防止/' "$PROJ/bin/agent-tick.sh" \
   | sed '$d' > "$T/raw-block.sh"
+grep -q 'oom_kill_count()' "$T/raw-block.sh" || ng "ヘルパーの抽出" "oom_kill_count の定義が範囲に入っていない"
 [ -s "$T/raw-block.sh" ] || { ng "OOMブロックの抽出" "見つからない（マーカーが変わった？）"; }
 # /proc を偽物に差し替え（置換できなければ本物を読んで偽の合格になるので必ず検証する）
 sed -e "s#/proc/vmstat#$T/vmstat#g" -e "s#/proc/meminfo#$T/meminfo#g" "$T/raw-block.sh" > "$BLOCK"
