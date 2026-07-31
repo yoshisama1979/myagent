@@ -10,7 +10,17 @@
 <div class="max-w-4xl mx-auto p-6 md:p-10">
 
   <h1 class="text-3xl font-bold mb-2">残存課題 — HANAチャット</h1>
-  <p class="text-sm text-gray-500 mb-8">事業方針は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照。</p>
+  <p class="text-sm text-gray-500 mb-4">事業方針は <a href="decisions.html" class="text-blue-600 hover:underline">decisions.html</a> 参照。</p>
+
+  <div class="bg-blue-50 border-l-4 border-blue-400 rounded p-4 mb-8 text-sm">
+    <p class="mb-2"><strong>このファイルの読み方</strong>：<strong>A. 事業・営業</strong>（売る・広げる）と <strong>B. プロダクト実装</strong>（作る・直す）の2部構成。普段の着手判断はここを見る。</p>
+    <p class="text-gray-700">ここに置くのは <strong>まだ着手が決まっていないアイデア・課題・論点</strong>。着手が決まった実装タスクは <strong>hana-tools（project_id: 24）の todo</strong> が一次管理。商談・代理店打診の進行は partner 台帳（<a href="../../../../business/partner/index.html" class="text-blue-600 hover:underline">経営パートナー掲示板</a>）が時系列の記録で、仕様・機能の正本はこのプロジェクト記録側。</p>
+    <p class="text-xs text-gray-500 mt-2">2026-07-31 棚卸し実施：<a href="memo.html" class="text-blue-600 hover:underline">memo.html</a> の 2026-05-28 分（社長メモ・機能追加アイデア5件）を本ファイルへ展開済み。</p>
+  </div>
+
+  <!-- ==================================================== -->
+  <div class="mt-12 mb-2 bg-slate-800 text-white rounded px-4 py-2 text-lg font-bold">A. 事業・営業</div>
+  <p class="text-sm text-gray-500 mb-6">売る・広げる側の課題。作る側の話は B へ。</p>
 
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">代理店リクルート</h2>
   <ul class="space-y-2 text-sm mb-6">
@@ -138,11 +148,41 @@
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span>導入実績の事例化（既存顧客の効果を見える化）</span></li>
   </ul>
 
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認・要調査（事業側）</h2>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm space-y-2">
+    <p>現状の導入クライアント数・売上規模（KPIの基準値設定に必要）</p>
+    <p>セルフサーブ化の完成時期目標</p>
+    <p>既存7クライアントで代理店候補に思い当たる候補（要ヒアリング）</p>
+    <p>競合サービスとの差別化要素（営業時に強みを出すため）</p>
+  </div>
+
+  <!-- ==================================================== -->
+  <div class="mt-16 mb-2 bg-slate-800 text-white rounded px-4 py-2 text-lg font-bold">B. プロダクト実装</div>
+  <p class="text-sm text-gray-500 mb-6">作る・直す側の課題。着手が決まったものは hana-tools の todo へ移し、ここからは消す。</p>
+
+  <div class="bg-amber-50 border-l-4 border-amber-400 rounded p-4 mb-8 text-sm">
+    <h3 class="font-bold text-amber-800 mb-2">⚠️ 用語の区別（混同注意）</h3>
+    <table class="w-full">
+      <tbody>
+        <tr class="border-b border-amber-200">
+          <td class="py-1 pr-3 font-semibold whitespace-nowrap align-top">HANAチャット（サービス本体）</td>
+          <td class="py-1 text-gray-700"><strong>クライアントのウェブサイトに設置する AI チャット</strong>。エンドユーザー向け。これが販売対象。</td>
+        </tr>
+        <tr>
+          <td class="py-1 pr-3 font-semibold whitespace-nowrap align-top">システム内チャット（管理側）</td>
+          <td class="py-1 text-gray-700"><strong>HANAチャットの管理画面の中にあるチャット</strong>。クライアント自身（HANAチャットを契約している事業者）が使う。サービス本体とは別物。</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-amber-700 mt-2">※ 以下の課題は <strong>どちら側の話か</strong> を各項目に明記する。</p>
+  </div>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">AI学習（RAG）強化</h2>
 
-  <h3 class="text-lg font-semibold mb-3 mt-6">学習データ登録 — 自由入力 → 自動整理 → 登録</h3>
+  <h3 class="text-lg font-semibold mb-3 mt-6">① 学習データ登録 — 自由入力 → 自動整理 → 登録</h3>
   <ul class="space-y-2 text-sm mb-4">
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>RAGに登録したい内容を雑に入力するだけで、AIが整理して登録する機能</strong></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>学習時に警告する機能</strong> <span class="text-xs bg-sky-100 text-sky-800 px-2 py-0.5 rounded">2026-07-31 社長メモ</span>：登録しようとしている内容に問題があるとき（既存と重複／既存と矛盾／情報が足りない 等）、<strong>登録の瞬間に指摘する</strong></span></li>
   </ul>
   <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-4 text-gray-700">
     <li>ユーザーは思いついた内容をそのまま投げ込めばよい（箇条書きでも口語でも可）</li>
@@ -150,23 +190,74 @@
     <li>「登録前のプレビュー → 承認 → 確定」のフローにするかは要検討</li>
     <li><strong>目的：</strong>学習データ更新のハードルを下げ、RAG の鮮度と網羅性を上げる</li>
   </ul>
+  <div class="bg-sky-50 border-l-4 border-sky-400 rounded p-4 text-sm ml-6 mb-6">
+    <p class="mb-1"><strong>社長の問い（2026-07-31）：</strong>「学習時のインストラクション、<strong>ルール化の方がいい？</strong>」</p>
+    <p class="text-gray-700 mb-1"><strong>添えた一案（判断は開発）：</strong>警告とルール化は<strong>排他ではない</strong>。<strong>正はルール（インストラクション）側に一本化し、警告はそのルールから生成する</strong>形にすれば、二重管理にならない。ルールを1箇所直せば警告の挙動も追随する。</p>
+    <p class="text-xs text-gray-500">出典：partner台帳 A-046（Slack 2026-07-31 10:10 投函）</p>
+  </div>
 
-  <h3 class="text-lg font-semibold mb-3 mt-6">会話分析 → 学習内容の改善提案</h3>
+  <h3 class="text-lg font-semibold mb-3 mt-6">② 会話分析 → 学習内容の改善提案</h3>
   <ul class="space-y-2 text-sm mb-4">
     <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>ユーザー会話を分析し、回答品質を上げるための学習内容の改善提案をする機能</strong></span></li>
   </ul>
   <p class="text-sm mb-2 ml-6">想定の分析観点：</p>
   <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-3 text-gray-700">
     <li>回答できなかった / 回答精度が低かった質問の抽出</li>
+    <li><strong>「うまくいかなかった会話」の原因の切り分け</strong>（2026-05-28 追加）：抽出して終わりにせず、<strong>なぜ今の学習状態では回答できなかったか</strong> を <strong>学習データ不足／表現の揺れ／文脈不足</strong> に分類する</li>
     <li>同じトピックの質問が繰り返されていないか</li>
     <li>既存ナレッジで不足している領域の検出</li>
+    <li><strong>エンドユーザーの会話傾向・質問内容の要約</strong>（2026-05-28 追加）：改善提案とは別に、<strong>クライアントが自社の顧客インサイトとして読める形</strong>の要約を出す（decisions.html の「運営者側にユーザーの課題・質問データを提供」という価値に直結）</li>
   </ul>
   <p class="text-sm mb-2 ml-6">出力イメージ：</p>
   <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-3 text-gray-700">
     <li>「この質問に答えられるよう、◯◯のドキュメントを追加してください」</li>
     <li>「既存ドキュメント X の説明が不足。以下を追記推奨」</li>
   </ul>
-  <p class="text-sm ml-6 mb-4 text-gray-700"><strong>目的：</strong>運用しながら自律的に賢くなる RAG にする（学習データの保守を自動補助）</p>
+  <p class="text-sm ml-6 mb-2 text-gray-700"><strong>目的：</strong>運用しながら自律的に賢くなる RAG にする（学習データの保守を自動補助）</p>
+  <p class="text-sm ml-6 mb-4 text-gray-700"><strong>届け方：</strong>分析結果を <strong>システム内チャットで対話的に引き出せる</strong>ようにしたい（2026-05-28 追加）。静的なレポート画面だけにするか、チャットで掘れるようにするかは要検討 → 「実装前に詰めたい点」#4 と関連。</p>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">③ 学習データの類似整理（2026-05-28 追加）</h3>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>学習データの中で似通った項目を発見し、統合・整理を補助する機能</strong></span></li>
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>答えられなかった質問を、似たものでまとめる</strong> <span class="text-xs bg-sky-100 text-sky-800 px-2 py-0.5 rounded">2026-07-31 社長メモ</span>：②が拾った未回答ログを類似でグルーピングし、<strong>「何件も聞かれているのに答えられていない塊」</strong>を上に出す</span></li>
+  </ul>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-4 text-gray-700">
+    <li>重複・矛盾・冗長を <strong>見える化</strong>する（似ている項目をグルーピングして提示）</li>
+    <li><strong>②と同じ「類似判定」を使い回せる</strong>（学習データ側に向ければ重複整理、未回答ログ側に向ければ質問のまとめ）＝<strong>項目設計は一度で済ませるのが得</strong>。未回答ログ → 類似まとめ → ナレッジ充実 のループは<strong>回答率＝商品価値（解約防止）に直結</strong>する（出典：partner台帳 A-046）</li>
+    <li><strong>目的：</strong>①で登録のハードルを下げるほどデータは増えて散らかる。増やす機能と対で、<strong>掃除する機能</strong>が要る</li>
+    <li>矛盾したデータが混在すると RAG の回答精度がそのまま落ちるため、②の「回答できなかった原因」とも地続き</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">④ 検索方法の拡張 — ハイブリッド検索（2026-05-28 追加）</h3>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>現状の RAG（ベクトル検索）に、キーワード検索等を組み合わせて必要な情報を引き出す</strong></span></li>
+  </ul>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-4 text-gray-700">
+    <li><strong>現代のエージェントがよく行う方法</strong>（ツール呼び出し・複数手法の併用）を取り入れる</li>
+    <li>ベクトル検索は「意味は近いが用語が違う」に強く、<strong>型番・固有名詞・略語の完全一致に弱い</strong>。キーワード検索の併用はそこを埋める</li>
+    <li><strong>この4件の中で、既存ユーザーの回答精度に最も直接効く可能性がある</strong>（①③は運用の質、②は改善サイクル、④は今日の回答そのもの）</li>
+  </ul>
+
+  <h3 class="text-lg font-semibold mb-3 mt-6">⑤ ナレッジグラフの導入 <span class="text-xs font-normal bg-sky-100 text-sky-800 px-2 py-0.5 rounded align-middle">2026-07-31 社長メモ</span></h3>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>HANAチャットにナレッジグラフを入れる（社長の意向・2026-07-31）</strong></span></li>
+  </ul>
+  <div class="bg-red-50 border-l-4 border-red-400 rounded p-4 text-sm ml-6 mb-4">
+    <p class="mb-1"><strong>⚠️ これは①〜④と重さが違う。</strong>「検索方式を1つ足す」ではなく <strong>知識の持ち方そのものの変更</strong>（文章の断片を並べて持つ → 概念と関係で持つ）。</p>
+    <p class="text-gray-700">先に入れるなら、①の登録フォーマット・③の類似整理の単位・④の引き方が<strong>すべてその上に乗る</strong>。後から入れるなら作り直しが出る。<strong>①〜④の着手順（論点 #9）の前提そのものが変わる</strong>ため、他より先に方針を決める必要がある。</p>
+  </div>
+  <ul class="list-disc list-inside space-y-1 text-sm ml-6 mb-4 text-gray-700">
+    <li>効きどころ：「A社の担当者は誰か」「この製品に対応する型番は」のような<strong>関係をたどる質問</strong>。ベクトル検索が最も苦手な領域で、④のキーワード併用でも埋まらない</li>
+    <li>コスト：グラフの設計・構築・維持が要る。<strong>①の自動登録がそのままグラフを育てられるか</strong>が実務上の分かれ目（人手で関係を張り続ける作りにすると運用が持たない）</li>
+    <li><strong>判断は開発の領域</strong>。ここは「社長の意向として記録し、設計判断の前提に置く」までが本ファイルの役割</li>
+  </ul>
+  <p class="text-xs text-gray-500 ml-6 mb-4">出典：partner台帳 A-046（Slack 2026-07-31 10:19 投函）</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">システム内チャット（管理側）の機能</h2>
+  <ul class="space-y-2 text-sm mb-4">
+    <li class="flex items-start gap-2"><span class="text-gray-400">☐</span><span><strong>使い方の質問対応</strong>（2026-05-28 追加）：クライアントが <strong>HANAチャットの使い方をシステム内チャットで質問できる</strong>。「設定の変更方法」「学習データの追加方法」等を会話形式で案内</span></li>
+  </ul>
+  <p class="text-sm ml-6 mb-4 text-gray-700">※ 下の「UI・ヘルプ」の使い方ページとは <strong>別物</strong>（あちらは読ませるページ、こちらは訊けるチャット）。ただし <strong>元ネタは同じ</strong>にできるはずで、ヘルプ本文をそのまま学習データとして食わせる作りにすれば二重メンテを避けられる → 実装順序は「ページを先に作る」が自然。</p>
 
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">UI・ヘルプ</h2>
   <ul class="space-y-2 text-sm mb-4">
@@ -180,15 +271,7 @@
     <li>学習データの追加方法（上記の新機能とリンク）</li>
   </ul>
 
-  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">要確認・要調査</h2>
-  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4 text-sm space-y-2">
-    <p>現状の導入クライアント数・売上規模（KPIの基準値設定に必要）</p>
-    <p>セルフサーブ化の完成時期目標</p>
-    <p>既存7クライアントで代理店候補に思い当たる候補（要ヒアリング）</p>
-    <p>競合サービスとの差別化要素（営業時に強みを出すため）</p>
-  </div>
-
-  <h3 class="text-lg font-semibold mb-3 mt-6">AI学習（RAG）強化機能の実装前に詰めたい点</h3>
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">実装前に詰めたい点</h2>
   <table class="w-full border-collapse text-sm mb-6">
     <thead>
       <tr class="bg-gray-100">
@@ -201,9 +284,13 @@
       <tr><td class="px-3 py-2 border border-gray-200">1</td><td class="px-3 py-2 border border-gray-200">学習データ登録の承認フロー（即登録 / プレビュー後確定 / 管理者承認）</td><td class="px-3 py-2 border border-gray-200">UX・データ品質</td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">2</td><td class="px-3 py-2 border border-gray-200">整理後の構造化フォーマット（既存スキーマに合わせるか / 新設するか）</td><td class="px-3 py-2 border border-gray-200">DB・RAG実装</td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">3</td><td class="px-3 py-2 border border-gray-200">会話分析の対象範囲（全会話 / ユーザー単位 / 一定期間）</td><td class="px-3 py-2 border border-gray-200">プライバシー・処理コスト</td></tr>
-      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200">改善提案の通知先（管理者画面 / メール / Chatwork）</td><td class="px-3 py-2 border border-gray-200">運用フロー</td></tr>
+      <tr><td class="px-3 py-2 border border-gray-200">4</td><td class="px-3 py-2 border border-gray-200">改善提案・分析結果の届け方（管理者画面 / システム内チャット / メール / Chatwork）</td><td class="px-3 py-2 border border-gray-200">運用フロー</td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">5</td><td class="px-3 py-2 border border-gray-200">使い方ページの掲載場所（チャット内モーダル / 別URL / ヘルプセンター化）</td><td class="px-3 py-2 border border-gray-200">フロントエンド</td></tr>
       <tr><td class="px-3 py-2 border border-gray-200">6</td><td class="px-3 py-2 border border-gray-200">使い方ページのターゲット（社内 / クライアント / 両方）</td><td class="px-3 py-2 border border-gray-200">文体・公開範囲</td></tr>
+      <tr class="bg-blue-50"><td class="px-3 py-2 border border-gray-200">7</td><td class="px-3 py-2 border border-gray-200"><strong>類似整理の踏み込み度</strong>（提示だけ / 統合案を出す / 自動統合）。誤統合は情報の消失になるため、既定は「提示 + 人が承認」が安全（2026-07-31 追加）</td><td class="px-3 py-2 border border-gray-200">データ保全・UX</td></tr>
+      <tr class="bg-blue-50"><td class="px-3 py-2 border border-gray-200">8</td><td class="px-3 py-2 border border-gray-200"><strong>ハイブリッド検索の方式と評価</strong>（ベクトルとキーワードの併合方法・重み付け、および <strong>改善したと言える判定基準</strong>）。評価用の質問セットが無いと良し悪しが測れない（2026-07-31 追加）</td><td class="px-3 py-2 border border-gray-200">RAG実装・品質検証</td></tr>
+      <tr class="bg-blue-50"><td class="px-3 py-2 border border-gray-200">9</td><td class="px-3 py-2 border border-gray-200"><strong>①〜⑤の実装順序</strong>。相互依存があるため（②の原因分析は③の重複解消が前提、①で増えたデータは③が要る、システム内チャットの使い方対応はヘルプ本文が前提）（2026-07-31 追加）</td><td class="px-3 py-2 border border-gray-200">計画</td></tr>
+      <tr class="bg-sky-50"><td class="px-3 py-2 border border-gray-200">10</td><td class="px-3 py-2 border border-gray-200"><strong>⑤ナレッジグラフを入れるか・いつ入れるか</strong>。<strong>#9 より先に決める必要がある</strong>（入れるなら①③④がその上に乗るため、後回しにすると作り直しになる）。判断材料＝関係をたどる質問が実際どれだけ来ているか（②の未回答ログで測れる）（2026-07-31 社長メモ）</td><td class="px-3 py-2 border border-gray-200">アーキテクチャ・全体計画</td></tr>
     </tbody>
   </table>
 

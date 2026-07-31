@@ -209,12 +209,137 @@ if [ ! -d "$MAILBOX_NEW" ]; then
   alert "mailbox の new/ がありません（$MAILBOX_NEW）。受信処理をスキップします。"
 fi
 
+# --- 連続タイムアウトのクールダウン（2026-07-31 社長承認）---
+# 契機＝07-31 12:19〜13:10。hp-loop:ycom が25分でタイムアウトし、その13秒後に同じ処理を再実行して
+# また25分でタイムアウト＝51分間サーバが高負荷になり、その最中に OOM が2回起きた（空きメモリ262MB）。
+# 25分かけて終わらなかった処理を同じ条件ですぐ回しても結果は同じ＝待ってから再挑戦する。
+#   1回目 → 30分待つ／2回目以降（連続）→ 6時間待つ（同じ処理を1日中回し続けない）。完走でリセット。
+# 状態＝data/overseer/.cooldown-<label>（「連続回数 解除時刻(epoch)」の1行）。壊れていたら捨てて通常運転に戻す
+# ＝クールダウンの誤動作で無人ループが永久に止まる方が、多少重いより悪い。
+#
+# ★daily（定時の強制起動）も冷却を尊重する（Codex🔴1）：当初は「1日1回だから増幅しない」として迂回させたが、
+#   「01:36に反応tickが起動→02:01タイムアウト→ロック待ちの02:00 daily が即起動」で今日の事故がそのまま
+#   再現する。ただし単純にスキップすると日次解析を失うので、見送った daily は .daily-due-<label> に印を残し、
+#   冷却明けの normal tick が一度だけ肩代わりする（下の dispatch 参照）。
+# ★タイムアウト以外の異常終了にも冷却をかける（Codex🔴4）：「24分走って exit 1」を繰り返せば負荷は同じ。
+COOLDOWN_1ST=1800     # 30分（★提案既定値）
+COOLDOWN_NTH=21600    # 6時間（★提案既定値）
+COOLDOWN_RESET=86400  # 前回の冷却明けからこれ以上経っていれば「連続」とみなさず1回目に戻す（★提案既定値）
+cooldown_file()   { printf '%s/data/overseer/.cooldown-%s'   "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
+daily_due_file()  { printf '%s/data/overseer/.daily-due-%s'  "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
+
+# 残り秒を返す（0＝待ち不要）。壊れたファイルは削除して0＝止めっぱなしにしない
+cooldown_remain() {
+  local f count until now_s max
+  f=$(cooldown_file "$1")
+  [ -f "$f" ] || { echo 0; return 0; }
+  read -r count until <"$f" 2>/dev/null || true
+  if ! [[ "${until:-}" =~ ^[0-9]+$ ]]; then
+    rm -f "$f" 2>/dev/null || true
+    echo 0; return 0
+  fi
+  now_s=$(date +%s)
+  # 解除時刻が上限を超えて未来＝値の破損かシステム時刻の巻き戻り。捨てると即再実行、信じると長期停止に
+  # なるため、6時間へ丸めて記録し直す（Codex🔴7）。どちらの事故にも倒れない側に寄せる。
+  max=$((COOLDOWN_NTH + 600))
+  if [ $((until - now_s)) -gt "$max" ]; then
+    [[ "${count:-}" =~ ^[0-9]+$ ]] || count=2
+    until=$((now_s + COOLDOWN_NTH))
+    { printf '%s %s\n' "$count" "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; } 2>/dev/null \
+      || rm -f "$f.tmp" 2>/dev/null || true
+    echo "$(now) [warn] $1 のクールダウン解除時刻が異常（上限超え）＝6時間に丸めました" >>"$LOG"
+  fi
+  if [ "$now_s" -ge "$until" ]; then echo 0; else echo $((until - now_s)); fi
+}
+
+# 異常終了（タイムアウト・OOM・その他）のときに呼ぶ＝連続回数を1つ進めて次回まで待たせる。
+# 標準出力に連続回数（通知文で使う）。$LOG への出力は標準出力を汚さないよう必ずリダイレクトする。
+cooldown_set() {
+  local f count prev_until until wait_s now_s
+  f=$(cooldown_file "$1")
+  count=""; prev_until=""
+  [ -f "$f" ] && read -r count prev_until <"$f" 2>/dev/null || true
+  [[ "${count:-}" =~ ^[0-9]+$ ]] || count=0
+  now_s=$(date +%s)
+  # 前回の冷却明けから十分に間が空いていれば「連続」ではない＝1回目に戻す（Codex🟡8）。
+  # これが無いと、1か月前の1回目を引きずって次の1回目が6時間停止になる。
+  if [[ "${prev_until:-}" =~ ^[0-9]+$ ]] && [ $((now_s - prev_until)) -gt "$COOLDOWN_RESET" ]; then
+    count=0
+  fi
+  count=$((count + 1))
+  [ "$count" -ge 2 ] && wait_s=$COOLDOWN_NTH || wait_s=$COOLDOWN_1ST
+  until=$((now_s + wait_s))
+  if ! { printf '%s %s\n' "$count" "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; }; then
+    rm -f "$f.tmp" 2>/dev/null || true
+    echo "$(now) [warn] クールダウンの記録に失敗＝$1 は次の tick で即再実行されます" >>"$LOG"
+  fi
+  echo "$count"
+}
+
+# 削除失敗を黙殺しない（Codex🟡10）＝残ると次の失敗が不当に「連続2回目」になる
+cooldown_clear() {
+  local f; f=$(cooldown_file "$1")
+  [ -e "$f" ] || return 0
+  rm -f "$f" 2>/dev/null && return 0
+  echo "$(now) [warn] $1 のクールダウン解除に失敗＝次の失敗が連続扱いになります（$f）" >>"$LOG"
+  return 1
+}
+
+# 通知文で使う待ち時間の表記（cooldown_set の連続回数と同じ分岐＝食い違わせない）
+cooldown_note() { [ "${1:-1}" -ge 2 ] && printf '%d時間' "$((COOLDOWN_NTH / 3600))" || printf '%d分' "$((COOLDOWN_1ST / 60))"; }
+
+# --- 反応起動の対象を数える（2026-07-31 社長承認）---
+# 従来は「自分宛の未読が1通でもあれば起動」＝中身を見ずに鳴る呼び鈴だった。実際 07-31 は開発
+# エージェントからの受領確認（type=ack「了解しました」）2通で25分のフル解析が2本走り、サーバが
+# 50分間高負荷になって OOM が2回起きた。全期間の実績でも、解析ループ宛の便の約2/3は
+# report/ack/fyi＝「本番はもう直っている」「受け取りました」の事後連絡で、待っている人がいない。
+#
+# 判断軸は「社長が待っているか」の一点にする（社長の指示 2026-07-31）：
+#   ・社長からの便 → 反応tickで即起動（従来どおりフルに動く。仕事は削らない）
+#   ・それ以外     → 起動しない。定時（daily）の解析でまとめて処理する
+# 起動しなかった便は消さず new/ に残るので、次の daily がそのまま拾う＝取りこぼさない。
+#
+# ★受領確認（type=ack）は宛先を問わず反応起動させない（Codex🟡13）：絞り込みを適用していない
+#   エージェント（chat/partner/overseer/rally/konjaku）では、今も ack だけで25分の処理が起動しうる。
+#   ack は定義上「受け取りました」で、応答も分析も要らない。ただし社長からの便は type によらず
+#   起動対象に残す＝取りこぼす側でなく余分に起動する側へ倒す。
+# 数えるだけの純粋な関数にしてあるのは、この判定を単体でテストできるようにするため。
+
+# 宛先 to の便すべて（件数表示用）
+mailbox_all() {
+  find "$MAILBOX_NEW" -maxdepth 1 -type f -name '*.json' \
+    -exec grep -l "\"to\": *\"$1\"" {} + 2>/dev/null
+}
+
+# 反応起動の引き金になる便のパス（改行区切り）。無進捗の検知でも同じ集合を使う＝判定を食い違わせない
+mailbox_triggers() {
+  local to="$1" urgent_only="${2:-0}" files
+  files=$(mailbox_all "$to")
+  [ -n "$files" ] || return 0
+  if [ "$urgent_only" = "1" ]; then
+    printf '%s\n' "$files" | xargs -r -d '\n' grep -l '"from": *"president"' 2>/dev/null
+    return 0
+  fi
+  { printf '%s\n' "$files" | xargs -r -d '\n' grep -L '"type": *"ack"' 2>/dev/null
+    printf '%s\n' "$files" | xargs -r -d '\n' grep -l '"from": *"president"' 2>/dev/null
+  } | sort -u
+}
+
+# 返り値＝「起動対象の件数 待機に回した件数」（スペース区切り1行）
+count_pending() {
+  local to="$1" urgent_only="${2:-0}" n u
+  n=$(mailbox_all "$to" | grep -c '[^[:space:]]')
+  u=$(mailbox_triggers "$to" "$urgent_only" | grep -c '[^[:space:]]')
+  printf '%s %s\n' "$u" "$((n - u))"
+}
+
 # --- 振り分け：宛先 mailbox に未読があれば（または daily で強制されていれば）当該モードを起動 ---
-# 引数：表示ラベル / スラッシュコマンド / mailbox 宛先(to) → 行った action 文字列を ACTIONS に積む
+# 引数：表示ラベル / スラッシュコマンド / mailbox 宛先(to) / [社長便だけで起動するか(1)]
+#       → 行った action 文字列を ACTIONS に積む
 declare -a ACTIONS=()
 dispatch() {
-  local label="$1" slash="$2" to="$3"
-  local pending force action rc
+  local label="$1" slash="$2" to="$3" urgent_only="${4:-0}"
+  local pending defer force action rc
   # daily（強制）モードでは強制対象だけ動かす。他エージェントの pending 処理は反応tickに任せ、
   # daily の保持時間を最短にして取りこぼし／横入りを防ぐ（Codex指摘：daily中に全dispatchが走る問題）。
   if [ "$MODE" = "daily" ] && [ "$FORCE_AGENT" != "$to" ]; then
@@ -222,16 +347,47 @@ dispatch() {
     return 0
   fi
   # new/ が健全な時だけ数える。find なので glob 非展開や空ディレクトリでも誤検知しない
+  defer=0
   if [ "$MAILBOX_OK" -eq 1 ]; then
-    pending=$(find "$MAILBOX_NEW" -maxdepth 1 -type f -name '*.json' \
-              -exec grep -l "\"to\": *\"$to\"" {} + 2>/dev/null | wc -l | tr -d ' ')
+    read -r pending defer <<<"$(count_pending "$to" "$urgent_only")"
   else
     pending=0
   fi
+  [[ "${pending:-}" =~ ^[0-9]+$ ]] || pending=0
+  [[ "${defer:-}"   =~ ^[0-9]+$ ]] || defer=0
   force=0; [ "$FORCE_AGENT" = "$to" ] && force=1
   action="idle"
+  # 冷却で見送った daily の後追い（上部の定義参照）。冷却が明けた最初の normal tick が一度だけ肩代わりする。
+  # 印が今日のものでなければ捨てる＝その日の daily cron が自分で来るので、古い借金を溜め込まない。
+  local due_file; due_file=$(daily_due_file "$label")
+  if [ "$force" -eq 0 ] && [ -f "$due_file" ]; then
+    if [ "$(cat "$due_file" 2>/dev/null)" != "$(date +%F)" ]; then
+      rm -f "$due_file" 2>/dev/null || true
+    elif [ "$(cooldown_remain "$label")" -eq 0 ]; then
+      force=1
+      echo "$(now) [daily-due] $label ＝冷却で見送った定時実行を肩代わりします" >>"$LOG"
+    fi
+  fi
   if [ "$pending" -gt 0 ] || [ "$force" -eq 1 ]; then
+    # 直前が異常終了していたら、冷ます時間を置いてから再挑戦する（上部の定義参照）。
+    # pending は消費せず残す＝待つだけで、仕事そのものは取りこぼさない。
+    local cd_left; cd_left=$(cooldown_remain "$label")
+    if [ "$cd_left" -gt 0 ]; then
+      action="cooldown($(( (cd_left + 59) / 60 ))分)"
+      # daily は「後で必ずやる」印を残してから見送る＝その日の解析を落とさない（Codex🔴1）
+      if [ "$force" -eq 1 ]; then
+        action="$action(daily順延)"
+        printf '%s\n' "$(date +%F)" >"$due_file" 2>/dev/null \
+          || echo "$(now) [warn] $label の daily順延の記録に失敗＝今日の定時実行が落ちます" >>"$LOG"
+      fi
+      echo "$(now) [cooldown] $label は直前が異常終了＝あと $(( (cd_left + 59) / 60 ))分 待ってから再挑戦します（pending=$pending・仕事は消していません）" >>"$LOG"
+      ACTIONS+=("$label:$pending:$action")
+      return 0
+    fi
     [ "$force" -eq 1 ] && action="daily" || action="handle($pending)"
+    # 起動の引き金になった便を控えておく＝完走後に1件も減っていなければ「無進捗」として冷やす（Codex🔴5）。
+    # これが無いと、exit 0 で返しつつ受信箱を処理しないループが毎分25分ジョブを起動し続ける。
+    local trig_before; trig_before=$(mailbox_triggers "$to" "$urgent_only")
     # 制限時間は全エージェント25分（社長合意 2026-07-24・15分→25分に統一）。
     # 契機＝07-24 朝礼が15分タイムアウトで黙って落ちた件。台帳/掲示板を読む重いセッションは
     # どのエージェントでも起こり得るため、朝礼だけの延長でなく一律に。暴走時も --kill-after で
@@ -253,26 +409,60 @@ dispatch() {
     local oom_pre oom_post
     oom_pre=$(oom_kill_count)
     MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
-    rc=${PIPESTATUS[0]}
+    # ログ側（sed >>$LOG）の失敗も拾う（Codex🟡11）＝ログが書けない状況ではクールダウンの記録も
+    # 書けない可能性が高く、この安全機構そのものが効かなくなる。ログに書けないので Slack で鳴らす。
+    local -a pipe_rc; pipe_rc=("${PIPESTATUS[@]}")
+    rc=${pipe_rc[0]}
+    if [ "${pipe_rc[1]:-0}" -ne 0 ]; then
+      fail "$label-logwrite"
+      alert "ヘッドレス $label の実行ログを記録できませんでした（ディスク満杯・権限などの可能性）。クールダウン等の状態も書けない恐れがあります。"
+    fi
     if [ "$rc" -ne 0 ]; then
       oom_post=$(oom_kill_count)
+      # タイムアウト以外の異常終了にも冷却をかける（Codex🔴4）＝「24分走って exit 1」の繰り返しも
+      # タイムアウトと同じ負荷になる。ここで一度だけ進め、分岐は通知文の出し分けに専念する。
+      local cd_n; cd_n=$(cooldown_set "$label")
+      local cd_msg="連続${cd_n}回目＝$(cooldown_note "$cd_n")冷ましてから再挑戦します"
       if [ "$rc" -eq 137 ] && [[ "${oom_pre:-}" =~ ^[0-9]+$ ]] && [[ "${oom_post:-}" =~ ^[0-9]+$ ]] \
          && [ "$oom_post" -gt "$oom_pre" ]; then
         fail "$label-oomkill"; action="$action(OOMKILL)"
-        alert "ヘッドレス $label がメモリ不足で強制終了されました（OOM kill・実行中に oom_kill が $((oom_post - oom_pre)) 件増加）。タイムアウトではありません。空きメモリ: $(mem_avail_mb)" \
+        alert "ヘッドレス $label がメモリ不足で強制終了されました（OOM kill・実行中に oom_kill が $((oom_post - oom_pre)) 件増加）。タイムアウトではありません。空きメモリ: $(mem_avail_mb)（$cd_msg）" \
           "$PROJ/data/overseer/.last-alert-oom"
         [ "$to" = "partner" ] && partner_alert "朝礼がメモリ不足で強制終了されました（OOM kill）。時間切れではなくメモリ側の問題です。"
       elif [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
         fail "$label-timeout"; action="$action(TIMEOUT)"
-        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。"
+        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。$cd_msg（すぐ再実行すると同じ結果になり負荷だけ倍になるため）。"
         [ "$to" = "partner" ] && partner_alert "朝礼が制限時間（$((tmo/60))分）内に終わりませんでした。台帳・掲示板が重くなっている可能性があります。"
       else
         fail "$label-fail($rc)"; action="$action(ERR$rc)"
-        alert "ヘッドレス $label が異常終了しました（exit=$rc pending=$pending force=$force）。"
+        alert "ヘッドレス $label が異常終了しました（exit=$rc pending=$pending force=$force）。$cd_msg。設定・認証の誤りなら、間を置いても直りません＝ログをご確認ください。"
         [ "$to" = "partner" ] && partner_alert "朝礼が異常終了しました（終了コード $rc）。生存確認リンクとログをご確認ください。"
+      fi
+    else
+      # 完走。ただし「起動の引き金になった便が1件も減っていない」＝無進捗なら冷やす（Codex🔴5）。
+      # exit 0 を返しつつ受信箱を処理しないループは、毎分25分ジョブを起動し続ける最悪の形になる。
+      local progressed=1
+      if [ -n "$trig_before" ]; then
+        progressed=0
+        local tf
+        while IFS= read -r tf; do
+          [ -n "$tf" ] || continue
+          [ -e "$tf" ] || { progressed=1; break; }
+        done <<<"$trig_before"
+      fi
+      if [ "$progressed" -eq 0 ]; then
+        fail "$label-noprogress"; action="$action(NOPROG)"
+        local cd_n2; cd_n2=$(cooldown_set "$label")
+        alert "ヘッドレス $label は正常終了しましたが、起動の引き金になった便が1件も処理されていません（new/ に残ったまま＝このままだと次の tick で同じ処理が再起動します）。連続${cd_n2}回目＝$(cooldown_note "$cd_n2")冷ましてから再挑戦します。"
+      else
+        # 一度こけただけの重い日を、以後ずっと引きずらない
+        cooldown_clear "$label" || true
+        rm -f "$due_file" 2>/dev/null || true   # 肩代わりした daily はここで完了扱い
       fi
     fi
   fi
+  # 待機に回した便は「idle」に化けさせない＝定時待ちが何通あるかを毎tickの1行で見えるようにする
+  [ "$defer" -gt 0 ] && [ "$action" = "idle" ] && action="defer($defer)"
   ACTIONS+=("$label:$pending:$action")
 }
 
@@ -291,15 +481,18 @@ dispatch "overseer" "/overseer" "overseer"
 # その用件にスレッド返信する。毎朝の「朝礼ブリーフィング」は daily partner（07:00）で投稿する。
 dispatch "partner"  "/partner"  "partner"
 # HP分析ループはサイト別に独立（mailbox to: hp-loop-<site> 新着 or daily hp-loop-<site> 強制で起動）
-dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"
-dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"
-dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka"
-dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii"
+# 第4引数の 1 ＝反応tickでは社長からの便だけで起動する（上の count_pending の注記を参照）。
+# 開発からの report/ack/fyi は待機に回し、定時の解析でまとめて処理する＝本番はもう直っており急がない。
+dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"     1
+dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"  1
+dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka" 1
+dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
+# rally / konjaku は daily が月曜だけ＝待機に回すと最大7日待つ。社長の判断待ちのため従来どおり全便で起動する
 dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"
 dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"
 # ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
 # blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
-dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"
+dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"    1
 dispatch "blog-write:ycom"   "/blog-write ycom"   "blog-write-ycom"
 # 既存記事の改善（B）：元記事は触らず改善版を下書き複製で作る。新規(blog-write)とは別ループ・別時刻。
 dispatch "blog-improve:ycom" "/blog-improve ycom" "blog-improve-ycom"
