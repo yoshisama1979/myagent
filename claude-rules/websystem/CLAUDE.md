@@ -6,6 +6,7 @@
   - 目次: `documents/specs/index.html`
   - 旧仕様書: `documents/document.md`（既存案件の移行用。**新規プロジェクトは specs/ のみを使い、document.md は作らない**）
 - テスト仕様書: `documents/test.csv`（**人間が行う手動テストのみ**を書く。自動テストでカバーする項目は書かない＝テストコードが正。`rules/modes/create-test.md` 参照）
+  - test.csv は**記録**。ユーザーはプロンプト画面しか見ていないため、**実装完了時・コミット提案時には今回の確認事項をチャットにも提示**する（同ルール「記録（test.csv）と提示（プロンプト）は別物」）
 - 残存課題: `documents/pending-issues.md`
 - ルール改善メモ: `documents/rule-improvements.md`（ルールファイルへの気づき・改善案の記録先。下記「コラボレーションの原則 2」参照）
 - 見積もり台帳: `documents/estimate-log.md`（**採用された**見積もりの記録先。記録は**ユーザー確認後のみ**。`rules/modes/quotation.md` §6 参照）
@@ -46,7 +47,7 @@
 | `rules/modes/tdd.md` | テスト作成時（BDDシナリオ・RGBCサイクル・三者整合性チェック） |
 | `.claude/rules/testcode.md`（paths自動） | バックエンドテスト作成時 |
 | `.claude/rules/frontend-test.md`（paths自動） | フロントエンドテスト作成時 ※テストランナー・コンテナ名等のスタック固有値は `project-config.md` を正とする |
-| `rules/modes/create-test.md` | テスト仕様書（CSV）作成時 |
+| `rules/modes/create-test.md` | テスト仕様書（CSV）作成時／**実装完了・コミット提案時にユーザーへ確認事項を提示するとき**（記録＝test.csv・提示＝チャットの使い分け） |
 | `.claude/rules/spec-format.md`（paths自動） | 仕様書（`documents/specs/`配下のHTML）を作成・更新するとき |
 | `rules/modes/refactoring.md` | リファクタリング時 |
 | `.claude/rules/coding.md`（paths自動） | コーディング時（CSS/Sass・HTML・PHP定数の規約）※素PHP+Sass 構成のプロジェクトのみ（スタックは `project-config.md` 参照） |
