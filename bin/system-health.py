@@ -194,7 +194,124 @@ def comms_health():
             out["distill_lag_h"] = round((now_ts - newest_raw) / 3600, 1)
     return out
 
+# ── 6) 故障：メモリ・swap の枯渇と OOM kill ────────────────────────────
+MEM_AVAIL_MIN_PCT = 15     # ★提案既定値：空き（MemAvailable）がこれを切ったら逼迫
+SWAP_USED_MAX_PCT = 60     # ★提案既定値：swap をこれ以上使っていたら常態的に足りていない
+PROC_HOG_PCT      = 40     # ★提案既定値：単一プロセスが RAM のこれ以上を占めたら暴走の疑い
+
+def memory_health():
+    """メモリ・swap の逼迫と OOM kill を見る（2026-07-31 社長承認・OOM対策③）。
+
+    契機＝07-30 02:19 と 07-31 10:05 の2回、RAM 5.8GB のこのVPSでメモリが尽き、カーネルが
+    user@1000.service（社長のログインセッションを束ねる systemd）を殺した＝配下の tmux が全滅した。
+    当時この監視にはメモリの項目が1つも無く、事前にも事後にも気づく手段が無かった。
+
+    OOM kill は /proc/vmstat の累計カウンタで見る（起動時0から単調増加・sudo 不要＝journal を
+    読む権限が要らない）。前回スナップショットとの差＝その間に実際に殺されたプロセス数。
+    カウンタが減っていたら再起動＝差分は取らない（増加分だけを故障とみなす）。
+    読めない環境では None を返して何も言わない（Linux 以外・/proc 不可視）。"""
+    try:
+        mi = {}
+        with open("/proc/meminfo", encoding="utf-8") as fh:
+            for ln in fh:
+                k, _, v = ln.partition(":")
+                mi[k] = int(v.split()[0])          # kB
+        total, avail = mi["MemTotal"], mi["MemAvailable"]
+        sw_total, sw_free = mi.get("SwapTotal", 0), mi.get("SwapFree", 0)
+    except Exception:
+        return None
+    oom = None
+    try:
+        with open("/proc/vmstat", encoding="utf-8") as fh:
+            for ln in fh:
+                if ln.startswith("oom_kill "):
+                    oom = int(ln.split()[1])
+                    break
+    except Exception:
+        pass
+    # 上位プロセス（RSS）。読めないpidは黙って飛ばす＝他ユーザ/一瞬で消えたプロセス
+    procs = []
+    page = os.sysconf("SC_PAGE_SIZE") // 1024      # kB/page
+    for d in os.listdir("/proc"):
+        if not d.isdigit():
+            continue
+        try:
+            with open(f"/proc/{d}/statm", encoding="utf-8") as fh:
+                rss_kb = int(fh.read().split()[1]) * page
+            with open(f"/proc/{d}/comm", encoding="utf-8") as fh:
+                name = fh.read().strip()
+        except Exception:
+            continue
+        procs.append({"name": name, "rss_kb": rss_kb})
+    procs.sort(key=lambda p: -p["rss_kb"])
+    return {"total_kb": total, "avail_kb": avail,
+            "avail_pct": round(100 * avail / total) if total else None,
+            "swap_total_kb": sw_total, "swap_used_kb": sw_total - sw_free,
+            "swap_used_pct": round(100 * (sw_total - sw_free) / sw_total) if sw_total else 0,
+            "oom_kill_total": oom, "top": procs[:3]}
+
+def mem_warnings(mem, last):
+    """memory_health() の結果を警告行に変える（main から切り出し＝回帰テスト可能にするため）。
+    OOM kill は「前回スナップショットからの増加分」だけを鳴らす＝同じ事故で毎日鳴り続けない。
+    カウンタが減っていたら再起動とみなして黙る（負の差分を故障にしない）。"""
+    if mem is None:
+        return ["メモリ計測ができない（/proc が読めない＝OOM の再発を検知できない）"]
+    # 判定は必ず【丸める前の実値】で行う（Codex🟡：表示用の round を使うと、空き14.6%が15%に
+    # 丸まって「< 15」に該当せず、境界直下をまるごと見逃す。表示だけ丸める）。
+    out = []
+    po = ((last or {}).get("mem") or {}).get("oom_kill_total")
+    co = mem.get("oom_kill_total")
+    if isinstance(po, int) and isinstance(co, int) and co > po:
+        out.append(f"🚨 前回スナップショット以降に OOM kill が {co - po} 件発生"
+                   f"（メモリ枯渇でカーネルがプロセスを殺した＝tmux 全滅の再発疑い）")
+    total = mem["total_kb"]
+    if total:
+        avail = 100 * mem["avail_kb"] / total
+        if avail < MEM_AVAIL_MIN_PCT:
+            out.append(f"空きメモリ {avail:.1f}% < {MEM_AVAIL_MIN_PCT}%（★提案既定値）＝枯渇寸前")
+    if mem["swap_total_kb"]:
+        swap = 100 * mem["swap_used_kb"] / mem["swap_total_kb"]
+        if swap > SWAP_USED_MAX_PCT:
+            out.append(f"swap 使用 {swap:.1f}% > {SWAP_USED_MAX_PCT}%（★提案既定値）＝RAM が恒常的に足りていない")
+    for p in mem["top"]:
+        pct = 100 * p["rss_kb"] / total if total else 0
+        if pct > PROC_HOG_PCT:
+            out.append(f"{p['name']} が RAM の {pct:.1f}% ({p['rss_kb']//KB}MB) を占有 > {PROC_HOG_PCT}%"
+                       f"（★提案既定値）＝暴走の疑い")
+    return out
+
 # ── スナップショット・トレンド ─────────────────────────────────────────
+def load_last(where=None):
+    """**直前**のスナップショット（最新1件）。OOM kill は「前回実行から何件増えたか」を
+    見るので、7日前と比べる load_prev ではなく最新と比べる必要がある。
+
+    where を渡すと、それを満たす最新1件を返す。OOM の比較相手には「oom_kill を実際に
+    読めたスナップショット」を要求する（Codex🟡：一時的な /proc/vmstat 読み取り失敗で
+    oom_kill_total=None が1件挟まると、単純な最新比較ではその期間の増分を永久に
+    復元できず、その間の OOM を取りこぼすため）。"""
+    if not os.path.exists(LOG):
+        return None
+    best, best_ts = None, None
+    try:
+        with open(LOG, encoding="utf-8", errors="replace") as fh:
+            for ln in fh:
+                try:
+                    snap = json.loads(ln)
+                    ts = datetime.datetime.fromisoformat(snap["ts"])
+                except Exception:
+                    continue
+                if where is not None and not where(snap):
+                    continue
+                if best_ts is None or ts > best_ts:
+                    best, best_ts = snap, ts
+    except OSError:
+        return None
+    return best
+
+def has_oom_counter(snap):
+    """スナップショットが「読めた oom_kill カウンタ」を持つか（load_last の where 用）。"""
+    return isinstance(((snap.get("mem") or {}).get("oom_kill_total")), int)
+
 def load_prev(days_back=6):
     """days_back 日以上前のスナップショットのうち **時刻が最も新しい** ものを返す
     （ファイル上の最後ではない＝時計巻き戻り・手動復旧・並べ替えに耐える）。"""
@@ -266,9 +383,13 @@ def main():
         fails.setdefault("fail_source", "tick.log(fallback)")
     mbox = mailbox_backlog()
     comms = comms_health()
+    mem = memory_health()
     snap = {"ts": now.isoformat(timespec="seconds"), "autoload": al,
             "states": [{"path": s["path"], "bytes": s["bytes"]} for s in states],
-            "failures": fails, "comms": comms}
+            "failures": fails, "comms": comms, "mem": mem}
+    # OOM kill の差分用。7日前と比べる prev とは別で、かつ「カウンタを読めた最新1件」を探す
+    # （None が1件挟まってもその期間の増分を取りこぼさない＝Codex🟡）
+    last = load_last(has_oom_counter)
     prev = load_prev()
     prev_states = {s["path"]: s["bytes"] for s in prev["states"]} if prev else {}
 
@@ -313,6 +434,8 @@ def main():
             warns.append(f"comms poll が {comms['poll_age_h']}h 停滞（2hおき 6-22時 cron が止まっている疑い）")
         if comms["distill_lag_h"] is not None and comms["distill_lag_h"] > 6:
             warns.append(f"comms 蒸留が新着 raw から {comms['distill_lag_h']}h 遅れ（/comms の失敗が続いている疑い＝distill.log 確認）")
+    # 故障：メモリ・swap の逼迫と OOM kill（2026-07-31 追加。tmux 全滅の再発検知）
+    warns += mem_warnings(mem, last)
     # 故障：mailbox（欠損・壊れたJSONも故障）
     for d, info in mbox.items():
         if info.get("missing"):
@@ -348,6 +471,18 @@ def main():
         lag = f"{comms['distill_lag_h']}h" if comms["distill_lag_h"] is not None else "なし"
         print(f"- comms: 最終poll {comms['poll_age_h']}h前 / 蒸留の未処理遅れ {lag}"
               + (" / 🚨 state破損" if comms["state_broken"] else ""))
+    if mem is None:
+        print("- メモリ: 🚨 計測不能（/proc が読めない）")
+    else:
+        d_oom, co = "", mem["oom_kill_total"]
+        po = ((last or {}).get("mem") or {}).get("oom_kill_total")
+        if isinstance(po, int) and isinstance(co, int):
+            d_oom = f"（前回から +{max(0, co - po)}）"
+        oom_s = f"{co}回{d_oom}" if isinstance(co, int) else "測定不可（このカーネルに oom_kill カウンタなし）"
+        print(f"- メモリ: 空き {mem['avail_kb']//KB}MB/{mem['total_kb']//KB}MB ({mem['avail_pct']}%) / "
+              f"swap 使用 {mem['swap_used_kb']//KB}MB/{mem['swap_total_kb']//KB}MB ({mem['swap_used_pct']}%) / "
+              f"OOM kill {oom_s}")
+        print("    上位: " + " / ".join(f"{p['name']} {p['rss_kb']//KB}MB" for p in mem["top"]))
     print()
     if warns:
         print("## ⚠️ 閾値超え・悪化トレンド（統括の起票対象はここだけ）")

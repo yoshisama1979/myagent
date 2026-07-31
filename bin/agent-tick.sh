@@ -40,6 +40,16 @@ PROJ="/home/vpsuser/projects/myagent"
 cd "$PROJ" || exit 1
 PY="$PROJ/bin/.venv/bin/python3"
 CLAUDE="/home/vpsuser/.local/bin/claude"
+# --- メモリ枯渇時に「社長の作業机」を巻き添えにしない（2026-07-31 社長承認・OOM対策①）---
+# 契機＝07-30 02:19 と 07-31 10:05 の2回、このVPS（RAM 5.8GB）でメモリが尽き、カーネルが
+# user@1000.service（社長のログインセッションを束ねる systemd）を殺した＝配下の tmux が全滅した。
+# 実測では claude プロセス2本が計5.3GB を占めており、cron 起動の claude 自身は 90MB＝健全だった。
+# oom_score_adj は fork で子に継承されるので、ここで 800 を付けておけば暴走した子孫ごと
+# 「カーネルが最初に殺す候補」になり、tmux とログインセッション（adj 100〜200）が生き残る。
+# 無人ループは殺されても次の周期で拾えるが、tmux が落ちると社長の手が止まるための優先順位。
+# choom は timeout の下で exec して claude 本体になる（プロセスは増えず timeout の kill 対象は同じ）。
+# choom が無い環境では黙って素通りする＝起動を止めない。
+if command -v choom >/dev/null 2>&1; then CHOOM=(choom -n 800 --); else CHOOM=(); fi
 LOG="$PROJ/data/overseer/tick.log"
 LOG_MAX_BYTES=1048576                                # 1MB を超えたら末尾512KBに切り詰め
 HEARTBEAT_WEB="$PROJ/site/overseer/last-tick.txt"   # Web から生存確認できる場所
@@ -65,6 +75,71 @@ fail() {
   printf '{"ts":"%s","fail":"%s"}\n' "$(date -Iseconds)" "$1" >>"$FAILLOG" 2>/dev/null || true
 }
 status_str() { if [ "${#FAILURES[@]}" -eq 0 ]; then echo "ok"; else echo "${FAILURES[*]}"; fi; }
+
+# --- 失敗を社長Slackへ通知（claude非依存・純シェル経由・1時間スロットル） ---
+# 第2引数でスロットル用ファイルを差し替えられる（既定＝$LAST_ALERT）。重要度の違う警報が
+# 互いを握り潰さないようにするため＝partner_alert が独立スロットルなのと同じ理由（2026-07-31 追加）。
+# 定義位置がメインロックより前なのは、下の OOM 検知がロック外で鳴らす必要があるため（同上）。
+alert() {
+  local msg="$1"
+  local throttle="${2:-$LAST_ALERT}"
+  echo "$(now) [ALERT] $msg" >>"$LOG"
+  if [ -f "$throttle" ]; then
+    local last age
+    last=$(cat "$throttle" 2>/dev/null || echo 0)
+    [[ "$last" =~ ^[0-9]+$ ]] || last=0          # 壊れた値で算術が落ちないように（Codex🟡6）
+    age=$(( $(date +%s) - last ))
+    [ "$age" -lt 3600 ] && return 0              # 1時間以内に通知済みなら鳴らさない（スパム防止）
+  fi
+  printf '⚠️ agent-tick 異常\n%s\n（%s）\n生存確認: http://100.123.104.87/overseer/last-tick.txt' \
+    "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post >>"$LOG" 2>&1 \
+    && date +%s >"$throttle"
+}
+
+# --- OOM kill の検知（2026-07-31 社長承認・Codexレビュー反映でメインロックの外へ）---
+# 契機＝07-30/07-31 の2回、メモリ枯渇でカーネルが社長のログインセッションを殺し tmux が全滅したが、
+# 誰も気づかず社長が手元で異変に気づくまで分からなかった。/proc/vmstat の oom_kill は起動時0からの
+# 単調増加カウンタで sudo 不要＝journal を読む権限が要らない（system-health.py は日次＝翌朝01:15まで
+# 気づけないため、通知はここに置く）。
+#
+# ★メインロックより前に置く理由（Codex🔴）：実際の OOM 2回はどちらも「ヘッドレス claude 実行中」＝
+#   メインロックが握られている時間帯に起きた。ロックの内側に置くと、いちばん鳴ってほしい場面で
+#   毎回 25分（daily は最大60分）遅れる＝「即時通知」という設計目的を満たさない。
+#   代わりに OOM 専用の短いロックで read→通知→write を直列化する（取れなければ他の tick が
+#   今まさに同じ判定をしている＝取りこぼしゼロで黙って抜ける）。
+# ★通知に失敗したらカウンタを進めない（Codex🔴）：進めてしまうと次回は差分ゼロになり、その OOM は
+#   二度と通知されない。Slack 投稿が失敗した回は据え置いて次の tick で再試行する。
+# ★カウンタが減ったら再起動＝差分を取らず値だけ更新（負の差分で鳴らさない）。
+OOM_COUNT="$PROJ/data/overseer/.oom-count"
+oom_now=$(awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true)
+if [[ "${oom_now:-}" =~ ^[0-9]+$ ]]; then
+  exec 8>"$PROJ/data/overseer/.oom.lock"
+  if flock -n 8; then
+    oom_prev=$(cat "$OOM_COUNT" 2>/dev/null || echo "")
+    oom_save=1
+    if [ -f "$OOM_COUNT" ] && ! [[ "$oom_prev" =~ ^[0-9]+$ ]]; then
+      fail "oom-count-broken"                    # 破損を無言で「初回」に化けさせない（Codex🟡）
+      oom_prev=""
+    fi
+    [[ "$oom_prev" =~ ^[0-9]+$ ]] || oom_prev=""
+    if [ -n "$oom_prev" ] && [ "$oom_now" -gt "$oom_prev" ]; then
+      fail "oom-kill($((oom_now - oom_prev)))"
+      # スロットルは独立（fetch失敗等の日常的な警報に最重要の OOM を握り潰させない）
+      alert "メモリ枯渇でカーネルがプロセスを $((oom_now - oom_prev)) 件強制終了しました（OOM kill）。tmux やヘッドレス実行が落ちている可能性があります。空きメモリ: $(awk '/^MemAvailable/{printf "%dMB", $2/1024}' /proc/meminfo 2>/dev/null)" \
+        "$PROJ/data/overseer/.last-alert-oom" || oom_save=0
+    fi
+    if [ "$oom_save" -eq 1 ]; then
+      # 原子的に更新（直接上書きだと途中終了で空ファイル化し、次回「初回」に化ける＝Codex🟡）
+      if ! { printf '%s\n' "$oom_now" >"$OOM_COUNT.tmp" && mv -f "$OOM_COUNT.tmp" "$OOM_COUNT"; }; then
+        fail "oom-count-write"                   # 保存できない＝以後ずっと検知できないので黙らない
+        rm -f "$OOM_COUNT.tmp" 2>/dev/null || true
+      fi
+    else
+      echo "$(now) [warn] OOM を検知しましたが通知に失敗＝カウンタを据え置き、次の tick で再通知します" >>"$LOG"
+    fi
+  fi
+  exec 8>&-
+fi
 
 # --- 多重起動防止 ---
 # normal（反応ティック）は前回が走っていれば静かにスキップ（取りこぼしても次の */N で拾える）。
@@ -92,22 +167,6 @@ if [ -f "$LOG" ]; then
     echo "$(now) [log] tick.log が ${sz}B を超えたため末尾512KBに切り詰め" >>"$LOG"
   fi
 fi
-
-# --- 失敗を社長Slackへ通知（claude非依存・純シェル経由・1時間スロットル） ---
-alert() {
-  local msg="$1"
-  echo "$(now) [ALERT] $msg" >>"$LOG"
-  if [ -f "$LAST_ALERT" ]; then
-    local last age
-    last=$(cat "$LAST_ALERT" 2>/dev/null || echo 0)
-    [[ "$last" =~ ^[0-9]+$ ]] || last=0          # 壊れた値で算術が落ちないように（Codex🟡6）
-    age=$(( $(date +%s) - last ))
-    [ "$age" -lt 3600 ] && return 0              # 1時間以内に通知済みなら鳴らさない（スパム防止）
-  fi
-  printf '⚠️ agent-tick 異常\n%s\n（%s）\n生存確認: http://100.123.104.87/overseer/last-tick.txt' \
-    "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post >>"$LOG" 2>&1 \
-    && date +%s >"$LAST_ALERT"
-}
 
 # --- 朝礼(partner)の失敗を #partner にも通知（社長合意 2026-07-24・#2「今日いちばん効く」） ---
 # 従来 alert() は既定ch（ウェブ解析）だけに出るため、社長は #partner で朝礼が「無い」ことで
@@ -182,10 +241,23 @@ dispatch() {
     # このスクリプトだけが書ける形にし、claude出力による状態偽装を防ぐ（Codex🔴 2026-07-17）
     # MYAGENT_AGENT：エージェント別の追加制限用（comms＝外部入力を読むため書き込み先を
     # data/comms/・site/comms/ に限定し外部送信系 Bash を拒否＝2026-07-28 Codexレビュー反映）
-    MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
+    # choom -n 800：OOM時にカーネルがこの claude（と子孫）を優先的に殺す＝社長の tmux を守る（上部の定義参照）
+    # 実行前後の oom_kill 差分で「タイムアウトの137」と「OOM で殺された137」を見分ける（Codex🟡）。
+    # choom -n 800 を付けた結果、この claude は OOM の第一候補になった＝137=OOM の経路が現実的になり、
+    # 素朴に 137=タイムアウトと決め打つと「25分でタイムアウト」と誤報して原因調査を誤らせる。
+    local oom_pre oom_post
+    oom_pre=$(awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true)
+    MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
     rc=${PIPESTATUS[0]}
     if [ "$rc" -ne 0 ]; then
-      if [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
+      oom_post=$(awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true)
+      if [ "$rc" -eq 137 ] && [[ "${oom_pre:-}" =~ ^[0-9]+$ ]] && [[ "${oom_post:-}" =~ ^[0-9]+$ ]] \
+         && [ "$oom_post" -gt "$oom_pre" ]; then
+        fail "$label-oomkill"; action="$action(OOMKILL)"
+        alert "ヘッドレス $label がメモリ不足で強制終了されました（OOM kill・実行中に oom_kill が $((oom_post - oom_pre)) 件増加）。タイムアウトではありません。空きメモリ: $(awk '/^MemAvailable/{printf "%dMB", $2/1024}' /proc/meminfo 2>/dev/null)" \
+          "$PROJ/data/overseer/.last-alert-oom"
+        [ "$to" = "partner" ] && partner_alert "朝礼がメモリ不足で強制終了されました（OOM kill）。時間切れではなくメモリ側の問題です。"
+      elif [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
         fail "$label-timeout"; action="$action(TIMEOUT)"
         alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。"
         [ "$to" = "partner" ] && partner_alert "朝礼が制限時間（$((tmo/60))分）内に終わりませんでした。台帳・掲示板が重くなっている可能性があります。"
