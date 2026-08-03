@@ -229,6 +229,17 @@ COOLDOWN_RESET=86400  # 前回の冷却明けからこれ以上経っていれ�
 # 各自に持つと、片方だけ直したとき「30分待つのに6時間と通知する」ような食い違いが静かに生まれる。
 cooldown_wait_for() { [ "${1:-1}" -ge 2 ] && echo "$COOLDOWN_NTH" || echo "$COOLDOWN_1ST"; }
 cooldown_file()   { printf '%s/data/overseer/.cooldown-%s'   "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
+
+# 状態ファイルの書き込みはここ1箇所（設定・丸め直し・hold の3箇所が同じことをしていた）。
+# 直接上書きすると途中終了で空ファイル化し、次回「冷却なし」に化けるため必ず tmp→mv で置き換える。
+# 散らばったまま片方だけ直すと、そこだけ非原子的に戻る。
+cooldown_write() {   # ラベル / 連続回数 / 解除時刻(epoch)
+  local f; f=$(cooldown_file "$1")
+  if ! { printf '%s %s\n' "$2" "$3" >"$f.tmp" && mv -f "$f.tmp" "$f"; } 2>/dev/null; then
+    rm -f "$f.tmp" 2>/dev/null || true
+    return 1
+  fi
+}
 daily_due_file()  { printf '%s/data/overseer/.daily-due-%s'  "$PROJ" "${1//[^a-zA-Z0-9]/_}"; }
 # 実行中の印（Codex🔴6）：クールダウンは「終了後」にしか書けないため、監督している側（この
 # スクリプトの bash 自体・timeout・パイプライン）が OOM で殺されたり VPS が落ちたりすると、
@@ -254,8 +265,7 @@ cooldown_remain() {
   if [ $((until - now_s)) -gt "$max" ]; then
     [[ "${count:-}" =~ ^[0-9]+$ ]] || count=2
     until=$((now_s + COOLDOWN_NTH))
-    { printf '%s %s\n' "$count" "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; } 2>/dev/null \
-      || rm -f "$f.tmp" 2>/dev/null || true
+    cooldown_write "$1" "$count" "$until" || true
     echo "$(now) [warn] $1 のクールダウン解除時刻が異常（上限超え）＝6時間に丸めました" >>"$LOG"
   fi
   if [ "$now_s" -ge "$until" ]; then echo 0; else echo $((until - now_s)); fi
@@ -278,8 +288,7 @@ cooldown_set() {
   count=$((count + 1))
   wait_s=$(cooldown_wait_for "$count")
   until=$((now_s + wait_s))
-  if ! { printf '%s %s\n' "$count" "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; }; then
-    rm -f "$f.tmp" 2>/dev/null || true
+  if ! cooldown_write "$1" "$count" "$until"; then
     echo "$(now) [warn] クールダウンの記録に失敗＝$1 は次の tick で即再実行されます" >>"$LOG"
   fi
   echo "$count"
@@ -289,9 +298,9 @@ cooldown_set() {
 # 原因がこちらに無い（待っても直らないが、毎分叩いても無駄）ときに、連続回数を進めずに冷ます。
 # クレジット切れがこれ＝失敗回数として数えて6時間ロックすると、補充後も長く止まったままになる。
 cooldown_hold() {
-  local f until; f=$(cooldown_file "$1")
-  until=$(( $(date +%s) + ${2:-$COOLDOWN_1ST} ))
-  { printf '0 %s\n' "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; } || rm -f "$f.tmp" 2>/dev/null || true
+  # 連続回数 0 で書く＝次に本当の失敗が起きたとき 0+1=1 回目からやり直す
+  cooldown_write "$1" 0 "$(( $(date +%s) + ${2:-$COOLDOWN_1ST} ))" \
+    || echo "$(now) [warn] $1 の冷却を記録できませんでした" >>"$LOG"
 }
 
 cooldown_clear() {
