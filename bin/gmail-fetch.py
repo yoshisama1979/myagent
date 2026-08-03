@@ -221,6 +221,7 @@ FALLBACK_CHARSETS = ("utf-8", "iso-2022-jp", "cp932", "euc-jp")
 # デコードできなかった／中身が文章に見えなかった本文の記録（poll の最後に鳴らすため）
 DECODE_FAILURES = []
 MIN_DECODE_SCORE = 0.5    # これ未満は「読めたつもり」を疑う（★提案既定値・本文は捨てない）
+RAW_KEEP_MAX = 200_000    # デコード失敗時に原バイトを残す上限（★提案既定値・失敗回のみ）
 
 
 def _jp_score(t: str) -> float:
@@ -297,15 +298,54 @@ def _decode_bytes(raw: bytes, declared: str):
     return raw.decode("utf-8", errors="replace"), f"replace(試行: {'/'.join(tried)})", True
 
 
-def _decode_part(part) -> str:
-    data = (part.get("body") or {}).get("data")
+def _decode_part(part, fetch_part=None) -> str:
+    b = part.get("body") or {}
+    data = b.get("data")
+    if not data and b.get("attachmentId") and fetch_part:
+        try:
+            data = fetch_part(b["attachmentId"])
+        except Exception as e:
+            DECODE_FAILURES.append({"charset": f"attachment-fetch-error({type(e).__name__})", "b64": ""})
+            return ""
     if not data:
         return ""
-    raw = base64.urlsafe_b64decode(data + "===")
+    # パディングは固定 "===" ではなく長さから計算する（不正な長さを黙って通さない）
+    raw = base64.urlsafe_b64decode(data + "=" * (-len(data) % 4))
+    size = b.get("size")
+    if isinstance(size, int) and size > 0 and abs(len(raw) - size) > 8:
+        # Gmail が申告したサイズと合わない＝取得が欠けている可能性。捨てずに記録だけする
+        DECODE_FAILURES.append({"charset": f"size-mismatch({len(raw)}≠{size})", "b64": ""})
     txt, used, failed = _decode_bytes(raw, _part_charset(part))
     if failed:
-        DECODE_FAILURES.append(used)
+        # ★読めなかった原バイトを残す（Codex🔴5）：Gmail 側が消えた・認証が切れた場合に
+        #   再取得できなくなるため、こちらにも復元の種を持っておく。失敗した回だけなので量は増えない。
+        DECODE_FAILURES.append({"charset": used, "b64": base64.b64encode(raw[:RAW_KEEP_MAX]).decode()})
     return txt
+
+
+def attachment_fetcher(svc, message_id):
+    """本文パートが別取得になっていたとき、その中身（base64）を取りに行く関数を返す"""
+    def fetch(attachment_id):
+        return (svc.users().messages().attachments()
+                .get(userId="me", messageId=message_id, id=attachment_id)
+                .execute() or {}).get("data", "")
+    return fetch
+
+
+def with_decode_note(rec: dict, issues) -> dict:
+    """デコードに問題があった回だけ、状態と原バイトを記録に足す。
+
+    問題なしのときは何も足さない＝全件に余計な欄を増やさない。蒸留側は decode_status が
+    あるかどうかだけ見れば「この本文は疑わしい」と分かる。
+    """
+    if not issues:
+        return rec
+    rec = dict(rec, decode_status="failed",
+               decode_detail=" / ".join(i["charset"] for i in issues))
+    b64 = next((i["b64"] for i in issues if i.get("b64")), "")
+    if b64:
+        rec["raw_body_base64"] = b64
+    return rec
 
 
 def with_stripped(rec: dict, body: str) -> dict:
@@ -334,9 +374,16 @@ def strip_body(txt: str):
         return txt, f"error({type(e).__name__})"
 
 
-def extract_body(payload) -> str:
-    """text/plain 優先・無ければ text/html をタグ除去。添付は見ない"""
+def extract_body(payload, fetch_part=None) -> str:
+    """text/plain 優先・無ければ text/html をタグ除去。添付は見ない。
+
+    ★body.data が無くても諦めない（Codex🔴6）：Gmail は本文パートのデータを別取得にすることがあり、
+      その場合 data が空で attachmentId が入る。これは「添付ファイル」とは限らず本文でも起きるため、
+      data が無いパートを一律に飛ばすと、エラーも出さずに空本文を保存してしまう（静かに壊れる）。
+      fetch_part(attachment_id) -> base64文字列 を渡せば取りに行く（渡さなければ従来どおり）。
+    """
     import html as html_mod
+    DECODE_FAILURES.clear()          # この1通ぶんの失敗だけを呼び出し側へ渡す
     plain = html = None
     stack = [payload]
     while stack:
@@ -348,7 +395,8 @@ def extract_body(payload) -> str:
         if _is_attachment(p):
             # text/plain の添付ファイルを本文と誤認して取り込まない（「添付は見ない」の徹底）
             continue
-        if not (p.get("body") or {}).get("data"):
+        b = p.get("body") or {}
+        if not b.get("data") and not b.get("attachmentId"):
             continue
         if mt == "text/plain" and plain is None:
             plain = p
@@ -357,7 +405,7 @@ def extract_body(payload) -> str:
     part = plain or html
     if part is None:
         return ""
-    txt = _decode_part(part)
+    txt = _decode_part(part, fetch_part)
     if plain is None:
         txt = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", txt, flags=re.S | re.I)
         txt = re.sub(r"<[^>]+>", " ", txt)
@@ -639,9 +687,10 @@ def _poll_account(svc, acct: str, cur: dict, lists, pending: dict, self_addrs=No
             else:
                 auth = "fail" if auth_res else "unknown"
             # 抽出は【上限をかける前】の本文に対して行う（長い引用で本文が消えないように）
-            body_txt = extract_body(full.get("payload", {}))
+            body_txt = extract_body(full.get("payload", {}), attachment_fetcher(svc, mid))
+            decode_issues = list(DECODE_FAILURES)
             body_new, strip_method = strip_body(body_txt)
-            recs.append({
+            recs.append(with_decode_note({
                 "ts": ts,
                 "account": acct,
                 "dir": "out" if outgoing else "in",
@@ -660,7 +709,7 @@ def _poll_account(svc, acct: str, cur: dict, lists, pending: dict, self_addrs=No
                 "message_id": mid,
                 "auth": auth,
                 "link": f"https://mail.google.com/mail/#all/{mid}",
-            })
+            }, decode_issues))
             counts["saved"] += 1
         elif all(v == "ignore" for _, _, v in verdicts):
             counts["ignored"] += 1
@@ -785,8 +834,7 @@ def cmd_repair(apply: bool):
         try:
             svc = gmail_service(acct)
             full = svc.users().messages().get(userId="me", id=mid, format="full").execute()
-            DECODE_FAILURES.clear()
-            body = extract_body(full.get("payload", {}))
+            body = extract_body(full.get("payload", {}), attachment_fetcher(svc, mid))
         except Exception as e:                     # 認証切れ・削除済み等でも他の件を止めない
             print(f"  ❌ 取得失敗 {mid[:12]}… （{type(e).__name__}）")
             continue

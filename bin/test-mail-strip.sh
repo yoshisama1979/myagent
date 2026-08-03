@@ -117,6 +117,46 @@ t, used, failed = gf._decode_bytes("あいう".encode("utf-16"), "")
 t, used, failed = gf._decode_bytes(b"\x80\x80\x80\x80", "")
 (ok if "肀" not in t else ng)("BOM 無しで utf-16 を推測しない（壊れたバイトを漢字にしない）")
 
+print("\n=== 本文パートが別取得（attachmentId）でも取りこぼさない ===")
+import base64                                              # noqa: E402
+
+BODY = "お世話になっております。ご確認をお願いいたします。"
+enc = base64.urlsafe_b64encode(BODY.encode()).decode()
+payload_att = {"mimeType": "text/plain",
+               "headers": [{"name": "Content-Type", "value": "text/plain; charset=UTF-8"}],
+               "body": {"attachmentId": "ATT1", "size": len(BODY.encode())}}
+
+t = gf.extract_body(payload_att, lambda aid: enc if aid == "ATT1" else "")
+(ok if t == BODY else ng)(f"attachmentId の本文を取りに行く（{t[:20]!r}）")
+
+t = gf.extract_body(payload_att)                            # 取得関数を渡さない＝従来動作
+(ok if t == "" else ng)("取得関数が無ければ空（従来どおり・例外にしない）")
+
+
+def boom(_):
+    raise RuntimeError("network")
+
+
+t = gf.extract_body(payload_att, boom)
+(ok if t == "" and gf.DECODE_FAILURES else ng)("取得に失敗したら記録が残る（黙って空にしない）")
+
+# 添付ファイルは従来どおり本文にしない
+payload_file = {"mimeType": "text/plain", "filename": "note.txt",
+                "body": {"attachmentId": "ATT1", "size": 10}}
+(ok if gf.extract_body(payload_file, lambda a: enc) == "" else ng)("添付ファイルは本文にしない")
+
+print("\n=== デコード失敗時に原バイトを残す ===")
+gf.DECODE_FAILURES.clear()
+bad = {"mimeType": "text/plain",
+       "headers": [{"name": "Content-Type", "value": "text/plain; charset=UTF-8"}],
+       "body": {"data": base64.urlsafe_b64encode(b"\x80\x80\x80\x80").decode()}}
+gf.extract_body(bad)
+rec = gf.with_decode_note({"id": "x"}, list(gf.DECODE_FAILURES))
+(ok if rec.get("decode_status") == "failed" else ng)("疑わしい本文に decode_status が付く")
+(ok if rec.get("raw_body_base64") else ng)("原バイトが base64 で残る（Gmail が消えても復元できる）")
+(ok if "decode_status" not in gf.with_decode_note({"id": "y"}, []) else ng)(
+    "問題が無ければ余計な欄を足さない")
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF
