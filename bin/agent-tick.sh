@@ -286,6 +286,14 @@ cooldown_set() {
 }
 
 # 削除失敗を黙殺しない（Codex🟡10）＝残ると次の失敗が不当に「連続2回目」になる
+# 原因がこちらに無い（待っても直らないが、毎分叩いても無駄）ときに、連続回数を進めずに冷ます。
+# クレジット切れがこれ＝失敗回数として数えて6時間ロックすると、補充後も長く止まったままになる。
+cooldown_hold() {
+  local f until; f=$(cooldown_file "$1")
+  until=$(( $(date +%s) + ${2:-$COOLDOWN_1ST} ))
+  { printf '0 %s\n' "$until" >"$f.tmp" && mv -f "$f.tmp" "$f"; } || rm -f "$f.tmp" 2>/dev/null || true
+}
+
 cooldown_clear() {
   local f; f=$(cooldown_file "$1")
   [ -e "$f" ] || return 0
@@ -489,8 +497,9 @@ dispatch() {
     # 実行前後の oom_kill 差分で「タイムアウトの137」と「OOM で殺された137」を見分ける（Codex🟡）。
     # choom -n 800 を付けた結果、この claude は OOM の第一候補になった＝137=OOM の経路が現実的になり、
     # 素朴に 137=タイムアウトと決め打つと「25分でタイムアウト」と誤報して原因調査を誤らせる。
-    local oom_pre oom_post
+    local oom_pre oom_post log_off
     oom_pre=$(oom_kill_count)
+    log_off=$(stat -c%s "$LOG" 2>/dev/null || echo 0)   # この実行が書いた分だけを後で読むための目印
     MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
     # ログ側（sed >>$LOG）の失敗も拾う（Codex🟡11）＝ログが書けない状況ではクールダウンの記録も
     # 書けない可能性が高く、この安全機構そのものが効かなくなる。ログに書けないので Slack で鳴らす。
@@ -500,6 +509,24 @@ dispatch() {
     if [ "${pipe_rc[1]:-0}" -ne 0 ]; then
       fail "$label-logwrite"
       alert "ヘッドレス $label の実行ログを記録できませんでした（ディスク満杯・権限などの可能性）。クールダウン等の状態も書けない恐れがあります。"
+    fi
+    # --- クレジット切れの判定（2026-08-03 社長承認）---
+    # 契機＝08-03、社長が partner へ投函した2通に半日返事が返らなかった。原因は claude 側の
+    # クレジット枯渇で、この場合 claude は「エラー」ではなく exit 0 を返し、案内を1行出して4秒で終わる。
+    # つまり無進捗として検知はできたが、通知文が「便が処理されていません」だったため
+    # 社長には原因が分からず、そのうえ連続2回目として6時間ロックされていた。
+    #   ・原因をそのまま通知に出す（ログには出ていたのに伝えていなかった＝静かに壊れるのと同じ）
+    #   ・連続回数に数えない（こちらの不具合ではない。補充後に長く止まったままにしない）
+    #   ・ただし毎分叩いても無駄なので30分だけ冷ます＝補充されれば30分以内に自力で復帰する
+    if grep -qiE "out of usage credits|/usage-credits|usage limit reached|reached your usage limit" \
+         <(tail -c "+$((log_off + 1))" "$LOG" 2>/dev/null); then
+      fail "$label-nocredit"; action="$action(NOCREDIT)"
+      cooldown_hold "$label" "$COOLDOWN_1ST"
+      alert "ヘッドレス $label が実行できません＝**クレジットが尽きています**（claude が案内だけ出して終了）。補充するまで無人処理は動きません。仕事は消していません（未処理 $pending 件は残置）。$((COOLDOWN_1ST / 60))分おきに自動で再挑戦するので、補充すれば自然に再開します。" \
+        "$PROJ/data/overseer/.last-alert-nocredit"
+      [ "$to" = "partner" ] && partner_alert "クレジットが尽きているため朝礼・返信ができません。補充をお願いします（お預かりした用件は消えていません）。"
+      ACTIONS+=("$label:$pending:$action")
+      return 0
     fi
     if [ "$rc" -ne 0 ]; then
       oom_post=$(oom_kill_count)

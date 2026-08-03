@@ -92,6 +92,13 @@ eq "十分に間が空いていれば1回目に戻る" "1" "$(run 'cooldown_set 
 between "その待ち時間も30分に戻る" 1750 1800 "$(run 'cooldown_remain hp-loop:ycom')"
 run 'cooldown_clear hp-loop:ycom'
 
+# 7c-2) cooldown_hold＝連続回数を進めずに冷ます（クレジット切れ用）
+run 'cooldown_clear x; cooldown_set x' >/dev/null            # まず連続1回目にする
+run 'cooldown_hold x 1800'
+between "hold は指定時間だけ冷ます" 1750 1800 "$(run 'cooldown_remain x')"
+eq "hold は連続回数を進めない（次の失敗が1回目に戻る）" "1" "$(run 'cooldown_set x')"
+run 'cooldown_clear x'
+
 # 7d) 直前に明けたばかりなら連続として扱う（時効が効きすぎない）
 printf '1 %s\n' "$(( $(date +%s) - 60 ))" >"$T/data/overseer/.cooldown-hp_loop_ycom"
 eq "明けた直後の失敗は連続2回目" "2" "$(run 'cooldown_set hp-loop:ycom')"
@@ -168,6 +175,20 @@ grep -q 'trig_before' "$SRC" && ok "起動の引き金になった便を控え�
 grep -q 'label-noprogress' "$SRC" \
   && ok "完走しても未処理なら無進捗として冷やす" \
   || ng "完走しても未処理なら無進捗として冷やす" "exit 0 の無限ループが毎分25分ジョブを起こす"
+
+# クレジット切れの扱い（2026-08-03）＝原因を通知に出し、連続回数には数えない
+grep -q 'out of usage credits' "$SRC" \
+  && ok "クレジット切れを判定している" \
+  || ng "クレジット切れを判定している" "原因が通知に出ず、社長に伝わらない"
+sed -n '/クレジット切れの判定/,/^    fi$/p' "$SRC" | grep -q 'cooldown_hold' \
+  && ok "クレジット切れは連続回数に数えない（hold を使う）" \
+  || ng "クレジット切れは連続回数に数えない" "cooldown_apply だと6時間ロックされ補充後も止まる"
+sed -n '/クレジット切れの判定/,/^    fi$/p' "$SRC" | grep -q 'クレジットが尽きています' \
+  && ok "通知文に原因（クレジット）が書かれている" \
+  || ng "通知文に原因が書かれている"
+sed -n '/クレジット切れの判定/,/^    fi$/p' "$SRC" | grep -q 'last-alert-nocredit' \
+  && ok "クレジット切れは独立スロットル（他の警報を握り潰さない）" \
+  || ng "クレジット切れは独立スロットル"
 
 # ログ書き込み失敗の検知（Codex🟡11）
 grep -q 'pipe_rc\[1\]' "$SRC" && ok "ログ書き込みの失敗を拾う" \
