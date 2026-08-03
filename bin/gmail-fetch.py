@@ -38,6 +38,9 @@ from email.header import decode_header, make_header
 from email.utils import getaddresses, parseaddr
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import _mail_strip  # noqa: E402  引用・署名の除去（検証ツール bin/mail-strip.py と同じ実装を共有）
+
 PROJ = Path(__file__).resolve().parent.parent
 DATA = PROJ / "data" / "comms" / "gmail"
 RAW_DIR = DATA / "raw"
@@ -205,15 +208,120 @@ def _is_attachment(part) -> bool:
     return False
 
 
+# 日本語メールで実際に使われる文字コード。宣言が無い／間違っている／Python が知らない名前
+# （x-sjis 等）のときに順に試す。ISO-2022-JP はエスケープシーケンスで自己識別でき、
+# CP932 は Shift_JIS の上位互換（機種依存文字も読める）なので Shift_JIS より先に置く。
+# ★utf-16 は入れない（Codex🔴3）：Python の utf-16 は BOM が無くてもネイティブエンディアンで
+#   デコードできてしまうため、他が全滅した壊れたバイト列を「漢字らしい文字列」に化けさせる。
+#   実測で b"\x80\x80\x80\x80" が「肀肀」になり、日本語らしさ 1.00 で成功扱いになった＝
+#   errors="replace" で � にするより悪い（壊れたことに誰も気づけない）。
+#   BOM がある場合と、宣言が明示的に utf-16 系の場合だけ下で個別に扱う。
+FALLBACK_CHARSETS = ("utf-8", "iso-2022-jp", "cp932", "euc-jp")
+
+# デコードできなかった／中身が文章に見えなかった本文の記録（poll の最後に鳴らすため）
+DECODE_FAILURES = []
+MIN_DECODE_SCORE = 0.5    # これ未満は「読めたつもり」を疑う（★提案既定値・本文は捨てない）
+
+
+def _jp_score(t: str) -> float:
+    """日本語の文章としてもっともらしいか（0〜1）。
+
+    「厳格にデコードできた＝正しい」ではない。実測で2通り外れた：
+      ・ISO-2022-JP は全バイトが7bit なので UTF-8 として“成功”する（中身はエスケープ記号の羅列）
+      ・EUC-JP はたまたま CP932 としても妥当なバイト列になり、化けたまま“成功”する
+    そこで、デコードできた候補すべてを「日本語らしさ」で採点して選ぶ。
+    """
+    good = bad = 0
+    for ch in t:
+        o = ord(ch)
+        if ch.isascii():
+            good += 1 if (ch.isprintable() or ch in "\r\n\t") else 0
+            bad += 0 if (ch.isprintable() or ch in "\r\n\t") else 1   # 制御文字＝化けの兆候
+        elif 0x3000 <= o <= 0x30FF or 0x4E00 <= o <= 0x9FFF or 0xFF01 <= o <= 0xFF60:
+            good += 1                      # 記号・かな・漢字・全角英数＝日本語の本文らしい
+        elif 0xFF61 <= o <= 0xFF9F:
+            bad += 1                       # 半角カタカナが大量＝化けの典型
+        else:
+            bad += 1                       # 私用領域・珍しい漢字など
+    return good / (good + bad) if (good + bad) else 0.0
+
+
+def _decode_bytes(raw: bytes, declared: str):
+    """(本文, 使った文字コード, 失敗したか) を返す。
+
+    ★errors="replace" を最初から使わない：読めないバイトを黙って � に置き換えて捨てるため、
+      あとから復元できない。実際 07月の28通中3通・2,562文字がこれで失われていた
+      （805字中705字が � など）。厳格にデコードできた候補を集め、日本語らしさで選ぶ。
+      全滅したときだけ置換に落とすが、そのときは必ず記録して鳴らす（黙って壊さない）。
+    """
+    # ① 自己識別できるもの（BOM・エスケープシーケンス）を先に確定させる＝推測に頼らない
+    for bom, enc in ((b"\xef\xbb\xbf", "utf-8-sig"), (b"\xff\xfe", "utf-16"), (b"\xfe\xff", "utf-16")):
+        if raw.startswith(bom):
+            try:
+                return raw.decode(enc), enc, False
+            except UnicodeDecodeError:
+                break
+    # ISO-2022-JP はエスケープシーケンスで自己識別できる＝他の候補より確実なので先に確定させる
+    if b"\x1b$" in raw or b"\x1b(J" in raw:
+        try:
+            return raw.decode("iso-2022-jp"), "iso-2022-jp", False
+        except UnicodeDecodeError:
+            pass
+    # ② 宣言が明示的に utf-16 系のときだけ試す（BOM 無しの推測には使わない＝上の注記の理由）
+    if (declared or "").lower().replace("_", "-") in ("utf-16", "utf-16le", "utf-16be"):
+        try:
+            return raw.decode(declared), declared, False
+        except (UnicodeDecodeError, LookupError):
+            pass
+    cands, tried = [], []
+    for cs in [declared] + [c for c in FALLBACK_CHARSETS if c.lower() != (declared or "").lower()]:
+        if not cs:
+            continue
+        tried.append(cs)
+        try:
+            txt = raw.decode(cs)                       # errors 既定＝strict
+        except (UnicodeDecodeError, LookupError):
+            continue
+        # 宣言された文字コードは僅差なら優先する（送り主の申告を無闇に疑わない）
+        cands.append((_jp_score(txt) + (0.02 if cs == declared else 0), txt, cs))
+    if cands:
+        score, txt, cs = max(cands, key=lambda x: x[0])
+        # 厳格にデコードできても中身が文章に見えないことがある（例：b"\x80\x80\x80\x80" は cp932 で
+        # 「通る」が中身は制御文字）。失敗として記録だけする＝本文は返すので情報は失わないが、
+        # 「読めたつもり」で静かに通過させない（Codex🔴4）。日本語以外の本文も低得点になり得るため、
+        # ここで本文を捨てたり置換したりはしない。
+        if txt.strip() and score < MIN_DECODE_SCORE:
+            return txt, f"{cs}(低品質 score={score:.2f})", True
+        return txt, cs, False
+    # ここに来たら本当に読めない。原本は Gmail 側に残っているので後から再取得できる
+    return raw.decode("utf-8", errors="replace"), f"replace(試行: {'/'.join(tried)})", True
+
+
 def _decode_part(part) -> str:
     data = (part.get("body") or {}).get("data")
     if not data:
         return ""
     raw = base64.urlsafe_b64decode(data + "===")
+    txt, used, failed = _decode_bytes(raw, _part_charset(part))
+    if failed:
+        DECODE_FAILURES.append(used)
+    return txt
+
+
+def strip_body(txt: str):
+    """引用と自社署名を落とした「今回書かれた部分」を返す (本文, 判定)。
+
+    返信が積み重なると引用が本文の何倍にもなる（実測32通で141,571字→11,361字＝92%が引用と署名）。
+    蒸留に渡す量がそのまま無駄になるので取り込み時に落とす。
+    ★原本（body）は消さない：抽出は必ずどこかで外れるので、後から作り直せる形にしておく。
+    ★取り込み時は同スレッドの過去分も学習済み署名も手元に無いが、それ抜きでも 92.0% 落ちる
+      （引用ヘッダと自社署名の区切りだけで足りる）ので、単体で完結させている。
+    """
     try:
-        return raw.decode(_part_charset(part), errors="replace")
-    except LookupError:
-        return raw.decode("utf-8", errors="replace")
+        r = _mail_strip.strip_quotes(txt)
+        return r["text"], r["method"]
+    except Exception as e:                     # 抽出の失敗で取り込み自体を止めない
+        return txt, f"error({type(e).__name__})"
 
 
 def extract_body(payload) -> str:
@@ -246,8 +354,19 @@ def extract_body(payload) -> str:
         txt = html_mod.unescape(txt)
         txt = re.sub(r"[ \t　]+", " ", txt)
     txt = re.sub(r"\n{3,}", "\n\n", txt).strip()
+    return txt
+
+
+def cap_body(txt: str) -> str:
+    """保存用に上限をかける。
+
+    ★順序が大事：以前はここ（extract_body の中）で切ってから保存していたため、
+      引用が長い返信では「引用で10,000字を使い切り、その先にある本文が消える」経路があった
+      （実測で32通中6通が上限ちょうど＝10,008字で頭打ちになっていた）。
+      いまは【抽出してから】上限をかけるので、抽出結果が切られることは実質なくなる。
+    """
     if len(txt) > BODY_MAX:
-        txt = txt[:BODY_MAX] + "\n…(以降省略)"
+        return txt[:BODY_MAX] + "\n…(以降省略)"
     return txt
 
 
@@ -509,6 +628,9 @@ def _poll_account(svc, acct: str, cur: dict, lists, pending: dict, self_addrs=No
                 auth = "pass"
             else:
                 auth = "fail" if auth_res else "unknown"
+            # 抽出は【上限をかける前】の本文に対して行う（長い引用で本文が消えないように）
+            body_txt = extract_body(full.get("payload", {}))
+            body_new, strip_method = strip_body(body_txt)
             recs.append({
                 "ts": ts,
                 "account": acct,
@@ -519,7 +641,11 @@ def _poll_account(svc, acct: str, cur: dict, lists, pending: dict, self_addrs=No
                 "to": [a for _, a in to_pairs
                        if a in selfs or classify(a, lists) != "ignore"],
                 "subject": hdec(h.get("subject", "")),
-                "body": extract_body(full.get("payload", {})),
+                # body＝原本（上限つき・従来どおり）／body_new＝引用と署名を落とした今回分。
+                # 原本を残すのは、抽出が外れたとき後から作り直せるようにするため。
+                "body": cap_body(body_txt),
+                "body_new": cap_body(body_new),
+                "strip_method": strip_method,
                 "thread_id": meta.get("threadId", ""),
                 "message_id": mid,
                 "auth": auth,
@@ -621,9 +747,134 @@ def cmd_pending():
               f"{p.get('in', 0):>3}/{p.get('out', 0):<3} {last}")
 
 
+def cmd_repair(apply: bool):
+    """保存済みで文字化けしている本文を、Gmail から取り直して修復する（読み取り専用API）。
+
+    契機＝2026-07-31。errors="replace" が読めないバイトを黙って � に置き換えていたため、
+    28通中3通・2,562文字がローカルで失われていた。原本は Gmail 側に残っており
+    message_id も保存しているので取り直せる（失われたのはこちらのコピーだけ）。
+    既定は下見のみ。--apply を付けたときだけ書き換える。
+    """
+    targets = []
+    for p in sorted(RAW_DIR.glob("*.jsonl")):
+        for i, line in enumerate(p.read_text(encoding="utf-8").splitlines()):
+            if not line.strip():
+                continue
+            d = json.loads(line)
+            n = (d.get("body") or "").count("�")
+            if n:
+                targets.append((p, i, d, n))
+    if not targets:
+        print("文字化けしている本文はありません")
+        return
+    print(f"文字化けを含む本文: {len(targets)} 件")
+    fixed = {}
+    for p, i, d, n in targets:
+        acct, mid = d.get("account", ""), d.get("message_id", "")
+        before = len(d.get("body") or "")
+        try:
+            svc = gmail_service(acct)
+            full = svc.users().messages().get(userId="me", id=mid, format="full").execute()
+            DECODE_FAILURES.clear()
+            body = extract_body(full.get("payload", {}))
+        except Exception as e:                     # 認証切れ・削除済み等でも他の件を止めない
+            print(f"  ❌ 取得失敗 {mid[:12]}… （{type(e).__name__}）")
+            continue
+        left = body.count("�")
+        mark = "✅" if left == 0 else ("△" if left < n else "❌")
+        print(f"  {mark} {mid[:12]}… {before:6d}字(�{n:4d}) → {len(body):6d}字(�{left:4d})")
+        if left < n:
+            # body だけ直すと body_new/strip_method が化けた本文から作った古い値のまま残る（Codex🔴8）。
+            # 上限も同じ経路（cap_body）でかけ直す＝取り込み時と同じ形に揃える。
+            new_txt, method = strip_body(body)
+            fixed[(p, i)] = dict(d, body=cap_body(body),
+                                 body_new=cap_body(new_txt), strip_method=method)
+    if not fixed:
+        print("修復できたものはありません（原本側の文字コードが判別不能な可能性）")
+        return
+    if not apply:
+        print(f"\n{len(fixed)} 件が修復可能です。書き換えるには --apply を付けて再実行してください（下見のみ・未書き換え）")
+        return
+    # 「書けた件数」を報告する＝競合で中止したのに「修復しました」と出すと嘘になる（Codex🔴7）
+    n = rewrite_rows(fixed)
+    print(f"\n{n} 件を修復しました" + ("" if n == len(fixed) else f"（{len(fixed) - n} 件は書き換えできず＝再実行してください）"))
+
+
+def rewrite_rows(changed) -> int:
+    """{(パス, 行番号): 新しいレコード} を raw/*.jsonl へ書き戻し、実際に書けた件数を返す。
+
+    ★読み込み→書き戻しの間に cron の poll が追記すると、その1通が消える。poll は2時間おきに走り、
+      修復は Gmail への往復で分単位かかるため現実的な窓がある。サイズと更新時刻を控えて、
+      変わっていたら書かずに中止する（黙って上書きしない）。
+    """
+    written = 0
+    for p in {k[0] for k in changed}:
+        rows = {k: v for k, v in changed.items() if k[0] == p}
+        # poll と同じロックを取ってから読み直す＝「確認したあとに追記される」窓を無くす（Codex🔴7）。
+        # サイズと更新時刻の比較だけでは、確認後・置換前の追記を消してしまう（compare-and-swap ではない）。
+        with open(LOCK_FILE, "a+") as lk:
+            fcntl.flock(lk, fcntl.LOCK_EX)
+            try:
+                lines = p.read_text(encoding="utf-8").splitlines()
+                stale = [i for (_, i) in rows if i >= len(lines)]
+                if stale:
+                    print(f"  ⚠️ {p.name} の行構成が変わっています＝書き換えを中止します（もう一度実行してください）")
+                    continue
+                for (_, i), d in rows.items():
+                    # 行番号だけで上書きすると、間に行が入ったとき別のメールを潰す。ID で本人確認する
+                    cur = json.loads(lines[i])
+                    if cur.get("message_id") != d.get("message_id"):
+                        print(f"  ⚠️ {p.name}:{i} の内容が入れ替わっています＝この行はスキップします")
+                        continue
+                    lines[i] = json.dumps(d, ensure_ascii=False)
+                    written += 1
+                tmp = p.with_suffix(p.suffix + f".tmp{os.getpid()}")   # 固定名だと同時実行で衝突する
+                tmp.write_text("\n".join(lines) + "\n", encoding="utf-8")
+                tmp.replace(p)
+            finally:
+                fcntl.flock(lk, fcntl.LOCK_UN)
+    return written
+
+
+def cmd_restrip(apply: bool):
+    """保存済みの本文に body_new（引用・署名を落とした今回分）を付け直す。
+
+    取り込み時の抽出を入れる前に保存された分を揃えるため。Gmail への通信は不要
+    （手元の body から計算するだけ）＝原本を再取得する repair とは別物。
+    """
+    changed, o, k = {}, 0, 0
+    for p in sorted(RAW_DIR.glob("*.jsonl")):
+        for i, line in enumerate(p.read_text(encoding="utf-8").splitlines()):
+            if not line.strip():
+                continue
+            d = json.loads(line)
+            txt = d.get("body") or ""
+            new, method = strip_body(txt)
+            if d.get("body_new") == new and d.get("strip_method") == method:
+                continue
+            o += len(txt)
+            k += len(new)
+            changed[(p, i)] = dict(d, body_new=cap_body(new), strip_method=method)
+    if not changed:
+        print("付け直す対象はありません（すべて最新）")
+        return
+    print(f"対象 {len(changed)} 通: {o:,} 字 → {k:,} 字（削減 {100 - 100 * k / (o or 1):.1f}%）")
+    if not apply:
+        print("書き換えるには --apply を付けて再実行してください（下見のみ・未書き換え）")
+        return
+    n = rewrite_rows(changed)
+    print(f"{n} 通に body_new を付けました" + ("" if n == len(changed) else f"（{len(changed) - n} 通は書き換えできず＝再実行してください）"))
+
+
 def main():
     DATA.mkdir(parents=True, exist_ok=True)
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
+    if cmd == "repair":
+        cmd_repair("--apply" in sys.argv)
+        return
+    if cmd == "restrip":
+        cmd_restrip("--apply" in sys.argv)
+        return
     if cmd == "login":
         cmd_login()
     elif cmd == "login-code":
