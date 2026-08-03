@@ -20,6 +20,18 @@ from _mail_strip import (  # noqa: E402
 
 PROJ = Path(__file__).resolve().parent.parent
 
+# 判定名の表はここ1箇所。集計とレポートで別々に持つと、判定を増やしたとき
+# 片方だけ書き忘れて「判定名が生のまま表示される」状態が静かに生まれる（実際に一度やった）。
+METHODS = {
+    "header-cut":     ("引用ヘッダで切れた",                  "bg-green-100 text-green-800"),
+    "bottom-post":    ("ボトムポスト＝引用の後ろの地の文を残した", "bg-sky-100 text-sky-800"),
+    "inline-sig-cut": ("インライン返信＋自社署名で切断",         "bg-amber-50 text-amber-800"),
+    "inline-kept":    ("インライン返信＝切らずに残した",        "bg-amber-100 text-amber-800"),
+    "thread-diff":    ("スレッド差分で引いた",                "bg-blue-100 text-blue-800"),
+    "suspect-empty":  ("⚠️空になったので切らず全部残した（安全弁）", "bg-red-100 text-red-800"),
+    "none":           ("引用が見つからず素通し",               "bg-gray-100 text-gray-700"),
+}
+
 # --- 評価（既存の保存分に対して試す。集計だけを出力し本文は出さない）--------------
 def load_raw():
     msgs = []
@@ -71,15 +83,6 @@ def write_report(msgs, results, path):
     """
     import html as h
 
-    labels = {
-        "header-cut": ("引用ヘッダで切断", "bg-green-100 text-green-800"),
-        "thread-diff": ("スレッド差分", "bg-blue-100 text-blue-800"),
-        "inline-kept": ("インライン返信＝温存", "bg-amber-100 text-amber-800"),
-        "inline-sig-cut": ("インライン返信＋署名で切断", "bg-amber-50 text-amber-800"),
-        "bottom-post": ("ボトムポスト＝引用の後ろを残した", "bg-sky-100 text-sky-800"),
-        "suspect-empty": ("⚠️空になったので切らず全部残した", "bg-red-100 text-red-800"),
-        "none": ("素通し", "bg-gray-100 text-gray-700"),
-    }
     total_o = sum(r["orig"] for r in results) or 1
     total_k = sum(r["kept"] for r in results) or 1
     # 全部を見るのは大変なので、残した文字数が多い順に並べる（社長ご指示 2026-07-31）。
@@ -101,7 +104,7 @@ def write_report(msgs, results, path):
             divided = True
         body = m.get("body") or ""
         dropped = body[len(r["text"]):] if body.startswith(r["text"]) else "（差分方式のため単純な後半ではありません）"
-        name, cls = labels.get(r["method"], (r["method"], "bg-gray-100"))
+        name, cls = METHODS.get(r["method"], (r["method"], "bg-gray-100"))
         rows.append(f"""
   <details class="border border-gray-300 rounded mb-3">
     <summary class="cursor-pointer p-3 hover:bg-gray-50 text-sm">
@@ -155,17 +158,8 @@ def main():
     print(f"対象 {len(results)} 通 / 署名を学習できた送信者 {len(sigs)} 人")
     print(f"合計 {total_o:,} 文字 → {total_k:,} 文字（{100 * total_k / total_o:.1f}% ・削減 {100 - 100 * total_k / total_o:.1f}%）")
     print("\n判定の内訳:")
-    labels = {
-        "header-cut": "引用ヘッダで切れた",
-        "thread-diff": "スレッド差分で引いた",
-        "inline-kept": "インライン返信＝切らずに残した",
-        "inline-sig-cut": "インライン返信＋自社署名で切断",
-        "bottom-post": "ボトムポスト＝引用の後ろの地の文を残した",
-        "suspect-empty": "⚠️空になったので切らず全部残した（安全弁）",
-        "none": "引用が見つからず素通し",
-    }
     for k, v in sorted(methods.items(), key=lambda x: -x[1]):
-        print(f"  {labels.get(k, k):32s} {v:3d}通")
+        print(f"  {METHODS.get(k, (k,))[0]:32s} {v:3d}通")
 
     # 要注意（本文は出さない。長さと判定だけ）
     # 「素通し＝失敗」ではない。引用の無い初回メールは素通しが正解なので、

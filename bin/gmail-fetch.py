@@ -308,6 +308,16 @@ def _decode_part(part) -> str:
     return txt
 
 
+def with_stripped(rec: dict, body: str) -> dict:
+    """本文を差し替えたレコードを返す（body / body_new / strip_method を必ず揃える）。
+
+    body だけ直して body_new を置き去りにすると、修復したのに古い（化けた本文から作った）
+    抽出結果が残る。3つを別々に組み立てる場所が増えるほど、その事故が起きやすくなる。
+    """
+    new_txt, method = strip_body(body)
+    return dict(rec, body=cap_body(body), body_new=cap_body(new_txt), strip_method=method)
+
+
 def strip_body(txt: str):
     """引用と自社署名を落とした「今回書かれた部分」を返す (本文, 判定)。
 
@@ -784,11 +794,8 @@ def cmd_repair(apply: bool):
         mark = "✅" if left == 0 else ("△" if left < n else "❌")
         print(f"  {mark} {mid[:12]}… {before:6d}字(�{n:4d}) → {len(body):6d}字(�{left:4d})")
         if left < n:
-            # body だけ直すと body_new/strip_method が化けた本文から作った古い値のまま残る（Codex🔴8）。
-            # 上限も同じ経路（cap_body）でかけ直す＝取り込み時と同じ形に揃える。
-            new_txt, method = strip_body(body)
-            fixed[(p, i)] = dict(d, body=cap_body(body),
-                                 body_new=cap_body(new_txt), strip_method=method)
+            # body だけ直すと body_new/strip_method が化けた本文から作った古い値のまま残る（Codex🔴8）
+            fixed[(p, i)] = with_stripped(d, body)
     if not fixed:
         print("修復できたものはありません（原本側の文字コードが判別不能な可能性）")
         return
@@ -849,12 +856,12 @@ def cmd_restrip(apply: bool):
                 continue
             d = json.loads(line)
             txt = d.get("body") or ""
-            new, method = strip_body(txt)
-            if d.get("body_new") == new and d.get("strip_method") == method:
+            nd = with_stripped(d, txt)
+            if (d.get("body_new"), d.get("strip_method")) == (nd["body_new"], nd["strip_method"]):
                 continue
             o += len(txt)
-            k += len(new)
-            changed[(p, i)] = dict(d, body_new=cap_body(new), strip_method=method)
+            k += len(nd["body_new"])
+            changed[(p, i)] = nd
     if not changed:
         print("付け直す対象はありません（すべて最新）")
         return

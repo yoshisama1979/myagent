@@ -125,17 +125,9 @@ def looks_inline(lines, start):
     if len(quoted) < 2:
         return False             # > が無い＝この方法では見分けられない。切る側に倒す
     lo, hi = quoted[0], quoted[-1]
-    body_lines = 0
-    for i in range(lo + 1, hi):
-        ln = lines[i]
-        s = ln.strip()
-        if not s or QUOTE_LINE.match(ln) or NOISE_LINE.match(ln):
-            continue
-        if any(p.match(ln) for p in QUOTE_HEADERS):
-            continue
-        if len(s) >= 8:          # 短い相槌や区切りは数えない
-            body_lines += 1
-    return body_lines >= 2
+    # 「地の文」の定義は is_substantive 1箇所に集約する。こことボトムポスト判定で別々に書くと、
+    # 片方だけ条件を足したとき「インラインとは見なさないが地の文としては数える」等の食い違いが出る。
+    return sum(1 for i in range(lo + 1, hi) if is_substantive(lines[i])) >= 2
 
 
 def diff_against(lines, parents):
