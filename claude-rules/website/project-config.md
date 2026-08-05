@@ -17,7 +17,7 @@
 - OS・開発環境：（記入。例: Windows + XAMPP）
 - SCSS自動コンパイル環境の有無：（記入。あり=フック方式／なし。`.claude/rules/scss-autocompile.md` が参照）
 - コンパイル手段：（記入。例: standalone dart-sass ／ sass.bat ／ 開発者依頼）
-- コンパイル済み `.css` をコミットに含めるか：（記入。既定: 含めない。`staging.md`／`commit-pipeline.md` が参照）
+- コンパイル済み `.css` をコミットに含めるか：（記入。**既定: 含める**＝`.scss` と生成された `.css` をセットでコミットする。配信・復元される実体が `.css` のため。差分が暴れる場合は「含めない」ではなく**生成系の一本化**で解決する〔`.claude/rules/scss-autocompile.md` §4〕。それが済むまでの暫定でのみ「含めない」を選ぶ。`staging.md`／`commit-pipeline.md` が参照）
 
 ## 資産の癖（`rules/modes/refactor.md` / `rules/modes/page-build.md` が参照）
 
