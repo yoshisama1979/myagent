@@ -1510,31 +1510,35 @@ function assignBreaks(agents) {
       out.set(w.id, cur); taken.add(cur.id);
     }
   }
-  // 3) 残りの人へ。食事どきは食事席から埋め、次に立ち話（2人そろうときだけ）、最後にその他
+  // 3) 残りの人へ配る。**食事どきは食事席が最優先**（テーブルが空のまま全員が立ち話…にしない）
+  //    → 次に立ち話（2人そろうときだけ）→ 最後にベンチ・散歩
   const rest = wants.filter(w => !out.has(w.id));
   // 'meal'＝食事席だけ／'other'＝立ち話以外の残り（食事どきは食事席を普通の休憩に使わない）
   const free = kind => BREAK_SPOTS.filter(s => usable(s) && s.type !== 'chat' &&
     (kind === 'meal' ? (s.meal && s.type === 'sit') : !(s.meal && meal)));
   let i = 0;
   const give = (w, s) => { out.set(w.id, s); taken.add(s.id); };
-  // 3-a) 立ち話：相手とセットで成立させる（半端に1人だけ立たせない）
-  for (const pairId of [...new Set(BREAK_SPOTS.filter(s => s.type === 'chat').map(s => s.pair))]) {
-    if (rest.length - i < 2) break;
-    const slots = BREAK_SPOTS.filter(s => s.pair === pairId && usable(s));
-    if (slots.length < 2) continue;
-    // ペアごとに別々の周期で「いま会話中か」を決める＝3組が同時に始まったり終わったりしない
-    const pp = 240 + hash32(pairId) % 200;
-    if (hash32(`${pairId}#${Math.floor((nowSec + hash32(pairId) % pp) / pp)}`) % 100 < 55) {
-      give(rest[i++], slots[0]); give(rest[i++], slots[1]);
-    }
-  }
-  // 3-b) 食事席 → その他の席・散歩
-  for (const kind of meal ? ['meal', 'other'] : ['other']) {
+  const fillSeats = kind => {
     for (const s of free(kind)) {
       if (i >= rest.length) break;
       give(rest[i++], s);
     }
-  }
+  };
+  const fillChats = () => {                        // 立ち話：相手とセットで成立させる（半端に1人だけ立たせない）
+    for (const pairId of [...new Set(BREAK_SPOTS.filter(s => s.type === 'chat').map(s => s.pair))]) {
+      if (rest.length - i < 2) break;
+      const slots = BREAK_SPOTS.filter(s => s.pair === pairId && usable(s));
+      if (slots.length < 2) continue;
+      // ペアごとに別々の周期で「いま会話中か」を決める＝3組が同時に始まったり終わったりしない
+      const pp = 240 + hash32(pairId) % 200;
+      if (hash32(`${pairId}#${Math.floor((nowSec + hash32(pairId) % pp) / pp)}`) % 100 < 55) {
+        give(rest[i++], slots[0]); give(rest[i++], slots[1]);
+      }
+    }
+  };
+  if (meal) fillSeats('meal');
+  fillChats();
+  fillSeats('other');
   // 4) 相手が居なくなった立ち話は解散（1人で喋っているように見せない）
   for (const [id, s] of out) {
     if (s.type !== 'chat') continue;
@@ -2129,6 +2133,11 @@ resize(); updateCamera();
 /* ============================================================
  * 9. アニメーションループ（状態ごとの動き）
  * ============================================================ */
+/** その行き先に立った/座ったときの足元の高さ（席に戻るなら室内の床＝0） */
+function spotY(spot) {
+  if (!spot) return 0;
+  return (spot.y ?? GARDEN.lawnY) + (spot.type === 'sit' ? BREAK.sitY : 0);
+}
 /** 角度を最短回りで補間（-π↔π をまたぐときに一回転しない） */
 function angLerp(cur, tgt, k) {
   return cur + Math.atan2(Math.sin(tgt - cur), Math.cos(tgt - cur)) * k;
@@ -2144,7 +2153,7 @@ function tickBreak(a, dt) {
       // ページを開いた直後（最初の割り当て）は誰も歩かせない＝寝ている人は席に、
       // 休憩の人は最初からその場所に居る状態で描き始める
       b.pos.x = dest.x; b.pos.z = dest.z;
-      b.pos.y = b.spot ? ((b.spot.y ?? GARDEN.lawnY) + (b.spot.type === 'sit' ? BREAK.sitY : 0)) : 0;
+      b.pos.y = spotY(b.spot);
       b.facing = b.spot ? (b.spot.face ?? 0) : 0;
       b.path = [];
     } else if (Math.hypot(dest.x - b.pos.x, dest.z - b.pos.z) < 0.15) {
@@ -2176,7 +2185,7 @@ function tickBreak(a, dt) {
       b.path = [{ x: p.x, z: p.z, y: GARDEN.lawnY }];
     } else {                                     // 着いた＝その場の向き・高さへ落ち着く
       const face = b.spot ? b.spot.face : 0;
-      const y = b.spot ? ((b.spot.y ?? GARDEN.lawnY) + (b.spot.type === 'sit' ? BREAK.sitY : 0)) : 0;
+      const y = spotY(b.spot);
       b.facing = angLerp(b.facing, face, Math.min(1, dt * 3));
       b.pos.y += (y - b.pos.y) * Math.min(1, dt * 3);
     }
@@ -2184,7 +2193,7 @@ function tickBreak(a, dt) {
   return !!(b.spot || b.path.length);
 }
 /** 屋外での動き（歩く・座る・食べる・立ち話・眺める）。腕は π が「下ろした状態」 */
-function animateOutside(a, t, ph, meal) {
+function animateOutside(a, t, ph, meal, ox, oz) {
   const b = a.brk, legs = a.av.legParts, arms = a.av.arms;
   a.av.legs.visible = true;
   a.av.group.rotation.z = 0;
@@ -2201,8 +2210,7 @@ function animateOutside(a, t, ph, meal) {
     }
     const turn = Math.floor(t / 2.6) % 2 === 0;
     a.chatBubble.visible = spot.id.endsWith('-a') ? turn : !turn;
-    a.chatBubble.position.set(b.pos.x - a.root.position.x, 2.45 + b.pos.y,
-                              b.pos.z - a.root.position.z);
+    a.chatBubble.position.set(ox, 2.45 + b.pos.y, oz);
   }
   if (b.walking) {
     const s = Math.sin(t * 7 + ph);
@@ -2295,7 +2303,7 @@ function animate() {
     a.badgeHolder.position.x = ox; a.badgeHolder.position.z = oz;
     a.nameSprite.position.x = ox; a.nameSprite.position.z = oz - 0.42;
     if (a.qBubble) { a.qBubble.position.x = ox; a.qBubble.position.z = oz - 0.32; }
-    if (outside) { animateOutside(a, t, ph, mealWin); continue; }
+    if (outside) { animateOutside(a, t, ph, mealWin, ox, oz); continue; }
     a.av.legs.visible = false;                          // 席では脚を隠す（机と椅子に隠れる部分）
     if (a.chatBubble) a.chatBubble.visible = false;
 
