@@ -15,8 +15,36 @@
   #hud-top h1 { margin:0 0 4px; font-size:16px; }
   #hud-top .sub { color:#94a3b8; font-size:11.5px; line-height:1.6; }
   #hud-top a { color:#7dd3fc; text-decoration:none; }
+  /* ---- 活動ティッカー（夜のうちに働いた分を朝に見せる） ---- */
+  /* flex＝長い出来事だけを省略し、右端の「夜間ダイジェスト」導線は必ず残す */
+  #actline { cursor:pointer; border-top:1px solid rgba(148,163,184,.18); margin-top:5px; padding-top:5px;
+    display:flex; gap:6px; align-items:baseline; white-space:nowrap; }
+  #actline:hover { color:#fff; }
+  #actline .ev { animation:actIn .5s ease-out; flex:1 1 auto; min-width:0;
+    overflow:hidden; text-overflow:ellipsis; }
+  #actline .fix { flex:0 0 auto; }
+  @keyframes actIn { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+  @media (prefers-reduced-motion: reduce) { #actline .ev { animation:none; } }
+  #actline .t { color:#94a3b8; font-variant-numeric:tabular-nums; }
+  #actline .who { font-weight:700; }
+  #actline .more { color:#7dd3fc; text-decoration:underline dotted; }
+  /* 夜ダイジェストの表（ポップアップ内） */
+  #holdPopup .digest { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  #holdPopup .digest span { border:1px solid rgba(148,163,184,.25); border-radius:8px; padding:4px 10px; font-size:12px; }
+  #holdPopup .row { display:flex; gap:8px; align-items:baseline; padding:4px 0;
+    border-bottom:1px solid rgba(148,163,184,.12); font-size:12.5px; }
+  #holdPopup .row .t { color:#94a3b8; font-variant-numeric:tabular-nums; flex:0 0 auto; }
+  #holdPopup .row .who { flex:0 0 11.5em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #holdPopup .row .what { flex:1 1 auto; color:#cbd5e1; }
+  #holdPopup .row a { color:#7dd3fc; text-decoration:none; }
+  /* 凡例は既定で畳む＝手前の庭（休憩中の様子）を隠さない。見出しクリックで開閉 */
   #legend { bottom:12px; left:14px; background:rgba(15,23,42,.7); border:1px solid rgba(148,163,184,.2);
-    border-radius:10px; padding:8px 12px; font-size:11.5px; color:#cbd5e1; line-height:1.8; }
+    border-radius:10px; padding:8px 12px; font-size:11.5px; color:#cbd5e1; line-height:1.8;
+    max-width:min(760px, calc(100vw - 28px)); }
+  #legend-head { cursor:pointer; user-select:none; color:#7dd3fc; }
+  #legend-head:hover { color:#fff; }
+  #legend-body { display:none; margin-top:4px; border-top:1px solid rgba(148,163,184,.18); padding-top:4px; }
+  #legend.open #legend-body { display:block; }
   #alert { top:12px; right:14px; background:rgba(127,29,29,.9); border:1px solid #ef4444;
     border-radius:10px; padding:8px 14px; display:none; }
   #tip { bottom:12px; right:14px; color:#64748b; font-size:11px; text-align:right; line-height:1.6; }
@@ -58,7 +86,8 @@
   <h1>🏢 はなさか エージェントオフィス</h1>
   <div class="sub" id="tickline">読み込み中…</div>
   <div class="sub" id="staffline">👥 社員の稼働：読み込み中…</div>
-  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ <a href="hold.html" target="_top">🗂 承認待ち <b id="holdN">-</b> 件</a> ／ <span id="qLink" style="cursor:pointer;color:#7dd3fc;text-decoration:underline dotted">🔔 質問 <b id="qN">-</b> 件</span> ／ ドラッグで回転（書類の山・コルクボード・吹き出しをクリックで詳細）</div>
+  <div class="sub" id="actline" title="クリックで夜間ダイジェスト">📻 活動：読み込み中…</div>
+  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ <a href="hold.html" target="_top">🗂 承認待ち <b id="holdN">-</b> 件</a> ／ <span id="qLink" style="cursor:pointer;color:#7dd3fc;text-decoration:underline dotted">🔔 質問 <b id="qN">-</b> 件</span> ／ <span style="color:#a5b4fc">🎮 ドラッグ＝回転／<b>WASD・矢印＝視点移動</b>（Shiftで速く・<b>0</b>で戻す）／右ドラッグ＝平行移動／ホイール＝ズーム</span></div>
   <span id="menu-btn">📁 メニュー ▾</span>
   <nav id="menu">
     <a href="../business/focus.html" target="_top">🎯 今日のフォーカス</a>
@@ -78,14 +107,23 @@
 <div class="hud" id="alert"></div>
 <div class="hud" id="holdPopup"></div>
 <div class="hud" id="legend">
+  <div id="legend-head">❔ 記号の意味（クリックで開閉）</div>
+  <div id="legend-body">
   🔨 働き中（画面が光りタイピング）　📬 仕事待ち（机に封筒の山）<br>
-  💤 待機（居眠り中・次の起床を待つ）　⚠️ 異常　🏢 ガラスの向こう＝別拠点の開発<br>
+  <span style="color:#a7f3d0">💤 待機（居眠り・たまに伸びをする）／☕ 休憩（ベンチ・カフェ）／🌿 外で一息／🚶 散歩／
+  💬 立ち話（2人1組・交互に喋る）／🍞🍱🍛 食事（朝6:30-9時・昼11:30-13:30・夜18-20:30にピクニック席とカフェが埋まる）
+  ——<b>どれも「仕事が無い＝待機中」の同じ状態</b>で、見せ方が違うだけ。仕事が入れば席に戻ります。
+  切り替えのタイミングは<b>一人ずつ別（2.5〜6分の個人周期）</b>なので、全員が一斉には動きません</span><br>
+  ⚠️ 異常　🏢 ガラスの向こう＝別拠点の開発<br>
   <span style="color:#fcd34d">⌨️ 社員が作業中（頭上に作業内容＋経過時間）　🏠 退勤中＝席が空　🏝 休職中</span>
   <span style="color:#93c5fd">｜机の前のバッジ＝ ⏱ 本日の合計　📋 ToDo件数　⏰ 期日超過</span><br>
   🏢 奥の壁＝全社ボード（進行中の案件・未完了ToDo）　※人の稼働は5分ごと・件数は30分ごとに更新<br>
-  <span style="color:#6ee7b7">💬 社長の頭上＝Chatworkで返すべきボール（クリックで整理板へ・2時間ごと更新）</span>
+  <span style="color:#6ee7b7">💬 社長の頭上＝Chatworkで返すべきボール（クリックで整理板へ・2時間ごと更新）</span><br>
+  <span style="color:#7dd3fc">📻 上の活動ティッカー＝直近24時間の出来事（🔨起動 ✉️便 📋成果 ⚠️警報）。クリックで🌙夜間ダイジェスト＝夜のうちの働きをまとめて確認</span><br>
+  <span style="color:#a5b4fc">🎮 視点：左ドラッグ＝回転／<b>W前・S後・A左・D右</b>（矢印キーも可・Shiftで速く）／右ドラッグ＝つかんで平行移動／ホイール＝ズーム／<b>0キーで最初の位置に戻る</b>。書類の山・コルクボード・吹き出しはクリックで詳細</span>
+  </div>
 </div>
-<div class="hud" id="tip">データ：/tools/office/status.php（読み取り専用）<br>AIの状態＝5秒ごと／社員の稼働＝5分ごと／ToDo・案件数＝30分ごと</div>
+<div class="hud" id="tip">データ：/tools/office/status.php ＋ activity.php（どちらも読み取り専用）<br>AIの状態＝5秒ごと／社員の稼働＝5分ごと／ToDo・案件数＝30分ごと／活動ティッカー＝60秒ごと</div>
 
 <script type="importmap">{ "imports": { "three": "./vendor/three.module.min.js" } }</script>
 <script type="module">
@@ -419,6 +457,209 @@ function duck(offset) {
 }
 duck(0); duck(0.42);
 
+/* ============================================================
+ * 2.6 庭園（建物の手前右＝休憩・散歩の場所）
+ *   ・待機中のエージェントが実際に歩いて来て座る場所（BREAK_SPOTS が座標を参照する）。
+ *   ・既存の低ポリ調に合わせて全部プロシージャル＝外部モデル・CDN依存なし
+ *     （このページは vendor/three.module.min.js だけで動く＝Tailscale内で完結）。
+ *   ・地面の高さ：芝生 y=-0.3／ウッドデッキ y=0（室内の床と同面）。
+ * ============================================================ */
+const GARDEN = { lawnY: -0.3, deckY: 0 };
+const woodMat  = new THREE.MeshStandardMaterial({ color: 0xb08b5a, roughness: 0.85 });
+const woodDark = new THREE.MeshStandardMaterial({ color: 0x7d5c37, roughness: 0.9 });
+const stoneLight = new THREE.MeshStandardMaterial({ color: 0xb9b3a6, roughness: 0.95 });
+const hedgeMat = new THREE.MeshStandardMaterial({ color: 0x2f6b39, roughness: 1 });
+
+// テラス（縁側）：建物の正面いっぱい。どの島からもまっすぐ庭へ出られる
+{
+  const terrace = new THREE.Mesh(new THREE.BoxGeometry(30, 0.3, 1.8), woodMat);
+  terrace.position.set(0, -0.15, 10.9); terrace.receiveShadow = true; scene.add(terrace);
+  for (let i = 0; i < 5; i++) {                       // 板の目地
+    const seam = new THREE.Mesh(new THREE.BoxGeometry(30, 0.01, 0.04), woodDark);
+    seam.position.set(0, 0.005, 10.1 + i * 0.4); scene.add(seam);
+  }
+  const step = new THREE.Mesh(new THREE.BoxGeometry(30, 0.15, 0.6), woodDark);
+  step.position.set(0, -0.225, 12.05); step.receiveShadow = true; scene.add(step);
+}
+
+// 石畳（歩く道筋に沿って敷く。歩行ルートと同じ座標を使うので道の上を歩く）
+function pathSlab(x, z, r = 0.5, rot = 0) {
+  const slab = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.07, 7), stoneLight);
+  slab.position.set(x, GARDEN.lawnY - 0.01, z); slab.rotation.y = rot;
+  slab.receiveShadow = true; scene.add(slab);
+}
+// ベンチ（座面 y≒0.42・低ポリ）。rotY は「座った人が向く方向」に合わせる
+function bench(x, z, rotY, groundY = GARDEN.lawnY) {
+  const g = new THREE.Group();
+  const seat = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.09, 0.62), woodMat);
+  seat.position.y = 0.42; seat.castShadow = true; seat.receiveShadow = true; g.add(seat);
+  const back = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.44, 0.08), woodMat);
+  back.position.set(0, 0.66, 0.28); back.rotation.x = -0.16; back.castShadow = true; g.add(back);
+  for (const sx of [-1, 1]) {
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.42, 0.5), woodDark);
+    leg.position.set(sx * 0.8, 0.21, 0.02); leg.castShadow = true; g.add(leg);
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.07, 0.6), woodDark);
+    arm.position.set(sx * 0.9, 0.62, 0.02); g.add(arm);
+  }
+  g.position.set(x, groundY, z); g.rotation.y = rotY; scene.add(g);
+}
+// パラソル＋丸テーブル＋椅子2脚（庭のカフェ席）
+function cafeSet(x, z) {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.07, 16), woodMat);
+  top.position.y = 0.66; top.castShadow = true; g.add(top);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 2.5, 8), woodDark);
+  pole.position.y = 1.25; g.add(pole);
+  const canopy = new THREE.Mesh(new THREE.ConeGeometry(1.3, 0.55, 8),
+    new THREE.MeshStandardMaterial({ color: 0xe4674f, roughness: 0.85, side: THREE.DoubleSide }));
+  canopy.position.y = 2.32; canopy.castShadow = true; g.add(canopy);
+  const fringe = new THREE.Mesh(new THREE.CylinderGeometry(1.3, 1.3, 0.1, 8, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0xf2f0e6, roughness: 0.9, side: THREE.DoubleSide }));
+  fringe.position.y = 1.99; g.add(fringe);
+  for (const [cx, cz] of [[-1.05, 0.15], [1.0, -0.2]]) {   // 椅子（座る場所は BREAK_SPOTS 側）
+    const st = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.26, 0.08, 12), woodMat);
+    st.position.set(cx, 0.42, cz); st.castShadow = true; g.add(st);
+    const sp = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.42, 8), woodDark);
+    sp.position.set(cx, 0.21, cz); g.add(sp);
+  }
+  g.position.set(x, GARDEN.lawnY, z); scene.add(g);
+}
+// ピクニックテーブル（天板＋両側のベンチ＝向かい合わせに4人座れる。食事どきの主役）
+function picnicTable(x, z) {
+  const g = new THREE.Group();
+  const top = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.09, 1.0), woodMat);
+  top.position.y = 0.66; top.castShadow = true; top.receiveShadow = true; g.add(top);
+  for (const sz of [-1, 1]) {                       // 脚（ハの字）とベンチ
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.7, 0.1), woodDark);
+    leg.position.set(0, 0.33, sz * 0.38); leg.rotation.x = sz * 0.18; leg.castShadow = true; g.add(leg);
+    const seat = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.08, 0.42), woodMat);
+    seat.position.set(0, 0.42, sz * 0.9); seat.castShadow = true; seat.receiveShadow = true; g.add(seat);
+    const sleg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.42, 0.1), woodDark);
+    sleg.position.set(0, 0.21, sz * 0.9); g.add(sleg);
+  }
+  // 食器（置きっぱなしの小物＝「ここで食べる場所」だと分かる目印）
+  for (const [dx, dz] of [[-0.75, -0.25], [0.75, -0.25], [-0.75, 0.25], [0.75, 0.25]]) {
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.03, 12),
+      new THREE.MeshStandardMaterial({ color: 0xf5f2ea, roughness: 0.5 }));
+    plate.position.set(dx, 0.72, dz); g.add(plate);
+  }
+  const jug = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.28, 10),
+    new THREE.MeshStandardMaterial({ color: 0x8fbfd8, roughness: 0.35 }));
+  jug.position.set(0, 0.84, 0); jug.castShadow = true; g.add(jug);
+  g.position.set(x, GARDEN.lawnY, z); scene.add(g);
+}
+
+// 花壇（レンガ枠＋土＋色とりどりの花）
+function flowerBed(x, z, w = 2.2, d = 1.2, seed = 1) {
+  const g = new THREE.Group();
+  const soil = new THREE.Mesh(new THREE.BoxGeometry(w, 0.22, d),
+    new THREE.MeshStandardMaterial({ color: 0x5a4433, roughness: 1 }));
+  soil.position.y = 0.11; soil.receiveShadow = true; g.add(soil);
+  const brick = new THREE.MeshStandardMaterial({ color: 0xa9603f, roughness: 0.95 });
+  for (const [bw, bd, ox, oz] of [[w + 0.2, 0.14, 0, d / 2 + 0.07], [w + 0.2, 0.14, 0, -(d / 2 + 0.07)],
+                                  [0.14, d, w / 2 + 0.07, 0], [0.14, d, -(w / 2 + 0.07), 0]]) {
+    const b = new THREE.Mesh(new THREE.BoxGeometry(bw, 0.28, bd), brick);
+    b.position.set(ox, 0.14, oz); b.castShadow = true; g.add(b);
+  }
+  const petals = [0xef7d9d, 0xf6d365, 0xe86f6f, 0xc084fc, 0xfef3c7];
+  for (let i = 0; i < 16; i++) {
+    const s = (Math.sin(i * 12.9898 + seed) * 43758.5453) % 1;
+    const fx = ((i % 6) / 5 - 0.5) * (w - 0.4), fz = (Math.floor(i / 6) / 2 - 0.5) * (d - 0.4);
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.2, 5),
+      new THREE.MeshStandardMaterial({ color: 0x3f8a45, roughness: 1 }));
+    stem.position.set(fx, 0.32, fz + (s % 0.2)); g.add(stem);
+    const flower = new THREE.Mesh(new THREE.SphereGeometry(0.075, 7, 6),
+      new THREE.MeshStandardMaterial({ color: petals[(i + seed) % petals.length], roughness: 0.8 }));
+    flower.position.set(fx, 0.44, fz + (s % 0.2)); g.add(flower);
+  }
+  g.position.set(x, GARDEN.lawnY, z); scene.add(g);
+}
+// 生垣（庭の外周）
+function hedgeRow(x, z, w, d) {
+  const h = new THREE.Mesh(new THREE.BoxGeometry(w, 0.8, d), hedgeMat);
+  h.position.set(x, GARDEN.lawnY + 0.4, z); h.castShadow = true; h.receiveShadow = true; scene.add(h);
+  for (let i = 0; i < Math.max(w, d) / 0.9; i++) {   // 上面をもこもこに
+    const bump = new THREE.Mesh(new THREE.SphereGeometry(0.42, 8, 6), hedgeMat);
+    bump.scale.y = 0.5;
+    bump.position.set(x + (w > d ? (i * 0.9 - w / 2 + 0.45) : 0), GARDEN.lawnY + 0.82,
+                      z + (d > w ? (i * 0.9 - d / 2 + 0.45) : 0));
+    scene.add(bump);
+  }
+}
+// 庭園灯（夜でなくても庭らしさが出る小物）
+function lantern(x, z) {
+  const g = new THREE.Group();
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 1.5, 8), woodDark);
+  post.position.y = 0.75; post.castShadow = true; g.add(post);
+  const cap = new THREE.Mesh(new THREE.ConeGeometry(0.26, 0.22, 8),
+    new THREE.MeshStandardMaterial({ color: 0x3f4653, roughness: 0.7 }));
+  cap.position.y = 1.72; g.add(cap);
+  const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.13, 10, 8),
+    new THREE.MeshStandardMaterial({ color: 0xfff3c4, emissive: 0xffe9a8, emissiveIntensity: 0.5, roughness: 0.4 }));
+  bulb.position.y = 1.55; g.add(bulb);
+  g.position.set(x, GARDEN.lawnY, z); scene.add(g);
+}
+// 噴水（庭の中心・水面はゆっくり回す）
+const fountainWaterTex = makeWaterTexture();
+fountainWaterTex.repeat.set(2, 2);
+function fountain(x, z) {
+  const g = new THREE.Group();
+  const basin = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.62, 0.52, 20), stoneLight);
+  basin.position.y = 0.26; basin.castShadow = true; basin.receiveShadow = true; g.add(basin);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.1, 8, 24), stoneLight);
+  rim.rotation.x = Math.PI / 2; rim.position.y = 0.52; rim.castShadow = true; g.add(rim);
+  // 水面は「青い」とはっきり分かる材質にする（遠目でも噴水と読める＝低ラフネスで白飛びさせない）
+  const water = new THREE.Mesh(new THREE.CircleGeometry(1.42, 20),
+    new THREE.MeshStandardMaterial({ color: 0x3f93c8, map: fountainWaterTex, roughness: 0.45, metalness: 0.05 }));
+  water.rotation.x = -Math.PI / 2; water.position.y = 0.46; g.add(water);
+  const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.26, 0.85, 12), stoneLight);
+  pillar.position.y = 0.9; g.add(pillar);
+  const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.66, 0.22, 0.18, 16), stoneLight);
+  dish.position.y = 1.38; dish.castShadow = true; g.add(dish);
+  const jetMat = new THREE.MeshStandardMaterial({
+    color: 0xeaf8ff, emissive: 0xbfe6ff, emissiveIntensity: 0.35,
+    transparent: true, opacity: 0.72, roughness: 0.2 });
+  const jet = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.11, 0.95, 8), jetMat);
+  jet.position.y = 1.95; g.add(jet);
+  for (const [dx, dy, dz, r] of [[0, 2.5, 0, 0.16], [0.3, 2.2, 0.1, 0.1], [-0.28, 2.15, -0.12, 0.09]]) {
+    const spray = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 8), jetMat);
+    spray.position.set(dx, dy, dz); g.add(spray);
+  }
+  g.position.set(x, GARDEN.lawnY, z); scene.add(g);
+  return water;
+}
+
+// ── 配置（座る場所は BREAK_SPOTS と座標を合わせること）──────────────────────
+// 建物の正面（z 12〜19）を庭の帯にし、右手は川沿いの遊歩道へつながる。
+// ＝どの島からもまっすぐ出られて、既定カメラの手前側に庭が広がる。
+// ⚠️ 休憩の「座れる場所」は既定カメラで見える手前右に集める（＝働いていない人が画面に映る）。
+//    西側は装飾だけ置く＝カメラを回したときのご褒美。座標を動かすときは BREAK_SPOTS も直すこと。
+const fountainWater = fountain(6.0, 15.4);
+cafeSet(13.6, 15.6);
+bench( 2.2, 14.8, -Math.PI / 2);       // 噴水を向いて座る（西側）
+bench(10.0, 14.8,  Math.PI / 2);       // 噴水を向いて座る（東側）
+bench(-6.0, 14.8, -Math.PI / 2);       // 西の庭（既定カメラでは画面の外・回すと見える）
+picnicTable(-0.5, 14.6);            // 食事どきに埋まる4席（BREAK_SPOTS の picnic-1〜4 と座標を合わせる）
+bench(16.9, 4.4, -Math.PI / 2);        // 川沿い：小川とアヒルを眺める
+bench(16.9, -1.6, -Math.PI / 2);       // 川沿い（奥）
+flowerBed(-11.4, 16.4, 2.6, 1.2, 1);
+flowerBed(-0.4, 17.0, 3.0, 1.2, 3);
+flowerBed(10.0, 16.8, 2.6, 1.2, 5);
+flowerBed(16.6, 12.2, 1.6, 1.0, 7);
+hedgeRow(1.0, 18.0, 32, 0.7);          // 庭の手前側を生垣で囲う
+hedgeRow(-15.0, 15.0, 0.7, 6.4);
+lantern(-9.6, 12.9); lantern(4.2, 12.9); lantern(14.6, 12.9); lantern(17.6, 1.2);
+tree(-13.6, 14.8, 0.9); tree(13.4, 16.6, 0.85); tree(19.2, 16.4, 1.05);
+// 石畳：テラス前を東西に走り、右手で川沿いの遊歩道へ折れる
+for (const [px, pz] of [[-13, 12.9], [-11, 12.9], [-9, 12.9], [-7, 12.9], [-5, 12.9],
+                        [-3, 12.9], [-1, 12.9], [1, 12.9], [3, 12.9], [5, 12.9],
+                        [7, 12.9], [9, 12.9], [11, 12.9], [13, 12.9], [15, 12.8],
+                        [16.6, 12.4], [17.9, 11.0],
+                        [18.15, 9.4], [18.15, 7.4], [18.15, 5.4], [18.15, 3.4],
+                        [18.15, 1.4], [18.15, -0.6], [18.15, -2.6], [18.15, -4.6], [18.15, -6.6]]) {
+  pathSlab(px, pz, 0.46, (px * 7 + pz * 3) % 3);
+}
+
 // 空（グラデーションのドーム・霧の影響を受けない）
 const skyCanvas = document.createElement('canvas'); skyCanvas.width = 4; skyCanvas.height = 128;
 { const ctx = skyCanvas.getContext('2d');
@@ -749,7 +990,26 @@ function buildAvatar(accent, remote, seed = 0, style = '', role = '') {
     hand.position.set(0, 0.21, 0); arm.add(hand);
     g.add(arm); arms.push(arm);
   }
-  return { group: g, arms, head, body };
+
+  /* 脚（席にいる間は非表示＝机と椅子で隠れる部分なので描かない。
+     休憩・散歩で外に出たときだけ見せる）。股関節 y=0.56 から下ろすと足裏が地面に着く＝
+     座り姿勢の胴体の高さを変えずに立たせられる。膝で分割して「座る」姿勢が作れるようにする。 */
+  const legs = new THREE.Group(); legs.visible = false; g.add(legs);
+  const trousers = mk(remote ? 0x6e7788 : 0x3c4557, 0.85);
+  const shoeMat = mk(remote ? 0x5c6474 : 0x2b2f38, 0.6);
+  const legParts = [];
+  for (const sx of [-1, 1]) {
+    const hip = new THREE.Group(); hip.position.set(sx * 0.1, 0.56, 0); legs.add(hip);
+    const thigh = new THREE.Mesh(new THREE.CapsuleGeometry(0.072, 0.16, 4, 8), trousers);
+    thigh.position.y = -0.14; thigh.castShadow = !remote; hip.add(thigh);
+    const knee = new THREE.Group(); knee.position.y = -0.28; hip.add(knee);
+    const shin = new THREE.Mesh(new THREE.CapsuleGeometry(0.062, 0.14, 4, 8), trousers);
+    shin.position.y = -0.13; shin.castShadow = !remote; knee.add(shin);
+    const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.07, 0.19), shoeMat);
+    shoe.position.set(0, -0.25, -0.05); shoe.castShadow = !remote; knee.add(shoe);
+    legParts.push({ hip, knee });
+  }
+  return { group: g, arms, head, body, legs, legParts };
 }
 
 function buildEnvelopePile(n) {
@@ -823,10 +1083,19 @@ function addAgentDesk(agent, index) {
 
   scene.add(root);
   avatars.set(agent.id, {
-    root, desk, av, badgeHolder: holder, badge: null,
+    root, desk, av, badgeHolder: holder, badge: null, badgeKey: '',
+    nameSprite: name,
     envelopeGroup: null, state: 'unknown', inbox: -1,
     qCount: 0, qBubble: null,
+    kind: agent.kind,
     phase: Math.random() * Math.PI * 2,   // アニメの位相をばらす
+    // 休憩・散歩の状態（席にいる間は spot=null・pos は席の世界座標）
+    // going は「いま向かっている先」。spot と同じ null で初期化する＝開いた直後に
+    // 「行き先が変わった」と誤判定して、席に居る人まで歩き出すのを防ぐ
+    brk: { spot: null, going: null, pos: { x, y: 0, z: z + 0.72 }, path: [], facing: 0,
+           walking: false, routeIdx: 0, routeDir: 1,
+           lane: ((seed % 5) - 2) * 0.42,          // 通路の左右レーン（すれ違いの重なり防止）
+           spd: 0.85 + (seed % 7) / 22 },          // 歩く速さの個体差（行進に見えないように）
   });
 }
 
@@ -1093,6 +1362,187 @@ function updateCompanyBoard(co) {
  * ============================================================ */
 const BADGE = { working:'🔨', inbox:'📬', idle:'💤', error:'⚠️', remote:'🏢' };
 
+/* ============================================================
+ * 6.5 休憩・散歩・食事・立ち話（待機中の見せ方を増やす）
+ *   ⚠️ 状態を作り替えているのではない：**全員 status='idle'（＝仕事が無い）のまま**で、
+ *      「居眠り／ベンチ／散歩／食事／立ち話」という見せ方を分けているだけ。
+ *      働き出したら（working/inbox/error）必ず席に戻る＝画面の意味は変わらない。
+ *   ・**一人ずつ独立した周期と位相**で切り替える（社長ご指摘 2026-08-06「一斉に思いついた
+ *     ように動くのが不自然」）。全員共通の時間バケットをやめ、id から個人の周期（2.5〜6分）と
+ *     開始位相を決めるので、切り替わる瞬間がばらける。ランダムにしないのは、5秒ごとの
+ *     ポーリングで人がテレポートするのを防ぐため（同じ時刻なら誰が計算しても同じ答えになる）。
+ *   ・別拠点（ガラスの向こう）と人間の社員は対象外（前者は中が見えない・後者は実タイマーが根拠）。
+ * ============================================================ */
+const BREAK = {
+  periodSec: 150, periodJitter: 210,   // 個人の切り替え周期＝150〜360秒（idハッシュで決まる）
+  ratio: 0.45, mealRatio: 0.62,        // 待機中のうち外に出ている割合（食事どきは増える）
+  speed: 1.35, sitY: -0.14,
+};
+// 食事どき（JST・この時間帯だけ「食事の席」が開き、外に出る人が増える）
+const MEAL_WINDOWS = [
+  { from: 6.5,  to: 9,    badge: '🍞', label: '朝食' },
+  { from: 11.5, to: 13.5, badge: '🍱', label: '昼食' },
+  { from: 18,   to: 20.5, badge: '🍛', label: '夕食' },
+];
+/** いまが食事どきなら、その窓を返す（違えば null） */
+function mealNow(now = new Date()) {
+  const h = now.getHours() + now.getMinutes() / 60;
+  return MEAL_WINDOWS.find(m => h >= m.from && h < m.to) ?? null;
+}
+// 散歩コース（石畳と同じ座標）：テラス前を東へ→建物の角を回って川沿いを北上。端で折り返す
+const PROMENADE = [
+  { x: -12.5, z: 12.9 }, { x: -8, z: 12.9 }, { x: -3.5, z: 12.9 }, { x: 1, z: 12.9 },
+  { x: 5.5, z: 12.9 }, { x: 10, z: 12.9 }, { x: 14.4, z: 12.85 }, { x: 16.6, z: 12.4 },
+  { x: 17.9, z: 11.0 }, { x: 18.15, z: 7.4 }, { x: 18.15, z: 3.4 }, { x: 18.15, z: -0.6 },
+  { x: 18.15, z: -4.6 },
+];
+/** 向かい合わせに立つ2人組（立ち話）。face は相手の方を向く角度を自動計算する */
+function chatPair(id, ax, az, bx, bz, y) {
+  const f = (x1, z1, x2, z2) => Math.atan2(-(x2 - x1), -(z2 - z1));
+  return [
+    { id: `${id}-a`, type: 'chat', pair: id, x: ax, z: az, y, face: f(ax, az, bx, bz) },
+    { id: `${id}-b`, type: 'chat', pair: id, x: bx, z: bz, y, face: f(bx, bz, ax, az) },
+  ];
+}
+// 行き先（座標は 2.6 の配置と一致させること）。face＝そこで向く方向（ラジアン・-π/2 で +x を向く）
+// sit はベンチの座面の上（rotY=±π/2 のベンチは座面の長辺が world z、rotY=0 なら world x）
+// meal:true ＝食事どきに優先して埋まる席（テーブルのある場所）。y 省略時は芝生の高さ
+const BREAK_SPOTS = [
+  { id: 'bench-fw',     type: 'sit',  x:  2.2, z: 15.4, face: -Math.PI / 2 },
+  { id: 'bench-fe',     type: 'sit',  x: 10.0, z: 14.2, face:  Math.PI / 2 },
+  { id: 'bench-west',   type: 'sit',  x: -6.0, z: 15.4, face: -Math.PI / 2 },
+  { id: 'bench-river1', type: 'sit',  x: 16.9, z: 5.1,  face: -Math.PI / 2 },
+  { id: 'bench-river2', type: 'sit',  x: 16.9, z: -0.9, face: -Math.PI / 2 },
+  { id: 'cafe-a',       type: 'sit',  meal: true, x: 12.55, z: 15.75, face: -Math.PI / 2 },
+  { id: 'cafe-b',       type: 'sit',  meal: true, x: 14.6,  z: 15.4,  face:  Math.PI / 2 },
+  // ピクニックテーブル（4席・向かい合わせ）＝食事どきの主役
+  { id: 'picnic-1', type: 'sit', meal: true, x: -1.3, z: 13.7, face: Math.PI },
+  { id: 'picnic-2', type: 'sit', meal: true, x:  0.3, z: 13.7, face: Math.PI },
+  { id: 'picnic-3', type: 'sit', meal: true, x: -1.3, z: 15.5, face: 0 },
+  { id: 'picnic-4', type: 'sit', meal: true, x:  0.3, z: 15.5, face: 0 },
+  { id: 'gaze-fountain',type: 'stand', x: 6.0, z: 13.4, face: Math.PI },
+  { id: 'gaze-river',   type: 'stand', x: 18.4, z: 8.6,  face: -Math.PI / 2 },
+  ...chatPair('chat-terrace', 7.0, 11.2, 8.4, 11.2, 0),   // テラスで立ち話（室内の床と同じ高さ）
+  ...chatPair('chat-garden', 3.2, 13.9, 4.5, 14.3),
+  ...chatPair('chat-river', 17.5, 6.8, 18.8, 7.2),
+  { id: 'walk-1',       type: 'walk',  from: 4 },
+  { id: 'walk-2',       type: 'walk',  from: 8 },
+  { id: 'walk-3',       type: 'walk',  from: 0 },
+];
+const BREAK_BADGE = { sit: '☕', stand: '🌿', walk: '🚶', chat: '💬' };
+/** その場所に居る人の頭上バッジ（食事どきの食事席だけ食事の絵文字にする） */
+function breakBadge(spot, meal = mealNow()) {
+  if (!spot) return null;
+  if (spot.meal && meal && spot.type === 'sit') return meal.badge;
+  return BREAK_BADGE[spot.type] ?? null;
+}
+// 休憩の割り当てを適用した回数。1回目＝ページを開いた直後なので歩かせず、その場に配置する
+let breakPass = 0;
+// 室内の通路（机・ラグ・ガラス壁を避けて通る一本道）と、庭に降りる高さ
+const AISLE_X = -6.2;        // 事務/解析島の西どなり＝どの島の机とも重ならない縦の通路
+const AISLE_Z = 9.6;         // テラス手前の横通路
+const GARDEN_Z = 12.9;       // 庭の遊歩道（石畳）の位置
+function hash32(s) {
+  let h = 2166136261;
+  for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+  return h;
+}
+const isOutside = p => p.z > 11.9 || p.x > 15.2;
+const clampGarden = x => Math.max(-13, Math.min(16, x));
+/** 現在地 → 行き先の道順。壁・ガラス・机をすり抜けないよう通路とテラスを必ず経由する。
+ *  y は芝生 -0.3／テラス・室内 0（歩きながら滑らかに上下する）。 */
+function breakPath(from, dest, home, lane = 0) {
+  const L = GARDEN.lawnY, P = [];
+  const A = AISLE_X + lane;                           // 通路は個体ごとに少しずらす＝すれ違いが団子にならない
+  const outNow = isOutside(from), outDest = isOutside(dest);
+  const toRiverSide = dest.z < 10;                    // 川沿いのベンチ＝建物の角を回り込む
+  if (!outNow) {                                      // 室内から：机→通路→テラス→庭
+    P.push({ x: from.x, z: from.z + 1.5, y: 0 }, { x: A, z: from.z + 1.5, y: 0 },
+           { x: A, z: AISLE_Z + lane * 0.5, y: 0 });
+    if (outDest) P.push({ x: A, z: 11.3, y: 0 }, { x: A, z: GARDEN_Z + lane * 0.4, y: L });
+  } else if (!outDest) {                              // 庭から自席へ：来た道を戻る
+    if (from.z < 10) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
+    P.push({ x: clampGarden(from.x), z: GARDEN_Z + lane * 0.4, y: L },
+           { x: A, z: GARDEN_Z + lane * 0.4, y: L },
+           { x: A, z: 11.3, y: 0 }, { x: A, z: AISLE_Z + lane * 0.5, y: 0 },
+           { x: A, z: home.z + 1.5, y: 0 }, { x: home.x, z: home.z + 1.5, y: 0 });
+  }
+  if (outDest) {                                      // 庭の中は遊歩道づたいに回り込む
+    const gz = GARDEN_Z + lane * 0.4;
+    if (from.z < 10 && !toRiverSide) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
+    if (toRiverSide) P.push({ x: clampGarden(from.x), z: gz, y: L },
+                            { x: 16.6, z: 12.6, y: L }, { x: 17.9, z: 11.0, y: L });
+    else P.push({ x: clampGarden(dest.x), z: gz, y: L });
+  }
+  P.push({ x: dest.x, z: dest.z, y: outDest ? L : 0 });
+  return P;
+}
+/** 待機中のエージェントに休憩場所を割り当てる。
+ *  ・切り替えの判定は**一人ずつ独立**（個人の周期と位相）＝みんなで一斉に動き出さない
+ *  ・いま座っている人はそのまま座り続ける（毎回の割り当てで椅子取りゲームにしない）
+ *  ・立ち話は2人そろって初めて成立（相手が居なくなったら会話をやめて席へ戻る）
+ *  ・食事どきは食事席を優先して埋める
+ *  同じ時刻・同じ顔ぶれなら誰が計算しても同じ結果になる（＝5秒ごとの再計算で人が飛ばない）。 */
+function assignBreaks(agents) {
+  const nowSec = Date.now() / 1000;
+  const meal = mealNow();
+  const ratio = meal ? BREAK.mealRatio : BREAK.ratio;
+
+  // 1) 「いま外に出たい人」を一人ずつ判定する（周期・位相・当たり判定すべて id 由来）
+  const wants = [];
+  for (const ag of agents) {
+    if (ag.kind === 'remote' || ag.status !== 'idle') continue;
+    const h0 = hash32(ag.id);
+    const period = BREAK.periodSec + (h0 % BREAK.periodJitter);   // 個人の周期
+    const slot = Math.floor((nowSec + (h0 % period)) / period);   // 位相をずらして周回を数える
+    const h = hash32(`${ag.id}#${slot}`);
+    if ((h % 1000) / 1000 >= ratio) continue;                     // この周回は席に居る
+    wants.push({ id: ag.id, h });
+  }
+  wants.sort((x, y) => x.h - y.h || (x.id < y.id ? -1 : 1));      // 決定的な優先順
+
+  // 2) 場所を配る。まず「いまその場所に居る人」を固定（動かさない）
+  const out = new Map(), taken = new Set();
+  const usable = s => !taken.has(s.id);
+  for (const w of wants) {
+    const cur = avatars.get(w.id)?.brk.going;
+    if (cur && BREAK_SPOTS.includes(cur) && !taken.has(cur.id)) {
+      out.set(w.id, cur); taken.add(cur.id);
+    }
+  }
+  // 3) 残りの人へ。食事どきは食事席から埋め、次に立ち話（2人そろうときだけ）、最後にその他
+  const rest = wants.filter(w => !out.has(w.id));
+  // 'meal'＝食事席だけ／'other'＝立ち話以外の残り（食事どきは食事席を普通の休憩に使わない）
+  const free = kind => BREAK_SPOTS.filter(s => usable(s) && s.type !== 'chat' &&
+    (kind === 'meal' ? (s.meal && s.type === 'sit') : !(s.meal && meal)));
+  let i = 0;
+  const give = (w, s) => { out.set(w.id, s); taken.add(s.id); };
+  // 3-a) 立ち話：相手とセットで成立させる（半端に1人だけ立たせない）
+  for (const pairId of [...new Set(BREAK_SPOTS.filter(s => s.type === 'chat').map(s => s.pair))]) {
+    if (rest.length - i < 2) break;
+    const slots = BREAK_SPOTS.filter(s => s.pair === pairId && usable(s));
+    if (slots.length < 2) continue;
+    // ペアごとに別々の周期で「いま会話中か」を決める＝3組が同時に始まったり終わったりしない
+    const pp = 240 + hash32(pairId) % 200;
+    if (hash32(`${pairId}#${Math.floor((nowSec + hash32(pairId) % pp) / pp)}`) % 100 < 55) {
+      give(rest[i++], slots[0]); give(rest[i++], slots[1]);
+    }
+  }
+  // 3-b) 食事席 → その他の席・散歩
+  for (const kind of meal ? ['meal', 'other'] : ['other']) {
+    for (const s of free(kind)) {
+      if (i >= rest.length) break;
+      give(rest[i++], s);
+    }
+  }
+  // 4) 相手が居なくなった立ち話は解散（1人で喋っているように見せない）
+  for (const [id, s] of out) {
+    if (s.type !== 'chat') continue;
+    if (![...out.values()].some(o => o.pair === s.pair && o.id !== s.id)) out.delete(id);
+  }
+  return out;
+}
+
 // HTMLへ流し込む動的値のエスケープ（サーバは台帳照合済みだが二重に守る＝Codex🔴XSS）
 function esc(s) {
   return String(s ?? '').replace(/[&<>"']/g,
@@ -1121,17 +1571,25 @@ function applyStatus(a, data) {
     if (a.envelopeGroup) { a.envelopeGroup.position.set(0.62, 0, -0.05); a.root.add(a.envelopeGroup); }
     a.inbox = data.inbox;
   }
-  if (a.state === data.status) return;
-  a.state = data.status;
-  // バッジ貼り替え（旧バッジのテクスチャを破棄）
+  if (a.state !== data.status) {
+    a.state = data.status;
+    // モニタの発光
+    const scr = a.desk.screen.material;
+    if (data.status === 'working') { scr.emissive.setHex(0x2dd4bf); scr.emissiveIntensity = 1.0; }
+    else if (data.status === 'error') { scr.emissive.setHex(0xef4444); scr.emissiveIntensity = 0.9; }
+    else { scr.emissive.setHex(0x000000); scr.emissiveIntensity = 0; }
+  }
+  // バッジ＝状態。休憩・散歩に出ている待機者はその見せ方（☕🌿🚶）に差し替える
+  // ＝どれも「待機中（仕事が無い）」であることは凡例で明示する
+  setBadge(a, breakBadge(a.brk.spot) ?? BADGE[a.state] ?? '❓');
+}
+/** バッジの貼り替え（同じ絵文字なら何もしない＝毎ポーリングで作り直さない） */
+function setBadge(a, emoji) {
+  if (a.badgeKey === emoji) return;
+  a.badgeKey = emoji;
   if (a.badge) { a.badgeHolder.remove(a.badge); disposeObject(a.badge); }
-  a.badge = makeEmojiSprite(BADGE[data.status] ?? '❓', 0.55);
+  a.badge = makeEmojiSprite(emoji, 0.55);
   a.badgeHolder.add(a.badge);
-  // モニタの発光
-  const scr = a.desk.screen.material;
-  if (data.status === 'working') { scr.emissive.setHex(0x2dd4bf); scr.emissiveIntensity = 1.0; }
-  else if (data.status === 'error') { scr.emissive.setHex(0xef4444); scr.emissiveIntensity = 0.9; }
-  else { scr.emissive.setHex(0x000000); scr.emissiveIntensity = 0; }
 }
 
 /* ============================================================
@@ -1191,10 +1649,15 @@ async function refresh() {
     }
     built = true;
   }
+  // 休憩・散歩の割り当て（待機中だけ・決定的）→ そのうえで状態を反映する
+  const breaks = assignBreaks(d.agents);
   for (const ag of d.agents) {
     const a = avatars.get(ag.id);
-    if (a) applyStatus(a, ag);
+    if (!a) continue;
+    a.brk.spot = (ag.status === 'idle') ? (breaks.get(ag.id) ?? null) : null;   // 働き出したら席へ戻る
+    applyStatus(a, ag);
   }
+  breakPass++;   // 2回目以降の割り当ては「歩いて移動する」（初回だけその場に配置）
 
   updateCompanyBoard(d.company || null);   // 全社ボード（進行中の案件・未完了ToDo）
 
@@ -1349,6 +1812,62 @@ function renderPopup() {
     }
     html += `<div class="btns"><a href="hold.html" target="_top">📄 一覧ページで見る</a>` +
             `<button id="popupClose">✕ 閉じる</button></div>`;
+  } else if (popupMode === 'act') {
+    // 🌙 夜間ダイジェスト＝「直近の18:00〜現在」に起きたことを一覧で（朝に開く前提）
+    if (nightCache === null) {
+      html = `<h2>🌙 夜間ダイジェスト</h2><div class="empty">読み込み中…</div>`;
+    } else if (nightCache.error) {
+      html = `<h2>🌙 夜間ダイジェスト</h2><div class="empty" style="color:#fca5a5">活動ログを取得できませんでした（activity.php）</div>`;
+    } else {
+      const g = nightCache.digest || {}, evs = nightCache.events || [];
+      html = `<h2>🌙 夜間ダイジェスト（${esc(nightCache.window?.label ?? '')}）</h2>`;
+      // 起動系はログが読めたときだけ数字を出す（読めないときに 0 と出さない）
+      const nRun = (g.runs === null || g.runs === undefined) ? '—' : g.runs;
+      const nMin = (g.minutes === null || g.minutes === undefined) ? '—' : g.minutes;
+      html += `<div class="digest">` +
+        `<span>🔨 起動 <b>${nRun}</b> 回</span>` +
+        `<span>⏱ のべ <b>${nMin}</b> 分</span>` +
+        `<span>✉️ 便 <b>${g.mails ?? 0}</b> 通</span>` +
+        `<span>📋 成果 <b>${g.boards ?? 0}</b> 件</span>` +
+        (g.errors ? `<span style="color:#fca5a5">⚠️ 異常 <b>${g.errors}</b> 件</span>` : '') +
+        `</div>`;
+      // 起動回数はログが残っている範囲でしか数えられない＝足りない分を「0回」と見せない
+      if (g.runsAvailable === false) html += `<div class="meta" style="margin-bottom:8px;color:#fca5a5">` +
+        `※ 起動の記録（tick.log）が読めないため、起動回数とのべ分数は表示していません` +
+        `（${esc(g.runsError ?? '不明')}）。便・成果の件数はファイルから直接数えたものです。</div>`;
+      else if (g.runsPartial) html += `<div class="meta" style="margin-bottom:8px;color:#fbbf24">` +
+        `※ 起動の記録は ${esc(actTime(g.runsSince))} 以降のみ（tick.log の切り詰め）。それ以前の起動回数・分数は含まれていません。</div>`;
+      if (g.mailsSkipped) html += `<div class="meta" style="margin-bottom:8px;color:#fbbf24">` +
+        `※ 便が多いため ${g.mailsSkipped} 通は走査していません（新しい方から ${esc(String(200))} 通まで）。</div>`;
+      if (!evs.length) {
+        html += `<div class="empty">この時間帯はまだ何も起きていません（次の定時起動をお待ちください）</div>`;
+      } else {
+        // 誰がどれだけ働いたか（3行以上あるときだけ・多い順）
+        const per = (g.agents || []).filter(a => a.runs || a.boards || a.mails).slice(0, 8);
+        if (per.length) {
+          html += `<div class="item"><div class="subject">👷 働いた人</div>`;
+          for (const a of per) {
+            const bits = [a.runs ? `起動${a.runs}回` : '', a.minutes ? `${a.minutes}分` : '',
+                          a.boards ? `成果${a.boards}件` : '', a.mails ? `便${a.mails}通` : ''].filter(Boolean);
+            html += `<div class="meta" style="margin-top:4px">${esc(a.label)}　${esc(bits.join('・'))}</div>`;
+          }
+          html += `</div>`;
+        }
+        html += `<div class="item"><div class="subject">🕒 時系列（新しい順・${evs.length} 件${g.truncated ? `／さらに ${g.truncated} 件省略` : ''}）</div>`;
+        for (const e of evs) {
+          const k = ACT_KIND[e.kind] || { icon: '•', color: '#cbd5e1' };
+          html += `<div class="row"><span class="t">${esc(actTime(e.ts))}</span>` +
+            `<span class="who" style="color:${e.bad ? '#fca5a5' : k.color}">${k.icon} ${esc(e.label ?? '')}</span>` +
+            `<span class="what">${esc(e.text ?? '')}` +
+            (e.url ? ` <a href="..${esc(e.url)}" target="_top">→</a>` : '') + `</span></div>`;
+        }
+        html += `</div>`;
+      }
+      html += `<div class="meta" style="margin-top:8px">※ 出来事は tick.log・mailbox・掲示板の更新時刻から都度組み立てた読み取りビューです` +
+              `（新しい台帳は作っていません）。本文は表示せず件名まで。</div>`;
+    }
+    html += `<div class="btns"><a href="list.html" target="_top">📄 一覧ビューへ</a>` +
+            `<button id="popupClose">✕ 閉じる</button></div>`;
   } else {
     // 吹き出しから開いたときは、その担当プロジェクトの板だけに絞る
     const boards = qFilterAgent ? qCache.boards.filter(b => b.agent === qFilterAgent) : qCache.boards;
@@ -1378,6 +1897,79 @@ function openPopup(mode, filterAgent = null) {
   popupMode = mode; qFilterAgent = filterAgent; renderPopup();
   document.getElementById('holdPopup').classList.add('open');
 }
+
+/* ============================================================
+ * 7.5 活動ティッカー／夜間ダイジェスト
+ *   「今どうか」しか映らない3Dに、「何をしたか」を足す。夜のうちに働いた分は
+ *   朝には画面から消えてしまう（夜型のエージェントが評価されない）ため、
+ *   activity.php（読み取り専用・別API）から出来事を取って流す。
+ *   ・ティッカー＝直近24時間の出来事を5秒ごとに1件ずつ（60秒ごとに取り直し）
+ *   ・ダイジェスト＝直近の18:00〜現在（＝昨夜）を開いたときにだけ取得
+ * ============================================================ */
+const ACT_KIND = {
+  run:   { icon: '🔨', color: '#5eead4' },
+  mail:  { icon: '✉️', color: '#c4b5fd' },
+  board: { icon: '📋', color: '#86efac' },
+  alert: { icon: '⚠️', color: '#fca5a5' },
+};
+const actState = { events: [], idx: 0, error: null };
+let nightCache = null;                        // 夜ダイジェスト（開いたときに取得）
+
+/** その日付なら HH:MM、別日なら M/D HH:MM */
+function actTime(iso) {
+  const now = new Date();
+  const d = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const hhmm = String(iso).slice(11, 16);
+  return String(iso).slice(0, 10) === d ? hhmm : `${Number(String(iso).slice(5, 7))}/${Number(String(iso).slice(8, 10))} ${hhmm}`;
+}
+function actFetch(query) {
+  return fetch(`../tools/office/activity.php?${query}`,
+    { cache: 'no-store', signal: AbortSignal.timeout(8000) }).then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    });
+}
+async function refreshActivity() {
+  try {
+    const d = await actFetch('hours=24');
+    if (!d.ok || !Array.isArray(d.events)) throw new Error('bad payload');
+    actState.events = d.events; actState.error = null;
+    if (actState.idx >= d.events.length) actState.idx = 0;
+  } catch (e) {
+    actState.error = '活動ログを取得できません';
+  }
+  paintTicker();
+}
+function paintTicker() {
+  const el = document.getElementById('actline');
+  if (!el) return;
+  const more = '<span class="fix more">🌙 夜間ダイジェスト</span>';
+  if (actState.error) { el.innerHTML = `<span class="ev">📻 <span style="color:#fca5a5">${esc(actState.error)}</span></span>` + more; return; }
+  if (!actState.events.length) { el.innerHTML = '<span class="ev">📻 直近24時間の記録はありません</span>' + more; return; }
+  const i = actState.idx % actState.events.length;
+  const e = actState.events[i];
+  const k = ACT_KIND[e.kind] || { icon: '•', color: '#cbd5e1' };
+  el.innerHTML = `<span class="fix t">📻 ${i + 1}/${actState.events.length}</span>` +
+    `<span class="ev">${k.icon} <span class="t">${esc(actTime(e.ts))}</span> ` +
+    `<span class="who" style="color:${e.bad ? '#fca5a5' : k.color}">${esc(e.label ?? '')}</span> ${esc(e.text ?? '')}</span>` + more;
+}
+async function openDigest() {
+  nightCache = null;
+  openPopup('act');                                  // まず「読み込み中」で開く
+  try {
+    const d = await actFetch('window=night');
+    if (!d.ok) throw new Error('bad payload');
+    nightCache = d;
+  } catch (e) {
+    nightCache = { error: true };
+  }
+  if (popupMode === 'act') renderPopup();
+}
+document.getElementById('actline').addEventListener('click', openDigest);
+setInterval(() => { if (actState.events.length) { actState.idx++; paintTicker(); } }, 5000);
+(async function actLoop() {
+  try { await refreshActivity(); } finally { setTimeout(actLoop, 60000); }
+})();
 function closePopup() {
   popupMode = null;
   document.getElementById('holdPopup').classList.remove('open');
@@ -1386,8 +1978,11 @@ function closePopup() {
   const sp = new URLSearchParams(location.search);
   const p = sp.get('popup');
   if (p === 'hold' || p === 'q') openPopup(p, p === 'q' ? sp.get('pj') : null);
+  if (p === 'act') openDigest();                    // ?popup=act で朝いちにダイジェストを開く
 }
 document.getElementById('qLink').addEventListener('click', () => openPopup('q'));
+document.getElementById('legend-head').addEventListener('click',
+  () => document.getElementById('legend').classList.toggle('open'));
 // ポーリング：完了してから次を予約（応答遅延時の多重リクエストを防ぐ＝Codex🟡）
 (async function loop() {
   try { await refresh(); } finally { setTimeout(loop, 5000); }
@@ -1400,40 +1995,112 @@ document.getElementById('menu-btn').addEventListener('click', () => {
 if (location.hash === '#menu') document.getElementById('menu').classList.add('open');
 
 /* ============================================================
- * 8. カメラ操作（簡易オービット：ドラッグ回転・ホイールズーム）
+ * 8. カメラ操作（オービット：ドラッグ回転・ホイールズーム・WASD/右ドラッグで視点移動）
  * ============================================================ */
-const target = new THREE.Vector3(-0.5, 0.2, -0.2);
-let theta = -0.38, phi = 0.92, dist = 29;
-// ?cam=theta,phi,dist で初期アングル指定（検証・お気に入りビュー共有用）
+// 注視点は「室内と手前の庭が両方入る」位置に置く（庭を作ったぶん少し手前・引き気味）
+const HOME_VIEW = { at: [0.6, 0.2, 3.4], theta: -0.26, phi: 0.88, dist: 34 };
+const target = new THREE.Vector3(...HOME_VIEW.at);
+let theta = HOME_VIEW.theta, phi = HOME_VIEW.phi, dist = HOME_VIEW.dist;
+// ?cam=theta,phi,dist で初期アングル、?at=x,z で注視点を指定（検証・お気に入りビュー共有用）
 {
-  const q = new URLSearchParams(location.search).get('cam');
+  const sp = new URLSearchParams(location.search);
+  const q = sp.get('cam');
   if (q) {
     // 空要素は NaN 扱い（Number('')===0 で最小ズームに張り付くのを防ぐ＝Codex🟡）
     const [a, b, c] = q.split(',').map(s => s.trim() === '' ? NaN : Number(s));
     if (isFinite(a)) theta = a; if (isFinite(b)) phi = b; if (isFinite(c)) dist = c;
   }
+  const at = sp.get('at');
+  if (at) {
+    const [x, z] = at.split(',').map(s => s.trim() === '' ? NaN : Number(s));
+    if (isFinite(x)) target.x = x; if (isFinite(z)) target.z = z;
+  }
 }
+// 注視点を動かせる範囲（外に出ると空と芝生しか映らないので、敷地の内側に留める）
+const PAN_LIMIT = { x: [-26, 26], z: [-20, 26] };
 function updateCamera() {
   phi = Math.max(0.25, Math.min(1.5, phi));   // 1.5＝ほぼ水平まで見上げられる（空・太陽が見える）
   dist = Math.max(7, Math.min(38, dist));
+  target.x = Math.max(PAN_LIMIT.x[0], Math.min(PAN_LIMIT.x[1], target.x));
+  target.z = Math.max(PAN_LIMIT.z[0], Math.min(PAN_LIMIT.z[1], target.z));
   camera.position.set(
     target.x + dist * Math.sin(phi) * Math.sin(theta),
     target.y + dist * Math.cos(phi),
     target.z + dist * Math.sin(phi) * Math.cos(theta));
   camera.lookAt(target);
 }
-let dragging = false, px = 0, py = 0, movedPx = 0;
-canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; py = e.clientY; movedPx = 0; });
+/** 視点を平行移動する。fwd＝画面の奥へ、rgt＝画面の右へ（どちらも今の向き基準・m単位） */
+function panBy(rgt, fwd) {
+  // カメラ→注視点の水平方向が「奥」。その右手が「右」（Y軸まわりの単純な合成）
+  const fx = -Math.sin(theta), fz = -Math.cos(theta);
+  target.x += fx * fwd + (-fz) * rgt;
+  target.z += fz * fwd + (fx) * rgt;
+  updateCamera();
+}
+function resetView() {
+  target.set(...HOME_VIEW.at);
+  theta = HOME_VIEW.theta; phi = HOME_VIEW.phi; dist = HOME_VIEW.dist;
+  updateCamera();
+}
+
+// ── キーボード：WASD／矢印で視点移動（Shiftで速く・0でホームに戻す）──────────
+// 押している間だけ動かすため keydown/keyup で集合を持ち、実際の移動は animate() で dt 積分する
+// （キーリピート任せにするとOS設定で速度が変わる）。修飾キー付きはブラウザ操作なので拾わない。
+const keys = new Set();
+const PAN_KEYS = { w:'f', s:'b', a:'l', d:'r', arrowup:'f', arrowdown:'b', arrowleft:'l', arrowright:'r' };
+addEventListener('keydown', e => {
+  if (e.key === 'Shift') keys.add('fast');
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === '0' || k === 'home') { resetView(); return; }
+  if (!PAN_KEYS[k]) return;
+  keys.add(PAN_KEYS[k]);
+  if (k.startsWith('arrow')) e.preventDefault();   // 矢印での画面スクロールを止める
+});
+addEventListener('keyup', e => {
+  const k = e.key.toLowerCase();
+  if (PAN_KEYS[k]) keys.delete(PAN_KEYS[k]);
+  if (k === 'shift') keys.delete('fast');
+});
+addEventListener('blur', () => keys.clear());      // 別タブへ移った隙に押しっぱなしにならないように
+/** 押されているキーに応じて視点を進める（animate から毎フレーム呼ぶ） */
+function tickPan(dt) {
+  if (!keys.size) return;
+  const f = (keys.has('f') ? 1 : 0) - (keys.has('b') ? 1 : 0);
+  const r = (keys.has('r') ? 1 : 0) - (keys.has('l') ? 1 : 0);
+  if (!f && !r) return;
+  // 速さはズーム量に比例（引いているときは大きく、寄っているときは細かく動く）
+  const sp = Math.max(5, dist * 0.55) * (keys.has('fast') ? 2.5 : 1) * dt;
+  const n = (f && r) ? Math.SQRT1_2 : 1;           // 斜め移動で速くならないように
+  panBy(r * sp * n, f * sp * n);
+}
+
+let dragging = false, panning = false, px = 0, py = 0, movedPx = 0;
+canvas.addEventListener('pointerdown', e => {
+  dragging = true;
+  // 右ドラッグ・ホイールドラッグ・Shift＋ドラッグ＝視点移動（左ドラッグは今までどおり回転）
+  panning = (e.button === 1 || e.button === 2 || e.shiftKey);
+  px = e.clientX; py = e.clientY; movedPx = 0;
+});
+canvas.addEventListener('contextmenu', e => e.preventDefault());   // 右ドラッグでメニューを出さない
 addEventListener('pointerup', e => {
   // ほぼ動かさずに離した＝クリック → 承認待ちトレイ（書類の山）ならポップアップ
-  if (dragging && movedPx < 6 && e.target === canvas) pickHold(e);
-  dragging = false;
+  if (dragging && !panning && movedPx < 6 && e.target === canvas) pickHold(e);
+  dragging = false; panning = false;
 });
 addEventListener('pointermove', e => {
   if (!dragging) return;
-  movedPx += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
-  theta -= (e.clientX - px) * 0.0055; phi -= (e.clientY - py) * 0.0045;
-  px = e.clientX; py = e.clientY; updateCamera();
+  const dx = e.clientX - px, dy = e.clientY - py;
+  movedPx += Math.abs(dx) + Math.abs(dy);
+  if (panning) {
+    // 画面1pxが地面で何mになるかを換算＝掴んだ地面がだいたい指についてくる
+    const mPerPx = 2 * dist * Math.tan(camera.fov * Math.PI / 360) / innerHeight;
+    panBy(-dx * mPerPx, dy * mPerPx / Math.max(0.35, Math.sin(phi)));
+  } else {
+    theta -= dx * 0.0055; phi -= dy * 0.0045;
+    updateCamera();
+  }
+  px = e.clientX; py = e.clientY;
 });
 const raycaster = new THREE.Raycaster(), pointerV = new THREE.Vector2();
 function pickHold(e) {
@@ -1462,10 +2129,146 @@ resize(); updateCamera();
 /* ============================================================
  * 9. アニメーションループ（状態ごとの動き）
  * ============================================================ */
+/** 角度を最短回りで補間（-π↔π をまたぐときに一回転しない） */
+function angLerp(cur, tgt, k) {
+  return cur + Math.atan2(Math.sin(tgt - cur), Math.cos(tgt - cur)) * k;
+}
+/** 休憩・散歩の移動を1フレーム進める。戻り値 true＝屋外の描画（歩き・座り）に切り替える */
+function tickBreak(a, dt) {
+  const b = a.brk;
+  const home = { x: a.root.position.x, z: a.root.position.z + 0.72, y: 0 };
+  if (b.spot !== b.going) {                      // 行き先が変わった＝道順を引き直す
+    b.going = b.spot;
+    const dest = b.spot ? (b.spot.type === 'walk' ? PROMENADE[b.spot.from] : b.spot) : home;
+    if (breakPass <= 1) {
+      // ページを開いた直後（最初の割り当て）は誰も歩かせない＝寝ている人は席に、
+      // 休憩の人は最初からその場所に居る状態で描き始める
+      b.pos.x = dest.x; b.pos.z = dest.z;
+      b.pos.y = b.spot ? ((b.spot.y ?? GARDEN.lawnY) + (b.spot.type === 'sit' ? BREAK.sitY : 0)) : 0;
+      b.facing = b.spot ? (b.spot.face ?? 0) : 0;
+      b.path = [];
+    } else if (Math.hypot(dest.x - b.pos.x, dest.z - b.pos.z) < 0.15) {
+      b.path = [];                               // もうそこに居る＝歩かない
+    } else {
+      b.path = breakPath(b.pos, dest, home, b.lane);
+    }
+    if (b.spot && b.spot.type === 'walk') { b.routeIdx = b.spot.from; b.routeDir = 1; }
+  }
+  if (b.path.length) {
+    const w = b.path[0];
+    const dx = w.x - b.pos.x, dz = w.z - b.pos.z;
+    const d = Math.hypot(dx, dz);
+    if (d < 0.1) { b.path.shift(); b.walking = b.path.length > 0; }
+    else {
+      const step = Math.min(d, BREAK.speed * b.spd * dt);
+      b.pos.x += dx / d * step; b.pos.z += dz / d * step;
+      b.facing = angLerp(b.facing, Math.atan2(-dx, -dz), Math.min(1, dt * 6));
+      b.walking = true;
+    }
+    b.pos.y += ((w.y ?? 0) - b.pos.y) * Math.min(1, dt * 4);
+  } else {
+    b.walking = false;
+    if (b.spot && b.spot.type === 'walk') {      // 散歩＝遊歩道を端まで行って折り返す
+      b.routeIdx += b.routeDir;
+      if (b.routeIdx >= PROMENADE.length) { b.routeIdx = PROMENADE.length - 2; b.routeDir = -1; }
+      if (b.routeIdx < 0) { b.routeIdx = 1; b.routeDir = 1; }
+      const p = PROMENADE[b.routeIdx];
+      b.path = [{ x: p.x, z: p.z, y: GARDEN.lawnY }];
+    } else {                                     // 着いた＝その場の向き・高さへ落ち着く
+      const face = b.spot ? b.spot.face : 0;
+      const y = b.spot ? ((b.spot.y ?? GARDEN.lawnY) + (b.spot.type === 'sit' ? BREAK.sitY : 0)) : 0;
+      b.facing = angLerp(b.facing, face, Math.min(1, dt * 3));
+      b.pos.y += (y - b.pos.y) * Math.min(1, dt * 3);
+    }
+  }
+  return !!(b.spot || b.path.length);
+}
+/** 屋外での動き（歩く・座る・食べる・立ち話・眺める）。腕は π が「下ろした状態」 */
+function animateOutside(a, t, ph, meal) {
+  const b = a.brk, legs = a.av.legParts, arms = a.av.arms;
+  a.av.legs.visible = true;
+  a.av.group.rotation.z = 0;
+  const spot = b.spot;
+  const sitting = !b.walking && spot && spot.type === 'sit';
+  const chatting = !b.walking && spot && spot.type === 'chat';
+  const eating = sitting && spot.meal && meal;
+  // 立ち話の💬は「今この人が喋っている番」のときだけ出す（相手と交互になるよう a/b で反転）
+  if (a.chatBubble) a.chatBubble.visible = false;
+  if (chatting) {
+    if (!a.chatBubble) {
+      a.chatBubble = makeEmojiSprite('💬', 0.5);
+      a.root.add(a.chatBubble);
+    }
+    const turn = Math.floor(t / 2.6) % 2 === 0;
+    a.chatBubble.visible = spot.id.endsWith('-a') ? turn : !turn;
+    a.chatBubble.position.set(b.pos.x - a.root.position.x, 2.45 + b.pos.y,
+                              b.pos.z - a.root.position.z);
+  }
+  if (b.walking) {
+    const s = Math.sin(t * 7 + ph);
+    legs[0].hip.rotation.x = s * 0.55;  legs[1].hip.rotation.x = -s * 0.55;
+    legs[0].knee.rotation.x = -Math.max(0, -s) * 0.7;
+    legs[1].knee.rotation.x = -Math.max(0, s) * 0.7;
+    arms[0].rotation.x = Math.PI - s * 0.45; arms[1].rotation.x = Math.PI + s * 0.45;
+    a.av.head.rotation.x = 0;
+    a.av.head.rotation.y = Math.sin(t * 0.6 + ph) * 0.12;
+    a.av.group.position.y = b.pos.y + Math.abs(Math.sin(t * 7 + ph)) * 0.03;
+  } else if (sitting) {
+    legs[0].hip.rotation.x = 1.35;  legs[1].hip.rotation.x = 1.28;
+    legs[0].knee.rotation.x = -1.3; legs[1].knee.rotation.x = -1.22;
+    if (eating) {
+      // 食事：片手を口元へ運んで戻す＋もぐもぐ頷く（食べる速さも個体ごとに少し変える）
+      const bite = Math.sin(t * (1.5 + (ph % 0.6)) + ph);
+      const up = Math.max(0, bite);
+      arms[0].rotation.x = -2.3 - up * 1.15;                    // 手が上がる＝口元へ
+      arms[1].rotation.x = -2.2;
+      a.av.head.rotation.x = up * 0.14 + Math.sin(t * 6 + ph) * 0.012 * up;
+      a.av.head.rotation.y = Math.sin(t * 0.3 + ph) * 0.12;
+    } else {
+      arms[0].rotation.x = -2.3; arms[1].rotation.x = -2.25;    // 膝の上に手を置く
+      a.av.head.rotation.x = Math.sin(t * 0.8 + ph) * 0.05;
+      a.av.head.rotation.y = Math.sin(t * 0.35 + ph) * 0.28;    // のんびり見まわす
+    }
+    a.av.group.position.y = b.pos.y + Math.sin(t * 1.1 + ph) * 0.006;
+  } else if (chatting) {
+    // 立ち話：相手を向いて立ち、喋る番は身ぶり手ぶり・聞く番はうなずく
+    const turn = a.chatBubble && a.chatBubble.visible;
+    legs[0].hip.rotation.x = 0.05; legs[1].hip.rotation.x = -0.05;
+    legs[0].knee.rotation.x = 0;   legs[1].knee.rotation.x = 0;
+    if (turn) {
+      const g = Math.sin(t * 2.6 + ph);
+      arms[0].rotation.x = Math.PI - 0.55 - g * 0.35;           // 話しながら手が動く
+      arms[1].rotation.x = Math.PI - 0.2 + g * 0.15;
+      a.av.head.rotation.x = Math.sin(t * 3.1 + ph) * 0.05;
+      a.av.group.position.y = b.pos.y + Math.abs(Math.sin(t * 2.2 + ph)) * 0.012;
+    } else {
+      arms[0].rotation.x = Math.PI - 0.1; arms[1].rotation.x = Math.PI - 0.1;
+      a.av.head.rotation.x = Math.max(0, Math.sin(t * 1.5 + ph)) * 0.16;   // うなずく
+      a.av.group.position.y = b.pos.y;
+    }
+    a.av.head.rotation.y = Math.sin(t * 0.5 + ph) * 0.06;
+  } else {                                                      // 立って眺める（伸びをする）
+    const stretch = Math.max(0, Math.sin(t * 0.28 + ph));
+    legs[0].hip.rotation.x = 0.05; legs[1].hip.rotation.x = -0.05;
+    legs[0].knee.rotation.x = 0;   legs[1].knee.rotation.x = 0;
+    arms[0].rotation.x = Math.PI - stretch * 2.4;
+    arms[1].rotation.x = Math.PI + stretch * 2.4;
+    a.av.head.rotation.x = -stretch * 0.2;
+    a.av.head.rotation.y = Math.sin(t * 0.4 + ph) * 0.32;
+    a.av.group.position.y = b.pos.y + Math.sin(t * 1.0 + ph) * 0.008;
+  }
+  a.badgeHolder.position.y = 1.95 + b.pos.y + (sitting ? 0.12 : 0);   // 座ると頭が下がるぶん少し上げる
+  a.nameSprite.position.y = 2.5 + b.pos.y;
+}
+
 const clock = new THREE.Clock();
+let prevT = 0;
 function animate() {
   requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
+  const dt = Math.min(0.1, Math.max(0, t - prevT));   // タブ復帰時の巨大 dt でワープさせない
+  prevT = t;
+  tickPan(dt);                                        // WASD／矢印を押している間は視点を動かす
   // 川の流れ（テクスチャスクロール）とアヒルの漂流
   waterTex.offset.y = -t * 0.05;
   for (const dk of ducks) {
@@ -1477,9 +2280,25 @@ function animate() {
     dk.g.rotation.y = Math.sin(t * 0.5 + dk.offset * 7) * 0.4;
     dk.g.rotation.z = Math.sin(t * 1.7 + dk.offset * 5) * 0.06;
   }
+  fountainWater.material.map.offset.x = t * 0.02;      // 噴水の水面をゆっくり回す
+  const mealWin = mealNow();                           // 食事どきか（1フレームに1回だけ判定）
   for (const a of avatars.values()) {
     const ph = a.phase;
     if (a.qBubble) a.qBubble.position.y = 3.05 + Math.sin(t * 1.8 + ph) * 0.06;
+
+    // 休憩・散歩：席（ローカル原点）からの相対位置に置き換える。名札・バッジ・吹き出しも一緒に動く
+    const outside = tickBreak(a, dt);
+    const b = a.brk;
+    const ox = b.pos.x - a.root.position.x, oz = b.pos.z - a.root.position.z;
+    a.av.group.position.x = ox; a.av.group.position.z = oz;
+    a.av.group.rotation.y = b.facing;
+    a.badgeHolder.position.x = ox; a.badgeHolder.position.z = oz;
+    a.nameSprite.position.x = ox; a.nameSprite.position.z = oz - 0.42;
+    if (a.qBubble) { a.qBubble.position.x = ox; a.qBubble.position.z = oz - 0.32; }
+    if (outside) { animateOutside(a, t, ph, mealWin); continue; }
+    a.av.legs.visible = false;                          // 席では脚を隠す（机と椅子に隠れる部分）
+    if (a.chatBubble) a.chatBubble.visible = false;
+
     if (a.state === 'working') {
       // せっせとタイピング：腕が高速に交互、体が小刻みに揺れる
       a.av.arms[0].rotation.x = -1.1 + Math.sin(t * 13 + ph) * 0.22;
@@ -1499,9 +2318,14 @@ function animate() {
       a.desk.screen.material.emissiveIntensity = 0.5 + Math.abs(Math.sin(t * 4)) * 0.6;
     } else {
       // 待機＝居眠り：ゆっくり船を漕ぐ・バッジ（💤）がふわふわ
-      a.av.head.rotation.x = 0.32 + Math.sin(t * 1.1 + ph) * 0.09;
-      a.av.group.position.y = Math.sin(t * 1.1 + ph) * 0.012;
-      a.av.arms[0].rotation.x = -0.35; a.av.arms[1].rotation.x = -0.35;
+      // ＋数十秒に一度だけ「伸びをして起きかける」（周期も位相も個体ごと＝一斉には起きない）
+      const w = Math.sin(t * (0.1 + (ph % 0.05)) + ph * 3);
+      const wake = w > 0.97 ? (w - 0.97) / 0.03 : 0;         // 0→1→0 の短い山
+      a.av.head.rotation.x = 0.32 + Math.sin(t * 1.1 + ph) * 0.09 - wake * 0.55;
+      a.av.group.position.y = Math.sin(t * 1.1 + ph) * 0.012 + wake * 0.05;
+      a.av.arms[0].rotation.x = -0.35 - wake * 1.6;          // 伸び＝腕が上がる
+      a.av.arms[1].rotation.x = -0.35 - wake * 1.5;
+      a.av.group.rotation.z = Math.sin(t * 0.7 + ph) * 0.01 * wake;
       a.badgeHolder.position.y = 1.95 + Math.sin(t * 1.4 + ph) * 0.07;
       if (a.badge) a.badge.material.opacity = 0.72 + Math.sin(t * 1.4 + ph) * 0.25;
     }

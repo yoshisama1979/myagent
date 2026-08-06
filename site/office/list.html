@@ -25,6 +25,20 @@
 
   <div id="islands" class="space-y-6"></div>
 
+  <!-- 🌙 夜間ダイジェスト：夜のうちに働いた分は朝には3Dから消えるので、ここで事後に見せる -->
+  <section class="mt-8 rounded-xl border border-indigo-500/40 bg-indigo-950/30 p-4">
+    <div class="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+      <h2 class="text-lg font-bold">🌙 夜間ダイジェスト <span id="digestWindow" class="text-xs font-normal text-slate-400"></span></h2>
+      <div class="text-xs text-slate-400">
+        <label class="mr-2"><input type="radio" name="digestWin" value="night" checked> 直近の18:00〜現在</label>
+        <label><input type="radio" name="digestWin" value="24"> 直近24時間</label>
+      </div>
+    </div>
+    <div id="digestSummary" class="flex flex-wrap gap-2 text-sm mb-3"></div>
+    <div id="digestAgents" class="text-xs text-slate-300 mb-3"></div>
+    <div id="digestEvents" class="text-sm"></div>
+  </section>
+
   <div class="mt-6 flex items-center gap-4 text-sm text-slate-300">
     <span id="hold" class="rounded-lg border border-amber-500/40 bg-amber-950/40 px-3 py-1.5">🗂 社長の承認待ち（hold/）：<b>0</b> 件</span>
     <span id="updated" class="text-xs text-slate-500"></span>
@@ -32,7 +46,8 @@
 
   <div class="mt-8 text-xs text-slate-500 leading-relaxed border-t border-slate-700 pt-4">
     状態の意味：🔨働き中（いまセッション実行中）／📬仕事待ち（受信箱にメールあり）／💤待機（次の起床を待っている）／⚠️異常（直近タイムアウト等）／🏢別拠点（VPS外＝中身は見えず受信箱の山だけ見える）。<br>
-    データ源：<span class="font-mono">/tools/office/status.php</span>（読み取り専用・5秒ごと自動更新）
+    データ源：<span class="font-mono">/tools/office/status.php</span>（状態・読み取り専用・5秒ごと）／
+    <span class="font-mono">/tools/office/activity.php</span>（出来事・読み取り専用・60秒ごと。tick.log・mailbox・掲示板の更新時刻から都度組み立てたビューで、新しい台帳は作っていません）
   </div>
 </div>
 
@@ -115,6 +130,76 @@ async function refresh() {
 // ポーリング：完了してから次を予約（応答遅延時の多重リクエストを防ぐ）
 (async function loop() {
   try { await refresh(); } finally { setTimeout(loop, 5000); }
+})();
+
+/* ── 🌙 夜間ダイジェスト（activity.php・読み取り専用・60秒ごと）──────────────
+   「今どうか」だけでは夜のうちの働きが朝に消えるので、出来事を事後に見せる。
+   台帳は新設せず、tick.log・mailbox・掲示板の更新時刻から都度組み立てたビュー。 */
+const KIND = { run:   { icon: '🔨', cls: 'text-emerald-300' },
+               mail:  { icon: '✉️', cls: 'text-violet-300' },
+               board: { icon: '📋', cls: 'text-lime-300' },
+               alert: { icon: '⚠️', cls: 'text-red-300' } };
+function digestWin() {
+  const el = document.querySelector('input[name="digestWin"]:checked');
+  return (el && el.value === '24') ? 'hours=24' : 'window=night';
+}
+// 窓の切替と60秒ポーリングが重なったとき、古い応答が新しい表示を上書きしないようにする世代番号
+let digestGen = 0;
+async function refreshDigest() {
+  const sum = document.getElementById('digestSummary');
+  const gen = ++digestGen;
+  let d;
+  try {
+    const r = await fetch(`../tools/office/activity.php?${digestWin()}`,
+      { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    d = await r.json();
+    if (!d.ok) throw new Error('bad payload');
+  } catch (e) {
+    if (gen === digestGen) sum.innerHTML = `<span class="text-red-300">活動ログを取得できません（${esc(e.message)}）</span>`;
+    return;
+  }
+  if (gen !== digestGen) return;                 // 追い越された古い応答は捨てる
+  const g = d.digest || {}, evs = d.events || [];
+  document.getElementById('digestWindow').textContent = `（${d.window?.label ?? ''}）`;
+  const chip = (t) => `<span class="rounded-lg border border-slate-600 px-3 py-1">${t}</span>`;
+  // 起動系はログが読めたときだけ数字を出す（読めないときに 0 と出さない）
+  const nRun = (g.runs ?? null) === null ? '—' : g.runs;
+  const nMin = (g.minutes ?? null) === null ? '—' : g.minutes;
+  sum.innerHTML = chip(`🔨 起動 <b>${nRun}</b> 回`) + chip(`⏱ のべ <b>${nMin}</b> 分`)
+    + chip(`✉️ 便 <b>${g.mails ?? 0}</b> 通`) + chip(`📋 成果 <b>${g.boards ?? 0}</b> 件`)
+    + (g.errors ? `<span class="rounded-lg border border-red-500/60 text-red-300 px-3 py-1">⚠️ 異常 <b>${g.errors}</b> 件</span>` : '')
+    // 起動回数はログが残っている範囲でしか数えられない＝足りない分を「0回」と見せない
+    + (g.runsAvailable === false
+        ? `<div class="w-full text-xs text-red-300">※ 起動の記録（tick.log）が読めないため、起動回数とのべ分数は表示していません（${esc(g.runsError ?? '不明')}）。</div>`
+        : g.runsPartial ? `<div class="w-full text-xs text-amber-300">※ 起動の記録は ` +
+            `${esc(String(g.runsSince).slice(5, 16).replace('T', ' '))} 以降のみ（tick.log の切り詰め）。それ以前の起動回数・分数は含まれていません。</div>` : '')
+    + (g.mailsSkipped ? `<div class="w-full text-xs text-amber-300">※ 便が多いため ${g.mailsSkipped} 通は走査していません（新しい方から200通まで）。</div>` : '');
+
+  const per = (g.agents || []).filter(a => a.runs || a.boards || a.mails);
+  document.getElementById('digestAgents').innerHTML = per.length
+    ? '👷 ' + per.map(a => `${esc(a.label)}<span class="text-slate-500">（` +
+        [a.runs ? `起動${a.runs}` : '', a.minutes ? `${a.minutes}分` : '',
+         a.boards ? `成果${a.boards}` : '', a.mails ? `便${a.mails}` : ''].filter(Boolean).join('・') +
+        `）</span>`).join('　')
+    : '';
+
+  const ev = document.getElementById('digestEvents');
+  if (!evs.length) { ev.innerHTML = '<div class="text-slate-400">この時間帯はまだ何も起きていません（次の定時起動をお待ちください）</div>'; return; }
+  ev.innerHTML = `<div class="text-xs text-slate-400 mb-1">🕒 新しい順・${evs.length} 件` +
+      (g.truncated ? `／さらに ${g.truncated} 件省略` : '') + `</div>` +
+    evs.map(e => {
+      const k = KIND[e.kind] || { icon: '•', cls: 'text-slate-300' };
+      return `<div class="flex gap-2 py-1 border-b border-slate-700/50">` +
+        `<span class="text-slate-500 tabular-nums shrink-0">${esc(String(e.ts).slice(5, 16).replace('T', ' '))}</span>` +
+        `<span class="${e.bad ? 'text-red-300' : k.cls} shrink-0 w-40 truncate">${k.icon} ${esc(e.label ?? '')}</span>` +
+        `<span class="text-slate-300">${esc(e.text ?? '')}` +
+        (e.url ? ` <a href="..${esc(e.url)}" target="_top" class="text-sky-400">→</a>` : '') + `</span></div>`;
+    }).join('');
+}
+for (const el of document.querySelectorAll('input[name="digestWin"]')) el.addEventListener('change', refreshDigest);
+(async function digestLoop() {
+  try { await refreshDigest(); } finally { setTimeout(digestLoop, 60000); }
 })();
 </script>
 </body>

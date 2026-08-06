@@ -26,52 +26,14 @@ header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 
-const JSON_OPT = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT;
-
 $ROOT     = realpath(__DIR__ . '/../../..');           // プロジェクトルート
 $HEARTBEAT = $ROOT . '/site/overseer/last-tick.txt';
 $TICKLOG   = $ROOT . '/data/overseer/tick.log';
 $MAILBOX   = $ROOT . '/data/mailbox';
 
-// ── VPS常駐エージェントの台帳（tick のラベル → 表示情報）──────────────────
-// nextWake は crontab の daily 起動時刻（変更したらここも直す。Phase 1 は静的でよい）
-$VPS_AGENTS = [
-    // tickラベル            id(=mailbox宛先)      表示名                       島          daily起床
-    'chat'              => ['id' => 'hanasaka-main',      'label' => '会話窓口',             'island' => 'office',   'wake' => null],
-    'memo-triage'       => ['id' => 'memo',               'label' => 'メモ係',               'island' => 'office',   'wake' => '23:00'],
-    'comms'             => ['id' => 'comms',              'label' => '会話整理｜Chatwork',   'island' => 'office',   'wake' => '2時間おき 6-22時'],
-    'finance'           => ['id' => 'finance',            'label' => '経理',                 'island' => 'office',   'wake' => null],
-    'overseer'          => ['id' => 'overseer',           'label' => '統括',                 'island' => 'exec',     'wake' => '01:00'],
-    'partner'           => ['id' => 'partner',            'label' => '経営パートナー',        'island' => 'exec',     'wake' => '07:00'],
-    'hp-loop:ycom'      => ['id' => 'hp-loop-ycom',       'label' => '解析｜自社YCOM',        'island' => 'analysis', 'wake' => '02:00'],
-    'hp-loop:yoshida'   => ['id' => 'hp-loop-yoshida',    'label' => '解析｜よしだ歯科',      'island' => 'analysis', 'wake' => '02:30'],
-    'hp-loop:fujisaka'  => ['id' => 'hp-loop-fujisaka',   'label' => '解析｜藤阪ガス',        'island' => 'analysis', 'wake' => '03:00'],
-    'hp-loop:yokohawaii'=> ['id' => 'hp-loop-yokohawaii', 'label' => '解析｜ヨーコハワイ',    'island' => 'analysis', 'wake' => '03:30'],
-    'hp-loop:rally'     => ['id' => 'hp-loop-rally',      'label' => '解析｜スタンプラリー',  'island' => 'analysis', 'wake' => '月 04:00'],
-    'hp-loop:konjaku'   => ['id' => 'hp-loop-konjaku',    'label' => '解析｜今昔写語',        'island' => 'analysis', 'wake' => '月 04:30'],
-    'blog-loop:ycom'    => ['id' => 'blog-loop-ycom',     'label' => 'ブログ分析｜YCOM',      'island' => 'blog',     'wake' => '05:00'],
-    'blog-write:ycom'   => ['id' => 'blog-write-ycom',    'label' => 'ブログ執筆｜YCOM',      'island' => 'blog',     'wake' => '月 05:30'],
-    'blog-improve:ycom' => ['id' => 'blog-improve-ycom',  'label' => 'ブログ改善｜YCOM',      'island' => 'blog',     'wake' => '月 06:00'],
-];
-// daily モードの tick では memo-triage が「memo」と表示される（同一人物として扱う）
-$LABEL_ALIAS = ['memo' => 'memo-triage'];
-
-// ── 別拠点（VPS外）エージェント：中身は見えない・受信箱の山だけ見える ─────────
-$REMOTE_AGENTS = [
-    'web-hanasaka' => '開発｜自社YCOM',
-    'yoshida-dev'  => '開発｜よしだ歯科',
-    'fujisaka-dev' => '開発｜藤阪ガス',
-];
-
-// ── 人間の社員（hana-tools users.id → 3Dオフィスの表示）─────────────────────
-// office-status API は在籍者を全員返す（テスト用アカウント・サブアカウントも含む）。
-// ここに載せた id だけ 3D に机を出す＝誰を出すかは社長が決める（増やすときはこの表に1行足す）。
-// note は台帳側の補足（APIからは分からない事情）。状況が変わったらこの行を直す。
-$STAFF = [
-    34 => ['label' => '社長',  'role' => 'president', 'note' => null],       // 松田 祥宗
-    37 => ['label' => '長谷',  'role' => 'staff',     'note' => null],       // 長谷 優里奈
-    36 => ['label' => '渡邉',  'role' => 'staff',     'note' => '休職中'],   // 渡邉 有沙（復職したら note を null に）
-];
+// エージェント名簿・掲示板台帳・JSON_OPT は activity.php と共有（二重管理しない＝2026-08-05 切り出し）。
+// $VPS_AGENTS / $LABEL_ALIAS / $REMOTE_AGENTS / $STAFF / $QUESTION_BOARDS を定義する。
+require_once __DIR__ . '/_agents.php';
 
 /** JSONを1階層だけ安全に読んで "to" を返す（壊れたファイル・巨大ファイル・symlink は無視） */
 function mail_to(string $file): ?string {
@@ -114,19 +76,7 @@ usort($holdItems, fn($a, $b) => strcmp($b['ts'], $a['ts']));   // 新しい順
 // ── 1.5) 解析掲示板の「🔔 社長への質問」────────────────────────────────
 // 各掲示板 index.html の 🔔 セクションから ID 付きの未対応項目（Q-NNN / Q-Y07 / PI-009 等）を抽出。
 // ✅/解決/回答済 の文脈にある ID は除外。番号なしの質問は拾えない（制約＝UI側にも明示）。
-// 'agent' ＝ 3Dオフィスでその質問を吹き出しで知らせるキャラクター（$AGENTS の id）。
-// tick に登場しないサイト（滋賀トヨタ・大阪トヨペット）はキャラ不在＝null（コルクボードのみ）。
-$QUESTION_BOARDS = [
-    ['key' => 'ycom',        'label' => '解析｜自社YCOM',     'file' => 'site/hp-analysis/ycom/index.html',       'url' => '/hp-analysis/ycom/',       'agent' => 'hp-loop-ycom'],
-    ['key' => 'yoshida',     'label' => '解析｜よしだ歯科',   'file' => 'site/hp-analysis/yoshida/index.html',    'url' => '/hp-analysis/yoshida/',    'agent' => 'hp-loop-yoshida'],
-    ['key' => 'fujisaka',    'label' => '解析｜藤阪ガス',     'file' => 'site/hp-analysis/fujisaka/index.html',   'url' => '/hp-analysis/fujisaka/',   'agent' => 'hp-loop-fujisaka'],
-    ['key' => 'yokohawaii',  'label' => '解析｜ヨーコハワイ', 'file' => 'site/hp-analysis/yokohawaii/index.html', 'url' => '/hp-analysis/yokohawaii/', 'agent' => 'hp-loop-yokohawaii'],
-    ['key' => 'rally',       'label' => '解析｜スタンプラリー', 'file' => 'site/hp-analysis/rally/index.html',    'url' => '/hp-analysis/rally/',      'agent' => 'hp-loop-rally'],
-    ['key' => 'konjaku',     'label' => '解析｜今昔写語',     'file' => 'site/hp-analysis/konjaku/index.html',    'url' => '/hp-analysis/konjaku/',    'agent' => 'hp-loop-konjaku'],
-    ['key' => 'shigatoyota', 'label' => '解析｜滋賀トヨタ',   'file' => 'site/hp-analysis/shigatoyota/index.html', 'url' => '/hp-analysis/shigatoyota/', 'agent' => null],
-    ['key' => 'osakatoyopet','label' => '解析｜大阪トヨペット', 'file' => 'site/hp-analysis/osakatoyopet/index.html', 'url' => '/hp-analysis/osakatoyopet/', 'agent' => null],
-    ['key' => 'ycom-blog',   'label' => 'ブログ｜YCOM',       'file' => 'site/hp-analysis/ycom/blog/index.html',  'url' => '/hp-analysis/ycom/blog/',  'agent' => 'blog-loop-ycom'],
-];
+// 掲示板の台帳（$QUESTION_BOARDS）は _agents.php で定義＝activity.php の更新検知と共有する。
 function board_questions(string $path): array {
     if (!is_file($path) || is_link($path)) return [];
     $sz = @filesize($path);
