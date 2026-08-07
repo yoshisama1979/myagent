@@ -58,9 +58,41 @@ fi
 
 # 実行開始の目印（このティック中の更新かどうかを mtime 比較で見る）
 STAMP=$(mktemp "${TMPDIR:-/tmp}/comms-tick.XXXXXX") || exit 1
+
+# --- 宛先の把握を「AIの心がけ」でなく機械で担保する（2026-08-07 Codexレビュー🔴5）---
+# rules/modes/comms.md v0.7 は「分類の前に comms-who.py を流す（スキップ不可）」と定めたが、
+# 文章の指示だけでは、AI が raw を直読みしても成功扱いになってしまう。そこで
+#   ① 起動前に宛先レポートを**こちらで生成**して置く（AIはこれを読むだけ＝流し忘れが起きない）
+#   ② 起動後に「新しい C-NNN 行に 〔差出人→宛先〕 が付いているか」を数えて検査する
+# ①が失敗しても蒸留は止めない（申告して続行＝取りこぼしより冗長を選ぶ）。
+WHO="$PROJ/data/comms/chatwork/.who-latest.txt"
+LEDGER="$PROJ/data/comms/chatwork/ledger.md"
+# レポートには会話本文と個人名が入る＝作る前に 0600 にしてから書く（緩い権限で存在する隙を作らない）
+: > "$WHO.tmp" && chmod 600 "$WHO.tmp"
+if ! python3 "$PROJ/bin/comms-who.py" > "$WHO.tmp" 2>&1; then
+  echo "$(now) [warn] comms-who.py が異常終了＝宛先レポート無しで蒸留します（AIは生ログを直読み）"
+fi
+mv -f "$WHO.tmp" "$WHO" 2>/dev/null || true
+
+# 宛先記法の無い「Chatwork行」数を実行前に控える（増えていたら規律違反）。
+# メール専用行（gm: だけ）は 〔→〕 を持たない規約なので数えない＝メールが増えるたびの誤警報を防ぐ。
+no_arrow() {
+  awk '/^[ \t]*C-[0-9][0-9][0-9][ \t]*\|/ && /cw:[ \t]*[0-9]/ && $0 !~ /〔/ {n++} END{print n+0}' \
+    "$1" 2>/dev/null || echo 0
+}
+before_no_arrow=$(no_arrow "$LEDGER")
+
 echo "$(now) [run] 新着あり → agent-tick daily comms"
 "$PROJ/bin/agent-tick.sh" daily comms
 rc=$?
+
+# 事後検査その2：宛先記法を持たない行が**増えていたら**、宛先を見ずに起票した疑い
+after_no_arrow=$(no_arrow "$LEDGER")
+if [ "$after_no_arrow" -gt "$before_no_arrow" ]; then
+  echo "$(now) [warn] 宛先記法〔→〕の無い C-NNN 行が ${before_no_arrow}→${after_no_arrow} に増えました" \
+       "＝宛先を見ずに起票した疑い（rules/modes/comms.md 🅰）。次サイクルで直させます"
+  rm -f "$MARK"
+fi
 
 # 事後検査：マーカーだけ進んで掲示板が未再生成なら不整合＝マーカーを消して次回再試行
 if [ -f "$MARK" ] && [ "$MARK" -nt "$STAMP" ]; then
