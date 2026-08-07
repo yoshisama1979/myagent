@@ -417,12 +417,14 @@ def main() -> int:
 
     warn_problems(raw_problems, room_problems)
 
+    def rc_of(rc: int = 0) -> int:
+        """終了コードの決め方は1箇所に置く（--strict の扱いを片方だけ直す事故を防ぐ）。"""
+        return rc or (1 if (a.strict and (raw_problems or room_problems)) else 0)
+
     if a.rooms:
-        rc = show_rooms(items, rooms)
-        return rc or (1 if (a.strict and (raw_problems or room_problems)) else 0)
+        return rc_of(show_rooms(items, rooms))
     if a.audit:
-        rc = audit(items)
-        return rc or (1 if (a.strict and (raw_problems or room_problems)) else 0)
+        return rc_of(audit(items))
 
     if not a.all:
         since = (a.since or cursor_from_ledger() or "").replace(" ", "T")
@@ -450,12 +452,12 @@ def main() -> int:
         if unknown:
             print(f"  ⚠️ rooms.md に無いルームが {len(unknown)} 件＝役割不明のまま蒸留します"
                   f"（`--rooms` で確認して rooms.md に足してください）")
-        return 1 if (a.strict and (raw_problems or room_problems)) else 0
+        return rc_of()
 
     if a.json:
         for i in items:
             print(json.dumps(i, ensure_ascii=False))
-        return 1 if (a.strict and (raw_problems or room_problems)) else 0
+        return rc_of()
 
     print(f"# {len(live)} 件（★＝社長宛／▶＝社長ご自身の発信／・＝他の方宛）  名簿 {len(roster)} 名")
     print("# 時刻\t[役割] ルーム\t差出人 → 宛先\t本文（タグ除去・先頭70字）")
@@ -468,7 +470,7 @@ def main() -> int:
         for i in skipped:
             print(_line(i))
 
-    return 1 if (a.strict and (raw_problems or room_problems)) else 0
+    return rc_of()
 
 
 if __name__ == "__main__":
