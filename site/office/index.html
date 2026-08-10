@@ -120,6 +120,7 @@
   <span style="color:#93c5fd">｜机の前のバッジ＝ ⏱ 本日の合計　📋 ToDo件数　⏰ 期日超過</span><br>
   🏢 奥の壁＝全社ボード（進行中の案件・未完了ToDo）　※人の稼働は5分ごと・件数は30分ごとに更新<br>
   <span style="color:#6ee7b7">💬 社長の頭上＝Chatworkで返すべきボール（クリックで整理板へ・2時間ごと更新）</span><br>
+  <span style="color:#cbd5e1">🚗 奥の通り・🚃 線路を通る電車・🛝 川向こうの公園・🚪 道路側の玄関と小道・🐈🐕🐇 やってくる動物・🐦 飛んでくる鳥・🦋 蝶 ＝ <b>背景の演出でデータとは無関係</b>。数や動きに意味はありません（見て楽しむための層）</span><br>
   <span style="color:#7dd3fc">📻 上の活動ティッカー＝直近24時間の出来事（🔨起動 ✉️便 📋成果 ⚠️警報）。クリックで🌙夜間ダイジェスト＝夜のうちの働きをまとめて確認</span><br>
   <span style="color:#a5b4fc">🎮 視点：左ドラッグ＝回転／<b>W前・S後・A左・D右</b>（矢印キーも可・Shiftで速く）／右ドラッグ＝つかんで平行移動／ホイール＝ズーム／<b>0キーで最初の位置に戻る</b>。書類の山・コルクボード・吹き出しはクリックで詳細</span>
   </div>
@@ -383,12 +384,13 @@ function makeGrassTexture() {
     ctx.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
   }
   const tex = new THREE.CanvasTexture(c);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(24, 20);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(28, 21);
   return tex;
 }
-const lawn = new THREE.Mesh(new THREE.PlaneGeometry(110, 90),
+// x -61〜69・z -51〜45。奥（-z）へ広いのは線路と家並みのぶん、東西は列車が霧の中で消える余白
+const lawn = new THREE.Mesh(new THREE.PlaneGeometry(130, 96),
   new THREE.MeshStandardMaterial({ map: makeGrassTexture(), roughness: 1 }));
-lawn.rotation.x = -Math.PI / 2; lawn.position.set(4, -0.31, 0);
+lawn.rotation.x = -Math.PI / 2; lawn.position.set(4, -0.31, -3);
 lawn.receiveShadow = true; scene.add(lawn);
 
 // 小川（建物の右手を手前→奥へ。テクスチャをスクロールさせて流す）
@@ -646,7 +648,7 @@ bench(16.9, -1.6, -Math.PI / 2);       // 川沿い（奥）
 flowerBed(-11.4, 16.4, 2.6, 1.2, 1);
 flowerBed(-0.4, 17.0, 3.0, 1.2, 3);
 flowerBed(10.0, 16.8, 2.6, 1.2, 5);
-flowerBed(16.6, 12.2, 1.6, 1.0, 7);
+flowerBed(16.9, 14.6, 1.6, 1.0, 7);   // 遊歩道の角（16.6,12.4）と重なっていたので北へ寄せた（歩く人・動物が花壇を突き抜けていた）
 hedgeRow(1.0, 18.0, 32, 0.7);          // 庭の手前側を生垣で囲う
 hedgeRow(-15.0, 15.0, 0.7, 6.4);
 lantern(-9.6, 12.9); lantern(4.2, 12.9); lantern(14.6, 12.9); lantern(17.6, 1.2);
@@ -659,6 +661,868 @@ for (const [px, pz] of [[-13, 12.9], [-11, 12.9], [-9, 12.9], [-7, 12.9], [-5, 1
                         [18.15, 9.4], [18.15, 7.4], [18.15, 5.4], [18.15, 3.4],
                         [18.15, 1.4], [18.15, -0.6], [18.15, -2.6], [18.15, -4.6], [18.15, -6.6]]) {
   pathSlab(px, pz, 0.46, (px * 7 + pz * 3) % 3);
+}
+
+/* ============================================================
+ * 2.7 道路と車（建物の奥＝窓の向こうを東西に通る道）
+ *   ・社長ご指示 2026-08-07「ダッシュボード横に道路を作って、車を走らせる」。
+ *   ・**奥に置いたのは既定カメラで見えるから**：横（西）に敷くと画角の外＋HUDの裏に
+ *     隠れてしまい、視点を動かさないと車が見えない。奥なら建物の窓の上を車が
+ *     左右に横切る＝何もしなくても動きが目に入る。手前の庭・小川と役割が競合しない。
+ *   ・**データとは無関係の背景**。エージェントの状態と混同しないよう、車には
+ *     バッジ・ラベル・クリック操作を一切付けない（見て楽しいだけの層）。
+ *   ・左側通行（日本）：+x（右）行きは奥の車線、-x（左）行きは office 寄りの車線。
+ *   ・影カメラ（±18m）の外なので castShadow は付けず、接地影は板1枚で代用する。
+ * ============================================================ */
+const ROAD = {
+  cz: -30.5, width: 8.4,            // 車道の中心と幅（2車線）
+  x0: -50, x1: 50,                  // 芝生（x -51〜59）の内側いっぱいに走らせる。長さは4の倍数＝破線が継ぎ目で乱れない
+  y: -0.285,                        // 芝生（-0.3）のすぐ上
+  laneFar: -32.6, laneNear: -28.4,  // 走行車線の中心（far＝+x行き／near＝-x行き）
+  walkZ: -25.6,                     // 歩道の中心（office 側）
+};
+ROAD.len = ROAD.x1 - ROAD.x0;
+ROAD.edgeNear = ROAD.cz + ROAD.width / 2;   // office 側の路肩
+ROAD.edgeFar  = ROAD.cz - ROAD.width / 2;
+
+// アスファルト：1タイル＝進行方向4m × 幅8.4m。白線・中央破線はテクスチャに焼き込む
+// （線を別メッシュにすると Zファイティングとドローコールが増えるため）
+function makeAsphaltTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#4a4d52'; ctx.fillRect(0, 0, 128, 128);
+  const tones = ['#43464b', '#54585e', '#3d4045'];
+  for (let i = 0; i < 2400; i++) {
+    ctx.fillStyle = tones[i % 3];
+    ctx.fillRect(Math.random() * 128, Math.random() * 128, 1, 1);
+  }
+  ctx.fillStyle = '#ded9cc';
+  ctx.fillRect(0, 5, 128, 3); ctx.fillRect(0, 120, 128, 3);   // 外側の白線
+  ctx.fillRect(4, 63, 60, 3);                                 // 中央線（約2m白・2m空きの破線）
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(ROAD.len / 4, 1); tex.anisotropy = 4;
+  return tex;
+}
+// 歩道：正方形のタイル目地
+function makePavingTexture() {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#c9c5bb'; ctx.fillRect(0, 0, 64, 64);
+  ctx.strokeStyle = '#b0aca2'; ctx.lineWidth = 2;
+  ctx.strokeRect(1, 1, 62, 62); ctx.beginPath();
+  ctx.moveTo(32, 0); ctx.lineTo(32, 64); ctx.moveTo(0, 32); ctx.lineTo(64, 32); ctx.stroke();
+  const tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(ROAD.len / 2, 2);
+  return tex;
+}
+const roadMesh = new THREE.Mesh(new THREE.PlaneGeometry(ROAD.len, ROAD.width),
+  new THREE.MeshStandardMaterial({ map: makeAsphaltTexture(), roughness: 0.95 }));
+roadMesh.rotation.x = -Math.PI / 2;
+roadMesh.position.set((ROAD.x0 + ROAD.x1) / 2, ROAD.y, ROAD.cz);
+scene.add(roadMesh);
+
+const curbMat = new THREE.MeshStandardMaterial({ color: 0xb9b4a8, roughness: 0.95 });
+const pavingMat = new THREE.MeshStandardMaterial({ map: makePavingTexture(), roughness: 1 });
+{                                                             // 歩道は office 側だけ（向かい側は線路用地＝2.7d）
+  const walk = new THREE.Mesh(new THREE.BoxGeometry(ROAD.len, 0.14, 2.3), pavingMat);
+  walk.position.set(0, -0.24, ROAD.walkZ); scene.add(walk);
+}
+for (const cz of [ROAD.edgeNear + 0.15, ROAD.edgeFar - 0.15]) {
+  const curb = new THREE.Mesh(new THREE.BoxGeometry(ROAD.len, 0.26, 0.3), curbMat);
+  curb.position.set(0, -0.2, cz); scene.add(curb);
+}
+
+// 小川をまたぐ橋。桁の天端は川の土手（y=-0.17）より高くして、土手が路面を突き抜けるのを防ぐ。
+// 幅は車道だけでなく両側の歩道まで覆う＝歩道が水の上に浮かないようにする。
+const BRIDGE = { x: 23, len: 9.6, deckY: -0.15 };
+BRIDGE.z0 = ROAD.walkZ + 1.35;                 // office 側の歩道の外側
+BRIDGE.z1 = ROAD.edgeFar - 0.6;                // 向かい側は縁石まで（その奥は線路＝鉄橋が別にある）
+BRIDGE.width = BRIDGE.z0 - BRIDGE.z1;
+BRIDGE.cz = (BRIDGE.z0 + BRIDGE.z1) / 2;
+const bridgeMat = new THREE.MeshStandardMaterial({ color: 0xa9a49a, roughness: 0.9 });
+const railMat = new THREE.MeshStandardMaterial({ color: 0xdcd8cf, roughness: 0.75 });
+const deck = new THREE.Mesh(new THREE.BoxGeometry(BRIDGE.len, 0.6, BRIDGE.width), bridgeMat);
+deck.position.set(BRIDGE.x, BRIDGE.deckY - 0.3, BRIDGE.cz); scene.add(deck);
+// 橋の上にも路面を敷く（白線が途切れないよう、本線のタイル位置に合わせてオフセットする）
+const bridgeRoadTex = makeAsphaltTexture();
+bridgeRoadTex.repeat.set(BRIDGE.len / 4, 1);
+bridgeRoadTex.offset.x = ((BRIDGE.x - BRIDGE.len / 2 - ROAD.x0) / 4) % 1;
+const bridgeRoad = new THREE.Mesh(new THREE.PlaneGeometry(BRIDGE.len, ROAD.width),
+  new THREE.MeshStandardMaterial({ map: bridgeRoadTex, roughness: 0.95 }));
+bridgeRoad.rotation.x = -Math.PI / 2;
+bridgeRoad.position.set(BRIDGE.x, BRIDGE.deckY + 0.005, ROAD.cz); scene.add(bridgeRoad);
+for (const rz of [BRIDGE.z0 - 0.12, BRIDGE.z1 + 0.12]) {      // 高欄
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(BRIDGE.len, 0.52, 0.22), railMat);
+  rail.position.set(BRIDGE.x, BRIDGE.deckY + 0.26, rz); scene.add(rail);
+}
+for (const px of [20.2, 25.8]) {                              // 橋脚
+  const pier = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.1, ROAD.width), bridgeMat);
+  pier.position.set(px, -1.0, ROAD.cz); scene.add(pier);
+}
+
+// 街灯（office 側の歩道・道路側へアームを伸ばす）と電柱＋電線（向かい側）
+const poleMat = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.7, metalness: 0.3 });
+const lampHeadMat = new THREE.MeshStandardMaterial({ color: 0xe8e4d6, roughness: 0.5 });
+const concreteMat = new THREE.MeshStandardMaterial({ color: 0xb5b1a8, roughness: 0.95 });
+const wireMat = new THREE.MeshStandardMaterial({ color: 0x2e3238, roughness: 0.9 });
+for (const x of [-36, -18, 0, 18, 36]) {
+  const g = new THREE.Group();
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 5.0, 8), poleMat);
+  pole.position.y = 2.5; g.add(pole);
+  const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.5, 6), poleMat);
+  arm.rotation.x = Math.PI / 2; arm.position.set(0, 4.94, -0.75); g.add(arm);
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.16, 0.7), lampHeadMat);
+  head.position.set(0, 4.86, -1.45); g.add(head);
+  g.position.set(x, -0.17, ROAD.walkZ - 0.9); scene.add(g);
+}
+const POLE_XS = [-40, -22, -4, 14, 32];
+const POLE_Z = ROAD.edgeFar - 5.1;             // 線路（z-36.8・幅3）の奥に立てる
+for (const x of POLE_XS) {
+  const g = new THREE.Group();
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 7.2, 8), concreteMat);
+  pole.position.y = 3.6; g.add(pole);
+  for (const y of [6.4, 5.8]) {
+    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.09, 1.7), concreteMat);
+    arm.position.set(0, y, 0); g.add(arm);
+  }
+  g.position.set(x, -0.17, POLE_Z); scene.add(g);
+}
+for (let i = 1; i < POLE_XS.length; i++) {           // 電線（隣り合う電柱のあいだに張る）
+  const len = POLE_XS[i] - POLE_XS[i - 1], mid = (POLE_XS[i] + POLE_XS[i - 1]) / 2;
+  for (const [dz, y] of [[-0.7, 6.4], [0.7, 6.4], [-0.7, 5.8], [0.7, 5.8]]) {
+    const w = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, len, 4), wireMat);
+    w.rotation.z = Math.PI / 2; w.position.set(mid, y - 0.17, POLE_Z + dz); scene.add(w);
+  }
+}
+// 通りの向かい側＝ご近所の家（道路に「行き先」があるように見せる背景・霧に溶ける距離）
+const houseWallMats = [0xe6ded0, 0xdfe3e0, 0xe8dcd2].map(c =>
+  new THREE.MeshStandardMaterial({ color: c, roughness: 0.9 }));
+const roofMat = new THREE.MeshStandardMaterial({ color: 0x5c6a72, roughness: 0.9 });
+for (const [hx, hz, w, d, h, mi] of [[-24, -43.8, 7, 6, 3.2, 0], [-6, -44.4, 6, 6.5, 3.6, 1],
+                                     [12, -43.6, 7.5, 6, 3.0, 2], [30, -44.2, 6.5, 6, 3.4, 0]]) {
+  const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), houseWallMats[mi]);
+  body.position.set(hx, h / 2 - 0.3, hz); scene.add(body);
+  const roof = new THREE.Mesh(new THREE.ConeGeometry(Math.max(w, d) * 0.78, 1.7, 4), roofMat);
+  roof.rotation.y = Math.PI / 4; roof.position.set(hx, h + 0.55, hz); scene.add(roof);
+}
+tree(-33, -41.5, 1.2); tree(3, -41.8, 1.0); tree(16.5, -41.5, 1.15);   // 線路の奥・家並みの手前（x22だと川の中に立つ）
+
+// 車：低ポリで前方＝+z に組み、走る向きに合わせて Y 90° 回して使う
+const carGlassMat = new THREE.MeshStandardMaterial({ color: 0x2c3a46, roughness: 0.25, metalness: 0.35 });
+const tyreMat = new THREE.MeshStandardMaterial({ color: 0x1d1f22, roughness: 0.9 });
+const headLampMat = new THREE.MeshStandardMaterial({ color: 0xfff4cf, emissive: 0xfff0b8, emissiveIntensity: 0.55, roughness: 0.4 });
+const tailLampMat = new THREE.MeshStandardMaterial({ color: 0xd0473b, emissive: 0xb02a20, emissiveIntensity: 0.45, roughness: 0.4 });
+const cargoMat = new THREE.MeshStandardMaterial({ color: 0xeceae4, roughness: 0.8 });
+// 接地影（影カメラの外なので本物の影は落ちない。中央が濃い楕円を1枚敷いて浮きを防ぐ）
+const blobTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(32, 32, 2, 32, 32, 32);
+  g.addColorStop(0, 'rgba(0,0,0,0.5)'); g.addColorStop(0.6, 'rgba(0,0,0,0.22)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+})();
+function groundBlob(w, d, y) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d),
+    new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2; m.position.y = y;
+  return m;
+}
+function makeCar(color, kind) {
+  const g = new THREE.Group();
+  const paint = new THREE.MeshStandardMaterial({ color, roughness: 0.45, metalness: 0.25 });
+  const L = kind === 'truck' ? 5.6 : kind === 'van' ? 4.7 : 4.2;
+  const W = kind === 'truck' ? 2.1 : 1.82;
+  const wheels = [];
+  const body = new THREE.Mesh(new THREE.BoxGeometry(W, 0.62, L), paint);
+  body.position.y = 0.66; g.add(body);
+  if (kind === 'truck') {
+    const cab = new THREE.Mesh(new THREE.BoxGeometry(W - 0.08, 0.78, 1.5), paint);
+    cab.position.set(0, 1.35, L / 2 - 0.85); g.add(cab);
+    const box = new THREE.Mesh(new THREE.BoxGeometry(W, 1.6, L - 2.1), cargoMat);
+    box.position.set(0, 1.76, -0.75); g.add(box);
+    const wind = new THREE.Mesh(new THREE.BoxGeometry(W - 0.3, 0.5, 0.07), carGlassMat);
+    wind.position.set(0, 1.44, L / 2 - 0.09); g.add(wind);
+  } else {
+    const cabL = kind === 'van' ? L - 1.4 : L - 2.0;
+    const cabH = kind === 'van' ? 1.0 : 0.66;
+    const cabY = 0.97 + cabH / 2, cabZ = kind === 'van' ? -0.3 : -0.15;
+    const cabin = new THREE.Mesh(new THREE.BoxGeometry(W - 0.1, cabH, cabL), paint);
+    cabin.position.set(0, cabY, cabZ); g.add(cabin);
+    const gh = cabH * 0.62, gy = cabY + cabH * 0.08;
+    for (const [w, h, d, x, z, ry] of [                       // 前後左右のガラス（面のすぐ外側に貼る）
+      [W - 0.34, gh, 0.06, 0, cabZ + cabL / 2 + 0.02, 0],
+      [W - 0.34, gh, 0.06, 0, cabZ - cabL / 2 - 0.02, 0],
+      [cabL - 0.5, gh, 0.06, W / 2 - 0.03, cabZ, Math.PI / 2],
+      [cabL - 0.5, gh, 0.06, -(W / 2 - 0.03), cabZ, Math.PI / 2]]) {
+      const pane = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), carGlassMat);
+      pane.position.set(x, gy, z); pane.rotation.y = ry; g.add(pane);
+    }
+  }
+  const wr = kind === 'truck' ? 0.42 : 0.34;
+  for (const wx of [-(W / 2 - 0.1), W / 2 - 0.1])
+    for (const wz of [L / 2 - 1.05, -(L / 2 - 1.05)]) {
+      const w = new THREE.Mesh(new THREE.CylinderGeometry(wr, wr, 0.22, 12), tyreMat);
+      w.rotation.z = Math.PI / 2; w.position.set(wx, wr, wz); g.add(w); wheels.push(w);
+    }
+  for (const lx of [-(W / 2 - 0.36), W / 2 - 0.36]) {
+    const hl = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.14, 0.07), headLampMat);
+    hl.position.set(lx, 0.74, L / 2 + 0.02); g.add(hl);
+    const tl = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.16, 0.07), tailLampMat);
+    tl.position.set(lx, 0.8, -(L / 2 + 0.02)); g.add(tl);
+  }
+  g.add(groundBlob(W + 0.6, L + 0.7, 0.02));
+  return { g, wheels, wr };
+}
+// ⚠️ 車の速度は**全車共通**にすること（社長ご指示 2026-08-07）。
+// 速度に差をつけると、同じ車線の後続が前の車に追いついて重なる＝追突して見える。
+// 同速なら車間は永久に変わらないので、追い越し・車間制御を作らずに破綻しない。
+const CAR_SPEED = 8.6;   // m/s（約31km/h）
+const cars = [];
+// color, kind, dir(+1＝右へ走る), 走り出す位置（0〜1・同じ車線どうしは十分に間隔をあける）
+for (const [color, kind, dir, at] of [
+  [0xd0453f, 'sedan',  1, 0.02],
+  [0xf2f0ea, 'van',    1, 0.29],
+  [0x2f6bb5, 'sedan',  1, 0.55],
+  [0x3f8f5c, 'sedan',  1, 0.79],
+  [0x9aa2ad, 'sedan', -1, 0.14],
+  [0xe8e5de, 'truck', -1, 0.46],
+  [0xd8a63c, 'sedan', -1, 0.75],
+]) {
+  const c = makeCar(color, kind);
+  c.g.position.set(0, ROAD.y, dir > 0 ? ROAD.laneFar : ROAD.laneNear);
+  c.g.rotation.y = dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+  scene.add(c.g);
+  cars.push({ ...c, dir, dist: at * ROAD.len, spin: 0 });
+}
+/** 車を1フレーム進める（端まで行ったら反対の端から出てくる） */
+function tickTraffic(dt) {
+  for (const c of cars) {
+    c.dist = (c.dist + CAR_SPEED * dt) % ROAD.len;
+    c.g.position.x = c.dir > 0 ? ROAD.x0 + c.dist : ROAD.x1 - c.dist;
+    c.spin += CAR_SPEED * dt / c.wr;                 // タイヤは実際の速度で回す
+    for (const w of c.wheels) w.rotation.x = c.spin;
+  }
+}
+
+/* ============================================================
+ * 2.7b 玄関と小道（社長ご指示 2026-08-07「道路側に玄関・道へ向かう小道」）
+ *   ・奥の壁（z=-10.15・厚み0.3）の窓と窓のあいだ x=4.5 の柱に貼り付ける
+ *     ＝壁に開口は開けない（室内側の壁紙・巾木に影響しない見せかけの玄関）。
+ *   ・小道は玄関ポーチから歩道（ROAD.walkZ）まで一直線。門柱に表札つき。
+ *   ・玄関そのものは既定カメラだと建物の陰＝カメラを回すと見える。
+ *     小道の先（門柱まわり）は建物の右上の隙間から既定でも見える。
+ * ============================================================ */
+// 文字入りの看板テクスチャ（表札・玄関サイン・公園の看板で共用）
+function makeSignTexture(text, w, h, bg, fg, font) {
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = fg; ctx.lineWidth = 2; ctx.strokeRect(2, 2, w - 4, h - 4);
+  ctx.fillStyle = fg; ctx.font = font; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, w / 2, h / 2 + 1);
+  return new THREE.CanvasTexture(c);
+}
+{
+  const EX = 4.5, WALL_OUT = -10.31;   // 玄関の中心 x／奥の壁の外面 z
+  const doorFrameMat = new THREE.MeshStandardMaterial({ color: 0x39414a, roughness: 0.55, metalness: 0.4 });
+  const entGlass = new THREE.MeshStandardMaterial({ color: 0x9fc3cf, roughness: 0.3, metalness: 0.2 });
+  // ポーチ（張り出しの土間）と両開きのガラス戸
+  const porch = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.18, 2.0), stoneLight);
+  porch.position.set(EX, -0.21, -11.35); porch.receiveShadow = true; scene.add(porch);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(2.7, 2.5, 0.18), doorFrameMat);
+  frame.position.set(EX, 1.11, WALL_OUT - 0.05); scene.add(frame);
+  for (const s of [-1, 1]) {
+    const pane = new THREE.Mesh(new THREE.BoxGeometry(1.12, 2.14, 0.06), entGlass);
+    pane.position.set(EX + s * 0.61, 1.05, WALL_OUT - 0.16); scene.add(pane);
+  }
+  const stile = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.3, 0.1), doorFrameMat);
+  stile.position.set(EX, 1.05, WALL_OUT - 0.16); scene.add(stile);
+  // 庇（ひさし）と社名サイン
+  const canopy = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.13, 1.5), doorFrameMat);
+  canopy.position.set(EX, 2.55, -11.0); canopy.castShadow = true; scene.add(canopy);
+  for (const s of [-1, 1]) {   // 庇の前端から壁へ斜めに戻る吊りロッド（傾きは +x回転＝上端が壁側）
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.5, 6), doorFrameMat);
+    rod.rotation.x = 0.97; rod.position.set(EX + s * 1.5, 2.97, -10.98); scene.add(rod);
+  }
+  const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 0.46),
+    new THREE.MeshStandardMaterial({
+      map: makeSignTexture('株式会社はなさか', 512, 80, '#f4f0e4', '#3a4148', '52px "Noto Sans JP", sans-serif'),
+      roughness: 0.6 }));
+  sign.rotation.y = Math.PI; sign.position.set(EX, 3.25, WALL_OUT - 0.02); scene.add(sign);
+  // 小道（ポーチ→歩道）。歩道と同じタイルだが目地の実寸を合わせて別テクスチャにする
+  const pathTex = makePavingTexture(); pathTex.repeat.set(1, 6);
+  const path = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.14, 12.2),
+    new THREE.MeshStandardMaterial({ map: pathTex, roughness: 1 }));
+  path.position.set(EX, -0.24, -18.4); scene.add(path);
+  lantern(EX - 1.6, -11.9); lantern(EX + 1.6, -11.9);
+  // 門柱（歩道ぎわ）＋表札
+  for (const s of [-1, 1]) {
+    const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.95, 0.36), stoneLight);
+    pillar.position.set(EX + s * 1.25, 0.18, -23.95); pillar.castShadow = true; scene.add(pillar);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.09, 0.46), curbMat);
+    cap.position.set(EX + s * 1.25, 0.7, -23.95); scene.add(cap);
+  }
+  const nameplate = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.17),
+    new THREE.MeshStandardMaterial({
+      map: makeSignTexture('株式会社はなさか', 192, 48, '#efe9da', '#41372c', '20px "Noto Sans JP", sans-serif'),
+      roughness: 0.7 }));
+  nameplate.rotation.y = Math.PI; nameplate.position.set(EX - 1.25, 0.32, -24.14); scene.add(nameplate);
+}
+
+/* ============================================================
+ * 2.7c 公園（社長ご指示 2026-08-07「オフィスの横の空いたスペースに公園」）
+ *   ・**川向こう（東どなり）に置いた理由**：建物の西どなりは既定カメラの画角の外
+ *     ＋HUDの裏で一度も見えない（2.7 の道路と同じ判断）。川の東側 x29〜43.5・
+ *     z-23〜-5.6 なら既定カメラの右上にそのまま映り、道路の歩道とも地続き。
+ *   ・入口は2つ＝北門（道路の歩道へ）と西の木橋（川を渡って遊歩道へ）。
+ *     木橋は z=-22 ＝アヒルの周回範囲（z -20〜36）の外側にした（桁を突き抜けない）。
+ *   ・遊具は全部プロシージャル。無人のブランコが風で小さく揺れる（tickTown）。
+ * ============================================================ */
+const swingSeats = [];
+{
+  const P = { x0: 29, x1: 43.5, z0: -23.2, z1: -5.6 };   // z0＝北（道路側）／z1＝南
+  const sandMat = new THREE.MeshStandardMaterial({ color: 0xd9c9a3, roughness: 1 });
+  const playMat = new THREE.MeshStandardMaterial({ color: 0x4a7ab5, roughness: 0.5, metalness: 0.3 });
+  const playMat2 = new THREE.MeshStandardMaterial({ color: 0xe07a3f, roughness: 0.6 });
+  const fenceMat = new THREE.MeshStandardMaterial({ color: 0x4f7d58, roughness: 0.6, metalness: 0.3 });
+  // 広場（砂の circle）
+  const plaza = new THREE.Mesh(new THREE.CircleGeometry(6.4, 26), sandMat);
+  plaza.rotation.x = -Math.PI / 2; plaza.position.set(36.2, -0.285, -13.4);
+  plaza.receiveShadow = true; scene.add(plaza);
+  // 外周の柵（緑の低フェンス）。openings＝北門(x36.2±1)と西の木橋(z-22±1)
+  function fenceRun(x0, z0, x1, z1) {
+    const alongX = z0 === z1, len = alongX ? x1 - x0 : z1 - z0;
+    const g = new THREE.Group();
+    for (const ry of [0.66, 0.36]) {
+      const rail = new THREE.Mesh(new THREE.BoxGeometry(alongX ? len : 0.05, 0.05, alongX ? 0.05 : len), fenceMat);
+      rail.position.set(alongX ? len / 2 : 0, ry, alongX ? 0 : len / 2); g.add(rail);
+    }
+    for (let d = 0; d <= len + 0.01; d += len / Math.max(1, Math.round(len / 2.9))) {
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.78, 0.08), fenceMat);
+      post.position.set(alongX ? d : 0, 0.39, alongX ? 0 : d); g.add(post);
+    }
+    g.position.set(x0, GARDEN.lawnY, z0); scene.add(g);
+  }
+  fenceRun(P.x0, P.z0, 35.2, P.z0); fenceRun(37.2, P.z0, P.x1, P.z0);   // 北（門の両側）
+  fenceRun(P.x0, P.z1, P.x1, P.z1);                                     // 南
+  fenceRun(P.x0, -21, P.x0, P.z1);                                      // 西（木橋の口を開ける）
+  fenceRun(P.x1, P.z0, P.x1, P.z1);                                     // 東
+  // 北門→歩道の取り付け・公園の看板
+  const gatePath = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.14, 1.6), pavingMat.clone());
+  gatePath.material.map = makePavingTexture(); gatePath.material.map.repeat.set(1, 1);
+  gatePath.position.set(36.2, -0.24, -23.9); scene.add(gatePath);
+  const parkSign = new THREE.Mesh(new THREE.PlaneGeometry(1.05, 0.3),
+    new THREE.MeshStandardMaterial({
+      map: makeSignTexture('はなさか公園', 256, 64, '#f5efdd', '#3f5a46', '34px "Noto Sans JP", sans-serif'),
+      roughness: 0.8 }));
+  parkSign.position.set(34.4, 0.62, -22.95); scene.add(parkSign);
+  for (const s of [-1, 1]) {
+    const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.0, 0.07), woodDark);
+    post.position.set(34.4 + s * 0.45, 0.2, -23.0); scene.add(post);
+  }
+  // ブランコ（2席・無人でも風で揺れる＝tickTown）
+  {
+    const g = new THREE.Group();
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 2.7, 8), playMat);
+    bar.rotation.z = Math.PI / 2; bar.position.y = 2.05; g.add(bar);
+    for (const sx of [-1.32, 1.32]) for (const sz of [-0.55, 0.55]) {
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 2.25, 8), playMat);
+      leg.rotation.x = sz > 0 ? 0.28 : -0.28; leg.position.set(sx, 1.02, sz * 0.55); g.add(leg);
+    }
+    for (const [sx, ph] of [[-0.55, 0], [0.55, 2.1]]) {
+      const pivot = new THREE.Group(); pivot.position.set(sx, 2.05, 0);
+      for (const cx of [-0.19, 0.19]) {
+        const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.013, 0.013, 1.42, 5),
+          new THREE.MeshStandardMaterial({ color: 0x8a9099, roughness: 0.6, metalness: 0.5 }));
+        chain.position.set(cx, -0.71, 0); pivot.add(chain);
+      }
+      const seat = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.05, 0.18), woodDark);
+      seat.position.set(0, -1.44, 0); pivot.add(seat);
+      g.add(pivot); swingSeats.push({ pivot, ph });
+    }
+    g.position.set(33.4, GARDEN.lawnY, -9.6); scene.add(g);
+  }
+  // すべり台
+  {
+    const g = new THREE.Group();
+    for (const sx of [-0.38, 0.38]) for (const sz of [-0.38, 0.38]) {
+      const leg = new THREE.Mesh(new THREE.BoxGeometry(0.07, 1.25, 0.07), playMat);
+      leg.position.set(sx, 0.62, sz); g.add(leg);
+    }
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.08, 0.95), playMat2);
+    deck.position.y = 1.28; g.add(deck);
+    for (const s of [-1, 1]) {   // デッキの手すり
+      const hr = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.4, 0.95), playMat);
+      hr.position.set(s * 0.45, 1.5, 0); g.add(hr);
+    }
+    const slope = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.06, 2.35), playMat2);
+    slope.rotation.x = -0.55; slope.position.set(0, 0.72, -1.45); g.add(slope);
+    for (const s of [-1, 1]) {   // 滑走面のふち
+      const lip = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.14, 2.35), playMat);
+      lip.rotation.x = -0.55; lip.position.set(s * 0.3, 0.78, -1.45); g.add(lip);
+    }
+    const ladder = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 1.6), playMat);
+    ladder.rotation.x = 0.94; ladder.position.set(0, 0.66, 0.92); g.add(ladder);
+    for (let i = 0; i < 4; i++) {
+      const rung = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.08), woodDark);
+      rung.position.set(0, 0.28 + i * 0.32, 1.24 - i * 0.26); g.add(rung);
+    }
+    g.position.set(39.6, GARDEN.lawnY, -9.9); g.rotation.y = -0.35; scene.add(g);
+  }
+  // 砂場・シーソー・鉄棒
+  {
+    const g = new THREE.Group();
+    for (const [w, d, ox, oz] of [[2.6, 0.2, 0, 1.3], [2.6, 0.2, 0, -1.3], [0.2, 2.4, 1.3, 0], [0.2, 2.4, -1.3, 0]]) {
+      const rim = new THREE.Mesh(new THREE.BoxGeometry(w, 0.2, d), woodMat);
+      rim.position.set(ox, 0.1, oz); g.add(rim);
+    }
+    const sand = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 2.4), sandMat);
+    sand.rotation.x = -Math.PI / 2; sand.position.y = 0.06; g.add(sand);
+    g.position.set(36.4, GARDEN.lawnY, -17.2); scene.add(g);
+  }
+  {
+    const g = new THREE.Group();
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.22, 0.34, 10), playMat);
+    base.position.y = 0.17; g.add(base);
+    const plank = new THREE.Mesh(new THREE.BoxGeometry(3.0, 0.07, 0.34), playMat2);
+    plank.rotation.z = 0.17; plank.position.y = 0.37; g.add(plank);
+    for (const s of [-1, 1]) {
+      const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.3, 6), playMat);
+      grip.rotation.x = Math.PI / 2; grip.position.set(s * 1.25, 0.55 + s * 0.21, 0); g.add(grip);
+    }
+    g.position.set(33.2, GARDEN.lawnY, -15.8); g.rotation.y = 0.4; scene.add(g);
+  }
+  {
+    const g = new THREE.Group();
+    for (const [bx, h] of [[-0.9, 0.85], [0.9, 1.25]]) {
+      for (const s of [-1, 1]) {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, h, 8), playMat);
+        post.position.set(bx + s * 0.65, h / 2, 0); g.add(post);
+      }
+      const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.34, 8),
+        new THREE.MeshStandardMaterial({ color: 0xb9bcc2, roughness: 0.35, metalness: 0.7 }));
+      bar.rotation.z = Math.PI / 2; bar.position.set(bx, h, 0); g.add(bar);
+    }
+    g.position.set(40.8, GARDEN.lawnY, -16.8); g.rotation.y = 0.15; scene.add(g);
+  }
+  // ベンチ・木（bench/tree は 2.5〜2.6 の部品を再利用）
+  bench(31.4, -16.2, -Math.PI / 2);      // 広場を向く（西側）
+  bench(41.9, -12.6,  Math.PI / 2);      // 広場を向く（東側）
+  tree(30.6, -20.8, 1.0); tree(42.6, -7.6, 1.05); tree(38.6, -20.6, 0.85);
+  // 西の木橋（川を渡って遊歩道へ。z=-22＝アヒルの範囲外）
+  const deckB = new THREE.Mesh(new THREE.BoxGeometry(8.8, 0.12, 1.6), woodMat);
+  deckB.position.set(23, -0.11, -22); deckB.receiveShadow = true; scene.add(deckB);
+  for (const s of [-1, 1]) {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(8.8, 0.07, 0.06), woodDark);
+    rail.position.set(23, 0.5, -22 + s * 0.76); scene.add(rail);
+    for (const px of [19.0, 21.0, 23.0, 25.0, 27.0]) {
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.62, 0.07), woodDark);
+      post.position.set(px, 0.2, -22 + s * 0.76); scene.add(post);
+    }
+  }
+  pathSlab(28.2, -22, 0.44); pathSlab(17.6, -22, 0.44);   // 橋のたもと（両岸）
+}
+
+/* ============================================================
+ * 2.7d 電車（社長ご指示 2026-08-07「電車も通すと面白そう」）
+ *   ・**道路と並走する単線**にした理由：南北に敷くと必ず道路と交差＝踏切で車を
+ *     止める制御が要る（車は全車同速の約束＝停止させると車間が崩れて追突に見える）。
+ *     並走なら交差ゼロで破綻しない。そのぶん向かいの路肩を線路用地にし、
+ *     電柱・家並み・木を後ろへ下げた（2.7 の該当行に注記）。
+ *   ・列車の位置は時刻 t の純関数（ポーリング再描画で飛ばない）。period 秒に
+ *     1本、方向は交互。線路の端は霧の中（85%減衰）＝現れ方・消え方が自然。
+ * ============================================================ */
+const RAIL = { z: -36.8, x0: -58, x1: 66, y: -0.12 };   // y＝バラスト天端
+RAIL.len = RAIL.x1 - RAIL.x0;
+{
+  const midX = (RAIL.x0 + RAIL.x1) / 2;
+  const ballastMat = new THREE.MeshStandardMaterial({ color: 0x6d675e, roughness: 1 });
+  const ballast = new THREE.Mesh(new THREE.BoxGeometry(RAIL.len, 0.26, 3.0), ballastMat);
+  ballast.position.set(midX, RAIL.y - 0.13, RAIL.z); scene.add(ballast);
+  // 枕木は敷板のテクスチャに焼き込む（1タイル2mに2本）＝メッシュを並べない
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#6d675e'; ctx.fillRect(0, 0, 64, 64);
+  const tones = ['#605a52', '#79726a', '#565049'];
+  for (let i = 0; i < 320; i++) {
+    ctx.fillStyle = tones[i % 3];
+    ctx.fillRect(Math.random() * 64, Math.random() * 64, 2, 2);
+  }
+  ctx.fillStyle = '#4a3f33';
+  for (const x of [6, 38]) ctx.fillRect(x, 6, 10, 52);
+  const bedTex = new THREE.CanvasTexture(c);
+  bedTex.wrapS = bedTex.wrapT = THREE.RepeatWrapping; bedTex.repeat.set(RAIL.len / 2, 1);
+  const bed = new THREE.Mesh(new THREE.PlaneGeometry(RAIL.len, 2.4),
+    new THREE.MeshStandardMaterial({ map: bedTex, roughness: 1 }));
+  bed.rotation.x = -Math.PI / 2; bed.position.set(midX, RAIL.y + 0.005, RAIL.z); scene.add(bed);
+  const railSteel = new THREE.MeshStandardMaterial({ color: 0xb9bcc2, roughness: 0.35, metalness: 0.7 });
+  for (const dz of [-0.72, 0.72]) {
+    const r = new THREE.Mesh(new THREE.BoxGeometry(RAIL.len, 0.1, 0.08), railSteel);
+    r.position.set(midX, RAIL.y + 0.05, RAIL.z + dz); scene.add(r);
+  }
+  // 川をまたぐ鉄橋（ガーダー橋＝桁2枚＋橋脚。バラストは連続でよい＝桁に納まって見える）
+  const girderMat = new THREE.MeshStandardMaterial({ color: 0x7d4a3a, roughness: 0.7, metalness: 0.3 });
+  for (const dz of [-1.55, 1.55]) {
+    const gird = new THREE.Mesh(new THREE.BoxGeometry(9.4, 0.7, 0.16), girderMat);
+    gird.position.set(23, -0.12, RAIL.z + dz); scene.add(gird);
+  }
+  for (const px of [20.4, 25.6]) {
+    const pier = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.0, 2.6), bridgeMat);
+    pier.position.set(px, -0.95, RAIL.z); scene.add(pier);
+  }
+}
+// 車両（3両編成・両端が先頭車＝どちら向きにもそのまま走れる）
+const train = new THREE.Group();
+{
+  const bodyMat = new THREE.MeshStandardMaterial({ color: 0xe8eaec, roughness: 0.4, metalness: 0.35 });
+  const stripeMat = new THREE.MeshStandardMaterial({ color: 0x2f8f6b, roughness: 0.5 });
+  const roofMat2 = new THREE.MeshStandardMaterial({ color: 0xb9bcc2, roughness: 0.6 });
+  const darkMat = new THREE.MeshStandardMaterial({ color: 0x2a2e33, roughness: 0.9 });
+  const doorMat = new THREE.MeshStandardMaterial({ color: 0xd8dde1, roughness: 0.45, metalness: 0.3 });
+  const CAR_L = 8.4, W = 2.5;
+  function trainCar(head) {   // head: 0＝中間車／+1・-1＝その向きに顔がある先頭車
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(new THREE.BoxGeometry(CAR_L, 2.0, W), bodyMat);
+    body.position.y = 1.55; g.add(body);
+    const roof = new THREE.Mesh(new THREE.BoxGeometry(CAR_L - 0.3, 0.18, W - 0.5), roofMat2);
+    roof.position.y = 2.62; g.add(roof);
+    for (const ax of [-2.1, 2.1]) {
+      const ac = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.16, 1.3), roofMat2);
+      ac.position.set(ax, 2.76, 0); g.add(ac);
+    }
+    const stripe = new THREE.Mesh(new THREE.BoxGeometry(CAR_L - 0.08, 0.32, W + 0.06), stripeMat);
+    stripe.position.y = 1.18; g.add(stripe);
+    const band = new THREE.Mesh(new THREE.BoxGeometry(CAR_L - 1.7, 0.62, W + 0.05), carGlassMat);
+    band.position.y = 2.02; g.add(band);
+    for (const dx of [-2.7, 2.7]) {
+      const door = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.5, W + 0.04), doorMat);
+      door.position.set(dx, 1.35, 0); g.add(door);
+    }
+    const under = new THREE.Mesh(new THREE.BoxGeometry(CAR_L - 1.0, 0.5, W - 0.7), darkMat);
+    under.position.y = 0.4; g.add(under);
+    for (const bx of [-2.9, 2.9]) {
+      const bogie = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.46, W - 1.0), darkMat);
+      bogie.position.set(bx, 0.26, 0); g.add(bogie);
+    }
+    if (head) {
+      const face = new THREE.Mesh(new THREE.BoxGeometry(0.14, 2.0, W - 0.12), bodyMat);
+      face.position.set(head * (CAR_L / 2 + 0.05), 1.55, 0); g.add(face);
+      const wind = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.72, W - 0.9), carGlassMat);
+      wind.position.set(head * (CAR_L / 2 + 0.13), 2.02, 0); g.add(wind);
+      for (const s of [-1, 1]) {
+        const lamp = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.14, 0.3), headLampMat);
+        lamp.position.set(head * (CAR_L / 2 + 0.13), 0.95, s * 0.75); g.add(lamp);
+      }
+    }
+    g.add(groundBlob(CAR_L + 0.8, W + 1.3, 0.03));
+    return g;
+  }
+  for (const [dx, head] of [[-8.7, -1], [0, 0], [8.7, 1]]) {
+    const car = trainCar(head); car.position.x = dx; train.add(car);
+  }
+  train.position.set(RAIL.x0, RAIL.y + 0.07, RAIL.z); train.visible = false;   // +0.07＝台車がレール天端に載る高さ
+  scene.add(train);
+}
+const TRAIN = { period: 52, speed: 14.5, len: 26.1 };   // period 秒に1本・方向は交互
+function tickTown(t) {
+  const cyc = Math.floor(t / TRAIN.period), u = t - cyc * TRAIN.period;
+  const d = u * TRAIN.speed, run = RAIL.len + TRAIN.len;
+  if (d >= run) { train.visible = false; }
+  else {
+    train.visible = true;
+    train.position.x = cyc % 2 === 0
+      ? RAIL.x0 - TRAIN.len / 2 + d
+      : RAIL.x1 + TRAIN.len / 2 - d;
+  }
+  for (const s of swingSeats)   // 無人のブランコが風でゆっくり揺れる
+    s.pivot.rotation.x = Math.sin(t * 1.05 + s.ph) * 0.07;
+}
+
+/* ============================================================
+ * 2.8 動物と鳥（ときどき「やってくる」生きもの）
+ *   ・社長ご指示 2026-08-07「動物がやってきたり、鳥が飛んでくるように」。
+ *   ・ずっと居るのではなく **来る → しばらく居る → 帰る** を繰り返す。周期も位相も
+ *     一匹ずつ別（2026-08-06「一斉に動くのは不自然」と同じ考え方）。
+ *   ・時刻 t だけから位置を決める＝5秒ごとのポーリングで何が起きても飛ばない。
+ *   ・これも背景の演出で、エージェントの状態とは無関係（バッジは付けない）。
+ * ============================================================ */
+/** 折れ線の道を「距離 → 位置・向き」に変換できる形にする */
+function makeRoute(pts) {
+  const segs = []; let total = 0;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], dx = pts[i].x - a.x, dz = pts[i].z - a.z;
+    const len = Math.hypot(dx, dz);
+    if (len < 1e-6) continue;
+    segs.push({ a, dx, dz, len, from: total, face: Math.atan2(dx, dz) });
+    total += len;
+  }
+  return { segs, total };
+}
+function routeAt(route, d) {
+  d = Math.max(0, Math.min(route.total, d));
+  const segs = route.segs;
+  for (let i = 0; i < segs.length; i++) {
+    const s = segs[i];
+    if (d <= s.from + s.len || i === segs.length - 1) {
+      const k = (d - s.from) / s.len;
+      return { x: s.a.x + s.dx * k, z: s.a.z + s.dz * k, face: s.face };
+    }
+  }
+  return { x: 0, z: 0, face: 0 };
+}
+
+// 四つ足の動物（猫・犬・うさぎ）。頭・脚・尻尾を別々に持たせて仕草を付けられるようにする
+function critter(kind) {
+  const P = {
+    cat:    { color: 0xbe9a67, belly: 0xf1e7d5, s: 0.95, long: 1.8,  leg: 0.24, ear: 'point', tail: 'long' },
+    dog:    { color: 0xd6b184, belly: 0xf6f0e4, s: 1.2,  long: 1.85, leg: 0.30, ear: 'flop',  tail: 'up' },
+    rabbit: { color: 0xdfd8ce, belly: 0xfbf7f0, s: 0.75, long: 1.45, leg: 0.16, ear: 'long',  tail: 'puff' },
+  }[kind];
+  const g = new THREE.Group();
+  const fur = new THREE.MeshStandardMaterial({ color: P.color, roughness: 0.95 });
+  const belly = new THREE.MeshStandardMaterial({ color: P.belly, roughness: 0.95 });
+  const dark = new THREE.MeshStandardMaterial({ color: 0x2b2723, roughness: 0.6 });
+  const s = P.s, R = 0.19 * s;
+  const hip = P.leg * s + R * 0.47;          // 足の裏がちょうど地面に着く高さ
+  const body = new THREE.Mesh(new THREE.SphereGeometry(R, 10, 8), fur);
+  body.scale.set(1, 0.92, P.long); body.position.y = hip; g.add(body);
+  const chest = new THREE.Mesh(new THREE.SphereGeometry(R * 0.72, 8, 6), belly);
+  chest.scale.set(0.9, 0.7, 1.3); chest.position.set(0, hip - R * 0.4, R * 0.4); g.add(chest);
+  const head = new THREE.Group();
+  head.position.set(0, hip + R * 0.55, R * P.long * 0.82); g.add(head);
+  head.add(new THREE.Mesh(new THREE.SphereGeometry(R * 0.62, 10, 8), fur));
+  const muzzle = new THREE.Mesh(new THREE.SphereGeometry(R * 0.32, 8, 6), belly);
+  muzzle.scale.set(1, 0.8, 1.25); muzzle.position.set(0, -R * 0.18, R * 0.5); head.add(muzzle);
+  const nose = new THREE.Mesh(new THREE.SphereGeometry(R * 0.1, 6, 5), dark);
+  nose.position.set(0, -R * 0.12, R * 0.76); head.add(nose);
+  for (const sx of [-1, 1]) {
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(R * 0.09, 6, 5), dark);
+    eye.position.set(sx * R * 0.26, R * 0.14, R * 0.5); head.add(eye);
+    if (P.ear === 'point') {
+      const ear = new THREE.Mesh(new THREE.ConeGeometry(R * 0.24, R * 0.5, 4), fur);
+      ear.position.set(sx * R * 0.32, R * 0.62, 0); ear.rotation.z = sx * 0.22; head.add(ear);
+    } else if (P.ear === 'flop') {
+      const ear = new THREE.Mesh(new THREE.BoxGeometry(R * 0.13, R * 0.6, R * 0.34), fur);
+      ear.position.set(sx * R * 0.56, R * 0.2, 0); ear.rotation.z = sx * 0.32; head.add(ear);
+    } else {
+      const ear = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.12, R * 0.09, R * 1.15, 6), fur);
+      ear.position.set(sx * R * 0.24, R * 0.95, -R * 0.05); ear.rotation.z = sx * 0.14; head.add(ear);
+    }
+  }
+  const legs = [];
+  for (const lx of [-1, 1]) for (const lz of [1, -1]) {
+    const pivot = new THREE.Group();
+    pivot.position.set(lx * R * 0.52, hip - R * 0.3, lz * R * P.long * 0.55);
+    const shin = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.16, R * 0.13, P.leg * s, 6), fur);
+    shin.position.y = -P.leg * s / 2; pivot.add(shin);
+    const paw = new THREE.Mesh(new THREE.SphereGeometry(R * 0.17, 6, 5), P.ear === 'long' ? fur : belly);
+    paw.scale.set(1, 0.7, 1.2); paw.position.set(0, -P.leg * s, R * 0.06); pivot.add(paw);
+    g.add(pivot);
+    legs.push({ pivot, front: lz > 0, ph: lx * lz > 0 ? 0 : Math.PI });   // 対角の脚が同じ位相＝並足
+  }
+  const tail = new THREE.Group();
+  tail.position.set(0, hip + R * 0.2, -R * P.long * 0.85); g.add(tail);
+  if (P.tail === 'puff') {
+    tail.add(new THREE.Mesh(new THREE.SphereGeometry(R * 0.3, 8, 6), belly));
+  } else {
+    const len = P.tail === 'long' ? R * 1.9 : R * 1.1;
+    const t1 = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.11, R * 0.08, len, 6), fur);
+    t1.position.y = len / 2; tail.add(t1);
+    tail.rotation.x = P.tail === 'long' ? -0.35 : -0.75;
+  }
+  g.add(groundBlob(R * 2.2, R * P.long * 2.6, 0.015));
+  return { g, legs, head, tail, restTail: tail.rotation.x, hip };
+}
+// 通り道と周期。move＝1周期のうち姿を見せている割合／stop＝途中で立ち止まる区間
+const animals = [];
+for (const plan of [
+  { kind: 'cat', period: 132, phase: 0.05, move: 0.68, stop: { at: 0.32, len: 0.16 }, y: GARDEN.lawnY,
+    route: [{ x: 24, z: 24 }, { x: 17, z: 18.5 }, { x: 11, z: 14.6 }, { x: 6.4, z: 13.5 },
+            { x: 0.6, z: 12.4 }, { x: -6, z: 13.4 }, { x: -12, z: 16 }, { x: -18, z: 23 }] },
+  // 犬＝テラスの前を西から東へ横切り、川沿いの遊歩道を通って奥の通りへ帰っていく
+  { kind: 'dog', period: 168, phase: 0.46, move: 0.62, stop: { at: 0.30, len: 0.10 }, y: GARDEN.lawnY,
+    route: [{ x: -26, z: 14 }, { x: -12, z: 12.4 }, { x: 0, z: 11.8 }, { x: 12, z: 12.6 },
+            { x: 14.4, z: 12.85 }, { x: 16.6, z: 12.4 }, { x: 17.9, z: 11.0 },   // ここから先は人と同じ遊歩道をたどる
+            { x: 18.15, z: 4 }, { x: 18.15, z: -10 }, { x: 18.15, z: -24 }, { x: 18.15, z: -34 }] },
+  { kind: 'rabbit', period: 104, phase: 0.71, move: 0.5, stop: { at: 0.5, len: 0.14 }, y: GARDEN.lawnY, hop: true,
+    route: [{ x: -19, z: 26 }, { x: -13, z: 20.5 }, { x: -8, z: 18.6 }, { x: -3, z: 19.4 }, { x: 3, z: 21 }, { x: 10, z: 25 }] },
+]) {
+  const o = critter(plan.kind);
+  scene.add(o.g);
+  animals.push({ ...plan, o, route: makeRoute(plan.route) });
+}
+
+// 鳥：本体は +z 向きに組む。翼は左右のピボットを z 軸まわりに回して羽ばたかせる
+function makeBird(scale, color) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.9 });
+  const wingMat = new THREE.MeshStandardMaterial({ color, roughness: 0.9, side: THREE.DoubleSide });
+  const body = new THREE.Mesh(new THREE.SphereGeometry(0.13 * scale, 8, 6), mat);
+  body.scale.set(1, 0.95, 1.5); g.add(body);
+  const head = new THREE.Group();
+  head.position.set(0, 0.1 * scale, 0.15 * scale); g.add(head);
+  head.add(new THREE.Mesh(new THREE.SphereGeometry(0.075 * scale, 8, 6), mat));
+  const beak = new THREE.Mesh(new THREE.ConeGeometry(0.028 * scale, 0.09 * scale, 5),
+    new THREE.MeshStandardMaterial({ color: 0xe0a03a, roughness: 0.7 }));
+  beak.rotation.x = Math.PI / 2; beak.position.z = 0.1 * scale; head.add(beak);
+  const tail = new THREE.Mesh(new THREE.BoxGeometry(0.1 * scale, 0.02 * scale, 0.2 * scale), mat);
+  tail.position.set(0, 0.03 * scale, -0.25 * scale); tail.rotation.x = -0.25; g.add(tail);
+  const wings = [];
+  for (const side of [-1, 1]) {
+    const pivot = new THREE.Group();
+    pivot.position.set(0.05 * scale * side, 0.05 * scale, 0);
+    const wing = new THREE.Mesh(new THREE.PlaneGeometry(0.34 * scale, 0.16 * scale), wingMat);
+    wing.position.x = 0.17 * scale * side; wing.rotation.x = -Math.PI / 2;
+    pivot.add(wing); g.add(pivot); wings.push({ pivot, side });
+  }
+  return { g, wings, head };
+}
+/** 翼の角度をまとめて設定。angle＝上下の振り／fold＝1で体に沿ってたたむ（地面に降りたとき） */
+function flapWings(bird, angle, fold = 0) {
+  for (const w of bird.wings) {
+    w.pivot.rotation.z = w.side * angle;
+    w.pivot.rotation.y = w.side * 1.3 * fold;   // 後ろへ引くと「翼をたたんだ」形になる
+  }
+}
+// 空を渡る群れ（V字編隊で斜めに横切り、渡り終えたらしばらく画面から消える）
+const flocks = [];
+for (const f of [
+  // ⚠️ 高度は 8〜14m に収めること：既定カメラは見下ろし角が強く、これより高いと画面の上に
+  //    外れて一度も見えない（遠くの空を飛ばすのも同じ理由で不可）。建物の上を横切らせる。
+  { n: 6, from: [-58, 9, 14], to: [56, 12, -18], period: 78, phase: 0.0, cross: 0.7, scale: 1.15, color: 0x3b4756 },
+  { n: 4, from: [60, 14, 26], to: [-58, 8, -6], period: 112, phase: 0.35, cross: 0.62, scale: 1.0, color: 0x54606e },
+]) {
+  const g = new THREE.Group(); scene.add(g);
+  const members = [];
+  for (let i = 0; i < f.n; i++) {
+    const b = makeBird(f.scale, f.color);
+    const row = Math.ceil(i / 2), side = i % 2 ? 1 : -1;
+    b.g.position.set(row * 1.5 * side, row * 0.3, -row * 1.9);
+    g.add(b.g); members.push(b);
+  }
+  flocks.push({ ...f, g, members });
+}
+// 庭に降りてくる小鳥（舞い降りる → ついばむ → 飛び立つ → しばらく留守）
+const groundBirds = [];
+for (const spot of [
+  { x: 6.0, z: 13.9, y: GARDEN.lawnY, period: 64, phase: 0.10 },   // 噴水のふち
+  { x: -0.6, z: 16.8, y: GARDEN.lawnY, period: 87, phase: 0.42 },  // 花壇のそば
+  { x: 12.4, z: 13.1, y: GARDEN.lawnY, period: 73, phase: 0.68 },  // カフェ席の足元
+  { x: 18.6, z: 3.0, y: -0.22, period: 96, phase: 0.25 },          // 川岸の石のそば
+]) {
+  // 1.15＝この画風で「鳥だ」と分かる最小の大きさ（実寸のスズメだと木片にしか見えない）
+  const b = makeBird(1.15, 0x6b6152);
+  scene.add(b.g);
+  groundBirds.push({ ...spot, b });
+}
+// 蝶（花壇のまわりをひらひら）
+const butterflies = [];
+for (const [cx, cz, color, ph] of [[-11.4, 16.4, 0xf2c14e, 0], [-0.4, 17.0, 0xeef3f6, 2.1], [10.0, 16.8, 0xe27ba8, 4.3]]) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.8, side: THREE.DoubleSide });
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.15, 5),
+    new THREE.MeshStandardMaterial({ color: 0x3a3230, roughness: 0.9 }));
+  body.rotation.x = Math.PI / 2; g.add(body);
+  const wings = [];
+  for (const side of [-1, 1]) {
+    const pivot = new THREE.Group();
+    const w = new THREE.Mesh(new THREE.PlaneGeometry(0.26, 0.3), mat);
+    w.position.x = side * 0.13; w.rotation.x = -Math.PI / 2;
+    pivot.add(w); g.add(pivot); wings.push({ pivot, side });
+  }
+  scene.add(g);
+  butterflies.push({ g, wings, cx, cz, ph, px: cx, pz: cz });
+}
+
+/** 動物・鳥・蝶を1フレーム進める（すべて時刻 t だけで決まる＝再現性がある） */
+function tickWildlife(t) {
+  for (const a of animals) {
+    const cyc = ((t / a.period) + a.phase) % 1;
+    if (cyc >= a.move) { a.o.g.visible = false; continue; }   // お帰り中＝留守
+    a.o.g.visible = true;
+    const st = a.stop, span = a.move - st.len;                // 実際に歩いている割合
+    const resting = cyc >= st.at && cyc < st.at + st.len;
+    const moved = resting ? st.at : (cyc < st.at ? cyc : cyc - st.len);
+    const p = routeAt(a.route, moved / span * a.route.total);
+    const speed = a.route.total / (span * a.period);          // m/s（脚の回転数をこれに合わせる）
+    a.o.g.position.set(p.x, a.y, p.z);
+    a.o.g.rotation.y = p.face;
+    if (resting) {
+      // 立ち止まって毛づくろい／匂いを嗅ぐ（前脚は伸ばし、後脚をたたんで腰を落とす）
+      for (const l of a.o.legs) l.pivot.rotation.x = l.front ? 0 : 0.9;
+      a.o.g.position.y = a.y - a.o.hip * 0.22;
+      a.o.head.rotation.x = 0.55 + Math.sin(t * 2.2 + a.phase * 9) * 0.28;
+      a.o.head.rotation.y = Math.sin(t * 0.7 + a.phase * 5) * 0.35;
+      a.o.tail.rotation.x = a.o.restTail + Math.sin(t * 1.6) * 0.12;
+      a.o.tail.rotation.z = Math.sin(t * 1.9 + a.phase) * 0.35;
+    } else if (a.hop) {
+      // うさぎ＝跳ねる。着地のたびに脚をたたむ
+      const hop = Math.abs(Math.sin(t * 3.1 + a.phase * 7));
+      a.o.g.position.y = a.y + hop * 0.22;
+      for (const l of a.o.legs) l.pivot.rotation.x = (l.front ? -0.5 : 0.6) * hop;
+      a.o.head.rotation.x = -hop * 0.18;
+      a.o.head.rotation.y = 0;
+      a.o.tail.rotation.z = 0;
+    } else {
+      const sw = Math.max(0.6, speed) * 5.5;
+      for (const l of a.o.legs) l.pivot.rotation.x = Math.sin(t * sw + l.ph) * 0.5;
+      a.o.g.position.y = a.y + Math.abs(Math.sin(t * sw)) * 0.02;
+      a.o.head.rotation.x = Math.sin(t * 1.3 + a.phase) * 0.06;
+      a.o.head.rotation.y = Math.sin(t * 0.5 + a.phase) * 0.2;
+      a.o.tail.rotation.x = a.o.restTail;
+      a.o.tail.rotation.z = Math.sin(t * sw * 0.5) * 0.25;     // 歩くと尻尾が振れる
+    }
+  }
+  for (const f of flocks) {
+    const u = ((t / f.period) + f.phase) % 1;
+    f.g.visible = u < f.cross;
+    if (!f.g.visible) continue;
+    const k = u / f.cross;
+    f.g.position.set(
+      f.from[0] + (f.to[0] - f.from[0]) * k,
+      f.from[1] + (f.to[1] - f.from[1]) * k + Math.sin(t * 0.45) * 0.7,
+      f.from[2] + (f.to[2] - f.from[2]) * k);
+    f.g.rotation.y = Math.atan2(f.to[0] - f.from[0], f.to[2] - f.from[2]);
+    f.members.forEach((b, i) => flapWings(b, 0.1 + Math.sin(t * 7.5 + i * 0.7) * 0.8));
+  }
+  for (const gb of groundBirds) {
+    const u = ((t / gb.period) + gb.phase) % 1;
+    const b = gb.b;
+    b.g.visible = u < 0.82;
+    if (!b.g.visible) continue;
+    const IN = 0.1, OUT = 0.72;                        // 舞い降りる／ついばむ／飛び立つ の境目
+    const away = { x: gb.x + 7, y: 8.5, z: gb.z - 9 }; // 飛んで来る・帰る方向（空の彼方）
+    if (u < IN || u >= OUT) {
+      const k = u < IN ? u / IN : 1 - (u - OUT) / (0.82 - OUT);   // 0＝空、1＝地面
+      b.g.position.set(away.x + (gb.x - away.x) * k, away.y + (gb.y + 0.12 - away.y) * k,
+        away.z + (gb.z - away.z) * k);
+      b.g.rotation.y = Math.atan2(gb.x - away.x, gb.z - away.z) * (u < IN ? 1 : 0) +
+        Math.atan2(away.x - gb.x, away.z - gb.z) * (u < IN ? 0 : 1);
+      b.g.rotation.x = (u < IN ? 0.25 : -0.25) * (1 - k);
+      flapWings(b, 0.2 + Math.sin(t * 16) * 0.9, 0);      // 飛んでいる＝翼を広げる
+      b.head.rotation.x = 0;
+    } else {
+      // 地面：ちょんちょん跳ねながら、ときどき下をついばむ
+      const hop = Math.abs(Math.sin(t * 2.6 + gb.phase * 11));
+      const peck = Math.max(0, Math.sin(t * 1.7 + gb.phase * 5) - 0.55) / 0.45;
+      b.g.position.set(gb.x + Math.sin(t * 0.5 + gb.phase * 8) * 0.35, gb.y + 0.12 + hop * 0.05,
+        gb.z + Math.cos(t * 0.37 + gb.phase * 6) * 0.3);
+      b.g.rotation.set(0, Math.sin(t * 0.6 + gb.phase * 3) * 1.4, 0);
+      flapWings(b, hop * 0.35, 1);                        // 地面＝翼をたたむ（跳ねるとき少し開く）
+      b.head.rotation.x = peck * 1.1;
+    }
+  }
+  for (const bf of butterflies) {
+    const x = bf.cx + Math.sin(t * 0.62 + bf.ph) * 1.7 + Math.sin(t * 1.9 + bf.ph) * 0.25;
+    const z = bf.cz + Math.cos(t * 0.44 + bf.ph) * 1.3;
+    bf.g.position.set(x, GARDEN.lawnY + 0.75 + Math.sin(t * 1.6 + bf.ph) * 0.3, z);
+    bf.g.rotation.y = Math.atan2(x - bf.px, z - bf.pz);       // 進む向きへ機首を向ける
+    bf.px = x; bf.pz = z;
+    // 振り幅は 0〜1.05rad＝真横（板が視線と平行＝消える）まで倒しきらない
+    for (const w of bf.wings) w.pivot.rotation.z = w.side * (0.5 + Math.sin(t * 13 + bf.ph) * 0.55);
+  }
 }
 
 // 空（グラデーションのドーム・霧の影響を受けない）
@@ -2002,8 +2866,10 @@ if (location.hash === '#menu') document.getElementById('menu').classList.add('op
 /* ============================================================
  * 8. カメラ操作（オービット：ドラッグ回転・ホイールズーム・WASD/右ドラッグで視点移動）
  * ============================================================ */
-// 注視点は「室内と手前の庭が両方入る」位置に置く（庭を作ったぶん少し手前・引き気味）
-const HOME_VIEW = { at: [0.6, 0.2, 3.4], theta: -0.26, phi: 0.88, dist: 34 };
+// 注視点は「奥の通り・室内・手前の庭が全部入る」位置に置く。
+// phi（見下ろす角度）は 0.98 が上限の目安＝これ以上カメラを下げると奥の壁（高さ6m）が
+// 道路を隠してしまう。道路を動かしたらここも合わせて見直すこと。
+const HOME_VIEW = { at: [0.6, 0.2, 2.0], theta: -0.26, phi: 0.98, dist: 36 };
 const target = new THREE.Vector3(...HOME_VIEW.at);
 let theta = HOME_VIEW.theta, phi = HOME_VIEW.phi, dist = HOME_VIEW.dist;
 // ?cam=theta,phi,dist で初期アングル、?at=x,z で注視点を指定（検証・お気に入りビュー共有用）
@@ -2022,7 +2888,8 @@ let theta = HOME_VIEW.theta, phi = HOME_VIEW.phi, dist = HOME_VIEW.dist;
   }
 }
 // 注視点を動かせる範囲（外に出ると空と芝生しか映らないので、敷地の内側に留める）
-const PAN_LIMIT = { x: [-26, 26], z: [-20, 26] };
+// 奥は通り（z=-30.5）を作ったぶん広げた＝車を間近で見られる
+const PAN_LIMIT = { x: [-26, 44], z: [-42, 26] };   // 東＝公園（x43.5）・奥＝線路と家並み（z-44）まで寄れる
 function updateCamera() {
   phi = Math.max(0.25, Math.min(1.5, phi));   // 1.5＝ほぼ水平まで見上げられる（空・太陽が見える）
   dist = Math.max(7, Math.min(38, dist));
@@ -2281,7 +3148,8 @@ function animate() {
   // 川の流れ（テクスチャスクロール）とアヒルの漂流
   waterTex.offset.y = -t * 0.05;
   for (const dk of ducks) {
-    const z = ((t * 0.55 + dk.offset * 90) % 90) - 45;         // 手前→奥へ流れて周回
+    // 手前→奥へ流れて周回。奥は橋の手前で折り返す（橋げたを突き抜けないよう範囲を絞る）
+    const z = ((t * 0.55 + dk.offset * 56) % 56) - 20;
     dk.g.position.set(
       23 + Math.sin(t * 0.5 + dk.offset * 7) * 1.6,            // 左右にゆらゆら
       -0.22 + Math.sin(t * 2.1 + dk.offset * 9) * 0.025,       // ぷかぷか
@@ -2290,6 +3158,9 @@ function animate() {
     dk.g.rotation.z = Math.sin(t * 1.7 + dk.offset * 5) * 0.06;
   }
   fountainWater.material.map.offset.x = t * 0.02;      // 噴水の水面をゆっくり回す
+  tickTraffic(dt);                                     // 奥の通り（車が流れる）
+  tickWildlife(t);                                     // 動物・鳥・蝶（来て、しばらく居て、帰る）
+  tickTown(t);                                         // 電車（周期で通過）とブランコの揺れ
   const mealWin = mealNow();                           // 食事どきか（1フレームに1回だけ判定）
   for (const a of avatars.values()) {
     const ph = a.phase;
