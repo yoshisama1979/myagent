@@ -92,3 +92,9 @@ data/hp-loop/osakatoyopet/
 
 # ── 3Dオフィスの装飾画像（社長の私物・肖像/著作物を含むためコミットしない）──
 site/office/decor/
+
+# 売掛金の消し込み作業ページ（取引先名・個別明細を含む＝git外）
+site/finance/
+
+# 社長の対応事項まとめ（各所の実名・明細を集約＝git外）
+site/todo/
