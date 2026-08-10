@@ -153,6 +153,10 @@ const TOP_KPIS = [
       <h3 class="font-semibold text-blue-600 mb-1">skill-sheet/</h3>
       <p class="text-sm text-gray-600">社員教育・人事評価のスキル定義集（PC操作スキル他）</p>
     </a>
+    <a href="hr/index.html" class="block border-2 border-blue-400 bg-blue-50 rounded p-4 hover:bg-blue-100 transition">
+      <h3 class="font-semibold text-blue-700 mb-1">👔 人事</h3>
+      <p class="text-sm text-gray-700">採用・入社／育成・評価／休職・退職／規程の入口。正本＝<a href="hr-rules.html" class="text-blue-700 hover:underline">人事・労務ルール</a></p>
+    </a>
   </div>
 
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">運用ルール</h2>
