@@ -86,7 +86,7 @@ websystem は「仕様書⇄test.csv⇄実装」を突き合わせる。ここ�
    タイムゾーン・複数日またぎのような**静かに壊す入力**を必ずケース化する。
 7. テストファイル冒頭に**契機（どの事故・どのレビューで生まれたか）と「触ったら必ず流すこと」**を書く。
 
-## 7. 現在のテスト資産と空白地帯（2026-08-10 実測・ベースライン全合格 252項目）
+## 7. 現在のテスト資産と空白地帯（ベースライン全合格 313項目・2026-08-10 現在）
 
 | 対象 | テスト | 状態 |
 |---|---|---|
@@ -95,13 +95,13 @@ websystem は「仕様書⇄test.csv⇄実装」を突き合わせる。ここ�
 | calendar-fetch.py | test-calendar-fetch（21） | ✅ |
 | _mail_strip.py | test-mail-strip（28） | ✅ |
 | guard-unattended-edits.py | test-guard-unattended-edits（44） | ✅ |
-| **gmail-fetch.py（2h cron・OAuth・本文抽出）** | **無し** | 🔴 **最優先**＝本文欠落事故の前歴あり・OAuth 経路は一度も自動テストされていない（共通化を見送った理由もこれ） |
-| **chatwork-fetch.py（2h cron・カーソル管理）** | **無し** | 🔴 カーソル巻き戻り＝取りこぼしに直結 |
+| gmail-fetch.py（2h cron・本文抽出） | test-gmail-fetch（37） | ✅ 2026-08-10 作成＝送信者の門番・文字コード（utf-16化け/低品質ゲート）・添付誤認・上限の順序・書き戻しの本人確認・読み取り専用。**OAuth 経路（login・トークン更新）は対象外のまま**＝ネットワーク非依存の範囲だけ（疎通は `auth` コマンドが担当） |
+| chatwork-fetch.py（2h cron・カーソル管理） | test-chatwork-fetch（24） | ✅ 2026-08-10 作成＝get() を偽APIに差し替え cmd_poll を丸ごと回す方式。forward-only・カーソル前進/冪等・数値比較・失敗ルーム未前進と自動復旧・100件警告・ルーム上限・my除外・v1→v2移行・壊れたstateで停止・flock排他・読み取り専用 |
 | **system-health.py（毎日 cron・警報の元）** | **無し** | 🟡 誤検知より「検知漏れ」が怖い層 |
 | finance-snapshot.py／ar-match.py | 無し | 🟡 読み取り専用だが金額の判定を持つ（ar-match は照合ロジック） |
 | president-todo.py／partner-index.py | 無し | 🟢 読み取り専用ビュー・実害は表示まで |
 
-- 🔴2本の作成は**別途着手**（本ルールの新設と同時にやると差分が混ざる）。gmail-fetch から。
+- 🔴は 2026-08-10 に全て解消（gmail-fetch・chatwork-fetch）。残る空白は🟡以下のみ。
 - 新しく🔴・🟡に該当するツールを作ったら、この表に行を足す（§2 のとおりテストは同コミット）。
 
 ## 変更履歴
