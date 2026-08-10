@@ -32,12 +32,20 @@ SUBAGENT_DESKS = {
 
 CONVERSATION_DESK = ("hanasaka-main", "社長と会話中")
 
+# 呼び出し元（MYAGENT_AGENT＝tickラベル）→ 3Dの机id。基本は「:」を「-」に読み替え、
+# 例外だけここに書く（_agents.php の $VPS_AGENTS と同じ対応）。台帳に無いidは
+# status.php 側が捨てるので、ここで完全一致させる必要はない（安全側）。
+VISIT_ALIAS = {"chat": "hanasaka-main", "memo-triage": "memo"}
+
 BEACON = os.path.join(os.path.dirname(os.path.abspath(__file__)), "office-beacon.sh")
+VISIT_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "office-visit-log.py")
 
 
 def run_beacon(args):
+    # timeout=5：PreToolUse フックは完了まで Task 実行を待たせるため、ここで長く待たない
+    # （Codexレビュー 2026-08-10 🔴＝ビーコン＋声かけログが直列で最大20秒止まりうる穴を短縮）
     subprocess.run(["bash", BEACON, *args],
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
 
 
 def main():
@@ -57,7 +65,19 @@ def main():
         if not desk:
             return
         if mode == "pre":
-            run_beacon(["start", desk[0], desk[1], caller, key])
+            # ビーコンと声かけログは独立に守る＝片方の失敗・タイムアウトが相方を巻き添えにしない
+            # （Codexレビュー 2026-08-10 🔴反映）
+            try:
+                run_beacon(["start", desk[0], desk[1], caller, key])
+            except Exception:
+                pass
+            try:
+                # 「声をかけに行く」再生用のイベント（id と時刻だけ・社長承認 2026-08-10）
+                frm = VISIT_ALIAS.get(caller, caller.replace(":", "-"))
+                subprocess.run([sys.executable, VISIT_LOG, frm, desk[0]],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=5)
+            except Exception:
+                pass
         else:
             run_beacon(["stop", desk[0], key])
     elif mode == "prompt":

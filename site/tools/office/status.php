@@ -172,6 +172,46 @@ foreach (array_column($VPS_AGENTS, 'id') as $lid) {
     if ($best !== null) $live[$lid] = $best;
 }
 
+// ── 1.8) 声かけログ: 委任の「呼びに行く」再生用（社長承認 2026-08-10）──────────
+// bin/office-visit-log.py（office-beacon-hook.py の pre から呼ばれる）が
+// data/office/live/visits.jsonl に {"ts","from","to"} を1行ずつ追記する。
+// 3D側はこれをキューに積み、呼んだ側のアバターが相手の机まで歩いて声をかける動きを
+// 順番に再生する（リアルタイムでなくてよい＝ストック再生・社長指定）。
+// 中身はエージェントidと時刻だけ（task本文は書かない約束）。ここは読むだけ・丸めは書き手側。
+$visits = [];
+$vf = $ROOT . '/data/office/live/visits.jsonl';
+if (is_file($vf) && !is_link($vf) && ($vsz = @filesize($vf)) !== false && $vsz <= 262144) {
+    // 書き手（office-visit-log.py）の flock に共有ロックで参加＝ローテ（truncate→書き戻し）の
+    // 途中を読まない。取れなければこの回は空で返す（次の5秒ポーリングで拾える）。
+    // LOCK_SH は読むだけ＝このAPIの「書き込みゼロ」は変わらない（Codexレビュー 2026-08-10 🟡反映）
+    $vraw = null;
+    $vh = @fopen($vf, 'rb');
+    if ($vh !== false) {
+        if (@flock($vh, LOCK_SH | LOCK_NB)) {
+            $vraw = (string)stream_get_contents($vh);
+            @flock($vh, LOCK_UN);
+        }
+        fclose($vh);
+    }
+    if ($vraw !== null) {
+        $known = array_flip(array_column($VPS_AGENTS, 'id'));
+        $vnow = time();
+        foreach (array_slice(explode("\n", $vraw), -60) as $ln) {
+            $j = json_decode($ln, true);
+            if (!is_array($j)) continue;
+            $vts = is_numeric($j['ts'] ?? null) ? (int)$j['ts'] : 0;
+            $vfr = is_string($j['from'] ?? null) ? $j['from'] : '';
+            $vto = is_string($j['to'] ?? null) ? $j['to'] : '';
+            // 直近10分だけ（古い分は夜間ダイジェスト側の領分）。未来のtsも拒否＝時計ずれ・
+            // 不正値が「いつまでも再生され続ける」のを防ぐ（ビーコンの期限判定と同型・Codex🟡）
+            if ($vts <= 0 || $vnow - $vts > 600 || $vts > $vnow + 60) continue;
+            if (!isset($known[$vfr]) || !isset($known[$vto]) || $vfr === $vto) continue;   // 台帳の既知idのみ
+            $visits[] = ['ts' => $vts, 'from' => $vfr, 'to' => $vto];
+        }
+        $visits = array_slice($visits, -30);
+    }
+}
+
 // ── 2) heartbeat: エージェント別の pending / action ──────────────────────
 // 形式: agent-tick alive: <ts> | mode=.. force=.. | label:pending:action ... | status=..
 $hb = @file_get_contents($HEARTBEAT);
@@ -515,6 +555,7 @@ $out = json_encode([
     'comms' => $comms,                           // Chatwork整理板（red=社長のボール/green=相手ボール/updated=蒸留時刻。未導入はnull）
     'unknownInbox' => $unknownInbox,             // 台帳に無い宛先の滞留（内容は出さず件数だけ）
     'agents'=> $agents,
+    'visits' => ['now' => time(), 'items' => $visits],   // 声かけログ（呼びに行く再生用・直近10分）
     'employees' => $employees,                   // 人間の社員（hana-tools タイマー由来）
     'employeeSource' => $empSource,              // 取得できたか／古いか（捏造しないための状態）
     // 全社ボード（進行中の案件・未完了ToDo合計）。取得できていなければ null＝数字を出さない

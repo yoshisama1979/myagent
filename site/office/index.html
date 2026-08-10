@@ -120,6 +120,7 @@
   <span style="color:#93c5fd">｜机の前のバッジ＝ ⏱ 本日の合計　📋 ToDo件数　⏰ 期日超過</span><br>
   🏢 奥の壁＝全社ボード（進行中の案件・未完了ToDo）　※人の稼働は5分ごと・件数は30分ごとに更新<br>
   <span style="color:#6ee7b7">💬 社長の頭上＝Chatworkで返すべきボール（クリックで整理板へ・2時間ごと更新）</span><br>
+  <span style="color:#fda4af">🚶💬 誰かの机まで歩いて声をかける動き ＝ <b>実際の委任（サブエージェント呼び出し）のストック再生</b>。発生から少し遅れて一人ずつ順番に再生されます（声をかけられた側の机が光るのは在席ビーコン＝実データ）</span><br>
   <span style="color:#cbd5e1">🚗 奥の通り・🚃 線路を通る電車・🛝 川向こうの公園・🚪 道路側の玄関と小道・🐈🐕🐇 やってくる動物・🐦 飛んでくる鳥・🦋 蝶 ＝ <b>背景の演出でデータとは無関係</b>。数や動きに意味はありません（見て楽しむための層）</span><br>
   <span style="color:#7dd3fc">📻 上の活動ティッカー＝直近24時間の出来事（🔨起動 ✉️便 📋成果 ⚠️警報）。クリックで🌙夜間ダイジェスト＝夜のうちの働きをまとめて確認</span><br>
   <span style="color:#a5b4fc">🎮 視点：左ドラッグ＝回転／<b>W前・S後・A左・D右</b>（矢印キーも可・Shiftで速く）／右ドラッグ＝つかんで平行移動／ホイール＝ズーム／<b>0キーで最初の位置に戻る</b>。書類の山・コルクボード・吹き出しはクリックで詳細</span>
@@ -2450,7 +2451,8 @@ function applyStatus(a, data) {
   }
   // バッジ＝状態。休憩・散歩に出ている待機者はその見せ方（☕🌿🚶）に差し替える
   // ＝どれも「待機中（仕事が無い）」であることは凡例で明示する
-  setBadge(a, breakBadge(a.brk.spot) ?? BADGE[a.state] ?? '❓');
+  // 声かけ再生中は🚶（歩いているのに💤が浮いていると不自然）。戻ったら次のポーリングで実状態に戻る
+  setBadge(a, a.visit ? '🚶' : (breakBadge(a.brk.spot) ?? BADGE[a.state] ?? '❓'));
 }
 /** バッジの貼り替え（同じ絵文字なら何もしない＝毎ポーリングで作り直さない） */
 function setBadge(a, emoji) {
@@ -2523,10 +2525,14 @@ async function refresh() {
   for (const ag of d.agents) {
     const a = avatars.get(ag.id);
     if (!a) continue;
+    // 行き先の更新は「声をかけに行く」再生中も続ける：歩きは tickVisit 側が管理していて
+    // spot を見ないので邪魔にならず、戻り終えた瞬間の再経路計算が最新の行き先を拾う
+    // （凍結すると訪問中の状態変化＝働き出した等が古い場所への復帰になる。Codexレビュー 2026-08-10 🟡反映）
     a.brk.spot = (ag.status === 'idle') ? (breaks.get(ag.id) ?? null) : null;   // 働き出したら席へ戻る
     applyStatus(a, ag);
   }
   breakPass++;   // 2回目以降の割り当ては「歩いて移動する」（初回だけその場に配置）
+  queueVisits(d.visits);                   // 委任の「声かけ」イベントを再生キューへ
 
   updateCompanyBoard(d.company || null);   // 全社ボード（進行中の案件・未完了ToDo）
 
@@ -3011,6 +3017,20 @@ function angLerp(cur, tgt, k) {
   return cur + Math.atan2(Math.sin(tgt - cur), Math.cos(tgt - cur)) * k;
 }
 /** 休憩・散歩の移動を1フレーム進める。戻り値 true＝屋外の描画（歩き・座り）に切り替える */
+/** b.path を辿って1歩進める（tickBreak と「声かけ」訪問で共用） */
+function walkAlong(b, dt) {
+  const w = b.path[0];
+  const dx = w.x - b.pos.x, dz = w.z - b.pos.z;
+  const d = Math.hypot(dx, dz);
+  if (d < 0.1) { b.path.shift(); b.walking = b.path.length > 0; }
+  else {
+    const step = Math.min(d, BREAK.speed * b.spd * dt);
+    b.pos.x += dx / d * step; b.pos.z += dz / d * step;
+    b.facing = angLerp(b.facing, Math.atan2(-dx, -dz), Math.min(1, dt * 6));
+    b.walking = true;
+  }
+  b.pos.y += ((w.y ?? 0) - b.pos.y) * Math.min(1, dt * 4);
+}
 function tickBreak(a, dt) {
   const b = a.brk;
   const home = { x: a.root.position.x, z: a.root.position.z + 0.72, y: 0 };
@@ -3032,17 +3052,7 @@ function tickBreak(a, dt) {
     if (b.spot && b.spot.type === 'walk') { b.routeIdx = b.spot.from; b.routeDir = 1; }
   }
   if (b.path.length) {
-    const w = b.path[0];
-    const dx = w.x - b.pos.x, dz = w.z - b.pos.z;
-    const d = Math.hypot(dx, dz);
-    if (d < 0.1) { b.path.shift(); b.walking = b.path.length > 0; }
-    else {
-      const step = Math.min(d, BREAK.speed * b.spd * dt);
-      b.pos.x += dx / d * step; b.pos.z += dz / d * step;
-      b.facing = angLerp(b.facing, Math.atan2(-dx, -dz), Math.min(1, dt * 6));
-      b.walking = true;
-    }
-    b.pos.y += ((w.y ?? 0) - b.pos.y) * Math.min(1, dt * 4);
+    walkAlong(b, dt);
   } else {
     b.walking = false;
     if (b.spot && b.spot.type === 'walk') {      // 散歩＝遊歩道を端まで行って折り返す
@@ -3060,12 +3070,98 @@ function tickBreak(a, dt) {
   }
   return !!(b.spot || b.path.length);
 }
+/* ---- 「声をかけに行く」＝委任のストック再生（社長承認 2026-08-10）--------------
+ * status.php の visits（bin/office-visit-log.py が書く委任イベント）をキューに積み、
+ * **一度に一人ずつ**再生する：呼んだ側が席を立つ → 相手の机まで歩く → 肩ごしに💬 →
+ * 来た道を戻る。リアルタイムではなくストック再生（発生から数十秒〜遅れてよい・社長指定）。
+ * 相手の机が光るのは在席ビーコン（実データ）側で勝手に起きる＝ここでは光らせない。
+ * 経路は breakPath と同じ通路網だけを通る（机・ガラスをすり抜けない）。 */
+const visitSeen = new Set();     // 再生済み（ts|from|to）
+const visitPair = new Map();     // "from>to" -> 最後にキューへ受理した時刻（連発の間引き用。キュー溢れで捨てられた分も8分抑止＝再現でなく雰囲気の再生なので意図どおり）
+let visitQ = [], visitActive = null, visitBaseTs = null;
+function queueVisits(v) {
+  if (!v || !Array.isArray(v.items)) return;
+  const now = Number(v.now) || 0;
+  if (visitBaseTs === null) visitBaseTs = now;   // 開く前の分は「直近2分」だけ再生（残りは夜間ダイジェストの領分）
+  for (const ev of v.items) {
+    const key = `${ev.ts}|${ev.from}|${ev.to}`;
+    if (visitSeen.has(key)) continue;
+    visitSeen.add(key);
+    if (ev.ts <= visitBaseTs - 120) continue;
+    const A = avatars.get(ev.from), B = avatars.get(ev.to);
+    if (!A || !B || A.kind === 'remote' || B.kind === 'remote') continue;   // 開発ルームはガラスの向こう＝行けない
+    const pair = `${ev.from}>${ev.to}`;
+    if (now - (visitPair.get(pair) || 0) < 480) continue;   // 同じ組の連発は8分に1回だけ（何往復もさせない）
+    visitPair.set(pair, now);
+    visitQ.push(ev);
+  }
+  if (visitQ.length > 4) visitQ = visitQ.slice(-4);         // 溜まりすぎたら古い分は捨てる（再現でなく雰囲気の再生）
+  if (visitSeen.size > 600) {                               // 既読キーの肥大防止
+    for (const k of [...visitSeen].slice(0, 300)) visitSeen.delete(k);
+  }
+}
+function startVisit(ev) {
+  const a = avatars.get(ev.from), tgt = avatars.get(ev.to);
+  if (!a || !tgt || a.visit) return;
+  const b = a.brk, T = tgt.root.position;
+  // 立ち位置＝相手の椅子の斜め後ろ（肩ごしに声をかける位置。通路からも机からも外れる）
+  const stand = { x: T.x - 0.6, z: T.z + 1.5, y: 0 };
+  let go;
+  if (isOutside(b.pos)) {
+    // 庭から：breakPath の帰り道ロジックで室内へ（home に相手の机を渡すと相手の行へ着く）
+    go = breakPath(b.pos, stand, { x: stand.x, z: T.z }, b.lane);
+  } else {
+    // 室内から：自分の椅子の後ろ → 西の縦通路 → 相手の行の通路 → 立ち位置
+    const A = AISLE_X + b.lane;
+    go = [{ x: b.pos.x, z: b.pos.z + 1.5, y: 0 },
+          { x: A, z: b.pos.z + 1.5, y: 0 },
+          { x: A, z: T.z + 2.22, y: 0 },
+          { x: stand.x, z: T.z + 2.22, y: 0 },
+          stand];
+  }
+  // 帰り道＝来た道の逆順（breakPath は「机の後ろの立ち位置」からの出発を想定していないため、
+  // tickBreak に返り道を任せると隣の行の机を突っ切る。必ず自前で戻す）
+  const back = go.slice(0, -1).reverse();
+  back.push({ x: b.pos.x, z: b.pos.z, y: b.pos.y });
+  a.visit = {
+    phase: 'go', back, talkLeft: 3.6,
+    face: Math.atan2(-(T.x - stand.x), -((T.z + 0.72) - stand.z)),   // 相手（椅子）の方を向く
+  };
+  b.path = go;
+  visitActive = a;
+}
+function tickVisit(a, dt) {
+  const v = a.visit, b = a.brk;
+  if (v.phase === 'go') {
+    if (b.path.length) walkAlong(b, dt);
+    if (!b.path.length) {
+      v.phase = 'talk'; b.walking = false;
+      if (!a.visitBubble) { a.visitBubble = makeEmojiSprite('💬', 0.5); a.root.add(a.visitBubble); }
+      a.visitBubble.visible = true;
+    }
+  } else if (v.phase === 'talk') {
+    v.talkLeft -= dt; b.walking = false;
+    b.facing = angLerp(b.facing, v.face, Math.min(1, dt * 5));
+    if (v.talkLeft <= 0) {
+      if (a.visitBubble) a.visitBubble.visible = false;
+      v.phase = 'back'; b.path = v.back;
+    }
+  } else {
+    if (b.path.length) walkAlong(b, dt);
+    if (!b.path.length) {
+      a.visit = null; visitActive = null;
+      b.going = { stale: true };   // 次の tickBreak が「いまの割り当て」に合わせて道順を引き直す
+    }
+  }
+}
+
 /** 屋外での動き（歩く・座る・食べる・立ち話・眺める）。腕は π が「下ろした状態」 */
 function animateOutside(a, t, ph, meal, ox, oz) {
   const b = a.brk, legs = a.av.legParts, arms = a.av.arms;
   a.av.legs.visible = true;
   a.av.group.rotation.z = 0;
-  const spot = b.spot;
+  const spot = a.visit ? null : b.spot;        // 声かけ再生中は休憩席の姿勢（座る等）を取らない
+  const talking = !b.walking && a.visit && a.visit.phase === 'talk';   // 相手の机の前で声をかけている
   const sitting = !b.walking && spot && spot.type === 'sit';
   const chatting = !b.walking && spot && spot.type === 'chat';
   const eating = sitting && spot.meal && meal;
@@ -3106,9 +3202,10 @@ function animateOutside(a, t, ph, meal, ox, oz) {
       a.av.head.rotation.y = Math.sin(t * 0.35 + ph) * 0.28;    // のんびり見まわす
     }
     a.av.group.position.y = b.pos.y + Math.sin(t * 1.1 + ph) * 0.006;
-  } else if (chatting) {
-    // 立ち話：相手を向いて立ち、喋る番は身ぶり手ぶり・聞く番はうなずく
-    const turn = a.chatBubble && a.chatBubble.visible;
+  } else if (chatting || talking) {
+    // 立ち話・声かけ：相手を向いて立ち、喋る番は身ぶり手ぶり・聞く番はうなずく
+    // （声かけ＝自分が用件を伝えている側なのでずっと喋る番）
+    const turn = talking || (a.chatBubble && a.chatBubble.visible);
     legs[0].hip.rotation.x = 0.05; legs[1].hip.rotation.x = -0.05;
     legs[0].knee.rotation.x = 0;   legs[1].knee.rotation.x = 0;
     if (turn) {
@@ -3162,12 +3259,15 @@ function animate() {
   tickWildlife(t);                                     // 動物・鳥・蝶（来て、しばらく居て、帰る）
   tickTown(t);                                         // 電車（周期で通過）とブランコの揺れ
   const mealWin = mealNow();                           // 食事どきか（1フレームに1回だけ判定）
+  // 「声かけ」の再生は一度に一人ずつ＝前の人が席へ戻ってから次を出す（順番に再生・社長指定）
+  if (!visitActive && visitQ.length && breakPass > 1) startVisit(visitQ.shift());
   for (const a of avatars.values()) {
     const ph = a.phase;
     if (a.qBubble) a.qBubble.position.y = 3.05 + Math.sin(t * 1.8 + ph) * 0.06;
 
     // 休憩・散歩：席（ローカル原点）からの相対位置に置き換える。名札・バッジ・吹き出しも一緒に動く
-    const outside = tickBreak(a, dt);
+    // （声かけ再生中はそちらが歩きを管理する＝屋外扱いで歩く姿勢になる）
+    const outside = a.visit ? (tickVisit(a, dt), true) : tickBreak(a, dt);
     const b = a.brk;
     const ox = b.pos.x - a.root.position.x, oz = b.pos.z - a.root.position.z;
     a.av.group.position.x = ox; a.av.group.position.z = oz;
@@ -3175,6 +3275,7 @@ function animate() {
     a.badgeHolder.position.x = ox; a.badgeHolder.position.z = oz;
     a.nameSprite.position.x = ox; a.nameSprite.position.z = oz - 0.42;
     if (a.qBubble) { a.qBubble.position.x = ox; a.qBubble.position.z = oz - 0.32; }
+    if (a.visitBubble && a.visitBubble.visible) a.visitBubble.position.set(ox, 2.45 + b.pos.y, oz);
     if (outside) { animateOutside(a, t, ph, mealWin, ox, oz); continue; }
     a.av.legs.visible = false;                          // 席では脚を隠す（机と椅子に隠れる部分）
     if (a.chatBubble) a.chatBubble.visible = false;
