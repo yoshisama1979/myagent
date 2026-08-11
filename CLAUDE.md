@@ -76,6 +76,7 @@
 | [rules/modes/deck-format.md](rules/modes/deck-format.md) | **スライド資料（提案書・営業デッキ）を作るとき**：HTML→ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
 | [rules/development.md](rules/development.md) | 開発・コミット時のルール |
 | [rules/testing.md](rules/testing.md) | **テスト・品質担保（TDD適応形）**：bin/ツールを作る・直すとき必読。無人ループ/状態書き込み/判定ロジックを持つツールは回帰テスト必須・直す前に再現（Red）・ルール⇄実装⇄テストの三者整合 |
+| [rules/refactoring.md](rules/refactoring.md) | **リファクタリング（挙動を変えずに内部を良くする）**：`/commit-pipeline` ステップ3・`/refactor` の正。既定スコープはSTRICT（差分の中だけ）・複数エージェント同居の混入対策・挙動不変は機械で示す・横断的改善は直さず起票 |
 | [rules/automation.md](rules/automation.md) | 自動化・定期実行・外部送信（Slack等）・API連携を作る/動かすときの安全ルール |
 | [rules/preview-server.md](rules/preview-server.md) | プレビューサーバ（VPS+Nginx+Tailscale）の構成と運用 |
 
