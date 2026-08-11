@@ -145,7 +145,10 @@ def _err_body(body, limit=300):
         pass
     text = re.sub(r"<[^>]+>", "", body or "")      # タグ除去
     # 秘密の漏れ防止：WAF/プロキシ等が混ぜ得る認証情報を redact（Authorization / Basic <token>）
-    text = re.sub(r"(?i)authorization\s*[:=]\s*\S+", "Authorization=[redacted]", text)
+    # ⚠️ スキームまで一緒に食べること。`\S+` だけだと "Authorization: Basic <token>" の
+    #    "Basic" までで止まり、**トークンが裸で残る**（しかも "Basic" が消えるので下の行にも
+    #    引っかからなくなる＝最も現実的な形だけが素通りしていた。2026-08-11 テストで検出）。
+    text = re.sub(r"(?i)authorization\s*[:=]\s*(?:basic\s+)?\S+", "Authorization=[redacted]", text)
     text = re.sub(r"(?i)\bbasic\s+[A-Za-z0-9+/=]+", "Basic [redacted]", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text[:limit]
