@@ -20,7 +20,7 @@
 閾値の出典：ledger 70KB=partner.md v0.3／coverage 100KB=hp-loop.md／掲示板 index 80KB=
   hp-loop.md v0.11。出典のない既定値（★印）は提案値＝統括が起票時に「既定値・要合意」と明記する。
 """
-import json, os, re, sys, glob, datetime
+import json, os, re, sys, glob, datetime, subprocess
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOG = os.path.join(ROOT, "data/overseer/system-health.jsonl")
@@ -88,6 +88,54 @@ def shape_warnings(shape):
             out.append(f"{shape['path']} の「{e['title']}」が単体 {e['bytes']//KB}KB "
                        f"> {ENTRY_MAX_BYTES//KB}KB（全体の{e['bytes']*100//total}%）")
     return out
+
+# ── 2c) 故障の一種：本番ツールが git に入っていない（消えたら復元できない）──────
+# 契機＝2026-08-11。ツール台帳に「運用中」と登録され日次分析が依存している bin/ の5本が、
+# 最古 2026-07-12 から**1ヶ月コミットされずディスク上にしか存在しなかった**。
+# git checkout / stash / reset 一発で1ヶ月分のツール開発と、それを使う分析が消える状態。
+# 原因＝無人ループはツールを拡張できてもコミットする手順を持たない（コミットは有人の仕事）。
+# 統括は O-009 で件数だけ挙げていたが「本番依存コードが混ざっている」質の評価が無かった。
+# ⚠️ ここで測るのは**バックアップの欠落＝故障**であって、コミットの頻度や作法ではない。
+TOOL_DEBT_DAYS = 3          # bin/ の未コミット変更を放置してよい日数（★提案既定値）
+
+def uncommitted_tools():
+    """bin/ の未コミット変更を [(path, 経過日数)] で返す。git が使えなければ None。
+
+    使い捨てスクリプト（`_tmp_` 始まり）は対象外＝ルール上その場限りで消す約束のもの。
+    """
+    try:
+        r = subprocess.run(["git", "-C", ROOT, "status", "--porcelain", "--", "bin/"],
+                           capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            return None
+    except Exception:
+        return None                      # git 不在・タイムアウト＝測れないことを隠さない
+    now = datetime.datetime.now().timestamp()
+    out = []
+    for line in r.stdout.splitlines():
+        path = line[3:].strip().strip('"')
+        name = os.path.basename(path)
+        if name.startswith("_tmp_"):
+            continue
+        full = os.path.join(ROOT, path)
+        if not os.path.isfile(full):
+            continue
+        out.append((path, (now - os.path.getmtime(full)) / 86400))
+    return sorted(out, key=lambda x: -x[1])
+
+def tool_debt_warnings(entries, max_days=TOOL_DEBT_DAYS):
+    """uncommitted_tools() の結果を警告文にする。判定はここ1箇所（テストが直接叩く）。"""
+    if entries is None:
+        return ["🚨 診断不能: bin/ の未コミット状況を git から取得できない"]
+    # 「最古」を名乗る以上、呼び出し側の並び順に依存しない（テストが実装のバグを検出した箇所）
+    old = sorted([(p, d) for p, d in entries if d > max_days], key=lambda x: -x[1])
+    if not old:
+        return []
+    head = ", ".join(f"{os.path.basename(p)}({int(d)}日)" for p, d in old[:3])
+    more = f" ほか{len(old)-3}本" if len(old) > 3 else ""
+    return [f"bin/ の未コミットが {len(old)}本・最古 {int(old[0][1])}日放置（>{max_days}日）＝"
+            f"{head}{more}。**ツールが git に無い＝消えたら復元できない**"
+            f"（2026-08-11 に1ヶ月放置の本番ツール5本が実在）"]
 
 # hp-loop の台帳・掲示板はサイト別に可変（gitignore のクライアント分含めディスク上を実測）
 def hp_loop_states():
@@ -453,6 +501,8 @@ def main():
     # 形の異常：サイズが閾値内でも「1本が台帳を食う」形は別に検知する（O-019 の再発防止）
     for tgt in SHAPE_TARGETS:
         warns.extend(shape_warnings(entry_shape(tgt)))
+    # バックアップの欠落：本番ツールが git に入っていない（2026-08-11 の1ヶ月放置の再発防止）
+    warns.extend(tool_debt_warnings(uncommitted_tools()))
     # 故障：診断不能そのものを故障として扱う（監視の無言停止を防ぐ）
     if fails.get("error"):
         warns.append(f"🚨 診断不能: {fails['error']}")

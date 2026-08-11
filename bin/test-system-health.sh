@@ -95,6 +95,29 @@ shp = sh.entry_shape("data/hp-improve/skill-kaizen.md")
 (ok if sh.shape_warnings(shp) == [] else ng)(f"退避後の本番台帳は無警告（{sh.shape_warnings(shp)}）")
 sh.ROOT = real
 
+print("\n=== 本番ツールが git に入っていない（2026-08-11 の1ヶ月放置の再発防止）===")
+(ok if sh.tool_debt_warnings([]) == [] else ng)("未コミットゼロなら無警告")
+(ok if sh.tool_debt_warnings([("bin/x.py", 0.5), ("bin/y.sh", 2.9)]) == [] else ng)(
+    f"{sh.TOOL_DEBT_DAYS}日以内は無警告（作業中のものを毎回鳴らさない）")
+w = sh.tool_debt_warnings([("bin/ga4-fetch.py", 30.2)])
+(ok if len(w) == 1 else ng)(f"閾値超えで警告（{len(w)}件）")
+(ok if "ga4-fetch.py" in w[0] and "30日" in w[0] else ng)(f"ファイル名と放置日数を出す（{w[0][:60]}…）")
+(ok if "復元できない" in w[0] else ng)("なぜ問題かを添える（コミット作法でなくバックアップの欠落）")
+w = sh.tool_debt_warnings([(f"bin/t{i}.py", 10 + i) for i in range(6)])
+(ok if len(w) == 1 and "6本" in w[0] and "ほか3本" in w[0] else ng)(
+    f"多数でも1行に畳む・件数は正確（{w[0][:70]}…）")
+(ok if w[0].index("t5.py") < w[0].index("t4.py") else ng)("古い順に並べる（直すべき順）")
+(ok if sh.tool_debt_warnings([("bin/x.py", 30)], max_days=90) == [] else ng)("閾値は引数で変えられる")
+w = sh.tool_debt_warnings(None)
+(ok if len(w) == 1 and "診断不能" in w[0] else ng)(
+    "git が使えないときは「0件」でなく診断不能として鳴らす（監視の無言停止を防ぐ）")
+
+print("\n=== 使い捨てスクリプトは対象外（_tmp_ は消す約束のもの）===")
+ents = sh.uncommitted_tools()
+(ok if ents is None or all("_tmp_" not in p for p, _ in ents) else ng)(
+    f"_tmp_ を含まない（{[p for p, _ in (ents or []) if '_tmp_' in p]}）")
+(ok if ents is None or isinstance(ents, list) else ng)("本番リポジトリで実行しても落ちない")
+
 print("\n=== 読み取り専用（監視が台帳を書き換えない）===")
 before = sorted(p.name for p in T.iterdir())
 sh.entry_shape("ledger.md"); sh.shape_warnings(sh.entry_shape("ledger.md"))
