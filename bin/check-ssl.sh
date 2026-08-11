@@ -46,10 +46,15 @@ if [ ! -f "$LIST_FILE" ]; then
 fi
 
 # --- 1ドメインの notAfter（GMT文字列）を取得。失敗時は空 ---
+# ⚠️ 末尾の `|| true` は必須。`set -euo pipefail` 下では openssl の非0終了でパイプライン全体が
+#    失敗し、呼び出し側の `enddate="$(get_enddate ...)"` で**スクリプトごと即死**していた
+#    （2026-08-11 テスト作成で検出）。結果、到達できないドメインが1つあるだけで
+#    レポートも Slack 通知も出ず終了コード1で黙って終わり、下の ⚠️ ERROR 処理は
+#    到達不能な死にコードだった＝「異常があるときだけ沈黙する」最悪の形。
 get_enddate() {
   local host="$1"
-  echo | timeout 15 openssl s_client -servername "$host" -connect "$host:443" 2>/dev/null \
-    | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2
+  { echo | timeout 15 openssl s_client -servername "$host" -connect "$host:443" 2>/dev/null \
+    | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2; } || true
 }
 
 now_epoch="$(date +%s)"

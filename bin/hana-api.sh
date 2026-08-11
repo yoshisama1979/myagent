@@ -56,8 +56,12 @@ search_clients() {
     echo '{"success": false, "message": "検索キーワードを指定してください"}' >&2
     exit 1
   fi
-  # 日本語対応: PHPでURLエンコード
-  local encoded=$(php -r "echo rawurlencode('$keyword');")
+  # 日本語対応: PHPでURLエンコード。
+  # ⚠️ キーワードを PHP コードへ文字列展開してはいけない（`'` 一つで任意コード実行になる。
+  #    2026-08-11 のテスト作成で検出＝`x'); echo shell_exec('id'); //` が実行できた）。
+  #    値は**環境変数で渡す**（mailbox.sh の JSON 生成と同じ作法＝クォート崩れ・注入の同時防止）。
+  local encoded
+  encoded=$(HANA_SEARCH_Q="$keyword" php -r 'echo rawurlencode(getenv("HANA_SEARCH_Q"));')
   curl -s -k -X GET "$BASE_URL/api/external/clients/search?q=$encoded" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
