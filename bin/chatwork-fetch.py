@@ -35,6 +35,9 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _env import env_value  # noqa: E402  .env の読み取りは bin/_env.py に集約
+
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "comms" / "chatwork"
 STATE = DATA / "state.json"
@@ -45,10 +48,10 @@ MAX_ROOMS_PER_POLL = 60  # レート制限 300req/5min の安全マージン
 
 
 def token() -> str:
-    for line in (ROOT / ".env").read_text().splitlines():
-        if line.startswith("CHATWORK_API_TOKEN="):
-            return line.split("=", 1)[1].strip()
-    sys.exit("CHATWORK_API_TOKEN が .env にありません")
+    tok = env_value("CHATWORK_API_TOKEN")
+    if not tok:
+        sys.exit("CHATWORK_API_TOKEN が .env にありません")
+    return tok
 
 
 def get(path: str, tok: str):

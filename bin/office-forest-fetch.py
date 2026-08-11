@@ -32,6 +32,9 @@ import re
 import sys
 import tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _env import env_value  # noqa: E402  .env の読み取りは bin/_env.py に集約（重複解消・相対パス事故の防止）
+
 PROJ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # live/ ではなく office/ 直下＝live/ はビーコンのTTL掃除（office-beacon.sh が
 # 60分超の *.json を消す）の領域なので、日次スナップショットを置くと消される（2026-08-11 実発生）
@@ -66,22 +69,12 @@ def err(msg):
     print(msg, file=sys.stderr)
 
 
-def _env_from_dotenv(key):
-    try:
-        with open(os.path.join(PROJ, ".env"), encoding="utf-8") as f:
-            for line in f:
-                s = line.strip()
-                if s.startswith(key + "="):
-                    return s[len(key) + 1:]
-    except FileNotFoundError:
-        pass
-    return None
 
 
 def load_client():
     """サービスアカウント JSON で BigQuery クライアントを作る（gsc-fetch.py と同型・中身は読まない）。"""
     cred_path = (os.environ.get("GSC_SA_JSON") or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-                 or _env_from_dotenv("GSC_SA_JSON"))
+                 or env_value("GSC_SA_JSON"))
     if not cred_path or not os.path.isfile(cred_path):
         err("ERROR: 認証JSONのパス未設定または不存在（.env の GSC_SA_JSON）")
         sys.exit(2)

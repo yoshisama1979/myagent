@@ -18,6 +18,20 @@
 ⚠️ `.env` のパスは**このファイルの位置から絶対パスで解決**する。相対パスで開くと、
    cron のように作業ディレクトリが違う環境で黙って読めなくなる（実在の潜在バグ＝`gsc-fetch.py`）。
 
+利用中（2026-08-11 時点・8本）
+  gmail-fetch / calendar-fetch / gsc-fetch / ga4-fetch / ads-fetch / clarity-fetch /
+  office-forest-fetch / chatwork-fetch
+
+**あえて移していないもの（規約が違う＝移すと静かに挙動が変わる）**
+  - `slack-poll.py`／`slack-listen.py`：同じキーが複数あるとき**最後の定義**を採る
+    （`slack.sh` と揃えた意図的な仕様）。本モジュールは**最初の定義**を採るため、
+    移すと重複キーのある .env で別の値を掴む。移すなら「最後を採る」選択肢を足すか、
+    先に .env 側の重複を無くしてから。
+  - `wp-draft.py`：環境変数を先に見る（`os.environ.get(key) or ...`）。移すこと自体は可能だが
+    回帰テストが無いため、テストを用意してからにする。
+  - shell 側（`slack.sh`・`hana-api.sh`・`hp-audit.sh`・`mailbox.sh`・`office-beacon.sh`）：
+    言語が違うため本モジュールでは吸収できない。共通化するなら別途 shell 用ヘルパーが要る。
+
 触ったら必ず流すこと：bash bin/test-env.sh
 """
 

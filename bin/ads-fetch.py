@@ -53,6 +53,9 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _env import env_value  # noqa: E402  .env の読み取りは bin/_env.py に集約（重複解消・相対パス事故の防止）
+
 
 def err(msg):
     print(msg, file=sys.stderr)
@@ -111,23 +114,13 @@ def validate_args(args):
         sys.exit(2)
 
 
-def _env_from_dotenv(key):
-    try:
-        with open(".env", encoding="utf-8") as f:
-            for line in f:
-                s = line.strip()
-                if s.startswith(key + "="):
-                    return s[len(key) + 1:]
-    except FileNotFoundError:
-        pass
-    return None
 
 
 def load_client():
     """サービスアカウント JSON で BigQuery クライアントを作る。中身は読まない。"""
     cred_path = (os.environ.get("ADS_SA_JSON") or os.environ.get("GSC_SA_JSON")
                  or os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-                 or _env_from_dotenv("ADS_SA_JSON") or _env_from_dotenv("GSC_SA_JSON"))
+                 or env_value("ADS_SA_JSON") or env_value("GSC_SA_JSON"))
     if not cred_path:
         err("ERROR: 認証JSONのパス未設定。.env の ADS_SA_JSON か GSC_SA_JSON を設定してください。")
         sys.exit(2)

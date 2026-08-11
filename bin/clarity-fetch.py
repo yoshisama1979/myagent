@@ -40,6 +40,9 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _env import env_value  # noqa: E402  .env の読み取りは bin/_env.py に集約（重複解消・相対パス事故の防止）
+
 API_URL = "https://www.clarity.ms/export-data/api/v1/project-live-insights"
 DAILY_LIMIT = 10  # Clarity Data Export API の制限（1プロジェクト/日）
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -52,22 +55,11 @@ def err(msg):
     print(msg, file=sys.stderr)
 
 
-def _env_from_dotenv(key):
-    """.env から必要キーだけ読む（全体を読み込まない）。値は呼び出し元でもログに出さない。"""
-    try:
-        with open(os.path.join(ROOT, ".env"), encoding="utf-8") as f:
-            for line in f:
-                s = line.strip()
-                if s.startswith(key + "="):
-                    return s[len(key) + 1:]
-    except FileNotFoundError:
-        pass
-    return None
 
 
 def load_token(site):
     key = f"CLARITY_API_TOKEN_{site.upper()}"
-    token = os.environ.get(key) or _env_from_dotenv(key)
+    token = os.environ.get(key) or env_value(key)
     if not token:
         err(f"ERROR: {key} が未設定です。Clarity → 設定 → データエクスポート → APIトークン生成 →"
             f" .env に {key}=<トークン> を追記してください（実値はAIが読まない・表示しない運用）。")
