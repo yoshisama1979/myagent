@@ -2206,7 +2206,7 @@ function addEmployeeDesk(emp, index) {
       const st = staffAvatars.get(emp.id);
       const now = st?.state === 'working' ? '⌨️ 作業中'
                 : st?.state === 'off' ? '🏠 退勤中（席が空）' : '—';
-      return `${escHtml(emp.role || '社員')}。人間の社員です（hana-tools の作業タイマーと連動して稼働が映ります）。` +
+      return `${esc(emp.role || '社員')}。人間の社員です（hana-tools の作業タイマーと連動して稼働が映ります）。` +
              `<div class="sub2">現在＝${now}　／　所属＝社員席（人）</div>`;
     },
     view: () => focusViewOf(av.group),
@@ -3404,17 +3404,16 @@ const ROLE_BY_ISLAND = {
   office: '事務まわりの担当。',
   exec: '経営まわりの担当。',
 };
-const escHtml = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 function focusAgentBody(agent, a) {
   const ag = a.agent ?? agent;
   const role = ROLE_BY_ID[agent.id] ?? ROLE_BY_ISLAND[agent.island] ?? 'はなさかのエージェント。';
-  const meta = [`現在＝${STATE_LABEL[a.state] ?? escHtml(a.state ?? '—')}`];
+  const meta = [`現在＝${STATE_LABEL[a.state] ?? esc(a.state ?? '—')}`];
   if (a.brk?.spot) meta.push(`${breakBadge(a.brk.spot) ?? '🌿'} 外で一息中`);
   if (a.visit) meta.push('🚶 声をかけに行っています');
-  if (ag.nextWake) meta.push(`定時起動＝${escHtml(ag.nextWake)}`);
+  if (ag.nextWake) meta.push(`定時起動＝${esc(ag.nextWake)}`);
   const isl = ISLANDS[agent.island];
-  if (isl) meta.push(`所属＝${escHtml(isl.name)}`);
-  return `${escHtml(role)}<div class="sub2">${meta.join('　／　')}</div>`;
+  if (isl) meta.push(`所属＝${esc(isl.name)}`);
+  return `${esc(role)}<div class="sub2">${meta.join('　／　')}</div>`;
 }
 /** アバターの「いまの位置」へズームするビュー（歩いて外に居てもその場所へ寄る） */
 function focusViewOf(obj3d, d = 9) {
