@@ -87,7 +87,7 @@
   <div class="sub" id="tickline">読み込み中…</div>
   <div class="sub" id="staffline">👥 社員の稼働：読み込み中…</div>
   <div class="sub" id="actline" title="クリックで夜間ダイジェスト">📻 活動：読み込み中…</div>
-  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ <a href="hold.html" target="_top">🗂 承認待ち <b id="holdN">-</b> 件</a> ／ <span id="qLink" style="cursor:pointer;color:#7dd3fc;text-decoration:underline dotted">🔔 質問 <b id="qN">-</b> 件</span> ／ <span style="color:#a5b4fc">🎮 ドラッグ＝回転／<b>WASD・矢印＝視点移動</b>（Shiftで速く・<b>0</b>で戻す）／右ドラッグ＝平行移動／ホイール＝ズーム</span></div>
+  <div class="sub">📋 <a href="list.html">一覧ビュー</a> ／ <a href="hold.html" target="_top">🗂 承認待ち <b id="holdN">-</b> 件</a> ／ <span id="qLink" style="cursor:pointer;color:#7dd3fc;text-decoration:underline dotted">🔔 質問 <b id="qN">-</b> 件</span> ／ <span id="forestBtn" title="クライアントの森へ（0キーで戻る）" style="cursor:pointer;color:#86efac;text-decoration:underline dotted">🌳 森</span> ／ <span style="color:#a5b4fc">🎮 ドラッグ＝回転／<b>WASD・矢印＝視点移動</b>（Shiftで速く・<b>0</b>で戻す）／右ドラッグ＝平行移動／ホイール＝ズーム</span></div>
   <span id="menu-btn">📁 メニュー ▾</span>
   <nav id="menu">
     <a href="../business/focus.html" target="_top">🎯 今日のフォーカス</a>
@@ -123,6 +123,7 @@
   🏢 奥の壁＝全社ボード（進行中の案件・未完了ToDo）　※人の稼働は5分ごと・件数は30分ごとに更新<br>
   <span style="color:#6ee7b7">💬 社長の頭上＝Chatworkで返すべきボール（クリックで整理板へ・2時間ごと更新）</span><br>
   <span style="color:#fda4af">🚶💬 誰かの机まで歩いて声をかける動き ＝ <b>実際の委任（サブエージェント呼び出し）のストック再生</b>。発生から少し遅れて一人ずつ順番に再生されます（声をかけられた側の机が光るのは在席ビーコン＝実データ）</span><br>
+  <span style="color:#f9a8d4">🌳 オフィス西どなりの森（HUDの「🌳 森」で見に行く） ＝ <b>クライアントサイトの実データ</b>（Search Console / GA4・毎日更新）。木の大きさ＝直近7日の検索クリック／🍎 実がなる＝直近にCV（問い合わせ・WEB予約）があった／🌼 地面の花＝全サイト合計の勢い／支柱つきの苗木＝データ未接続。待機中のキャラクターは森を散歩します</span><br>
   <span style="color:#cbd5e1">🚗 奥の通り・🚃 線路を通る電車・🛝 川向こうの公園・🚪 道路側の玄関と小道・🐈🐕🐇 やってくる動物・🐦 飛んでくる鳥・🦋 蝶 ＝ <b>背景の演出でデータとは無関係</b>。数や動きに意味はありません（見て楽しむための層）</span><br>
   <span style="color:#7dd3fc">📻 上の活動ティッカー＝直近24時間の出来事（🔨起動 ✉️便 📋成果 ⚠️警報）。クリックで🌙夜間ダイジェスト＝夜のうちの働きをまとめて確認</span><br>
   <span style="color:#a5b4fc">🎮 視点：左ドラッグ＝回転／<b>W前・S後・A左・D右</b>（矢印キーも可・Shiftで速く）／右ドラッグ＝つかんで平行移動／ホイール＝ズーム／<b>0キーで最初の位置に戻る</b>。書類の山・コルクボード・吹き出しはクリックで詳細</span>
@@ -810,6 +811,175 @@ for (const [hx, hz, w, d, h, mi] of [[-24, -43.8, 7, 6, 3.2, 0], [-6, -44.4, 6, 
   roof.rotation.y = Math.PI / 4; roof.position.set(hx, h + 0.55, hz); scene.add(roof);
 }
 tree(-33, -41.5, 1.2); tree(3, -41.8, 1.0); tree(16.5, -41.5, 1.15);   // 線路の奥・家並みの手前（x22だと川の中に立つ）
+
+/* ---- 2.7e クライアントの森（★実データ層・社長指示 2026-08-10）-----------------
+ * オフィスの西どなりの芝生に「サイトの木」を植える（社長指定 2026-08-11・既定カメラの
+ * 画角外なのでHUDの🌳ボタンで見に行く）。サイトが増えたら さらに西へ育つ。
+ * status.php の forest（bin/office-forest-fetch.py が日次で書く GSC/GA4 集計値）
+ * だけで見た目が決まる：
+ *   木の大きさ＝直近7日の検索クリック（√スケール）
+ *   実がなる🍎＝CV（問い合わせ/予約）が直近にあった＝「成果の翌朝に実る」
+ *   地面の花＝全サイト合計の7日クリック（総合値）＝会社全体の勢い
+ *   支柱つきの苗木＝データ未接続のサイト（正直にそう見せる）
+ * 待機中のキャラクターの散歩道（PROMENADE 0〜6）が森の中を蛇行して通る。
+ *（東側の木橋〜川向こうの周回路も残置＝散歩の行き先が2方向ある）
+ * ジオメトリは applyForest() がポーリング値の変化時だけ植え替える（実質1日1回）。
+ * サイトが増える前提の作り＝区画は FOREST_SLOTS から登録順に自動割当（座標を手で足さない）。 */
+const FOREST_SLOTS = [];
+{
+  // オフィスの西どなり（x-33〜-17.5, z0〜12.5 → 増えたら さらに西の格子へ）。
+  // 手前の10区画は散歩の小径（PROMENADE 0〜6）から1m強離した手置きの配置
+  // ＝歩く人が幹に刺さらない。11区画目からは西（x-）の格子へ延びていく。
+  FOREST_SLOTS.push([-25.6, 6.6], [-22.8, 1.2], [-31.5, 5.2], [-19, 3], [-27.4, 10.6],
+                    [-24, 11.4], [-31, 1.6], [-17.6, 7.4], [-33.4, 8], [-29.6, 12]);
+  for (const z of [2, 5.5, 9, 12.5]) for (const x of [-35.5, -39, -42.5, -45.5]) FOREST_SLOTS.push([x, z]);
+}
+// 森への木橋（z5.6・西岸の遊歩道とつなぐ）。アヒルの周回範囲（z-20〜36）内なので
+// デッキを高く（天端0.38）してアヒルが下をくぐれるようにする（公園の橋 z-22 は範囲外で低いまま）
+{
+  const woodMat = new THREE.MeshStandardMaterial({ color: 0xa8845c, roughness: 0.85 });
+  const deck = new THREE.Mesh(new THREE.BoxGeometry(8.6, 0.12, 1.7), woodMat);
+  deck.position.set(23, 0.32, 5.6); scene.add(deck);
+  for (const rx of [18.55, 27.45]) {                     // 両岸のスロープ
+    const ramp = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.1, 1.7), woodMat);
+    ramp.position.set(rx, 0.08, 5.6);
+    ramp.rotation.z = (rx < 23 ? -1 : 1) * 0.4; scene.add(ramp);
+  }
+  for (const dz of [-0.78, 0.78]) {                      // 高欄
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(8.6, 0.09, 0.09), woodMat);
+    rail.position.set(23, 0.86, 5.6 + dz); scene.add(rail);
+    for (let i = 0; i <= 6; i++) {
+      const post = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.52, 0.07), woodMat);
+      post.position.set(19.1 + i * 1.3, 0.62, 5.6 + dz); scene.add(post);
+    }
+  }
+}
+let forestGroup = null, forestKey = '';
+function forestPlate(text) {                   // 木の根元の立て札（どの木がどのサイトか）
+  const g = new THREE.Group();
+  const post = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.55, 6),
+    new THREE.MeshStandardMaterial({ color: 0x8a6a48, roughness: 0.9 }));
+  post.position.y = 0.27; g.add(post);
+  const board = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.34, 0.05),
+    new THREE.MeshStandardMaterial({ color: 0xf0e9d8, roughness: 0.8 }));
+  board.position.y = 0.62; g.add(board);
+  const face = new THREE.Mesh(new THREE.PlaneGeometry(1.29, 0.28),
+    new THREE.MeshStandardMaterial({
+      map: makeSignTexture(text, 256, 56, '#f0e9d8', '#3e4a42', '30px "Noto Sans JP", sans-serif'),
+      roughness: 0.7 }));
+  face.position.set(0, 0.62, 0.03); g.add(face);
+  return g;
+}
+function forestTree(e) {                       // サイトの木：大きさ＝7日クリック・実＝CV
+  const g = new THREE.Group();
+  const s = Math.min(2.1, 0.75 + Math.sqrt(Math.max(0, e.clicks7d)) / 16);
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.14 * s, 0.2 * s, 1.1 * s, 8),
+    new THREE.MeshStandardMaterial({ color: 0x6b4a2e, roughness: 0.9 }));
+  trunk.position.y = 0.55 * s; g.add(trunk);
+  const crownMat = new THREE.MeshStandardMaterial({ color: 0x2f7a3f, roughness: 0.85 });
+  const blobs = [[0, 1.7, 0, .85], [.5, 1.3, .2, .6], [-.45, 1.35, -.15, .55], [.05, 1.15, .5, .5]];
+  for (const [dx, dy, dz, r] of blobs) {
+    const leaf = new THREE.Mesh(new THREE.SphereGeometry(r * s, 10, 10), crownMat);
+    leaf.position.set(dx * s, dy * s, dz * s); g.add(leaf);
+  }
+  if (e.bloom) {                               // 実がなる＝直近CVあり（最低3個＝遠目でも分かる数）
+    const n = Math.max(3, Math.min(10, e.cv_recent || 0));
+    const fruitMat = new THREE.MeshStandardMaterial({ color: 0xd8402f, emissive: 0x7a1408, emissiveIntensity: 0.25, roughness: 0.55 });
+    const fruitGeo = new THREE.SphereGeometry(0.1 * Math.max(1, s * 0.62), 8, 8);
+    for (let k = 0; k < n; k++) {
+      const [bx, by, bz, br] = blobs[k % blobs.length];
+      const a = k * 2.4;                       // 黄金角ふうに散らす＝実が一列に並ばない
+      const fruit = new THREE.Mesh(fruitGeo, fruitMat);
+      // 係数0.95〜＝樹冠の球面ぎりぎりの外側に置く（0.8だと葉に埋まってほぼ見えない）
+      fruit.position.set((bx + Math.cos(a) * br * 0.97) * s,
+                         (by - br * 0.28) * s,
+                         (bz + Math.sin(a) * br * 0.97) * s);
+      g.add(fruit);
+    }
+  }
+  return g;
+}
+function forestSapling() {                     // データ未接続＝支柱つきの苗木（まだ育っていない）
+  const g = new THREE.Group();
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.06, 0.7, 6),
+    new THREE.MeshStandardMaterial({ color: 0x7a5a3a, roughness: 0.9 }));
+  trunk.position.y = 0.35; g.add(trunk);
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.3, 8, 8),
+    new THREE.MeshStandardMaterial({ color: 0x7fae6a, roughness: 0.85 }));
+  crown.position.y = 0.85; g.add(crown);
+  const stake = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.0, 6),
+    new THREE.MeshStandardMaterial({ color: 0xb59a6a, roughness: 0.9 }));
+  stake.position.set(0.22, 0.5, 0); stake.rotation.z = -0.12; g.add(stake);
+  const tie = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.3, 5),
+    new THREE.MeshStandardMaterial({ color: 0x4a4a42, roughness: 0.9 }));
+  tie.rotation.z = Math.PI / 2; tie.position.set(0.11, 0.62, 0); g.add(tie);
+  return g;
+}
+function forestFlowers(total) {                // 地面の花＝全サイト合計（√スケール・最大56本）
+  const g = new THREE.Group();
+  const count = Math.min(56, Math.round(Math.sqrt(Math.max(0, total)) * 1.6));
+  const petals = [0xf2a9c4, 0xf6d879, 0xff9d80, 0xc9b8f0];
+  const stemMat = new THREE.MeshStandardMaterial({ color: 0x3d7a3f, roughness: 0.9 });
+  const stemGeo = new THREE.CylinderGeometry(0.018, 0.018, 0.24, 5);
+  const headGeo = new THREE.SphereGeometry(0.075, 7, 7);
+  const headMats = petals.map(c => new THREE.MeshStandardMaterial({ color: c, roughness: 0.7 }));
+  for (let i = 0; i < count; i++) {
+    const h = (Math.imul(i + 1, 2654435761) >>> 0);      // 決定論の散布＝毎日同じ総合値なら同じ絵
+    const x = -32.5 + (h % 140) / 10, z = 0.4 + ((h >> 8) % 118) / 10;
+    const stem = new THREE.Mesh(stemGeo, stemMat);
+    stem.position.set(x, 0.12, z); g.add(stem);
+    const head = new THREE.Mesh(headGeo, headMats[h % 4]);
+    head.position.set(x, 0.28, z); g.add(head);
+  }
+  return g;
+}
+function disposeForest(g) {
+  const mats = new Set();
+  g.traverse(o => {
+    if (!o.isMesh) return;
+    o.geometry.dispose();
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) mats.add(m);
+  });
+  for (const m of mats) { if (m.map) m.map.dispose(); m.dispose(); }
+}
+function applyForest(fo) {
+  if (!fo || !fo.sites) {
+    // データが消えた/壊れたら森も畳む＝APIが null でも古い実・花を出し続けない
+    // （Codexレビュー 2026-08-11 🔴反映）
+    if (forestGroup) { scene.remove(forestGroup); disposeForest(forestGroup); forestGroup = null; forestKey = ''; }
+    return;
+  }
+  // 3日以上更新が無ければ実と花は消す＝古い成果を「今日の顔」にしない（木の大きさは残す）。
+  // 全体の generated_at に加え、サイト単位でも fetched_date で判定＝取得失敗の持ち越しが
+  // 新鮮な成果のふりをしない（Codexレビュー 2026-08-11 🔴反映）
+  const nowSec = Date.now() / 1000;
+  const stale = nowSec - (fo.generated_at || 0) > 72 * 3600;
+  const siteStale = e => !e.fetched_date || nowSec - Date.parse(e.fetched_date) / 1000 > 72 * 3600;
+  const key = JSON.stringify(fo.sites) + (stale ? '|stale' : '');
+  if (key === forestKey) return;               // 変化した時だけ植え替え（実質1日1回）
+  forestKey = key;
+  if (forestGroup) { scene.remove(forestGroup); disposeForest(forestGroup); }
+  forestGroup = new THREE.Group();
+  let i = 0, total = 0;
+  for (const [sid, e] of Object.entries(fo.sites)) {     // 登録順＝区画は動かない（毎日同じ場所）
+    if (i >= FOREST_SLOTS.length) break;
+    const [x, z] = FOREST_SLOTS[i];
+    const jx = ((i * 53) % 17) / 17 * 0.5 - 0.25, jz = ((i * 31) % 13) / 13 * 0.5 - 0.25;
+    const dim = stale || siteStale(e);
+    const t = e.connected ? forestTree(dim ? { ...e, clicks_latest: 0, bloom: false } : e) : forestSapling();
+    const plate = forestPlate(e.connected ? e.label : `${e.label}・準備中`);
+    plate.position.set(0.15, 0, 1.15);
+    t.add(plate);
+    t.position.set(x + jx, -0.3, z + jz);
+    const nearShadow = Math.abs(x) < 18 && Math.abs(z) < 18;
+    t.traverse(o => { if (o.isMesh) o.castShadow = nearShadow; });
+    forestGroup.add(t);
+    if (e.connected) total += e.clicks7d || 0;
+    i++;
+  }
+  if (!stale) forestGroup.add(forestFlowers(total));
+  scene.add(forestGroup);
+}
 
 // 車：低ポリで前方＝+z に組み、走る向きに合わせて Y 90° 回して使う
 const carGlassMat = new THREE.MeshStandardMaterial({ color: 0x2c3a46, roughness: 0.25, metalness: 0.35 });
@@ -2259,10 +2429,22 @@ function mealNow(now = new Date()) {
 }
 // 散歩コース（石畳と同じ座標）：テラス前を東へ→建物の角を回って川沿いを北上。端で折り返す
 const PROMENADE = [
+  // 0〜6＝西どなりの森（2.7e）を蛇行する小径。点を増減したら FOREST_SLOTS との間隔
+  // （1m強）を保つこと（木に刺さって歩かない）。6 で庭の石畳（z12.9）に合流する
+  { x: -29.5, z: 8.6 }, { x: -27, z: 5 }, { x: -23.4, z: 3.4 }, { x: -20.2, z: 5.4 },
+  { x: -21.4, z: 8.8 }, { x: -18.2, z: 11.2 }, { x: -14.6, z: 12.9 },
   { x: -12.5, z: 12.9 }, { x: -8, z: 12.9 }, { x: -3.5, z: 12.9 }, { x: 1, z: 12.9 },
   { x: 5.5, z: 12.9 }, { x: 10, z: 12.9 }, { x: 14.4, z: 12.85 }, { x: 16.6, z: 12.4 },
   { x: 17.9, z: 11.0 }, { x: 18.15, z: 7.4 }, { x: 18.15, z: 3.4 }, { x: 18.15, z: -0.6 },
   { x: 18.15, z: -4.6 },
+  // ここから東＝木橋（z5.6）を渡ってクライアントの森（2.7e）へ入り、森の中を周回して折り返す。
+  // 橋の上の点は y 付き（デッキの高さを歩く）。点を増減したら FOREST_SLOTS との間隔
+  // （1m強）を保つこと（木に刺さって歩かない）
+  { x: 18.5, z: 5.4 },
+  { x: 20.6, z: 5.6, y: 0.34 }, { x: 23, z: 5.6, y: 0.38 }, { x: 25.4, z: 5.6, y: 0.34 },
+  { x: 27.9, z: 5.6 },
+  { x: 30, z: 4.6 }, { x: 33, z: 6 }, { x: 36.5, z: 4.8 }, { x: 38.6, z: 1.8 },
+  { x: 36.8, z: -1.6 }, { x: 33.2, z: -2.6 }, { x: 30.2, z: -0.8 },
 ];
 /** 向かい合わせに立つ2人組（立ち話）。face は相手の方を向く角度を自動計算する */
 function chatPair(id, ax, az, bx, bz, y) {
@@ -2293,9 +2475,11 @@ const BREAK_SPOTS = [
   ...chatPair('chat-terrace', 7.0, 11.2, 8.4, 11.2, 0),   // テラスで立ち話（室内の床と同じ高さ）
   ...chatPair('chat-garden', 3.2, 13.9, 4.5, 14.3),
   ...chatPair('chat-river', 17.5, 6.8, 18.8, 7.2),
-  { id: 'walk-1',       type: 'walk',  from: 4 },
-  { id: 'walk-2',       type: 'walk',  from: 8 },
-  { id: 'walk-3',       type: 'walk',  from: 0 },
+  { id: 'gaze-forest',  type: 'stand', x: -31.8, z: 3.2, face: -Math.PI / 2 },   // 森の中で木を眺める
+  { id: 'walk-1',       type: 'walk',  from: 11 },
+  { id: 'walk-2',       type: 'walk',  from: 15 },
+  { id: 'walk-3',       type: 'walk',  from: 2 },    // 森の小径から歩き始める（クライアントの森）
+  { id: 'walk-4',       type: 'walk',  from: 25 },   // 川向こう（木橋の先の周回路）から歩き始める
 ];
 const BREAK_BADGE = { sit: '☕', stand: '🌿', walk: '🚶', chat: '💬' };
 /** その場所に居る人の頭上バッジ（食事どきの食事席だけ食事の絵文字にする） */
@@ -2315,7 +2499,7 @@ function hash32(s) {
   for (const ch of s) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
   return h;
 }
-const isOutside = p => p.z > 11.9 || p.x > 15.2;
+const isOutside = p => p.z > 11.9 || p.x > 15.2 || p.x < -16;   // x<-16＝西どなりの森
 const clampGarden = x => Math.max(-13, Math.min(16, x));
 /** 現在地 → 行き先の道順。壁・ガラス・机をすり抜けないよう通路とテラスを必ず経由する。
  *  y は芝生 -0.3／テラス・室内 0（歩きながら滑らかに上下する）。 */
@@ -2324,12 +2508,35 @@ function breakPath(from, dest, home, lane = 0) {
   const A = AISLE_X + lane;                           // 通路は個体ごとに少しずらす＝すれ違いが団子にならない
   const outNow = isOutside(from), outDest = isOutside(dest);
   const toRiverSide = dest.z < 10;                    // 川沿いのベンチ＝建物の角を回り込む
+  const toEast = dest.x > 26;                         // 川向こう（木橋で渡る）
+  const toWest = dest.x < -16;                        // 西どなりの森
+  const BRIDGE_W = [{ x: 18.5, z: 5.4, y: L }, { x: 20.6, z: 5.6, y: 0.34 },   // 橋を西→東に渡る点列
+                    { x: 23, z: 5.6, y: 0.38 }, { x: 25.4, z: 5.6, y: 0.34 }, { x: 27.9, z: 5.6, y: L }];
+  // 橋の上で行き先が変わったら、まず近い方の橋端まで渡り切ってから続きを組む
+  // ＝橋上は x>26 でも x<-16 でもないため、放置すると川を斜めに横切る（Codexレビュー 2026-08-11 🔴反映）
+  if (from.x > 18.4 && from.x < 28 && from.z > 4.2 && from.z < 7.0) {
+    if (toEast) {
+      for (const p of BRIDGE_W) if (p.x > from.x + 0.1) P.push(p);
+      from = { x: 27.9, z: 5.6 };
+    } else {
+      for (const p of [...BRIDGE_W].reverse()) if (p.x < from.x - 0.1) P.push(p);
+      from = { x: 18.5, z: 5.4 };
+    }
+  }
+  const fromEast = from.x > 26, fromWest = from.x < -16;
+  const WEXIT = { x: -17.4, z: 11.8, y: L };          // 森⇄庭の出入口（建物の北西角 z10 を外して回る）
+  if ((fromEast && toEast) || (fromWest && toWest)) { // 同じ側どうし＝見通しが良い・直行
+    P.push({ x: dest.x, z: dest.z, y: L });
+    return P;
+  }
   if (!outNow) {                                      // 室内から：机→通路→テラス→庭
     P.push({ x: from.x, z: from.z + 1.5, y: 0 }, { x: A, z: from.z + 1.5, y: 0 },
            { x: A, z: AISLE_Z + lane * 0.5, y: 0 });
     if (outDest) P.push({ x: A, z: 11.3, y: 0 }, { x: A, z: GARDEN_Z + lane * 0.4, y: L });
-  } else if (!outDest) {                              // 庭から自席へ：来た道を戻る
-    if (from.z < 10) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
+  } else if (!outDest) {                              // 庭・森から自席へ：来た道を戻る
+    if (fromEast) P.push(...[...BRIDGE_W].reverse()); // 橋で西岸へ戻ってから
+    if (fromWest) P.push(WEXIT);                      // 森から庭の西端へ出てから
+    if (fromEast || (!fromWest && from.z < 10)) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
     P.push({ x: clampGarden(from.x), z: GARDEN_Z + lane * 0.4, y: L },
            { x: A, z: GARDEN_Z + lane * 0.4, y: L },
            { x: A, z: 11.3, y: 0 }, { x: A, z: AISLE_Z + lane * 0.5, y: 0 },
@@ -2337,10 +2544,30 @@ function breakPath(from, dest, home, lane = 0) {
   }
   if (outDest) {                                      // 庭の中は遊歩道づたいに回り込む
     const gz = GARDEN_Z + lane * 0.4;
-    if (from.z < 10 && !toRiverSide) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
-    if (toRiverSide) P.push({ x: clampGarden(from.x), z: gz, y: L },
-                            { x: 16.6, z: 12.6, y: L }, { x: 17.9, z: 11.0, y: L });
-    else P.push({ x: clampGarden(dest.x), z: gz, y: L });
+    if (toEast) {                                     // 川向こうへ：庭→建物の角→木橋
+      if (fromWest) P.push(WEXIT);
+      P.push({ x: clampGarden(from.x), z: gz, y: L },
+             { x: 16.6, z: 12.6, y: L }, { x: 17.9, z: 11.0, y: L }, ...BRIDGE_W);
+    } else if (toWest) {                              // 西の森へ：庭の西端→出入口
+      if (fromEast) P.push(...[...BRIDGE_W].reverse(),
+                           { x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
+      else if (outNow && from.z < 10) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
+      P.push({ x: -13, z: gz, y: L }, WEXIT);
+    } else if (fromEast) {                            // 川向こうから西岸の庭・川沿いへ：橋を戻る
+      P.push(...[...BRIDGE_W].reverse());
+      if (!toRiverSide) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L },
+                               { x: clampGarden(dest.x), z: gz, y: L });
+    } else if (fromWest) {                            // 西の森から庭・川沿いへ：出入口から出る
+      P.push(WEXIT);
+      if (toRiverSide) P.push({ x: -13, z: gz, y: L },
+                              { x: 16.6, z: 12.6, y: L }, { x: 17.9, z: 11.0, y: L });
+      else P.push({ x: clampGarden(dest.x), z: gz, y: L });
+    } else {
+      if (from.z < 10 && !toRiverSide) P.push({ x: 17.9, z: 11.0, y: L }, { x: 16.6, z: 12.6, y: L });
+      if (toRiverSide) P.push({ x: clampGarden(from.x), z: gz, y: L },
+                              { x: 16.6, z: 12.6, y: L }, { x: 17.9, z: 11.0, y: L });
+      else P.push({ x: clampGarden(dest.x), z: gz, y: L });
+    }
   }
   P.push({ x: dest.x, z: dest.z, y: outDest ? L : 0 });
   return P;
@@ -2535,6 +2762,7 @@ async function refresh() {
   }
   breakPass++;   // 2回目以降の割り当ては「歩いて移動する」（初回だけその場に配置）
   queueVisits(d.visits);                   // 委任の「声かけ」イベントを再生キューへ
+  applyForest(d.forest);                   // クライアントの森（実データ・変化した時だけ植え替え）
 
   updateCompanyBoard(d.company || null);   // 全社ボード（進行中の案件・未完了ToDo）
 
@@ -2897,7 +3125,7 @@ let theta = HOME_VIEW.theta, phi = HOME_VIEW.phi, dist = HOME_VIEW.dist;
 }
 // 注視点を動かせる範囲（外に出ると空と芝生しか映らないので、敷地の内側に留める）
 // 奥は通り（z=-30.5）を作ったぶん広げた＝車を間近で見られる
-const PAN_LIMIT = { x: [-26, 44], z: [-42, 26] };   // 東＝公園（x43.5）・奥＝線路と家並み（z-44）まで寄れる
+const PAN_LIMIT = { x: [-48, 44], z: [-42, 26] };   // 東＝公園（x43.5）・奥＝線路と家並み（z-44）まで寄れる
 function updateCamera() {
   phi = Math.max(0.25, Math.min(1.5, phi));   // 1.5＝ほぼ水平まで見上げられる（空・太陽が見える）
   dist = Math.max(7, Math.min(38, dist));
@@ -2922,6 +3150,14 @@ function resetView() {
   theta = HOME_VIEW.theta; phi = HOME_VIEW.phi; dist = HOME_VIEW.dist;
   updateCamera();
 }
+// 🌳 森ビュー：クライアントの森（2.7e・川向こう）は既定カメラだと右枠外なので、
+// HUDのボタン一発で見に行けるようにする（戻りは既存の 0 キー＝resetView）
+function forestView() {
+  target.set(-25.5, 0, 6.5);
+  theta = HOME_VIEW.theta; phi = HOME_VIEW.phi; dist = 24;
+  updateCamera();
+}
+document.getElementById('forestBtn').addEventListener('click', forestView);
 
 // ── キーボード：WASD／矢印で視点移動（Shiftで速く・0でホームに戻す）──────────
 // 押している間だけ動かすため keydown/keyup で集合を持ち、実際の移動は animate() で dt 積分する
@@ -3062,7 +3298,7 @@ function tickBreak(a, dt) {
       if (b.routeIdx >= PROMENADE.length) { b.routeIdx = PROMENADE.length - 2; b.routeDir = -1; }
       if (b.routeIdx < 0) { b.routeIdx = 1; b.routeDir = 1; }
       const p = PROMENADE[b.routeIdx];
-      b.path = [{ x: p.x, z: p.z, y: GARDEN.lawnY }];
+      b.path = [{ x: p.x, z: p.z, y: p.y ?? GARDEN.lawnY }];   // y付きの点＝木橋のデッキを歩く
     } else {                                     // 着いた＝その場の向き・高さへ落ち着く
       const face = b.spot ? b.spot.face : 0;
       const y = spotY(b.spot);
@@ -3156,6 +3392,36 @@ function tickVisit(a, dt) {
     }
   }
 }
+
+/* ---- タブ復帰＝「留守の間も動いていた体」で再開（社長承認 2026-08-10）----------
+ * 非表示中はブラウザが描画ループを止める一方、ポーリングは続いて行き先だけが溜まる
+ * ＝戻った瞬間に全員が一斉に歩き出して見える。10秒以上の留守なら、復帰の1回だけ
+ * 全員を「もう着いていた」位置に置き直す（ページを開いた直後の初期配置と同じ規律）。
+ * 声かけ再生も同じ扱い＝再生途中の1件は済んだことにし、留守中に溜まった分は
+ * 直近2分だけ残す（開いた直後の visitBaseTs-120 と同じ線）。 */
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { hiddenAt = performance.now(); return; }
+  if (!hiddenAt || performance.now() - hiddenAt < 10000) { hiddenAt = 0; return; }
+  hiddenAt = 0;
+  if (visitActive) {                                 // 再生途中の声かけ＝話し終えて席に戻った体
+    if (visitActive.visitBubble) visitActive.visitBubble.visible = false;
+    visitActive.visit = null; visitActive = null;
+  }
+  // 基準は実時間＝スリープ明けは visitNow（最後のAPI時刻）が古く、数時間前のキューが
+  // 残ってしまう（Codexレビュー 2026-08-11 🟡反映。ts はサーバ時計だがNTP同期前提で実用十分）
+  visitQ = visitQ.filter(ev => ev.ts > Date.now() / 1000 - 120);
+  for (const a of avatars.values()) {
+    const b = a.brk;
+    b.going = b.spot;                                // 「行き先が変わった」判定を先回りで消す
+    const dest = b.spot ? (b.spot.type === 'walk' ? PROMENADE[b.spot.from] : b.spot)
+                        : { x: a.root.position.x, z: a.root.position.z + 0.72 };
+    b.pos.x = dest.x; b.pos.z = dest.z; b.pos.y = spotY(b.spot);
+    b.facing = b.spot ? (b.spot.face ?? 0) : 0;
+    b.path = []; b.walking = false;
+    if (b.spot && b.spot.type === 'walk') { b.routeIdx = b.spot.from; b.routeDir = 1; }
+  }
+});
 
 /** 屋外での動き（歩く・座る・食べる・立ち話・眺める）。腕は π が「下ろした状態」 */
 function animateOutside(a, t, ph, meal, ox, oz) {

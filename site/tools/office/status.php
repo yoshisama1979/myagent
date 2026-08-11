@@ -212,6 +212,42 @@ if (is_file($vf) && !is_link($vf) && ($vsz = @filesize($vf)) !== false && $vsz <
     }
 }
 
+// ── 1.9) クライアントの森: HP指標の日次スナップショット（社長指示 2026-08-10）──
+// bin/office-forest-fetch.py（日次）が data/office/forest.json に書く集計値を返す
+// （live/ 直下はビーコンのTTL掃除が *.json を消すので置かない＝2026-08-11 実発生）。
+// 3D側はオフィス裏の「サイトの木」に使う：木の大きさ＝7日クリック・実がなる＝CVの翌日・
+// 地面の花＝総合値。ここは読むだけ・想定キーだけを通す（余計な中身をAPIに素通しさせない）。
+$town = null;
+$tf = $ROOT . '/data/office/forest.json';
+if (is_file($tf) && !is_link($tf) && ($tsz = @filesize($tf)) !== false && $tsz <= 65536) {
+    $tj = json_decode((string)@file_get_contents($tf), true);
+    if (is_array($tj) && is_array($tj['sites'] ?? null)) {
+        // 型は明示検証＝壊れたローカルJSONでAPI全体を汚さない（"false"→true・配列→warning を防ぐ。
+        // 真偽値は === true・数値は is_numeric・日付は形の一致だけ通す（Codexレビュー 2026-08-11 🟡反映）
+        $tstr  = fn($v) => is_string($v) ? $v : '';
+        $tdate = fn($v) => (is_string($v) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $v)) ? $v : '';
+        $tnum  = fn($v) => is_numeric($v) ? max(0, (int)$v) : 0;
+        $tsites = [];
+        foreach ($tj['sites'] as $tid => $te) {
+            if (!preg_match('/^[a-z0-9-]{1,40}$/', (string)$tid) || !is_array($te)) continue;
+            $tsites[$tid] = [
+                'label'         => mb_substr($tstr($te['label'] ?? null) !== '' ? $te['label'] : $tid, 0, 30),
+                'connected'     => ($te['connected'] ?? null) === true,
+                'clicks7d'      => $tnum($te['clicks7d'] ?? null),
+                'clicks_latest' => $tnum($te['clicks_latest'] ?? null),
+                'latest_date'   => $tdate($te['latest_date'] ?? null),
+                // サイト単位の鮮度＝取得失敗の持ち越しは fetched_date が古いまま届く
+                // ＝3D側がサイトごとに実・灯りを消せる（Codexレビュー 2026-08-11 🔴反映）
+                'fetched_date'  => $tdate($te['fetched_date'] ?? null),
+                'has_cv_feed'   => ($te['has_cv_feed'] ?? null) === true,
+                'bloom'         => ($te['bloom'] ?? null) === true,
+                'cv_recent'     => $tnum($te['cv_recent'] ?? null),
+            ];
+        }
+        $town = ['generated_at' => (int)($tj['generated_at'] ?? 0), 'sites' => $tsites];
+    }
+}
+
 // ── 2) heartbeat: エージェント別の pending / action ──────────────────────
 // 形式: agent-tick alive: <ts> | mode=.. force=.. | label:pending:action ... | status=..
 $hb = @file_get_contents($HEARTBEAT);
@@ -556,6 +592,7 @@ $out = json_encode([
     'unknownInbox' => $unknownInbox,             // 台帳に無い宛先の滞留（内容は出さず件数だけ）
     'agents'=> $agents,
     'visits' => ['now' => time(), 'items' => $visits],   // 声かけログ（呼びに行く再生用・直近10分）
+    'forest' => $town,                                   // クライアントの森（HP指標・日次。無ければ null）
     'employees' => $employees,                   // 人間の社員（hana-tools タイマー由来）
     'employeeSource' => $empSource,              // 取得できたか／古いか（捏造しないための状態）
     // 全社ボード（進行中の案件・未完了ToDo合計）。取得できていなければ null＝数字を出さない
