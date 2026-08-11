@@ -46,6 +46,49 @@ STATE_FILES = [
     ("site/overseer/index.html",          80 * KB, "hp-loop.md v0.11 と同型"),
     ("site/business/partner/index.html",  80 * KB, "hp-loop.md v0.11 と同型"),
 ]
+# ── 2b) 形の異常：1エントリへの「飲み込み」（サイズ閾値をすり抜ける肥大）──────
+# 契機＝O-019（K-330 が気づき97件を配下に飲み込み 169KB＝全体の54%）→ 2026-08-11 に
+# K-405・K-422 で再発（114件・157KB＝全体の62%）。台帳のルールは「気づきは独立見出し
+# `### K-NNN` で足す」だが、宣言だけで機械の担保が無く2回とも数週間気づけなかった。
+# サイズ閾値は「合計」しか見ないため、1本が台帳の6割を占める形の異常は検知できない＝別に測る。
+ENTRY_MAX_BYTES = 8 * KB    # 1エントリの上限（★提案既定値。実測の中央値は約1KB）
+SWALLOW_MAX = 3             # 1エントリが抱えてよい「- **K-」行の数（★提案既定値）
+SHAPE_TARGETS = ["data/hp-improve/skill-kaizen.md"]
+
+def entry_shape(path):
+    """台帳を見出し単位に割り、巨大エントリと飲み込みを返す（読み取り専用）。"""
+    p = os.path.join(ROOT, path)
+    if not os.path.exists(p):
+        return None
+    lines = open(p, encoding="utf-8").read().split("\n")
+    heads = [i for i, l in enumerate(lines) if l.startswith("### ")]
+    entries = []
+    for n, i in enumerate(heads):
+        j = heads[n + 1] if n + 1 < len(heads) else len(lines)
+        body = "\n".join(lines[i:j])
+        entries.append({
+            "title": lines[i][4:64],
+            "bytes": len(body.encode("utf-8")),
+            "swallowed": sum(1 for l in lines[i + 1:j] if l.startswith("- **K-")),
+        })
+    return {"path": path, "entries": entries,
+            "total": sum(e["bytes"] for e in entries)}
+
+def shape_warnings(shape):
+    """entry_shape() の結果を警告文にする。判定はここ1箇所（テストが直接叩く）。"""
+    if not shape or not shape["entries"]:
+        return []
+    out, total = [], max(shape["total"], 1)
+    for e in shape["entries"]:
+        if e["swallowed"] > SWALLOW_MAX:
+            out.append(f"{shape['path']} の「{e['title']}」が K 追記 {e['swallowed']}件を"
+                       f"配下に飲み込み（>{SWALLOW_MAX}）＝独立見出しに数えられずローテも索引もすり抜ける"
+                       f"（O-019 と同型）")
+        elif e["bytes"] > ENTRY_MAX_BYTES:
+            out.append(f"{shape['path']} の「{e['title']}」が単体 {e['bytes']//KB}KB "
+                       f"> {ENTRY_MAX_BYTES//KB}KB（全体の{e['bytes']*100//total}%）")
+    return out
+
 # hp-loop の台帳・掲示板はサイト別に可変（gitignore のクライアント分含めディスク上を実測）
 def hp_loop_states():
     out = []
@@ -407,6 +450,9 @@ def main():
             warns.append(f"{s_['path']} {s_['bytes']//KB}KB > {s_['threshold']//KB}KB（{s_['source']}）")
         elif s_["path"] in prev_states and s_["bytes"] - prev_states[s_["path"]] > 20 * KB:
             warns.append(f"{s_['path']} が7日で +{(s_['bytes']-prev_states[s_['path']])//KB}KB（閾値内だが増加が速い）")
+    # 形の異常：サイズが閾値内でも「1本が台帳を食う」形は別に検知する（O-019 の再発防止）
+    for tgt in SHAPE_TARGETS:
+        warns.extend(shape_warnings(entry_shape(tgt)))
     # 故障：診断不能そのものを故障として扱う（監視の無言停止を防ぐ）
     if fails.get("error"):
         warns.append(f"🚨 診断不能: {fails['error']}")
