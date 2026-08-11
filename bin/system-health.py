@@ -243,18 +243,27 @@ def loop_tools():
     # 実在するものだけ（許可リストには過去に消したツールの行が残ることがある）
     return sorted(n for n in names if os.path.isfile(os.path.join(ROOT, "bin", n)))
 
-def tested_tools():
+def tested_tools(sources=None):
     """テストが「自分の対象」として名乗っているツール名の集合。
 
     判定はテストファイルの冒頭15行（＝対象を書く契機コメント。testing.md §6-7 が義務化している）。
     本文中の言及は拾わない＝写経・比較で名前が出るだけのものを「テスト済み」と誤認しないため。
+
+    sources に [(名, 本文)] を渡すとファイルを読まずにそれを使う（テスト用の継ぎ目＝`dup_impls`
+    と同型）。実リポジトリの状態に依存しない検証をするため：以前は「本文にしか出ない例」として
+    実在ツール名を使っていたが、そのツールにテストが出来た瞬間に期待値が古くなった（2026-08-11）。
     """
+    if sources is None:
+        sources = []
+        for f in sorted(glob.glob(os.path.join(ROOT, "bin/test-*"))):
+            try:
+                sources.append((os.path.basename(f),
+                                open(f, encoding="utf-8", errors="replace").read()))
+            except OSError:
+                continue
     named = set()
-    for f in sorted(glob.glob(os.path.join(ROOT, "bin/test-*"))):
-        try:
-            head = "".join(open(f, encoding="utf-8", errors="replace").readlines()[:15])
-        except OSError:
-            continue
+    for _name, text in sources:
+        head = "".join(text.splitlines(keepends=True)[:15])
         named |= set(re.findall(r"bin/([A-Za-z0-9_.-]+\.(?:py|sh|mjs))", head))
     return named
 

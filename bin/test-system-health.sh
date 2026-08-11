@@ -171,7 +171,15 @@ tools, tested = sh.loop_tools(), sh.tested_tools()
     "実在するものだけ（許可リストに残った消済みツールを数えない）")
 (ok if "system-health.py" in tested and "agent-tick.sh" in tested else ng)(
     "テストが冒頭で名乗る対象を拾える（別名テスト test-cooldown→agent-tick も）")
-(ok if "hp-audit.sh" not in tested else ng)("本文でしか言及されないツールを『テスト済み』にしない")
+# ⚠️ ここは以前「実在するがテストの無いツール名」を例に使っていて、そのツールにテストが
+#    出来た瞬間に期待値が古くなった（2026-08-11＝hp-audit.sh にテストが付いた）。
+#    リポジトリの状態に依存しないよう、合成した入力で規約そのものを見る。
+synth = sh.tested_tools([("test-x.sh",
+                          "# bin/alpha.py のテスト\n" + "\n" * 20 + "# bin/beta.py と比較する\n")])
+(ok if synth == {"alpha.py"} else ng)(
+    f"冒頭15行で名乗った対象だけを拾う（本文中の言及は『テスト済み』にしない・{sorted(synth)}）")
+(ok if sh.tested_tools([("test-y.sh", "対象を書いていないテスト\n")]) == set() else ng)(
+    "対象を名乗らないテストは何も主張しない")
 ch = sh.code_churn(days=14)
 (ok if ch is None or (ch["added"] >= 0 and ch["net"] == ch["added"] - ch["removed"]) else ng)(
     f"増減を実測できる（{ch}）")
