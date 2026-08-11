@@ -68,6 +68,13 @@ get_outsources() {
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
+# オフィス状況取得（3Dオフィス連携・読み取り専用）
+# 全社員の「いま作業中か」「何の作業か」を返す。書き込み系は提供されない（タイマー操作不可）。
+get_office_status() {
+  curl -s -k -X GET "$BASE_URL/api/external/office-status" \
+    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+}
+
 # ToDo一覧取得
 # オプション:
 #   --user_id=N           作成者でフィルタ
@@ -247,6 +254,7 @@ case "$command" in
   clients)      get_clients ;;
   search)       search_clients "$@" ;;
   outsources)   get_outsources ;;
+  office-status) get_office_status ;;
   todos)        get_todos "$@" ;;
   create-todo)  create_todo "$@" ;;
   update-todo)  update_todo "$@" ;;
@@ -266,6 +274,7 @@ hana-tools APIラッパー
   clients                          クライアント一覧取得
   search "キーワード"              クライアント検索（部分一致、カンマ区切りでOR検索）
   outsources                       外注先一覧取得
+  office-status                    オフィス状況取得（全社員の稼働中/作業内容。3Dオフィス連携）
   todos [--user_id=N] [--assignee_user_id=N] [--work_id=N] [--status=S]
                                    ToDo一覧取得（フィルタ未指定時は assignee_user_id=デフォルトユーザー）
   projects [--client_id=N]         プロジェクト一覧取得（client/works・site_url・gsc_dataset 含む）
