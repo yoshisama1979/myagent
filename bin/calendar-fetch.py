@@ -36,13 +36,15 @@ import tempfile
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _env import env_value  # noqa: E402  .env の読み取り（gmail-fetch.py と同じ実装を共有）
+
 PROJ = Path(__file__).resolve().parent.parent
 DATA = PROJ / "data" / "comms" / "calendar"
 SECRETS_DIR = PROJ / "data" / "secrets"
 CAL_LIST = DATA / "calendars.md"
 OUT_FILE = DATA / "events.json"
 STATUS_FILE = DATA / "fetch-status.json"   # 直近の取得が失敗したときだけ置く
-ENV_FILE = PROJ / ".env"
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 REDIRECT_URI = "http://localhost:8765/"
@@ -66,24 +68,6 @@ CAL_TEMPLATE = """# 読むカレンダー（社長が編集してよいファイ
 def die(msg: str, code: int = 1):
     print(f"⚠️ calendar-fetch: {msg}", file=sys.stderr)
     sys.exit(code)
-
-
-def env_value(key: str) -> str:
-    """.env から必要キーだけ抜く（gmail-fetch と同じ規約・秘密値はログに出さない）"""
-    if not ENV_FILE.is_file():
-        return ""
-    for line in ENV_FILE.read_text(encoding="utf-8", errors="replace").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        k, v = line.split("=", 1)
-        if k.strip() != key:
-            continue
-        v = v.strip()
-        if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
-            v = v[1:-1]
-        return v
-    return ""
 
 
 def atomic_write(path: Path, text: str, secret: bool = False):

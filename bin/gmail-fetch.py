@@ -40,6 +40,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _mail_strip  # noqa: E402  引用・署名の除去（検証ツール bin/mail-strip.py と同じ実装を共有）
+from _env import env_value  # noqa: E402  .env の読み取り（calendar-fetch.py と同じ実装を共有）
 
 PROJ = Path(__file__).resolve().parent.parent
 DATA = PROJ / "data" / "comms" / "gmail"
@@ -48,7 +49,6 @@ STATE_FILE = DATA / "state.json"
 SENDERS_FILE = DATA / "senders.md"
 PENDING_FILE = DATA / "pending.json"
 LOCK_FILE = DATA / ".poll.lock"
-ENV_FILE = PROJ / ".env"
 
 SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
 BODY_MAX = 10000          # 蒸留に十分な長さで打ち切り（長文の引用連鎖対策）
@@ -69,24 +69,6 @@ SENDERS_TEMPLATE = """# Gmail 送信者リスト（社長が編集してよい�
 
 ## 無視（承認待ち一覧にも出さない）
 """
-
-
-def env_value(key: str) -> str:
-    """最初に一致した行の値を返す（hana-api.sh と同じ規約・秘密値はログに出さない）"""
-    if not ENV_FILE.is_file():
-        return ""
-    for line in ENV_FILE.read_text(encoding="utf-8", errors="replace").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        k, v = line.split("=", 1)
-        if k.strip() != key:
-            continue
-        v = v.strip()
-        if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
-            v = v[1:-1]
-        return v
-    return ""
 
 
 def die(msg: str, code: int = 1):
