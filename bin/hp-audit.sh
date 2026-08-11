@@ -5,6 +5,9 @@
 #   bash bin/hp-audit.sh <URL>            # 人が読む要約（⚠️で課題を表示）
 #   bash bin/hp-audit.sh <URL> --json     # JSON出力（/hp-loop の一次情報・差分比較用）
 #   bash bin/hp-audit.sh <URL> --text     # ページ本文テキストを抽出して出力（本文精読・実査用）
+#   bash bin/hp-audit.sh <URL> --plumbing # 「配管」点検（解析タグ/混在コンテンツ/バージョン露出/JS棚卸し）
+#   bash bin/hp-audit.sh <URL> --links [--match=<部分文字列>]
+#                                         # a href の棚卸し（内部リンク構造の実査。--match で絞り込み）
 #
 # 取得する信号: HTTPステータス / title / meta description・keywords / canonical / robots /
 #   viewport(ズーム禁止検出) / OGP・Twitterカード(プレースホルダ検出) / JSON-LD(型・無効化検出) /
@@ -20,16 +23,25 @@ command -v python3 >/dev/null 2>&1 || { echo "ERROR: python3 が必要です" >&
 URL=""
 JSON=0
 TEXT=0
+PLUMB=0
+IMGS=0
+LINKS=0
+MATCH=""
 for a in "$@"; do
   case "$a" in
     --json) JSON=1 ;;
     --text) TEXT=1 ;;
+    --plumbing) PLUMB=1 ;;
+    --imgs) IMGS=1 ;;
+    --links) LINKS=1 ;;
+    --match=*) MATCH="${a#--match=}" ;;
     -*)     echo "ERROR: 不明なオプション: $a" >&2; exit 1 ;;
     *)      if [ -n "$URL" ]; then echo "ERROR: URLは1つだけ指定してください（複数指定: '$URL' と '$a'）" >&2; exit 1; fi
             URL="$a" ;;
   esac
 done
-[ -z "$URL" ] && { echo "使い方: bash bin/hp-audit.sh <URL> [--json|--text]" >&2; exit 1; }
+[ -z "$URL" ] && { echo "使い方: bash bin/hp-audit.sh <URL> [--json|--text|--plumbing|--imgs|--links [--match=<部分文字列>]]" >&2; exit 1; }
+[ -n "$MATCH" ] && [ "$LINKS" = 0 ] && { echo "ERROR: --match= は --links と併用してください" >&2; exit 1; }
 
 # URLスキームは http/https のみ許可（HTTP GET 要件。file:// 等を弾く）
 case "$URL" in
@@ -49,8 +61,9 @@ http_meta="$(curl -sSL \
   -A 'Mozilla/5.0 (hanasaka-hp-audit; +internal-analysis)' \
   -o "$tmp" -w '%{http_code}\t%{url_effective}\t%{size_download}\t%{time_total}' "$URL")" || curl_exit=$?
 
-URL="$URL" HTTP_META="$http_meta" CURL_EXIT="$curl_exit" JSON_OUT="$JSON" TEXT_OUT="$TEXT" python3 - "$tmp" <<'PY'
+URL="$URL" HTTP_META="$http_meta" CURL_EXIT="$curl_exit" JSON_OUT="$JSON" TEXT_OUT="$TEXT" PLUMB_OUT="$PLUMB" IMGS_OUT="$IMGS" LINKS_OUT="$LINKS" LINK_MATCH="$MATCH" python3 - "$tmp" <<'PY'
 import os, sys, re, json
+import html as _htmlmod
 
 path = sys.argv[1]
 html_raw = open(path, encoding='utf-8', errors='replace').read()
@@ -67,6 +80,10 @@ ttime     = hm[3] if len(hm) > 3 else ''
 curl_exit = os.environ.get('CURL_EXIT', '0')
 json_out  = os.environ.get('JSON_OUT') == '1'
 text_out  = os.environ.get('TEXT_OUT') == '1'
+plumb_out = os.environ.get('PLUMB_OUT') == '1'
+imgs_out  = os.environ.get('IMGS_OUT') == '1'
+links_out = os.environ.get('LINKS_OUT') == '1'
+link_match = os.environ.get('LINK_MATCH', '')
 
 # --- 取得失敗の明示扱い（成功を装って空ページを監査しない） ---
 # curl 異常終了（タイムアウト/DNS/プロトコル違反/サイズ超過）・非2xx・空body は監査不能とする
@@ -112,6 +129,114 @@ if text_out:
     print(body[:LIMIT])
     if len(body) > LIMIT:
         print(f"\n…（{len(body)-LIMIT}字を省略）")
+    sys.exit(0)
+
+# ---- リンク棚卸しモード（--links・読み取り専用・2026-08-06追加） ----
+# 内部リンク構造そのものが施策の対象になる提案（R-038 導線の誤配線／R-042 ハブの孤立）で、
+# 「どのページからどこへ何本張られているか」を実査するために追加。
+# それまでは生 curl+grep が必要で、許可リストに curl が無いセッションでは検証不能だった。
+if links_out:
+    anchors = []
+    for m in re.finditer(r'<a\b([^>]*)>(.*?)</a>', html, re.I | re.S):
+        attrs, inner = m.group(1), m.group(2)
+        hm_ = re.search(r'\bhref\s*=\s*["\']([^"\']*)["\']', attrs, re.I)
+        if not hm_:
+            continue
+        href = _htmlmod.unescape(hm_.group(1)).strip()
+        text = _htmlmod.unescape(re.sub(r'<[^>]+>', ' ', inner))
+        text = re.sub(r'\s+', ' ', text).strip()
+        anchors.append((href, text))
+
+    if link_match:
+        hits = [(h, t) for h, t in anchors if link_match in h or link_match in t]
+    else:
+        hits = anchors
+
+    print(f"■ hp-audit --links: {url}  (HTTP {http_code} / {size}B)")
+    print(f"  a[href] 総数: {len(anchors)}件" + (f" / --match='{link_match}' 一致: {len(hits)}件" if link_match else ""))
+    counts = {}
+    for h, t in hits:
+        counts.setdefault(h, []).append(t)
+    print(f"--- href 別（{len(counts)}種・本数の多い順） ---")
+    for h, texts in sorted(counts.items(), key=lambda kv: (-len(kv[1]), kv[0]))[:80]:
+        label = next((t for t in texts if t), '(テキストなし)')
+        if len(label) > 40:
+            label = label[:40] + '…'
+        print(f"  {len(texts):3d}本  {h}    ← 「{label}」")
+    if len(counts) > 80:
+        print(f"  …（{len(counts)-80}種を省略）")
+    sys.exit(0)
+
+# ---- 「配管」点検モード（--plumbing・読み取り専用・2026-07-25追加） ----
+# hp-loop の月次定石 #9「配管一斉点検」の ③解析タグ棚卸し ④JS/死にコード ⑤混在コンテンツ
+# ⑥CMS/ライブラリのバージョン露出 を、生 curl/grep 無しで（＝無人ループの許可範囲内で）取る。
+# 動かない層（設定・タグ・コードの残骸）は日次/週次の観察では見えないため、機械で列挙する。
+if plumb_out:
+    def uniq_keep(seq, n=30):
+        out = []
+        for x in seq:
+            if x and x not in out:
+                out.append(x)
+            if len(out) >= n:
+                break
+        return out
+
+    # ③ 解析タグ（コメント除去後＝実際に配信されているものだけ）
+    tags = {
+        'GTM(コンテナ)':      uniq_keep(re.findall(r'GTM-[A-Z0-9]{4,9}', html)),
+        'GA4(測定ID)':        uniq_keep(re.findall(r'\bG-[A-Z0-9]{6,12}\b', html)),
+        '旧UA(ユニバーサル)': uniq_keep(re.findall(r'\bUA-\d{4,10}-\d{1,4}\b', html)),
+        'Google広告(AW)':     uniq_keep(re.findall(r'\bAW-\d{6,12}\b', html)),
+        'Clarity':            uniq_keep(re.findall(r'clarity\.ms/tag/([A-Za-z0-9]+)', html)
+                                        or (['(clarity.ms 参照あり・ID不明)'] if 'clarity.ms' in html else [])),
+        'Yahoo!タグ':         uniq_keep(['s.yjtag.jp'] if 'yjtag.jp' in html else []),
+        'Facebookピクセル':   uniq_keep(re.findall(r"fbq\(\s*['\"]init['\"]\s*,\s*['\"](\d+)['\"]", html)
+                                        or (['(connect.facebook.net 参照あり)'] if 'connect.facebook.net' in html else [])),
+    }
+    # コメントアウトされたタグ（＝残骸。配信されていないが放置されている）
+    commented_tags = uniq_keep(re.findall(r'(GTM-[A-Z0-9]{4,9}|UA-\d{4,10}-\d{1,4}|\bG-[A-Z0-9]{6,12}\b)',
+                                          ' '.join(re.findall(r'<!--.*?-->', html_raw, re.S))))
+
+    # ④ JS 棚卸し（外部 src と、フォーム/日付まわりのライブラリ痕跡）
+    scripts = uniq_keep([s for s in re.findall(r'<script\b[^>]*\bsrc\s*=\s*["\']([^"\']+)["\']', html, re.I)], 40)
+    LIB_HINTS = ['jquery', 'datepicker', 'ui/1', 'bootstrap', 'slick', 'colorbox', 'fancybox',
+                 'validation', 'validate', 'swiper', 'lightbox', 'modernizr', 'prototype', 'scriptaculous']
+    lib_hits = uniq_keep([s for s in scripts if any(k in s.lower() for k in LIB_HINTS)], 20)
+    inline_n = len(re.findall(r'<script\b(?![^>]*\bsrc\s*=)[^>]*>', html, re.I))
+
+    # ⑤ 混在コンテンツ（http:// の *リソース* 参照＝ブラウザがブロック/警告する対象）
+    mixed_res = uniq_keep(re.findall(r'(?:\bsrc|\bdata-src)\s*=\s*["\'](http://[^"\']+)["\']', html, re.I)
+                          + re.findall(r'<link\b[^>]*\bhref\s*=\s*["\'](http://[^"\']+)["\']', html, re.I), 20)
+    mixed_link = uniq_keep(re.findall(r'<a\b[^>]*\bhref\s*=\s*["\'](http://[^"\']+)["\']', html, re.I), 10)
+
+    # ⑥ CMS・ライブラリのバージョン露出
+    gen = [c for c in re.findall(r'<meta\b[^>]*\bname\s*=\s*["\']generator["\'][^>]*>', html, re.I)]
+    gen_c = uniq_keep([re.search(r'content\s*=\s*["\']([^"\']*)["\']', g, re.I).group(1)
+                       for g in gen if re.search(r'content\s*=\s*["\']([^"\']*)["\']', g, re.I)])
+    vers = uniq_keep(re.findall(r'[?&]ver=([0-9][0-9A-Za-z._-]*)', html), 20)
+    plugins = uniq_keep(re.findall(r'/wp-content/plugins/([A-Za-z0-9_-]+)/', html), 20)
+    themes = uniq_keep(re.findall(r'/wp-content/themes/([A-Za-z0-9_-]+)/', html), 10)
+
+    print(f"■ hp-audit --plumbing: {url}  (HTTP {http_code} / {size}B)")
+    print("--- ③ 解析タグ（配信中） ---")
+    for k, v in tags.items():
+        print(f"  {k}: {', '.join(v) if v else '—'}")
+    print(f"  コメント内に残るタグ(残骸): {', '.join(commented_tags) if commented_tags else '—'}")
+    print("--- ④ JS 棚卸し ---")
+    print(f"  外部script {len(scripts)}件 / インラインscript {inline_n}件")
+    print(f"  ライブラリ痕跡: {', '.join(lib_hits) if lib_hits else '—'}")
+    for s in scripts:
+        print(f"    - {s}")
+    print("--- ⑤ 混在コンテンツ（http:// 参照） ---")
+    print(f"  リソース(src/link): {len(mixed_res)}件")
+    for s in mixed_res:
+        print(f"    - {s}")
+    print(f"  リンク(a href): {len(mixed_link)}件" + (f" 例 {mixed_link[0]}" if mixed_link else ""))
+    print("--- ⑥ CMS/ライブラリのバージョン露出 ---")
+    print(f"  generator: {', '.join(gen_c) if gen_c else '—'}")
+    print(f"  ?ver= 値: {', '.join(vers) if vers else '—'}")
+    print(f"  WPプラグイン: {', '.join(plugins) if plugins else '—'}")
+    print(f"  WPテーマ: {', '.join(themes) if themes else '—'}")
     sys.exit(0)
 
 def metas(attr, key):
@@ -185,6 +310,29 @@ imgs = re.findall(r'<img\b[^>]*>', html, re.I)
 img_total = len(imgs)
 img_no_alt = sum(1 for t in imgs if not re.search(r'\balt\s*=', t, re.I))
 img_empty_alt = sum(1 for t in imgs if re.search(r'\balt\s*=\s*""', t, re.I))
+
+# alt 欠落の img は「件数」だけだと実装側が直せない（どの画像か分からない）ので src を列挙する。
+# data-src / srcset しか持たない遅延読み込み img も拾う（2026-07-27 追加・yoshida R-Y30 の認識合わせが契機）
+def _img_src(tag):
+    for attr in ('src', 'data-src', 'data-original', 'srcset', 'data-srcset'):
+        m = re.search(r'\b%s\s*=\s*["\']([^"\']+)["\']' % attr, tag, re.I)
+        if m:
+            v = m.group(1).strip().split(',')[0].split()[0]
+            return v if attr == 'src' else f'{v} ({attr})'
+    return '(src属性なし)'
+
+img_no_alt_src = [_img_src(t) for t in imgs if not re.search(r'\balt\s*=', t, re.I)][:20]
+img_empty_alt_src = [_img_src(t) for t in imgs if re.search(r'\balt\s*=\s*""', t, re.I)][:20]
+
+# alt の「中身（テキスト）」も出す。件数と src だけでは「alt はあるが非記述的（例 alt="治療前"・alt="1"）」を
+# 検証できず、実装側の改善報告を本番GETで確認できない（2026-07-27 追加・yoshida R-Y11(c) の検証が契機）。
+def _img_alt(tag):
+    m = re.search(r'\balt\s*=\s*"([^"]*)"', tag, re.I) or re.search(r"\balt\s*=\s*'([^']*)'", tag, re.I)
+    if not m:
+        return None
+    return _htmlmod.unescape(m.group(1)).strip()
+
+img_alts = [{'src': _img_src(t), 'alt': _img_alt(t)} for t in imgs][:80]
 
 a_total = len(re.findall(r'<a\b', html, re.I))
 tel = len(re.findall(r'href\s*=\s*"tel:', html, re.I))
@@ -293,7 +441,9 @@ result = {
     'canonical': canonical, 'robots': robots, 'viewport': viewport,
     'ogp': ogp, 'twitter': twitter, 'jsonld': ldjson,
     'headings': {'h1': len(h1), 'h2': len(h2), 'h3': len(h3)},
-    'images': {'total': img_total, 'no_alt': img_no_alt, 'empty_alt': img_empty_alt},
+    'images': {'total': img_total, 'no_alt': img_no_alt, 'empty_alt': img_empty_alt,
+               'no_alt_src': img_no_alt_src, 'empty_alt_src': img_empty_alt_src,
+               'alts': img_alts},
     'links': {'total': a_total, 'tel': tel, 'mailto': mailto, 'contact': contact_links},
     'cv': cv,
     'commented_meta_tags': commented_meta,
@@ -316,6 +466,14 @@ print(f"  OGP: {len(ogp)}件 {sorted(ogp.keys()) if ogp else ''} / Twitter: {len
 print(f"  JSON-LD: {len(ldjson)}件 " + (str([l['types'] for l in ldjson]) if ldjson else ''))
 print(f"  見出し: h1={result['headings']['h1']} h2={result['headings']['h2']} h3={result['headings']['h3']}")
 print(f"  img: {img_total}件 (alt欠落 {img_no_alt} / alt空 {img_empty_alt})")
+for s in img_no_alt_src:
+    print(f"    - alt欠落: {s}")
+if imgs_out:
+    # --imgs: alt の中身まで列挙（非記述的な alt の検出・実装報告の検証用）
+    for it in img_alts:
+        a = it['alt']
+        label = '(alt無し)' if a is None else ('(alt空=装飾)' if a == '' else f'alt="{a}"')
+        print(f"    · {it['src']} → {label}")
 print(f"  リンク: a={a_total} / tel={tel} mailto={mailto} contact={contact_links}")
 # CV要素の棚卸し
 print(f"  CV要素:")

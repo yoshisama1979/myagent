@@ -39,6 +39,9 @@ import { fileURLToPath } from 'node:url';
 const CHROME_ALLOWLIST = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable',
   '/usr/bin/chromium', '/usr/bin/chromium-browser'];
 const NAV_TIMEOUT = 45000;
+// Chrome DevTools プロトコルの応答上限（puppeteer 既定は180秒）。Maps 等の常時再描画キャンバスがあると
+// Page.captureScreenshot が合成フレームを返せず既定のまま3分×4枚ぶん待たされるので、短くして早く失敗させる。
+const PROTOCOL_TIMEOUT = 60000;
 const SETTLE_MS = 2500;            // networkidle 後にイントロ演出等を落ち着かせる猶予
 const SCROLL_MAX_STEPS = 60;       // 無限スクロール対策（最大ステップ）
 const SCROLL_MAX_MS = 15000;       // スクロール処理全体の上限（無限ページで止まらない保険）
@@ -80,8 +83,22 @@ const CHROME = (() => {
   return c;
 })();
 
-const [rawUrl, outdirArg, nameArg] = process.argv.slice(2);
-if (!rawUrl || !outdirArg) fail('usage: node bin/hp-shot.mjs <URL> <outdir> [name]');
+// --focus-text <文字列>：その文字列を含む見出し/要素へスクロールした位置で fold を撮る（SP幅の節を原寸精査する用）
+const argv = process.argv.slice(2);
+let focusText = null;
+const fi = argv.indexOf('--focus-text');
+if (fi >= 0) { focusText = argv[fi + 1] || null; argv.splice(fi, 2); }
+// --block <部分文字列>（複数可）：一致するリクエストURLを abort する。
+// 撮れないページ（Maps 等の常時再描画キャンバス）でもレイアウトだけは観察できるようにする逃げ道。
+// ⚠️ 撮った絵は「その要素を外した状態」なので、結果JSONの blocked を必ず添えて読む。
+const blockList = [];
+for (let i = argv.indexOf('--block'); i >= 0; i = argv.indexOf('--block')) {
+  const v = argv[i + 1];
+  if (!v) fail('error: --block には部分文字列が要ります');
+  blockList.push(v); argv.splice(i, 2);
+}
+const [rawUrl, outdirArg, nameArg] = argv;
+if (!rawUrl || !outdirArg) fail('usage: node bin/hp-shot.mjs <URL> <outdir> [name] [--focus-text <文字列>] [--block <部分文字列>]...');
 
 // --- URL 検証（http(s)のみ・認証情報なし・内部/メタデータ宛て拒否） ---
 let parsed;
@@ -117,14 +134,26 @@ const outPath = (suffix) => {
   return p;
 };
 
+// 1枚撮る。失敗しても throw せずエラー文字列を返す（他の3枚を巻き添えにしない）。
+async function capture(page, outPath, fullPage) {
+  try {
+    await page.screenshot({ path: outPath, fullPage });
+    return null;
+  } catch (e) {
+    return (e && e.message ? e.message : String(e)).split('\n')[0];
+  }
+}
+
 async function shot(browser, { width, height, dpr, mobile }, foldPath, fullPath) {
   const page = await browser.newPage();
   try {
     // 非GETを物理的に遮断（フォーム送信/ビーコン/POST等を abort＝read-only 担保）
     await page.setRequestInterception(true);
     page.on('request', (req) => {
-      if (req.method() === 'GET') req.continue();
-      else req.abort();
+      if (req.method() !== 'GET') { req.abort(); return; }              // 非GETは遮断（read-only 担保）
+      const u = req.url();
+      if (blockList.some(b => u.includes(b))) { req.abort(); return; }  // --block 指定分
+      req.continue();
     });
     // ダウンロードを拒否
     const cdp = await page.target().createCDPSession();
@@ -132,8 +161,33 @@ async function shot(browser, { width, height, dpr, mobile }, foldPath, fullPath)
 
     await page.setViewport({ width, height, deviceScaleFactor: dpr, isMobile: mobile, hasTouch: mobile });
     if (mobile) await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1');
-    const resp = await page.goto(url, { waitUntil: 'networkidle2', timeout: NAV_TIMEOUT });
+    // networkidle2 に到達しないページ（Maps 等の常時通信・ハングする同期リソース）用フォールバック：
+    // load → domcontentloaded の順に段階を落として撮る（degraded にどの段階で撮れたかを明示）
+    let resp; let degraded = null;
+    const isTimeout = (e) => String(e && e.message).includes('timeout') || (e && e.name === 'TimeoutError');
+    try {
+      resp = await page.goto(url, { waitUntil: 'networkidle2', timeout: NAV_TIMEOUT });
+    } catch (e) {
+      if (!isTimeout(e)) throw e;
+      try {
+        degraded = 'networkidle2-timeout→load';
+        resp = await page.goto(url, { waitUntil: 'load', timeout: NAV_TIMEOUT });
+      } catch (e2) {
+        if (!isTimeout(e2)) throw e2;
+        degraded = 'load-timeout→domcontentloaded';
+        resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT });
+      }
+    }
     await new Promise(r => setTimeout(r, SETTLE_MS));
+    if (degraded === 'load-timeout→domcontentloaded') {
+      // ここまで落ちるページはメインスレッドがブロックされている疑い＝JS評価(スクロール等)を挟まず素の初期表示だけ撮る
+      const dFold = await capture(page, foldPath, false);
+      const dFull = await capture(page, fullPath, true);
+      return {
+        status: resp ? resp.status() : null, finalUrl: redactUrl(page.url()), title: '', degraded,
+        ...(dFold || dFull ? { shotErrors: { ...(dFold ? { fold: dFold } : {}), ...(dFull ? { full: dFull } : {}) } } : {}),
+      };
+    }
     // 遅延読み込み画像の発火＋イントロ演出の完了を促す：最下部まで送って先頭へ戻す（回数・時間・高さ上限つき）
     await page.evaluate(async (maxSteps, maxMs) => {
       await new Promise(res => {
@@ -147,10 +201,28 @@ async function shot(browser, { width, height, dpr, mobile }, foldPath, fullPath)
     }, SCROLL_MAX_STEPS, SCROLL_MAX_MS);
     await page.evaluate(() => window.scrollTo(0, 0));
     await new Promise(r => setTimeout(r, 800));
-    await page.screenshot({ path: foldPath, fullPage: false }); // ファーストビュー（鮮明）
-    await page.screenshot({ path: fullPath, fullPage: true });   // 全体（構造）
-    const title = (await page.title() || '').slice(0, 200);
-    return { status: resp ? resp.status() : null, finalUrl: redactUrl(page.url()), title };
+    if (focusText) {
+      // 指定文字列を含む最初の見出し（無ければ任意要素）まで送り、その位置で fold を撮る
+      await page.evaluate((txt) => {
+        const pools = [document.querySelectorAll('h1,h2,h3,h4'), document.querySelectorAll('section,div,p,li')];
+        for (const pool of pools) {
+          for (const el of pool) {
+            if ((el.textContent || '').includes(txt)) { el.scrollIntoView({ block: 'start' }); return; }
+          }
+        }
+      }, focusText);
+      await new Promise(r => setTimeout(r, 500));
+    }
+    // 撮影は1枚ずつ失敗を許容する：fold が撮れて full だけ落ちる（巨大/常時再描画ページ）ことがあり、
+    // 1枚の失敗で4枚とも捨てると「何も見えない」に落ちるため（/company/ が2サイクル未取得だった原因）。
+    const foldErr = await capture(page, foldPath, false);
+    const fullErr = await capture(page, fullPath, true);
+    const title = (await page.title().catch(() => '') || '').slice(0, 200);
+    return {
+      status: resp ? resp.status() : null, finalUrl: redactUrl(page.url()), title,
+      ...(degraded ? { degraded } : {}),
+      ...(foldErr || fullErr ? { shotErrors: { ...(foldErr ? { fold: foldErr } : {}), ...(fullErr ? { full: fullErr } : {}) } } : {}),
+    };
   } finally {
     await page.close();
   }
@@ -161,6 +233,7 @@ const browser = await puppeteer.launch({
   executablePath: CHROME,
   headless: 'new',
   userDataDir,
+  protocolTimeout: PROTOCOL_TIMEOUT,
   args: ['--disable-gpu', '--hide-scrollbars', '--disable-dev-shm-usage',
          '--disable-background-networking', '--disable-sync'],
 });
@@ -175,8 +248,9 @@ try {
   const size = p => { try { return statSync(p).size; } catch { return 0; } };
   console.log(JSON.stringify({
     ok: true, url: redactUrl(url), finalUrl: pc.finalUrl, status: pc.status, title: pc.title,
-    pc: { fold: pcFold, full: pcFull, foldBytes: size(pcFold), fullBytes: size(pcFull) },
-    sp: { fold: spFold, full: spFull, foldBytes: size(spFold), fullBytes: size(spFull) },
+    ...(blockList.length ? { blocked: blockList } : {}),
+    pc: { fold: pcFold, full: pcFull, foldBytes: size(pcFold), fullBytes: size(pcFull), ...(pc.shotErrors ? { shotErrors: pc.shotErrors } : {}) },
+    sp: { fold: spFold, full: spFull, foldBytes: size(spFold), fullBytes: size(spFull), ...(sp.shotErrors ? { shotErrors: sp.shotErrors } : {}) },
   }));
 } catch (e) {
   console.error('shot failed:', (e && e.message ? e.message : String(e)).split('\n')[0]);

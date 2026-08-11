@@ -22,17 +22,29 @@ events_intraday_YYYYMMDD = streaming）を SELECT し、イベント分布・CV�
   bin/.venv/bin/python bin/ga4-fetch.py events  --days 28          # event_name 別の件数・人数
   bin/.venv/bin/python bin/ga4-fetch.py cv --start 2026-04-01 --end 2026-06-30  # CV を月次トレンドで
   bin/.venv/bin/python bin/ga4-fetch.py cv --events "問い合わせ,見積もりのリクエスト" --json
+  bin/.venv/bin/python bin/ga4-fetch.py pages --days 28 --page '?p='   # ページ別の閲覧数・人数
+  bin/.venv/bin/python bin/ga4-fetch.py landing --days 28 --page '?p=6624'  # 記事別のCV寄与
+  bin/.venv/bin/python bin/ga4-fetch.py sources --days 28 --page '/blog/'   # 着地面の参照元内訳（T-025）
   bin/.venv/bin/python bin/ga4-fetch.py events --dry-run           # 課金スキャン量だけ見積り
 
 主なオプション:
   --days N        直近 N 日（既定 28・本日を含むため範囲は N+1 日分）。--start/--end 指定時はそちら優先
   --start/--end   YYYY-MM-DD。明示的な期間指定
-  --limit N       events モードの上位件数（既定 60）
+  --limit N       events / pages / landing モードの上位件数（既定 60）
   --dataset NAME  GA4 データセット（既定 analytics_265729912＝はなさか/y-com.info）
-  --events LIST   cv モードで集計するイベント名（カンマ区切り。未指定なら既定CVリスト）
+  --events LIST   cv / landing モードで集計するイベント名（カンマ区切り。未指定なら既定CVリスト）
+  --page STR      pages / landing モードでページの部分一致フィルタ（例 '?p=6624'・'/contents/'）
   --max-gb G      スキャン上限 GB（既定 8）。超えるクエリはエラーで止める
   --dry-run       スキャン量だけ見積もって表示（課金されない）
   --json          機械可読な JSON で出力
+
+ページ別モード（pages / landing・2026-07-13 追加）:
+  - pages   : ページ別の page_view 数・ユーザー数。「どの記事が読まれているか」
+  - landing : セッションの**最初の page_view**（＝ランディングページ）別に、セッション数・
+              CVを含んだセッション数・CV率。「どの記事が問い合わせ／見積に寄与したか」。
+              記事末CTA（B-002/B-007 等）の効果検証に使う。
+  - page_key はクエリ文字列のうち WordPress の `?p=NNNN` だけを残して正規化する
+    （UTM 等でページが分散して見かけの数字が割れるのを防ぐ）。
 """
 import argparse
 import datetime
@@ -61,6 +73,28 @@ DEFAULT_CV_EVENTS = [
     "スマホからの電話問い合わせ", "tel",
     "コーダー応募1次完了", "コーダー応募2次完了", "デザイナー応募完了ページ(designer.html)",
 ]
+
+# dataset 別の既定CVイベント（サイトごとに GA4 のイベント命名が違うため）。
+# ここに無い dataset は DEFAULT_CV_EVENTS にフォールバックする。
+# 背景（2026-07-26 hp-loop yoshida Cycle 045）：よしだ歯科の北極星＝WEB予約だが、
+# DEFAULT_CV_EVENTS は はなさか(ycom)向けの命名（問い合わせ・見積・tel 系）しか持たず
+# `reservation` を含まないため、--events を付け忘れると **全ページの予約CVが 0 と表示される**
+# （＝北極星が沈黙する。landing/cv モードの既定値が測定を誤らせる罠）。
+DATASET_CV_EVENTS = {
+    # よしだ歯科（yoshida）：WEB予約＝reservation／インターネットによるご予約（同一行動の別名2本）、
+    #                        電話＝tel／スマホからの電話問い合わせ（同上）
+    "analytics_287348176": [
+        "reservation", "インターネットによるご予約",
+        "tel", "スマホからの電話問い合わせ",
+    ],
+}
+
+
+def cv_events_for(dataset, override):
+    """CVイベント名を決める：--events 明示 > dataset 別の既定 > 全体の既定。"""
+    if override:
+        return [e.strip() for e in override.split(",") if e.strip()]
+    return DATASET_CV_EVENTS.get(dataset, DEFAULT_CV_EVENTS)
 
 
 def validate_identifiers(project, dataset):
@@ -156,22 +190,49 @@ def table_inventory(client, project, dataset, start, end):
     return sorted(daily_dates), has_intraday
 
 
-def build_ga_cte(project, dataset, has_daily, has_intraday):
+BASE_COLS = "event_name, event_date, user_pseudo_id"
+
+# ページ別モード用の追加列。page_location と ga_session_id を event_params から取り出す。
+# page_key はパス＋WordPress の ?p=NNNN だけに正規化する（UTM 等でページが割れるのを防ぐ）。
+PAGE_COLS = BASE_COLS + """,
+         event_timestamp,
+         (SELECT value.int_value FROM UNNEST(event_params) WHERE key = 'ga_session_id') AS session_id,
+         CONCAT(
+           IFNULL(REGEXP_EXTRACT(
+             (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location'),
+             r'^https?://[^/]+(/[^?#]*)'), ''),
+           IFNULL(CONCAT('?p=', REGEXP_EXTRACT(
+             (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location'),
+             r'[?&]p=(\\d+)')), '')
+         ) AS page_key,
+         IFNULL(device.category, '(not set)') AS device_category"""
+
+# 参照元モード用の追加列。イベントスコープの collected_traffic_source（セッションの実流入元に近い）を
+# 一次、ユーザースコープの traffic_source（初回接触）をフォールバックに使う。
+SRC_COLS = PAGE_COLS + """,
+         collected_traffic_source.manual_source AS ev_source,
+         collected_traffic_source.manual_medium AS ev_medium,
+         traffic_source.source AS user_source,
+         traffic_source.medium AS user_medium"""
+
+
+def build_ga_cte(project, dataset, has_daily, has_intraday, cols=BASE_COLS):
     """daily / intraday の存在に応じて UNION 分岐を組む。
     - daily 分岐は `events_*`（8桁日付フィルタで intraday_* を自然排除）。
     - intraday 分岐は `events_intraday_*`。daily がある日は event_date で除外（二重計上防止）。
-    どちらも無ければ None（呼び出し側でエラー）。"""
+    どちらも無ければ None（呼び出し側でエラー）。
+    cols は本スクリプト内の定数のみ（外部入力を渡さない＝SQLi対策）。"""
     branches = []
     if has_daily:
         branches.append(
-            f"  SELECT event_name, event_date, user_pseudo_id\n"
+            f"  SELECT {cols}\n"
             f"  FROM `{project}.{dataset}.events_*`\n"
             f"  WHERE _TABLE_SUFFIX BETWEEN @start AND @end"
         )
     if has_intraday:
         dedup = "\n    AND event_date NOT IN UNNEST(@daily_dates)" if has_daily else ""
         branches.append(
-            f"  SELECT event_name, event_date, user_pseudo_id\n"
+            f"  SELECT {cols}\n"
             f"  FROM `{project}.{dataset}.events_intraday_*`\n"
             f"  WHERE _TABLE_SUFFIX BETWEEN @start AND @end{dedup}"
         )
@@ -247,6 +308,112 @@ ORDER BY month, c DESC
     return run_query(client, sql, params, args)
 
 
+def q_pages(client, cte, params, args):
+    """ページ別の page_view 数・ユーザー数（--page で部分一致フィルタ）。"""
+    from google.cloud import bigquery
+
+    sql = cte + """
+SELECT page_key, COUNT(*) AS views, COUNT(DISTINCT user_pseudo_id) AS users
+FROM ga
+WHERE event_name = 'page_view'
+  AND page_key != ''
+  AND (@page IS NULL OR STRPOS(page_key, @page) > 0)
+GROUP BY page_key
+ORDER BY views DESC
+LIMIT @limit
+"""
+    params = params + [
+        bigquery.ScalarQueryParameter("page", "STRING", args.page),
+        bigquery.ScalarQueryParameter("limit", "INT64", args.limit),
+    ]
+    return run_query(client, sql, params, args)
+
+
+def q_landing(client, cte, params, args, cv_events):
+    """ランディングページ（セッション最初の page_view）別に、セッション数・CVを含むセッション数・CV率。
+    ＝「どの記事が問い合わせ／見積に寄与したか」。記事末CTAの効果検証に使う。
+    --by-device 指定時は landing × デバイス種別（mobile/desktop/tablet）で割る（T-024）。
+    デバイスはセッション内の最初のイベントの device.category を採用する（セッション途中で
+    変わることは実質ないが、複数値が混ざっても1行に潰れないよう明示的に1つ選ぶ）。"""
+    from google.cloud import bigquery
+
+    by_device = getattr(args, "by_device", False)
+    dev_select = "landing, device_category" if by_device else "landing"
+    dev_group = "landing, device_category" if by_device else "landing"
+
+    sql = cte + f"""
+, sess AS (
+  SELECT user_pseudo_id, session_id,
+         ARRAY_AGG(IF(event_name = 'page_view' AND page_key != '', page_key, NULL)
+                   IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)] AS landing,
+         ARRAY_AGG(device_category IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)]
+           AS device_category,
+         COUNTIF(event_name IN UNNEST(@cv_events)) AS cv_events
+  FROM ga
+  WHERE session_id IS NOT NULL
+  GROUP BY user_pseudo_id, session_id
+)
+SELECT {dev_select}, COUNT(*) AS sessions,
+       COUNT(DISTINCT user_pseudo_id) AS users,
+       COUNTIF(cv_events > 0) AS cv_sessions,
+       ROUND(SAFE_DIVIDE(COUNTIF(cv_events > 0) * 100, COUNT(*)), 2) AS cv_rate_pct
+FROM sess
+WHERE landing IS NOT NULL
+  AND (@page IS NULL OR STRPOS(landing, @page) > 0)
+GROUP BY {dev_group}
+ORDER BY sessions DESC
+LIMIT @limit
+"""
+    params = params + [
+        bigquery.ArrayQueryParameter("cv_events", "STRING", cv_events),
+        bigquery.ScalarQueryParameter("page", "STRING", args.page),
+        bigquery.ScalarQueryParameter("limit", "INT64", args.limit),
+    ]
+    return run_query(client, sql, params, args)
+
+
+def q_sources(client, cte, params, args, cv_events):
+    """セッションの参照元（source / medium）別に、セッション数・ユーザー数・CV。
+    ＝「その着地面のトラフィックはどこから来ているか」。ボット・リファラスパム等の
+    機械的アクセスの切り分けに使う（--page で着地ページの部分一致フィルタ）。
+    参照元はセッション内の最初の非NULL値：collected_traffic_source（イベントスコープ）を
+    一次、traffic_source（ユーザー初回接触）をフォールバックにする（T-025）。"""
+    from google.cloud import bigquery
+
+    sql = cte + """
+, sess AS (
+  SELECT user_pseudo_id, session_id,
+         ARRAY_AGG(IF(event_name = 'page_view' AND page_key != '', page_key, NULL)
+                   IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)] AS landing,
+         ARRAY_AGG(ev_source IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)] AS ev_source,
+         ARRAY_AGG(ev_medium IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)] AS ev_medium,
+         ARRAY_AGG(user_source IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)] AS user_source,
+         ARRAY_AGG(user_medium IGNORE NULLS ORDER BY event_timestamp LIMIT 1)[SAFE_OFFSET(0)] AS user_medium,
+         COUNTIF(event_name IN UNNEST(@cv_events)) AS cv_events
+  FROM ga
+  WHERE session_id IS NOT NULL
+  GROUP BY user_pseudo_id, session_id
+)
+SELECT COALESCE(ev_source, user_source, '(not set)') AS source,
+       COALESCE(ev_medium, user_medium, '(not set)') AS medium,
+       COUNT(*) AS sessions,
+       COUNT(DISTINCT user_pseudo_id) AS users,
+       COUNTIF(cv_events > 0) AS cv_sessions
+FROM sess
+WHERE landing IS NOT NULL
+  AND (@page IS NULL OR STRPOS(landing, @page) > 0)
+GROUP BY source, medium
+ORDER BY sessions DESC
+LIMIT @limit
+"""
+    params = params + [
+        bigquery.ArrayQueryParameter("cv_events", "STRING", cv_events),
+        bigquery.ScalarQueryParameter("page", "STRING", args.page),
+        bigquery.ScalarQueryParameter("limit", "INT64", args.limit),
+    ]
+    return run_query(client, sql, params, args)
+
+
 def fmt_rows(rows):
     if isinstance(rows, dict):
         return json.dumps(rows, ensure_ascii=False, default=str)
@@ -258,13 +425,17 @@ def fmt_rows(rows):
 
 def main():
     p = argparse.ArgumentParser(description="GA4(BigQuery) 読み取り専用フェッチャ")
-    p.add_argument("mode", choices=["summary", "events", "cv"], help="取得モード")
+    p.add_argument("mode", choices=["summary", "events", "cv", "pages", "landing", "sources"], help="取得モード")
     p.add_argument("--days", type=int, default=28)
     p.add_argument("--start")
     p.add_argument("--end")
     p.add_argument("--limit", type=int, default=60)
     p.add_argument("--dataset", default=DEFAULT_DATASET)
-    p.add_argument("--events", default=None, help="cv モードの対象イベント（カンマ区切り）")
+    p.add_argument("--events", default=None, help="cv / landing モードの対象イベント（カンマ区切り）")
+    p.add_argument("--by-device", dest="by_device", action="store_true",
+                   help="landing モードで landing×デバイス種別（mobile/desktop/tablet）に分割（T-024）")
+    p.add_argument("--page", default=None,
+                   help="pages / landing モードでページの部分一致フィルタ（例 '?p=6624'）")
     p.add_argument("--max-gb", dest="max_gb", type=float, default=8.0)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--json", dest="as_json", action="store_true")
@@ -281,7 +452,13 @@ def main():
     if not has_daily and not has_intraday:
         err(f"ERROR: {project}.{dataset} の {start}〜{end} に events_/events_intraday_ テーブルが見つかりません。")
         sys.exit(3)
-    cte = build_ga_cte(project, dataset, has_daily, has_intraday)
+    if args.mode == "sources":
+        cols = SRC_COLS
+    elif args.mode in ("pages", "landing"):
+        cols = PAGE_COLS
+    else:
+        cols = BASE_COLS
+    cte = build_ga_cte(project, dataset, has_daily, has_intraday, cols=cols)
     params = base_params(start, end, daily_dates, include_daily_dates=(has_daily and has_intraday))
 
     result = {"project": project, "dataset": dataset, "start": start, "end": end,
@@ -293,10 +470,22 @@ def main():
     elif args.mode == "events":
         result["events"] = q_events(client, cte, params, args)
     elif args.mode == "cv":
-        cv_events = ([e.strip() for e in args.events.split(",") if e.strip()]
-                     if args.events else DEFAULT_CV_EVENTS)
+        cv_events = cv_events_for(dataset, args.events)
         result["cv_events"] = cv_events
         result["cv"] = q_cv(client, cte, params, args, cv_events)
+    elif args.mode == "pages":
+        result["page_filter"] = args.page
+        result["pages"] = q_pages(client, cte, params, args)
+    elif args.mode == "landing":
+        cv_events = cv_events_for(dataset, args.events)
+        result["cv_events"] = cv_events
+        result["page_filter"] = args.page
+        result["landing"] = q_landing(client, cte, params, args, cv_events)
+    elif args.mode == "sources":
+        cv_events = cv_events_for(dataset, args.events)
+        result["cv_events"] = cv_events
+        result["page_filter"] = args.page
+        result["sources"] = q_sources(client, cte, params, args, cv_events)
 
     if args.as_json:
         print(json.dumps(result, ensure_ascii=False, default=str, indent=2))
@@ -304,7 +493,10 @@ def main():
 
     print(f"■ GA4(BigQuery): {project}.{dataset} / 期間 {start}〜{end}"
           f" / daily日数={len(daily_dates)} / intraday={'有' if has_intraday else '無'}")
-    for key in ("summary", "events", "cv"):
+    if "cv_events" in result:
+        # どのイベントを CV として数えたかを必ず明示する（既定値のまま北極星を取りこぼす事故の防止）
+        print(f"  CV対象イベント: {', '.join(result['cv_events'])}")
+    for key in ("summary", "events", "cv", "pages", "landing", "sources"):
         if key in result:
             print(f"--- {key} ---")
             print(fmt_rows(result[key]))

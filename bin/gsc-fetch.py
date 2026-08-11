@@ -263,6 +263,28 @@ LIMIT @limit
     return run_query(client, sql, params, args)
 
 
+def q_query_pages(client, fq, args, start, end):
+    """クエリ（部分一致）を獲得しているページを返す＝page-queries の逆引き。
+    「このクエリ群はどの記事が受けているか」を1発で特定する（B-007 のような
+    クラスター施策で、対象記事URLを推測でなく実測で確定するのに使う）。
+    --query に検索語の部分文字列（例 'ワードプレス'）を渡す。読み取り専用・パラメータ化。"""
+    from google.cloud import bigquery
+
+    sql = f"""
+SELECT url, query,
+       {_METRICS}
+FROM `{fq}`
+WHERE {_where(args.search_type, args.site, "query IS NOT NULL AND STRPOS(query, @q) > 0")}
+GROUP BY url, query
+ORDER BY impressions DESC, clicks DESC
+LIMIT @limit
+"""
+    params = _date_params(start, end, args.search_type, args.site)
+    params.append(bigquery.ScalarQueryParameter("q", "STRING", args.query))
+    params.append(bigquery.ScalarQueryParameter("limit", "INT64", args.limit))
+    return run_query(client, sql, params, args)
+
+
 def fmt_rows(rows):
     """人間可読の簡易表示。順位は小数1桁、CTRは%。"""
     if isinstance(rows, dict):  # dry-run / summary(単一行はリスト)
@@ -283,13 +305,14 @@ def fmt_rows(rows):
 
 def main():
     p = argparse.ArgumentParser(description="GSC(BigQuery) 読み取り専用フェッチャ")
-    p.add_argument("mode", choices=["summary", "queries", "pages", "page-queries", "overview"], help="取得モード")
+    p.add_argument("mode", choices=["summary", "queries", "pages", "page-queries", "query-pages", "overview"], help="取得モード")
     p.add_argument("--days", type=int, default=28)
     p.add_argument("--start")
     p.add_argument("--end")
     p.add_argument("--limit", type=int, default=25)
     p.add_argument("--site", default=None)
     p.add_argument("--page", default=None, help="page-queries モードで対象ページURLの部分文字列（例 '?p=2082'）")
+    p.add_argument("--query", default=None, help="query-pages モードで対象クエリの部分文字列（例 'ワードプレス'）")
     p.add_argument("--search-type", dest="search_type", default="WEB")
     p.add_argument("--dataset", default=None)
     p.add_argument("--max-gb", dest="max_gb", type=float, default=5.0)
@@ -319,6 +342,12 @@ def main():
             sys.exit(2)
         result["page"] = args.page
         result["page_queries"] = q_page_queries(client, fq, args, start, end)
+    elif args.mode == "query-pages":
+        if not args.query:
+            err("ERROR: query-pages モードは --query <クエリ部分文字列> が必須です（例 --query 'ワードプレス'）。")
+            sys.exit(2)
+        result["query"] = args.query
+        result["query_pages"] = q_query_pages(client, fq, args, start, end)
     elif args.mode == "overview":
         result["summary"] = q_summary(client, fq, args, start, end)
         result["queries"] = q_queries(client, fq, args, start, end)
@@ -330,13 +359,13 @@ def main():
 
     print(f"■ GSC(BigQuery): {project}.{dataset} / 期間 {start}〜{end} / search_type={args.search_type}")
     if args.dry_run:
-        for key in ("summary", "queries", "pages", "page_queries"):
+        for key in ("summary", "queries", "pages", "page_queries", "query_pages"):
             if key in result:
                 print(f"[{key}] dry-run: {fmt_rows(result[key])}")
         return
     if "page" in result:
         print(f"対象ページ（部分一致）: {result['page']}")
-    for key in ("summary", "queries", "pages", "page_queries"):
+    for key in ("summary", "queries", "pages", "page_queries", "query_pages"):
         if key in result:
             print(f"--- {key} ---")
             print(fmt_rows(result[key]))
