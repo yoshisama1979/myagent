@@ -1,6 +1,6 @@
 # リファクタリング実施ガイドライン
 
-> **version 0.1**（2026-08-11 社長指示「1から進めて」で新設）｜ changelog はファイル末尾。
+> **version 0.2**（2026-08-11 社長指示「1から進めて」で新設・同日 §4.5 追加）｜ changelog はファイル末尾。
 > 出自＝`claude-rules/websystem/rules/modes/refactoring.md`（250行）を、このリポジトリの実態
 > （`bin/` の bash・python 運用ツール＋無人 cron ループ＋Markdown 台帳＋静的HTML＋**複数エージェントが同じ作業ツリーに同居**）
 > へ適応させたもの。**websystem の Laravel／React／TypeScript 節は不採用**（このリポジトリに該当スタックが無い）。
@@ -58,6 +58,36 @@
    （`git restore --staged` で相手の作業を剥がさない）。
 5. 実例＝2026-08-11 に `office/index.html`（他エージェントの233行）と `milestones.md`（13行）を巻き込みかけ、
    上記3・4で回避した。過去には3回、混入したまま commit している（[[project_git-index-race]]）。
+
+## 4.5 隔離して直す（worktree の手順・横断的変更のとき）
+
+STRICT を超える変更（§3 の「複数ファイル横断」）は、**main の作業ツリーで直接やらない**。
+git worktree で別フォルダを生やし、そこで書いて検証し、通ったものだけ main に入れる。
+失敗しても丸ごと捨てられる＝同居エージェントに一切影響しない。
+
+```bash
+git worktree add ../myagent-refactor -b refactor/<用件>   # 作業場を生やす（追跡ファイル12MBだけ・.git は共有）
+# …作業・検証・コミット…
+cd /home/vpsuser/projects/myagent                          # ★必ず main 側へ戻ってから
+git merge --ff-only refactor/<用件>
+git worktree remove ../myagent-refactor && git branch -d refactor/<用件>
+```
+
+**踏んだ落とし穴（2026-08-11・3回まわして全部当たった）**
+
+1. **`git checkout <別ブランチ>` は同居環境では禁じ手**＝作業ツリーの中身が丸ごと入れ替わり、
+   他のエージェントの足元からファイルが消える。ブランチを分けたいなら必ず worktree。
+2. **worktree の中から `git merge` / `git worktree remove` を打たない**。前者は自分自身にマージして
+   「Already up to date」になるだけ、後者は立っている床を外して cwd を失う。**必ず main 側へ戻ってから**。
+3. **枝が古くなったら、当てずに作り直す**。ブランチを切った後で main 側が進んでいると、
+   `git checkout <枝> -- <file>` は**その後の変更を巻き戻す**（実際に、後から main に入った
+   新モード204行を消しかけた）。**枝を捨てて、今の版に同じ修正をやり直す方が速くて安全**。
+4. **`.env` や `data/` は worktree に無い**（git 管理外だから）。実データでの検証が要るときだけ
+   `.env` をコピーし、**検証が終わったら必ず消す**（コミット前に `git status` で確認）。
+5. **マージ前に、対象ファイルが main 側で編集中でないか見る**（`git status --short <paths>`）。
+   編集中なら git がマージを拒否する＝**それは正しい動作**。強行せず、
+   ①相手がコミットするのを待つ ②衝突しないファイルだけ先に入れる（`git checkout <枝> -- <安全な paths>`）
+   のどちらかを選ぶ。**相手の未コミット作業を上書きする選択肢は無い**。
 
 ## 5. 挙動不変を「示す」（言うだけにしない）
 
@@ -119,4 +149,5 @@ STRICT を超える改善（共通ライブラリの抽出・データモデル�
 
 | version | 日付 | 内容 |
 |---------|------|------|
+| 0.2 | 2026-08-11 | **§4.5 隔離して直す（worktree の手順）を追加**（社長「今のブランチで管理するルールは記述する必要ありますか」）。同日に3回まわして実際に踏んだ落とし穴5つを手順つきで固定＝①同居環境で `git checkout <別ブランチ>` は禁じ手 ②worktree の中から merge / remove を打たない（cwd を失う） ③枝が古くなったら当てずに作り直す（後から main に入った新モード204行を消しかけた） ④.env は worktree に無い＝検証用コピーは必ず消す ⑤マージ前に対象ファイルが main 側で編集中でないか見る（git の拒否は正しい動作・強行しない） |
 | 0.1 | 2026-08-11 | 初版（社長指示）。websystem の refactoring.md から目的・STRICT スコープ・実施/非実施の判断を移植し、Laravel／React／TypeScript 節は不採用。このリポジトリ固有として **§4 複数エージェント同居の鉄則**（混入3回の前例）・**§5 挙動不変を機械で示す**（testing.md と接続）・**§7 横断的改善は直さず起票**（STRICT の原理的限界＝.env 19本重複の実測つき）を追加。契機＝`/commit-pipeline` ステップ3 と `/refactor` が参照する `rules/refactoring.mdc` が実在せず、毎コミットの1段が空回りしていたこと |
