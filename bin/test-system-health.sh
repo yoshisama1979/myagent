@@ -15,7 +15,7 @@ PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 [ -f "$PROJ/bin/system-health.py" ] || { echo "❌ 起動位置がおかしい: $PROJ" >&2; exit 2; }
 
 python3 - "$PROJ" <<'PYEOF'
-import importlib.util, sys, tempfile
+import importlib.util, os, sys, tempfile
 from pathlib import Path
 
 proj = Path(sys.argv[1])
@@ -117,6 +117,69 @@ ents = sh.uncommitted_tools()
 (ok if ents is None or all("_tmp_" not in p for p, _ in ents) else ng)(
     f"_tmp_ を含まない（{[p for p, _ in (ents or []) if '_tmp_' in p]}）")
 (ok if ents is None or isinstance(ents, list) else ng)("本番リポジトリで実行しても落ちない")
+
+print("\n=== コードの層：`_tmp_` 残骸（『済んだら削除』の約束の違反だけ鳴らす）===")
+(ok if sh.code_layer_warnings({"tmp": [], "untested": []}) == [] else ng)("残骸ゼロなら無警告")
+(ok if sh.code_layer_warnings({"tmp": [{"name": "_tmp_a.py", "days": 3.0}], "untested": []}) == [] else ng)(
+    f"{sh.TMP_MAX_DAYS}日以内は無警告（作業中の使い捨てを毎日鳴らさない）")
+w = sh.code_layer_warnings({"tmp": [{"name": "_tmp_crop.py", "days": 21.4}], "untested": []})
+(ok if len(w) == 1 and "_tmp_crop.py" in w[0] and "21日" in w[0] else ng)(f"閾値超えは名前と日数を出す（{w[0][:50] if w else '—'}…）")
+(ok if w and "testing.md §1" in w[0] else ng)("なぜ問題かの根拠（どのルールの約束か）を添える")
+many = {"tmp": [{"name": f"_tmp_{i}.py", "days": 10 + i} for i in range(6)], "untested": []}
+w = sh.code_layer_warnings(many)
+(ok if len(w) == 1 and "6本" in w[0] and "ほか3本" in w[0] else ng)(f"多数でも1行に畳む・件数は正確（{w[0][:60] if w else '—'}…）")
+(ok if w and w[0].index("_tmp_5.py") < w[0].index("_tmp_4.py") else ng)("古い順に並べる（呼び出し側の並びに依存しない）")
+(ok if sh.code_layer_warnings({"tmp": [{"name": "_tmp_a.py", "days": 30}], "untested": []},
+                              max_tmp_days=90) == [] else ng)("閾値は引数で変えられる")
+
+print("\n=== コードの層：無担保ツールは『増えたとき』だけ鳴らす（既知の積み残しで警報疲れさせない）===")
+cur = {"tmp": [], "untested": ["ga4-fetch.py", "gsc-fetch.py"]}
+(ok if sh.code_layer_warnings(cur) == [] else ng)("前回スナップショットが無ければ黙る（初回に13本を全部『新規』と誤報しない）")
+(ok if sh.code_layer_warnings(cur, {"untested": ["ga4-fetch.py", "gsc-fetch.py"]}) == [] else ng)(
+    "同じ顔ぶれが続くだけなら鳴らさない（積み残しは testing.md §7 の表が持つ）")
+w = sh.code_layer_warnings(cur, {"untested": ["ga4-fetch.py"]})
+(ok if len(w) == 1 and "gsc-fetch.py" in w[0] and "ga4-fetch.py" not in w[0] else ng)(
+    f"新しく載った1本だけを名指しする（{w[0][:60] if w else '—'}…）")
+(ok if sh.code_layer_warnings({"tmp": [], "untested": ["a.py"]},
+                              {"untested": ["a.py", "b.py"]}) == [] else ng)("テストが付いて減ったときは鳴らさない")
+(ok if sh.code_layer_warnings(None) == [] and sh.code_layer_warnings({}) == [] else ng)(
+    "空・None を渡しても落ちない")
+
+print("\n=== コードの層：重複の数え方（数字が信用を失うと統括は起票をやめる）===")
+src = [("a.py", 'ENV = os.path.join(ROOT, ".env")\n'),
+       ("b.py", 'x = os.environ.get("HOME")\n'),          # ← `.env` に部分一致する罠
+       ("c.py", 'from _env import env_value\nv = env_value("K")  # .env を読む\n'),
+       ("_env.py", 'ENV_FILE = PROJ / ".env"\n'),
+       ("d.sh", 'set -a; . "$PROJ/.env"; set +a\n'),
+       ("e.py", 'import fcntl\nfcntl.flock(fh, fcntl.LOCK_EX)\nos.replace(tmp, path)\n'),
+       ("f.sh", 'flock -n 9 || exit 0\n')]
+d = sh.dup_impls(src)
+(ok if d.get(".env の自作読み込み") == ["a.py"] else ng)(
+    f"os.environ を .env と誤認しない・共有ヘルパー利用者と _env.py 自身は除く（{d.get('.env の自作読み込み')}）")
+(ok if d.get(".env の自作読み込み(shell)") == ["d.sh"] else ng)(f"shell も数える（{d.get('.env の自作読み込み(shell)')}）")
+(ok if d.get("flock の自作") == ["e.py"] else ng)(f"python の flock は呼び出しの形で見る（{d.get('flock の自作')}）")
+(ok if d.get("flock の自作(shell)") == ["f.sh"] else ng)(f"shell の flock はコマンドの形で見る（{d.get('flock の自作(shell)')}）")
+(ok if d.get("atomic write の自作(os.replace)") == ["e.py"] else ng)(f"atomic write（{d.get('atomic write の自作(os.replace)')}）")
+(ok if sh.dup_impls([]) == {} else ng)("該当ゼロならキー自体を作らない")
+(ok if "system-health.py" in sh.DUP_EXCLUDE else ng)("検知器自身は対象外（自分のパターン定義で自分を数えない）")
+
+print("\n=== コードの層：本番リポジトリで実測できる（パースの前提が崩れていない）===")
+sh.ROOT = str(proj)
+tools, tested = sh.loop_tools(), sh.tested_tools()
+(ok if tools and all("/" not in t for t in tools) else ng)(f"無人ループのツールを列挙できる（{len(tools)}本）")
+(ok if all(os.path.isfile(os.path.join(str(proj), "bin", t)) for t in tools) else ng)(
+    "実在するものだけ（許可リストに残った消済みツールを数えない）")
+(ok if "system-health.py" in tested and "agent-tick.sh" in tested else ng)(
+    "テストが冒頭で名乗る対象を拾える（別名テスト test-cooldown→agent-tick も）")
+(ok if "hp-audit.sh" not in tested else ng)("本文でしか言及されないツールを『テスト済み』にしない")
+ch = sh.code_churn(days=14)
+(ok if ch is None or (ch["added"] >= 0 and ch["net"] == ch["added"] - ch["removed"]) else ng)(
+    f"増減を実測できる（{ch}）")
+cl = sh.code_layer()
+(ok if set(cl) >= {"churn", "tmp", "loop_tools", "untested", "dup"} else ng)(f"スナップショット用の形が揃う（{sorted(cl)}）")
+(ok if isinstance(cl["untested"], list) and all(t in tools for t in cl["untested"]) else ng)(
+    f"テスト無しは無人ループのツールの部分集合（{len(cl['untested'])}本）")
+sh.ROOT = str(T)
 
 print("\n=== 読み取り専用（監視が台帳を書き換えない）===")
 before = sorted(p.name for p in T.iterdir())

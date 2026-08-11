@@ -137,6 +137,178 @@ def tool_debt_warnings(entries, max_days=TOOL_DEBT_DAYS):
             f"{head}{more}。**ツールが git に無い＝消えたら復元できない**"
             f"（2026-08-11 に1ヶ月放置の本番ツール5本が実在）"]
 
+# ── 2d) コードの層：構造の複雑度（統括の全体最適棚卸し用）────────────────────
+# 契機＝2026-08-11 社長「後戻りできなくなる前に、全体の設計やコードの最適化の提案をしてくれるように
+# なっていますか」。実測した答えは No＝統括の起票38件のうち79%が障害/予防で、コードの層は
+# 一度も見ていなかった（bin/ 61本中、視野に入っていたのは5本）。日次の計測が「台帳のサイズ」しか
+# 見ないため、コードだけが誰にも測られずに増え続けていた。
+#
+# ⚑ 判定の方針（既存の「床と待ち」節と同じ作法・設計原則との整合）：
+#   - 増減行数・重複本数は【数字だけ】出し、閾値も⚠️も付けない。理由＝行数に閾値を付けると
+#     「書かないこと」が最適化目標に化ける。refactoring.md の北極星「きれいにすること自体は
+#     成果ではない」と同じ。統括が隔週の棚卸しで読んで、必要なら O-NNN に起票する。
+#   - ⚠️ を出すのは【約束の違反】だけ＝①`_tmp_` は「済んだら削除」とルールに書いてある
+#     （testing.md §1）②無人ループが実行するツールのテストは「必須」と書いてある（同 §2）。
+#     宣言に機械の担保を対で付ける（同 §4）のがここの役目。
+#   - ②は既知の積み残しを毎日鳴らさない＝**増えたときだけ**鳴らす（新しく無担保のツールが
+#     無人ループに載った瞬間を捕まえる）。現在数は数字として常に出す。
+TMP_MAX_DAYS = 7            # `_tmp_` を置いておいてよい日数（★提案既定値）
+CHURN_DAYS = 14             # 増減を見る窓（統括の棚卸し周期に合わせる）
+# ⚠️ `.env` は `os.environ` に部分一致する（最初の実装で 3本→6本 に水増しされた）。
+# 数字が信用を失うと統括は起票をやめる＝後ろに英数字が続かない場合だけ拾う。
+_DOTENV = re.compile(r"\.env(?![A-Za-z0-9_])")
+DUP_PATTERNS = [            # (ラベル, 対象拡張子, 判定関数)  ＝ 同じ処理の再実装の"候補"を数える
+    (".env の自作読み込み", (".py",),
+     lambda t: bool(_DOTENV.search(t)) and "import _env" not in t and "from _env" not in t),
+    (".env の自作読み込み(shell)", (".sh",), lambda t: bool(_DOTENV.search(t))),
+    ("atomic write の自作(os.replace)", (".py",), lambda t: "os.replace(" in t),
+    # 「flock」の素の部分一致だと、この検知器自身のパターン定義行に当たって自分を数える
+    # （実際に system-health.py が誤って 7本目に入った）＝呼び出しの形で判定する
+    ("flock の自作", (".py",), lambda t: "fcntl.flock(" in t),
+    ("flock の自作(shell)", (".sh",), lambda t: re.search(r"\bflock\s+-", t) is not None),
+]
+# 対象外：`_env.py` は共有ヘルパー自身＝「重複」でなく解決側。
+# `system-health.py` は**この検知器そのもの**＝ソースに判定文字列（"fcntl.flock(" 等）が
+# 説明として書いてあるため、自分を走査すると必ず自分を数える（実際に2回踏んだ）。
+# パターン定義ブロックだけ切っても、注記や docstring に同じ文字列が残るので根治しない。
+# → 自己計測はあきらめて対象外にし、**出力にその事実を書く**（黙って外すと数字が嘘になる）。
+DUP_EXCLUDE = {"_env.py", "system-health.py"}
+
+def _bin_sources():
+    """bin/ の本番ソース [(ファイル名, 本文)]。テストと使い捨ては対象外。"""
+    out = []
+    for f in sorted(glob.glob(os.path.join(ROOT, "bin/*"))):
+        n = os.path.basename(f)
+        if not os.path.isfile(f) or n.startswith(("test-", "_tmp_")):
+            continue
+        if not n.endswith((".py", ".sh", ".mjs")):
+            continue
+        try:
+            out.append((n, open(f, encoding="utf-8", errors="replace").read()))
+        except OSError:
+            continue
+    return out
+
+def code_churn(days=CHURN_DAYS):
+    """bin/ の直近 days 日の増減。git が使えなければ None（測れないことを隠さない）。"""
+    try:
+        r = subprocess.run(["git", "-C", ROOT, "log", f"--since={days} days ago",
+                            "--numstat", "--format=", "--", "bin/"],
+                           capture_output=True, text=True, timeout=30)
+        if r.returncode != 0:
+            return None
+    except Exception:
+        return None
+    add = dele = 0
+    files = set()
+    for line in r.stdout.splitlines():
+        parts = line.split("\t")
+        if len(parts) != 3 or parts[0] == "-":      # "-" はバイナリ
+            continue
+        add += int(parts[0]); dele += int(parts[1]); files.add(parts[2])
+    return {"days": days, "added": add, "removed": dele,
+            "net": add - dele, "files": len(files)}
+
+def tmp_leftovers():
+    """使い捨てスクリプト（`_tmp_`）の残骸を [(名前, 経過日数)] で返す。"""
+    now = datetime.datetime.now().timestamp()
+    out = []
+    for f in sorted(glob.glob(os.path.join(ROOT, "bin/_tmp_*"))):
+        if os.path.isfile(f):
+            out.append((os.path.basename(f), (now - os.path.getmtime(f)) / 86400))
+    return sorted(out, key=lambda x: -x[1])
+
+def loop_tools():
+    """無人ループが実行しうる bin/ ツールの名前（crontab＋許可リストの和）。
+
+    ⚠️ 覆えるのは testing.md §2 の条件①（無人ループから呼ばれる）だけ。
+    ②状態を書く・③判定を持つ は機械では判定できない＝人の目が要る（正直に狭く名乗る）。
+    """
+    names = set()
+    try:
+        r = subprocess.run(["crontab", "-l"], capture_output=True, text=True, timeout=15)
+        if r.returncode == 0:
+            for line in r.stdout.splitlines():
+                if not line.strip().startswith("#"):
+                    names |= set(re.findall(r"bin/([A-Za-z0-9_.-]+\.(?:py|sh|mjs))", line))
+    except Exception:
+        pass                                        # crontab 不在の環境（テスト等）では許可リストだけ
+    try:
+        with open(os.path.join(ROOT, ".claude/settings.local.json"), encoding="utf-8") as fh:
+            allow = json.load(fh).get("permissions", {}).get("allow", [])
+        for a in allow:
+            names |= set(re.findall(r"bin/([A-Za-z0-9_.-]+\.(?:py|sh|mjs))", str(a)))
+    except Exception:
+        pass
+    # 実在するものだけ（許可リストには過去に消したツールの行が残ることがある）
+    return sorted(n for n in names if os.path.isfile(os.path.join(ROOT, "bin", n)))
+
+def tested_tools():
+    """テストが「自分の対象」として名乗っているツール名の集合。
+
+    判定はテストファイルの冒頭15行（＝対象を書く契機コメント。testing.md §6-7 が義務化している）。
+    本文中の言及は拾わない＝写経・比較で名前が出るだけのものを「テスト済み」と誤認しないため。
+    """
+    named = set()
+    for f in sorted(glob.glob(os.path.join(ROOT, "bin/test-*"))):
+        try:
+            head = "".join(open(f, encoding="utf-8", errors="replace").readlines()[:15])
+        except OSError:
+            continue
+        named |= set(re.findall(r"bin/([A-Za-z0-9_.-]+\.(?:py|sh|mjs))", head))
+    return named
+
+def dup_impls(sources=None):
+    """同じ処理の再実装の"候補"を数える。{ラベル: [ファイル名]}（grep 相当＝厳密判定ではない）。"""
+    src = _bin_sources() if sources is None else sources
+    out = {}
+    for label, exts, pred in DUP_PATTERNS:
+        hits = [n for n, t in src if n.endswith(exts) and n not in DUP_EXCLUDE and pred(t)]
+        if hits:
+            out[label] = sorted(hits)
+    return out
+
+def code_layer():
+    """コードの層の実測値を1つの dict にまとめる（スナップショットにも入れる）。"""
+    tools = loop_tools()
+    tested = tested_tools()
+    dups = dup_impls()
+    return {
+        "churn": code_churn(),
+        "tmp": [{"name": n, "days": round(d, 1)} for n, d in tmp_leftovers()],
+        "loop_tools": len(tools),
+        "untested": [n for n in tools if n not in tested],
+        "dup": {k: len(v) for k, v in dups.items()},
+        "dup_files": dups,
+    }
+
+def code_layer_warnings(cur, prev=None, max_tmp_days=TMP_MAX_DAYS):
+    """コードの層の警告。判定はここ1箇所（テストが直接叩く）。
+
+    鳴らすのは「約束の違反」だけ＝残骸の放置と、無担保ツールの**増加**。量の変化は鳴らさない。
+    """
+    if not cur:
+        return []
+    out = []
+    # 「最古」を名乗る以上、呼び出し側の並び順に依存しない（tool_debt_warnings と同じ轍）
+    old = sorted([t for t in cur.get("tmp", []) if t["days"] > max_tmp_days],
+                 key=lambda t: -t["days"])
+    if old:
+        head = ", ".join(f"{t['name']}({int(t['days'])}日)" for t in old[:3])
+        more = f" ほか{len(old)-3}本" if len(old) > 3 else ""
+        out.append(f"bin/ の使い捨てスクリプト `_tmp_` が {len(old)}本 残骸化"
+                   f"（>{max_tmp_days}日・最古 {int(old[0]['days'])}日）＝{head}{more}。"
+                   f"**済んだら削除する約束のもの**（testing.md §1）")
+    now_un = set(cur.get("untested") or [])
+    if prev is not None:
+        was_un = set((prev or {}).get("untested") or [])
+        added = sorted(now_un - was_un)
+        if added:
+            out.append(f"無人ループが実行するツールで**新たに**テスト無しが {len(added)}本"
+                       f"＝{', '.join(added)}。testing.md §2 は「無人ループから呼ばれるものは"
+                       f"回帰スイート必須」＝宣言に担保が付いていない（既存の積み残しは鳴らさない）")
+    return out
+
 # hp-loop の台帳・掲示板はサイト別に可変（gitignore のクライアント分含めディスク上を実測）
 def hp_loop_states():
     out = []
@@ -475,9 +647,10 @@ def main():
     mbox = mailbox_backlog()
     comms = comms_health()
     mem = memory_health()
+    code = code_layer()
     snap = {"ts": now.isoformat(timespec="seconds"), "autoload": al,
             "states": [{"path": s["path"], "bytes": s["bytes"]} for s in states],
-            "failures": fails, "comms": comms, "mem": mem}
+            "failures": fails, "comms": comms, "mem": mem, "code": code}
     # OOM kill の差分用。7日前と比べる prev とは別で、かつ「カウンタを読めた最新1件」を探す
     # （None が1件挟まってもその期間の増分を取りこぼさない＝Codex🟡）
     last = load_last(has_oom_counter)
@@ -503,6 +676,11 @@ def main():
         warns.extend(shape_warnings(entry_shape(tgt)))
     # バックアップの欠落：本番ツールが git に入っていない（2026-08-11 の1ヶ月放置の再発防止）
     warns.extend(tool_debt_warnings(uncommitted_tools()))
+    # コードの層：約束の違反だけ鳴らす（増減行数・重複本数は下の節に数字だけ出す）
+    # 比較相手は「コードの層を実際に測れた最新1件」＝この機能を入れる前の古い版と比べて
+    # 全件を「新規」と誤報しない（tool_debt と同じく、測れていない期間は黙る）
+    last_code = load_last(lambda s: isinstance(s.get("code"), dict))
+    warns.extend(code_layer_warnings(code, (last_code or {}).get("code")))
     # 故障：診断不能そのものを故障として扱う（監視の無言停止を防ぐ）
     if fails.get("error"):
         warns.append(f"🚨 診断不能: {fails['error']}")
@@ -580,6 +758,24 @@ def main():
               f"OOM kill {oom_s}")
         print("    上位: " + " / ".join(f"{p['name']} {p['rss_kb']//KB}MB" for p in mem["top"]))
     print()
+    # ── コードの層（統括の全体最適棚卸し用・数字のみ／判定・起票はしない）──────
+    print("## コードの層（数字のみ・判定なし＝統括の隔週棚卸しで読む）")
+    ch = code["churn"]
+    if ch is None:
+        print("- bin/ の増減: 🚨 測定不能（git が使えない）")
+    else:
+        print(f"- bin/ の増減（直近{ch['days']}日）: +{ch['added']}行 / -{ch['removed']}行 / "
+              f"純 {ch['net']:+d}行 / 触れた {ch['files']}本")
+    un = code["untested"]
+    print(f"- 無人ループが実行するツール: {code['loop_tools']}本 / うちテスト無し {len(un)}本"
+          + (f"（{', '.join(un)}）" if un else ""))
+    if code["dup"]:
+        print("- 同じ処理の再実装（候補・grep 相当／`_env.py` と本ツール自身は対象外）: "
+              + " / ".join(f"{k} {v}本" for k, v in sorted(code["dup"].items())))
+    print(f"- `_tmp_` 残骸: {len(code['tmp'])}本"
+          + (f"（最古 {int(code['tmp'][0]['days'])}日）" if code["tmp"] else ""))
+    print("> ⚑ 行数・本数に閾値は置かない（置くと「書かないこと」が目標に化ける）。"
+          "⚠️ を出すのは約束の違反＝残骸の放置と、無担保ツールの<u>増加</u>だけ。\n")
     if warns:
         print("## ⚠️ 閾値超え・悪化トレンド（統括の起票対象はここだけ）")
         for w in warns:
