@@ -177,6 +177,7 @@ class FooControllerTest extends SafeTestCase
 - **フィーチャーテスト**: API、コントローラー、認証
 - エラーケース、境界値、セキュリティテストも含む
 - テスト実行で失敗を確認（Red）
+- 既存実装に後からテストを足す場合は Red が取れない → `rules/modes/tdd.md` 3.0 で代替する
 
 ---
 
