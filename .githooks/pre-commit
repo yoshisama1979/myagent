@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# コミット直前の機械ゲート。実体は bin/precommit-guard.py（判定はそちら1箇所）。
+# 有効化：git config core.hooksPath .githooks（リポジトリごとに1回・core.hooksPath は git 管理外）
+# 緊急時：git commit --no-verify（理由をコミットメッセージに書くこと）
+set -u
+PROJ="$(git rev-parse --show-toplevel)"
+[ -f "$PROJ/bin/precommit-guard.py" ] || exit 0   # ツールが無い版へ戻ってもコミットを塞がない
+exec python3 "$PROJ/bin/precommit-guard.py"
