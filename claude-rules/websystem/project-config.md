@@ -76,6 +76,15 @@
 - **visibility 既定**: （記入。既定: `shared`＝全体共有）
 - **API トークンの置き場**: （記入。例: 環境変数 `HANASAKA_API_TOKEN`。**実値をこのファイル・リポジトリに書かない**）
 
+## HP分析ループ連携（`rules/modes/mailbox.md` / `rules/modes/hp-loop-dialogue.md` が参照）
+
+> 外部の「はなさかAI HP分析ループ」とサイト別にやり取りするための固有ID。ループはマルチサイト化で `hp-loop-<site>` に分かれており、**無印 `hp-loop` 宛では現行ループが拾えない**。対の分析ループがあるプロジェクトで記入する（無いプロジェクトは空欄のままでよい）。
+
+> ⚠️ **連携するのに未記入のまま放置しない**：ここが空欄だと、開発エージェントは報告の宛先（`hp-loop-<site>`）を確定できずメールボックス送信が成立しない（[rules/modes/mailbox.md](rules/modes/mailbox.md) §2 が「未記入なら社長に確認」と指示する）。このマシンの担当プロジェクトが決まったら**最初に埋める**。
+
+- 対になる分析ループのID（報告の宛先）：（記入。`hp-loop-<site>` 形式。例：hp-loop-ycom）
+- 自分（実装エージェント）のID：（記入。例：web-hanasaka。※ mailbox の `from` はトークンから決まるので参考値）
+
 ## 仕様書の場所
 
 - **既定**: `documents/specs/`（HTML。`.claude/rules/spec-format.md` 準拠）

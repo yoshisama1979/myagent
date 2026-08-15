@@ -6,7 +6,7 @@
 | テンプレート | 対象 | 中身の骨子 |
 |---|---|---|
 | [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、スライド資料PDF（deck-format） |
-| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、スライド資料PDF（deck-format） |
+| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
 
 ## 使い方（新規プロジェクトへの導入手順）
 
@@ -36,7 +36,7 @@
 ### ② 送る（テンプレ級だけ・経路はテンプレで異なる）
 
 - **website**：拠点PCの実装エージェントは mailbox を持つ。`[テンプレ還元]` 印の気づきを **`bash bin/mailbox.sh send --to rule-kaizen`** で送る（`thread: website-kaizen`／`subject: [website/<ファイル名>] 要旨`）。手順は website の `rules/modes/mailbox.md`「テンプレ改善提案を送る」節。
-- **websystem**：mailbox インフラを前提にしない。`[テンプレ還元]` 印は `rule-improvements.md` に残し、**棚卸し時に社長が myagent へ持ち帰る**（人手キャリーバック）。プロジェクトが mailbox を配線済みなら website と同じく `rule-kaizen` へ送ってよい。
+- **websystem**：mailbox インフラを前提にしない。`[テンプレ還元]` 印は `rule-improvements.md` に残し、**棚卸し時に社長が myagent へ持ち帰る**（人手キャリーバック）。プロジェクトが mailbox を配線済み（対の分析ループあり・トークン配布済み）なら website と同じく `rule-kaizen` へ送ってよい（手順は websystem の `rules/modes/mailbox.md` §2-3。`--thread websystem-kaizen`）。
 - 受け口 `rule-kaizen` は myagent VPS の **受信専用の宛先**。有効化には myagent 側でトークン表に1エントリ登録が要る（`myagent/rules/modes/mailbox.md`「`rule-kaizen` を有効にする」）。未登録なら送信側は空振りせず `rule-improvements.md` に残す。
 
 ### ③ 選別・起票・反映（myagent 側・reviewer 型・社長ゲート必須）
