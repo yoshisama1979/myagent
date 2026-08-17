@@ -40,6 +40,54 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 022 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 022 — 2026-08-17（<span class="text-red-700">3週間ぶりに本番が動いた／新機能2本は中身が空</span>／<span class="text-emerald-700">Search Console の毎日連携が正常と確定</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功・<span class="text-emerald-700">8/14 分が着弾して2日分に増加＝前回の「増えていない」は解消</span></strong>（<code>searchconsole_rally</code>・14日窓）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/15）。社長入力（from-president.md）＝新規追記なし（22サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 16本 ✅／hp-shot 4ページ×PC/SP ✅／素の <code>curl</code>・<code>hp-links.py</code> は<strong>4回目の再試行も承認不可</strong>）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle022-20260817.md</code>、スクショ＝<code>cycles/rally/shots/c022-*.png</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-17 早朝・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>3週間ぶりのデプロイ</strong></td><td class="py-1 px-2">トップの配信内容が <strong>55,994B → 57,978B（+1,984B）</strong>・リンク数 9→11 に変化。<strong>過去のスクリーンショットと並べて比較したところ、左メニューが 4項目 → 6項目に増えていました</strong>（＋「人物からさがす」＋「タグからさがす」）。<span class="text-gray-500">※ title・説明文・OGP・canonical・見出し構成は<strong>すべて据え置き</strong>＝R-R01・R-R02 は未着手のまま。応答 0.06〜0.07秒（良好）</span></td><td class="py-1 px-2">🚨 <strong>変化あり</strong>（deploy-log に記帳）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>新機能2本が空</strong></td><td class="py-1 px-2"><code>/people</code>（人物からさがす）＝「<strong>まだ人物が登録されていません</strong>」／<code>/spots/tags</code>（タグからさがす）＝「<strong>まだタグが登録されていません</strong>」。<strong>どちらも全ページ共通メニューから1クリックで到達します</strong></td><td class="py-1 px-2">🔴 <strong>R-R29 起票</strong>（新規）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong><code>/people</code> に外枠が無い</strong></td><td class="py-1 px-2">このページだけ<strong>ロゴ・左メニュー・検索窓・「無料で始める」が1つも表示されません</strong>（スマホでは ☰ すら無く、アイコンが左端で見切れ）。配信される中身も <strong>12,504B＝他ページの約1/4</strong>＝<strong>検索エンジン向けの事前描画の対象外</strong>で、名札もトップと同じもの。<span class="text-gray-500">※同時に追加された <code>/spots/tags</code> は外枠の中で正常に描画＝2本で作り方が揃っていない</span></td><td class="py-1 px-2">🔴 <strong>R-R30 起票</strong>（新規）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2"><strong>「スポットを探す」がスマホで機能しない</strong></td><td class="py-1 px-2"><code>/spots/search</code>（メニュー先頭）は「<strong>サイドバーの検索フォームから入力してください</strong>」と案内するが、<strong>スマホにサイドバーは無く（☰内）、ページ内にも検索窓が無い</strong>＝案内どおりの操作ができない。title/説明文も <code>/spots/prefectures</code> と完全同一の既定値</td><td class="py-1 px-2">🟡 <strong>R-R31 起票</strong>（新規）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">存在しないURLの200<br>（射程が拡大）</td><td class="py-1 px-2"><code>/spots/people</code>・<code>/spots/persons</code>・<code>/spots/figures</code>・<code>/spots/characters</code> という<strong>「ありそうな英単語」も全部200を返し、画面は「読み込み中…」で永久に止まります</strong>（当方が新機能のURLを探す過程で実際に踏みました）。<span class="text-emerald-700">※ルート直下の <code>/persons</code>・<code>/tags</code> は正しく404</span></td><td class="py-1 px-2">🔴 <strong>R-R27 の根拠を強化</strong>（新規番号にはしない）</td></tr>
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2"><strong>Search Console</strong></td><td class="py-1 px-2"><strong>8/14 分が着弾して2日分に増えました</strong>＝前回「1日分から増えていない」とご報告した件は<strong>通常のデータ遅延で、設定は正常</strong>と確定（監視終了）。数字＝<strong>25表示・8クリック・CTR 32.0%・平均掲載順位 3.4</strong>。<span class="text-red-800">ただし<strong>表示されているのはトップ1本だけ</strong>で、検索語も「全国スタンプラリー」など<strong>サービス名を知っている人の3語のみ</strong>＝<strong>地名・スポット名・テーマ名では1回も出ていません</strong></span></td><td class="py-1 px-2">✅ <strong>解決</strong>（効果検証の窓が正常稼働）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">GA4</td><td class="py-1 px-2">45日で <strong>events 1,231／users 96</strong>（前回 994／89）。閲覧＝トップ179・<code>/map</code> 110・<code>/spots/themes</code> 43・<code>/spots</code>(404) 40。<strong>新機能2本はまだ GA4 に出ていません</strong>（デプロイ直後）。<code>/admin/*</code> の混入は継続（→R-R17）</td><td class="py-1 px-2">R-R17 の必要性は継続</td></tr>
+        <tr><td class="py-1 px-2">継続確認<br>（在庫の生存）</td><td class="py-1 px-2"><code>www</code> SSL証明書エラー（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code> 404（R-R06）／<code>/privacy</code>・<code>/terms</code> 404（R-R09）／<code>/spots</code> 404の行き止まり（R-R24）／存在しないURLの200（R-R27）＝<strong>すべて継続</strong>。<strong>今回のデプロイで消化された提案は 28件中 0件</strong></td><td class="py-1 px-2">⚠️ <strong>Q-R11 起票</strong>（下記）</td></tr>
+      </tbody>
+    </table>
+
+    <div class="border-2 border-red-300 bg-red-50 rounded-lg p-4 mb-5">
+      <h3 class="font-bold text-red-800 mb-2">🚨 Cycle 022 でいちばんお伝えしたかったこと — 「探し方を2つ増やした」のに、開けると2つとも空っぽです</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>まず、方向性は大歓迎です。</strong>「人物からさがす」（れきしの人物ゆかりの地）と「タグからさがす」（お城・桜・夜景）は、<strong>すでに用意されている23本のテーマ企画（R-R25）とまったく同じ勝ち筋</strong>です＝「現存十二天守」「日本三名瀑」と同じで、<strong>人物名やタグ名は それ自体が検索される言葉</strong>だからです。発見される（経路①）を太くする、正しい方向の実装だと思います。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>問題は順番です。</strong>2本とも中身がゼロのまま、<strong>全ページ共通の左メニューという一等地に常設されています</strong>。訪れた人はどの画面からでも1クリックで「まだ登録されていません」に行き着きます。<strong>探し方を増やすつもりが、「作りかけのサービス」という印象を全ページで配ってしまう</strong>状態です——メールアドレスを預けて登録するか迷っている人には、これが効きます。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>そして「人物からさがす」（<code>/people</code>）には、もう一段大きな問題があります</strong>＝<strong>このページだけサイトの外枠が付いていません</strong>。ロゴも、メニューも、検索窓も、「無料で始める」ボタンも出ません。スマホに至っては上部のメニューボタン（☰）すら無く、アイコンが画面の左端で切れています。<strong>＝辿り着いた人には、ブラウザの「戻る」以外に出口がありません</strong>。<span class="text-gray-600">これは Cycle 019 で見つけた「出口のない404ページ」（R-R24）と同じ形が、今度は<strong>「正常なページ」として</strong>現れたものです。</span>加えてこのページだけ検索エンジン向けの下ごしらえ（プリレンダ）から漏れているため、<strong>将来 人物データを入れても、そのままでは検索結果に出ません</strong>。</p>
+      <p class="text-sm text-gray-800"><span class="text-emerald-700"><strong>いま直せば無傷で済みます</strong></span>＝まだ検索エンジンにこれらのページは1つも登録されていないので、外部からの流入被害は発生していません。<strong>→ R-R29（空の棚をメニューに出さない）・R-R30（<code>/people</code> を外枠の中へ）として起票しました。</strong></p>
+    </div>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>ボトルネックの診断を更新しました</strong>：前回まで「最大のボトルネックは本番が3週間動いていないこと」とご報告していましたが、<strong>今回のデプロイでこの見立ては誤りだったと分かりました＝開発は動いています</strong>。ただし<strong>消化された提案は28件中0件</strong>。＝真の課題は「手が止まっていること」ではなく、<strong>解析側の優先順位（発見される→登録→スタンプ収集）と、実装側が実際に着手する順番がつながっていないこと</strong>です。<strong>これは私の側では解けないため、5サイクルぶりの新しい質問（🔔 Q-R11）として社長にお預けします。</strong></li>
+        <li><strong>経路①（発見される）の窓が正常に開きました</strong>：Search Console が2日分に増え、<strong>毎日の自動連携が正常</strong>と確定。以後は R-R25（テーマ層）・R-R21（個別ページの名札）の効果を<strong>数字で測れます</strong>。現在地＝<strong>表示25・クリック8・掲載順位3.4だが、出ているのは「全国スタンプラリー」を知っている人の指名検索だけ</strong>＝<strong>「まだ知らない人」には1度も出会えていません</strong>。これが R-R25・R-R21 が最優先である理由そのものです。</li>
+        <li><strong>今回の3件は、いずれも「発見の入口」の話です</strong>：R-R29（入口が空）・R-R30（入口に外枠が無い）・R-R31（入口がスマホで操作できない）。<strong>いま在庫の最上位に置いている R-R25・R-R21 は「入口に正しい名札を付ける」施策</strong>で、その手前の<strong>入口そのものの作りが崩れている</strong>ことが分かった形です。名札を整える前に、入口を通れるようにする必要があります。</li>
+        <li><strong>観測手法の学び</strong>：hp-audit の差分では「サイズが変わった」までしか分からず、<strong>スクリーンショットを過去分と並べて初めて「メニューが2項目増えた」と特定できました</strong>。今後は<strong>配信サイズが変わったサイクルでは、必ず同じサイクルでスクリーンショットの定点比較を行う</strong>運用にします（本サイクルで前倒し実施済み・台帳に反映）。</li>
+        <li><strong>追わないもの／保留</strong>：<code>/people</code> に将来生える「人物詳細ページ」は、まだ存在しないため種プールに置きます（生えたら R-R21 の6層目）。「□」（豆腐文字）の件は前回どおり、当方の描画環境の可能性が高いため断定していません。</li>
+        <li><strong>今サイクルの新規Rは3件</strong>（R-R29・R-R30・R-R31）＋既存2件の根拠・対象を拡張（R-R27・R-R21）。<strong>新しい質問は1件</strong>（Q-R11）。</li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。<strong>着手推奨の順序を更新しました＝<span class="text-red-700">R-R30</span> → R-R17 → R-R27 → R-R24 → <span class="text-red-700">R-R31</span> → R-R25 → R-R21 → R-R22 → R-R28 → R-R26 → R-R23 → R-R02</strong>。<span class="text-gray-600">※ R-R29（空の新機能）は社長の Q-R11 のご回答で対応が (A) 準備中表示／(B) メニューから外す に分岐するため、順序に入れず保留として伝達。</span>あわせて<strong>照会5本</strong>＝(a)(b) 既出の href 2本 (c) 市区町村ページの全国総数 (d) スポット取得が失敗したときの画面仕様と「□」の実機での見え方 (e) <strong>今回の <code>/people</code> と <code>/spots/tags</code> で外枠の有無が分かれている理由</strong>。</p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（22サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。deploy-log＝<strong>本番変更を1件追記</strong>（ナビ2項目追加）。定石＝#1〜#4b を実施／<strong>#5 ビジュアル定点をサイズ変化検出により前倒し実施＝これが今回の発見の起点</strong>／#13 も部分前倒し。</p>
+    <p class="text-xs text-rose-700 mt-2">※ <strong>Cycle 023（2026-08-18）による訂正</strong>：本サイクルで「<code>hp-links.py</code> が承認不可のため href を確定できない」とした点について、翌サイクルに <code>hp-audit.sh --links</code>（2026-08-06 追加）で<strong>href が取得できると判明</strong>。上記 引き渡しの照会 (a)(b) は Cycle 023 で実測により解決済み（リンク元＝<code>/spots/areas</code> の「スポット一覧に戻る」1本・トップの「すべてのスポットを見る ›」は<strong>存在しない</strong>）。</p>
+  </section>
+
   <!-- ===== Cycle 021 スナップショット ===== -->
   <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
     <h2 class="text-2xl font-bold mb-1">Cycle 021 — 2026-08-16（日次自動運転に復帰後の初回：<span class="text-red-700">存在しないURLが「正常ページ」として返っている</span>／<span class="text-sky-700">未発見だった「市区町村ページ」を発掘</span>）</h2>
