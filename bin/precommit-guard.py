@@ -36,7 +36,9 @@ GATED_PREFIXES = ("rules/", ".claude/")
 AGENT_PATHS = {
     "overseer":      ["site/overseer/"],
     "hp-loop-*":     ["data/hp-loop/", "site/hp-analysis/"],
-    "blog-loop-*":   ["data/blog-loop/", "site/hp-analysis/", "site/drafts/blog/"],
+    # site/drafts/ は 2026-08-17 に git 管理外へ（草案＝副次成果物）。
+    # 許可に残すと「コミットしてよい」と誤読されるので外す（ステージすれば [git外] 検査が止める）。
+    "blog-loop-*":   ["data/blog-loop/", "site/hp-analysis/"],
     "memo":          ["site/notes.html"],
 }
 

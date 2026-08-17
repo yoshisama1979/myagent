@@ -134,6 +134,14 @@ r = run([S("data/hp-loop/ycom/coverage.md")], agent="overseer")
     "hp-loop-<site> は自分の台帳を書ける（ワイルドカード照合）")
 (ok if run([S("site/hp-analysis/ycom/index.html")], agent="hp-loop-yoshida") == [] else ng)(
     "hp-loop-* は解析掲示板も書ける")
+# 2026-08-17：草案は git 管理外にしたので、許可パスからも外れていること（ルールと柵の整合）
+(ok if "site/drafts/blog/" not in str(g.allowed_prefixes("blog-loop-ycom")) else ng)(
+    "草案は blog-loop の許可パスに含まれない（git 管理外にしたため）",
+    g.allowed_prefixes("blog-loop-ycom"))
+r = run([S("site/drafts/blog/ycom/T-001_body.html")], agent="blog-loop-ycom",
+        ignored={"site/drafts/blog/ycom/T-001_body.html"})
+(ok if r and any("[git外]" in x for x in r) else ng)(
+    "★草案をコミットしようとしたら止まる（.gitignore 対象）", r)
 r = run([S("site/business/partner/index.html")], agent="blog-loop-ycom")
 (ok if r and "[領域外]" in r[0] else ng)("blog-loop はパートナーの掲示板を書けない", r)
 (ok if run([S("site/business/partner/index.html")], agent="partner") == [] else ng)(
