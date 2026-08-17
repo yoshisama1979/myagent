@@ -9,8 +9,13 @@
 - プロジェクトルート：（記入。例: c:/xampp/htdocs/example）
 - ディレクトリ構成の要点：（記入。例: HTML直下＋`css/sass/`＋`images/`、共通部品は `include/`）
 - 公開URL：（記入。例: https://www.example.com/）
-- デプロイ先・手順：（記入。例: FTPで本番へ手動アップ／開発者が実施。AIはデプロイしない）
+- デプロイ先・手順：（記入。例: FTPで本番へ手動アップ／開発者が実施。**AIはデプロイしない**＝`git push`・本番サーバーでのコマンド実行・FTPアップロードはすべてユーザーが行う）
 - ブランチ運用：（記入。例: main 直コミット／feature ブランチ運用）
+
+> ⚠️ **デプロイ手順を推測で書かない**：反映先・ブランチ・公開ディレクトリは**この欄の記入を正**とし、空欄なら**ユーザーに確認する**。
+> ブランチ名から昇格経路を推測しない（使われなくなった古いブランチが残っていることは普通にある）。
+> 反映状況を答える前に、**実状態を読む**（`git log -1 --oneline` / `git branch --show-current` / `git status --short`／公開URLを実際に GET する）。
+> 「アップした」と「公開URLで確認できた」は別物として報告する（[rules/modes/hp-loop-dialogue.md](rules/modes/hp-loop-dialogue.md) §5-2 と同じ規律）。
 
 ## 環境（`.claude/rules/scss-autocompile.md` / `.claude/commands/cleanup-permissions.md` が参照）
 

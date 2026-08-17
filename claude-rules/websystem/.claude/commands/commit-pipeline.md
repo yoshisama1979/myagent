@@ -32,7 +32,7 @@
 
 `/codex-review` コマンドが未導入の環境では `mcp__codex__codex`（sandbox: read-only / approval-policy: never）を直接呼ぶ。それも不可なら Claude 単独レビューで進める旨を報告する。
 
-**使用モデル**：`model` パラメータは原則指定しない＝実行環境の `~/.codex/config.toml`（CODEX_HOME）の `model` 既定に従う（2026-07-14 時点の推奨既定＝`gpt-5.6-sol`。新版が出たら config.toml の1行を更新すれば全経路に効く）。明示指定する場合もサフィックス無し系列を使う（`-codex` 付きモデルは「未サポート」エラーになることがある）。**実際に使われたモデル名をレビュー報告に明記**する（裏取りは `~/.codex/sessions/<日付>/rollout-*.jsonl` の `"model":` 記録）。
+**使用モデル**：`rules/modes/dialogue-mode.md` Step 5 の「使用モデル」に従う（本ファイルには**書き写さない**＝二重定義は片方だけ古くなるため）。要点は「`model` は原則指定せず実行環境の `~/.codex/config.toml` の既定に従う／明示するならサフィックス無し系列／**実際に使われたモデル名をレビュー報告に明記**する」。
 
 Codex MCP が利用不可の場合（接続エラー等）はその旨を伝えて、Claude のレビューのみで進める。
 
