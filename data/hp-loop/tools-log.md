@@ -243,6 +243,16 @@
 - **限界・使うときの注意**：①**`tel`（電話タップ）はデバイス依存の行為**＝PCと比較するときは `--events reservation` のように**デバイス非依存のCVだけに絞る**（混ぜると差が誇張される）②desktop/tablet は母数が小さくなりやすい＝**低母数は M-05 に従い参考値**（yoshida の desktop 248セッションは、7.64%想定なら期待19件に対し実測3件＝偶然では説明できない水準と判断した）③デバイスは**セッション先頭の1値**で代表させている。
 - **横展開**：全サイト共通で使える（ycom／fujisaka 等でも同じ分解が可能）。
 
+## T-027 — `bin/sitemap-count.py`（sitemap.xml の `<loc>` をURLパターン別に数える）
+
+- **作成**: 2026-08-18（hp-loop konjaku Cycle 022）。契機＝**誤った数値を2サイクル（C020・C021）にわたって掲示板に載せていたことが判明**。`hp-audit.sh --text` は本文を **12,000字で打ち切る**（`bin/hp-audit.sh` L126 `LIMIT = 12000`）ため、**1,718,788B の sitemap.xml に対して読めていたのは 12,212B＝全体の0.7%**。そこに現れた `/cities/` 109件を「収録総数は109件」と書き、社長への📥依頼と R-J23 の前提にまでしていた。＝**打ち切りのある出力で件数を数えてはいけない**という一般則の実害。
+- **目的**: sitemap.xml（および sitemapindex）の `<loc>` を全件拾い、URLパターン別に件数＋サンプルを出す。「検索エンジンに何を・何件申告しているか」はインデックス面の一次情報で、hp-loop の効果検証（R-J17 の絞り込み・R-J23 の収録拡充・R-J24 の SSR 化）の直接の指標になる。
+- **使い方**: `bin/.venv/bin/python3 bin/sitemap-count.py <sitemap-url> [--pattern /cities/ --pattern /old-photos/] [--samples 3] [--no-follow] [--max-children 50]`。`--pattern` 無指定なら**パス第1階層**で自動分類。
+- **区分**: **読み取り専用**（HTTP GET のみ・書き込み/外部送信/破壊的操作なし。automation.md 準拠）。gzip 配信にも対応。sitemapindex は子を辿る（既定50本まで・超過は⚠️自己申告）。子1本の取得失敗で全体を落とさない。
+- **⚠️ 現状の制約（2026-08-18 時点）**: **無人実行の許可リスト未登録のため cron では実行できない**。`.claude/settings.local.json` は `guard-unattended-edits.py` により無人セッションから編集不可（仕様どおり）なので、社長に1行の追加を依頼中＝`"Bash(bin/.venv/bin/python3 bin/sitemap-count.py:*)"`。**登録されるまで konjaku の sitemap 実収録数は「未確認」のまま**（暫定の下限＝`/cities/` 109件以上・`/prefectures/` 47件以上）。※ [[reference_allowlist-bash-prefix-gap]] のとおり、登録時は前置あり／なしの両形を入れるのが安全。
+- **限界**: ①`<loc>` を正規表現で拾う（XML パーサではない）＝壊れたXMLでも動くが、CDATA 等の特殊表記は想定していない ②`--pattern` は**先に一致したものに計上**する排他分類（重複カウントしない）③sitemapindex の子が50本を超える大規模サイトは `--max-children` を明示する ④サイズだけの定点観測なら `hp-audit --json` の `size_bytes` で足りる（本ツールは件数の内訳が要るときに使う）。
+- **横展開**: 全サイト共通で使える（ycom/yoshida/fujisaka 等の sitemap 実査にもそのまま適用可）。
+
 ## T-023 — `bin/chatwork-fetch.py`（Chatwork 新着の差分取得＝Comms モードの一次データ源）
 
 - **作成**：2026-07-27（社長要望＝「Chatwork/メールの要点だけ履歴で残したい。ボールの所在・確定事項・完了で分類したい」。メールは後回し＝Chatworkで型を作ってから横展開）
