@@ -33,7 +33,7 @@
 
 | 層 | 置き場所 | 読み込まれ方 |
 |---|---|---|
-| 常時 | `.claude/rules/`（フロントマター無し） | セッション開始時に自動ロード（`.claude/rules/dev.md`・`.claude/rules/private.md` の極小2本のみ） |
+| 常時 | `.claude/rules/`（フロントマター無し） | セッション開始時に自動ロード（`.claude/rules/dev.md`・`.claude/rules/private.md` の2本のみ） |
 | 条件付き | `.claude/rules/`（`paths:` フロントマター付き） | **globに合致するファイルを扱うときだけ自動適用**（読み忘れが起きない） |
 | 読み込み式 | `rules/modes/` | 自動ロードされない。下表の「いつ参照するか」に該当したら **Read で読む** |
 
@@ -55,7 +55,10 @@
 | `.claude/rules/ui-design.md`（paths自動） | UI/デザインを実装・変更するとき。`Design.md`=SSOT の扱い方・UI実装原則・アクセシビリティ最低ライン・Do/Don't ※UIライブラリ・カラーコードは `Design.md`（あれば）→ `project-config.md` の順で正とする |
 | `rules/modes/design-replication.md` | **デザインカンプ／モックアップ（特にAI生成画像）を渡されてUIを再現する時。** 推測を実測に変え、実ブラウザ描画で照合する周回（色の実測・同一幅スクショ・寸法は意図から設計しSSOTに記録） |
 | `rules/modes/ui-check.md` | **UI実装を終えて確認するとき**（`rules/modes/agent.md` Step 8 動作確認・Autopilot 達成判定の前）。動作・アクセシビリティ・レスポンシブ・一貫性の目視品質ゲート（自動テストとは別物） |
-| `rules/modes/commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン）／**ブランチ運用方針：単一AI × `develop` 直接コミット**（feature ブランチを切らない・PR とマージはユーザー手動） |
+| `.claude/rules/config-values.md`（paths自動） | **設定値（しきい値・上限・フラグ等）を追加・変更するとき**。正を1箇所だけ決める・既定値を2箇所以上に書かない・クライアントは既定値を推測しない・最終判定はサーバー側・環境変数は文字列として検証する。config / `.env` 系を開けば自動適用されるが、**クライアント側やテスト側だけを触るときは自動適用されない**ので明示的に読む |
+| `.claude/rules/api-design.md`（paths自動） | **API を実装・変更するとき**（認証系統の明示・管理用と公開用の分離・複数経路の共通化・内部表現を返さない・DB制約とバリデーションの整合・部分更新の検証・一括インポート・テストDBと本番DBの差）※実パス・middleware名・モデル名は `project-config.md` 側 |
+| `rules/modes/commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン）／**ブランチ運用方針：単一AI × 作業ブランチ直接コミット**（feature ブランチを切らない・PR とマージはユーザー手動。**ブランチ名と昇格経路は `project-config.md` を正とする**） |
+| `rules/modes/deploy.md` | **本番デプロイの手順を提示するとき**。推測で手順を書かず、まず本番の実状態（`git log -1` / `git branch --show-current` / `git status`）を読む。ブランチ名を信用しない・反映に再ビルドが要るかは構成で決まる・破壊的マイグレーション時の順序。**AI は push / マージ / 本番コマンドを実行しない** |
 | `rules/modes/estimation.md` | 新機能のタスク抽出・見積もり（難易度評価）を行うとき |
 | `rules/modes/quotation.md` | **顧客向けの見積書**（工数・費用・但し書き）を作成・提示するとき。内部のタスク抽出は rules/modes/estimation.md、見積書への仕立ては rules/modes/quotation.md |
 | `rules/modes/deck-format.md` | **クライアント向けスライド資料（提案書・報告デッキ）を HTML→PDF で作るとき**。ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |
@@ -93,9 +96,11 @@
 
 ## 改行コード
 
-- `.gitattributes` により全テキストファイルの改行コードは **LF** に統一されている
-- Windows (CRLF) 環境でも Git チェックアウト時に LF へ変換される
-- 新規ファイル作成時も LF を使用すること
+- **方針**: リポジトリに入る改行コードは **LF**。新規ファイル作成時も LF を使用すること
+- **担保しているのは `.gitattributes` と `core.autocrlf` の組み合わせ**で、**どこまでを対象にしているかはプロジェクトごとに違う**。
+  `.gitattributes` が `*.sh` 等のインフラ設定だけを対象にし、`.md` / `.html` は `core.autocrlf=true`（**コミット時**に変換）で正規化している、という構成は珍しくない
+- したがって **Windows のワークツリー上で CRLF に見えても、それ自体はルール違反ではない**（コミット時に LF へ正規化される）。
+  CRLF を見つけても**不要な一括変換をしない**。気になる場合は `cat .gitattributes` と `git config core.autocrlf` で実際の設定を確認してから判断する
 
 ## フロントエンドテスト
 

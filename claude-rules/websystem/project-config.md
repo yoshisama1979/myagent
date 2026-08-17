@@ -20,6 +20,24 @@
 - **プロジェクトルート**: （記入。例: `/path/to/project`）
 - **コマンド実行方法**: （記入。例: `docker compose exec laravel php artisan ...`。`rules/modes/refactoring.md`/コマンド群が参照）
 
+## ブランチ運用・デプロイ（`rules/modes/deploy.md` / `rules/modes/commit.md` / `rules/modes/autopilot.md` が参照）
+
+> ⚠️ **ルール本文の `develop` / `staging` / `main` は既定の例。ここに記入した値が正。**
+> 未記入のままだと、AI が名前から昇格経路を推測し、**使われていない古いブランチへマージさせる事故**になる。
+
+- **AI の作業ブランチ**: （記入。例: `develop`。AI は他ブランチへ切替・コミット・マージしない）
+- **昇格経路（デプロイ順）**: （記入。例: `develop` → `staging` → `main` ／ `develop` → `staging` 止まり）
+- **本番が動いているブランチ**: （記入。例: `staging`。**最終コミット日を確認して決める**。古いブランチが残っていることがある）
+- **本番サーバーの構成（サービスごとに「即反映」か「要再ビルド」か）**: （記入。例: `laravel`=ソースをバインドマウント（pull で即反映）／`next`=イメージ焼き込み（**再ビルド必須**））
+- **メンテナンスモードの入切**: （記入。例: `php artisan down` / `up`。無ければ「無し」と明記）
+- **DB バックアップの取得コマンド・置き場**: （記入。破壊的マイグレーション前に必須）
+- **AI がやらないこと**: `git push` / PR 作成・マージ / 本番サーバーでのコマンド実行（すべてユーザー）
+
+## 既知のテスト失敗（ベースライン）（`rules/modes/tdd.md` 1.6 が参照）
+
+- **一覧の置き場**: （記入。例: `documents/pending-issues.md` の「既知のテスト失敗」節）
+- **リグレッション判定**: 新規失敗が 0 件であること（件数だけ数えず、**今回触る領域に関係する失敗は中身を読む**）
+
 ## コンテナ名
 
 - **Next コンテナ名**: （記入。例: `myapp-next`。`.claude/rules/frontend-test.md` が参照）
@@ -61,6 +79,7 @@
 - **設定ファイル**: （記入。例: `next/vitest.config.mts`）
 - **テスト配置**: （記入。例: `next/src/__tests__/`）
 - **実行コマンド**: （記入。例: `docker exec <next-container> npm test`）
+- **本番ビルド相当の静的チェック**: （記入。例: `docker exec <next-container> npx next lint`。**本番ビルドが内部で走らせる lint / 型チェックをコミット前に通す**ためのコマンド。テストランナーや開発サーバーはこれを通らないので、ここを省くとデプロイ時に初めてビルドが落ちる）
 
 ## スライド資料（デッキ）（`rules/modes/deck-format.md` が参照）
 

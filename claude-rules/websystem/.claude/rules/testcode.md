@@ -168,6 +168,7 @@ class FooControllerTest extends SafeTestCase
 4. **環境変数確認**: phpunit.xml に `APP_ENV=testing`・`DB_CONNECTION=sqlite`・`DB_DATABASE=:memory:`（または許可リスト記載のテスト DB）が **明示** されていること（`.env` 任せにしない）
 5. **継承漏れ確認**: `grep -rL "SafeTestCase" src/tests/Feature src/tests/Unit --include="*Test.php"` で SafeTestCase を継承していない DB 使用テストが無いこと（DB に触れない純粋な Unit テストは対象外）。※これは**文字列一致の簡易確認**＝コメントや未使用の `use` があるだけでも通ってしまう。ガードを基底 `Tests\TestCase` に組み込めばこの確認自体が不要になる（推奨）
 6. **直列実行の確認**: `--parallel` を使っていないこと（本雛形の保証範囲外＝上記 ⚠️ 参照）
+7. **ベースライン失敗の中身確認**: 着手前に既存の失敗一覧を眺め、**今回触る領域に関係する失敗が混ざっていないか**を確認する（件数だけ数えて次へ進まない）→ `rules/modes/tdd.md` 1.6
 
 ---
 
@@ -178,6 +179,7 @@ class FooControllerTest extends SafeTestCase
 - エラーケース、境界値、セキュリティテストも含む
 - テスト実行で失敗を確認（Red）
 - 既存実装に後からテストを足す場合は Red が取れない → `rules/modes/tdd.md` 3.0 で代替する
+- **「素通りするテスト」を疑う** → `rules/modes/tdd.md` 3.0.1（①期待値が既定値と同じ＝セットアップが効いていなくても通る／②期待値を実行環境に依存させている＝最初から落ちたまま気づかれない）。設定・環境変数の解決規則をテストするときは**必ず既定値とは異なる値でも 1 ケース**検証する
 
 ---
 

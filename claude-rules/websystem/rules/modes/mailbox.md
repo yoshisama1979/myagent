@@ -34,7 +34,7 @@
 | `.env`（gitignore 必須） | `MAILBOX_URL=http://<VPSのTailscale IP>/tools/mailbox/` と `MAILBOX_TOKEN=<このマシン用トークン>` の2行 |
 | Tailscale | VPS に到達するための前提（tailnet 内からのみ届く） |
 
-- **あなたのエージェントID（`from`）は、トークンからサーバが決める**。本文でどう名乗っても詐称はできない（例：このマシンが `rally-dev` のトークンなら送信元は必ず `rally-dev`）。
+- **あなたのエージェントID（`from`）は、トークンからサーバが決める**。本文でどう名乗っても詐称はできない（例：このマシンが `foo-dev` のトークンなら送信元は必ず `foo-dev`）。
 - トークンは **画面・ログ・コミットに出さない**。`.env` は `bin/mailbox.sh` が必要キーだけ読む（全体を `source` しない）。
 
 ---

@@ -6,7 +6,7 @@
 | テンプレート | 対象 | 中身の骨子 |
 |---|---|---|
 | [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、スライド資料PDF（deck-format） |
-| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
+| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、API実装規約（api-design）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、本番デプロイ（deploy）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
 
 ## 使い方（新規プロジェクトへの導入手順）
 
