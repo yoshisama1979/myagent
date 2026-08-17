@@ -20,7 +20,7 @@
   </nav>
 
   <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ（過去サイクル）— YCOM（y-com.info）</h1>
-  <p class="text-gray-600 mb-2">HP分析ループの<strong>過去サイクルの全記録</strong>（Cycle 070〜000）を新しい順に保管します。履歴は消しません。<strong>最新は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>、前提・確定事項は<a href="spec.html" class="text-blue-600 hover:underline">確定・仕様</a>へ。</strong></p>
+  <p class="text-gray-600 mb-2">HP分析ループの<strong>過去サイクルの全記録</strong>（Cycle 082〜000）を新しい順に保管します。履歴は消しません。<strong>最新は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>、前提・確定事項は<a href="spec.html" class="text-blue-600 hover:underline">確定・仕様</a>へ。</strong></p>
   <p class="text-sm text-gray-500 mb-8">対象サイト：<a href="https://y-com.info/" class="text-blue-600 hover:underline font-mono">y-com.info</a>（はなさか自社・YCOM）</p>
 
   <!-- 3ページの案内 -->
@@ -37,6 +37,11 @@
     <table class="w-full text-sm border-collapse">
       <thead><tr class="text-left border-b border-emerald-300 text-emerald-900"><th class="py-1 pr-3">提案</th><th class="py-1 pr-3">内容</th><th class="py-1">結果</th></tr></thead>
       <tbody class="align-top text-gray-700">
+        <tr class="border-b border-emerald-100"><td class="py-1 pr-3 font-mono">R-042</td><td class="py-1 pr-3"><strong>システム開発ページ（<span class="font-mono">/service/system/</span>）の内部リンクの孤立を解消＝共通メニュー・フッターへ掲載</strong>（Cycle 073・07-25 起票）</td><td class="py-1 text-emerald-700"><strong>✅ 本番反映（2026-08-11・commit 388aaeb）・本ループが独立検証済（08-13）＝報告と完全一致</strong>。トップ 1→<strong>3本</strong>・料金表 0→<strong>2本</strong>・実績一覧 0→<strong>2本</strong>・サービス 1→<strong>3本</strong>（リンク文言「システム開発について」）。掲載面＝メガメニュー「導入・カスタマイズ」＋フッター（兄弟の運用代行ページと同じ面に統一）。<strong>実装担当の内部確認により、当方の「孤立している」という見立てが正確だったことも裏付けられました</strong>＝共通テンプレートに <span class="font-mono">service/system/</span> の記述が一件も存在せず、被リンクは実質2本のみだった。<strong>導線側の R-038（08-05 反映）と対が揃った状態</strong>＝効果判定は ~09-10（<strong class="text-rose-700">※反映前は「表示ゼロ」と記載していましたが誤りで、正しくは6表示/17.0位＝判定は倍率で読みます</strong>）。⚠️ 全ページ共通のメニュー変更のため、効果はこのページ単体でなくサイト全体のクロール配分にも及びうる点は織り込んで読みます（実装担当の注記）。</td></tr>
+        <tr class="border-b border-emerald-100 bg-rose-50"><td class="py-1 pr-3 font-mono">R-035</td><td class="py-1 pr-3">/price/ に「具体数字クエリ」に答える節を追加（スマホ対応の費用FAQ・「◯万円でできること」・アンカー直達）＝R-029 第三弾。Cycle 049（07-13）起票 → 07-14 本番反映（既存公開値の組み立てのみ・新規の価格主張なし）</td><td class="py-1 text-rose-700"><strong>❌ 不発で確定クローズ（Cycle 090・2026-08-10＝反映から28日の予定どおりの判定）</strong>＝反映直後は「スマホ サイト 費用」で3クリック（8.6位）を生んだものの、その後<strong>この検索語の帯そのものが消滅</strong>（3クリック→2→0→直近3週は表示すら出現ゼロ）。「ホームページ制作 5万円」は順位9〜10位を保ったまま0クリック継続。<strong>切り分け＝(i) 主因は「需要側の消滅」で順位低下は副</strong>＝施策が効かなかったというより<strong>効果を測る検索需要そのものが消えた</strong>型（他サイトでも実証済みの「窓が消える」パターンの当サイト1例目）。(ii) 8月上旬の検索エンジン全体の変動（3サイト対照で確認済み）では表示ゼロは説明できない＝独立の需要消滅。(iii) 07-21 の FAQ構造化データ追加は本文不変＝影響小と判定済み。<strong>学び＝「具体的な金額の節」の横展開はしない。節や title に投資する前に、その検索帯が実際にクリックを生んでいるか＋需要が続いているかを固定窓で確認する</strong>（関連の内部仮説〔非対称仮説〕も同時クローズ）。残る打ち手は R-029 の深さ拡充（見出し40本規模）へ集約</td></tr>
+        <tr class="border-b border-emerald-100"><td class="py-1 pr-3 font-mono">R-037</td><td class="py-1 pr-3">料金ページに残っていた旧A/Bテスト用タグ（async-hide＝ページを最大4秒「真っ白」にしうる残骸）の除去。Cycle 070（07-22）起票・Codexクロスレビュー C1 由来</td><td class="py-1 text-emerald-700">✅ <strong>本番反映（08-05）・独立検証済（Cycle 086・配管検査で除去を確認）</strong>。⚠️ 訂正＝残骸の実在場所は <span class="font-mono">/price/</span>（<span class="font-mono">basic.html</span> には元から無かった＝起票時の対象URL取り違え・料金ページ順位下降の交絡要因ではなかった。実装担当の認識合わせで判明・お詫びして訂正）</td></tr>
+        <tr class="border-b border-emerald-100"><td class="py-1 pr-3 font-mono">R-041</td><td class="py-1 pr-3">実績一覧（<span class="font-mono">/works/</span>）のスマホ表示崩れ修復＝カードが4列のまま入り屋号・URL・「制作STORY」帯が重なって判読不能だった（PCは正常）。Cycle 073（07-25）週次ビジュアルで摘出・起票</td><td class="py-1 text-emerald-700">✅ <strong>本番反映（08-05）・独立検証済（Cycle 086・スクショSP実画像で 4列→2列・重なり解消を確認）</strong>。タグ検査では6サイクル「異常なし」だった視覚層の実害＝週次ビジュアルの放置検出が機能した実例</td></tr>
+        <tr class="border-b border-emerald-100"><td class="py-1 pr-3 font-mono">R-043</td><td class="py-1 pr-3">システム開発ページ（<span class="font-mono">/service/system/</span>）のスマホ「1行1〜2文字」縦読み状態の解消（カード折り返し不備・ページ高がPC比2.3倍）。Cycle 079（07-31）週次ビジュアルで摘出・起票</td><td class="py-1 text-emerald-700">✅ <strong>本番反映（08-05）・独立検証済（Cycle 086・スクショSP実画像で縦折れ解消を確認）</strong>。⚠️ 訂正＝影響範囲は3ページ（起票時の「当該ページ限定」を実装担当の報告で訂正）</td></tr>
         <tr class="border-b border-emerald-100 bg-rose-50"><td class="py-1 pr-3 font-mono">R-034</td><td class="py-1 pr-3"><span class="font-mono">/price/</span> の検索結果での見え方を「大阪×具体価格」に最適化＝1ページ目なのに0クリックの買い手クラスタを刈り取る。Cycle 023（06-29）起票 → 06-30 本番反映（title「ホームページ制作 料金表【1ページ5万円〜】| 大阪の…」・description に料金レンジ）</td><td class="py-1 text-rose-700"><strong>❌ 効果なしで確定クローズ（Cycle 075・2026-07-28 判定／Cycle 076 で掲載）</strong>＝反映後の完全な28日窓で<strong>対象クラスタ計~140表示が全0クリック</strong>（「大阪 価格 制作費」2.2位・「大阪 価格」3.6位・「大阪 レポート 費用」2.6位 等＝<strong>順位はむしろ上昇したのにクリックは1件も出ず</strong>）。＝<strong>真因は検索結果での見え方ではなく、この検索語の束にクリック需要自体が乏しいこと</strong>（推測：広告・地図枠の支配／検索語の実体が希薄）。対比＝同時期に同じページへ足した「具体的な金額に答える節」（R-035）は5クリック・CTR23.8%を獲得＝<strong>クエリ帯を分離した比較で機構が言える</strong>。<strong>学び（L-03）として全サイト共有ライブラリへ昇格</strong>＝「1ページ目上位×0クリックのクラスタは title/meta では拾えない場合がある」。<strong>今後この帯に見え方の改修は再提案しない</strong>（同型の R-036 も ~08-18 で不発なら同じ扱い）</td></tr>
         <tr class="border-b border-emerald-100"><td class="py-1 pr-3 font-mono">R-028</td><td class="py-1 pr-3">トップのファーストビューに「無料相談・お見積り」のコンバージョンCTAを設置（特にスマホ）。Cycle 017（06-24）起票→Cycle 061（07-18）で web-hanasaka の共通CTA設計（PI-032）へ統合検討として引き渡し</td><td class="py-1 text-rose-700">❌ 見送りで決着（Cycle 070・2026-07-22）＝ホームページ制作は高関与・比較検討型の商材のため、FVでの刈り取り型CTAは意図とズレ信頼を損ねうるとの実装担当判断＋社長方針（信頼醸成優先）。観察（SP相談導線が弱い）自体は妥当とされ、<strong>スマホの常設・低摩擦の相談導線のみ先方 PI-039 で継続検討</strong>（設計→社長合意→反映時報告）。FV方針は<a href="spec.html" class="underline">確定・仕様</a>に記録・再提案しない</td></tr>
         <tr class="border-b border-emerald-100"><td class="py-1 pr-3 font-mono">R-014a</td><td class="py-1 pr-3"><span class="font-mono">/price/basic.html</span> title/meta を料金クエリ最適化（title＝「ホームページ制作の料金表・費用の目安 | 大阪のホームページ制作会社YCOM」）</td><td class="py-1 text-emerald-700">✅ 本番反映済（Cycle 007）</td></tr>
@@ -93,9 +98,374 @@
     </table>
   </div>
 
+  <!-- ===== ご報告の履歴（index の 🔔 から移送・解決済み） ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">ご報告の履歴（解決済み・index から移送）</h2>
+
+  <section class="border-2 border-rose-300 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-lg font-semibold mb-2">⚠️ ご報告④（2026-08-14 掲載 → <strong>2026-08-16（Cycle 096）に index から移送</strong>）＝「配信問題は解消しました」は<strong>誤り</strong>でした（掲載の翌日に3例目が発覚）</h3>
+    <p class="text-sm text-gray-700 mb-2"><strong>当時の掲載内容</strong>＝「08-11・08-12 分の配信不達は当方側の原因と判明し、『配信したと記録してよいのは同じ回にファイルの実在を確認したときだけ』という規律に変えた。08-13・08-14 分は確認済み」。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">その後の事実</strong>＝翌 08-15（Cycle 095）の実査で、<strong>08-14 分の配信もそもそも実行されていなかった</strong>ことが判明しました（3例目）。＝当時の「解消しました」は事実と異なりました。原因は、規律が「記録の書き方」しか縛っておらず「配信の実行」自体を縛れていなかったこと。<strong>08-15 に手順の順序を「配信 → ファイルの実在確認 → その結果を記録」に固定</strong>し、08-15・08-16 分は実在を確認済みです（現況は <a href="index.html" class="underline">最新レポート</a>）。</p>
+    <p class="text-xs text-gray-500">※この節は「解決済み」ではなく「掲載時点では正しかったが、後に事実が変わった報告」として保全します（履歴は改変しません）。</p>
+  </section>
+
+  <section class="border-2 border-gray-300 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-lg font-semibold mb-2">✅ ご報告③（2026-08-08 掲載 → 2026-08-11 に index から移送）＝実装の停滞は 08-05 夕方に解消していた</h3>
+    <p class="text-sm text-gray-700 mb-2"><strong>事実</strong>＝08-05 17:04 に実装担当（web-hanasaka）から6日ぶりの実装報告が届き、<strong>R-037（料金ページの白画面残骸の除去）・R-038（トップ「WEBシステム」カードの誤配線是正）・R-041（実績一覧のスマホ崩れ修復）・R-043（システム開発ページのスマホ縦読み解消）の4件が本番反映</strong>されました。本ループが4件すべてを独立検証（配管検査・リンク実査・スクショSP実画像）し、反映を確認済みです（→ 上記「完了した提案」）。当時「実装が止まっているのでお声がけを」とお願いしていたご報告③は、これをもって解消しました。</p>
+
+    <h3 class="text-lg font-semibold mb-2 mt-4">🔴 ご報告②の経緯（2026-08-08〜08-10 分・2026-08-11 に index から移送）＝レポート配信の3連続不達とその修復</h3>
+    <p class="text-sm text-gray-700 mb-2"><strong>08-08 に判明</strong>＝①掲示板 index が 08-05（Cycle 085）のまま2サイクル更新されていなかった（08-06 の実装検証・R-044 起票、08-07 の R-045 起票・会社概要ページの初点検は内部台帳にだけ記録されていた）→ 08-08 に復元掲載。②08-06 の実装担当へのレポート配信が「投函したつもりで実ファイルが存在しない」＝<strong>送信が無言で失敗</strong>していた。同日 blog-loop（ブログ分析）も同じ送信失敗を報告＝08-06 に少なくとも2エージェントの mailbox 送信が無言で不成立（原因は本ループでは特定できず＝推測：一時的な障害）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>08-09 に判明</strong>＝①08-08 に「再配信し実在確認した」と記録した配信も<strong>実ファイルが存在しなかった</strong>（記録と実行の食い違い＝配信は3サイクル連続で不達。R-044・R-045 は実装担当に一度も届いていなかった）。②最後に成功した 08-05 の配信も実装担当が4日間受け取っていなかった。③実装担当からの 08-05 の報告を既読処理する操作も、<strong>システムの識別子不一致（トークンの識別子と宛先の不一致）</strong>で本ループからは実行できないことを確定。→ 08-09 に R-044/R-045 の全文を同梱して再配信し、<strong>投函直後にファイルの実在を機械確認</strong>（以後この手順を標準化＝「送った」ではなく「残っていることを確かめた」まで）。</p>
+    <p class="text-sm text-gray-700"><strong>08-10 続報</strong>＝08-09 の再配信ファイルは実在のままだが実装担当が未取得（5日間）＝<strong>送信側は復旧・受信側が停止中</strong>の形。→ 08-11 に受信箱を実査し、実装担当が最後に取得したのは 08-04 分と特定（現況は <a href="index.html" class="underline">最新レポート</a> のご報告②）。</p>
+  </section>
+
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
 
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 097 — 2026-08-17（y-com.info・日次＋週次1本〔広告週次〕）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・転送正常＝最新 08-14・28日 per-URL・全量600件）✅／広告（ads-fetch・日次＋週次）✅／オンページ実査（hp-audit・定点8ページ）✅／受信箱の直接実査 ✅／Clarity ❌（許可リスト未登録40日目）。入力＝本ループ宛の新着なし・from-president 新規なし。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① 主産物＝「効果なし」判定の撤回（測り方の欠陥）<strong class="text-rose-700">──ただし、この撤回自体が翌 Cycle 098 でさらに訂正されました</strong></p>
+      <p class="text-sm text-gray-700 mb-2">当日は、8/11 実装のシステム開発ページ（R-042）について「8/1〜8/7 が 0表示 → 8/8〜8/14 に 6表示・17.0位＝ゼロから出はじめた」と報告し、8/14・8/16 の「効果なし」判定を撤回しました。運用代行（R-045）は 0表示 → 55表示・15.2位、施策していない WordPress ページも 2表示 → 23表示・20.6位。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">【Cycle 098・08-18 訂正】この「後の期間」の取り方が誤っていました</strong>＝実装は <strong>8/11</strong> なのに、後窓を <strong>8/8〜8/14</strong> と置いたため、<strong>実装前の3日（8/8・9・10）が「実装後」に混ざっていました</strong>。日単位で切り直すと、システム開発ページの 6表示は<strong>全量が 8/6〜8/8＝実装前</strong>に入っており、<strong>実装後（8/11〜8/15）は 0表示</strong>でした。＝「ゼロから出はじめた」は成立しません。詳細は <a href="index.html" class="underline">最新レポート Cycle 098</a>。</p>
+    </div>
+
+    <div class="border border-emerald-300 bg-emerald-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-emerald-900 mb-1">📈 ② サイト全体は縮んでいる中で、リンクを通したページが伸びている</p>
+      <p class="text-sm text-gray-700">6/22〜7/17 が 69,140表示・2,192クリック → 7/20〜8/14 は 52,919表示・1,553クリック（表示 -23.5%／クリック -29.1%）。＝全体の追い風では説明できない、という切り分け。<span class="text-gray-600">※この観察自体は Cycle 098 でも再確認され有効（-23.8%／-29.8%）。ただし①の訂正により、伸びているのは運用代行・WordPress の2ページで、システム開発ページは含まれません。</span></p>
+    </div>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-amber-900 mb-1">💰 ③ 週次の広告点検（期日到来）＝「コンバージョン832件・獲得単価23円」は実態ではない</p>
+      <p class="text-sm text-gray-700">直近28日（7/20〜8/16）＝費用 ¥18,846・表示上のCV 832件・表示上のCPA ¥23。内訳＝「TOPページ70%スクロール」561.7件＋「HANAチャットLP 70%スクロール」263.4件＝<strong>825件（99.2%）がスクロールしただけ</strong>。実アクションは「HANAチャット料金へのクリック」6.0件＋「AIチャット問合せフォーム到達」1.0件＝合計7件 → <strong>実質CPA ¥2,700〜3,100</strong>（母数6件＝参考値）。無駄配信の刈り取りはディスプレイのみのため対象データなし。<strong>CV設定の付け替え（管理画面作業）を3回目のお願い</strong>。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 効果検証</strong>＝R-036（レスポンシブページ）19回目の不動（「レスポンシブ対応 大阪」51表示・5.4位・0クリック）＝不発でほぼ確定。確定日を検索データの3日遅れを織り込んで ~08-18 → <strong>~08-21</strong> へ繰り延べ。「ホームページ制作 料金表」13.5位（186表示）＝12.8〜13.6 の帯の内側。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>⑤ 日次定点＝退行なし</strong>（8ページ HTTP200・基準値一致）。提携募集ページ（R-040）＝「外注 ホームページ 大阪」21表示・2.3位＝前提健在・タイトル48字のまま未着手24日目。相談ページの重複（R-047）＝4ページ計80表示・0クリックで構図不変。広告日次 異常なし（6日 ¥4,374）。受信箱 新着なし。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>⑥ 新規提案・質問はゼロ</strong>（在庫6件のまま）。施策していない WordPress ページまで一緒に上がった件を「内部リンクの改善はページ単位でなく束ごと動くのでは」という仮説として内部台帳へ記録（提案化はしない）。</p>
+    <p class="text-xs text-gray-500 mt-2">※ index から移送（2026-08-18・Cycle 098 ローテ）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 096 — 2026-08-16（y-com.info・日次＋週次1本〔CV実測〕）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・転送正常＝最新 08-13・28日 per-URL・<strong>全量600件で取得</strong>）✅／GA4（BigQuery・週次CV実測）✅／オンページ実査（hp-audit・定点8ページ＋トップのリンク再実査）✅／広告（ads-fetch・日次）✅／受信箱の直接実査 ✅／Clarity ❌（許可リスト未登録39日目）。入力＝本ループ宛の新着なし・from-president 新規なし。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① 本日の主産物＝<strong>8月第1週の「問い合わせ7倍」は、1週間で収束していました</strong>（週次CV実測の期日が来たので測り直しました）</p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">期間（7日間）</th><th class="py-1 pr-3">問い合わせフォーム完了</th><th class="py-1">人数</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">07-25〜31（急増前・対照）</td><td class="py-1 pr-3">4件</td><td class="py-1">4人</td></tr>
+          <tr class="border-b border-rose-100 bg-amber-50"><td class="py-1 pr-3">08-01〜07（急増）</td><td class="py-1 pr-3 font-semibold">28件</td><td class="py-1 font-semibold">18人</td></tr>
+          <tr class="bg-emerald-50"><td class="py-1 pr-3">08-08〜14（その次の週）</td><td class="py-1 pr-3 font-semibold text-emerald-800">3件</td><td class="py-1 font-semibold text-emerald-800">3人</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>＝第2週は、急増前の水準に戻っています。</strong><strong class="text-rose-700">推測＝これは「実際に問い合わせが増え続けている」形ではありません</strong>。<strong>残る2説のうち (B) スパム／一過性のできごと と整合します</strong>。ただし<strong>数字だけでは機械的な投稿かどうかは決められません</strong>＝最後の切り分けは社長の受信メール確認（🔔 Q-013）。</p>
+      <p class="text-sm text-gray-700"><strong>なぜ最優先で報告したか</strong>＝この確認がつかないと<strong>「8月はCVが増えた」という誤った成功譚を作ってしまう</strong>ため。<span class="text-gray-600">※参考＝見積フォームは逆に 08-01〜07 のゼロ件から 08-08〜14 に3件（2人）へ回復＝急増とは別系統。</span></p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>② 週次CV実測のその他（28日・着地ページ別）</strong>＝トップ 278セッション → 12件（4.3%）・問い合わせフォーム直着地 43セッション → 27件（62.8%）＝この2面がCVのほぼ全量（前回 5.1%／72.9% から低下だが母数小＝転換と読まない）。ブログ上位3本 計912セッション・<span class="font-mono">/aichat/</span> 3ページ 計3,309セッション（サイト最大の流入面）で合計CV1件。Q-012（<span class="font-mono">/aichat/</span> を分析対象に含めるか）は26日間未回答。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 08-11 実装の2件の経過（未判定）</strong>＝運用代行ページ 28日で58表示・14.0位（基準 15表示・15.5位＝約3.9倍）。システム開発ページ 6表示・17.0位＝<strong>「基準から変化なし」と記載（→ Cycle 097 でこの判定は誤りと判明・撤回）</strong>。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 効果検証（日次）</strong>＝「ホームページ制作 料金表」13.5位（188表示・12.8〜13.6 の帯）。R-036＝「レスポンシブ対応 大阪」18回目の不動（51表示・5.4位・0クリック）＝確定 ~08-18 と記載（→ Cycle 097 でラグ織り込み ~08-21 へ繰り延べ）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>⑤ 日次定点＝退行なし</strong>。R-040＝「外注 ホームページ 大阪」23表示・2.5位＝撤回しない判断を再確認。タイトル48字のまま＝未着手23日目。広告異常なし（6日 ¥4,260）。受信箱＝新着なし。R-047＝トップの4ページ同時リンクを再実査して構図不変を確認。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>⑥ 新しい提案・質問はゼロ</strong>（在庫6件のまま）。掲載後に事実が変わったご報告1件（配信問題の「解消しました」）をアーカイブへ移送。</p>
+    <p class="text-xs text-gray-500 mt-2">※ index から移送（2026-08-17・Cycle 097 ローテ）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 095 — 2026-08-15（y-com.info・日次のみ〔週次はすべて未到来〕）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・転送正常＝最新 08-12・28日 per-URL・<strong>全量600件で取得</strong>）✅／オンページ実査（hp-audit・定点8ページ＋相談系4ページ）✅／広告（ads-fetch・日次）✅／受信箱の直接実査 ✅／Clarity ❌（許可リスト未登録38日目）。入力＝本ループ宛の新着なし・from-president 新規なし。</p>
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① お詫び＝<strong>昨日お約束した再発防止が、その翌日に別の形で破れていました</strong>（実装担当へのレポート配信が届いていませんでした）</p>
+      <p class="text-sm text-gray-700 mb-2">昨日（Cycle 094）、掲示板の更新が2日落ちていた件をお詫びし、「出力できたことをファイルの実在で毎回確認する」規律を適用するとご報告しました。<strong>本日その確認を実施したところ、昨日のレポート自体が実装担当（web-hanasaka）に配信されていませんでした</strong>（08-14 付の送信ファイルが1件も存在しない＝08-11・08-12 に続く3例目）。台帳には「配信した」と記録されていましたが、事実と異なります。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">これが実務に与えた影響</strong>＝昨日確定した<strong>「R-040 は撤回せず着手してよい」という通知が、実装担当に届いていません</strong>。＝実装担当から見ると、まだ 08-13 にお伝えした「当方の再判定が終わるまで着手待ちで可」の状態のままです。<strong>つまり R-040 が22日間止まっている直近の原因は、実装側ではなく当方の配信失敗です</strong>。</p>
+      <p class="text-sm text-gray-700"><strong>本日の対処</strong>＝①昨日の内容（R-040 着手可・R-046 の訂正）を含めて<strong>配信し直し</strong>、②<strong>投函後にファイルの実在を確認してから</strong>台帳に記録しました（＝下記の「配信済み」は実物を確認済みです）。<strong>根本の直し</strong>＝昨日の規律は「記録の書き方」しか縛っておらず「配信の実行」を縛れていませんでした。<strong>手順の順序を「配信 → 実在確認 → その結果を記録」に固定</strong>し、確認が取れなければ「未達」と書きます。</p>
+    </div>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-amber-900 mb-1">🔴 ② 本日の主産物＝<strong>昨日ご報告した「無料相談が3ページに分散」は、実は4ページ。しかも原因は共通テンプレート（全ページのリンク）にありました</strong>（→ R-047 を更新）</p>
+      <p class="text-sm text-gray-700 mb-2">昨日の発見を掘り下げたところ、<strong>4枚目 <span class="font-mono">/service/free_advice.html</span>（「ホームページなんでも無料相談（1日1社限定）」）</strong>が見つかりました。このページは<strong>検索結果に一度も出ていません</strong>（28日・全600件で確認）。</p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-amber-300 text-amber-900"><th class="py-1 pr-3">「相談」の受け皿ページ</th><th class="py-1 pr-3">28日の表示</th><th class="py-1 pr-3">順位</th><th class="py-1 pr-3">クリック</th><th class="py-1">中身の厚み（見出し数）</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono text-xs">/service/web/consult.html</td><td class="py-1 pr-3">35</td><td class="py-1 pr-3">11.2位</td><td class="py-1 pr-3">0</td><td class="py-1">7</td></tr>
+          <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono text-xs">/role/consult.html</td><td class="py-1 pr-3">28</td><td class="py-1 pr-3 font-semibold">7.4位</td><td class="py-1 pr-3">0</td><td class="py-1">5</td></tr>
+          <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono text-xs">/beginner/consult.html</td><td class="py-1 pr-3">15</td><td class="py-1 pr-3 font-semibold">5.8位</td><td class="py-1 pr-3">0</td><td class="py-1">7</td></tr>
+          <tr class="bg-rose-50"><td class="py-1 pr-3 font-mono text-xs">/service/free_advice.html <span class="text-rose-700 font-semibold">←新発見</span></td><td class="py-1 pr-3 font-semibold text-rose-700">0</td><td class="py-1 pr-3">—</td><td class="py-1 pr-3">0</td><td class="py-1">9</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>そして本日いちばん重要な発見</strong>＝<strong class="text-rose-700">この分散は個別ページの問題ではなく、共通テンプレートに焼き付いています</strong>。トップページのリンクを実際に調べたところ、<strong>4つの相談ページすべてに、同時にリンクが張られていました</strong>：</p>
+      <ul class="text-sm text-gray-700 list-disc list-inside mb-2 ml-2">
+        <li>「ホームページの運営のご相談」→ <span class="font-mono text-xs">/service/web/consult.html</span></li>
+        <li>「ホームページなんでも無料相談」→ <span class="font-mono text-xs">/service/free_advice.html</span></li>
+        <li>「ホームページ制作の無料相談」→ <span class="font-mono text-xs">/beginner/consult.html</span>（2本）</li>
+        <li>「相談できる制作会社」→ <span class="font-mono text-xs">/role/consult.html</span></li>
+      </ul>
+      <p class="text-sm text-gray-700 mb-2">＝<strong>サイトの全ページから、「相談」という評価が4方向に割られ続けています</strong>。ちょうどいま実験中の R-045（「主要ページへのリンクが共通メニュー由来しかない＝検索に出にくい」）の<strong>裏返し</strong>で、こちらは<strong>集まるべきリンクが割れている</strong>ケースです。加えて<strong>4枚とも中身が薄く（見出し5〜9個・構造化データ1件のみ）</strong>、料金ページ（構造化データ3件）と比べて明確に手が入っていません。</p>
+      <p class="text-sm text-gray-700"><strong>→ R-047 の改善案に (C) を追加しました＝共通テンプレートの相談リンクを、決めた主URL 1本に集約する。</strong>(A) 統合でも (B) 役割分担でも、これは必ず伴う作業です（全ページに影響するため<strong>社長の合意が前提</strong>）。<strong class="text-amber-800">お願いは変わりません＝「相談ページを1本にまとめるか／役割を分けるか」の一言</strong>（料金ページ R-044 と同じご判断で、まとめて決められます）。</p>
+      <p class="text-xs text-amber-800 mt-2">※あわせて、昨日「2か月間見ていなかった」とご報告した <span class="font-mono">/role/</span> フォルダの中身を確認しました＝<strong><span class="font-mono">consult.html</span> の1枚だけ</strong>で、他に隠れたページはありません（昨日の宿題を消化）。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 効果検証（日次）</strong>＝「ホームページ制作 料金表」<strong>13.3位</strong>（182表示・昨日 12.8位／<strong>これは悪化ではなく集計期間が3日ずれた差の範囲</strong>＝12.8〜13.6 の帯で推移中。薄い変動を転換と読まないという自ルールに従います）。「ホームページ制作 料金表 大阪」2.1位・「web制作会社 料金表」9.3位＝1ページ目維持。<strong>クリックは依然ゼロ</strong>。<strong>R-036</strong>＝「レスポンシブ対応 大阪」<strong>17回目の不動</strong>（49表示・5.4位・0クリック）＝<strong class="text-rose-700">~08-18（あと3日）に「不発」として確定させる見込み</strong>です。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">④ 08-11 に実装いただいた2件の経過（まだ判定しません）</strong>＝<strong>運用代行ページ</strong>は28日で<strong>43表示・13.0位</strong>（リンク追加前の基準 15表示・15.5位＝<strong>約2.9倍</strong>）、検索語も「ホームページ更新代行 大阪」12.0位・「ホームページ修正更新代行 大阪」7.3位など<strong>狙った言葉で出始めています</strong>。<strong>ただし反映後のデータはまだ2日分だけなので、成果とは呼びません</strong>（判定は ~09-10）。システム開発ページは 6表示・17.0位で基準から変化なし（同じく2日分＝判定不能）。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑤ 日次定点＝退行なし</strong>（8ページすべて HTTP200・基準値一致）。提携募集ページ（R-040 の対象）は<strong>タイトル48字のまま＝未着手22日目</strong>（原因は上記①）。<strong>広告も異常なし</strong>（6日 ¥4,343≒日¥724・データ到着は 08-13 まで＝2日遅れ）。<strong>受信箱＝新着なし</strong>。</p>
+
+    <p class="text-sm text-gray-700"><strong class="text-amber-700">次の見どころ</strong>：CV実測 ~08-16・広告週次 ~08-17・<strong>R-036 の確定 ~08-18</strong>・競合対比 ~08-19・R-030②＋R-040 の複合判定 ~08-21・ビジュアル再監査＋総点検＋配管点検 ~08-21・<strong>R-042／R-045 の効果判定 ~09-10</strong>・9月初に8月分の対応実績レポート。<strong class="text-rose-700">社長へのお願い＝🔔最上部のとおり（最優先＝Q-013 の1分確認／次点＝R-044＋R-047 の「重複ページをどうするか」の方針＝<strong>2件まとめて一言で決められます</strong>／継続＝広告のCV付け替え）</strong>。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 094 — 2026-08-14（y-com.info・日次＋週次2本〔ビジュアル再監査・完全性批評〕）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・<strong class="text-emerald-700">08-09 で止まっていた転送が復旧</strong>＝最新 08-11・28日 per-URL・全量452URL検算）✅／オンページ実査（hp-audit・定点8ページ＋新規1ページ）✅／画像点検（hp-shot）✅／広告（ads-fetch・日次）✅／Clarity ❌（許可リスト未登録37日目）。入力＝受信箱に新着なし・from-president 新規なし。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① まずお詫びと復旧のご報告＝<strong>このページ（掲示板）が3日間、更新されていませんでした</strong></p>
+      <p class="text-sm text-gray-700 mb-2">内部の分析台帳は 08-12・08-13 とも通常どおり進んでいたのに、<strong>社長がご覧になるこのページへの反映だけが2回続けて落ちていました</strong>（本日の点検で検出）。＝この間の成果（下記③④⑤）が社長に届いていませんでした。申し訳ありません。<strong>本日、内部台帳を正としてこのページを全面的に同期しました</strong>（内容は失われていません）。<strong>再発防止</strong>＝レポート配信で導入済みの「出力できたことをファイルの実在で毎回確認する」規律を、掲示板の更新にも同じ形で適用します。<strong class="text-rose-700">【Cycle 095・08-15 追記】この再発防止は不十分でした</strong>＝翌 08-15 の点検で、<strong>Cycle 094 のレポートが実装担当に配信されていなかった</strong>ことが判明しています（詳細は最新レポート）。</p>
+    </div>
+
+    <div class="border-2 border-emerald-400 bg-emerald-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-emerald-900 mb-1">✅ ② 本日の主産物＝<strong>「この施策はもう根拠が消えたかもしれない」と保留していた R-040 を、実測で「やる価値あり」と確定させました</strong></p>
+      <p class="text-sm text-gray-700 mb-2">08-08 に「R-040 の最大の根拠だった検索語が消滅しかけている」とご報告し、~08-14 に再判定するとお約束していた件です。規定どおり<strong>28日間の前後比較</strong>で測り直した結果、<strong>逆でした</strong>。</p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-emerald-300 text-emerald-900"><th class="py-1 pr-3">「外注 ホームページ 大阪」での提携募集ページ</th><th class="py-1 pr-3">表示</th><th class="py-1 pr-3">順位</th><th class="py-1">クリック</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-emerald-100"><td class="py-1 pr-3">前の28日（6/17〜7/14）</td><td class="py-1 pr-3">31</td><td class="py-1 pr-3">5.9位</td><td class="py-1">0</td></tr>
+          <tr><td class="py-1 pr-3 font-semibold">後の28日（7/15〜8/11）</td><td class="py-1 pr-3 font-semibold text-emerald-700">33</td><td class="py-1 pr-3 font-semibold text-emerald-700">3.2位</td><td class="py-1 font-semibold">0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>つまり</strong>＝検索需要は消えておらず、むしろ<strong>順位は 5.9位 → 3.2位に上がっています</strong>。それでも<strong>クリックは1件も発生していません</strong>＝「買い手が探して、検索1ページ目の上位に当社が出て、しかし中身が"提携先募集"なので誰もクリックしない」という取りこぼしが、より強い形で続いていたということです。<strong>→ R-040 は撤回せず、実装をお願いする状態に戻しました</strong>（社長のご回答は不要です）。</p>
+      <p class="text-xs text-gray-600">※なぜ 08-08 に見誤ったか＝この検索語は<strong>週に数回しか検索されない「薄い」語</strong>で、1週間ずつに切ると普通にゼロが並びます。8/11 に自分で決めた「薄い語は短い窓で判定しない」というルールを、その3日後に自分で破っていました（3例目）。</p>
+    </div>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-amber-900 mb-1">🆕 ③ 新しい発見（週次の総点検から）＝<strong>「無料相談」のページが3枚に分かれていて、検索1ページ目を3枠占めながらクリックがゼロです</strong>（→ R-047）</p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-amber-300 text-amber-900"><th class="py-1 pr-3">ページ</th><th class="py-1 pr-3">28日の表示</th><th class="py-1 pr-3">平均順位</th><th class="py-1">クリック</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono text-xs">/service/web/consult.html</td><td class="py-1 pr-3">35</td><td class="py-1 pr-3">10.7位</td><td class="py-1">0</td></tr>
+          <tr class="border-b border-amber-100"><td class="py-1 pr-3 font-mono text-xs">/role/consult.html</td><td class="py-1 pr-3">27</td><td class="py-1 pr-3 font-semibold">7.6位</td><td class="py-1">0</td></tr>
+          <tr><td class="py-1 pr-3 font-mono text-xs">/beginner/consult.html</td><td class="py-1 pr-3">17</td><td class="py-1 pr-3 font-semibold">5.9位</td><td class="py-1">0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2">検索語は「ホームページ作成 大阪 24時間 相談」「ホームページ 運用 相談 無料」など、<strong>まさに相談先を探している買い手</strong>です。<strong>合計79表示・全部1ページ目圏・クリック0</strong>。原因の見立て（<strong>推測</strong>）＝同じ用件の入口が3つに割れ、どれも決め手にならない＝<strong>料金ページが2枚に割れている問題（R-044）とまったく同じ構造</strong>です。<strong class="text-rose-700">【Cycle 095・08-15 追記】実際は4枚でした</strong>（詳細は最新レポート）。</p>
+      <p class="text-xs text-amber-800">なお <span class="font-mono">/role/</span> というディレクトリは、<strong>この分析台帳を作って以来2か月間、一度も見ていませんでした</strong>（当方の巡回範囲の漏れ＝<span class="font-mono">/beginner/</span> に続く2件目）。<strong>検索データ側の全URL一覧との突き合わせを毎週の点検手順に追加しました。</strong></p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">④ 実装いただいた3件が本番反映済みと確認できました（08-11 反映・独立検証済）</strong>＝<strong>R-042</strong>（システム開発ページを共通メニュー＋フッターに掲載＝トップ1→3本・料金表0→2本・実績0→2本・サービス1→3本）／<strong>R-045(a)</strong>（サービスページのリンク文言を「運営・運用について」→「運用代行・保守について」へ是正）／<strong>R-045(b)</strong>（<strong>料金表の本文から運用代行ページへの初めての直接リンク</strong>）。＝<strong>「主要ページが共通メニューからしかリンクされていない」という積年の問題に、初めて実験が走り始めた状態です</strong>（結果は ~09-10 に判定）。残りは R-045(c)（兄弟ページ間の相互リンク）です。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">⑤ 訂正が2件あります（当方の測り方の誤り）</strong>＝いずれも<strong>「検索に一度も出ていない」と書いていたページが、実は出ていた</strong>というものです。①<strong>運用代行・システム開発・WordPress の3ページ</strong>＝「表示ゼロ」ではなく、それぞれ<strong>15表示/15.5位・6表示/17.0位・11表示/26.1位</strong>ありました。→ 効果の測り方を「ゼロから発生するか」ではなく<strong>「何倍になるか」</strong>に直しました。②<strong>実績の個別ページ（39件）</strong>＝<strong>多数が1ページ目の上位に出ていて、クリックだけがゼロ</strong>でした（例：4.9位・6.3位・7.3位）。→ R-046 の狙いを<strong>「出ている表示を個別ページに正しく帰属させ、クリックを取りに行く」</strong>へ直しました。<strong>原因は共通で、検索データを上位200件までしか見ていなかったこと</strong>です。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑥ 効果検証</strong>＝「ホームページ制作 料金表」<strong>13.3 → 12.8位</strong>（185表示）。<strong>ただしクリックは依然ほぼゼロ</strong>。R-036＝<strong>16回目の不動</strong>（5.4位・0クリック）。<strong>⑦ 日次定点＝退行なし</strong>。広告も異常なし（6日 ¥4,443≒日¥740）。</p>
+    <p class="text-xs text-gray-500 mt-2">※旧サイクル（Cycle 093 以前）の記録は本ページ以下に保全しています。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 091 — 2026-08-11（y-com.info・日次／週次はすべて未到来）</h3>
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 my-3">
+      <p class="text-sm font-semibold text-amber-900">📌 <strong>Cycle 092（08-12）・093（08-13）はこの掲示板に記録が作られませんでした</strong>＝内部の分析台帳では通常どおり実施されていたのに、掲示板側の更新だけが2回続けて落ちていた不具合です（Cycle 094・08-14 に検出・お詫び済み）。その2サイクルの成果（R-046 の起票／R-044 の判断材料の実測確定／R-042・R-045 の反映検証／問い合わせ急増の3説が2説に絞れたこと）は <a href="index.html" class="underline">最新レポート Cycle 094</a> に統合して反映しています。内部台帳の全文は <span class="font-mono">data/hp-loop/ycom/coverage-archive.md</span> に保全。</p>
+    </div>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・同期間長の週次比較 07-26〜08-01 vs 08-02〜08＋per-URL 逆引き＋28日の前後比較＋上位200件の露出検算）✅／オンページ実査（hp-audit・定点8ページ）✅／広告（ads-fetch・日次）✅／Clarity ❌（許可リスト未登録34日目＝📥参照）。入力＝宛先の直接検算で本ループ宛の未処理0件・from-president 新規なし。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① 本日の主産物＝<strong>昨日ご報告した「R-035 は不発だった」という判定を撤回・訂正します</strong>（測り方の窓が短すぎました）</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>何が起きたか</strong>＝昨日（Cycle 090）、料金ページに足した「具体的な金額の節」（R-035・7/14 反映）について、<strong>「直近1週間の数字が3週続けてゼロ＝この検索語の帯そのものが消滅した＝施策は不発」</strong>とご報告しました。本日、規定どおりの<strong>「反映日を起点にした28日間の前後比較」をページ別に取り直したところ、結論が逆でした。</strong></p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">「スマホ サイト 費用」</th><th class="py-1 pr-3">表示</th><th class="py-1 pr-3">クリック</th><th class="py-1">順位</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">反映前 28日（6/16〜7/13）</td><td class="py-1 pr-3">8</td><td class="py-1 pr-3">2</td><td class="py-1">8.8位</td></tr>
+          <tr><td class="py-1 pr-3 font-semibold">反映後 28日（7/14〜8/11）</td><td class="py-1 pr-3 font-semibold text-emerald-700">17（2.1倍）</td><td class="py-1 pr-3 font-semibold text-emerald-700">3</td><td class="py-1">9.1位（横ばい）</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>つまり</strong>＝帯は消滅していませんでした。内訳を見ると<strong>7/14〜7/31 に表示17・クリック3の全部が入り、8月に入ってからがゼロ</strong>です。＝「反映後に伸びた検索需要が、8月に入って止まった」形であって、<strong>施策が効かなかった証拠にはなりません</strong>（お盆前後の季節変動の可能性。9月に戻るかを ~9/10 に見ます）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>なぜ間違えたか</strong>＝この検索語は<strong>週に数回しか検索されない「薄い」語</strong>なので、1週間で切ると普通にゼロが並びます。そこを「消滅」と読んでしまいました。<strong>本来のルール（反映日から28日で前後比較する）を守っていれば起きなかった誤りです。</strong></p>
+      <p class="text-sm text-rose-800"><strong>撤回するもの＝2つ</strong>：①「この検索帯は消滅した」という事実認識 ②そこから引き出した<strong>「具体的な金額を書いた節を他ページへ広げるのはやめる」という方針</strong>（＝間違った根拠で打ち手を1つ捨てるところでした）。<strong>訂正後の扱い</strong>＝R-035 は「効果は判定不能（母数が小さすぎる＋小さな良い兆し）」とし、<strong>金額を書く打ち手は R-029 次弾（見出し40本拡充）の設計に含めて活かします</strong>（単独の新提案は出しません）。<strong>再発防止</strong>＝「薄い検索語は短い窓で判定しない」を全サイト共通の計測ルール（M-18）として登録しました。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">② 効果検証（日次）</strong>＝「ホームページ制作 料金表」<strong>13.8 → 13.6位</strong>＝14位前後の帯で横ばい継続（「ホームページ制作 料金」17.9位＝2ページ目のまま＝次弾40本拡充の根拠は変わりません）。R-036＝14回目不動（5.6位/0クリック・確定 ~08-18）。<strong>※今回、集計値のままだと「レスポンシブ対応 大阪」が 5.6→8.2位に悪化したように見えました</strong>が、ページ別に割ると当該ページは 5.6位のままで、別ページ（29位）が混ざった見かけの値でした＝<strong>誤報を1件、事前に止めています</strong>。R-040＝根拠クエリの表示ゼロ継続（再判定 ~08-14。<strong>この判定にも今日決めた新ルールを適用します</strong>）。運用代行・システム開発・/price/・WordPress＝上位200件まで見ても露出ゼロ継続。<strong>サイト全体＝表示の減少がさらに縮小（−4.3%→−2.1%）・クリック 422→456（+8%）・CTR 2.91→3.22%</strong>。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 日次定点＝退行なし。</strong>定点8ページすべて HTTP200・基準値一致。広告日次も異常なし（7日 ¥4,320≒日¥617・データ転送正常）。<span class="text-gray-500">新規の提案番号・新規のご質問はゼロです＝<strong>判定の訂正が本日の成果</strong>。Q-013・Q-012 は引き続きご回答待ち。</span></p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">④ 配信の続報＝実装担当が 6日間レポートを取得していません</strong>（ご報告②）。受信箱を実査したところ、<strong>実装担当が最後に受け取った本ループのレポートは 08-04 分</strong>で、以降の3通（08-05／08-09／08-10）が未読のまま残っています。あわせて<strong>ブログ分析ループから実装担当への連絡も 07-23 以降の5通が未読</strong>でした（推測：受信のスレッドごとに止まり方が違う）。＝<strong>在庫4件（R-039/040/042/045）が止まっている実体は「実装担当の作業順」ではなく「レポートが読まれていないこと」の可能性が高い</strong>状態です。本ループからは直せないため、統括（overseer）での点検を重ねて推奨します。</p>
+
+    <p class="text-sm text-gray-700"><strong class="text-amber-700">次の見どころ</strong>：競合対比 ~08-12・<strong>R-040 再判定 ~08-14</strong>・週次ビジュアル/完全性批評 ~08-14・CV実測 ~08-16・広告週次 ~08-17・R-036 確定 ~08-18・R-030②＋R-040 複合判定 ~08-21・配管点検 ~08-21・非対称仮説の再判定 ~09-10。<strong class="text-rose-700">社長へのお願い＝🔔最上部のとおり（最優先＝Q-013 の1分確認、次点＝R-044 の方針と R-029 次弾の着手可否、継続＝広告CV付け替え）</strong>。</p>
+    <p class="text-xs text-gray-500 mt-2">※旧サイクル（Cycle 090 以前）の記録は <a href="archive.html" class="underline">アーカイブ</a> に保全しています。</p>
+  </section>
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 090 — 2026-08-10（y-com.info・日次＋広告週次＋R-035 確定判定）</h3>
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 my-3">
+      <p class="text-sm font-semibold text-rose-900">⚠️ この回の主産物（R-035 の「❌不発」確定クローズ）は、<strong>翌 Cycle 091（08-11）で撤回されました</strong>＝判定に使った窓の幅が誤っていたためです。28日の前後比較では表示 8→17・クリック 2→3 と<strong>伸びており、「帯が消滅した」は事実に反していました</strong>。訂正後の内容は <a href="index.html" class="underline">最新レポート</a> の Cycle 091 をご覧ください。以下は当時の記録をそのまま保全したものです。</p>
+    </div>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・同期間長の週次比較 07-25〜31 vs 08-01〜07＋per-URL 逆引き＋上位200件の露出検算）✅／オンページ実査（hp-audit・定点8ページ）✅／広告（ads-fetch・日次＋週次）✅／Clarity ❌（許可リスト未登録33日目）。入力＝宛先の直接検算で本ループ宛の未処理0件・from-president 新規なし。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">① 主産物＝R-035（料金ページの「具体数字」節）を「❌不発」で確定クローズ</strong>〔※091 で撤回〕。当時の判定＝反映直後（7月中旬）は「スマホ サイト 費用」で3クリックを生んだが、その後この検索語の帯そのものが消滅（直近3週は表示すら出現ゼロ）＝主因は「検索需要側の消滅」で順位低下は副、8月上旬の検索エンジン全体の変動では説明できない、07-21 のFAQ構造化データ追加は本文不変で影響小、の3点。学びとして「具体的な金額の節の横展開はやめる」を吸収した〔※この学びも 091 で撤回〕。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-amber-700">② 広告週次（期日到来で実施）</strong>＝CV計測の健全性は<strong>不健全のまま</strong>＝直近28日の表面CV 854.9件のうち<strong>99.5%がスクロール到達の計測</strong>、実アクション（HANAチャット料金クリック）は<strong>4件のみ</strong>（費用¥19,051→実質CPA約¥4,800）＝広告管理画面でのCV付け替え（07-27 提起済・社長作業）を再々提起。無駄配信チェック＝ディスプレイのみのため対象外・検索広告との重複＝出稿なしのため対象なし。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">③ 効果検証（日次）</strong>＝「ホームページ制作 料金表」14.1 → <strong>13.8位</strong>（14位前後の帯で横ばい継続・「ホームページ制作 料金」17.5位）。R-036＝13回目不動（5.6位/0クリック）。R-040＝根拠クエリの表示消滅継続。運用代行・システム開発・/price/・WordPress＝上位200件まで見ても露出ゼロ継続。サイト全体＝表示の減少が縮小（−9.6%→−4.3%）・クリック 434→452・CTR 3.00→3.27%。</p>
+    <p class="text-sm text-gray-700"><strong>④ 日次定点＝退行なし</strong>（8ページすべて HTTP200・基準値一致）。広告日次も異常なし（7日 ¥4,346）。配信の続報＝08-09 の再配信ファイルは実在のままだが実装担当が 08-05 以降5日間未取得。新規の提案番号はゼロ。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 089 — 2026-08-09（y-com.info・日次＋週次CV実測）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（同期間長の週次比較＋per-URL 逆引き＋上位200件検算）✅／GA4（週次CV実測＝完全データの固定窓）✅／hp-audit 定点8ページ ✅／広告 ✅／Clarity ❌（未登録32日目）。入力＝未処理0件・from-president 新規なし。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+      <li><strong class="text-rose-700">① 週次CV実測の主産物＝問い合わせフォーム完了が8月第1週に7倍（28件/18人・08-05 に15件集中）</strong>＝実需要増か・スパムか・テスト送信かをデータだけでは区別できない → <strong>Q-013 起票</strong>（実受信メールの1分確認を社長へ依頼・実装担当へは「08-05 テスト送信の有無」を配信で同時確認）。判明まで成果として扱わない。</li>
+      <li><strong class="text-rose-700">② 配信不達は3サイクル連続と確定（08-06/07/08）</strong>＝Cycle 088 が「再配信・実在確認済」と記録した配信も実ファイル不存在＝R-044・R-045 は実装担当に一度も届いていなかった。089 で R-044/R-045 全文＋Q-013 事実確認を同梱した自己完結レポートを再配信し、<strong>投函直後にファイル実在を確認</strong>（M-20260809T021612）。あわせて 08-05 配信分を実装担当が4日間未取得＝取得側の停止の可能性も指摘（overseer 点検推奨）。</li>
+      <li>③ 効果検証＝「ホームページ制作 料金表」13.9→14.1位（14位前後の横ばい・「料金」17.7 悪化圏継続）／R-035 表示消滅継続（確定 ~08-11 予約）／R-036 12回目不動／R-040 根拠クエリ消滅継続（~08-14 再判定）／露出ゼロ4ページ継続。サイト全体＝表示 −9.6%・クリック横ばい・CTR 2.82→3.11%。</li>
+      <li>④ 定点8ページ退行なし・広告異常なし。新規Rゼロ（Q-013 の事実確認が先）。</li>
+    </ul>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 088 — 2026-08-08（y-com.info・日次）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・同期間長の週次比較＋per-URL 逆引き5本＋上位200件の露出検算）✅／オンページ実査（hp-audit・定点8ページ）✅／広告（ads-fetch・日次7日）✅／Clarity ❌（許可リスト未登録31日目）。入力＝宛先の直接検算で本ループ宛の未処理0件・from-president 新規なし（週次・月次の定石は期日未到来＝純粋な日次回）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">① 修復の報告＝08-06・08-07 の2サイクル分が掲示板に未掲載だった件を検出し、アーカイブへ復元掲載・🔔・進行中の表を最新化・実装担当へ再配信</strong>（08-06 の配信は「投函したつもりでファイルが残っていない」無言の送信失敗＝blog-loop にも同日同事象）。<span class="text-rose-700">※Cycle 089（08-09）の検証でこの日の「再配信」も実ファイル不存在と判明＝配信不達は3サイクル連続だった（089 で実在確認つき再配信済み）。</span></p>
+    <p class="text-sm text-gray-700 mb-2"><strong class="text-emerald-700">② 実装の停滞は解消していました（08-05 反映の4件を検証済み）。</strong>R-037・R-038・R-041・R-043 の4件が本番反映され、全件を独立検証でOK。残る実装在庫は R-039・R-040・R-042＋新規 R-045 の4件。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong class="text-emerald-700">③ 効果検証（日次）＝料金ページの主クエリに初の改善方向。</strong>「ホームページ制作 料金表」14.4 → 13.9位（3週横ばいの後、初めて改善側。ただし「ホームページ制作 料金」は 17.2位＝2ページ目のまま＝次弾の40本拡充が本命のまま）。R-035＝2表示/0クリック＝確定判定 ~08-11 は不発でほぼ確定の見込み。R-036＝11サイクル連続不動（5.6位/0クリック・~08-18）。R-040＝根拠クエリの表示消滅が続く（~08-14 再判定）。運用代行・システム開発・/price/ ＝上位200件まで見ても検索露出ゼロ継続。</p>
+    <p class="text-sm text-gray-700"><strong>④ 日次定点＝退行なし。</strong>定点8ページすべて HTTP200・基準値一致。広告も異常なし（7日 ¥4,219≒日¥603・データ転送正常）。新規の提案番号なし（R-044・R-045 は 08-06/07 起票分の初掲載）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 087 — 2026-08-07（y-com.info・日次＋週次ビジュアル＋週次完全性批評）＝<strong class="text-rose-700">掲示板未掲載だった分を Cycle 088（08-08）で内部台帳から復元</strong></h3>
+    <p class="text-sm text-gray-600 mb-3">※このサイクルは内部台帳には全記録がありますが、掲示板（index）への掲載が漏れていました（手動セッションが台帳更新までで終了）。Cycle 088 で復元掲載。データ状況：GSC ✅／hp-audit 定点8ページ ✅／hp-shot ✅／広告 ✅／Clarity ❌（未登録30日目）。入力＝ゼロ（宛先の直接検算で未処理0件・from-president 新規なし）。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+      <li><strong>週次ビジュアル＝会社概要（/company/）の3サイクル越しの「撮影不能」を解決し初取得</strong>。真因＝Google Maps の常時再描画で撮影段階がハングする当方ツール側の問題（撮影ツール T-008 を修理＝タイムアウト短縮・1枚ずつ失敗許容・特定リクエストの遮断オプション）。ページ自体は PC/SP とも崩れなし。⚠️「Maps のキーが死んで訪問者に地図エラーが見えているのでは」という初期仮説は否定（スクリプトは正常配信＝訪問者側の実害は未確認・実機確認を実装担当へ依頼）。副次の発見2件＝<strong>沿革の最終エントリが2024（2年空白）</strong>／<strong>「1万円プランはやめろと同業に言われるのでやめる」等の社内向け口語エントリが客向け会社概要に残存</strong>（→ 🔔として社長確認へ）。あわせて /price/ も初取得＝参考価格つきの完成度の高い解説ページ・崩れなし（R-044 統合案の根拠強化）。</li>
+      <li><strong>週次完全性批評＝「主要下層ページの被リンクが共通ナビ由来だけで、本文からの文脈リンクがゼロ」という共通機構を特定</strong>：運用代行（operate/）・/price/・/service/system/ が該当。対照＝料金表（basic.html）はナビ＋別語アンカー3本＝文脈リンクあり→28日1,527表示。GSC 28日窓を上位200件まで広げても4ページ（operate/・wordpress.html・system/・/price/）は一度も現れない＝露出ゼロを広い網で確定。→ <strong>新規 R-045 起票</strong>（運用代行ページへの文脈内部リンク＝R-042 と同機構の別ページ版・2件まとめて1作業可）。</li>
+      <li><strong>R-040 の前提が弱まった</strong>＝最大根拠の「外注 ホームページ 大阪」が直近窓でサイト全体0表示（クエリごと消滅・他URLへの移動ではない）。短窓1本では判定しない＝<strong>~08-14 に再判定</strong>（2窓連続ゼロなら効果測定不能として扱いを判断）。</li>
+      <li>効果検証＝R-029「ホームページ制作 料金表」14.4位＝3窓連続横ばい（下げ止まり）だが「ホームページ制作 料金」は 17.1 へ悪化／R-035 は表示帯消滅を追認（確定 ~08-11・不発ほぼ確定）／R-036 10回目不動／クローズ3件＝R-037・R-041・R-043 を✅確定（→ 完了した提案表へ）。定点8ページ退行なし・広告異常なし。</li>
+    </ul>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 086 — 2026-08-06（y-com.info・反応型＝実装報告6日ぶり着信）＝<strong class="text-rose-700">掲示板未掲載だった分を Cycle 088（08-08）で内部台帳から復元</strong></h3>
+    <p class="text-sm text-gray-600 mb-3">※このサイクルも掲示板（index）への掲載が漏れていました。さらに<strong>実装担当へのレポート配信も投函不成立</strong>（台帳には配信IDの記録があるが実ファイルが存在しない＝送信が無言で失敗）と Cycle 088 で判明。Cycle 088 で復元掲載＋再配信。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+      <li><strong>🎉 実装報告が6日ぶりに着信＝在庫4件が本番反映され、4件すべてを独立検証で確認</strong>：<strong>R-037</strong>（料金ページの白画面残骸 async-hide 除去）・<strong>R-038</strong>（トップ「WEBシステム」カードの誤配線是正→ /service/system/ へ）・<strong>R-041</strong>（実績一覧のスマホ崩れ修復＝4列→2列・屋号/URL の重なり解消をスクショ実画像で確認）・<strong>R-043</strong>（システム開発ページのスマホ縦読み解消）。R外1件（報告規約の初履行）を含め受信簿（deploy-log）に5行記録。</li>
+      <li><strong>訂正2件</strong>＝R-037 の残骸の実在場所は /price/（basic.html には元から無かった＝料金ページ順位下降の交絡ではなかった）／R-043 の影響範囲は3ページ。</li>
+      <li><strong>サイト全体の順位下降は外的要因が濃厚と特定</strong>＝業種も実装も無関係な3サイト（はなさか 9.0→10.5／よしだ歯科 5.3→6.3／藤阪ガス 8.1→9.0）が同一期間・同方向＝検索側の全体変動と読むのが自然（推測）。＝料金ページ固有の毀損は見かけ（−5位規模）より小さい。計測定石 M-14 として全サイト共有ライブラリへ昇格。</li>
+      <li><strong>新規 R-044 起票＝料金ページの二重化解消</strong>：/price/（費用の一般解説・検索露出ゼロ）と /price/basic.html（自社の価格表・料金クエリ着地の一極集中）の2枚に主題が割れている。R-029 次弾（見出し40本規模）を<strong>どちらのURLに積むか</strong>の方針決定が先（推奨＝(A)統合。→ 🔔）。</li>
+    </ul>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 085 — 2026-08-05（y-com.info・日次＋週次「検索結果の実見」を前倒し実施）＝Cycle 088 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（期間分割の検算＋per-URL 逆引き＋サイト全体の同期間長比較）✅／検索結果の実見（hp-serp）✅／競合オンページ比較 ✅／hp-audit 定点8ページ＋提携ページ ✅／広告 ✅／Clarity ❌（未登録28日目）。入力＝ゼロ。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-2">
+      <li><strong>🔴 料金ページ下降の原因究明＝「検索結果の顔ぶれの入れ替わり」が最有力</strong>：「ホームページ制作 料金」の1ページ目10枠のうち<strong>8枠が大手の相場解説記事</strong>（エックスサーバー／ロリポップ／freee／LISKUL 等）・制作会社の料金ページは2件のみ。「料金表」も約半数が解説記事・7/26 比較の競合 tarrows は1ページ目から消失。当社の料金ページは同業の料金ページには構造・CV導線とも全面優位＝<strong>負けている相手は同業でなく解説記事</strong>（ロリポップ記事は見出し39本 vs 当社14本）→ <strong>R-029 次弾の目標を「24本」から「40本規模」へ引き上げ</strong>＋R-032（ブログの買い手意図クラスタ化）の価値上昇。</li>
+      <li><strong>⚠️ 訂正2件</strong>＝①「サイト全体は下がっていない」は不正確（同期間長で 9.0→10.4・表示 −12%＝全体下降＋料金ページ固有の追加下降の二重構造）②R-035「唯一クリックが取れる帯」も28日平均のマジックで、期間を割ると直近窓は 0クリック/3表示＝表示自体がほぼ消滅（確定 ~08-11 は不発に倒れる公算大）。</li>
+      <li>実装在庫7件が復旧後5日間未着手（当時）＝🔴ご報告③として社長へ提起（→ 翌 08-05 夕方に4件の反映報告が着信し解消）。R-036＝8サイクル不動。定点退行なし・広告異常なし。新規提案ゼロ。</li>
+    </ul>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 084 — 2026-08-04（y-com.info・日次）＝Cycle 085 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・28日窓 07-07〜08-04・per-URL 逆引き4本＋<strong>窓を3分割した検算</strong>）✅／オンページ実査（hp-audit・定点8ページ＋提携ページ）✅／広告（ads-fetch・日次7日）✅／Clarity ❌（許可リスト未登録27日目）／検索結果の実見（hp-serp）❌（手動セッションでは実行権限なし＝翌サイクルへ繰越）。入力＝ゼロ（mailbox 新着なし・from-president 新規なし・実装報告未着）。</p>
+
+    <div class="border-2 border-rose-300 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① 料金ページの検索順位が実際に下がっています＝前回の「様子見」を訂正します（本日の最重要）</p>
+      <p class="text-sm text-gray-700 mb-2">昨日（Cycle 083）は「ホームページ制作 料金表」10.6位について<strong>「28日平均の窓ずれによる振れかもしれないので悪化とは断定しない」</strong>とご報告しました。本日、<strong>28日をまとめて平均せず、期間を3つに割って計算し直した</strong>ところ、はっきりした下降が出ました。<strong class="text-rose-700">お詫びして訂正します＝これは振れではなく実際の下降です。</strong></p>
+      <table class="w-full text-sm border-collapse bg-white mb-2">
+        <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">/price/（料金ページ）の主なクエリ</th><th class="py-1 pr-3">07-07〜07-20</th><th class="py-1 pr-3">07-21〜07-27</th><th class="py-1">直近（07-28〜08-01）</th></tr></thead>
+        <tbody class="align-top text-gray-700">
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3 font-semibold">ホームページ制作 料金表</td><td class="py-1 pr-3"><strong class="text-emerald-700">9.3位</strong>（1ページ目）</td><td class="py-1 pr-3">11.5位</td><td class="py-1"><strong class="text-rose-700">14.5位</strong>（2ページ目）</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">ホームページ制作 料金</td><td class="py-1 pr-3">—</td><td class="py-1 pr-3">14.1位</td><td class="py-1 text-rose-700">16.1位</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">ホームページ 料金</td><td class="py-1 pr-3">—</td><td class="py-1 pr-3">10.4位</td><td class="py-1 text-rose-700">12.5位</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">web制作会社 料金表</td><td class="py-1 pr-3">—</td><td class="py-1 pr-3">8.9位</td><td class="py-1">9.8位</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">ホームページ 制作 相場 1ページ</td><td class="py-1 pr-3">—</td><td class="py-1 pr-3">7.9位</td><td class="py-1">8.8位</td></tr>
+          <tr><td class="py-1 pr-3">ホームページ制作 大阪 価格</td><td class="py-1 pr-3">—</td><td class="py-1 pr-3">2.2位</td><td class="py-1">4.6位</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>観察＝料金ページの主要クエリが「一律に」下がっています</strong>（ヘッド語ほど大きく下降）。<strong class="text-emerald-700">一方で、サイト全体が下がっているわけではありません</strong>＝同じ期間、提携ページの「外注 ホームページ 大阪」は 3.4位 → 直近 <strong>2.8位</strong>とむしろ上がっており、<strong>下降は <span class="font-mono">/price/</span> というページ単位で起きています</strong>（サイト全体のペナルティ等ではない）。<span class="text-rose-700">※この「サイト全体ではない」という判定は、翌 Cycle 085 でサイト全体の平均順位を同期間長で測り直した結果、<strong>部分的に誤り</strong>と分かり訂正しました（サイト全体にも 9.0位→10.4位の下降成分が実在。ただし /price/ の下げ幅の方がはるかに大きく、ページ固有の成分があること自体は維持）。</span>技術面の実査（本日の hp-audit）でも料金ページに退行はありません（title/説明文/構造化データ/見出し構成すべて基準どおり・HTTP200）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>なぜ問題か</strong>＝この順位は 7月に<strong>「料金ページの中身を厚くする」施策（R-029）で 14.1位 → 9.3位まで押し上げた成果そのもの</strong>です。それが元の水準へ戻りつつあります。しかも1ページ目を割ると、クリックは原理的にほぼ発生しなくなります（＝いま狙っている「クリックの回収」が土台から崩れます）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>原因（推測・まだ特定できていません）</strong>＝(a) 競合側の動き（この帯の検索結果は 08-02 の実見で「相場の解説記事」が過半を占めており、記事側が強化されると押し出されやすい）(b) Google 側の順位変動などの外的要因 (c) ページ側の要因。<strong>(c) について正直に申し添えると、料金ページには R-037（最大4秒の白画面になりうる旧タグの残骸）が 13日間未除去のまま残っています</strong>＝ただしこの残骸は順位が上がっていた期間にも存在したため、これ単独が原因とは考えていません（断定しません）。</p>
+      <p class="text-sm text-rose-800"><strong>次の一手（新規のご提案は出しません＝打ち手はすでに手元にあります）</strong>＝<strong class="text-rose-900">①引き渡し済みの R-029 次弾「見出しを疑問単位に細かく割る」の優先度を、在庫の中で最上位に引き上げます</strong>（＝順位を押し上げた実績のある「中身を厚くする」レバーを、下がり始めた今こそ打ち直す。社長のご回答・新しい価格情報は不要です）。<strong>②原因究明として、週次の「検索結果の実見」（本来 ~08-09 期日）を明日の自動サイクルへ前倒し</strong>し、この帯の上位に新顔が入っていないかを確認します。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-amber-700">② 実装の在庫が動いていません（ご報告）。</strong>実装担当（web-hanasaka）は 07-31 に復旧し「溜まった便を古い順に処理する」と受領確認をくれましたが、<strong>その後4日間、着手・報告ともゼロ</strong>です。引き渡し済みで待っている提案は<strong>7件</strong>＝R-037/R-038/R-039（13日目）・R-040（11日目）・R-041/R-042（10日目）・R-043（4日目）。<strong>いずれも社長のご回答は不要な「✅AI即応」の案件です</strong>。本日の実査でも提携ページの title は 48字のまま＝未着手を確認しています。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">③ そのほかの効果検証（日次）＝方向変わらず。</strong>R-035 帯は維持（「スマホ サイト 費用」<strong>5クリック/24表示/CTR20.8%/9.0位</strong>・確定判定 ~08-11）。R-036＝<strong>7サイクル連続で完全に不動</strong>（47表示/5.4位/0クリック）。R-040＝「外注 ホームページ 大阪」41表示/<strong>3.4位＝過去最上位を更新</strong>・0クリック占有継続。運用代行ページへの表示移転は<strong>ゼロのまま</strong>。<span class="text-rose-700">※③の R-035「帯は維持」も、翌 Cycle 085 の窓分割で<strong>訂正</strong>（28日窓が7月前半の実績を含んでいたため維持に見えていただけで、直近は表示・クリックとも消滅していました）。</span></p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 日次定点＝退行なし。</strong>定点8ページすべて HTTP200・基準値一致。広告の日次も異常なし（7日 ¥3,983≒日¥569・転送正常）。新規提案はゼロ（意図的）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 083 — 2026-08-03（y-com.info・日次＋広告週次の期日）＝Cycle 084 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・28日窓 07-06〜08-03・per-URL 逆引き5本）✅／オンページ実査（hp-audit・定点8ページ＋提携ページ）✅／広告（ads-fetch・日次7日＋週次28日・CV内訳・検索語・自然検索突合）✅／Clarity ❌（許可リスト未登録26日目）。入力＝ゼロ（mailbox 新着なし・from-president 新規なし・実装報告未着）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-sky-700">① 広告週次＝CV計測の不健全は変わらず。</strong>直近28日の広告費 <strong>¥18,845</strong> に対し表面CV793件（1件¥24）のうち実アクションは「HANAチャット料金クリック」2件だけ（残り790件はスクロール計測）＝<strong>実質1アクション約¥9,400</strong>。管理画面でのCV付け替えを再度お願い（07-27 提起の再掲）。無駄配信の検索語チェックは対象外（ディスプレイのみ）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">② 広告⇔サーチコンソール連携のデータが初着信</strong>（07-27 の社長リンク作業が転送に反映）。現状は突合対象なしだが、今後検索広告を出す際の判断基盤が整った。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">③ 効果検証（日次5件）。</strong>「ホームページ制作 料金表」172表示/10.6位（9.8→9.9→10.6＝この時点では「窓の日ずれの振れ・悪化と断定しない」と判定。<strong class="text-rose-700">→ Cycle 084 の窓分割検算で実際の下降と判明し訂正</strong>）・「web制作会社 料金表」8.1位。R-035 帯維持（5クリック/CTR20.8%・確定 ~08-11）。R-036＝6サイクル連続不動。R-040＝3.6位＝過去最上位更新・0クリック占有継続（未着手12日目）。運用代行への移転ゼロ。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 日次定点＝退行なし。</strong>定点8ページすべて HTTP200・基準値一致。広告日次も異常なし（7日 ¥3,942）。新規提案ゼロ（日次＋広告週次の日として意図的）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 082 — 2026-08-02（y-com.info・日次＋週次＝競合対比・CV実測の期日）＝Cycle 083 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・28日窓 07-05〜08-02・per-URL 逆引き4本）✅／オンページ実査（hp-audit・定点8ページ）✅／GA4 CV実測（イベント在庫→着地別CVR）✅／検索結果の実見（hp-serp・2クエリ）＋競合オンページ比較（hp-compete）✅／広告（ads-fetch・7日）✅／Clarity ❌（許可リスト未登録25日目）。実装担当からの受信＝ゼロ（先方は溜まった便を古い順に処理中）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-sky-700">① 週次・検索結果の実見＝「上位なのに0クリック」の機構がほぼ判明（今サイクル最大の収穫）。</strong>「ホームページ制作 大阪 価格」＝上位10件のうち料金ページの実体は2件だけ（1位の同業と4位の当社）で、残り7〜8件は「相場はいくら？」の解説記事・比較まとめ記事。「レスポンシブ対応 大阪」も同じ構図。＝この帯のクリックは「発注先のページ」ではなく「相場・解説の読み物」に流れている（推測）。含意＝(a) /price/ を「読み物として答えるページ」へ拡充する路線（R-029）(b) ブログで買い手意図の解説記事を作る路線（R-032）の正しさの裏付け。この帯へ title/説明文の追加投資はしない（R-034 ❌確定と整合）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-sky-700">② 週次・競合対比＝料金ページはオンページで全面優位</strong>（見出し数 14 vs 5・構造化データ 3 vs 2・CV導線 20 vs 3・相手の強みはドメイン名と推測）。<strong>週次・CV実測（GA4・28日）</strong>＝問い合わせ完了 23人・見積完了 2人・メール 11人・電話 1人。着地別＝トップ 168セッション→8CV（4.8%・前窓 7.4%＝母数の振れ）・ブログ群/AIチャットLPは CV 0（着地単位＝認知貢献は否定しない）。二重計上ペア3組は健在＝R-023 のご判断待ちの根拠不変。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">③ 効果検証（日次5件）＝方向変わらず。</strong>「ホームページ制作 料金表」164表示/9.9位（窓ずれ±0.1・1ページ目維持・クリック1件のまま）・「web制作会社 料金表」8.0位。R-035 帯維持（5クリック/CTR21.7%・確定 ~08-11）。R-036＝5サイクル連続不動（45表示/5.4位/0クリック）。R-040＝「外注 ホームページ 大阪」47表示/3.7位・0クリック占有継続（未着手11日目）。運用代行への表示移転ゼロ継続（~08-21）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 日次定点＝退行なし。</strong>定点8ページすべて HTTP200・基準値一致。広告も異常なし（7日 ¥3,869≒日¥553・転送正常）。新規提案はゼロ（週次検証の日として意図的。機構発見は種プール「非対称仮説」へ付与＝R-035 確定後に「具体数字節の横展開」として起票予定）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 081 — 2026-08-01（y-com.info・日次＋月替わり＝7月の月次実績レポート初掲載）＝Cycle 082 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・28日窓 07-04〜08-01・per-URL 逆引き4本）✅／オンページ実査（hp-audit・定点8ページ）✅／広告（ads-fetch・7日）✅／Clarity ❌（許可リスト未登録24日目）。実装担当からの受信＝ゼロ（復旧翌日・報告はまだ届いていない）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-sky-700">① 月次実績レポート（7月分）を初掲載（index 🛠節）。</strong>7月の本番反映は<strong>7件</strong>（料金ページ3段階拡充・具体数字節・運用代行刷新・レスポンシブ見え方刷新・FAQ構造化データ横展開）＝すべて本番HTMLで独立確認済みのものだけを掲載。7月最大の成果は<strong>料金ページの順位効果の確定</strong>（下記②）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">② 効果検証＝R-029 の主戦クエリが初の一桁台へ。</strong>「ホームページ制作 料金表」<strong>173表示/9.8位</strong>（10.4→10.0→<strong>9.8</strong>＝1ページ目入り・拡充開始時 14.1位から単調改善）・「web制作会社 料金表」50表示/<strong>7.9位</strong>（1ページ目定着）・「相場 1ページ」8.4位。<strong class="text-rose-700">クリックは依然1件</strong>＝順位は上がったが1ページ目最下段のため、クリック回収の本命＝次弾（見出し細分化・引き渡し済）の反映待ち。R-035 帯は維持（「スマホ サイト 費用」5クリック/CTR21.7%・確定 ~08-11）。R-036 は4サイクル連続で不動（47表示/5.4位/0クリック）。運用代行への表示移転は依然ゼロ（R-040 未反映のため見込みどおり・~08-21 複合判定）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 日次定点＝退行なし。</strong>定点8ページすべて HTTP200・構造変化なし。提携ページ title 48字のまま＝R-040 未着手10日目（実装担当は復旧済み・古い順で検証着手中のため待ちの状態は健全）。広告も異常なし（7日 ¥3,950≒日¥564・転送正常）。新規提案はゼロ（月次レポート＋効果検証の日として意図的）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 080 — 2026-07-31 午後（y-com.info・反応サイクル＝実装担当の復旧確認）＝Cycle 081 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">位置づけ：昼の臨時サイクル（Cycle 079）の直後、<strong>実装担当（web-hanasaka）からの受領確認2通（12:19着）に反応した処理サイクル</strong>。数字の取得は深夜の日次（Cycle 078）の値が当日有効のため再取得なし（GSC/広告は1日1回の原則）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">① 実装担当が復旧＝9日ぶり（🔔の✅解決として index 掲載→本サイクルで当欄へ移送）。</strong>受領確認2通で、溜まっていた便（07-22 提案3件／07-26／07-29 レポート／07-29 報告ルール／07-30／07-31）の<strong>全受領＋古い順の処理開始</strong>、および<strong>報告ルールの承諾</strong>（R外の本番変更も日付つきで毎回報告・検証用の観測可能値を併記）が明言された。<strong>停止の正体（見立ての訂正）</strong>＝故障・PC停止ではなく<strong>常駐でない運用</strong>（担当PCで作業者が動いている間だけ受信箱を処理）で、07-22 の返信後、次の起動が 07-31 だっただけ＝「拠点PC側のエージェント停止が有力（推測）」の見立ては誤りだったため訂正。先方より「社長のPC確認は不要」と明言＝依頼キャンセル。稼働形態は<a href="spec.html" class="underline">確定・仕様</a>に恒久記録。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>② 本ループの対応＝3点。</strong>(a) 受領確認への返信を1通投函（昼12:40の Cycle 079 便＝R-043＋事実確認2点も処理対象に加わっている旨）。(b) 在庫8件（R-037〜043・R-029次弾）の状態を「受領待ち」→「実装担当が検証・着手中」へ更新。(c) 実装報告が届き次第、1件ずつ本番HTMLで独立検証して受信簿（deploy-log）に記録する態勢へ。15時時点で本番の変更はまだなし（定点実査でも不変）。</p>
+    <p class="text-sm text-gray-700"><strong>③ 教訓＝内部改善1件。</strong>「先方からの送信・受信処理・本番変更の3つが同時に止まった」という観測は、故障と「常駐でない相手の無稼働期間」を区別できなかった。今後は未達が続いても稼働形態を先に確かめてからエスカレーションする。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 079 — 2026-07-31 昼（y-com.info・臨時サイクル）＝Cycle 080 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">位置づけ：深夜2:00の日次（Cycle 078）に続く同日の臨時サイクル。<strong>明日 8/1 は月替わり（7月の対応実績レポート初回）と週次点検の期日が重なる「重いサイクル」になる予定だったため、週次の全体点検（ビジュアル・完全性批評）を今日のうちに前倒しで消化</strong>。データ状況：受信箱＝0件（実ファイル検算・※12:19着の受領確認2通はこの検算より後に到着＝Cycle 080 で処理）・社長指示ファイル＝新規なし・スクリーンショット（PC/SP）＝取得（未見だった3ページ）・Clarity＝24日連続停止中。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">① 🆕 新規提案1件＝R-043：システム開発ページ（<span class="font-mono">/service/system/</span>）がスマホで「縦読み」状態。</strong>週次ビジュアル点検（未見3ページ＝お問い合わせ・システム開発・会社概要）で、「対応できるシステムの種類」のカード約10枚が、<strong>スマホではタイトルが「顧/客・/案件/管理」のように1行1〜2文字で縦に折れ、ページ全高がPC版の約2.3倍（この節だけで約10画面分のスクロール）</strong>になっているのをスクリーンショット実見で確認。実績ページの崩れ（R-041）と同型の「タグ検査では見えない層」の実害。R-041 と同じCSS修正として同時実装を推奨（🔧表 R-043 行）。<strong>お問い合わせフォーム（/contact/normal/）は崩れなし・健全</strong>（主力CV受け皿の視覚確認を初消化）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-amber-700">② 🔍 会社概要（<span class="font-mono">/company/</span>）に「読み込みが終わらない」挙動＝実装担当へ事実確認（提案はまだしない）。</strong>観察（事実）＝curl は0.2秒で正常応答する一方、<strong>ヘッドレスChromeでは読み込み完了もJS実行も45〜180秒待っても終わらず撮影不能</strong>（複数回再現・同時刻の他ページは正常）。固有スクリプト＝Google Maps＋初期化JSが疑い（推測・実ブラウザ影響は未確認＝実機確認を依頼）。あわせて<strong>全ページで jQuery 二重読み込み</strong>（同v1.11.3の非圧縮版＋圧縮版＝約300KB/ページの無駄）と、トップに<strong>旧ヒートマップ（Crazy Egg）のスクリプト残骸らしきもの</strong>を検出＝配管衛生（R-039 束）の追加候補として事実確認へ。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 実装担当の停止＝昼の再確認でも復旧なし（9日目継続）。</strong>本番HTML（提携ページ title 48字）は深夜から変化なし。今日の便（Cycle 079 分）も投函。<span class="text-gray-500">※この直後の Cycle 080 で受領確認2通が確認され復旧＝原因は常駐でない運用と判明（「拠点PC停止」の推測は訂正）。</span></p>
+    <p class="text-sm text-gray-700"><strong>④ 内部整備＝スクリーンショットツールの盲点を修理。</strong>「読み込みが完了しないページは撮影不能＝恒久的に視覚点検の対象外」だった構造に、段階的に条件を落として撮る方式＋「指定の節に寄って撮る」機能を追加（R-043 の原寸確認はこの新機能による）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 078 — 2026-07-31 深夜2:00（y-com.info・無人cron）＝Cycle 079 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：受信箱＝0通（受信箱コマンドの名義ズレは既知のため、実ファイルを直接確認して0件を検算済み）。社長指示ファイル＝新規なし。取得できたもの＝本番HTML実査（定点8ページ）・GSC 28日窓（07-03〜07-31／クエリ→ページ逆引き4本）・Google広告（日次の異常検知）。取得できないもの＝<strong>Clarity（行動の実測）＝23日連続で停止中</strong>（許可リストに1行追加が必要）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">① 🔴 実装担当の停止は9日目＝未読が5通に増加。</strong>昨日の Cycle 077 レポートの便も未達のまま積まれ、本番の変更もゼロ＝<strong>提案6件（R-037〜R-042）は9日間動いていません</strong>。新しい観測はなく、打てる手は昨日と同じ（拠点PCのご確認＋つなぎ3案）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">② 効果検証＝料金ページ（R-029）の順位改善は継続。</strong>「ホームページ制作 料金表」＝172表示/<strong>10.0位</strong>（10.4 → 10.0）・「web制作会社 料金表」＝49表示/<strong>7.9位</strong>（8.3 → 7.9＝1ページ目に定着）・「相場 1ページ」8.5位・「作成 料金表」7.5位。<strong>ただしクリックは依然1件</strong>＝次弾（見出しの疑問単位分割・新規事実不要）が本命のまま①で停止中。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 検証中の施策＝すべて見込みどおり・新しい判断なし。</strong>R-035＝「スマホ サイト 費用」5クリック/22表示/CTR22.7%（8.7位）維持＝確定 ~08-11。R-036＝「レスポンシブ対応 大阪」47表示/5.5位/<strong>0クリック＝3サイクル連続不動</strong>（確定 ~08-18・不発なら「上位でも0クリック」型の2例目として終了）。R-030第二弾＋R-040＝運用代行ページへの表示移転は依然ゼロ（提携ページが「外注 ホームページ 大阪」48表示/<strong>3.8位＝過去最上位</strong>を0クリックで占有継続＝R-040 の根拠は強化）。広告＝7日で¥3,971・異常なし。</p>
+    <p class="text-sm text-gray-700"><strong>④ 新規提案ゼロ（意図的・3日連続）／内部整備＝「着手区分」の正本を内部台帳へ移す列追加を実施</strong>（掲示板の🔧表は台帳からの転記ビューに）。昨日の発見（「上位でも0クリック／下位でも高クリック」の対比）は R-035 の確定（~08-11）待ちで温存。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 077 — 2026-07-30 深夜2:00（y-com.info・無人cron）＝Cycle 078 の index 更新で移送</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：受信箱＝0通。社長指示ファイル＝新規なし。取得できたもの＝本番HTML実査・GSC 28日窓（07-02〜07-30／クエリ→ページ逆引き4本）・Google広告（日次の異常検知）・実装担当の受信箱の実査。取得できないもの＝<strong>Clarity（行動の実測）＝22日連続で停止中</strong>。※分析→<u>先に</u>掲示板・Slack・配信→そのあと内部台帳、の順で実行。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">① 🔴 最重要＝実装が止まっている原因の絞り込み＝「いつ止まったか」をほぼ特定。</strong>観察（すべて事実）＝(a) 実装担当あての未読は4通に増加（07-22 提案3件／07-26 レポート／07-29 レポート／07-29 報告ルールのお願い）＝最古8日目。(b) <strong>実装担当から当方へ届いた最後のメッセージは 2026-07-22 20:00</strong>＝以降8日間、先方からの送信ゼロ。(c) 当方が投函して届かなくなった最初の便は 07-22 20:13＝その13分後。(d) 同じ8日間、本番サイトの変更もゼロ。＝受信の処理・先方からの送信・本番の変更の<strong>3つの独立した観測がすべて「7/22 の夜8時ごろで停止」と一致</strong>＝拠点PC側の実装担当エージェントの停止が有力（推測）。お願い＝拠点PCで 7/22 夜8時前後の再起動・常駐停止等の確認。つなぎ案＝(i) 掲示板URL直参照 (ii) 社長からの転送 (iii) 復旧後に古い順で処理。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">② 効果検証＝料金ページ（R-029）はさらに改善。</strong>「web制作会社 料金表」48表示/<strong>8.3位</strong>（8.9→8.3＝1ページ目定着へ）・「ホームページ制作 料金表」170表示/<strong>10.4位</strong>（境界維持）・「相場 1ページ」8.5位。クリックは依然1件＝次弾（見出しの疑問単位分割）が本命だが①で停止中。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">③ 🔍 発見＝「上位でも0クリックの語」と「下位でも高クリックの語」の対比。</strong>「大阪 価格 制作費」2.1位/40表示→0クリック・「大阪 価格」3.5位/39表示→0クリック・「大阪 レポート 費用」2.6位/28表示→0クリック・「レスポンシブ対応 大阪」5.4位/47表示→0クリック・「外注 ホームページ 大阪」4.0位/44表示→0クリック。一方「スマホ サイト 費用」＝8.7位（下位）で5クリック・クリック率22.7%。＝「地域＋サービス名」では上位でも0クリック、「具体的な費用の問い」では下位でもクリック。在庫の優先順位に関わるが、<strong>R-035（同路線）が効果検証中（~08-11）のため提案化は意図的に見送り</strong>（交絡防止・確定後に横展開として提案）。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 定点＝退行なし／広告＝異常なし。</strong>提携ページ title 48字のまま＝R-040 8日間未着手（「外注 ホームページ 大阪」44表示/4.0位を0クリック占有継続）。R-036＝47表示/5.4位/0クリック＝2サイクル連続不動（確定 ~08-18）。R-030第二弾＝移転ゼロ（1表示/89位のみ）。広告＝7日¥4,145・異常なし。</p>
+    <p class="text-sm text-gray-700"><strong class="text-rose-700">⑤ 新規提案ゼロ（意図的・2日連続）。</strong>在庫6件が8日間ゼロ進行のため、積み増しより詰まりの原因特定（①）に充当。撤回ゼロ＝6件とも根拠生存（R-040 は強化）。次の見どころ＝R-035 確定 ~08-11・R-036 確定 ~08-18・R-030+R-040 複合判定 ~08-21・8月初旬に月次実績レポート初回。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 076 — 2026-07-29 深夜2:00（y-com.info・無人cron）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：受信箱＝0通。社長指示ファイル＝新規なし。取得できたもの＝本番HTML実査（8ページ）・GSC 28日窓（クエリ→ページ逆引き3本）・Google広告（日次の異常検知）。取得できないもの＝<strong>Clarity（行動の実測）＝21日連続で停止中</strong>（許可リストに1行追加が必要＝下記📥）。<strong class="text-rose-700">※本サイクルは「出力が落ちる」不具合を踏まえ、分析→<u>先に</u>掲示板・Slack・配信→そのあと内部台帳、の順で実行しました。</strong></p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">① 07-28（Cycle 075）の結果を、いまここに反映します（未報告だったもの）。</strong>07-28 の分析は実施され台帳に残っていましたが、掲示板・Slack・配信のいずれも出ていませんでした（＝直近5サイクルで3回目・原因と対策案は上部の🔔②）。以下②③が、その未報告分＋本日分の中身です。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-emerald-700">② 🎯 効果が「確定」しました＝料金ページのコンテンツ拡充（R-029）は、順位を動かすレバーとして本物でした。</strong>「ホームページ制作 料金表」＝<strong>14.1位 → 10.3位（8回連続で改善方向・4週間）</strong>、あわせて「web制作会社 料金表」も<strong>1ページ目へ（8.9位）</strong>、「ホームページ 制作 相場 1ページ」8.5位。<strong>やったこと</strong>＝新しい価格情報を足したのではなく、<strong>既に公開している内容を「料金の考え方」「見積りの取り方」「予算別の目安」「FAQの具体化」に組み直して厚くしただけ</strong>です（社長の新規事実ゼロ）。<strong>⚠️ 正直な限定</strong>＝<strong>動いたのは順位までで、クリックはまだ1件</strong>（10.3位＝1ページ目の最下段付近のため）。＝<strong>「この型は効く」と確定できたので、他ページにも横展開します</strong>が、売上への回収はここからです。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">③ 逆に「効かない」と確定したので止めます＝大阪×価格の見え方改善（R-034）。</strong>06-30 に title・説明文を「大阪＋具体価格」に最適化した施策で、<strong>28日間まるごとの検証で結果は全0クリック</strong>（対象＝「ホームページ制作 大阪 価格 制作費」2.2位/39表示・「大阪 価格」3.6位/37表示・「大阪 レポート 費用」2.6位/28表示 など計~140表示）。<strong>順位はむしろ上がっているのにクリックが1件も出ない</strong>＝この検索語の束には<strong>そもそもクリックする需要がない</strong>（推測：広告や地図枠に取られている／検索語自体が実体の薄いもの）と判断し、<strong>❌効果なしでクローズします</strong>。同じ時期に足した「具体的な金額に答える節」（R-035）は<strong>5クリック・CTR23.8%</strong>を出しており、同じページでも<strong>金額を具体的に見せる帯だけがクリックを生む</strong>という対比が取れました。<span class="text-gray-500">＝今後この帯に見え方（title/meta）の改修は提案しません（同型の R-036 も ~08-18 で不発なら同じ扱いにします）。</span></p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 本日の定点（8ページ）＝退行なし。</strong>トップ・料金・サービス・運用代行・WordPress・レスポンシブ・FAQ・提携ページのすべてで、タイトル・説明文・構造化データ・見出し構造に異常はありません。<strong>ただし提携ページの title は48字のまま＝R-040 は7日間未着手</strong>で、その間も<strong>「外注 ホームページ 大阪」で 43表示/3.9位（1ページ目）を0クリックで占有し続けています</strong>（起票時 5.0位 → 4.5 → 4.1 → <strong>3.9</strong> と、むしろ買い手枠での順位が上がっている＝提案の根拠は日々強まっています）。<strong>Google広告</strong>＝7日で¥4,091（日予算どおり）・異常なし。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">⑤ 新規提案は本日ゼロです（意図的）。</strong>在庫6件（R-037〜R-042）が<strong>7日間まったく動いていない</strong>ため、新しい提案を積むより<strong>受領されない原因の切り分けと、効果検証・剪定</strong>に充てました（上部🔔①）。本ループのルール上、7日を超えた提案には「引き渡す／撤回する／止めている原因を名指しする」の三択が課されます＝<strong>今回は3つ目＝原因を「実装担当が受け取れていない可能性」と名指しし、社長へエスカレーションします</strong>（撤回はしません＝6件とも根拠は生きており、うち R-040 は根拠が強まっているため）。</p>
+
+    <p class="text-sm text-gray-700"><strong class="text-amber-700">次の見どころ</strong>：R-035 確定 <strong>~08-11</strong>・R-036 確定 <strong>~08-18</strong>・R-030第二弾＋R-040 の複合判定 <strong>~08-21</strong>・R-029 の次弾（見出しの疑問単位分割）の実装。<strong class="text-rose-700">社長へのお願い＝①🔔① web-hanasaka が動いているかのご確認（最優先）②🔔② 出力順序の変更のご承認③🧩④の素材2点（システム/AI実績の一言リスト・Web制作の許諾候補）④📥 Clarity の許可リスト1行⑤ Q-012（AIチャットLPの扱い）</strong>。</p>
+
+  </section>
   <!-- ===== Cycle 074（2026-07-26 深夜・無人cron）＝Cycle 076 の index 更新で移送 ===== -->
   <section class="border border-gray-300 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 074 — 2026-07-26 深夜2:00（y-com.info・無人cron）</h3>

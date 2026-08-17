@@ -7,3 +7,10 @@
 
 | 反映日 | R番号 | 内容 | 報告ID・検証 |
 |---|---|---|---|
+| 2026-08-05 | R-037 | `/price/index.html` の旧A/Bテスト `async-hide` 一式を削除（白画面リスク解消） | M-20260805T170425-web-hanasaka-3f53125faf8a9991 / commit a5f0c18 ／**✅検証済（08-06 Cycle 086・本ループ独立GET）**＝`--plumbing` で GTM-5B5WZHG の参照消失・配信中コンテナは GTM-55DB6J6 のみ（計測は維持）。⚠️**対象URLは `/price/basic.html` ではなく `/price/`**（起票時の取り違え＝先方指摘・台帳訂正済） |
+| 2026-08-05 | R-038 | トップ主要カード「WEBシステム」のリンク先を `./service/web/cms.html` → `./service/system/` へ是正 | 同上 / commit a5f0c18 ／**✅検証済（08-06 Cycle 086・`hp-audit --links` で独立確認）**＝`./service/system/` 1本（アンカー「WEBシステム…」）・`cms.html` 2→1本（共通ナビ分は維持＝孤立させていない） |
+| 2026-08-05 | R-041 | `/works/` のSP表示崩れ修正（4列→2列折返し・長いURLの突き抜け解消） | 同上 / commit a5f0c18 ／**✅検証済（08-06 Cycle 086・hp-shot SP実画像を Read）**＝SP幅で2列に折返し・屋号の重なり解消・URL は折返して画面内に収まる・「制作STORY」帯の重なり解消 |
+| 2026-08-05 | R-043 | サービス系カードのSP表示崩れ修正（1カラム化・アイコン float 解除・行間是正） | 同上 / commit a7b8de2 ／**✅検証済（08-06 Cycle 086・hp-shot SP実画像を Read）**＝`/service/system/` のSPで縦折れ解消・見出しが1行で判読可。⚠️**影響範囲は起票時の想定（system 単独）より広く `/service/`・`/service/ai/`・`/service/system/` の3ページ**（先方指摘・台帳訂正済） |
+| 2026-08-05 | R外 | `css/sass/works.scss` の未使用mixin（radius/box-shadow）削除＝内部リファクタ | 同上 / commit 67c5ecd ／**出力CSS差分ゼロ＝見た目・DOM影響なしとの報告**。本ループ側の観測点なし（hp-audit・hp-shot とも変化なし＝報告と整合）。R外変更の報告規約（2026-07-29 依頼）が初めて履行された1件目 |
+| 2026-08-06 | R外 | `/price/basic.html` の廃止済み Google Content Experiment 残骸を除去（`utmx`/`ga_exp.js`＝`document.write` による同期挿入＝レンダリングブロック要因） | M-20260811T092309-web-hanasaka-9169c3c5637e75d4 / commit 53b4d7d ／**✅検証済（08-12 Cycle 092・本ループ独立GET `--plumbing`）**＝残骸タグの表示なし・配信中コンテナは GTM-55DB6J6 のみ（計測は維持）。⚠️**R-037（`/price/` の async-hide）とは別ページ・別系統の残骸**＝台帳上も混同しない（先方明示）。Crazy Egg は契約確認待ちで意図的に残置（社長回答待ち） |
+| 2026-08-06 | R外 | `/works/` 系の WP 由来データの出力エスケープ統一（htmlspecialchars＋href の http(s) allowlist）＋**実績詳細39ページの画像 alt 是正**（`$data['NAME']` 誤参照→`$data['sitename']`）＋`count($data['SPEC'])` の PHP8 TypeError ガード | 同上 / commit 53b4d7d ／**🔧一部検証済（08-12 Cycle 092）**＝alt 是正は `?p_id=8086` で `alt=""`→`alt="GOLFZONE24"` を独立確認（39/39 は先方の全数GET報告）。**エスケープ統一・PHP8 ガードは静的GETに差分が出ない種類の変更＝本ループでは観測不能**（観測できないことを「未対応」と判定しない＝先方の明示的な申し送りを受領） |

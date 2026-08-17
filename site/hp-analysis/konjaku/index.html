@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今昔写語 HP分析｜最新レポート｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <span>今昔写語</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-1">📋 今昔写語 — 最新レポート</h1>
+  <p class="text-gray-600 mb-2"><span class="font-mono">konjaku-photo.jp</span> ／ <span class="font-mono">konjaku-photo.com</span>（自社プロダクト）／ゴール：<strong>比較ページの閲覧増（主軸）＋閲覧→投稿の好循環</strong></p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：<strong>Cycle 021（2026-08-17 午前）</strong>＝新サイトが検索エンジンに<strong>何も見せていない</strong>ことが判明。あわせて昨夜〜今朝の結論を2件訂正しました。最新サイクル＋未完了の繰り越しだけを表示。背景は確定・仕様、完了の履歴はアーカイブへ。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <span class="px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-semibold">📋 最新レポート（このページ）</span>
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 確定・仕様</a>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <!-- 🔔 社長への質問 -->
+  <div class="border-2 border-slate-300 bg-slate-50 rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-bold text-slate-800 mb-3">🔔 社長への質問・ご判断（未回答）</h2>
+    <p class="text-xs text-gray-500 mb-3">回答は <code>data/hp-loop/konjaku/from-president.md</code> へ（または Slack 日報スレッドに返信）。<strong>ご確認が必要なのはこの🔔節の項目だけ</strong>（🔧表の✅行は回答不要）。</p>
+
+    <div class="bg-rose-50 border-2 border-rose-400 rounded p-4 mb-4 text-sm">
+      <p class="font-bold text-rose-900 mb-2">🚨 最優先のご判断 — 2つのドメインをどうするか（R-J19・2日連続でお願いしています）</p>
+      <p class="text-gray-800 mb-2">今昔写語が<strong>2つのドメインで同時に公開されたまま</strong>動いています。</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1 mb-2">
+        <li><strong><span class="font-mono">konjaku-photo.com</span>（旧システム）</strong>＝実際にお客さんが来ているのはこちら。<strong>直近1週間で 5,780人</strong>（Google・Yahoo・Bing の検索から約4,200セッション）。</li>
+        <li><strong><span class="font-mono">konjaku-photo.jp</span>（新システム）</strong>＝この分析ループが18サイクル見てきたサイト。計測は正常に動いていますが、<strong>8/16 の1日で 3人</strong>（同じ日の <span class="font-mono">.com</span> は 867人＝<strong>約290倍の差</strong>）。</li>
+        <li>両方とも生きていて、<strong>行き来する自動転送（リダイレクト）も、検索エンジンに「正はこちら」と伝える指定（canonical）もありません</strong>。中身は同じです。</li>
+      </ul>
+      <p class="text-gray-800 mb-2">この移行は <strong>①予定どおり進行中（.jp を本番にして .com は畳む）</strong> ／ <strong>②当面は両方このまま</strong> ／ <strong>③.com を本番のまま .jp は開発・検証用</strong> のどれでしょうか。<strong>この一言だけで、止まっている提案の順序がすべて確定します。</strong></p>
+      <div class="bg-white border border-rose-200 rounded p-3 mt-2">
+        <p class="font-semibold text-rose-900 mb-1">⚠️ 今回（8/17 午前）分かったことで、判断の中身が変わりました</p>
+        <p class="text-gray-800 mb-2">旧サイトが検索で稼いでいるのは<strong>トップページではありません</strong>。「東大阪市で撮影された古い写真」のような<strong>市区町村ごとのページが911種類</strong>、都道府県ページが134種類、<strong>写真1枚ごとのページが3,000種類以上</strong>、それぞれが検索から直接お客さんを受け取っています（トップは全体の3%）。</p>
+        <p class="text-gray-800 mb-2">今朝の速報では「<strong>新サイトにはその市区町村ページが無い</strong>」とお伝えしましたが、<strong>これは誤りでした。お詫びして訂正します</strong>。市区町村ページは<strong>すでに実在します</strong>（例：<span class="font-mono">/cities/608/old-photos</span>＝「千葉市稲毛区の古写真」）。</p>
+        <p class="text-gray-800">問題はもっと単純で、もっと深いものでした——<strong>新サイトのページは、人が見れば中身がありますが、検索エンジンに配られるHTMLには「読み込み中...」としか書かれていません</strong>（トップも、市区町村も、都道府県も、写真1枚ずつのページも、全部です）。<br>
+        <strong>＝作るべきものは、ほぼ作られています。ただ、検索エンジンに見せられていないだけです。</strong>これは移行方針の判断を楽にします（新設ではなく設定変更の範囲）。ただし<strong>①を選ばれる場合、この対応の完了前に旧サイトを畳むことだけは避けてください</strong>——現状の新サイトを検索エンジンは「全部同じ空白ページ」としか認識できないためです。</p>
+      </div>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-300 rounded p-3 mb-4 text-sm">
+      <p class="font-semibold text-emerald-900 mb-1">✅ GA4 が2つとも効いています（2026-08-16 社長対応の成果）</p>
+      <p class="text-gray-700 mb-1">社長からのご訂正で、GA4 が<strong>新旧2系統</strong>あることが分かりました＝<strong>新（<span class="font-mono">.jp</span>）＝<span class="font-mono">analytics_549912350</span>／旧（<span class="font-mono">.com</span>）＝<span class="font-mono">analytics_254454527</span></strong>。<br>
+      これにより<strong>「新サイトの計測が届いていない」という今朝までの診断も誤りでした＝新サイトはちゃんと計測できています</strong>（8/16 に37件・3人）。ただし<strong>実数の差は歴然です＝同じ8/16の1日で .com 867人 vs .jp 3人（約290倍）</strong>。<br>
+      <strong>GSC（検索キーワード側）は本日時点でまだ着弾していません</strong>（8/18頃の見込み・毎日確認します）。</p>
+    </div>
+
+    <ul class="space-y-3 text-sm text-gray-800">
+      <li><strong>Q-J06</strong>（GSC の対象）：Search Console に登録されたのは <strong><span class="font-mono">konjaku-photo.jp</span> と <span class="font-mono">konjaku-photo.com</span> のどちらでしょうか？</strong><br><span class="text-xs text-gray-500">※ 検索の実績（どんな言葉で来ているか・順位）は <strong>.com 側にしか無い</strong>ため、<span class="font-mono">.jp</span> だけの登録だと「ほぼ空のレポート」が届きます。<strong>できれば両方を登録</strong>いただけると移行の前後を比較できます（各5分）。データ着弾時にこちらでも確認しますので、<strong>お返事いただかなくても8/18頃には判明</strong>します。</span></li>
+      <li><strong>Q-J03</strong>（権利）：掲載している昔の写真の<strong>出典・権利</strong>はクリアですか？　規約・プラポリは「別ページに存在するがリンクされていない」のか「未整備」のか？<br><span class="text-xs text-gray-500">※ ID 1・2・3・10・100 の5件すべてで古写真が表示されず、ID 500 以上の4件はすべて正常＝初期に登録された番号帯に集中しています。単なる画像の欠落（移行時のロスト）か、<strong>権利者の申し出等で画像だけ取り下げた履歴</strong>かで対応が変わります。<strong>心当たりの有無だけ</strong>お聞かせください。</span></li>
+      <li><strong>Q-J01</strong>（投稿モデル）：写真を投稿するのは誰ですか？　① 運営がキュレーション／② 一般ユーザーのUGC／③ 両方。<br><span class="text-xs text-gray-500">※ 登録ユーザー 6,828人・全ページに「写真を投稿する」CTA＝UGC路線（②/③）の傍証。確定回答で R-J04 の前提を固めます。</span></li>
+    </ul>
+  </div>
+
+  <!-- 📥 欲しい情報 -->
+  <div class="border border-gray-300 bg-white rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-semibold mb-2">📥 分析に欲しい情報</h2>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li><strong>ドメイン移行の方針</strong>（→ 上の🔔 R-J19。これが決まらないと他の提案の優先順位が確定しません）</li>
+      <li><strong>Search Console の登録対象</strong>（→ Q-J06。8/18 の着弾で判明する見込み）</li>
+      <li><strong>サイト設定（<code>data/hp-loop/sites/konjaku.md</code>）の「対象URL」に <span class="font-mono">konjaku-photo.com</span> を追加</strong>していただきたいです。<span class="text-xs text-gray-500">＝この1行が <span class="font-mono">.jp</span> だけだったことが、18サイクル気づけなかった根源です。設定ファイルは分析ループの領域外のため、こちらでは書き換えません（申し送りのみ）。</span></li>
+      <li><strong>新サイトの市区町村ページの総数</strong>（開発側のDBまたはルート定義から）→ <strong>サイトマップに載っているのは109件</strong>ですが、旧サイトでは<strong>911種の市区町村ページが実際に閲覧されて</strong>います。この差が「まだ作られていない」のか「サイトマップに載せていないだけ」なのかで対応が変わります（R-J23）。<span class="text-xs text-gray-500">※ こちらでも旧サイト側から調べられますが、DBの実数が最も確実です。konjaku-dev へ照会します。</span></li>
+      <li><strong>市区町村・都道府県の「旧サイトの内部ID ↔ 新サイトのID」の対応表</strong>（開発側のDBから。例 旧 <span class="font-mono">p_city=640</span>＝東大阪市 ↔ 新 <span class="font-mono">/cities/???</span>）→ <strong>ドメイン統合時の1対1リダイレクトの設計に直結</strong>します。<span class="text-xs text-gray-500">※ 移行方針（R-J19）が①なら必須になります。</span></li>
+      <li><strong>古写真が欠落しているレコードの件数と ID 分布</strong>（開発側のDBクエリ＝R-J16 の規模判定）→ konjaku-dev へ依頼済み（C018）</li>
+      <li><strong>「今の写真」が未登録のレコードの件数</strong>（R-J17 の露出制御の設計に必要）→ konjaku-dev へ依頼済み（C018）</li>
+      <li>投稿モデル（Q-J01）／権利状況（Q-J03）</li>
+      <li class="text-gray-400"><s>GA4 プロパティの作成アカウント確認</s> → ✅ <span class="text-emerald-700 font-semibold">2026-08-16 解決（既存プロパティが5年分あり・新規作成不要）</span></li>
+      <li class="text-gray-400"><s>konjaku-dev の mailbox トークン登録</s> → ✅ <span class="text-emerald-700 font-semibold">2026-08-15 完了</span></li>
+    </ul>
+  </div>
+
+  <!-- 🔧 進行中の提案 -->
+  <div class="border border-gray-300 bg-white rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-3">🔧 進行中の提案（ステータス）</h2>
+    <p class="text-xs text-gray-600 mb-2"><strong>ご確認が必要なのは🔔の行だけ</strong>（✅＝回答不要でそのまま実装に渡せる）。<strong>着手の推奨順（C021 で組み替え）＝<span class="text-rose-700">R-J24（配信HTMLに中身を載せる＝これが最上位・R-J02/J20/J23 はこの一手で同時に解決）</span> → 応急処置 R-J17・R-J15 → <span class="text-blue-700">計測</span> R-J22 → R-J01 → R-J05（canonical は R-J19 の回答待ち）</strong>。<br><span class="text-emerald-700">✅ C021 で在庫が1本増え、2本が縮小しました＝R-J23 は「新設（数日規模）」から「サイトマップ収録の拡充（小）」へ、R-J21 は「計測の開通」から「ほぼ解決」へ。<strong>前提の誤りが解けた結果、必要な工数は全体として下がっています。</strong></span><br><span class="text-rose-700">⚠️ C019 で順序が乱れた件は継続中：sitemap が先に本番へ入り、中身が空のまま約1.6万URLの申告が続いています（R-J24 が入るまでこの状態）。</span><br><span class="text-gray-500">※ 8/16→8/17 の本番反映はゼロです（配信の翌日のため督促ではなく事実の記録）。</span></p>
+    <table class="w-full text-sm border-collapse">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">ID</th><th class="py-1 pr-2">提案</th><th class="py-1 pr-2">優先</th><th class="py-1 pr-2">着手区分</th><th class="py-1">状態</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J19</td><td class="py-1 pr-2"><strong>ドメイン統合の方針決定と実装（.com ↔ .jp）</strong>（C019）。<span class="text-xs text-amber-700">C020 で重みが増した＝<strong>旧サイトの稼ぎ頭は市区町村911ページ・個別写真3,000ページ以上のロングテール</strong>（トップは3%）。新サイトに市区町村階層が無いため、<strong>いまのまま畳むと最大の入口を失う</strong></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答（移行方針＝①.jpへ移行／②両方維持／③.comが本番）</td><td class="py-1">🆕提案・<strong>最優先</strong>（2日目）</td></tr>
+        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J24</td><td class="py-1 pr-2"><strong>ページの中身を、検索エンジンに配るHTMLに載せる（SSR化）</strong>（新規・C021）＝<strong>この1件が R-J02・R-J20・R-J23 の共通の根</strong>。<span class="text-xs text-amber-700">実査＝トップ／市区町村／都道府県／写真1枚ごと の<strong>4階層すべて</strong>で、配信HTMLの本文が「読み込み中...」だけ（トップは投稿枚数も「- 枚」）。画面には正しく表示される＝データも画面も出来ており、<strong>配る順番だけの問題</strong></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🆕提案・<strong>最上位</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J17</td><td class="py-1 pr-2"><strong>「比較が成立しているページ」を優先的に露出する</strong>（C018）＝応急処置。<span class="text-xs text-amber-700">C020 再実査＝<strong>sitemap.xml は 1,718,018B のまま</strong>（絞り込み未実施）。実査9件のうち昔＋今が両方そろうのは1件だけ。まず sitemap の対象を「完全形のみ」に絞るのが最も安い手</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・未反映</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J15</td><td class="py-1 pr-2"><strong>存在しないIDのソフト404を本物の404にする</strong>（C017）＝応急処置。<span class="text-xs text-amber-700">C020 再実査＝<span class="font-mono">/old-photos/999999</span> は<strong>いまも HTTP 200</strong>（未反映）</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・未反映</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J02</td><td class="py-1 pr-2">個別比較ページの固有 title/meta/SSR＝<strong>移行の前提条件</strong>。<span class="text-xs text-amber-700">C020 再実査＝配信HTMLの title は依然「古写真詳細」固定（未反映）。<strong>C020 で「衛生」から「稼ぎ頭の再現」へ格上げ</strong>＝旧サイトの個別写真ページは実測で検索の入口になっており（1枚のページに7日で24セッション）、そこには「[大阪府]ショッパーズ八尾店…の古写真」という固有 title が SSR されている。<span class="text-blue-700">C021＝<strong>R-J24 の一部として同時に解決すべき</strong>（title だけ直しても本文が空なら効果は限定的）</span></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・未反映（R-J24 に統合）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J20</td><td class="py-1 pr-2"><strong>一覧・年代・都道府県ページの固有 title/description</strong>（C019）＝<strong>移行の前提条件</strong>。<span class="text-xs text-amber-700">C020 で根拠が実測に変わった＝<strong>旧サイトの都道府県ページ134種が実際に検索の入口になっている</strong>（<span class="font-mono">p_pref=39</span> だけで7日29セッション）。新サイト側は「都道府県ID: 27の古い写真」＝内部ID露出のまま sitemap で申告済み（C021 再実査でも不変）。<span class="text-blue-700">C021＝<strong>R-J24 の一部として同時に解決すべき</strong>。なお市区町村ページ（<span class="font-mono">/cities/…</span>）は title がトップと完全に同一＝内部ID露出以前の状態</span></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🆕提案（2日目・R-J24 に統合）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J23</td><td class="py-1 pr-2"><strong>市区町村ページをサイトマップに全件載せる</strong>（C020 起票・<span class="text-rose-700">C021 で大幅に縮小</span>）。<span class="text-xs text-amber-700"><s>新設が必要</s>→ <strong>訂正：ページは既に実在します</strong>（<span class="font-mono">/cities/608/old-photos</span>＝「千葉市稲毛区の古写真」）。<strong>残る差＝サイトマップ収録は109件のみ・旧サイトでは911種が実閲覧</strong>。この差が未生成なのか未収録なのかを開発側で確認 → 収録拡充。中身の表示は R-J24 が担当</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応（件数確認から）</td><td class="py-1">🆕提案（前提を訂正・工数：中→小）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J21</td><td class="py-1 pr-2"><s>.jp の GTM から既存 GA4 へ計測を通す</s>（C019 起票）→ <strong class="text-emerald-700">✅ ほぼ解決（C021）</strong>。<span class="text-xs text-amber-700"><strong>訂正：.jp は最初から正常に計測されていました</strong>——ただし<strong>別プロパティ</strong>（<span class="font-mono">analytics_549912350</span>）へ。「未到達」と見えたのは、こちらが旧 <span class="font-mono">.com</span> のプロパティだけを見ていたためです。<strong>残件＝新旧2プロパティにまたがる前後比較の物差し</strong>（分析側で個別集計して突き合わせる運用にします＝実装作業なし）</span></td><td class="py-1 pr-2">🟢</td><td class="py-1 pr-2">⏳検証中（作業なし）</td><td class="py-1">✅ほぼ解決（分析側で対応）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J13</td><td class="py-1 pr-2"><s>計測タグの実装（GA4/GTM）</s>＝北極星を測る土台 → <strong class="text-emerald-700">✅ 完了（C021 確認）</strong>。<span class="text-xs text-amber-700">GTM <span class="font-mono">GTM-NGPVQTKQ</span> 設置済み＋<strong>GA4 <span class="font-mono">analytics_549912350</span> への配信も到達を実測で確認</strong>（8/16＝37イベント・3人・page_view 19）。残る計測課題は R-J22（参加イベントの定義）へ引き継ぎ</span></td><td class="py-1 pr-2">🟢</td><td class="py-1 pr-2">⏳検証中（作業なし）</td><td class="py-1">✅完了（次サイクルで archive へ）</td></tr>
+        <tr class="border-b border-gray-100 bg-blue-50"><td class="py-1 pr-2 font-mono">R-J22</td><td class="py-1 pr-2"><strong>プロダクトの行動（写真投稿・コメント・会員登録）を GA4 のイベントとして計測する</strong>（新規・C020）。<span class="text-xs text-amber-700">GA4 のイベント在庫を実査したところ、<strong>自動収集（表示・スクロール等）以外のイベントが1つも定義されていない</strong>＝北極星の後半「閲覧→投稿の好循環」は<strong>いま原理的に測れない</strong>。R-J10/J11/J18（参加を増やす提案）の効果検証がここで初めて成立する</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🆕提案</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J01</td><td class="py-1 pr-2">OGP/Twitterカード整備（before/afterは映える＝SNS拡散）。<span class="text-xs text-amber-700">🔧一部反映：個別ページに og:title/og:description が出たが<strong>全ページ共通の固定文</strong>で <strong>og:image が無い</strong>。<span class="text-gray-500">C019 の「旧サイトには完成形がある＝移植で済む」は C020 の再実査で<strong>訂正</strong>＝旧サイトの og:image も共通バナー画像でした（実物の古写真ではない）＝<strong>移植でなく新規に作る必要があります</strong></span>。C020 実測＝SNS/ブログからの参照流入は少数ながら実在（Pinterest・X・Facebook・廃線ブログ等）</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・🔧一部反映</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J05</td><td class="py-1 pr-2">canonical＋sitemap＋www DNS の手当て。<span class="text-xs text-amber-700">🔧一部反映：sitemap.xml と robots.txt は新設済み。<strong>残り＝canonical（R-J19 の方針と一体）と www.konjaku-photo.jp の DNS 未解決</strong>（C020 再実査でも canonical は両ドメインとも無し）</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🔧一部反映（canonical は R-J19 待ち）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J16</td><td class="py-1 pr-2"><strong>「古写真」が表示されない登録の棚卸し</strong>（C017）。<span class="text-xs text-gray-500">ID 1・2・3・10・100 の5件すべて欠落／ID 500 以上の4件は正常＝低い番号帯（初期の移行データ）に集中。全体の件数は外からは数えられない＝開発側の件数クエリを依頼済み</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応（件数調査から）</td><td class="py-1">引き渡し済</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J18</td><td class="py-1 pr-2"><strong>「今の写真はまだ登録されていません」の空枠を参加CTAに変える</strong>（C018）。<span class="text-xs text-amber-700">GA4 実測で<strong>新規訪問が9割超（再訪ほぼゼロ）</strong>＝「一度来て二度と戻らない」状態。参加の入口を目の前に置く価値が高い。<strong>効果検証には R-J22（イベント計測）が前提</strong></span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J12</td><td class="py-1 pr-2">法的表記の整備＝運営者情報・利用規約・プラポリ・出典/削除窓口。<span class="text-xs text-gray-500">フッターは新設済み（🔧一部反映）だが法的ページへのリンクは依然ゼロ。器（ページとリンクの実装）だけなら回答前でも着手可</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答（Q-J03＝権利状況・規約の有無）</td><td class="py-1">引き渡し済・🔧一部反映</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J03</td><td class="py-1 pr-2">画像SEO（alt・ファイル名・ImageObject構造化）＝Google画像検索流入。<span class="text-xs text-amber-700"><span class="font-mono">.jp</span> の配信HTMLは img 0件のまま。<span class="font-mono">.com</span> は img 24件・alt 完備＝ここでも旧サイトのほうが整っている</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J09</td><td class="py-1 pr-2">投稿カードのタイトル＝場所名を「検索・共有に効く地名」に。<span class="text-xs text-gray-500">新着カードは地名・施設名主体＝改善傾向。旧投稿の住所断片の補正が残り</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・🔧一部反映</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-J11</td><td class="py-1 pr-2">参加ハードルを「写真投稿」→「コメント・場所の同定」に下げる。<span class="text-xs text-amber-700">コメントは<strong>1,494件・最新 2026/7/14 のまま停滞6週目</strong>。新規率9割超と合わせ「来訪はあるが誰も定着していない」ことが数字で裏づけられている</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・🔧一部反映</td></tr>
+        <tr><td class="py-1 pr-2 font-mono">R-J04</td><td class="py-1 pr-2">投稿導線（UGC増）の明確化。<span class="text-xs text-gray-500">リニューアルで「写真を投稿する」CTAは大幅改善済み＝残りは投稿モデル確定後の磨き込み（主役は R-J18 に譲った）</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答（Q-J01＝投稿モデル）</td><td class="py-1">引き渡し済・回答待ち</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-2">実装担当 <code>konjaku-dev</code>（✅ 2026-08-15 接続）。<strong>C020 の週次棚卸しで R-J01〜J21 の全21件をライブ再検証</strong>（撤回0・状態更新3・記帳漏れ1件を修復）。<strong>C021 で前提の訂正2件＝R-J21・R-J13 を解決へ、R-J23 を縮小、R-J24 を新規起票</strong>。次回の週次棚卸しは 8/24。</p>
+  </div>
+
+  <hr class="my-8 border-gray-300">
+
+  <!-- ===== Cycle 021 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 021 — 2026-08-17 午前（🔑 新サイトは「作られていない」のではなく「検索エンジンに見せていない」だけだった）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GA4＝<strong>新旧2系統とも取得可</strong>（新 <span class="font-mono">analytics_549912350</span>／旧 <span class="font-mono">analytics_254454527</span>）。<strong>GSC＝本日午前時点でも未着弾</strong>（テーブル未作成を実行して確認・8/18 再試行）。サイト実査＝hp-audit を<strong>4階層</strong>（トップ／市区町村／都道府県／個別写真）に実施＋hp-shot で描画後を確認。起動＝<strong>mailbox 新着</strong>（<code>M-20260817T105240</code>＝社長からの GA4 訂正）。</p>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-5 mb-5">
+      <h3 class="font-semibold mb-2">総評</h3>
+      <p class="text-sm text-gray-700 mb-3">社長から「GA4 は新旧2つある」というご訂正をいただき、それを起点に新サイト側を測り直したところ、<strong>今朝お伝えした結論のうち2つが誤っていた</strong>ことが分かりました。お詫びして訂正します。①「新サイトに市区町村ページが無い」→<strong>実在します</strong>。②「新サイトの計測が届いていない」→<strong>届いています</strong>（別のプロパティへ）。</p>
+      <p class="text-sm text-gray-700 mb-3">そして、その2つの誤診には<strong>同じ1つの原因</strong>がありました。<strong>新サイトは、検索エンジンに配るHTMLの中身が空なのです。</strong>トップも、市区町村も、都道府県も、写真1枚ごとのページも、配信されるHTMLには<strong>「読み込み中...」としか書かれていません</strong>（トップの投稿枚数すら「- 枚」です）。ブラウザで開けば中身は正しく表示されます——実際、市区町村ページは「千葉市稲毛区の古写真」という見出しと写真が並ぶ、良い出来のページです。<strong>ただ、その姿を見ているのは人間だけで、Google は見ていません。</strong></p>
+      <p class="text-sm text-gray-700 mb-3">これは<strong>今週の順序違反（サイトマップだけが先に本番へ入った件）と噛み合って最悪の形</strong>になっています。＝約1.6万URLを「見に来てください」と申告しておきながら、見に行くと全部が同じ空白ページ、という状態です。</p>
+      <p class="text-sm text-gray-700"><strong>ただし、これは悪い知らせではありません。</strong>今朝は「911の市区町村ページを新設する（数日規模）」とお伝えしましたが、実際には<strong>ページもデータも画面も、ほぼ出来ています</strong>。必要なのは「作る」ことではなく「<strong>配る順番を変える</strong>」ことです。<strong>やるべき仕事は、今朝の見立てより小さくなりました。</strong></p>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-5">
+      <h3 class="font-semibold text-blue-800 mb-2">🔍 新規事実（観察＝事実）</h3>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+        <li><strong>🔑 新サイトの配信HTMLは、4階層すべてで本文が「読み込み中...」だけ</strong>：トップ（投稿枚数「- 枚」・登録ユーザー数「- 人」・全セクションが「読み込み中...」）／市区町村 <span class="font-mono">/cities/608/old-photos</span>（18,179B のうち中身はナビとフッターのみ）／都道府県 <span class="font-mono">/prefectures/27/old-photos</span>（「データを読み込み中...」）／個別写真 <span class="font-mono">/old-photos/1000</span>（「読み込み中...」）。<strong>＝検索エンジンが読める固有の文字が1つもありません。</strong></li>
+        <li><strong>画面（ブラウザ表示）はきちんと出来ています</strong>：同じ市区町村ページをスクリーンショットで確認したところ、見出し「<strong>千葉市稲毛区の古写真</strong>」・「2件の古写真が見つかりました」・写真カード（東京高等工芸学校本館 1926年／千葉陸軍防空学校 1942年）・「今の写真あり(0)／今の写真なし(2)」の絞り込みタブまで揃っていました。<strong>作りとしては良いページです。</strong></li>
+        <li><strong>❌ 訂正：市区町村ページは「存在しない」のではなく実在します</strong>（今朝の Cycle 020 の記述は誤りでした）。<strong>サイトマップにも109件収録されています</strong>（都道府県は47件＝全都道府県）。<span class="text-gray-500">こちらの見落としです。C019・C020 とも 1.7MB のサイトマップを目視で確認しており、<span class="font-mono">/cities/</span> の行を拾えていませんでした。</span></li>
+        <li><strong>ただし収録数には差があります</strong>：サイトマップの市区町村は<strong>109件</strong>に対し、旧サイトでは<strong>911種</strong>の市区町村ページが実際に閲覧されています。「まだ生成されていない」のか「サイトマップに載せていないだけ」なのかは外からは判別できません→ 開発側へ照会（R-J23）。</li>
+        <li><strong>❌ 訂正：新サイトの計測は届いています</strong>（今朝までの「GA4 未到達」も誤りでした）。<strong>新サイト専用の GA4 プロパティ <span class="font-mono">analytics_549912350</span></strong> に 8/16 分が正常に着弾＝<strong>37イベント・3人・ページ表示19回</strong>。閲覧されたのはトップ 4回・都道府県ページ 4種・<strong>市区町村ページ 4種</strong>・個別写真 1件。流入元は Google 検索1・Bing 検索1・旧サイトからの参照1。<span class="text-gray-500">＝新サイトも既にわずかながら検索経由で発見されています。</span></li>
+        <li><strong>新旧の実力差は同じ日の比較で約290倍</strong>（8/16 単日）：<span class="font-mono">.com</span> 867人・7,567イベント ／ <span class="font-mono">.jp</span> 3人・37イベント。</li>
+        <li><strong>旧サイトのアクセスは、ロボット（bot）ではなく実在の人と考えられます</strong>：8/16 の <span class="font-mono">.com</span> は 867人のうち<strong>551人（63%）が滞在・操作の記録あり</strong>、<strong>372人（43%）がスクロール</strong>、クリック36件・サイト内検索17件。<span class="text-gray-500">推測：botはスクロールや滞在をほとんど記録しないため、この分布は実ユーザー主体と見るのが自然です（断定はできません）。</span></li>
+        <li><strong>「現在地周辺から探す」は新サイトに存在しません</strong>（前回からの宿題）。新サイトの導線は「地域から探す／年代から探す／ランキング」＋キーワード検索まで。旧サイトのファーストビューにある位置情報での探索は未移植＝移行チェックリストに追加します。</li>
+        <li><strong>8/16→8/17 午前の本番反映はゼロ</strong>：ソフト404（<span class="font-mono">/old-photos/999999</span>）はいまも200、サイトマップは1,718,018B のまま、写真ページのタイトルも「古写真詳細」固定のまま、canonical も両ドメインとも無し。<span class="text-gray-500">（配信の翌日ですので督促ではなく、事実の記録です）</span></li>
+        <li><strong>GSC は本日午前時点でも未着弾</strong>（テーブルが未作成であることを実行して確認）。8/18 に再試行します。</li>
+      </ul>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-5 text-sm">
+      <p class="font-semibold text-amber-800 mb-1">🧭 今朝の結論を2件訂正しました（原因と再発防止）</p>
+      <p class="text-gray-700 mb-2">誤診の原因は<strong>2つとも同じ</strong>でした＝<strong>「配信HTMLに中身が無い」という事実を掴む前に、配信HTMLだけを見て『無い』と結論づけた</strong>こと。市区町村ページは title がトップと同一だったため「別ページとして存在しない」と見え、計測は旧プロパティしか見ていなかったため「届いていない」と見えました。</p>
+      <p class="text-gray-700">再発防止＝①<strong>「無い」と書く前に、描画後（スクリーンショット）とサイトマップ本文の両方で裏を取る</strong>（今回はどちらか一方でも実施していれば防げました）②<strong>データ源が1つだと分かった時点で「他にもあるか」を確認する</strong>（GA4 が2系統ある可能性を疑っていませんでした）。カイゼン台帳へ記録します。</p>
+    </div>
+
+    <!-- 新規提案 -->
+    <div class="border border-gray-300 bg-white rounded-lg p-5 mb-5">
+      <h3 class="font-semibold mb-3">💡 新規提案（1件）＋既存2件の前提訂正<span class="text-xs font-normal text-gray-500">※ 今回は「新しく足す」より「間違っていた前提を直す」が主な成果です</span></h3>
+
+      <div class="border-l-4 border-rose-500 pl-4 mb-5">
+        <p class="font-bold text-gray-900">R-J24 — ページの中身を、検索エンジンに配るHTMLに載せる（SSR化）　<span class="text-sm font-normal">🔴 最高／工数：中／✅AI即応</span></p>
+        <ul class="text-sm text-gray-700 mt-2 space-y-1">
+          <li><strong>観点</strong>：SEO（インデックスの成立）／移行リスク／※ R-J02・R-J20・R-J23 の<strong>共通の根</strong></li>
+          <li><strong>観察（事実）</strong>：新サイトの主要4階層すべてで、配信されるHTMLの本文が「読み込み中...」だけでした。トップ＝投稿枚数「- 枚」・登録ユーザー数「- 人」・PICK UP／年代／都道府県／ランキング／新着／コメントの全セクションが「読み込み中...」。市区町村 <span class="font-mono">/cities/608/old-photos</span>＝ナビとフッター以外は空・title はトップと完全に同一。都道府県 <span class="font-mono">/prefectures/27/old-photos</span>＝「データを読み込み中...」・title は「都道府県ID: 27の古い写真」。個別写真 <span class="font-mono">/old-photos/1000</span>＝「読み込み中...」・title は「古写真詳細」固定。<strong>一方、同じページをブラウザで描画すると中身は正しく表示されます</strong>（スクリーンショットで確認＝「千葉市稲毛区の古写真」「2件の古写真が見つかりました」＋写真カード）。</li>
+          <li><strong>なぜ問題か</strong>：Google は JavaScript を実行して中身を読むこともできますが、それは<strong>後回しの処理</strong>で、確実でも即時でもありません。約1.6万URLの規模ではまず追いつきません。しかも現在、サイトマップでその1.6万URLを「見に来てください」と申告済みです。<strong>＝検索エンジンから見ると「同じタイトルの空白ページが1.6万枚ある大量の重複」に見えます</strong>。これは評価されないだけでなく、サイト全体の評価を下げる可能性があります（推測）。旧サイトが同じ内容をサーバ側で出力して月1万人以上を集めていることが、この差の実証です。</li>
+          <li><strong>改善案</strong>：Next.js App Router を使っているので、<strong>データ取得をクライアント側からサーバ側（Server Component）へ移す</strong>のが基本形です。優先順は①<strong>個別写真ページ</strong>（3,000種以上が実閲覧＝最大の面）②<strong>市区町村ページ</strong>（旧サイトで911種）③<strong>都道府県ページ</strong>（134種）④トップ。あわせて各階層の <span class="font-mono">generateMetadata</span> で<strong>固有の title/description</strong> を出す（＝R-J02・R-J20 が同時に解決）。文言は旧サイトの実績ある形をそのまま使えます＝「東大阪市で撮影された古い写真 ｜ 今昔写語」「[大阪府]〇〇の古写真 ｜ 今昔写語」。<span class="text-gray-500">※ 全ページ一括でなく、まず個別写真ページ1階層だけを先行実装して効果を確かめる進め方を推奨します（安全かつ検証が速い）。</span></li>
+          <li><strong>効果</strong>：北極星（比較ページの閲覧）に対して、<strong>現在ゼロに近い新サイトの検索流入が成立する条件そのもの</strong>です。旧サイトの実測（市区町村911種・個別3,000種以上が入口として機能）が、そのまま「新サイトで回復すべき水準」の見積りになります。<strong>測れる窓＝①本番GET＝配信HTMLに地名・写真名が含まれるか（実装当日に確認可）②GA4 <span class="font-mono">analytics_549912350</span> で <span class="font-mono">/cities/</span> <span class="font-mono">/old-photos/</span> の閲覧が立ち上がるか（現在は1日3人）③GSC 着弾後は「〇〇市 古い写真」帯の表示・クリック</strong>。</li>
+          <li><strong>工数</strong>：中（階層ごとに段階実装が可能。1階層あたりは小）。<strong>R-J19 の方針回答を待たずに着手できます</strong>＝①②どちらの方針でも新サイトには必要な作業で、③（.jp は検証用）の場合のみ不要になります。</li>
+        </ul>
+      </div>
+
+      <div class="border-l-4 border-emerald-500 pl-4 mb-5 bg-emerald-50 py-2">
+        <p class="font-bold text-gray-900">R-J21・R-J13 — 前提の訂正により<strong>解決</strong>（作業なし）</p>
+        <p class="text-sm text-gray-700 mt-1">「新サイトの計測が GA4 に届いていない」は<strong>誤りでした</strong>＝新サイト専用プロパティ <span class="font-mono">analytics_549912350</span> に正常に届いています（8/16＝37イベント・3人）。GTM 設置（R-J13）も含めて<strong>計測の土台は完成しています</strong>。残るのは新旧2プロパティにまたがる前後比較の物差しですが、これは<strong>分析側で個別に集計して突き合わせる運用にします＝開発側の作業はありません</strong>。<span class="text-xs text-gray-500">※ 将来ドメインを統合する際は1プロパティにまとめるのが望ましいですが、R-J19 の方針が決まってからで十分です。</span></p>
+      </div>
+
+      <div class="border-l-4 border-amber-500 pl-4">
+        <p class="font-bold text-gray-900">R-J23 — 「市区町村ページの新設」→「<strong>サイトマップ収録の拡充</strong>」へ縮小　<span class="text-sm font-normal">🟡 中／工数：中→<strong>小</strong>／✅AI即応</span></p>
+        <p class="text-sm text-gray-700 mt-1">市区町村ページは<strong>実在します</strong>（今朝の「存在しない」は誤りでした）。残る論点は<strong>サイトマップに109件しか載っていない</strong>こと——旧サイトでは911種が実際に閲覧されています。<strong>konjaku-dev へのご確認</strong>＝「新サイトの市区町村ページは何件生成されますか（全国分か、写真が登録済みの市区町村のみか）。109件はサイトマップの絞り込み条件によるものですか」。<strong>数日規模の新規開発が必要という今朝の見立ては取り下げます。</strong><span class="text-xs text-gray-500">※ ただし収録を増やす前に R-J24（中身を載せる）と R-J17（完全形のみに絞る）が先です＝空のページを増やして申告しても逆効果のため。</span></p>
+      </div>
+    </div>
+
+    <div class="bg-slate-100 border border-slate-300 rounded p-4 mt-5 text-sm">
+      <p class="font-semibold text-slate-800 mb-1">次の一手（社長へ）</p>
+      <p class="text-gray-700"><strong>★ お願いは変わらず1点です＝ドメインをどうするか（🔔 R-J19）</strong>——①.jp へ移行する／②当面は両方／③.com が本番で .jp は検証用。<br>
+      今回の分析で<strong>判断の材料が良い方向に変わりました</strong>：新サイトは「作られていない」のではなく「見せていない」だけでした。<strong>①を選びやすくなっています</strong>（新規開発ではなく設定変更の範囲）。ただし<strong>R-J24 の完了前に旧サイトを畳むことだけは避けてください</strong>——いま転送しても、転送先を検索エンジンは空白ページとしか認識できないためです。<br>
+      <span class="text-xs text-gray-600">※ 方針の回答を待たずに進められるもの（<strong>R-J24 中身をHTMLに載せる</strong>／R-J17 サイトマップの絞り込み／R-J15 ソフト404／R-J22 参加イベントの計測）は、実装担当へ「先行して着手可」として配信します。GSC は 8/18 の着弾を確認します。</span></p>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：<strong>mailbox 新着1件を処理</strong>（<code>M-20260817T105240</code>＝hanasaka-main 経由の社長訂正「GA4 は新旧2系統・正は <span class="font-mono">analytics_549912350</span>」）→ 本サイクルの起点として全面的に反映し、<code>cur/</code> へ。from-president.md＝新規追記なし（Q-J01・Q-J03・Q-J06 未回答）。<strong>照会いただいた bot 混在の検証を実施</strong>＝engagement/scroll の分布から実ユーザー主体と判断（推測明示）。定石＝hp-audit 差分・mailbox 検算・<strong>スクショ定点（前サイクル繰越分を実施＝<code>konjaku-c021-jp-city608</code>）</strong>を実施。週次2本（勝ちパターン適用・在庫生存確認）は C020＝08-17 実施済みで期日前（次回 8/24）。月次 #9 は C019 で臨時実施済み・#12 は当月実施済みのため対象外。<strong>新規 R 1件（R-J24）／既存の前提訂正3件（R-J21・R-J13 を解決へ、R-J23 を縮小）</strong>。反応型の起動のため Slack はスレッド返信のみ（日報は本日 04:30 の C020 が投稿済み）。実装担当へ Cycle 021 レポートを配信。C020 は archive へ回転。</p>
+  </section>
+
+</div>
+</body>
+</html>

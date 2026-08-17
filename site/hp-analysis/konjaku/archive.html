@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今昔写語 HP分析｜アーカイブ｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">今昔写語</a>
+    <span class="mx-1">/</span>
+    <span>アーカイブ</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ — 今昔写語</h1>
+  <p class="text-gray-600 mb-6">完了したもの（✅本番反映済みの提案・❌中止・✅解決済みの質問）と、過去サイクルの記録（スナップショット）を新しい順に蓄積。履歴は消さない・改変しない。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 確定・仕様</a>
+    <span class="px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-semibold">🗄️ アーカイブ（このページ）</span>
+  </div>
+
+  <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
+
+  <!-- ===== 完了した提案 ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-bold text-emerald-900 mb-3">✅ 完了した提案（本番反映済み）</h2>
+    <p class="text-xs text-gray-600 mb-3">Cycle 016（2026-08-10）：全面リニューアルの実査検出により4本が反映確認。<strong>いずれも実装報告なし（konjaku-dev 未接続）＝本番GET・スクショによる実査検証</strong>。効果検証（閲覧・回遊の数字）は GSC/GA4 接続後に予約（台帳）。</p>
+    <ul class="space-y-2 text-sm text-gray-800">
+      <li><strong>R-J08</strong>（「人気の今昔」など一覧の独立ページ化・🟡 Cycle 003 起票）→ ✅ <strong>反映（C019・2026-08-16 実査検出）</strong>：年代別 <span class="font-mono">/eras/{meiji…heisei_reiwa}</span>・都道府県別 <span class="font-mono">/prefectures/{id}/old-photos</span> が独立URLとして誕生し sitemap にも収録（従来はトップ内アンカー <span class="font-mono">/#eras /#areas</span> のみ）。<span class="text-gray-600">※固有 title/description は未実装（<span class="font-mono">/prefectures/27/old-photos</span> の title が「都道府県ID: 27の古い写真」＝内部ID露出）＝<strong>残りは R-J20 として分離・継続</strong>。ランキングの独立URL化も未実施のため R-J20 に含めた。</span></li>
+      <li><strong>R-J14</strong>（本番ビルドの確認・🔴 Cycle 015 起票）→ ✅ <strong>反映＋効果検証済（C016・2026-08-10）</strong>：チャンク名が content-hash 化・応答 8.0〜8.3秒 → <strong>0.04〜0.08秒</strong>（複数回再現）＝devモード疑いは解消。起票から1週間で完了・データ連携前でも本番GETで検証できた最初の R。</li>
+      <li><strong>R-J06</strong>（トップFV再設計＝非ログイン閲覧者を主役に・🔴 Cycle 002 起票）→ ✅ <strong>反映（C016 実査検出）</strong>：新FVは比較スライダー＋コピー＋「写真を投稿する／みんなの写真を見る」CTA、ログインはサイドバー下段へ。</li>
+      <li><strong>R-J07</strong>（FVにサービス説明の一文＋探す導線・🟡 Cycle 002 起票）→ ✅ <strong>反映（C016 実査検出）</strong>：「あの頃の街と、今の街をつなぐ。」＋説明文＋h1 整備＋年代別/都道府県別/ランキングの導線がトップに常設。</li>
+      <li><strong>R-J10</strong>（コメントUGCの浮上化・🟡 Cycle 005 起票）→ ✅ <strong>主要部分反映（C016 実査検出）</strong>：トップに VOICES（最新コメント）節＋専用ページ <span class="font-mono">/comments</span>（1,494件・検索つき）を新設＝最下部死蔵は解消。通知等の拡張は効果を見てから（コメント新着は 2026/7/14 で停滞中＝閲覧増が先）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 解決済みの質問 ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-10">
+    <h2 class="text-lg font-bold text-emerald-900 mb-3">✅ 解決済みの質問</h2>
+    <ul class="space-y-2 text-sm text-gray-800">
+      <li><strong>Q-J04</strong>（計測の土台＝GSC・GA4 の接続予定）→ ✅ <strong>解決（2026-08-16・社長対応）</strong>。<br>
+      ・<strong>GA4＝新規プロパティの作成は不要でした</strong>：既存プロパティ <span class="font-mono">analytics_254454527</span>（測定ID <span class="font-mono">G-YBRQK0Q7JC</span>）が <strong>2021-07-03 から約5年分</strong>蓄積されており、BigQuery 経由で取得できることを Cycle 019 で確認・初取得。＝「どのアカウントで作るか」という論点自体が消滅しました。<br>
+      ・<strong>GSC＝<span class="font-mono">searchconsole_konjaku</span> を社長がエクスポート設定済み</strong>（2026-08-16）。実データの着弾は〜48時間後（8/18頃）。<span class="text-gray-600">※着弾時に<strong>対象プロパティが .jp か .com か</strong>の確認が残ります（→ 最新レポートの Q-J06）。</span><br>
+      <span class="text-xs text-gray-500">※この解決により、C013 以降ずっと「唯一の関門」として督促してきた項目が閉じました。同時に、この GA4 データが Cycle 019 の最大の発見（ドメイン並存）を暴きました。</span></li>
+      <li><strong>Q-J02</strong>（個別比較ページのURL有無）→ ✅ <strong>実査で解決（C016・2026-08-10）</strong>：リニューアルで個別URL <span class="font-mono">/old-photos/{id}</span> が誕生（200確認・旧サイトでは既知パターン全404）。＝回答選択肢の (a)/(b) を待たず観察で確定。残る論点（固有 title/meta・本文SSR）は R-J02 で継続。</li>
+      <li><strong>Q-J05</strong>（ループの回し方：日次継続 vs 週1へ間引き）→ ✅ <strong>週次で確定</strong>（月曜 04:30）。<strong>社長決定 2026-07-08</strong>：入力凍結中のループ（konjaku / rally）は日次→週次に右サイズ化。新着 mailbox が来れば反応ティックで即起動＝取りこぼしなし。データ連携後は日次へ戻す。<br><span class="text-xs text-gray-500">※ 掲示板は Cycle 008〜012 の間これを「未回答」と表示し社長に督促し続けていたが、<strong>実際には社長は決定済み</strong>で、<code>bin/agent-tick.sh</code> の cron 定義とサイト設定の両方に記録されていた。<strong>掲示板側の追従漏れ</strong>（社長の不作為ではない）。Cycle 013 の自己監査で発見・訂正。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== Cycle 020 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 020 — 2026-08-17（🔑「このサイトはどこで稼いでいるのか」が初めて数字で見えた）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GA4＝取得可（<span class="font-mono">analytics_254454527</span>・2026-08-10〜17 の7日）。GSC＝未着弾（テーブル未作成を実行して確認）。サイト実査＝hp-audit を2ドメイン＋主要ページ型に実施。<strong>分析ツールを1つ改修（T-026＝<code>ga4-fetch.py --raw-page</code>）</strong>。起動＝日次 cron（04:30）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：前日の発見（アクセスは旧ドメインにあった）を受け「その1万人はどのページを見ているのか」を測った。手持ちの集計ツールが旧サイトのクエリ形式URL（<span class="font-mono">?p_mode=view&amp;p_photo=1000</span>）を切り捨てる作りだったため、全ページが1つに潰れて見えなかった。ツールを改修（既定は不変の opt-in・他5サイト回帰確認済み）して初めてページ別の実態が見え、<strong>検索流入がトップではなく「地域ごとのページ」と「写真1枚ごとのページ」の膨大なロングテールに載っている</strong>ことが判明した（トップは全 page_view の約3%）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①7日で page_view 17,865・うちトップ 523（3%）②<strong>市区町村ページ911種・都道府県ページ134種・個別写真ページ3,000種以上</strong>が実際に閲覧されている（東大阪市 116回＋2ページ目80回）③入口（landing）も同構造＝写真1枚のページ（ID 14394）が単独24セッション ④旧サイトは <span class="font-mono">p_city</span>/<span class="font-mono">p_pref</span>/<span class="font-mono">p_photo</span> に<strong>地名入りの固有 title/description を SSR</strong> ⑤<strong>プロダクトの参加イベント（投稿・コメント・会員登録）が1つも定義されていない</strong>→ R-J22 起票 ⑥<span class="font-mono">DATASET_CV_EVENTS</span> 未登録のため <span class="font-mono">cv_sessions=0</span> は「CVが無い」でなく「定義が無い」（M-09 の罠に実際に嵌まっていた）⑦SNS/ブログからの参照流入は少数ながら実在（Pinterest・X・Facebook・廃線ブログ等）⑧8/16→8/17 の本番反映はゼロ。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>対応記録</strong>：週次定石2本を実施＝①勝ちパターン適用判定（M-08・M-09 を適用）②在庫の生存確認（R-J01〜J21 全21件をライブ再検証＝撤回0・状態更新3・<strong>R-J21 の記帳漏れを修復</strong>）。<strong>新規 R 2件（R-J23・R-J22）</strong>。<strong>自作事故を1件検出</strong>＝C019 の配信本文が空だった（存在しないオプション <code>--body-file</code> を渡し、その文字列が本文として投函された）→ C020 の配信に C019 分を含めて送り直し・投函後の body 長検算を手順化。日次 cron のため Slack 日報1本。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 021・2026-08-17 午前）</strong>：この回の結論のうち<strong>2つが誤りでした</strong>。①<strong>「新サイトに市区町村ページが存在しない」は誤り</strong>＝<span class="font-mono">/cities/{id}/old-photos</span> は実在し（HTTP 200・描画後は「千葉市稲毛区の古写真」と地名が出る）、sitemap にも109件収録されていました。C019・C020 とも sitemap の目視で見落としていました。→ R-J23 は「新設」から「既存ページの SSR・収録数の拡充」へ縮小。②<strong>「.jp の計測が GA4 に未到達」も誤り</strong>＝.jp は<strong>別の GA4 プロパティ</strong>（<span class="font-mono">analytics_549912350</span>）に正常に計測されていました。C019/C020 が見ていた <span class="font-mono">analytics_254454527</span> は旧 <span class="font-mono">.com</span> 専用のプロパティです（社長訂正・M-20260817T105240）。→ R-J21 はほぼ解決済みへ。<strong>いずれも「配信HTMLでは中身が見えない」という C021 の発見が根本原因</strong>で、観察そのものは正しく、解釈が1段浅かったという性質の誤りです。</p>
+  </section>
+
+  <!-- ===== Cycle 019 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 019 — 2026-08-16（🚨18サイクルの前提が覆る発見＝「見られていない」のではなく「別のドメインで見られていた」）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：<strong>GA4 を初取得</strong>（<span class="font-mono">analytics_254454527</span>・2026-08-02〜16）。GSC は設定済み・着弾待ち。サイト実査＝hp-audit（--json/--text/--links/--plumbing）を<strong>2ドメイン</strong>に実施＋hp-shot（<span class="font-mono">.com</span> トップ PC/SP を初撮影）。起動＝mailbox 新着（<code>M-20260816T224740</code>）＋手動実行。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：GA4 がつながった初日に、このループが18サイクル積み上げてきた前提が根本から覆った。「今昔写語は検索エンジンから見えていない」と診断し続けてきたが、実際には <span class="font-mono">konjaku-photo.com</span> に2週間で 11,068人が訪れ、その8割が検索経由だった。見えていなかったのはサービスではなくこのループの方で、ずっと <span class="font-mono">konjaku-photo.jp</span> だけを観測していた。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①2ドメインが同一コンテンツ（同一ID体系）を両方200で配信・相互リダイレクトなし・canonical どちらにも無し ②アクセスはすべて .com（google organic 4,881S・yahoo 1,618・bing 1,536／.jp は0件）③新規訪問97%＝ほぼ誰も戻ってこない ④.com トップに「新しいサイトはこちら」の告知バナー＝移行が途中で止まっている ⑤<strong>旧サイトのほうが SEO の作りが整っている</strong>（個別ページに固有 title/description を SSR・Twitterカード・img 24件 alt 完備・内部リンク497本）⑥報告なしの本番実装を4件検出（sitemap/robots 新設・年代/都道府県の独立URL・GTM 設置・個別ページ OGP）⑦ただし新設ページは <span class="font-mono">/prefectures/27/old-photos</span> の title が「都道府県ID: 27の古い写真」＝内部ID露出 ⑧GTM は載ったが GA4 に届いていない ⑨<span class="font-mono">/old-photos/999999</span> はいまも200 ⑩.com の robots.txt / sitemap.xml は実体を持たずトップHTMLを返す。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>このループ自身の反省</strong>：サイト設定の対象URLが <span class="font-mono">.jp</span> 1本だけで「同じサービスが他ドメインで動いていないか」を一度も確認していなかった。また C013 で「データが無い」と判定して18サイクル回したが、実際には5年分の GA4 が存在していた＝<strong>「データが無い」は確認した事実ではなく思い込みだった</strong>。再発防止＝新規サイトの初回に「同一ブランドの別ドメイン（.com/.jp/.net・www有無）を横断確認する」を定石化（他5サイトへも展開）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>対応記録</strong>：mailbox 新着1件を処理し <code>cur/</code> へ。<strong>Q-J04 を✅解決</strong>（GA4＝既存プロパティで新規作成不要）。<strong>R-J08 を✅反映としてクローズ</strong>（固有メタの残件は R-J20 へ分離）。実査検出の本番変更4件を <code>deploy-log.md</code> に記帳。<strong>新規 R 2件（R-J19・R-J20）</strong>、R-J17 を🔺緊急度上昇、R-J13 の🔔を解消。月次 #9 配管点検を両ドメインで臨時実施。手動セッションのため Slack 日報は非投稿。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 020・2026-08-17）</strong>：①この回の実装担当への配信（<code>M-20260816T230833</code>）は<strong>本文が空だった</strong>（存在しないオプションを渡し、その文字列が本文として投函された）＝C019 の内容は konjaku-dev に届いておらず、Cycle 020 の配信に含めて送り直しました。②上記⑤の「og:image に実物の古写真」は C020 の再実査（ID 14394）では確認できず、共通バナー画像でした＝<strong>.com が完璧なのではなく「title/description だけが正しい」</strong>が正確な理解です。③この回で起票した R-J21（.jp の GTM から GA4 へ配信）が掲示板の🔧表に記帳されておらず、C020 で追加しました。</p>
+  </section>
+
+  <!-- ===== Cycle 018 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 018 — 2026-08-15（実装担当へ初配信＋個別ページ9件サンプリング＝「比較が成立しているのは9件中1件」）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 は未連携（データ未取得）。サイト実査＝hp-audit（--json）・hp-shot（個別ページ6ID＝C017 の3IDと合わせて計9件）。起動＝mailbox 新着（konjaku-dev 稼働確認）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：成果は2つ。<strong>①13サイクル続いた「配信先準備中」が解けた</strong>——konjaku-dev（開発機）の接続完了の連絡が届き、在庫 R-J01〜R-J18 の要点と着手推奨順を1通に集約して初配信した。<strong>②C017 の発見を9件まで広げたら想定より重い実態が出た</strong>——個別比較ページ9件のうち、「昔」と「今」の両方がそろって比較が成立しているのは<strong>1件だけ</strong>だった。C017 時点では「古い登録で昔の写真が欠けている」問題と見ていたが、実際には「今の写真が未登録」というもう一方の欠けも同じくらい多い。＝検索やSNSで人を連れてくる施策を進めるほど「来たのに比較が見られない」ページへの着地が増える構造。ここに手を打つ提案を2件（R-J17・R-J18）起票した。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①比較成立は9件中1件（ID 1000 のみ）②「古写真が表示されない」は<strong>低ID帯に集中</strong>（1・2・3・10・100 の5件すべて欠落／500・1000・2000・8000 の4件はすべて正常）③「今の写真はまだ登録されていません」も4件（ID 10・500・2000・8000）＝仕様どおりの表示だが投稿への導線が無い ④撮影位置未設定が3件 ⑤タイトルは全件・地名入りで生成されている（＝R-J02 は置き場所の移動だけ）⑥出典が入る登録もある（「絵葉書の世界」「ジャパンアーカイブズ」）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>対応記録</strong>：mailbox 新着1件（<code>hanasaka-main → hp-loop-konjaku</code>）を処理し <code>cur/</code> へ。最新レポートを konjaku-dev へ初配信（<code>M-20260815T153958</code>）。<code>hanasaka-main</code> へ受領と配信報告を返信（<code>M-20260815T154011</code>）。from-president.md＝新規追記なし。新規 R 2件（R-J17・R-J18）。週次・月次定石は last-run 2026-08-10＝期日前のため未実施。手動セッションのため Slack 日報は非投稿。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 019・2026-08-16）</strong>：C001〜C018 の観察はすべて <span class="font-mono">konjaku-photo.jp</span>（新システム）に対するものでした。C019 で、同一コンテンツを配信するもう一つのドメイン <span class="font-mono">konjaku-photo.com</span>（旧システム）が稼働しており<strong>検索流入は事実上すべてそちらにある</strong>ことが判明しています。上記サイクルの「検索に見えない」という評価は <span class="font-mono">.jp</span> についてのみ正しく、サービス全体としては当たっていません。</p>
+  </section>
+
+  <!-- ===== Cycle 017 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 017 — 2026-08-15（手動セッション・個別比較ページの初の内容実査＝ソフト404と「昔」の欠落を検出）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。サイト実査＝hp-audit（--json/--text/--links）・hp-shot（トップ PC/SP・/comments・個別ページ4ID）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：C016 で誕生を確認した個別比較ページ <span class="font-mono">/old-photos/{id}</span> をはじめて中身まで実査した。結論は二面。<strong>①ページの作りは良い</strong>——ID 1000（神戸海岸オリエンタルホテル）は彩色古写真と現在の同アングル写真が並び、タグ・撮影位置の地図・登録情報・コメント欄まで揃う。<strong>②検索エンジンから見た状態に2つの欠陥がある</strong>——存在しないIDでも HTTP 200 を返す（ソフト404）ことと、古い登録では比較の「昔」側が空のまま公開されていること。いちばんの成果は<strong>着手の順序が確定したこと</strong>＝R-J02 →  R-J15 → R-J16 → R-J05 → R-J01。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①ソフト404（<span class="font-mono">/old-photos/999999</span>・<span class="font-mono">/old-photos/abcdef</span>・<span class="font-mono">/old-photos/17000</span> がいずれも HTTP 200／<span class="font-mono">/zzz-not-exist</span> は正しく404）→ R-J15 起票 ②比較の「昔」が空のページ（ID 1・2＝古写真が灰色プレースホルダ／ID 1000 は両方正常）→ R-J16 起票 ③レンダリング後の title は既に地名入り（「[京都府]石清水八幡宮の古写真」）だが配信HTMLは全件「古写真詳細」固定＝R-J02 は文言設計でなく置き場所の移動 ④<span class="font-mono">/old-photos</span>（一覧）の配信HTMLの a[href] 17本はすべてナビ・フッター・X＝個別ページへの内部リンク経路はゼロ ⑤規模＝写真 17,457枚（8/10比 +60）・ユーザー 6,828人・コメント 1,494件（増減なし）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>含意</strong>：受け皿の中身は十分だと確認できた一方、入口側で (a) 全ページ同一タイトル・本文なし (b) 存在しないIDまで200で無限に開く (c) 一部は比較が成立していない、が重なっている。この状態で sitemap を入れると低品質ページを1.7万件登録することになるため順序を確定した。<span class="text-gray-500">※翌 C018（同日）で個別ページを9件までサンプリングし、「比較が成立しているのは9件中1件」という更に重い実態が判明。R-J17・R-J18 として起票。</span></p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：新規 R 2件（R-J15・R-J16）＋既存 R-J02/J05/J01/J11 の根拠・順序を更新。from-president.md 追記なし。週次・月次定石は last-run 2026-08-10＝期日前のため未実施。スクショ＝<code>konjaku-c017-*</code>。手動セッションのため Slack 日報は非投稿。konjaku-dev トークン未登録＝配信保留（※同日夕方に登録完了・C018 で初配信）。C016 は archive へ回転。</p>
+  </section>
+
+  <!-- ===== Cycle 016 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 016 — 2026-08-10（週次定期・🎉全面リニューアルを実査検出＝在庫4本が本番反映・個別URL誕生・Q-J02 解決）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。サイト実査＝hp-audit（--json/--text/--links/--plumbing）・hp-shot（トップ PC/SP・/comments）・hp-serp（site: インデックス確認＝M-15 初適用）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：<strong>サイトが全面リニューアルされていた</strong>（実装報告なし・実査検出）。前回 C015（8/3）はまだ旧サイトだったため<strong>本番反映は 8/3〜8/10 の間</strong>（サイトのお知らせは「2026.07.27 デザインをリニューアルしました」＝日付は食い違い・観察のみ記録）。デザイン刷新に加えて情報設計・URL構造・ビルドが根本から変わり、<strong>在庫提案のうち4本相当（R-J06 FV再設計／R-J07 説明文＋導線／R-J10 コメント浮上／R-J14 本番ビルド）が実装済み</strong>に。一方<strong>検索・SNS・計測の「外向きの層」はほぼ手つかず</strong>＝OGP・固有メタ・canonical・sitemap・構造化データ・解析タグは依然ゼロ。「中身は良くなったが外からは相変わらず見えない・測れない」が新しい現在地。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①本番ビルド化を確認（チャンク content-hash 化・応答 8.0〜8.3秒 → 0.04〜0.08秒＝R-J14 完了）②新URL構造＝<span class="font-mono">/old-photos</span>・<strong><span class="font-mono">/old-photos/{id}</span>（個別ページ・200実在＝旧サイトでは全404）</strong>・<span class="font-mono">/old-photos/upload</span>・<span class="font-mono">/comments</span>（Q-J02 を実査で解決）③規模を初公表＝写真 17,397枚・ユーザー 6,828人・コメント 1,494件 ④公式X（@konjaku_photo）リンク出現 ⑤フッター新設・©「© 2024 今昔写語」に統一（旧「今昔フォト」不一致は解消。法的表記リンクは依然なし）⑥外向きの層は不変（解析タグ皆無を --plumbing で再確認・www DNS 未解決）⑦トップのインデックスは陽性（<span class="font-mono">site:</span> 実見＝M-15 初適用）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>含意</strong>：経路①（検索から届く）は「入口となる個別URLが1.7万枚分誕生した」ことで土台ができたが、固有メタ・sitemap・本文SSR が無いためまだ検索には載らない。経路②（SNS）は X 運用開始で送り手は動き出したが OGP 不在で受け皿が映えない。→ 次の一手は「R-J02（固有メタ）→ R-J05（sitemap）→ R-J01（OGP）」の外向き3点セット＋R-J13（計測）。<span class="text-gray-500">※翌 C017（8/15）で個別ページの内容実査を行い、この順序に R-J15（ソフト404）・R-J16（古写真の欠落）を挟む形へ更新した。</span></p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：<strong>新規 R ゼロ</strong>（成果＝実装4本の検出・検証・アーカイブ化と在庫全件の前提/区分更新）。Q-J02 を✅解決（spec へ昇格）。週次定石＝勝ちパターン適用判定（M-15 が初適用可能→即適用）・在庫生存確認（14件全件・4件クローズ・3件一部反映・撤回なし）。#9 配管一斉点検を臨時実施。#12 月次実績（2026-07）＝実装ゼロを掲載。deploy-log.md 新設（リニューアルを「報告なし・実査検出」で記録）。スクショ＝<code>konjaku-c016-*</code>。週次定期のため Slack 日報1本投稿。C015 は archive へ回転。</p>
+  </section>
+
+  <!-- ===== Cycle 015 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 015 — 2026-08-03（週次定期・配管一斉点検 初実施＝計測タグ皆無と Next.js 製が確定）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。サイト実査＝hp-audit（--json/--text/--plumbing）・hp-shot スクショ定点。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：月次定石「配管一斉点検（#9）」初実施で、<strong>計測タグが1つも入っていない</strong>（GTM/GA4/旧UA/Clarity/広告タグ 全て無し）ことと<strong>Next.js（App Router）製</strong>であることが確定。前者は「GA4 接続待ち」の中身が実はタグ実装という開発タスクだったことを意味し（→R-J13 起票）、後者は在庫の主力（OGP・SSR・sitemap）がフレームワーク標準機能で安く実装できることを意味する。応答が3回連続8秒台＋チャンク名が非ハッシュ＝<strong>本番が dev モードで動いている疑い</strong>を検出（→R-J14 起票。<strong>※翌週 C016 で本番ビルド化と 0.04秒への改善を確認＝解消</strong>）。変化検知＝写真投稿は継続成長（佐賀38→44）・コメントは 2026/7/14 から3週間停滞・www DNS 未解決・/search は部分SSRだが結果カードはJS描画＝抜け道にならず。#12 月次実績（2026-07）＝実装ゼロ。着手区分列を🔧表に初適用。前週 2026-07-27（月）の週次実行の記録が無い＝欠測の可能性（統括へ申し送り）。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：新規 R 2件（R-J13 計測タグ・R-J14 本番ビルド）。既存在庫12件は生存確認済み。スクショ4枚×2回（konjaku-c015-*）。週次定期のため Slack 日報1本投稿。C014 は archive へ回転。</p>
+  </section>
+
+  <!-- ===== Cycle 014 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 014 — 2026-07-20（週次定期・🎉ライブ実査が復活＝定点観測を解除し深掘り再開）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携のまま。ただし本サイクルから hp-audit（本番GET）・hp-shot（描画後スクショ）が実行可能＝サイト実査は解禁。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：13サイクル続いた「外部GET不可」は<strong>誤診だった</strong>（bash前置形式のみ試して「承認ゲート不可」と記録・前置なし直接形式なら通った＝K-317 同事象・rally と同日発見）。再開条件③「読み取りGET許可」成立＝定点観測モードを解除。<strong>新規事実</strong>：sitemap.xml 404 確定／robots 全許可／存在しないパスは404を返す（SPA全200型でない）／<span class="font-mono">/search</span> 実在だがメタはトップと同一／個別比較ページのURLは既知パターン全404＝<strong>Googleが辿れる面は実質トップ1枚</strong>（Q-J02 の外形側を実査で確定）。<strong>変化検知</strong>：都道府県件数増加（京都590→614等）・新着カード入れ替わり（東大阪クラスタ・施設名主体）・最新コメント2026/7/14＝<strong>サイトは成長中だが検索に見えないまま蓄積</strong>。©表記「今昔フォト」の名称不一致を確認（R-J12へ追記）。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：新規 R ゼロ（発見は全て既存 R の根拠強化と Q-J02 の絞り込みに充当）。在庫12件の生存確認＝撤回なし。スクショ4枚更新（konjaku-c014-*）。週次定期のため Slack 日報1本投稿。C013 は archive へ回転。</p>
+  </section>
+
+  <!-- ===== Cycle 013 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 013 — 2026-07-13（定点観測＋掲示板の自己監査＝古い記述を2件訂正）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。外部GET は実試行して承認ゲート不可を確認（※後の C014 で「bash前置形式のみ試していた」誤診と判明＝直接形式なら可だった）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：サイト・データ・実装の3系統は13サイクル連続で変化なし。新規 R ゼロ（レンズ枯渇・水増ししない）。ただし「外部が動かないなら掲示板自身を疑う」方針で自己監査し、<strong>掲示板の誤りを2件訂正</strong>：<strong>①Q-J05 は「5サイクル未回答」ではなく社長が 2026-07-08 に週次化を決定済みだった</strong>（掲示板の追従漏れ・✅解決済みへ）。<strong>②勝ちパターン・ライブラリの適用判定を初実施＝収録型（W-01・M-01〜M-05）はすべて GSC 前提で今昔写語に適用可能な型ゼロ</strong>＝Search Console は「3つのお願いの1つ」でなく唯一の関門と判明。督促を3項目→この1点に圧縮（overseer v0.4 準拠・以降再膨張させない）。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：新規 R ゼロ・新規 Q なし。Q-J05 を解決済みとして spec/archive へ。C012 は archive へ回転。ad-hoc 手動実行のため Slack 日報は非投稿。</p>
+  </section>
+
+  <!-- ===== Cycle 012 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 012 — 2026-07-08（定点観測＝変化検知・律速追跡）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。C008 以降は定点観測モード。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：<strong>変化なし（12サイクル連続）</strong>。入力3系統（データ／実装／社長回答）がいずれも不動＝<code>to: hp-loop-konjaku</code> 新着なし（他サイト宛4件のみ・触らない）／from-president 追記なし／外部GET 承認ゲート不可／GSC・GA4 未連携／konjaku-dev トークン未登録。<strong>新規 R ゼロ</strong>（K-136＝観点を水増ししない）。分析の弾（R-J01〜J12＝12本）は着手可能な粒度で満載のまま。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：新規 R ゼロ・新規 Q なし。Q-J05 を「4サイクル未回答」として督促（<strong>※後に誤りと判明＝社長は同日 2026-07-08 に週次化を決定済みだった。Cycle 013 で訂正・解決済みへ</strong>）。未完了 R は最新レポートの🔧表で継続追跡。ad-hoc 手動実行のため Slack 日報は非投稿。</p>
+  </section>
+
+  <!-- ===== Cycle 008 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 008 — 2026-07-04（定点観測モードへ移行＝変化検知＋律速追跡）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。外部GET承認ゲート（8サイクル連続・実試行し不可を確認）。新着 mailbox・新規 from-president なし。前サイクルで既存スクショのレンズを使い切ったため、宣言どおり定点観測へ移行。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：<strong>変化なし</strong>。入力3系統（データ／実装／社長回答）がいずれも不動。<code>to: hp-loop-konjaku</code> 新着なし・from-president 追記なし・外部GET 承認ゲート不可・GSC/GA4 未連携継続・konjaku-dev トークン未登録継続。件数を稼ぐための観点水増しはせず（K-136）<strong>新規 R ゼロ</strong>。8サイクル無変化を律速の重さとして提示し、ループの回し方（Q-J05：日次継続 vs 週1間引き）を新規に社長へ。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：新規 R ゼロ（水増ししない）／新規 Q-J05 を1件追加。未完了 R-J01〜J12 は最新レポートの🔧表で継続追跡。ad-hoc 手動実行のため Slack 日報は非投稿（daily cron と二重に鳴らさない）。</p>
+  </section>
+
+  <!-- ===== Cycle 007 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 007 — 2026-07-03（観点レンズ＝信頼・権利＝既存スクショの最後の残レンズ）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。外部GET承認ゲート（7サイクル連続）のため、Cycle 001 取得済みの JS描画後スクショ（PC フル）を「信頼・権利」レンズで精読。新着 mailbox・新規 from-president なし。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：PC フル全景を最上部から最下部まで見渡すと、ページはコメント一覧→ボタンで終わり、<strong>フッター（法的表記の帯）が存在しない</strong>＝運営者情報（株式会社はなさか）・利用規約・プライバシーポリシー・著作権/出典ポリシー・削除依頼窓口が描画後トップに不可視（構造レベルの観察事実。規約類が別URLに存在するかは未確認＝Q-J03）。これは(a)権利の守り＝UGC×昔写真は第三者の著作物・肖像を含みうるのに削除依頼の受け口が示されていない、(b)個人情報＝会員登録するのにプラポリ不可視、(c)信頼＝運営者が見えないサイトには投稿しにくい、の3点で効く。運営が自社なので整備は実装のみで完結（クライアント調整・データ接続と独立）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：運営＝自社なので法的表記の整備は社内判断＋実装で完結／R-J12 は GSC・SSR と独立に着手できる小さな守り／規約類が別ページに存在するならリンクを張るだけで済む可能性。<br><strong>⚠️課題</strong>：フッター（法的表記帯）が無い／UGC×昔写真の権利リスクが高いのに削除窓口が不可視＝拡散を進めるほどリスク先行／（継続）実装0件・データ未連携・トークン未登録＝律速7サイクル据え置き。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J12 フッター（法的表記）整備＝運営者情報・利用規約・プライバシーポリシー・著作権/出典・削除依頼窓口🔴（R-J01 の拡散を始める前の守り・Q-J03 と連動）。<strong>次の一手＝正直な申告</strong>：既存スクショから出せる非重複の観点レンズ（C002=FV／C003=拡散入口／C004=場所名メタ／C005=コメント資産／C006=投稿フロー／C007=信頼・権利）を<strong>使い切った</strong>。次サイクルからは新規提案の水増しをせず、定点観測（変化検知）＋律速追跡に切り替える。再開条件＝①Search Console 登録 ②konjaku-dev トークン登録 ③対話GET許可のいずれか。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規追記なし（Q-J01〜J04 未回答）。新規所見 R-J12 を追加。フッター不在（観察事実）を確定・仕様⑥へ昇格。Q-J03 に「規約類の有無」を追記。未完了 R は最新レポートの🔧表で継続追跡。daily 定期実行のため Slack 日報を1本投稿。</p>
+  </section>
+
+  <!-- ===== Cycle 006 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 006 — 2026-07-02（観点レンズ＝投稿フロー実体＝“誰が・どう参加しているか”）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。外部GET承認ゲート（6サイクル連続）のため、Cycle 001 取得済みの JS描画後スクショ（PC フル）を「投稿フロー」レンズで精読。新着 mailbox・新規 from-president なし。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：誰がどう参加しているかに明確な非対称を発見＝(1) 一覧カード（比較写真）は日付が一様に「2026/6/5」＝同日一括シードに見え、ユーザーの継続的な写真投稿の痕跡が薄い（推測・GET/ログイン実査で確定したい）。(2) 最下部コメントは 2025〜2026 と散らばり実ユーザーが継続（事実）。(3) 「あなたも投稿」的な可視CTAが無く、参加はログインの先に隠れている（事実）。＝<strong>「写真投稿」は運営シード寄り／「コメント」は住民が本当に動いている</strong>。参加のハードルを“昔の写真の現物”（高障壁）から“思い出コメント・場所の同定”（低障壁・実証済）へ下げるのが戦略＝R-J09（場所名補正）を群衆で回し、R-J10（コメント資産）を増やす、1レバー3方向。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：コメントUGCが自然発生済＝受け皿がある／一覧カードの完成度が高く器として流用可／昔↔今の素材が場所同定・思い出投稿と本質的に相性良。<br><strong>⚠️課題</strong>：写真投稿がシード寄り（推測）／可視の参加CTA無し／低障壁の参加行動を増幅する設計が無い／（継続）実装0件・データ未連携。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J11 参加のハードルを「写真投稿」→「思い出コメント・場所の同定」に下げる（軽量投稿口・「地名を教えて」導線・“写真がなくても投稿できる”の明示・反応通知との接続）🟡。<strong>次の一手</strong>＝律速「動かす前提」が6サイクル連続据え置き＝最小の一歩は Search Console 登録（約5分）。レンズ在庫は残り「信頼・権利」程度と正直に申告。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規追記なし（Q-J01〜J04 未回答）。新規所見 R-J11 を追加。カード日付の一様性（観察）を確定・仕様③へ追記。未完了 R は最新レポートの🔧表で継続追跡。ad-hoc 手動実行のため Slack 日報は非投稿（daily cron と二重に鳴らさない）。</p>
+  </section>
+
+  <!-- ===== Cycle 005 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 005 — 2026-07-01（観点レンズ＝稼働中のコメントUGC＝“今すぐ動いている唯一の資産”）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。外部GET承認ゲート（5サイクル連続）のため、Cycle 001 取得済みの JS描画後スクショ（SP フル）を新レンズで精読。新着 mailbox・新規 from-president なし。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：これまでは「これから作るべき未構築の資産（OGP/SSR/場所名/人気ページ）」を見てきたが、今回は視点を反転し「<strong>今このサイトで実際に動いているもの</strong>」を探した。SP フルを最下部まで精読すると答えは1つ＝<strong>コメントUGC</strong>（実ユーザー名＋日付 2025〜2026 継続＝小さいが本物のコミュニティ）。だが数字タイルの巨大スクロール壁の最奥に死蔵し、新規来訪者にも投稿者にもほぼ届かない。人の声＝社会的証明・再訪エンジン・鮮度シグナルの3ゴール全てに効くのに、未構築の本丸を待たず“既にあるものを浮上させるだけ”で動かせる最低障壁のレバーを眠らせている点を課題化。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：コメントUGCが本物に稼働（2025〜2026継続）／一覧カードの before/after サムネ＋日付が完成度高い／昔↔今の素材が感想・思い出を呼びコメントと相性良。<br><strong>⚠️課題</strong>：唯一動いている資産（コメント）がページ最下部に死蔵／新着・反響がトップ/カード/通知に浮上しない＝再訪・社会的証明・鮮度の取りこぼし／（継続）OGP・個別ページJS描画・h1/canonical・場所名ばらつき（実装0件）。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J10 稼働中のコメントUGCを死蔵させず、新着/反響を上位・カード・通知に浮上＝社会的証明・鮮度・再訪のエンジンに🟡。<strong>次の一手</strong>＝律速「動かす前提」が5サイクル連続据え置き＝社長が1つ動かす局面（最小の一歩＝Search Console 登録・約5分）。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規追記なし（Q-J01〜J04 未回答）。新規所見 R-J10 を追加。確認できた「コメントUGC＝唯一の稼働資産・最下部に死蔵」を確定・仕様⑤へ昇格。未完了 R は最新レポートの🔧表で継続追跡。ad-hoc 手動実行のため Slack 日報は非投稿（daily cron 04:30 と二重に鳴らさない）。</p>
+  </section>
+
+  <!-- ===== Cycle 004 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 004 — 2026-06-30（観点レンズ＝投稿メタ品質＝場所名／モバイルの回遊コスト）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。ライブ取得が承認待ち（4サイクル連続）のため、Cycle 001 取得済みの JS描画後スクショ（PC/SP フル）を新レンズで精読。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：「拡散の入口（C003）」から一段ズームインし、投稿1件1件のカードのタイトル（場所名）を見た。一覧カードは before/after サムネ＋日付が揃い完成度が高いが、<strong>一部カードのタイトルが「364-1」「2-12-6」など住所断片だけ</strong>で、人が読み・検索する地名になっていない。同じ場所の昔↔今 product では「場所名」こそ最大の検索クエリ・共有フックで、住所番地だけのタイトルは検索意図に当たらずクリック率・SNS共有も落ち、R-J01(OGP)/R-J02(SSR) を入れても title/見出しが住所断片だと効果が半減する土台の問題。あわせてモバイルで「閲覧数/ランキング」数字タイル群が巨大スクロール壁になり、最下部のコメントUGC（2025〜2026 の実コメント）にほぼ到達しないことを再確認。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：一覧カードの before/after サムネ＋日付が機能／多くのカードに場所名らしき日本語タイトル／コメントUGC継続稼働／素材自体が場所名・画像検索と相性良。<br><strong>⚠️課題</strong>：一部カードのタイトルが住所断片のみ（投稿メタの品質ばらつき）／モバイルで数字ランキング群が巨大スクロール壁＝コメントUGC死蔵／（継続）OGP・個別ページJS描画・h1/canonical 無し（実装0件）。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J09 投稿カードのタイトル＝場所名を「検索・共有に効く地名」に（住所断片→駅名/施設名/商店街名・投稿フォーム誘導＋既存補正・SSR title/OGP の土台）🟡。<strong>次の一手</strong>＝律速「動かす前提」が4サイクル連続据え置き＝社長が1つ動かす局面（最小の一歩＝Search Console 登録）。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規追記なし（Q-J01〜J04 未回答）。新規所見 R-J09 を追加。確認できた「カードの場所名にばらつき」を確定・仕様へ昇格。未完了 R は最新レポートの🔧表で継続追跡。</p>
+  </section>
+
+  <!-- ===== Cycle 003 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 003 — 2026-06-29（観点レンズ＝拡散・既存資産の入口化）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。ライブ取得が承認待ちのため、Cycle 001 取得済みの JS描画後スクショ（PC/SP フル）を別レンズで精読。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：トップは縦長1枚（ヒーロー比較→検索/フィルタ→一覧カード→「閲覧数/ランキング」数字タイルの大グリッド→コメントUGC）。中段の「閲覧数/ランキング」が<strong>サムネも場所名も無い数字タイルの羅列</strong>で「何が人気の今昔か」が伝わらず、検索とSNSの最強の入口になり得る人気資産を死蔵している点を課題化。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：一覧カードが共有単位として完成度高い／閲覧数・ランキングのデータが既にある（資産）／コメントUGC稼働。<br><strong>⚠️課題</strong>：閲覧数/ランキングが数字の羅列で人気コンテンツへ飛べない／独立URL・固有titleの受け皿が無い／（継続）OGP・個別ページJS描画・h1/canonical 無し。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J08 既存の閲覧数/ランキングを「人気の今昔」独立ページ化（サムネ＋場所名＋固有title/SSR）＝検索・SNSの入口🟡。<strong>次の一手</strong>＝律速3点（Search Console登録／konjaku-dev トークン登録／対話GET許可）。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規追記なし（Q-J01〜J04 未回答）。新規所見 R-J08 を追加。確認できたページ構造を確定・仕様へ昇格。未完了 R は最新レポートの🔧表で継続追跡。</p>
+  </section>
+
+  <!-- ===== Cycle 002 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 002 — 2026-06-28（深掘り：JS描画後の実画面を観察）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 未連携。ライブ取得が承認待ちのため、Cycle 001 取得済みの JS描画後スクショ（PC/SP）を精読した deepening pass。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：JS描画後の実画面でヒーローの昔↔今比較は実際に強い（1964五輪↔現在等）。一覧カード・閲覧数/ランキング・コメント欄（UGC）まで揃いコミュニティが稼働。一方 PC初期表示の左上をログインフォームが占有し、第一画面に「何のサイトか」を伝えるコピー/見出し（h1）が乏しい。アクセス増主軸なのに新規来訪者の“まず見て楽しむ”体験よりログインが優先される構造を課題化。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：ヒーロー比較が魅力的／新着活発（2026/06）／閲覧数・ランキングの仕組みが既にある／コメント欄でコミュニティ稼働。<br><strong>⚠️課題</strong>：PCのFV左上をログインが占有／FVに一言説明が乏しい（3秒で伝わらない）／主ナビが歯車アイコンで回遊・内部リンク弱／（継続）OGP・個別ページJS描画・h1/canonical 無し。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J06 トップFV再設計＝非ログイン閲覧者を主役に（ログインを従に）🔴／R-J07 FVにサービス説明一文＋「人気/エリアから探す」導線（h1兼用）🟡。<strong>次の一手</strong>＝R-J06＋R-J07 を一体で着手し入口体験を改善。本丸 R-J01/J02・Search Console接続は最優先で継続。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規追記なし（Q-J01〜J04 未回答）。新規所見 R-J06・R-J07 を追加。未完了 R は最新レポートの🔧表で継続追跡。</p>
+  </section>
+
+  <!-- ===== Cycle 001 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 001 — 2026-06-27（今昔写語・初回診断）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC・GA4 ともに未連携（データ未取得）。<code>hp-audit</code>（配信HTML）＋ <code>hp-shot</code>（JS描画後スクショ）によるサイト実査。効果実測はデータ接続後に予約。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>総評</strong>：「昔↔今の同じ場所」を見比べる体験は本質的に強いコンテンツ（懐かしさ・発見・地域性）で、SNS拡散・画像検索と相性が良い。title/description が配信されている点は rally より一歩進んでいる（◯）。一方で ギャラリー本体がJS描画＝個別比較が検索に出にくく、ビジュアル product なのにOGPが無く、最も拡散されるべき before/after が共有時に映えない。アクセス増の本丸は「各比較ページを検索（特に画像検索）とSNSの入口にすること」。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>✅良い点</strong>：title/description 配信あり／コンテンツが強い／検索・一覧・ログイン機能が揃う／viewport あり。<br><strong>⚠️課題</strong>：OGP/Twitterカード無し／ギャラリーJS描画でインデックスされにくい／JSON-LD無し／h1・canonical無し／投稿(UGC)導線が初見で見えにくい。</p>
+    <p class="text-sm text-gray-700"><strong>提案</strong>：R-J01 OGP整備🔴／R-J02 個別ページSSR+固有title/h1🔴／R-J03 画像SEO🟡／R-J04 投稿導線(UGC)🟡／R-J05 h1+canonical+sitemap🟢。<strong>次の一手</strong>＝R-J01(Quick win)＋R-J02方針(Q-J02)＋Search Console接続(Q-J04)。</p>
+    <p class="text-xs text-gray-500 mt-2">対応記録：from-president.md＝新規（初回・指示なし）。ゴール「アクセス増主軸＋全方位」・実装担当「専用機(konjaku-dev)」を社長確定→ spec.html に反映。</p>
+  </section>
+
+  <!-- ===== Cycle 000 スナップショット ===== -->
+  <section class="mb-6 opacity-80 border-t border-gray-200 pt-6">
+    <h2 class="text-lg font-bold mb-1">Cycle 000 — 2026-06-27（ループ登録）</h2>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li>今昔写語（自社プロダクト）を <code>/hp-loop konjaku</code> としてループに登録。掲示板3層・社長指示ファイル・日次cron（04:30）・mailbox許可リストを新設。</li>
+      <li>URL（konjaku-photo.jp 到達200）・ゴール（アクセス増主軸＋全方位）・実装担当（konjaku-dev＝専用機）を確定。GSC/GA4 は未連携（接続待ち）。</li>
+    </ul>
+  </section>
+
+</div>
+</body>
+</html>

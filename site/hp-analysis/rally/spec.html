@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全国スタンプラリー HP分析｜確定・仕様｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">全国スタンプラリー</a>
+    <span class="mx-1">/</span>
+    <span>確定・仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 確定・仕様 — 全国スタンプラリー</h1>
+  <p class="text-gray-600 mb-6">変わりにくい前提・背景の常設リファレンス（サイト前提・確定回答・データソース・役割分担）。確定したことだけをここに置く。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-semibold">📐 確定・仕様（このページ）</span>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">サイト前提</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">プロダクト</td><td class="py-1">全国スタンプラリー（株式会社はなさか 自社プロダクト・hana-tools client_id 21 / project_id 69）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">対象URL</td><td class="py-1"><a href="https://check-rally.com/" class="text-blue-600 hover:underline font-mono">https://check-rally.com/</a>（✅ 到達200・2026-06-27）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">✅ <strong>参加者の利用・アクセス増</strong>（B2Cエンドユーザーの利用拡大。社長確定 2026-06-27）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">事業内容</td><td class="py-1">B2Cスタンプラリー Webアプリ。アカウント作成（メール認証）→ GPSでスポットにチェックイン → スタンプ収集 → ランキング・コレクション。ゲスト閲覧導線あり（「登録せずにスポットを探す」）。<span class="text-gray-500">※「ひらがな基調UI」は 2026-07 のリニューアルで通常表記に刷新済み</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">種別/技術</td><td class="py-1">🟡 <strong>2026-08-15（Cycle 018）実査で前提を再更新</strong>：配信HTMLに title・meta description・ページ別 h1・本文が含まれる（推測：SSR/プリレンダ。方式は Q-R01 で rally-dev に照会中）。<span class="text-rose-700">⚠️ <strong>2026-08-16（Cycle 021）訂正</strong>：「未知パスは404を返すサーバルーティング」と書いていたが、<strong>それが成り立つのはトップ直下だけ</strong>。<strong><code>/spots/</code> 配下は存在しないID・スラッグ・コードでも HTTP 200 を返す（soft-404）</strong>＝<code>/spots/zzz</code>・<code>/spots/cities</code>・<code>/spots/prefectures/zzz</code>・<code>/spots/themes/zzz</code>・<code>/spots/cities/99999999</code> を実測（→R-R27）。</span><br><span class="text-rose-700">⚠️ <strong>「全ページ同一 title」は誤りだったため訂正</strong></span>（過去は <code>/ranking</code> 1ページのみで全体を判断していた）。<strong>メタ層は2階建て</strong>＝<br>・<code>/spots/*</code> 系（areas・themes・スポット詳細）＝<strong>固有 title＋固有 description＋OGP 3件（og:title/description/type）＋twitter 3件</strong>を配信<br>・アプリ主要ルート（<code>/</code>・<code>/map</code>・<code>/ranking</code>→<code>/ranking/points</code>・<code>/login</code>）＝<strong>トップと同一の既定 title/description・OGP ゼロ</strong>（<code>/register</code> のみ固有 title）<br>・<strong>インスタンス単位は未対応</strong>＝スポット詳細の title は「スポット詳細 #496」というプレースホルダ（描画後も同じ）・h1/h2/h3 ゼロ／テーマ詳細は親一覧と title/desc が完全同一（→R-R21）<br><strong>全ページ共通で欠けているもの</strong>＝canonical・JSON-LD・<strong>og:image</strong>（→R-R01 残件・R-R02）。<span class="text-gray-500">旧前提「配信HTMLに title/meta/h1 が無い完全SPA」は 2026-07-20 に解消済み</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">規模（確定）</td><td class="py-1">✅ <strong>スポット総数 = 14,477件</strong>（2026-08-15 Cycle 020 実測＝<code>/spots/areas</code> の広域エリア別件数を合算）。内訳＝関西3,548／関東2,249／東海1,309／九州1,280／東北1,146／甲信越1,127／中国1,057／北海道969／四国746／北陸665／沖縄381。GA4 に <code>/spots/14701</code> が出る観測（ID上限）とも整合。<strong>Q-R06② はこれで解決</strong>（社長への確認不要）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ページ構造<br>（<strong>5層</strong>・Cycle 020 確定／<span class="text-sky-700">Cycle 021 で市区町村層を追加</span>）</td><td class="py-1">✅ 発見層を通しで実査し全体像が確定：<br>・<code>/spots/areas</code>（広域エリア一覧・<strong>11エリア</strong>）→ title「広域エリア一覧 ｜ スタンプラリー」＝<strong>固有</strong><br>・<code>/spots/prefectures</code>（都道府県一覧）→ <code>/spots/prefectures/&lt;県&gt;</code> <strong>47件</strong>。<span class="text-rose-700"><strong>47県すべてが同一 title</strong></span>（東京＝北海道を実測確認）。数値ID形式（<code>/spots/prefectures/13</code>）はスラッグへリダイレクト＝<strong>重複URL問題は無い</strong><br>・<code>/spots/themes</code>（テーマ一覧・<strong>23テーマ</strong>／解説文つき）→ <span class="text-rose-700"><strong>title/description が <code>/spots/prefectures</code> と完全同一＝別ページの説明</strong></span>。<code>/spots/themes/&lt;slug&gt;</code> 23件も親と同一 title（→R-R25）<br>・<span class="text-sky-700"><strong>【Cycle 021 追加】<code>/spots/cities/&lt;コード&gt;</code>（市区町村・第4層）</strong></span>＝都道府県ページから辿る層。愛知県＝<strong>33市区町村・231スポット</strong>／名古屋市（23100）＝<strong>67スポット＋12区で絞り込み</strong>。<strong>全国の総数は未実測（推測：数百〜1,500ページ）</strong>。<span class="text-rose-700"><strong>title/description は都道府県層と完全同一の既定値・h1 ゼロ</strong></span>（→R-R21）<br>・<code>/spots/&lt;id&gt;</code>（スポット詳細・<strong>14,477件</strong>）→ title「スポット詳細 #NNN」＝プレースホルダ（→R-R21）<br><strong>＝約15,000ページ超が実質4種類の title を共有している</strong>。<code>/spots</code>（一覧トップ）だけが404＝戻り導線ゼロの行き止まり（→R-R24）。<span class="text-rose-700">逆に <code>/spots/</code> 配下の<strong>存在しないURLは200</strong>を返す（→R-R27）＝<strong>ステータスと画面が逆転している</strong></span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">主要導線</td><td class="py-1">ホーム／スポットを探す（＝<code>/map</code>）／エリアからさがす（<code>/spots/areas</code>）／テーマで探す（<code>/spots/themes</code>）／キーワードで探す／ランキング（<code>/ranking/points</code>）／ログイン（<code>/login</code>）／無料で始める（<code>/register</code>）。<br>⚠️ <strong>PCとSPで導線が非対称</strong>（Cycle 020 実測）＝PCは左サイドバーに常時「ログイン」「無料で始める」があるが、<strong>SPではロゴと ☰ だけになり、<code>/map</code>・<code>/spots/themes</code>・<code>/spots/areas</code>・スポット詳細のファーストビューに参加導線が出ない</strong>（→R-R22・R-R26）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">既知の実装不具合</td><td class="py-1">🔴 <strong>浮動CTA「近くのスポットを探す」がSPで下層要素を覆う</strong>＝固定配置のためスクロール中も常に同じ位置でカード1枚分を隠し続ける。<strong>6種類のページで再現済み</strong>（トップSP＝ログイン導線／スポット詳細SP＝所在地／エリア一覧SP＝「関東」カード名と2,249件／テーマ一覧SP＝テーマ名／<span class="text-sky-700">都道府県SP＝岡崎市カード（Cycle 021）／市区町村SP（Cycle 021）</span>）＝<strong>個別ページではなくコンポーネントの問題</strong>（→R-R23）<br>🟡 <strong>一覧カードの画像が全面プレースホルダ（ピン絵）</strong>＝<code>/map</code>・<code>/spots/areas</code>・<code>/spots/themes</code>・<code>/spots/prefectures/*</code>・<code>/spots/cities/*</code> の<strong>6画面すべて</strong>。一方スポット詳細には高品質写真がある（同一市内で実測）＝<span class="text-gray-500">推測：一覧側に写真が配線されていない</span>（→R-R28）<br>🔴 <strong>存在しないURLが200を返す（soft-404）</strong>＝<code>/spots/</code> 配下のみ。県/テーマ/市は「エリアが見つかりません」を200で表示、スポットIDは<strong>「読み込み中…」のまま停止</strong>（→R-R27）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">データソース・ツール</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">GSC</td><td class="py-1">✅ <strong>連携済み・データ着弾（2026-08-15 Cycle 020 で初取得）</strong>。dataset＝<code>searchconsole_rally</code>（社長が 2026-08-15 にエクスポート設定・見込みより2日早く着弾）。取得＝<code>bin/.venv/bin/python3 bin/gsc-fetch.py {summary,queries,pages} --dataset searchconsole_rally --days N</code>。<br><strong>初回の実測値（＝効果検証の分母）＝2026-08-13 の1日分</strong>：クリック4／表示13／CTR 30.77%／平均掲載順位 2.7。<strong>表示されているURLは <code>https://check-rally.com/</code> の1本のみ</strong>（スポット・テーマ・都道府県・エリアは<strong>表示回数ゼロ</strong>）。クエリ＝「全国 スタンプラリー」3表示0クリック順位4.0／「全国スタンプラリー」2表示0クリック順位5.0（他は匿名化枠）。<br>⚠️ <strong>エクスポートは設定日以降しか蓄積されない</strong>＝過去に遡った分析はできない。データラグは2〜3日</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">GA4</td><td class="py-1">✅ <strong>連携済み（2026-08-15 Cycle 018 で初取得）</strong>。dataset＝<code>analytics_543430115</code>（BigQuery 実査でホスト名 <code>check-rally.com</code> により特定）。<strong>2026-06-27 から日次エクスポート稼働</strong>。取得＝<code>bin/.venv/bin/python3 bin/ga4-fetch.py {summary,events,sources,pages,landing} --dataset analytics_543430115 --days N</code>（<code>--by-device</code> でデバイス分割）。<br>⚠️ <strong>限界（重要）</strong>：<strong>カスタムCVイベントが未設定</strong>＝取れるのは自動収集のみ（page_view／user_engagement／scroll／session_start／first_visit／<strong>form_start</strong>／click）。<strong>アカウント登録の完了・スタンプ取得は記録されていない＝北極星の達成そのものが測定不能</strong>（→R-R17）。<code>ga4-fetch.py</code> の CV モードは既定イベント名（はなさか用）のため rally では常に 0 になる＝<strong>cv_sessions=0 を「CVゼロ」と読まない</strong>。<br>⚠️ <strong>内部トラフィック除外なし</strong>＝<code>/admin/*</code> の閲覧と <code>tagassistant.google.com</code> 経由の検証セッションが数字に混入する</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">基準値<br>（2026-08-15）</td><td class="py-1">効果検証の分母＝<strong>GA4 41日間（2026-07-05〜08-14・稼働34日）</strong>：ユーザー<strong>80</strong>／page_view 498／セッション110／<code>form_start</code> <strong>13件（6ユーザー）</strong>。流入＝直接60・Google organic 33・Yahoo organic 8・Bing 1・tagassistant 8（ノイズ）＝<strong>オーガニック計42セッション/39ユーザー</strong>。着地＝トップ82（mobile 48/desktop 34）・<strong>スポット詳細に12セッション以上が分散（ほぼモバイル）</strong>・<code>/register</code> 閲覧6/着地1。<span class="text-gray-500">※以降の施策効果はこの値との比較で判定する</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">カバレッジ台帳</td><td class="py-1">✅ <strong><code>data/hp-loop/rally/coverage.md</code>（2026-08-15 Cycle 018 新設）</strong>。踏査状況・種プール・ブロッカー・定石 last-run 表を保持（他5サイトと同型。rally だけ17サイクル無台帳だった）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">サイト取得</td><td class="py-1">✅ <strong>2026-07-20 開通確認</strong>：<code>bash bin/hp-audit.sh &lt;URL&gt;</code>（on-page信号・--text で本文精読）／<code>bin/hp-shot.sh</code>（スクショ・<strong>bash 前置なしの形で呼ぶ</strong>）／<code>bin/hp-serp.sh</code>（インデックス確認）。⚠️ <strong>可否は許可リストの「呼び出し形」で分かれる</strong>（bash 前置の有無）＝「権限拒否」と判断する前に両形を試す。素の <code>curl</code> は不可のまま（hp-audit で代替）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">役割分担</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li>診断・提案＝本ループ（<code>/hp-loop rally</code>）。実装＝<code>rally-dev</code>（<strong>✅ 2026-08-15 mailbox 開通</strong>）。意思決定・回答＝社長（<code>from-president.md</code>）。</li>
+    <li><strong>最新レポートの配信経路（2026-08-15 確定）</strong>：<code>bin/mailbox.sh local-send --from hp-loop-rally --to rally-dev --type report</code> で毎サイクル1通（着手可能な粒度・プレーンテキスト・<code>needs_approval</code> なし）。拠点PC側は VPS の mailbox API を Tailscale 経由で読む。拠点PCには websystem テンプレの通信ルール（<code>rules/modes/mailbox.md</code>／<code>hp-loop-dialogue.md</code>・2026-08-15 commit 2f47b24）が配布済で、報告は「観測可否の二分岐」形式（rally は SPA のため<strong>解析ループの静的GETに映らない変更が多い＝別確認の明示</strong>が増える想定）で返る。</li>
+    <li><strong>ただし「実装」と「サーバ／インフラ」は別</strong>：<code>rally-dev</code> はアプリ実装側。証明書（R-R18）・robots/sitemap 配置（R-R06）・本番の稼働そのもの（R-R20）を触れるのが誰かは<strong>未確定＝Q-R08 で確認中</strong>。</li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">運用（このループの回し方）</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">頻度</td><td class="py-1">✅ <strong>日次（毎日 04:00・cron <code>daily hp-loop-rally</code>）へ復帰（2026-08-15）</strong>。2026-07-08 社長決定「データ連携が開通したら日次へ戻す」の条件が成立したため（GA4 開通・rally-dev 開通＝入力凍結が解消）。<span class="text-gray-500">※週次だった期間（2026-07-08〜08-15）＝GSC/GA4 未連携・実装配線なしで日次の効果が逓減していたための右サイズ化</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">随時起動</td><td class="py-1"><code>to: hp-loop-rally</code> の新着（社長の回答・データ連携・実装報告）があれば反応tickで即起動＝週次でも取りこぼしなし</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">分析の継続</td><td class="py-1">週次でも<strong>分析は止めない</strong>（診断・提案は継続）。ただし在庫が飽和している間は<strong>新規起票より在庫の棚卸し</strong>（統合・優先度の付け直し・生存確認）にサイクルを使う（hp-loop v0.10）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">確定した質問の回答</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-24 font-mono">Q-R07</td><td class="py-1">✅ <strong>rally は週次運用に落とす</strong>（社長決定 2026-07-08）。塞がり（GSC/GA4 未連携・rally-dev 未登録・当環境のネット未許可）が解けたら日次へ戻す。<span class="text-gray-500">※ 掲示板が本決定を取り込めず Cycle 008〜012 で「未回答」として再掲していた誤りを Cycle 013 で訂正</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-24 font-mono">Q-R02</td><td class="py-1">✅ <strong>□（豆腐）は本番で解消済み</strong>（2026-07-20 Cycle 014 のライブスクショで実測確認・社長回答不要化。リニューアルで表示フォント問題は消滅）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-24 font-mono">Q-R03</td><td class="py-1">✅ <strong>GSC・GA4 とも社長が 2026-08-15 に対応済み</strong>。GA4＝<code>analytics_543430115</code> で実データ取得成功（41日分・2026-06-27 から稼働）。GSC＝<code>searchconsole_rally</code> のエクスポート設定完了・データ着弾待ち（08-17 頃）。<strong>17サイクル続いた「データ未取得」が解消し、効果検証（PDCA の C）が可能になった</strong>。詳細は上表「データソース・ツール」</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-24 font-mono">Q-R09</td><td class="py-1">✅ <strong>社長の確認を待たずに解決</strong>（2026-08-15）。Cycle 017 が検出した接続不能は Cycle 018 の実測で復旧を確認（HTTP 200）＝<strong>スマホでの確認依頼は不要になった</strong>。<span class="text-gray-500">※原因は未特定＝Q-R08 と R-R19 が引き継ぐ</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-24 font-mono">Q-R04</td><td class="py-1">✅ <strong>位置情報は非ブロッキング化＋ゲスト閲覧導入済み</strong>（2026-07-20 実測＝実装が事実上の回答。位置拒否でも警告バナーのみ・「登録せずにスポットを探す」あり。残余のフォールバック内容は R-R08 で追跡）</td></tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全国スタンプラリー HP分析｜アーカイブ｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">全国スタンプラリー</a>
+    <span class="mx-1">/</span>
+    <span>アーカイブ</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ — 全国スタンプラリー</h1>
+  <p class="text-gray-600 mb-6">完了したもの（✅本番反映済みの提案・❌中止・✅解決済みの質問）と、過去サイクルの記録（スナップショット）を新しい順に蓄積。履歴は消さない・改変しない。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 確定・仕様</a>
+    <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-semibold">🗄️ アーカイブ（このページ）</span>
+  </div>
+
+  <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
+
+  <!-- ===== 完了した提案（Cycle 022 でクローズ） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-2">✅ 完了した提案 — Cycle 022（2026-08-17）でクローズ</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong><code>R-R16</code> ディープリンク／共有着地の整合性 — ✅完了（検証済み・定石へ移管）</strong><br>
+      GA4 に出ている実在ルート10本＋未知パスを1本ずつ直接GETで検証（Cycle 019 実施）。<strong>結果＝<code>/spots</code> のみ404、他は全て200</strong>（スポット詳細 <code>/spots/496</code>・<code>/spots/6004</code>・<code>/spots/14646</code> はいずれも冷間の直リンクで正常表示）。「GA4 に <code>/spots</code> が出ているのに本番404」という不一致は<strong>切り分け完了＝実在する行き止まりだった</strong>（→ <strong>R-R24</strong> として独立起票）。<span class="text-rose-700">⚠️ Cycle 021 訂正：当時「未知パスも正しく404」としたのはトップ直下だけを見た検証で、<code>/spots/</code> 配下の未知パスは<strong>200 を返す</strong>（→ <strong>R-R27</strong> として独立起票）。</span><br>
+      <span class="text-gray-500">→ 本件の役割（切り分け）は完了し、継続監視は<strong>台帳の月次定石 #13（GA4実URL × 本番GET のステータス突合）</strong>へ移管済み。残作業が無いため Cycle 022 でクローズ。派生した R-R24・R-R27 は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>で進行中です。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== Cycle 021 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 021 — 2026-08-16（日次自動運転に復帰後の初回：<span class="text-red-700">存在しないURLが「正常ページ」として返っている</span>／<span class="text-sky-700">未発見だった「市区町村ページ」を発掘</span>）</h2>
+    <p class="text-xs text-gray-500 mb-4">※ 当時のスナップショット。<span class="text-emerald-700">本サイクルで「監視中」としていた Search Console の停滞は、<strong>Cycle 022 で 8/14 分が着弾して解消しました</strong>（通常のデータ遅延でした）。また「本番が3週間以上動いていない」という当時の診断も、<strong>Cycle 022 で 3週間超ぶりのデプロイを検出したことで更新されています</strong></span>。最新の状況は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> を参照。</p>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得できましたが 8/13 の1日分から増えていません</strong>（24時間経過・下記で説明）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/14）。社長入力（from-president.md）＝新規追記なし。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 11本 ✅／hp-shot 4ページ×PC/SP ✅／素の <code>curl</code>・<code>hp-links.py</code> は<strong>3回目の再試行も承認不可</strong>＝リンクの href 抽出ができない点は前回までと同じ限界）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle021-20260816.md</code>、スクショ＝<code>cycles/rally/shots/c021-*.png</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-16 早朝・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>存在しないURLが200を返す</strong></td><td class="py-1 px-2">デタラメなURLを6本作ってGETしたところ、<code>/spots/</code> 配下は<strong>すべて「正常（HTTP 200）」で返ってきました</strong>＝<code>/spots/zzz-not-exist-123</code>・<code>/spots/cities</code>・<code>/spots/prefectures/zzz</code>・<code>/spots/themes/zzz</code>・<code>/spots/cities/99999999</code>。<span class="text-emerald-700">※トップ直下（<code>/zzz-not-exist</code>）は正しく404を返します＝問題は <code>/spots/</code> 配下だけ</span>。画面は「エリアが見つかりません」（＝中身は無い）／スポットIDの場合は<strong>「読み込み中…」の回転マークのまま止まります</strong></td><td class="py-1 px-2">🔴 <strong>R-R27 起票</strong>（新規）</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2"><strong>市区町村ページの発見</strong></td><td class="py-1 px-2">GA4 の閲覧URL一覧に <code>/spots/cities/11100</code> 等が出ていたので初めて開いたところ、<strong>これまで気づいていなかった「市区町村」の層がありました</strong>。<code>/spots/prefectures/aichi</code>＝<strong>愛知県 33市区町村・231スポット</strong>（名古屋市67／犬山市30／豊田市11…）、<code>/spots/cities/23100</code>＝<strong>名古屋市67スポット＋「区でしぼりこむ」12区</strong>。<strong>中身は十分あるのに、title・説明文は都道府県ページと1文字も違わない既定値・見出し(h1)もゼロ</strong></td><td class="py-1 px-2">🔴 <strong>R-R21 の対象層に追加</strong>（4層へ）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2">カード画像<br>（6画面目）</td><td class="py-1 px-2">愛知県ページ・名古屋市ページのスポットカードも<strong>全件が「ピンの絵」のプレースホルダ</strong>。名古屋市の1ページ目は<strong>大須観音・ナゴヤドーム・名古屋市博物館・白鳥庭園・久屋大通公園</strong>など著名スポット20件ですが、<strong>写真は1枚も出ていません</strong>。一方<strong>同じ名古屋市中区の「中部電力 MIRAI TOWER」の詳細ページには高品質な写真があります</strong></td><td class="py-1 px-2">🟡 <strong>R-R28 起票</strong>（種プールから卒業）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">浮動CTAの重なり<br>（6種類目まで確認）</td><td class="py-1 px-2">都道府県ページSPで<strong>「近くのスポットを探す」が岡崎市カードを覆う</strong>／市区町村ページSPでも同じ位置に固定表示。既報の4型（スポット詳細・トップ・エリア一覧・テーマ一覧）と合わせ<strong>6種類のページで再現</strong></td><td class="py-1 px-2">🔴 <strong>R-R23 の根拠を追加</strong>（新規番号にはしない）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2"><strong>Search Console が増えていない</strong></td><td class="py-1 px-2">前回（8/15夜）に届いた <strong>8/13 の1日分から、24時間経っても増えていません</strong>（8/14 分が未着。7日窓・14日窓とも同じ）。数字は前回と同一＝13表示・4クリック・平均掲載順位2.7・<strong>表示URLはトップ1本のみ</strong></td><td class="py-1 px-2">🟡 <strong>監視中</strong>（通常のデータ遅延は2〜3日＝<strong>まだ正常の範囲</strong>。明日も増えなければ設定を疑い、その時点でご相談します）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップHTML＝<strong>55,994B で Cycle 018／019／020 とバイト同一</strong>＝<strong>3週間を超えて本番の更新がありません</strong>。応答 0.098〜0.145秒（良好）</td><td class="py-1 px-2">⚠️ <strong>在庫が消化されていない</strong>（下記）</td></tr>
+        <tr><td class="py-1 px-2">継続確認</td><td class="py-1 px-2">apex http→https 301→<strong>200</strong>／apex https <strong>200</strong>／<code>www</code>＝SSL証明書エラー継続（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code>＝404継続（R-R06）／<code>/privacy</code>・<code>/terms</code>＝404継続（R-R09）</td><td class="py-1 px-2">R-R18・R-R06・R-R09 継続</td></tr>
+      </tbody>
+    </table>
+
+    <div class="border-2 border-red-300 bg-red-50 rounded-lg p-4 mb-5">
+      <h3 class="font-bold text-red-800 mb-2">🚨 いちばんの発見をかみ砕くと — 「存在しない住所に、立派な看板の空き家が無限に建てられる」状態</h3>
+      <p class="text-sm text-gray-800 mb-2">ウェブでは「そのページはありません」を伝える正式な合図（<strong>404</strong>）があります。検索エンジンはこの合図を見て「このURLは無いんだな」と理解し、登録（インデックス）しません。<strong>ところが <code>/spots/</code> 以下は、どんなデタラメなURLでも「200＝正常なページです」と答えてしまいます</strong>。しかもその偽ページには、サイドバーもメニューも「無料で始める」ボタンも普通に付いています。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>いま実害が出ているわけではありません</strong>（そもそも検索エンジンにトップ以外が1ページも登録されていないため）。<strong>問題は、これから効かせようとしている2つの施策と正面衝突すること</strong>です＝<strong>R-R06（sitemap.xml を置いて1万4千件を検索エンジンに教える）</strong>と <strong>R-R21（1ページずつに正しい名札を付ける）</strong>。この2つが入った瞬間、検索エンジンはこのサイトを本格的に巡回し始めます。そのときに「何を打っても200が返る」状態だと、<strong>巡回の労力が存在しないURLに吸われ、「読み込み中…」だけの空ページが検索結果に載りかねません</strong>。</p>
+      <p class="text-sm text-gray-800"><strong>だからこの1件は、R-R06・R-R21 より<u>先に</u>直しておく「土台の掃除」として起票しました（R-R27）</strong>。直し方はシンプルで、該当のデータが見つからないときに 404 を返すようにするだけです（工数＝小）。<span class="text-gray-600">なお皮肉なことに、<strong>唯一きちんと404を返している <code>/spots</code> は、ヘッダーも戻るボタンも無い行き止まり</strong>です（R-R24）＝<strong>合図と画面が逆</strong>になっているので、2件セットで直すのが自然です。</span></p>
+    </div>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路①（発見される）の「土台」に穴が見つかった</strong>：これまでは「名札を付ける（R-R21・R-R25）」「地図を渡す（R-R06）」と、<strong>攻めの手ばかり</strong>を積んできました。今回見つかったのは<strong>その手が効き始めた瞬間に足を引っぱる守りの欠陥</strong>（R-R27）です。順番として、<strong>掃除 → 地図 → 名札</strong> に組み替えました。</li>
+        <li><strong>「まだ見ていない層」がまだ残っていた</strong>：21サイクル回して、今日ようやく<strong>市区町村ページ</strong>に気づきました。しかも <strong>「〇〇市 観光」「名古屋市 スタンプラリー」はローカル検索の需要が明確</strong>で、都道府県（47件）より具体的なぶん競合も薄い層です。<strong>新しい提案番号は作らず、R-R21（名札の実体化）の対象層に足しました</strong>＝同じテンプレート改修1回で一緒に直るためです。</li>
+        <li><strong>「空の店先」問題が経路②の一貫した課題として固まった</strong>：カード画像のプレースホルダが<strong>6画面すべてで再現</strong>し、しかも<strong>同じ市内のスポット詳細には写真がある</strong>ことが分かりました（＝写真が無いのではなく、一覧に配線されていない＝<span class="text-gray-500">推測</span>）。初めて来た人が最初に見る面が全部「空の絵」なのは、登録前の第一印象を確実に削ります。前回は種プールに置きましたが、今回<strong>独立した提案（R-R28）に格上げ</strong>しました＝各提案の「ついでに」に散らすと、誰も直さないまま残るためです。</li>
+        <li><strong>いま最大のボトルネックは「提案の数」ではなく「実装が動いていないこと」</strong>：<strong>本番のトップページは3週間を超えて1バイトも変わっていません</strong>。回答待ちでない<strong>✅すぐ着手できる提案が13件</strong>たまっています。<span class="text-gray-500">（在庫前進トリップワイヤに基づき、この事実を毎日の日報にも出します）</span></li>
+        <li><strong>過去の記述を1件訂正</strong>：Cycle 019 で「未知パスも正しく404を返す」と書きましたが、<strong>それはトップ直下だけを見た検証でした</strong>。<code>/spots/</code> 配下は200を返します（R-R16 の記述を訂正済み）。</li>
+        <li><strong>追わないもの／保留</strong>：「読み込み中…」で止まる偽ページは、<strong>実在スポットでも通信失敗時に同じ画面になるのか</strong>が未確認のため<strong>種プール</strong>（rally-dev へ照会）。見出しに出る「□」（豆腐文字）は<strong>当方の描画環境にその絵文字が無いだけの可能性が高い</strong>ので<strong>断定せず</strong>実機確認を依頼（同じ画面の 📍 は正常に出ているため）。</li>
+        <li><strong>今サイクルの新規Rは2件</strong>（R-R27・R-R28）＋既存2件の対象・根拠を拡張（R-R21・R-R23）。新しい質問は<strong>ゼロ</strong>です。</li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。<strong>着手推奨の順序を更新しました＝R-R17（計測イベント＋内部除外）→ <span class="text-red-700">R-R27（存在しないURLは404に＝土台の掃除・新規）</span> → R-R24（404画面を入口に）→ R-R25（テーマ23ページの名札と画像）→ R-R21（個別ページの名札・スポット14,477＋<span class="text-sky-700">市区町村</span>＋都道府県47）→ R-R22（スポット詳細に参加の扉）→ R-R28（一覧カードの写真・新規）→ R-R26（<code>/map</code> の扉と名札）→ R-R23（浮動CTA・全ページ共通）→ R-R02（og:image）</strong>。あわせて<strong>照会4本</strong>＝(a)(b) 既出の href 2本 (c) 市区町村ページの全国総数 (d) スポット取得が失敗したときの画面仕様と「□」の実機での見え方。</p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（21サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。deploy-log＝本番変更の検出なし（トップHTMLはバイト同一）＝追記なし。定石＝#1変化検知・#2進捗追跡・#3到達性・#4 GA4・#4b GSC を実施／<strong>#13（URL突合）は月次期日 09-14 だが、手順を拡張して部分前倒し実施＝この拡張が R-R27 の発見につながった</strong>／#5 ビジュアル定点・#6 全体棚卸し・#7 競合対比・#8 win-patterns は 08-22 期日で未到来／#9 配管点検（09-02）・#10 定石見直し（09-14）も未到来／#12 月次実績は対象外（9月最初のサイクル）。Cycle 020 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へスナップショット移動。</p>
+  </section>
+  <!-- ===== Cycle 020 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 020 — 2026-08-15（臨時・手動起動4回目：<span class="text-red-700">Search Console 初着弾</span>／<span class="text-sky-700">スポット総数14,477件を実測確定</span>／<span class="text-emerald-700">テーマ層＝最短のレバーを発見</span>）</h2>
+    <p class="text-xs text-gray-500 mb-4">※ 当時のスナップショット。<span class="text-emerald-700">本サイクルで「未知パスも正しく404」としていた前提は <strong>Cycle 021 で訂正されました</strong>（<code>/spots/</code> 配下は存在しないURLでも200＝R-R27）。また本サイクルで「4層」とした発見層は、<strong>Cycle 021 で市区町村層が加わり5層</strong>と分かりました</span>。最新の状況は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> を参照。</p>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝<span class="text-red-700">初めて実データを取得</span></strong>（<code>searchconsole_rally</code>・<strong>08-13 の1日分のみ</strong>＝予定より2日早い着弾。母数が小さいため傾向は語らない）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓＋直近3日）。社長入力（from-president.md）＝新規追記なし。mailbox＝新着なし（前回の開通通知は処理済み）。本番実査＝<strong>実施</strong>（hp-audit 13本 ✅／hp-shot 3ページ×PC/SP ✅／素の curl・<code>hp-links.py</code> は<strong>再試行したが承認不可</strong>＝リンクの href 抽出ができない点は前回と同じ限界）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle020-20260815.md</code>、スクショ＝<code>cycles/rally/shots/c020-*.png</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-15 夜・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>GSC 初着弾</strong></td><td class="py-1 px-2">08-13 分が届いた（<strong>13表示・4クリック・CTR30.8%・平均掲載順位2.7</strong>）。<strong>検索結果に出ていたページはトップ1本のみ</strong>。スポット・テーマ・都道府県・エリアの各ページは<strong>表示回数ゼロ</strong>。クエリは「全国 スタンプラリー」3表示0クリック・順位4.0／「全国スタンプラリー」2表示0クリック・順位5.0（残りは匿名化枠）</td><td class="py-1 px-2">🚀 <strong>20サイクル越しの「データ未取得」解消</strong>／R-R21・R-R25 の裏づけ</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2"><strong>スポット総数の確定</strong></td><td class="py-1 px-2"><code>/spots/areas</code> を初めて描画取得したところ、<strong>広域エリアごとの件数が画面に出ていた</strong>＝関西3,548／関東2,249／東海1,309／九州1,280／東北1,146／甲信越1,127／中国1,057／北海道969／四国746／北陸665／沖縄381。<strong>合計 14,477件</strong>（GA4 に <code>/spots/14701</code> が出る観測とも整合）</td><td class="py-1 px-2">✅ <strong>Q-R06② を社長に聞かず解決</strong>／R-R21 の効果が桁で言える</td></tr>
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2"><strong>テーマ層の発見</strong></td><td class="py-1 px-2"><code>/spots/themes</code> に<strong>23本のテーマ企画が固有の解説文つきで既に存在</strong>（日本三名瀑・現存十二天守・西国三十三所・国宝五城・日本の世界遺産ほか）。GA4 で<strong>トップを除けば最大級の入口</strong>（一覧38views・着地7セッション／各テーマ詳細も計28views以上・着地2セッション）。<strong>しかし一覧の title/description が <code>/spots/prefectures</code>（都道府県別検索）と完全に同一</strong>＝別ページの説明。カード画像は全件プレースホルダ</td><td class="py-1 px-2">🔴 <strong>R-R25 起票</strong>（今サイクル最重要）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2"><strong>名札の全体像（4層）</strong></td><td class="py-1 px-2">発見層を通しで実査＝<strong>都道府県ページ47件は全県まったく同じ title</strong>（東京＝北海道を実測確認）／テーマ詳細23件は親と同一（C018）／スポット詳細14,477件は「スポット詳細 #NNN」。<strong>約14,551ページが実質4種類の title を共有</strong>。<span class="text-emerald-700">※<code>/spots/prefectures/13</code>→<code>/hokkaido</code> のリダイレクトは正常＝重複URL問題は無い</span></td><td class="py-1 px-2">🔴 <strong>R-R21 の対象と規模を確定</strong>（都道府県層を追加）</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2"><code>/map</code> 実査<br>（前回の宿題）</td><td class="py-1 px-2"><strong>閲覧数2位（45日で83回）</strong>。位置情報を許可しなくても地図とピンは正常描画（<span class="text-emerald-700">R-R08 の一部反映が維持されている＝退行なし</span>）。しかし<strong>スマホのファーストビューに登録・ログイン導線がゼロ</strong>（PCサイドバーにはある）・<strong>title/description がトップと同じ既定値・h1 なし・OGP なし</strong>・スポットカードの画像は全件プレースホルダ。着地は6セッション＝<span class="text-gray-500">推測：サイト内を回遊した人が辿り着く面</span></td><td class="py-1 px-2">🔴 <strong>R-R26 起票</strong>／種プールの宿題を消化</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">浮動CTAの重なり<br>（4種類目まで確認）</td><td class="py-1 px-2">エリア一覧SPで<strong>「関東」カードのエリア名と件数（2,249件）が完全に隠れる</strong>／テーマ一覧SPで<strong>テーマ名が隠れる</strong>。既報のトップSP（ログイン導線）・スポット詳細SP（所在地）と合わせ<strong>4種類のページで再現</strong>＝<strong>固定配置のためスクロール中も常にカード1枚分を覆い続ける</strong></td><td class="py-1 px-2">🔴 <strong>R-R23 を「実装単位の不具合」として確定</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップHTML＝<strong>55,994B で Cycle 018／019 とバイト同一</strong>＝デプロイなし。応答 0.057秒</td><td class="py-1 px-2">✅ 定石#1（deploy-log 追記なし）</td></tr>
+        <tr><td class="py-1 px-2">継続確認</td><td class="py-1 px-2">apex http→https 301→<strong>200</strong>／apex https <strong>200</strong>／<code>www</code>＝SSL証明書エラー継続（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code>＝404継続（R-R06）／<code>/privacy</code>・<code>/terms</code>＝404継続（R-R09）</td><td class="py-1 px-2">R-R18・R-R06・R-R09 継続</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">当時の北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-2 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路①（発見される）の現在地が、初めて数字で出た</strong>：Search Console のデータが届き、<strong>「14,477件の在庫を持ちながら、検索に出ているのはトップ1枚だけ」</strong>が事実として確認できた。これまで R-R21 は「名札が空だから直すべき」という理屈だけで置いていたが、<strong>いまは「実際に1件も検索に出ていない」という観測に裏づけられた提案</strong>になった。<span class="text-gray-500">※ただし1日分＝母数が小さいので、順位や傾向はまだ語らない。</span></li>
+        <li><strong>同じ病に「工数2桁小さい入口」が見つかった</strong>：スポット詳細14,477件と同じ「中身はあるのに名札が空」という病が、<strong>テーマ23ページにも起きている</strong>。しかもテーマは<strong>企画名そのものが検索語</strong>（日本三名瀑・現存十二天守…）で、<strong>解説文はもう書けている</strong>。＝<strong>R-R25 を R-R21 より先に置く</strong>のが北極星への最短距離と判断した（大きいレバーより、確実に回る小さいレバーを先に回す）。</li>
+        <li><strong>「入口を増やす」より先に「出口を塞がない」は維持</strong>：R-R24（404を入口に）は工数が最小で全ての誤URLに効くため、順序は変えない。今回<strong>リンク元の候補がもう1つ見つかった</strong>＝エリア一覧の「‹ スポット一覧に戻る」（推測・href は未確定）。</li>
+        <li><strong>経路③（続ける理由）の穴が1つ増えた</strong>：<code>/map</code> は<strong>閲覧2位＝いちばん「使ってみよう」としている人が居る画面</strong>なのに、スマホでは参加の扉が無い（R-R26）。あわせて浮動CTAの重なりが4種類のページで再現し、<strong>個別ページの手当てでは直らない実装単位の不具合と確定</strong>した（R-R23）。</li>
+        <li><strong>計測の信頼性は引き続き先に直す</strong>：運営者のログイン操作がCV相当の数字に混入している以上、いま R-R21/R-R25 を打っても効果判定がぶれる。<strong>R-R17（イベント2つ＋内部除外）を先頭に置く判断は変えない</strong>。</li>
+        <li><strong>横道の成果</strong>：「エリア一覧を画面で見る」という、それ自体は名札の話と無関係な観察から<strong>スポット総数（14,477件）が取れ、社長への質問が1つ減った</strong>。GA4/GSC の数字を待つのではなく<strong>実際に画面を見に行ったことで、聞かずに済む答えが手に入った</strong>という例。</li>
+        <li><strong>追わないもの</strong>：<code>/spots/prefectures/13</code>→<code>/hokkaido</code> のリダイレクトは正常動作（重複URL問題は無い）と確認したので追わない。カード画像のプレースホルダは「写真が配線されていないのか・対象スポットに写真が無いのか」を切り分けてからにするため<strong>種プールへ</strong>（<span class="text-emerald-700">→ Cycle 021 で6画面目まで再現し R-R28 として起票</span>）。一般語の順位4〜5位も<strong>1日分では判断材料にならない</strong>ため種プールへ。</li>
+        <li><strong>今サイクルの新規Rは2件</strong>（R-R25・R-R26）。残りは<strong>既存Rの根拠を実測で固める</strong>ことに配分した（規模確定1件・確定への格上げ1件・候補追加1件・重要度上昇1件）。</li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。<strong>着手推奨の順序を更新しました＝R-R17（計測イベント＋内部除外）→ <span class="text-red-700">R-R25（テーマ23ページの名札と画像・最短のレバー）</span> → R-R24（404を入口に）→ R-R21（個別ページの名札・14,477件＋都道府県47件）→ R-R22（スポット詳細に参加の扉）→ R-R26（<code>/map</code> の扉と名札）→ R-R23（浮動CTA・全ページ共通）→ R-R02（og:image）</strong>。あわせて<strong>2本の href 確認依頼</strong>＝(a) トップの「すべてのスポットを見る ›」(b) エリア一覧の「‹ スポット一覧に戻る」が <code>/spots</code>（404）を指しているか。</p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（20サイクル連続）。mailbox＝新着なし（<code>hanasaka-main</code> の開通通知 M-20260815T130838 は Cycle 018 で内容反映済み・本サイクルで処理済みへ移動）。deploy-log＝本番変更の検出なし（トップHTMLはバイト同一）＝追記なし。定石＝#1変化検知・#2進捗追跡・#3到達性・#4 GA4 を実施／<strong>#4b GSC＝着弾を確認し初実施（20サイクル分の繰越を消化）</strong>／#5 ビジュアル定点・#6 全体棚卸し・#7 競合対比・#8 win-patterns は 08-22 期日で未到来／#9 配管点検（09-02）・#10 定石見直し（09-14）・#13 URL突合（09-14）も未到来／#12 月次実績は対象外（9月最初のサイクル）。Cycle 019 の記録はアーカイブへスナップショット移動。</p>
+  </section>
+
+  <!-- ===== Cycle 019 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-xl font-bold mb-1">Cycle 019 — 2026-08-15（臨時・手動起動3回目：出口のない404を発見／登録の入口を特定し前回の読み違いを訂正）</h2>
+    <p class="text-xs text-gray-500 mb-4">※ 当時のスナップショット。<span class="text-emerald-700">本サイクルで「08-17 頃の着弾待ち」と書いた Search Console のデータは、<strong>Cycle 020（同日夜）で着弾を確認しました</strong></span>。最新の状況は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> を参照。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-15 夕・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">404が行き止まり</td><td class="py-1 px-2"><code>/spots</code>（末尾スラッシュ付きも）＝<strong>HTTP 404</strong>。描画されるのは<strong>「ページが見つかりません」のカード1枚だけで、ヘッダー・ロゴ・メニュー・戻るボタンが無い</strong>（スクショ確認）。GA4 実測で45日 <strong>32views／4ユーザー</strong>が到達（うち直近3日は1ユーザーで25views＝<span class="text-gray-500">推測：検証作業</span>）</td><td class="py-1 px-2">🔴 <strong>R-R24 起票</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2">ルート健全性（新規実施）</td><td class="py-1 px-2">GA4 に出る実在ルートを1本ずつ直接GET＝<code>/map</code>・<code>/login</code>・<code>/register</code>・<code>/account</code>・<code>/footprints</code>・<code>/password-reset</code>・<code>/ranking/points</code>・<code>/spots/areas</code>・<code>/spots/themes</code>・スポット詳細3種（496・6004・14646）は<strong>すべて200</strong>。存在しないパスも正しく404。<strong>404は <code>/spots</code> の1点のみ</strong></td><td class="py-1 px-2">✅ 切り分け完了（R-R16 の宿題を消化）</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2">登録の入口を特定<br>（Cycle 018 の訂正）</td><td class="py-1 px-2">着地ページ別のフォーム入力開始＝<strong>トップ着地86セッション中9件（10.5%）</strong>／<strong><code>/register</code> 着地からは0件</strong>／<strong>スポット詳細着地12セッションからも0件</strong>。＝入力が起きているのは<strong>トップのヒーロー内メールフォーム</strong>。Cycle 018 の「登録フォームに触った人6人」＝<code>/register</code> の話、という読みは<strong>誤り</strong></td><td class="py-1 px-2">⚠️ <strong>Cycle 018 を訂正</strong>／R-R22 の根拠を差し替え</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2">計測に運営側が混入</td><td class="py-1 px-2"><code>/admin/login</code>・<code>/admin/password-reset</code>・<code>/ranking/points</code> に着地したセッションにも<strong>フォーム入力開始が各1件</strong>＝運営者自身のログイン操作がCV相当の数字に混ざっている。閲覧も <code>/admin/*</code> に計13回</td><td class="py-1 px-2">🔴 <strong>R-R17 を補強</strong>（内部トラフィック除外）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">浮動CTAの重なり<br>（トップでも発生）</td><td class="py-1 px-2">トップのSPファーストビューで、浮動ボタン「近くのスポットを探す」が<strong>「すでにアカウントをお持ちの方」（ログイン導線）を覆い隠している</strong>（「すでにアカウ」までしか読めない・スクショ確認）</td><td class="py-1 px-2">🔴 <strong>R-R23 を🟡→🔴へ格上げ</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップHTML＝<strong>55,994B でCycle 018 とバイト同一</strong>＝デプロイなし。応答 0.06秒。ビジュアル定点（トップ PC/SP）も Cycle 016 から変化なし</td><td class="py-1 px-2">✅ 定石#5 の繰越を消化</td></tr>
+        <tr><td class="py-1 px-2">継続確認</td><td class="py-1 px-2">apex http/https＝200（安定）／<code>www</code>＝SSL証明書エラー継続／<code>robots.txt</code>・<code>sitemap.xml</code>＝404継続／GSC＝テーブル未作成</td><td class="py-1 px-2">R-R18・R-R06 継続</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">当時の北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-2 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路②（参加）の穴の場所が、前回よりさらに正確になった</strong>：着地ページ別に割ると、<strong>トップ着地は10.5%が入力開始／スポット詳細着地は0%</strong>という明確な差が出る＝穴は「スポット詳細に扉が無いこと」1点（R-R22）。</li>
+        <li><strong>「入口を増やす」より先に「出口を塞がない」</strong>：R-R24 は工数が最小（404画面にヘッダーと2ボタン）で全ての誤URLに効くため、推奨着手順を R-R17 → R-R24 → R-R21 → R-R22 に更新した。</li>
+        <li><strong>経路③（継続）の摩擦を1つ発見</strong>：トップで浮動CTAがログイン導線を覆っている（R-R23 格上げの理由）。</li>
+        <li><strong>計測の信頼性は先に直す</strong>：運営者のログイン操作がCV相当の数字に混入している以上、R-R17（イベント2つ＋内部除外）を先頭に置く判断は変えない。</li>
+        <li><strong>横道の成果</strong>：「GA4の実URL一覧 × 本番GETのステータス突合」を初めて回し、定石（月次点検 #13）に追加した。</li>
+        <li><strong>追わないもの</strong>：直近3日の <code>/spots</code> 25views と <code>/map</code> 56views の集中は実ユーザーか検証作業か区別できないため種プールへ（<span class="text-emerald-700">→ Cycle 020 で <code>/map</code> を実査し R-R26 として起票</span>）。</li>
+        <li><strong>本サイクルの新規Rは1件</strong>（R-R24）＋格上げ1件・根拠差し替え1件・補強1件・降格1件。</li>
+      </ul>
+    </div>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし（19サイクル連続）。mailbox＝<code>hanasaka-main</code> の開通通知（M-20260815T130838）は Cycle 018 で内容反映済み。deploy-log＝本番変更の検出なし。実測ログ＝<code>data/hp-loop/cycles/rally/cycle019-20260815.md</code>。</p>
+  </section>
+
+  <!-- ===== Cycle 018 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-xl font-bold mb-1">Cycle 018 — 2026-08-15（臨時・手動起動2回目：本番の復旧を確認／GA4 開通で北極星を初計測／前提の誤りを1件訂正）</h2>
+    <p class="text-xs text-gray-500 mb-4">※ 当時のスナップショット。<span class="text-rose-700">本サイクルの「登録フォームに触った人 6人（form_start 13件）」という記述は、Cycle 019 の実測（着地ページ別の内訳）で<strong>読み違いと判明し訂正されています</strong></span>＝実際の発火はトップページのヒーロー内メールフォームで、<code>/register</code> 着地セッションの form_start はゼロでした。最新の解釈は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> を参照。</p>
+
+    <div class="border-l-4 border-emerald-400 bg-emerald-50 rounded p-4 mb-4">
+      <p class="text-sm font-bold text-emerald-800 mb-1">✅ サイトは復旧しています（2026-08-15 13:09 実測）</p>
+      <p class="text-sm text-gray-800 mb-2">12:5x 台にお知らせした「サイトに接続できない」件は解消。13:09 以降 <code>https://check-rally.com/</code> は <strong>HTTP 200・55,994バイト・0.05秒</strong>で正常取得（十数回アクセスし全て正常）。<strong>ダウンタイムは少なくとも約20分</strong>。<code>www</code> 付きURLのエラーが「TCP接続失敗」→「SSL証明書エラー＝以前と同じ既知状態」に戻ったことからも、ネットワーク／サーバ層の一過性事象と確認。</p>
+      <p class="text-sm text-gray-700"><strong>⚠️ 原因は未特定＝再発の可能性は残る</strong>。推測：①一過性のIPブロック（fail2ban/WAF。80と443が同時に即時拒否され自動復旧する挙動に最も整合＝<strong>当ループ自身の巡回が引き金の可能性</strong>。前サイクルは20分で6回アクセス）②Webサーバの短時間の再起動・デプロイ。確定にはサーバログが必要＝<strong>Q-R08</strong> が唯一の道。</p>
+    </div>
+
+    <div class="border-l-4 border-sky-400 bg-sky-50 rounded p-4 mb-4">
+      <p class="text-sm font-bold text-sky-800 mb-1">🎉 GA4 開通 — 17サイクルぶりに「数字で語れる」状態に</p>
+      <p class="text-sm text-gray-800 mb-2">GA4（<code>analytics_543430115</code>）から初めて実データを取得（2026-07-05〜08-14 の41日・稼働34日）。GSC も設定は BigQuery 側に届いており着弾待ち（08-17 頃）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>北極星ファネルの初計測（41日）</strong>：サイトに来た人 <strong>80人</strong>（ページ閲覧498回・セッション110）＝1日あたり約2人 → 登録ページを見た人 4人（6回）＝5% → 登録フォームに触った人 6人（13回）<span class="text-rose-700">※この行が Cycle 019 で訂正</span> → <strong>登録完了・スタンプ収集＝測れません</strong>（イベント未設定・R-R17）。</p>
+      <p class="text-sm text-gray-700"><strong>🔍 いちばん大きな発見：検索からの流入は、もう起きている</strong>。流入元（41日・セッション）＝直接60／Google検索33／Yahoo検索8／Bing 1／タグ検証8（設定作業のノイズ）。<strong>検索流入は計42セッション・39人＝約38%</strong>。しかも <code>/spots/○○</code>（スポット詳細）に12セッション以上がバラバラに着地し、そのほとんどがスマートフォン。<strong>「SPAだから検索エンジンに中身が見えず発見されない」という17サイクル続けた前提の修正</strong>＝ゼロから作る話ではなく、既に流れている細い水路を太くする話になった。</p>
+    </div>
+
+    <p class="text-sm text-gray-500 mb-3">データ状況：GA4＝初取得に成功。GSC＝データセットは存在するがテーブル未作成（<code>searchdata_url_impression</code> NotFound）。社長入力（from-president.md）＝新規追記なし。mailbox＝新着なし。本番実査＝実施・全ページ到達（hp-audit ✅／hp-shot ✅＝<code>bash</code> 前置なしの直接形式で通ることを発見＝K-317 と同事象／素の curl・check-ssl・hp-links は承認不可）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle018-20260815.md</code>、スクショ＝<code>cycles/rally/shots/c018-spot496-*.png</code>。</p>
+
+    <h3 class="font-semibold mb-2 text-sm">実査で確認した事実（2026-08-15・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2">到達性</td><td class="py-1 px-2"><code>https://check-rally.com/</code>＝<strong>HTTP 200・55,994B・0.051秒</strong>。本サイクル中に十数ページを取得し全て正常。<code>www</code> 変種は<strong>SSL証明書エラー（exit 60）＝Cycle 015/016 と同じ既知状態へ復帰</strong></td><td class="py-1 px-2">✅ <strong>R-R20 クローズ</strong>・Q-R09 解決</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2">GA4（初取得）</td><td class="py-1 px-2">41日で <strong>80ユーザー・498 page_view・110セッション</strong>。流入＝直接60／Google検索33／Yahoo検索8／Bing 1／タグ検証8（作業ノイズ）。着地＝トップ82（mobile 48/desktop 34）・<strong>スポット詳細に12セッション以上が分散（ほぼモバイル）</strong>。<code>/register</code> 閲覧6・<code>form_start</code> 13件（6人）・<strong>登録完了/スタンプ取得のイベントは存在しない</strong></td><td class="py-1 px-2">🎉 <strong>17サイクルぶりに効果検証が可能に</strong>／R-R17 再定義</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2">前提の訂正</td><td class="py-1 px-2"><code>/spots/areas</code>・<code>/spots/themes</code> は<strong>固有 title＋固有 description＋OGP3件</strong>を配信。掲示板が書いてきた「全ページ同一 title」は<strong>誤り</strong>（過去は <code>/ranking</code> 1ページのみを見て全体を判断していた）。一方 <code>/</code>・<code>/map</code>・<code>/ranking</code>・<code>/login</code> は既定のまま</td><td class="py-1 px-2">⚠️ <strong>R-R01 を訂正・縮小</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">スポット詳細の実態</td><td class="py-1 px-2">title＝<strong>「スポット詳細 #496」</strong>（描画後も同じ）・description＝全スポット共通の汎用文・<strong>h1/h2/h3 すべて0件</strong>・og:image 無し。<strong>ところが画面には</strong>「中部電力 MIRAI TOWER（名古屋テレビ塔）」「全日本タワー連盟 — 全国20タワーめぐり」「名古屋市 中区／栄町駅」＋高品質写真が<strong>ちゃんと出ている</strong></td><td class="py-1 px-2">🔴 <strong>R-R21 起票</strong>（当時の最重要）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2">スマホの参加導線</td><td class="py-1 px-2">スポット詳細をSP幅で撮影＝<strong>登録CTAがハンバーガーの中に隠れ、画面のどこにも出ない</strong>（PCはサイドバーに「無料で始める」あり）。ページ内リンクは9本のみ</td><td class="py-1 px-2">🔴 <strong>R-R22 起票</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">表示不具合</td><td class="py-1 px-2">スポット詳細に <strong>「作成日: 1970/1/1」</strong>（初期値の露出）・<strong>「システム情報」（スポットID・優先度: 高）が一般表示</strong>・SPで浮動ボタンが住所表示を覆う</td><td class="py-1 px-2">🟡 <strong>R-R23 起票</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化なし（継続）</td><td class="py-1 px-2"><code>robots.txt</code> 404・<code>sitemap.xml</code> 404・<code>/privacy</code> 404・<code>/terms</code> 404・canonical 全ページ無し・JSON-LD 0件・www SSL エラー</td><td class="py-1 px-2">R-R06・R-R09・R-R18 継続</td></tr>
+        <tr><td class="py-1 px-2">デプロイ痕跡</td><td class="py-1 px-2">トップHTML <strong>55,778B（08-03・08-10）→ 55,994B（08-15）＝+216B</strong>＝3週間ぶりの変更。内容は特定できず</td><td class="py-1 px-2">deploy-log に記帳</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2 text-sm">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路①（発見）は「作る」から「太くする」へ変わった</strong>：オーガニック42セッション・スポット詳細への分散着地という実データにより、SPAでも検索経路は生きていると判明。着地しているページの名札（title・h1）が空欄＝ここを埋めるのが最大のレバー（→R-R21）。</li>
+        <li><strong>経路②（参加）の穴が場所ごと特定できた</strong>：発見が起きているのに登録ページ閲覧が41日で4人。スクショで着地面（SPのスポット詳細）に参加導線が1つも無いと確認（→R-R22）。<span class="text-rose-700">※この読みは Cycle 019 で精緻化＝登録の入口はトップのヒーローフォームであり、<code>/register</code> の閲覧数は穴ではなかった。穴は「スポット詳細着地の12セッションが1件も参加動作に至っていない」こと。</span></li>
+        <li><strong>経路③（継続）は依然として測定不能</strong>：登録完了・スタンプ取得のイベントが無く、北極星の達成そのものが見えない（→R-R17 を「イベント2つの追加」に軽量化）。</li>
+        <li><strong>可用性は前提条件</strong>：復旧は確認できたが原因は未特定＝再発しうる（→Q-R08・R-R19）。GA4 開通により「流入が急に止まったら気づく」第二の網ができた。</li>
+        <li><strong>横道から出た成果</strong>：「実URL一覧が無い」という5サイクル続いた📥が、GA4 の閲覧ページ一覧で副産物として解決（T-021 の許可リスト登録＝社長の手元作業が不要になった）。</li>
+        <li><strong>今サイクルの新規Rは3件</strong>（R-R21・R-R22・R-R23）＋既存4件の再定義＋1件クローズ。</li>
+      </ul>
+    </div>
+
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし（18サイクル連続）。mailbox＝新着なし。deploy-log＝3行追記。<strong>カバレッジ台帳 <code>data/hp-loop/rally/coverage.md</code> を新設</strong>（rally だけ17サイクル無台帳で、定石の last-run が機械管理されていなかったため）。定石＝#1変化検知・#3到達性・#4 GA4 を実施／#5 ビジュアル定点は未実施＝Cycle 019 へ繰越／#6 全体棚卸し・#8 win-patterns 点検を実施／#9 配管点検は 30日未満で対象外／#12 月次実績は対象外。実装担当（rally-dev）へレポート配信済み。</p>
+  </section>
+
+  <!-- ===== 完了した提案・解決済みの質問（Cycle 018 で回転） ===== -->
+  <section class="mb-10 border border-emerald-200 rounded-lg p-5 bg-emerald-50">
+    <h2 class="text-xl font-bold mb-3">✅ 完了した提案・解決済みの質問（2026-08-15 / Cycle 018 で回転）</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong>R-R20 ✅クローズ（本番の復旧）</strong>：Cycle 017（08-15 12:5x〜13:0x）で検出した「80/443・3ホスト変種・2クライアント・6回すべて TCP 接続拒否」は、Cycle 018（13:09〜）の実測で<strong>HTTP 200・55,994B・0.051秒</strong>へ復旧を確認。<code>www</code> 変種のエラーも exit 7（TCP失敗）→ exit 60（SSL証明書）＝既知状態へ復帰。<strong>ダウンタイムは少なくとも約20分</strong>。<span class="text-rose-700">⚠️ 原因は未特定のままクローズ</span>＝推測①一過性のIPブロック（fail2ban/WAF。80/443同時の即時拒否と自動復旧に最も整合。<strong>当ループ自身の巡回が引き金の可能性あり</strong>）②Webサーバの短時間再起動。確定にはサーバログが必要＝<strong>原因特定は Q-R08・再発防止は R-R19 が引き継ぐ</strong>。</li>
+      <li><strong>Q-R09 ✅解決（サイトが開くかの確認）</strong>：社長への「スマホでWi-Fiを切って開いてください」という1分確認のお願いは、Cycle 018 で復旧を実測できたため<strong>不要になりました</strong>（社長の作業ゼロで解決）。</li>
+      <li><strong>Q-R03 ✅解決（GSC・GA4 の接続予定）</strong>：社長が 2026-08-15 に対応済み。<strong>GA4＝<code>analytics_543430115</code> で実データ取得に成功</strong>（2026-06-27 から日次エクスポート稼働・Cycle 018 で 41日分を初取得）。<strong>GSC＝<code>searchconsole_rally</code> のデータセットは BigQuery に作成済み・テーブル未作成＝実データ着弾待ち</strong>（08-17 頃見込み）。恒久的な前提として <a href="spec.html" class="text-blue-600 hover:underline">確定・仕様</a> へ昇格。</li>
+      <li><strong>📥「ナビ先の実URL一覧」✅解決</strong>：GA4 の閲覧ページ一覧から実URLを列挙できたため、5サイクル繰り越していた T-021 <code>hp-links</code> の許可リスト登録（社長の手元作業）は<strong>不要になりました</strong>。</li>
+    </ul>
+  </section>
+
+  <!-- ===== Cycle 017 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 017 — 2026-08-15（臨時・手動起動：<span class="text-red-700">本番サイトが接続不能と判明</span>／16サイクル続いた「配信先なし」は <code>rally-dev</code> 開通で解消・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 は<strong>未連携（データ未取得）</strong>と記録（<span class="text-emerald-700">※同日中の Cycle 018 で GA4 は開通＝<code>sites/rally.md</code> の更新に本サイクルが追従できていなかった</span>）。mailbox 新着1通（<code>hanasaka-main</code>→<code>hp-loop-rally</code>＝rally-dev 稼働確認・17サイクル目にして初の受信）。社長入力＝新規追記なし。実測ログ＝<code>data/hp-loop/cycles/rally/outage-cycle017-20260815.md</code>、SERP＝<code>serp-cycle017.txt</code>。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>🚨 到達不能を検出（→R-R20 起票・翌サイクルでクローズ）</strong>：<code>https://check-rally.com/</code>・<code>http://check-rally.com/</code>・<code>https://www.check-rally.com/</code> の3変種すべてで TCP 接続が即時拒否（curl exit 7・16〜37ms）。ヘッドレスChrome も <code>net::ERR_CONNECTION_REFUSED</code>。約20分・計6回すべて同一結果。</li>
+      <li><strong>対照実験</strong>：同セッション・同ツールで <code>y-com.info</code>（200・73,677B）・<code>konjaku-photo.jp</code>（200・25,747B）は正常取得＝VPSの回線・ツール側の問題ではないと確認。</li>
+      <li><strong>前回からの後退</strong>：www 変種のエラーが exit 60（SSL・TLS層到達）→ exit 7（TCP失敗）へ後退。Cycle 016（08-10）は本番HTMLを 55,778B 取得できていた＝08-10 以降の新規事象と判定。</li>
+      <li><strong>✅ 配信経路の開通（朗報）</strong>：<code>hanasaka-main</code> より受信＝<strong>rally-dev（拠点PC）の mailbox 接続が完了</strong>（VPS側トークン登録済・拠点PC の .env とクライアント配置で認証・inbox 読取成功）。websystem テンプレの通信ルール（mailbox.md／hp-loop-dialogue.md）も配布済み。<strong>本サイクルから最新レポートの配信を開始</strong>＝16サイクル続いた「渡し先が無い」状態が解消。</li>
+      <li><strong>→R-R19 起票（死活監視）</strong>：前回の到達確認（08-10）から今回まで最大5日間、停止に気づけない構造だった（週次巡回＋GA4未連携）。</li>
+      <li><strong>在庫の再検証は不能</strong>：本番停止のため13件の前提をライブ再検証できず、前回 08-10 の実測値を据え置き＝「未検証」と正直に記録（<span class="text-emerald-700">※Cycle 018 で一括再検証を完了</span>）。</li>
+      <li><strong>北極星との接続</strong>：到達不能＝発見・参加・継続の全経路がゼロ＝在庫14件のどれよりも上位。新規Rは可用性の層2件のみ（本番が見られないため通常の改善提案は新規ゼロ＝無理に起票しない）。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし（17サイクル連続）。mailbox＝<code>hanasaka-main</code> の1通を処理（<code>done</code> 済）。月次実績（#12）・配管点検（#9）＝last-run 2026-08-03 のため対象外。</p>
+  </section>
+
+  <!-- ===== Cycle 016 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 016 — 2026-08-10（週次・変化検知：本番は3週間動きなし〔バイト同一〕。繰越2件の「承認不可」は呼び出し形の誤りと判明＝訂正し、ビジュアル定点とインデックス定点を復旧・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 は<strong>未連携（データ未取得）</strong>継続。社長入力・mailbox 新着＝なし（16サイクル連続。mailbox は new/ 全31通を直接 grep で確認＝rally 宛ゼロ）。本番実査＝hp-audit ✅・<strong>hp-shot ✅・hp-serp ✅（前回「承認不可」としたのは誤り＝bash 前置なしの呼び出し形なら実行可能だった）</strong>・素の curl と T-021 hp-links は承認不可（hp-links は2形式で再試行のうえ否で確定）。スクショ＝<code>cycle016-top-*</code>、監査JSON＝<code>audit-cycle016-top.json</code>。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>変化検知</strong>：トップ配信HTMLは Cycle 014・015 と<strong>バイト単位で同一</strong>（55,778B・title/desc/見出し/画像/リンク/フォーム全項目一致）。スクショ（PC/SP fold）も同構成＝ビジュアル退行なし＝実装の動きなし（3週間）。</li>
+      <li><strong>継続確認</strong>：www 変種の SSL 証明書エラー継続（curl exit 60）／robots.txt・sitemap.xml 404 継続／<code>/privacy</code>・<code>/terms</code> 404 継続・フッター法的リンク無し／<code>/ranking</code> の title・description はトップと同一のまま・OGP・Twitterカード・canonical・JSON-LD ゼロ継続。<strong>新観察</strong>：<code>/ranking</code> は <code>/ranking/points</code> へリダイレクト（変化か既存かは不明＝次回から定点に含める）。</li>
+      <li><strong>インデックス定点（復旧）＋訂正</strong>：<code>site:check-rally.com</code> 実見＝トップページの収載を確認（陽性のみ根拠に使える）。収載URLの<strong>列挙</strong>はツールがドメイン重複を除外するため原理的に不能＝<strong>「収載はトップのみ」（Cycle 014）は断定しすぎだったため撤回</strong>。全ページの収載状況は GSC 接続（Q-R03）だけが確認手段。</li>
+      <li><strong>ツール可否の訂正（K-511 起票）</strong>：Cycle 015 の「hp-serp・hp-shot は承認不可＝繰越」は誤り。真因は許可リストの呼び出し形（<code>bash bin/hp-serp.sh</code> は否・<code>bin/hp-serp.sh</code> は可）で、正解は Cycle 014 の自分の記録に明記済みだった。両ツールとも開通し週次のビジュアル定点・インデックス定点が復旧。</li>
+      <li><strong>配管点検の未実施分</strong>：③解析タグ棚卸し・⑤混在コンテンツ・⑥バージョン露出は素の curl 承認不可のため未実施＝繰越継続。</li>
+      <li><strong>北極星との接続</strong>：3週間の停滞＝ボトルネックは配線（Q-R08）で不変／新規Rはゼロ（在庫14件の前提をライブ再検証し全件成立を確認＝効果検証・生存確認と観測手段の復旧が成果）。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。rally-dev トークン未登録＝配信保留（<span class="text-emerald-700">※この状態は翌 Cycle 017〔2026-08-15〕に解消＝拠点PC稼働確認により配信開始</span>）。</p>
+  </section>
+
+  <!-- ===== Cycle 015 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 015 — 2026-08-03（週次・変化検知：本番は2週間動きなし。月次配管点検で www の SSL 切れを発見＝新規 R-R18。月次実績レポート初回＋deploy-log 新設・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 未連携継続。社長入力・mailbox 新着なし（15サイクル連続）。本番実査＝hp-audit / hp-shot 可と記録（※hp-serp・hp-links「承認不可＝繰越」と記録したが、<span class="text-rose-700">hp-serp・hp-shot の「承認不可」は Cycle 016 で呼び出し形（bash 前置）の誤りと判明・訂正済み</span>）。スクショ＝<code>cycle015-top-*</code>、監査JSON＝<code>audit-cycle015-top.json</code>。※前週 07-27（月曜）分の実行記録が見当たらない（cron 欠落の可能性・統括へ観察として共有）。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>変化検知</strong>：トップ配信HTMLは Cycle 014 と<strong>バイト単位で同一</strong>（55,778B・title/desc/見出し/リンク数すべて一致）＝実装の動きなし（2週間）。</li>
+      <li><strong>新規 R-R18 🔴（月次配管点検①で発見）</strong>：apex の http→https 301 は正常だが、<code>https://www.check-rally.com/</code> が <strong>SSL 証明書エラーで接続不能</strong>（curl exit 60・2回確認）。www 付きで案内された訪問者は全員ブラウザ警告で離脱＝経路①「発見→到達」の穴。改善案＝証明書に www を追加（SAN）＋www→apex 301。</li>
+      <li><strong>継続確認</strong>：robots.txt・sitemap.xml 404（R-R06）／/privacy・/terms 404・フッター法的リンク無し（R-R09）／ページ固有 meta・OGP・canonical・JSON-LD ゼロ（R-R01残件・R-R02）。</li>
+      <li><strong>登録フォームの注記（推測）</strong>：<code>action=""・method="get"</code>＝JS失敗時にメールアドレスがURLクエリに載る形→ 新規Rにせず R-R08 の実装時確認事項へ。</li>
+      <li><strong>月次実績レポート（#12）初回＋deploy-log 新設</strong>：2026-07分＝リニューアル（R外）・R-R03✅・R-R10✅・R-R08/R-R14/R-R01🔧一部を遡及記録（すべて実査検出＝実装報告は届いていない）。</li>
+      <li><strong>配管点検の未実施分</strong>：③解析タグ棚卸し・⑤混在コンテンツ・⑥バージョン露出は素の curl 承認不可のため未実施＝繰越（Cycle 016 でも繰越継続）。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。新規起票＝R-R18 の1件のみ（未回答Q 5件のため新規は絞る）。在庫14件の生存確認済み。rally-dev トークン未登録＝配信保留。</p>
+  </section>
+
+  <!-- ===== Cycle 014 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 014 — 2026-07-20（週次・13サイクルぶりに本番実査が開通：サイトは全面リニューアル済みと判明・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 未連携継続。社長入力・mailbox 新着なし（14サイクル連続）。<strong>本番実査が開通</strong>（真因＝許可リストの呼び出し形：<code>bash bin/hp-audit.sh</code> は可・<code>bin/hp-shot.sh</code> は bash 前置なしなら可。素の curl は不可）。スクショ＝<code>cycle014-*</code>、監査JSON＝<code>audit-cycle014-top.json</code>。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>最大のニュース</strong>：check-rally.com は<strong>新デザイン＋具体コピー＋遊び方4ステップ＋ゲスト導線</strong>に全面刷新されていた（2026-06-27 のスクショで凍結していた分析材料を全面更新）。□（豆腐）と抽象コピーは解消済み。</li>
+      <li><strong>実査で確認した主な事実</strong>：□ゼロ（R-R03 ✅）／ヒーローコピー具体化（R-R10 ✅）／ゲスト導線＋位置エラー非ブロッキング化（R-R08 🔧一部・「近くのスポット」枠は位置なしだと空）／遊び方4ステップ導入（R-R14 🔧一部・サンプルスポット陳列は無し）／配信HTMLにページ別 h1・title/meta（R-R01 🔧前進・推測：SSR/プリレンダ）／全ページ同一 title/desc・canonical/OGP/JSON-LD ゼロ（R-R01残件・R-R02 未着手）／robots.txt・sitemap.xml <strong>404</strong>・Google 収載トップ1ページのみ（R-R06 未着手＝最優先）／フッター法的リンク無し・/privacy /terms 404（R-R09 未着手）／未知パスは正しく404＝SPA丸投げでない（R-R16 🔧部分検証）。</li>
+      <li><strong>北極星との接続</strong>：経路②（参加の障壁）は実装で大きく前進／経路①（発見される）が唯一の太いボトルネックに（robots/sitemap/SC登録＋OGPが最短手）／実装は進んでいたのに報告がループに届かない＝<strong>配線（トークン登録 or 報告経路）が分析精度そのもの</strong>と実証（Q-R08 起票）。</li>
+      <li><strong>クローズ</strong>：R-R03・R-R10 ✅反映済み、Q-R02・Q-R04 ✅解決（下の「✅解決・反映済み」参照）。新規起票ゼロ（在庫13件の再監査を成果とする週次）。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。rally-dev トークン登録待ち＝配信保留。サイト前提の変化は確定・仕様に反映済み。</p>
+  </section>
+
+  <!-- ===== ✅解決・反映済み（Cycle 014 ライブ再実査） ===== -->
+  <section class="mb-10 border border-emerald-200 rounded-lg p-5 bg-emerald-50">
+    <h2 class="text-xl font-bold mb-3">✅ 解決・本番反映済み（Cycle 014・2026-07-20 のライブ再実査）</h2>
+    <p class="text-sm text-gray-600 mb-3">13サイクルぶりに本番実査（hp-audit / hp-shot / hp-serp）が開通し、<strong>check-rally.com が全面リニューアル済み</strong>と判明。以下を実測ベースでクローズ（実装者は未確認＝Q-R08 で確認中。実装報告はループに届いていない）。</p>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong>R-R03（□豆腐の修正）＝✅ 本番反映済み・再監査確認</strong>：2026-07-20 の PC/SP トップのライブスクショで□ゼロ。ロゴ・主要CTA「無料ではじめる」・ナビ・キーワード検索すべて可読。起票時（2026-06-27）の「登録ボタンの文字が読めない」は解消。</li>
+      <li><strong>R-R10（ヒーロー/コア訴求コピーの実体化）＝✅ 本番反映済み・再監査確認</strong>：全ひらがな抽象コピー（「ちかくの すてきな ばしょ」）は消滅し、「まちを歩いて、発見して、スタンプを集めよう」＋バッジ「GPSでつながる、リアル冒険スタンプラリー」＋説明文（GPS・スタンプ・ランキングの具体語）へ刷新。地域名・「観光」等の検索名詞の作り込みは R-R07（コンテンツ設計）の範囲として引き継ぐ。</li>
+      <li><strong>Q-R02（□は実機でも見えるか）＝✅ 解決（質問不要化）</strong>：上記のとおり本番で解消済みを実測確認。社長回答は不要になった。</li>
+      <li><strong>Q-R04（位置情報の必須／ゲスト閲覧の可否）＝✅ 解決（実装が事実上回答）</strong>：位置情報拒否でもトップは全画面エラーにならず警告バナーのみ＋「登録せずにスポットを探す→」のゲスト導線が導入済み＝方向①（任意化＋ゲスト閲覧）が実装で採用されていた。残余（位置拒否時のフォールバック内容・登録前の価値提示）は R-R08 の残作業として index で追跡。</li>
+    </ul>
+  </section>
+
+  <!-- ===== Cycle 013 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 013 — 2026-07-13（週次・在庫の棚卸し：新規は積まず17件を15件・3パックへ再編・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに未連携＝効果検証(C)不可。本番再実査は不可（13サイクル連続・当時の記録）。社長入力・mailbox 新着ゼロ。分析材料は 2026-06-27 のスクショで凍結。<strong>Slack 投稿は成功＝「ネット未許可」ではなく「curl／hp-audit.sh が実行許可リストに無いこと」が真因と当時判定</strong>（→ Cycle 014 で「許可リストの呼び出し形の違い」とさらに特定され、実査開通）。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>今サイクルの判断</strong>：17件が未実装のまま滞留・実装担当に1件も渡せていない状態で18件目を積まない＝新規Rゼロとし、在庫の棚卸しに徹した（hp-loop v0.10「在庫の鮮度管理」）。</li>
+      <li><strong>統合クローズ 2件</strong>：R-R04（初見体験）→ R-R08 に完全内包／R-R05（h1・canonical・ページ固有meta）→ R-R01（SSR）の衛生タスクとして統合（撤回ではなく統合＝中身は残る）。</li>
+      <li><strong>15件を3パックに再編</strong>：P1＝今すぐ着手（フロントのみ・5件）／P2＝発見・拡散（6件）／P3＝基盤（4件）。rally-dev が動いたら P1 から丸ごと渡す形。</li>
+      <li><strong>質問を1枚の回答シートに圧縮</strong>：7問の長文再掲をやめ「1行で答えられる形＋答えると動く提案」の表1枚へ（督促の騒音化対策）。</li>
+      <li><strong>自分の誤りの訂正</strong>：Q-R07（週次への右サイズ化）は社長が 2026-07-08 に決定済みだったのに、掲示板は未回答扱いのまま5回再掲・Slack 督促を続けていた（M-02 の典型例）。✅解決として確定・仕様へ移動。</li>
+      <li><strong>生存確認</strong>：15件は前提（SPA・位置情報依存・□フォント・未連携）が変わっていないとして全件有効と判定——<span class="text-rose-700">ただしこの判定の根拠は 2026-06-27 のスクショであり、実際には前提の多くが変わっていた（Cycle 014 のライブ実査で R-R03・R-R10 反映済み等が判明）＝「ライブ再実査ができない状態での生存確認」の限界が実証された</span>。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし（13サイクル連続）。mailbox 新着なし。rally-dev トークン登録待ち＝配信保留。</p>
+  </section>
+
+  <!-- ===== ✅解決済みの質問・統合クローズした提案（Cycle 013 棚卸し） ===== -->
+  <section class="mb-10 border border-emerald-200 rounded-lg p-5 bg-emerald-50">
+    <h2 class="text-xl font-bold mb-3">✅ 解決・クローズ（Cycle 013・2026-07-13 の棚卸し）</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong>Q-R07（rally を週次に落とすか）＝✅ 解決</strong>：社長決定（<strong>2026-07-08</strong>）で <code>rally</code> は<strong>日次→週次（月曜04:00）</strong>に右サイズ化済み（<code>data/hp-loop/sites/rally.md</code> に反映）。<span class="text-rose-700">掲示板側がこの決定を取り込めておらず、Cycle 008〜012 で「未回答」として5回再掲・Slack 督促し続けていた誤りを Cycle 013 で訂正</span>。確定事項は <a href="spec.html" class="text-blue-600 hover:underline">確定・仕様</a>へ。</li>
+      <li><strong>R-R04（初見体験：位置情報の説明＋登録メリット訴求／ゲスト閲覧）＝🔀 R-R08 へ統合クローズ</strong>：内容が R-R08（初回訪問のCV根治）に完全に内包されており、番号が2つあることで判断を鈍らせていた。中身は R-R08 に残る（撤回ではない）。</li>
+      <li><strong>R-R05（h1の1本化＋canonical＋ページ固有meta）＝🔀 R-R01 へ統合クローズ</strong>：SSR/プリレンダ（R-R01）と同時に扱うのが自然な SEO 衛生タスクのため、R-R01 の内訳として統合。中身は残る。</li>
+    </ul>
+  </section>
+
+  <!-- ===== Cycle 012 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 012 — 2026-07-08（12サイクル連続で入力ゼロ／"測れない"を内製で解く R-R17 を1件起票・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。外部ネット未許可（<code>curl check-rally.com</code> 権限拒否）で新規スクショ・robots/sitemap の実取得も保留。分析材料は 2026-06-27 のスクショで固定。提案は16件で飽和し、獲得3経路（SEO／現地QR／口コミ）＋継続＋陳列＋CV＋信頼＋現地パフォーマンス＋共有着地まで出揃った。</p>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R17</strong>（🟦🟡 計測の自前化＝ファーストパーティのファネル計測・新規）これまでの16提案が「D（打ち手）」なのに対し、これは<strong>その効果を測る "C" の基盤</strong>で、外部（Google）接続に依存しない別レイヤー。<strong>観察</strong>：12サイクル連続で「GA4/GSC 未連携＝効果検証不可」がボトルネックとして再掲され続け、効果測定が<strong>外部依存の単一障害点</strong>になっている。<strong>なぜ問題か</strong>：測れないと PDCA の C が回らず A（効いた型を伸ばす／効かないレバーを別の手へ）が判断できず、全提案が"撃ちっぱなし"になる。<strong>改善案</strong>：rally-dev 稼働後、①主要ファネルイベント（ヒーロー表示／「探す」クリック／位置情報の許可・拒否／登録開始・完了／スタンプ取得）を自前エンドポイントへ最小ログ ②日次でファネル通過率を集計 ③個人情報を送らない設計（イベント名＋匿名セッションIDのみ・R-R09 のプライバシーポリシーと整合）。GA4 が後で繋がれば二重化。効果=高／工数=小〜中／優先=🟡。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。あわせて Q-R07（週次への右サイズ化）を5回目の再掲としていたが、<strong>実際には 2026-07-08 に社長が決定済みだった</strong>（Cycle 013 で訂正・上記✅参照）。これらの R の<strong>現在の生死は index の繰り越し表</strong>で追跡中。</p>
+  </section>
+
+  <!-- ===== Cycle 011 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 011 — 2026-07-07（11サイクル連続で入力ゼロ／口コミループの"出口"を1件だけ起票・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。11サイクル連続で ①社長入力なし ②GSC/GA4 未連携 ③当環境の外部ネット未許可（<code>curl check-rally.com</code> 権限拒否）。分析材料は 2026-06-27 の取得済みスクショで固定。提案は15件で飽和。今サイクルは既存15件と重ならない観点を1件だけ起票し、Q-R07（週次への右サイズ化）を4回目の再掲。</p>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R16</strong>（🟦🟡 ディープリンク／共有着地の整合性・新規）SSR無しの JS SPA（クライアントルーティング）。R-R11(共有・招待)・R-R02(OGP) を整えても、配ったURLは受信者が<strong>冷間（新端末・アプリ未起動）で直リンク</strong>で開くのが常。深い経路（<span class="font-mono">/spot・/area・/theme・/badge</span>）を冷間直リンクすると、サーバ側フォールバック未設定なら 404、あってもクライアントで状態復元できず「トップに落ちる／該当スポットが出ない」ことが多い（推測・要検証）＝<strong>共有しても着地が壊れて拡散が丸ごと漏れる（穴の空いたバケツの共有版）</strong>。① 主要な深い経路の冷間直リンク挙動を実測（rally-dev 稼働後／ネット許可後）② SPAフォールバック（history API rewrite）＋可能なら SSR/プリレンダで URLごとの OGP を動的化 ③ 共有直後の受信者を ゲスト閲覧→参加/登録 へ繋ぐ着地設計（R-R08 連動）。効果=中〜高（R-R11 の共有ループが成立するかの前提）／工数=小〜中／優先=🟡（R-R11・R-R02 を打つ前に確認すべき前提）。</li>
+    </ul>
+    <p class="text-xs text-gray-500 mb-2">あわせて <strong>Q-R07</strong>（rally を塞がり3点が解けるまで「週次」に落とす右サイズ化）を4回目の再掲。分析は止めない＝週次でも継続。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 012（2026-07-08）で「測れない」を内製で解く <strong>R-R17</strong>（GA4/GSC を待たないファーストパーティのファネル計測）を起票。</p>
+  </section>
+
+  <!-- ===== Cycle 010 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 010 — 2026-07-06（打ち手は出揃った＝残るは社長の1回答／バックログ依存マップ・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。10サイクル連続で ①社長入力なし ②GSC/GA4 未連携 ③当環境の外部ネット未許可（<code>curl check-rally.com</code> 権限拒否）。分析材料は 2026-06-27 の取得済みスクショで固定。提案は14件で飽和し、獲得3経路（SEO／現地QR／口コミ）＋継続＋陳列＋CV＋信頼まで出揃った。今サイクルは新規を積むより「どの回答が・どの提案を・いくつ解くか」を1枚の依存マップに整理。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">🔑 バックログ依存マップ（社長の1アクション→即着手可になる提案）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>Q-R07</strong>（週次に落とす？・5秒）→ 塞がっている間の日次の空回りを止める（最省コスト）</li>
+        <li><strong>Q-R04＋Q-R02</strong>（位置情報は任意でよい？／□CTAは実機でも□？・1分）→ <strong>R-R08</strong>（初回CVの本丸）＋<strong>R-R03</strong>（□＝登録ボタン不読）＝🔴最大</li>
+        <li><strong>Q-R06＋📥場所データ規模</strong>（3分）→ <strong>R-R10</strong>（ヒーローコピー）＋<strong>R-R14</strong>（トップ陳列）＋<strong>R-R07</strong>（コンテンツ設計）</li>
+        <li><strong>Q-R05</strong>（プライバシーポリシー等は在る？・1分）→ <strong>R-R09</strong>（信頼・フッター）＋<strong>R-R12</strong>（スポット掲載窓口）</li>
+        <li>📥 共有/招待・再訪施策は在る？（2分）→ <strong>R-R11</strong>（口コミ・社会的証明）＋<strong>R-R13</strong>（継続・再訪）の中身確定</li>
+        <li><strong>Search Console 登録</strong>（Q-R03・15分）→ <strong>R-R06</strong>（robots/sitemap→登録）＋効果検証(C)開通</li>
+        <li><strong>Q-R01</strong>（SSR入れる？・要判断）→ <strong>R-R01</strong>（SEO根治）＋R-R05／R-R07 の SEO実効性が発火</li>
+        <li><strong>rally-dev トークン登録</strong>（社長手元・10分）→ 全提案の実装配信（mailbox 配信が開通）</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R15</strong>（🟦🟢 現地・弱電波での実利用の信頼性・新規）SSR無しの重い JS SPA＋起動時に位置情報API依存＝スタンプラリーが本質的に使われる<strong>屋外・移動中・電波の弱い観光地</strong>でシェルすら出ず「真っ白/エラー」になり得る（推測）。① 初期バンドル/LCP の実測とパフォーマンス予算（rally-dev 稼働後）② PWA/Service Worker のオフライン耐性（見た地図・スポット・図鑑をキャッシュ）③ 電波弱時の graceful degradation（スケルトン/リトライ/オフライン明示）④ 位置情報タイムアウト時フォールバック（R-R08 連動）。獲得・陳列とは別の"届いた後に落とさない"技術レイヤー。効果=中〜高／工数=中／優先=🟢（実測は rally-dev 稼働後）。</li>
+    </ul>
+    <p class="text-xs text-gray-500 mb-2">あわせて <strong>Q-R07</strong>（rally を塞がり3点が解けるまで「週次」に落とす右サイズ化）を3回目の再掲。分析は止めない＝週次でも継続。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 011（2026-07-07）で SPA のディープリンク/共有着地の整合性（冷間ロードで共有URLが正しい画面に着地するか＝口コミループの出口）を R-R16 として起票。</p>
+  </section>
+
+  <!-- ===== Cycle 009 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 009 — 2026-07-05（トップが「空の店先」＝商品そのものが陳列されていない・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。9サイクル連続で ①社長入力なし ②GSC/GA4 未連携 ③当環境の外部ネット未許可。分析材料は 2026-06-27 の取得済みスクショで固定。取得済みスクショを「初見の来訪者にこの商品の中身が伝わるか＝陳列」の観点で精査。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（トップに「中身」が無い＝空の店先）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>トップに実際のコンテンツ（＝スポット）が1件も並んでいない</strong>：PC/SP とも、出るのはコピー・アカウント登録フォーム・「あなたのまわりに（位置情報エラー）」だけ。どんな場所が・どのエリアに・何件くらいあり・集めるとどんなバッジになるのかが、写真1枚・実例1件も出ていない＝商品を置いていない店先。</li>
+        <li><strong>コア価値は位置情報許可の壁の向こうにしか無い</strong>：唯一「中身」に触れる「あなたのまわりに」は位置情報を許可しない限りエラー表示（R-R08 で既出）＝許可もログインもしない初見は魅力を1つも見ずに去る。</li>
+        <li><strong>（戦略）"コンテンツが主戦場"（社長方針）なのに主戦場をトップで見せていない</strong>：獲得（R-R08〜R-R12）で連れてきても着地が空の店先では転換しない。実在スポットの陳列は①初見の価値提示(CV)②SSR後は各スポット詳細への内部リンク＝クロール入口(SEO) を兼ねる。R-R08(CV機構)・R-R11(社会的証明)とは別レイヤー＝商品そのものの陳列。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R14</strong>（🟦🟡 トップの空の店先解消・新規）① サンプルスポットのカードを3〜6件トップに（写真＋名前＋エリア＋バッジ絵。実データ無ければ代表例＝<code>【要・社長確認】</code>）② テーマ/エリアのタイル入口（位置情報非依存の"探す"第一手＝R-R08 連動）③「3ステップの使い方」（探す→行く→スタンプ）④ 掲載データの規模・由来（📥）で見せ方を確定。SSR前でもトップHTMLにブロックを足すだけで着手可。効果=中〜高／工数=小〜中。</li>
+    </ul>
+    <p class="text-xs text-gray-500 mb-2">あわせて <strong>Q-R07</strong>（rally を塞がり3点が解けるまで「週次」に落とす右サイズ化）を再掲。分析は止めない＝週次でも継続。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 010（2026-07-06）で「バックログ依存マップ（1つの回答→N提案が解ける）」を整理し、現地・弱電波での SPA 実利用の信頼性を R-R15 として起票。</p>
+  </section>
+
+  <!-- ===== Cycle 008 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 008 — 2026-07-04（第4の軸＝継続（リテンション）が空白／このループの右サイズ化を提案・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。8サイクル連続で ①社長入力なし ②GSC/GA4 未連携 ③当環境の外部ネット未許可（curl 再試行で権限拒否）。分析材料は 2026-06-27 の取得済みスクショで固定。取得済みスクショを、これまで一度も当てていない「継続（リテンション・再訪）」の観点で精査。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（継続＝再訪の仕掛けが空白）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>これまでの12提案（R-R01〜R-R12）は全て「新規獲得」で、"利用"の半分＝継続（再訪）に触れた提案がゼロ</strong>：ゴールは「参加者の利用・アクセス増」。SEO・初回CV・コピー・口コミ・現地QR＝すべて入口（人を入れる）の話で、スタンプラリーの核＝「集め続ける＝再訪する」を生む設計が入口から見えない。</li>
+        <li><strong>再訪の器（バッジ図鑑）はあるが、再訪の"引き金"が見当たらない</strong>：進捗ナッジ（あと1つでバッジ）・新スポット/期間限定の再訪喚起・PWA/ホーム画面追加が取得済みスクショの範囲では確認できない。※下層・ログイン後・プッシュ通知の有無は未確認。</li>
+        <li><strong>（戦略）獲得だけ増やして再訪の受け皿が無いと「穴の空いたバケツ」</strong>：既にメールを取得する設計なのに、その接点を再訪メール（新スポット/達成/次の目標）に活かしている様子が見えず、取った接点を使い切れていない可能性。継続＝LTV＝ゴールの"利用"に直結。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R13</strong>（🟦🟡 継続・再訪／第4の軸・新規）① バッジ図鑑を"進捗＋あと少し"訴求に（達成率可視化・あと◯個でコンプ＝コレクション心理）② 取得済みメールで再訪喚起（近くに新スポット/期間限定/達成おめでとう＋次の目標。送信は外部送信＝段階導入・社長合意後・rally-dev 実装領域）③ PWA/ホーム画面追加で再訪摩擦を下げる ④ まず既存に再訪施策（プッシュ/メール/PWA）があるか要確認（📥）。効果=中〜高（再訪率＝LTV＝ゴールの"利用"に直結）／工数=小〜中。</li>
+    </ul>
+    <p class="text-xs text-gray-500 mb-2">あわせて <strong>Q-R07</strong>（rally を塞がり3点が解けるまで「週次」に落とす右サイズ化）を提案。分析は止めない＝週次でも継続。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 009（2026-07-05）で「空の店先」＝トップに実際の中身（サンプルスポット/テーマ/使い方）が無い問題を R-R14 として起票。</p>
+  </section>
+
+  <!-- ===== Cycle 007 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 007 — 2026-07-03（獲得経路②：スポット側＝現地を獲得チャネルにする入口が無い・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。当環境は外部ネットワーク未許可（curl / hp-audit 再試行で権限拒否・Cycle 002〜007 連続）＝robots.txt/sitemap.xml の実取得・下層ページ新規スクショは保留。取得済みスクショ（PC/SP・JS描画後 2026-06-27）を、Cycle 006 で整理した獲得3経路のうち唯一未着手だった「②現地・スポット側」の観点で精査。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（スポット側＝供給ループ）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>ランディングに「スポット側の入口」が一切無い</strong>：ナビ・フッターのどこにも、施設・店舗・自治体が「うちの場所を載せたい」と申し込める導線（掲載希望・提携・スポット登録）が見当たらない＝入口は100%参加者（需要側）向けで、コンテンツの源泉＝供給側の窓口がゼロ。※下層・ハンバーガー内は未確認（捏造しない）。</li>
+        <li><strong>現地こそ最強の獲得接点なのに受け皿設計が見えない</strong>：新規参加が最も自然に起きるのは「すでにそのスポットに来ている人が店頭QR/ポップでその場で参加する」瞬間（関心・現地性・行動が揃い、位置情報の説得も不要・検索エンジン非依存）。トップは登録フォーム最優先で現地起点の着地・参加の型が入口から見えない。</li>
+        <li><strong>（戦略）供給ループは獲得ループを兼ねる</strong>：掲載窓口＋現地QRキットを渡せば、各スポットが「集客になるから」と自発的に rally を宣伝する分散チャネルになる。現状の掲載が運営の手作業登録なら、それが規模の上限（由来は📥で確認）。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R12</strong>（🟦🟡 獲得・現地／供給ループ・新規）スポット側を獲得チャネルにする＝①「スポット掲載をご希望の方へ」ページ＋フッター/ナビ導線（R-R09と同時なら1工数。掲載条件・費用は <code>【要・社長確認】</code>）② 現地QRキット（店頭ポップ→そのスポットの詳細ページ直行＝現地なら位置情報の説得不要）③ QR着地は「その場で参加→スタンプ→登録は後」の順序（R-R08 の思想を現地起点に）④ まず既存にスポット申込の仕組み・配布済みQRがあるか要確認（📥）。効果=中〜高（検索非依存の獲得＋スポット数=コンテンツ規模の成長装置）／工数=小〜中。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 008（2026-07-04）で獲得軸に対する第4の軸＝<strong>継続（リテンション・再訪）</strong>の欠落を R-R13 として起票。</p>
+  </section>
+
+  <!-- ===== Cycle 006 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 006 — 2026-07-02（成長ループ：口コミ・共有・招待と社会的証明がランディングに無い・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。当環境は外部ネットワーク未許可（curl / hp-audit を再試行し権限拒否を確認・Cycle 002〜006 連続）＝robots.txt/sitemap.xml の実取得・下層ページ新規スクショは保留。取得済みスクショ（PC/SP・JS描画後 2026-06-27）を「新しい参加者はどう来て、どう次の参加者を連れてくるか＝獲得エンジン（成長ループ）」という未指摘の観点で精査。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（成長ループ）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>ランディングに社会的証明が一切無い</strong>：ヒーロー・登録フォーム・「あなたのまわりに」のどこにも参加者数・掲載スポット数・達成/収集の実績といった「使われている」証拠が無く、証拠を得る前にメール登録を求められる（R-R08＝順序、R-R10＝コピーの具体とは別軸＝「数・実績」という社会的証明の欠落）。</li>
+        <li><strong>共有・招待（口コミループ）の導線がランディングに無い</strong>：SNS/LINE共有・友達招待・「一緒にまわろう」等が見当たらない。スタンプラリーは本来バイラル（集める→見せる→友達が参加）だが、その成長エンジンが入口に無い。※深い階層に共有/招待機能が存在する可能性は未確認（捏造しない）。</li>
+        <li><strong>（戦略）アクセス増の経路は3つ：①SEO ②各スポット経由の流入（現地QR等） ③口コミ・共有</strong>。①は R-R01（SSR）待ちで当面詰まる。これまでの10提案は①とCV順序・コピーに集中し、③に一度も触れていなかった。②③はデータ接続やSSRを待たず今すぐ効かせられる。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R11</strong>（🟦🟡 成長／獲得・新規）成長ループ＋社会的証明をランディングに＝① 社会的証明ブロック（参加者数/スポット数/スタンプ数＝数値は <code>【要・社長確認】</code>）② バッジ/スタンプの SNS・LINE 共有導線（達成時の共有カード＝R-R02のOGPと連動）③ 友達招待（招待リンク）④ まず既存機能に共有/招待があるか要確認（有れば入口へ露出のみ＝最小工数）。効果=中〜高／工数=小〜中。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 007（2026-07-03）で獲得経路②（スポット側＝掲載窓口＋現地QRキット）の欠落を R-R12 として起票＝獲得3経路の論点が出揃った。</p>
+  </section>
+
+  <!-- ===== Cycle 005 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 005 — 2026-07-01（コンテンツ実体：ヒーロー訴求コピーが薄い・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。当環境は外部ネットワーク未許可（curl 再試行で権限拒否を確認・Cycle 002〜005 連続）＝robots.txt/sitemap.xml の実取得・下層ページ新規スクショは保留。取得済みスクショ（PC/SP・JS描画後 2026-06-27）を「見せている中身（訴求コピー）の実体」という未指摘の観点で精査。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（コンテンツ実体）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>ファーストビューの主要コピーが全ひらがな・抽象で、何のサービス／どんな場所／規模が伝わらない</strong>：ヒーローは「ぜんこくの すてきな ばしょへ」「ちかくの すてきな ばしょを みつけて、スタンプを あつめよう。」のみ。場所の種類・規模・得られるもの・対象の具体がゼロ＝メール要求の手前で価値の証拠が無い（R-R08 の"順序"とは別軸＝見せている中身が薄い）。</li>
+        <li><strong>全ひらがな本文は SSR を入れても SEO で拾われない</strong>：本文に「観光」「スタンプラリー」「名所」等の検索される名詞が無ければ、SSR で HTML を生成しても何のクエリでも引っかからない＝SSR は器・キーワードを含む実コピーが中身。R-R01（技術）と R-R07（受け皿）を繋ぐ「コピーの実体」が抜けている。</li>
+        <li><strong>（推測）全ひらがな・分かち書きのトーンは児童向けの印象</strong>：対象が「観光する大人」ならトーンと対象がずれる可能性＝ブランド方針か再考余地かを Q-R06 で確認（断定しない）。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R10</strong>（🟦🟡 コンテンツ実体・新規）ヒーロー/コア訴求コピーを実体のある言葉に＝① 具体価値を1行＋規模を数字で（<code>【要・社長確認】</code>）② 検索される名詞を自然に含める ③ ひらがなの世界観を残すなら装飾＝ひらがな／実体・meta＝通常表記で両立 ④ トーン・対象・スポット種別は Q-R06 で確定。SSR前でも今すぐコピーは直せる。効果=中〜高／工数=小〜中。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 006（2026-07-02）で成長ループ（口コミ・共有・招待）＋社会的証明の欠落を R-R11 として起票。</p>
+  </section>
+
+  <!-- ===== Cycle 004 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 004 — 2026-06-30（深掘り③：信頼・コンプライアンス＋アイコンフォント全域波及・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。当環境は外部ネットワーク未許可（curl/hp-audit を試行し権限拒否を確認）＝robots.txt/sitemap.xml の実取得・下層ページ新規スクショは保留。取得済みスクショ（PC/SP・JS描画後 2026-06-27）を信頼要素・コンプライアンス・装飾フォントの視点で再精査。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（信頼・コンプラ・装飾フォント）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>個人情報（メール）を登録要求しているのに、運営者情報・プライバシーポリシー・利用規約・問い合わせへの導線が確認範囲（PC左ナビ・フッター・取得済みスクショ）に無い</strong>＝(a)法務リスク (b)初見の不安で登録前離脱。※ハンバーガー内・登録フロー内・下層に存在する可能性は未確認＝Q-R05 で伺う（捏造しない）。</li>
+        <li><strong>□（アイコンフォント）読込失敗はサイト全域に波及</strong>：ロゴ/CTA だけでなく左ナビ装飾マーカー・ログイン・JOIN US・ヒーローのピル・フッターにも一様に□。＝個別バグでなく「表示用/アイコンフォントの配信・プリロード失敗」1点に集約。地の日本語テキストは正常。実機再現なら（Q-R02）フォント配信を直せば一括改善。</li>
+        <li><strong>（再確認）PCトップに非登録の「探す」導線が無い</strong>（SPはJOIN US直下に緑「ちかくの スポットを さがす」あり）＝R-R08 ③の裏付け。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R09</strong>（🔴 信頼・コンプラ・新規）フッター/信頼整備＝運営者情報・プライバシーポリシー・利用規約・お問い合わせ＋フッターナビ。① Q-R05 で有無確認 ② 既にあれば露出のみ（最小工数）③ 無ければ整備＋登録フォーム近傍に同意文言＋リンク。固有表記は <code>【要・社長確認】</code>。内部リンク/クロールにも効く。効果=中〜高／工数=小〜中。</li>
+      <li><strong>R-R03 範囲更新</strong>（🟡）□はサイト全域のアイコンフォント読込失敗。原因1点に集約＝実機再現なら（Q-R02）<code>@font-face</code>/プリロード/フォールバックの修正で一括改善。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 005（2026-07-01）でヒーロー/コア訴求コピーの実体不足（全ひらがな・抽象→利用動機もSEOキーワードも作れていない）を R-R10 として起票。</p>
+  </section>
+
+  <!-- ===== Cycle 003 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 003 — 2026-06-29（深掘り②：初回CV＋コンテンツ設計・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>＝効果検証(C)不可。当環境は外部ネットワーク未許可のため robots.txt/sitemap.xml の実取得・下層ページ新規スクショ・Slack配信は保留（次サイクル予約）。取得済みスクショ（PC/SP・JS描画後）を「初回訪問の登録転換（CV）」の視点で精査し、R-R07 を着手可能なコンテンツ・ブループリントへ具体化。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（初回訪問CVの視点）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>コア価値「近くの素敵な場所」が初回訪問で破綻</strong>：位置情報が許可されないとトップの「あなたの まわりに」が黄色エラー（「いちじょうほうの しようが きょかされていません…」）になり“近く”が空表示。ヘッドレス特有ではなく、実機の「許可しない/まだ許可していない」ユーザーでも同じ。フォールバック（エリア/テーマから探す）が無い。</li>
+        <li><strong>価値提示より先に「メール必須」＋PC/SP導線不一致</strong>：PCトップ最初のフォームがいきなりメール必須で、3ステップ/バッジ例/規模感など価値の証拠が無い。SPにはフォーム下に緑の非登録導線「ちかくの スポットを さがす」があるが、PCには見当たらない。</li>
+        <li><strong>登録ボタンのラベルが□</strong>（R-R03 と整合）：主要CTAのラベルが豆腐＝実機再現なら登録の最終地点が壊れている（CV観点で重大度を上げる）。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R08</strong>（🔴 オンボーディング/CV・新規）初回訪問のCV根治＝①位置情報なしでも価値が出るフォールバック（未許可/拒否時はエリア・テーマ・人気/全国の場所を第一手に＋再許可導線）②メール要求の前に3ステップ図解・バッジ見本・「全国◯◯スポット」の規模感を1ブロック（数値は <code>【要・社長確認】</code>）③PCにもSP同様の非登録「探す」導線でゲスト閲覧→登録の二段に④□CTAを実機確認の上で修正。SSR不要・データ無しでもフロントだけで着手可。効果=高／工数=中。</li>
+      <li><strong>R-R07 具体化</strong>（🟡 コンテンツ）場所詳細／エリア／テーマ／トップの「持つべき要素（H1/本文/JSON-LD）＋狙うクエリの型＋内部リンク」ブループリントを掲示板に追加。SSR後そのまま indexable な受け皿に。紹介文・写真・スポット数等の固有事実は <code>【要・社長確認】</code>／「場所」データの規模・由来は要確認＝設計の前提。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。mailbox <code>to: hp-loop-rally</code>＝新着なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 004（2026-06-30）で信頼/コンプラの R-R09 を起票し、R-R03 の□波及範囲を「サイト全域のアイコンフォント読込失敗」へ更新。</p>
+  </section>
+
+  <!-- ===== Cycle 002 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 002 — 2026-06-28（深掘り①：discoverability・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携</strong>。Cycle 001 取得済みの <code>hp-shot</code> スクショ（PC/SP・JS描画後）を視覚精査。当環境は外部ネットワーク未許可のため robots.txt/sitemap.xml の実取得・新規スクショ・Slack配信は保留（次サイクル予約）。</p>
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">所見（深掘り）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>□豆腐は「Webフォント依存」に限定と判明</strong>：地の日本語テキスト（ナビ・ヒーロー文・フォーム見出し）は正常描画。□になるのは (a)ロゴ/ワードマーク (b)黒い送信ボタン文言 (c)「あなたの まわりに」の値 (d)装飾アイコン＝表示用フォント＋アイコンフォントの読込失敗の症状（ランダム文字化けではない）。実機再現なら登録離脱に直結（Q-R02）。</li>
+        <li><strong>情報設計（IA）は明快</strong>：左ナビ＋キーワード検索で回遊の素地は十分。コンテンツが伴えば検索の受け皿になりうる。</li>
+        <li><strong>discoverability は SSR 一本足にしない</strong>：SSR(R-R01・大・方針待ち)の手前で、robots/sitemap/Search Console 登録(R-R06)を分離して先行できる。</li>
+      </ul>
+    </div>
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-3">
+      <li><strong>R-R06</strong>（🔴 discoverability）robots.txt 整備＋全URL（場所・エリア・テーマ・バッジ図鑑）の sitemap.xml 動的生成＋Search Console 登録・sitemap送信。SSRを待たず先行できる発見性の最安レバー。観察＝SPAは内部リンク遷移がJSでクローラが各URLを辿りにくい（robots/sitemap の実在は未確認＝次サイクルで取得）。効果=中〜高／工数=小〜中。</li>
+      <li><strong>R-R07</strong>（🟡 コンテンツ）場所詳細／エリア／テーマページのコンテンツ設計（名称・説明・エリア・カテゴリ・写真・周辺の内部リンク）。SSR後そのまま indexable な受け皿に。技術(SSR)は衛生・コンテンツが主戦場。「場所」データの規模・由来は要確認。効果=中〜高／工数=中。</li>
+    </ul>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし。これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。Cycle 003（2026-06-29）で R-R07 をコンテンツ・ブループリントへ具体化し、CV根治の R-R08 を起票。</p>
+  </section>
+
+  <!-- ===== Cycle 001 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 001 — 2026-06-27（初回診断・スナップショット）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC・GA4 ともに<strong>未連携（データ未取得）</strong>。<code>hp-audit</code>（配信HTML）＋ <code>hp-shot</code>（JS描画後スクショ PC/SP）によるサイト実査。</p>
+
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4 text-sm text-gray-700">
+      <p class="font-semibold mb-1">総評</p>
+      <p>UI・体験は完成度が高く、アカウント登録導線もファーストビューに配置（◯）。一方で <strong>SPA（クライアント描画）ゆえに配信HTMLが空</strong>＝検索エンジン・SNSが中身を取得できず「アクセス増」の最大ボトルネック。やるべきは小手先のタグ調整ではなく <strong>各ページのHTMLを生成（SSR/プリレンダ）して検索・シェアの入口を開けること</strong>。拡散しやすい product なので OGP 整備の費用対効果も高い。</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-3 text-sm mb-4">
+      <div class="bg-emerald-50 border border-emerald-200 rounded p-3">
+        <p class="font-semibold text-emerald-800 mb-1">✅ 良い点</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li>アカウント登録フォームをファーストビューに配置（CV導線が明快）</li>
+          <li>探し方が多彩（エリア／テーマ／マップ／キーワード／バッジ図鑑）＝回遊の素地</li>
+          <li>やさしいUI・世界観の統一（参加のハードルが低い）</li>
+          <li>viewport 設定あり（モバイル前提の設計）</li>
+        </ul>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 rounded p-3">
+        <p class="font-semibold text-amber-800 mb-1">⚠️ 課題</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-1">
+          <li><strong>配信HTMLに title/meta/h1/本文が無い</strong>（SPA・検索/SNS が中身を読めない）＝アクセス増の最大障壁</li>
+          <li>OGP/Twitterカード無し＝共有しても映えない（拡散機会の損失）</li>
+          <li>JSON-LD（構造化データ）無し＝地図・場所のリッチリザルト機会なし</li>
+          <li>h1 が複数（主題が曖昧）・canonical 無し</li>
+          <li>スクショで□豆腐（ロゴ・送信ボタン・バッジ等）＝実機要確認（推測：フォント/アイコン欠落）</li>
+          <li>「あなたのまわりに」が位置情報未許可で空表示＝初見の体験が途切れる</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="font-semibold text-sm mb-2">改善提案（起票時の詳細）</p>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong>R-R01</strong>（🔴 SEO土台）SPAのSEO根治：SSR/プリレンダで各URLに固有の title/meta/h1/本文（場所名・エリア・説明）を含むHTMLを返す。最低でも場所詳細・エリア一覧をインデックス可能に。観察＝hp-audit で title=0字/meta=0字/h1は描画後のみ。効果=高／工数=大（方針は Q-R01）。</li>
+      <li><strong>R-R02</strong>（🔴 拡散）OGP/Twitterカード整備：トップ＝サービス紹介OG画像、場所詳細＝その場所の写真＋名前をOG画像に（SSRと併用で効果大）。Twitterカードは summary_large_image。効果=中〜高／工数=小〜中（Quick win）。</li>
+      <li><strong>R-R03</strong>（🟡 ビジュアル）□豆腐の実機確認と修正：JS描画後スクショでロゴ・送信ボタン・ナビ装飾・バッジ枠が□。推測＝Webフォント/アイコンフォントの読込失敗。実機再現を確認（Q-R02）→実バグなら配信/プリロード/フォールバック、アイコンはSVG化。効果=中（実バグなら高）／工数=小。</li>
+      <li><strong>R-R04</strong>（🟡 オンボーディング）初見体験：①位置情報を求める理由を一言（「近くの場所を表示するために使います」）②未許可でも人気/全国の場所を見せる（ゲスト閲覧）③登録メリット（バッジ・記録・近くの発見）を箇条で。効果=中／工数=小〜中。</li>
+      <li><strong>R-R05</strong>（🟢 SEO衛生）h1の1本化＋canonical＋各ページ固有meta（SSR後）。効果=中／工数=小。</li>
+    </ul>
+    <p class="text-xs text-gray-500 mt-3">対応記録：from-president.md＝新規（初回・指示なし）。ゴール「参加者の利用・アクセス増」・実装担当「サイトごと専用機（rally-dev）」は社長確定（2026-06-27）→ spec.html に反映。<br>※ これらの R/Q の<strong>現在の生死は index の繰り越し表</strong>で追跡中。</p>
+  </section>
+
+  <!-- ===== Cycle 000 スナップショット ===== -->
+  <section class="mb-6 border border-gray-200 rounded-lg p-5 bg-white opacity-90">
+    <h2 class="text-xl font-bold mb-1">Cycle 000 — 2026-06-27（ループ登録）</h2>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li>全国スタンプラリー（自社プロダクト）を <code>/hp-loop rally</code> としてループに登録。掲示板3層・社長指示ファイル・日次cron（04:00）・mailbox許可リストを新設。</li>
+      <li>URL（check-rally.com 到達200）・ゴール（参加者の利用・アクセス増）・実装担当（rally-dev＝専用機）を確定。GSC/GA4 は未連携（接続待ち）。</li>
+    </ul>
+  </section>
+
+</div>
+</body>
+</html>

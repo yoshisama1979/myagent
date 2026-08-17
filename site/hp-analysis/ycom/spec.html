@@ -66,7 +66,7 @@
       <li><strong>Q-002</strong>：ゴール＝<strong>SEO流入＋問い合わせ増</strong>。</li>
       <li><strong>Q-003</strong>：GSCデータ＝<strong>BigQuery 一括エクスポートを T-006 <span class="font-mono">gsc-fetch.py</span> で取得・解決（2026-06-12）</strong>。GA4は別途。</li>
       <li><strong>Q-004・Q-006</strong>：頻度＝<strong>定期化せず都度 <span class="font-mono">/hp-loop</span></strong>（後に日次 daily 実行で運用）。</li>
-      <li><strong>Q-005</strong>：実装は <strong>y-com.info 担当エージェント（web-hanasaka）に引き渡し</strong>。本ループは診断・提案まで。</li>
+      <li><strong>Q-005</strong>：実装は <strong>y-com.info 担当エージェント（web-hanasaka）に引き渡し</strong>。本ループは診断・提案まで。<strong class="text-amber-700">稼働形態（2026-07-31 判明・先方明言）＝web-hanasaka は常駐ではなく間欠稼働</strong>（担当PCで作業者が動いている間だけ受信箱を処理）。＝<strong>便が数日〜1週間超未達でも故障・停止とは限らない</strong>（実例＝07-22〜07-31 の9日間は無稼働期間で、復旧後に古い順で一括処理された）。未達が続く場合のエスカレーションは「稼働形態の確認」を先に行い、拠点PCの故障を推測で断定しない。</li>
       <li><strong>Q-008</strong>：GSCデータ＝<strong>継続共有・蓄積で運用</strong>。</li>
       <li><strong>Q-009</strong>：<strong class="text-emerald-700">GA4新規作成は不要＝GA4は稼働中</strong>と BigQuery で確認・<strong>R-022は中止</strong>（詳細はアーカイブ Cycle 008）。</li>
       <li><strong>Q-010</strong>：<strong class="text-emerald-700">料金の目安レンジ提供済み＝R-014b 本番反映を確認（2026-06-18）</strong>。<span class="font-mono">/price/basic.html</span> に総額目安＋料金FAQを設置（詳細はアーカイブ Cycle 009）。</li>

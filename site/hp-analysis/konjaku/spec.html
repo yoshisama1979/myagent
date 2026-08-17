@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>今昔写語 HP分析｜確定・仕様｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">今昔写語</a>
+    <span class="mx-1">/</span>
+    <span>確定・仕様</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">📐 確定・仕様 — 今昔写語</h1>
+  <p class="text-gray-600 mb-6">変わりにくい前提・背景の常設リファレンス（サイト前提・確定回答・データソース・役割分担）。確定したことだけをここに置く。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <span class="px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-semibold">📐 確定・仕様（このページ）</span>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">サイト前提</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">プロダクト</td><td class="py-1">今昔写語（株式会社はなさか 自社プロダクト・hana-tools client_id 21 / project_id 36 / work_id 26 今昔写語開発）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">対象URL</td><td class="py-1">🚨 <strong>2ドメインが並存（C019・2026-08-16 確定）</strong>：<a href="https://konjaku-photo.jp/" class="text-blue-600 hover:underline font-mono">https://konjaku-photo.jp/</a>（新システム＝Next.js。本ループが C001〜C018 で観測してきた対象）と <a href="https://konjaku-photo.com/" class="text-blue-600 hover:underline font-mono">https://konjaku-photo.com/</a>（旧システム＝PHP。<strong>実トラフィックはこちら</strong>）。<strong>同一ID体系の同一コンテンツを両方 HTTP 200 で配信・相互リダイレクト無し・canonical 双方無し</strong>。詳細は下記「ドメイン構成」節。以後の分析は<strong>両ドメインを対象</strong>とする</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">ゴール</td><td class="py-1">✅ <strong>アクセス（閲覧）増を主軸に全方位</strong>（投稿ユーザー増・SEO流入増も重点。社長確定 2026-06-27）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">事業内容</td><td class="py-1">昔↔今 写真比較ギャラリー。同じ場所の「昔の写真」と「今の様子」を見比べる。ログイン・検索・多数の比較投稿。<span class="text-gray-500">（旧：ダークテーマ単一ページ → 2026-08 リニューアルでライト基調・複数ページ構成へ）</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">規模（公表値）</td><td class="py-1">✅ <strong>投稿写真数 17,397枚・登録ユーザー数 6,828人・コメント総数 1,494件</strong>（2026-08-10 実査＝リニューアル後トップ・/comments の表示値。以前は非公表で不明だった）。公式X＝<a href="https://x.com/konjaku_photo" class="text-blue-600 hover:underline font-mono">@konjaku_photo</a>（C016 リンク出現＝SNS運用開始の外形）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">種別/技術</td><td class="py-1">✅ <strong>Next.js（App Router）製・本番ビルド稼働</strong>（C015 で確定・C016 で本番ビルド化を確認＝チャンク content-hash・応答0.04〜0.08秒）。<strong>2026-08 全面リニューアル</strong>（C016 実査検出・報告なし）＝FV・ナビ・フッター・URL構造を刷新。🟡 残る構造課題＝<strong>一覧・個別のコンテンツ本体は依然JS描画</strong>（配信HTMLに img 0件）・全ページ title/description 共通・canonical/OGP/JSON-LD 無し（トップ h1 は整備済み）。SSR・generateMetadata・sitemap.ts はフレームワーク標準＝実装コストは低い</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">URL構造<br><span class="font-normal text-xs text-gray-500">（2026-08 リニューアル後・C016 確定）</span></td><td class="py-1">✅ <span class="font-mono">/old-photos</span>（一覧）・<strong><span class="font-mono">/old-photos/{id}</span>（個別ページ・200実在）</strong>・<span class="font-mono">/old-photos/upload</span>（投稿）・<span class="font-mono">/comments</span>（コメント一覧・検索つき）・<span class="font-mono">/search</span>。<strong>C019（2026-08-16）追加＝年代・都道府県が独立URL化</strong>：<span class="font-mono">/eras/{meiji, taisho, showa_early, showa_mid, showa_late, heisei_reiwa, unknown}</span>・<span class="font-mono">/prefectures/{数値ID}/old-photos</span>（<span class="font-mono">/areas/osaka</span> は404＝スラッグ形式ではない）。ランキングは依然トップ内アンカー（<span class="font-mono">/#ranking</span>）。<strong>title は個別ページが全件「古写真詳細」固定（→R-J02）、年代ページはトップと同一、都道府県ページは「都道府県ID: {id}の古い写真」＝内部ID露出（→R-J20）</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">計測タグ</td><td class="py-1">🟡 <strong>ドメインで分かれる（C019・2026-08-16 実査）</strong>。<br><strong>.com＝計測済み</strong>：GTM <span class="font-mono">GTM-MCNQLLC</span>＋GA4 <span class="font-mono">G-YBRQK0Q7JC</span>＋CrazyEgg。<strong>これが GA4 プロパティ <span class="font-mono">analytics_254454527</span> の実体</strong>（＝5年分のデータ源）。<br><strong>.jp＝GTM のみ</strong>：<span class="font-mono">GTM-NGPVQTKQ</span> が 2026-08-15〜16 に新設されたが、<strong>GA4 に .jp のページは1件も届いていない</strong>（直近3日 0件）＝コンテナは載ったが配信が未設定（→R-J13 の残件）。<br>両ドメインとも混在コンテンツ0・バージョン露出なし。<span class="text-gray-500">※ C015/C016 の「解析タグ皆無」は <span class="font-mono">.jp</span> についてのみ正しい。<strong>.com は当初から計測されていた</strong>＝「計測が無い」という18サイクル分の前提は誤りだった</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">URL変種</td><td class="py-1"><strong>.jp</strong>：http→https 正常（✅）／<strong>www.konjaku-photo.jp は DNS 未解決</strong>（🟡 C015〜C019 不変・R-J05）／<strong>robots.txt・sitemap.xml は 2026-08-15〜16 に実体化</strong>（従来404）＝robots 71B（全許可＋<span class="font-mono">Sitemap:</span> 宣言）・sitemap 1,718,018B（約1.6万URL）。<br><strong>.com</strong>：http→https・www→非www ともに <span class="font-mono">https://konjaku-photo.com/</span> へ正常正規化（✅）／🔴 <strong>robots.txt・sitemap.xml が実体を持たない</strong>＝どちらもトップHTML（978KB）を HTTP 200 で返すキャッチオール（＝検索エンジンへの制御手段が無い）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">データソース・ツール</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">GSC</td><td class="py-1">🟡 <strong>設定済み・着弾待ち</strong>（社長設定 2026-08-16）。dataset＝<code>searchconsole_konjaku</code>。実データ着弾は〜48時間（<strong>2026-08-18 頃</strong>）。取得＝<code>bin/.venv/bin/python3 bin/gsc-fetch.py --dataset searchconsole_konjaku</code>。<strong>⚠️ 着弾時に対象プロパティが <span class="font-mono">.jp</span> か <span class="font-mono">.com</span> かを必ず確認</strong>（検索実績は .com 側にしか無いため。→Q-J06）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">GA4</td><td class="py-1">✅ <strong>連携済み・<span class="text-rose-700">新旧2系統ある（C021・2026-08-17 社長訂正で確定）</span></strong>。<strong>①正＝<code>analytics_549912350</code>（新 <span class="font-mono">.jp</span>）</strong>＝daily エクスポート・初回テーブル <code>events_20260816</code>・<strong>日常の効果検証はこちらを使う</strong>。<strong>②旧＝<code>analytics_254454527</code>（旧 <span class="font-mono">.com</span>・測定ID <code>G-YBRQK0Q7JC</code>）</strong>＝2021-07-03 から約5年分・streaming(intraday)のみ・<strong>リプレイス前後の Before/After 比較素材として使う</strong>。取得＝<code>bin/.venv/bin/python3 bin/ga4-fetch.py &lt;mode&gt; --dataset &lt;上記いずれか&gt; --days N</code>。<strong>⚠️ 2プロパティは合算できない</strong>＝新旧比較は個別に集計して突き合わせる。<span class="text-rose-700">⚠️ C019/C020 の GA4 分析はすべて②（.com）のもの。「.jp の計測が未到達」という C019/C020 の記述は<strong>①の存在を知らなかったことによる誤り</strong>で、.jp は当初から正常に計測されていた</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">✅ 解決（T-026）</td><td class="py-1">✅ <strong>2026-08-17（C020）にツール改修で解決</strong>。旧課題＝<code>ga4-fetch.py</code> の <code>pages</code>/<code>landing</code> は page_key を「パス＋<code>?p=NNNN</code>」に正規化するため、<span class="font-mono">.com</span> の <code>/?p_mode=view&amp;p_photo={id}</code> が<strong>すべて <code>/</code> に潰れ</strong>、北極星の直接指標が取れなかった。→ <strong><code>--raw-page</code> オプションを追加</strong>（page_key＝ホスト名＋パス＋クエリ）。<strong>既定は不変＝他5サイトの数字は1つも変わらない opt-in 設計・回帰確認済み</strong>。使い方＝<code>ga4-fetch.py pages --dataset analytics_254454527 --days 7 --raw-page</code>（<code>--page konjaku-photo.jp</code> でホスト絞りも可＝R-J21 の反映検知に使う）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">⚠️ CV列の読み方</td><td class="py-1">🔴 <strong><code>landing</code>/<code>sources</code> の <code>cv_sessions=0</code> を「CVが無い」と読まないこと</strong>（M-09）。本 dataset は <code>ga4-fetch.py</code> の <code>DATASET_CV_EVENTS</code> に未登録のため、<strong>ycom 向けの既定CVリスト（問い合わせ・見積り・tel…）で集計した結果の 0</strong> が印字される。実際は<strong>このサービス固有のイベントが1つも定義されていない</strong>（C020 実査）＝正しい意味は「<strong>CVが定義されていない</strong>」。→ R-J22 でイベントを実装し、実名を <code>DATASET_CV_EVENTS</code> に登録するまで cv_* 列は無意味</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">サイト取得</td><td class="py-1"><code>bin/hp-audit.sh &lt;URL&gt;</code>（on-page信号・読み取り。<code>--text</code>＝本文抽出・<code>--json</code>＝差分用）／<code>bin/hp-shot.sh</code>（スクショ＝JS描画後を撮れる）。当面の一次情報。<strong>⚠️ 呼び出し形の注意（2026-07-20 確定）</strong>：無人環境の許可リストは「<code>bin/x</code>」と「<code>bash bin/x</code>」を別物として扱う。<strong>前置なしの直接形式で呼ぶこと</strong>（bash前置は承認ゲートに掛かる。C002〜C013 の「外部GET不可」はこの誤診＝K-317 同事象）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">🚨 ドメイン構成（C019・2026-08-16 確定）</h2>
+  <p class="text-sm text-gray-700 mb-3">本ループは C001〜C018 の18サイクル、<span class="font-mono">konjaku-photo.jp</span> だけを観測していた。<strong>C019 で、同一サービスが <span class="font-mono">konjaku-photo.com</span> でも稼働しており、検索流入は事実上すべてそちらにあることが判明</strong>（GA4 初取得により発覚）。それ以前のサイクルの「検索に見えていない」という診断は <span class="font-mono">.jp</span> についてのみ正しく、サービス全体には当てはまらない。</p>
+  <table class="w-full text-sm border-collapse mb-4">
+    <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-3">項目</th><th class="py-1 pr-3">konjaku-photo.com（旧システム）</th><th class="py-1">konjaku-photo.jp（新システム）</th></tr></thead>
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">技術</td><td class="py-1 pr-3">PHP系・jQuery 1.8.2／jQuery Migrate／Bootstrap 3.2／flexslider／slick／Google Maps API。<strong>SSR（サーバ側で本文まで描画）</strong></td><td class="py-1">Next.js（App Router）・本番ビルド。<strong>本文はJS描画</strong>（配信HTMLはシェル）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">トップの実測</td><td class="py-1 pr-3">978,202B／応答 4.11秒／h1×18・h2×22／img 24件（<strong>alt 欠落0</strong>）／a[href] 497本（297種）</td><td class="py-1">27,079B／応答 0.06秒／h1×1・h2×7・h3×2／img 0件／a[href] 22本（9種）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">個別比較ページ</td><td class="py-1 pr-3"><span class="font-mono">/?p_mode=view&amp;p_photo={id}</span>。<strong>固有 title/description を SSR</strong>（「[兵庫県]神戸海岸オリエンタルホテルの古写真 | …」）・Twitterカード <span class="font-mono">summary_large_image</span>（@konjaku_photo）。<span class="text-rose-700">⚠️ <strong>C020 訂正</strong>＝C019 に書いた「og:image＝実物の古写真（<span class="font-mono">/m/pic/600/{id}.png</span>）」は、別IDでの再実査（<span class="font-mono">p_photo=14394</span>）では確認できず <strong>og:title は「今昔写語」固定・og:image は共通バナー <span class="font-mono">/images/ogp_banner.jpg</span></strong> だった。＝<strong>.com が完璧なのではなく「title/description だけが正しい」</strong>。R-J01（OGP）は「移植」ではなく<strong>新規に作る</strong>必要がある</span></td><td class="py-1"><span class="font-mono">/old-photos/{id}</span>。title は<strong>全件「古写真詳細」固定</strong>・og:title/og:description は出るが<strong>サイト共通の固定文</strong>・<strong>og:image 無し</strong>。存在しないIDでも HTTP 200（ソフト404・R-J15 未反映）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">robots / sitemap</td><td class="py-1 pr-3">🔴 <strong>どちらも実体なし</strong>＝トップHTML（978KB）を200で返す</td><td class="py-1">✅ robots 71B（全許可＋Sitemap宣言）／sitemap.xml 1,718,018B（約1.6万URL・2026-08-15〜16 新設）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">計測</td><td class="py-1 pr-3">GTM-MCNQLLC＋GA4 <span class="font-mono">G-YBRQK0Q7JC</span>＋CrazyEgg。<strong>＝GA4 <span class="font-mono">analytics_254454527</span> の実体</strong></td><td class="py-1">GTM-NGPVQTKQ。<strong class="text-emerald-700">✅ GA4 <span class="font-mono">analytics_549912350</span> へ正常到達（C021 実測で確定）</strong><span class="text-gray-500">＝C019/C020 の「到達0件」は旧プロパティだけを見ていた誤り</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">実トラフィック<br><span class="font-normal text-xs text-gray-500">同一日で比較＝2026-08-16 単日（C021）</span></td><td class="py-1 pr-3"><strong>users 867／events 7,567／page_view 2,801</strong>。<span class="text-xs">engagement 551 users（63%）・scroll 372 users（43%）・click 36・search 17 ＝<strong>bot 主体ではなく実ユーザー主体と判断</strong>（推測・断定不可）</span><br><span class="text-xs text-gray-500">15日窓（08-02〜16）＝users 11,068／page_view 34,992／organic 8,035 sess／新規率97%</span></td><td class="py-1"><strong>users 3／events 37／page_view 19</strong>。閲覧＝トップ4・都道府県4種・<strong>市区町村4種</strong>・個別写真1。流入＝google organic 1・bing organic 1・<span class="font-mono">.com</span> referral 1<br><span class="text-xs text-rose-700"><strong>＝同一日で約290倍の差</strong>（867 vs 3）</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">URL変種</td><td class="py-1 pr-3">http・www とも <span class="font-mono">https://konjaku-photo.com/</span> へ正常正規化</td><td class="py-1">http→https 正常。<strong>www.konjaku-photo.jp は DNS 未解決</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">相互の関係</td><td class="py-1 pr-3" colspan="2"><strong>同一ID体系・同一コンテンツ</strong>（<span class="font-mono">.com/?p_photo=1000</span> と <span class="font-mono">.jp/old-photos/1000</span> はどちらも「神戸海岸オリエンタルホテル」）。<strong>相互リダイレクト無し・canonical 双方無し＝重複コンテンツ状態</strong>。<span class="font-mono">.com</span> トップに黄帯「今昔写語が新しくリニューアルオープン／新しいサイトはこちら」の告知あり（<span class="text-gray-500">ただし配信HTMLの a[href] に <span class="font-mono">.jp</span> は0本＝リンクはJS生成の可能性・推測。クローラーはこの導線を辿れない</span>）。→ 方針決定は <strong>R-J19</strong></td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-8">💡 <strong>含意</strong>：新サイトに出している提案（R-J02 個別メタ・R-J03 画像alt）の多くは、<strong>旧サイトに既に実装済みの機能</strong>である。＝新規設計ではなく「旧サイトからの移植」として扱うと工数が下がる（<strong>ただし R-J01 の OGP は旧サイトも未完成＝移植では済まない・C020 訂正</strong>）。逆に言えば、現状の移行は<strong>機能を落としたまま進んでいる</strong>。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">🔑 検索資産の構造（C020・2026-08-17 確定＝北極星の実測窓）</h2>
+  <p class="text-sm text-gray-700 mb-3"><strong>T-026（<code>ga4-fetch.py --raw-page</code>）で初めて実URL粒度の集計が取れた</strong>。7日窓（2026-08-10〜17・すべて <span class="font-mono">.com</span>）＝page_view 17,865／users 5,780。<strong>このサービスの検索資産はトップページではなく、地域一覧と個別写真のロングテールに載っている</strong>という事実が確定した（推測ではなく実測）。</p>
+  <table class="w-full text-sm border-collapse mb-3">
+    <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-3">ページ型（.com）</th><th class="py-1 pr-3">実測（7日）</th><th class="py-1 pr-3">title の実装（.com）</th><th class="py-1">.jp 側の対応</th></tr></thead>
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">トップ <span class="font-mono">/</span></td><td class="py-1 pr-3">523 views（<strong>全体の約3%</strong>）／入口 132 sessions</td><td class="py-1 pr-3">サイト共通</td><td class="py-1">✅ あり</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">市区町村 <span class="font-mono">?p_mode=view&amp;p_city={id}</span></td><td class="py-1 pr-3"><strong>911種が閲覧されている</strong>（東大阪市=640: 116views／356: 112／496: 112＋<span class="font-mono">&amp;p_page=2</span> 80views＝<strong>一覧を読み進めている</strong>）</td><td class="py-1 pr-3">✅ <strong>「東大阪市で撮影された古い写真 | …」</strong>を SSR（description も同型）</td><td class="py-1"><span class="text-rose-700">⚠️ <strong>C021 訂正＝階層は実在する</strong></span>（<span class="font-mono">/cities/{id}/old-photos</span>・HTTP 200・描画後は「千葉市稲毛区の古写真」）。<strong>sitemap にも109件収録済み</strong>（C019/C020 の「存在しない・sitemap にも無し」は見落としによる誤り）。残る問題＝①<strong>配信HTMLが空</strong>（→R-J24）② title がトップと完全同一 ③<strong>収録109件 vs .com 実閲覧911種</strong>の差（→R-J23）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">都道府県 <span class="font-mono">?p_mode=view&amp;p_pref={id}</span></td><td class="py-1 pr-3">134種（20=東京都: 121views／37: 88／39: 78）。<strong>入口としても主力</strong>（p_pref=39 が 29 sessions・38 が 28・20 が 28）</td><td class="py-1 pr-3">✅ <strong>「東京都で撮影された古い写真 | …」</strong>を SSR</td><td class="py-1">🟡 URLは新設済み（<span class="font-mono">/prefectures/{id}/old-photos</span>）だが title＝<strong>「都道府県ID: 27の古い写真」＝内部ID露出</strong> → <strong>R-J20</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">個別写真 <span class="font-mono">?p_mode=view&amp;p_photo={id}</span></td><td class="py-1 pr-3"><strong>3,000種以上</strong>（集計上限に到達＝実数はさらに多い）。最大 ID 14394 が 50views・<strong>単独で 24 sessions の入口</strong></td><td class="py-1 pr-3">✅ <strong>「[大阪府]ショッパーズ八尾店-Tサカエ-トポス八尾店(昭和45年開店〜平成11年)の古写真 | …」</strong>を SSR</td><td class="py-1">🔴 <span class="font-mono">/old-photos/{id}</span> は存在するが title＝<strong>全件「古写真詳細」固定</strong> → <strong>R-J02</strong></td></tr>
+    </tbody>
+  </table>
+  <p class="text-sm text-gray-700 mb-2"><strong>この表が示すこと</strong>：利用者は「今昔写語」を探して来るのではなく、<strong>「自分の街・その建物」を探して検索し、該当ページに直接降りてくる</strong>。＝ドメイン移行（R-J19）の成否は「トップのアクセスが移ったか」ではなく<strong>「このロングテールの層別 page_view を .jp 側で回復できたか」</strong>で測る。<strong>移行の前提条件＝<span class="text-rose-700">R-J24（配信HTMLに中身を載せる）が最上位</span>で、R-J02・R-J20 はその一部として同時に解決する</strong>（受け皿URLは存在するが、中身が空では転送しても評価が引き継がれない）。</p>
+  <p class="text-xs text-gray-500 mb-8">効果検証の基準値として台帳 <code>coverage.md</code>「効果検証の予約」に記録済み。再取得＝<code>bin/.venv/bin/python3 bin/ga4-fetch.py pages --dataset analytics_254454527 --days 7 --raw-page --limit 3000</code>（型別に見るときは <code>--page p_city</code> 等で絞る）。<strong>新サイト側は <code>--dataset analytics_549912350</code></strong>（<code>--raw-page</code> でホスト名つきのURLが出る）。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">🔴 配信HTML（SSR）の実態 — .jp（C021・2026-08-17 確定）</h2>
+  <p class="text-sm text-gray-700 mb-3"><strong>新サイトは4階層すべてで、配信されるHTMLの本文が「読み込み中...」だけ</strong>。中身はブラウザ側の JavaScript が後から描画している。<strong>＝人が見る画面と、検索エンジンが読むHTMLが完全に別物</strong>。これが C019/C020 で「市区町村ページが無い」「個別ページに中身が無い」と誤診した根本原因であり、<strong>.jp の検索流入がほぼゼロであることの構造的な説明</strong>でもある（→ <strong>R-J24</strong>）。</p>
+  <table class="w-full text-sm border-collapse mb-3">
+    <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-3">階層</th><th class="py-1 pr-3">配信HTML（検索エンジンが読むもの）</th><th class="py-1">描画後（人が見るもの）</th></tr></thead>
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">トップ <span class="font-mono">/</span></td><td class="py-1 pr-3">27,079B。ヒーローのコピーとお知らせ2件のみ実体あり。<strong>投稿写真数「- 枚」・登録ユーザー数「- 人」</strong>、PICK UP／年代／都道府県／ランキング／新着／コメントの<strong>全6セクションが「読み込み中...」</strong></td><td class="py-1">統計値・各セクションとも正常表示</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">市区町村 <span class="font-mono">/cities/{id}/old-photos</span></td><td class="py-1 pr-3">18,179B。<strong>ナビ＋フッター以外は「読み込み中...」のみ</strong>。title＝<strong>トップと完全に同一</strong>（地名なし）・canonical 無し。<span class="text-gray-500">※ID違いでもサイズがほぼ同一（608/606＝18,179B・1522＝18,184B）＝中身が無いことの傍証</span></td><td class="py-1">h1「<strong>千葉市稲毛区の古写真</strong>」・「2件の古写真が見つかりました」・絞り込みタブ（今の写真あり(0)／なし(2)）・写真カード（東京高等工芸学校本館 1926／千葉陸軍防空学校 1942）<br><span class="text-xs text-emerald-700">＝<strong>ページの作り自体は良い</strong></span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">都道府県 <span class="font-mono">/prefectures/{id}/old-photos</span></td><td class="py-1 pr-3">23,035B。本文＝「トップページに戻る <strong>データを読み込み中...</strong>」のみ。title＝「都道府県ID: 27の古い写真」＝<strong>内部ID露出</strong></td><td class="py-1">一覧が正常表示</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">個別写真 <span class="font-mono">/old-photos/{id}</span></td><td class="py-1 pr-3">本文＝「トップページに戻る <strong>読み込み中...</strong>」のみ。title＝<strong>全件「古写真詳細」固定</strong>。存在しないIDも HTTP 200（ソフト404）</td><td class="py-1">古写真＋現在写真・タグ・地図・登録情報・コメント欄。<strong>描画後の title は地名入り</strong>（「[京都府]石清水八幡宮の古写真」）</td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-8"><strong>再検証の手順（毎サイクル・安い）</strong>：<code>bin/hp-audit.sh &lt;URL&gt; --text</code> で本文に「読み込み中」以外の固有語（地名・写真名）が出れば R-J24 の反映。<strong>⚠️ 教訓＝「存在しない」と書く前に、必ず描画後（<code>hp-shot</code>）とサイトマップ本文の両方で裏を取る</strong>（C019〜C020 の誤診2件はいずれもこの手順を踏めば防げた）。<strong>sitemap の実収録数の数え方</strong>＝<code>bin/hp-audit.sh https://konjaku-photo.jp/sitemap.xml --text</code> を <code>grep -c</code>（2026-08-17 時点＝<span class="font-mono">/cities/</span> 109件・<span class="font-mono">/prefectures/</span> 47件）。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">GA4 イベント在庫（C020・2026-08-17 実査）</h2>
+  <p class="text-sm text-gray-700 mb-2">7日窓の全イベント＝<code>page_view</code> 17,865／<code>user_engagement</code> 14,604／<code>session_start</code> 6,025／<code>first_visit</code> 5,471／<code>scroll</code> 4,532／<code>click</code> 212／<code>search</code> 175／<code>キーワード検索</code> 173。<strong>前7つは GA4 の自動収集で、プロダクト固有の行動（写真投稿・コメント投稿・会員登録・比較スライダー操作）は1つも定義されていない</strong>。＝北極星の後半「閲覧→投稿の好循環」は現状<strong>原理的に測定不能</strong>（→ R-J22）。<span class="text-gray-500">※ <code>search</code> と <code>キーワード検索</code> は件数がほぼ同数＝同一トリガーに2名称の疑い（M-08 の型・二重計上に注意）。</span></p>
+  <p class="text-xs text-gray-500 mb-8">それまでの代理指標＝<span class="font-mono">/comments</span> の総数と最新日付（1,494件・2026-07-14 で6週間停滞）／<code>first_visit ÷ session users</code>（新規率9割超＝再訪がほぼ無い）。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">確認済みサイト構造（.jp・2026-08 リニューアル後・C016 実査）</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-44">トップ（新）</td><td class="py-1">サイドナビ（ホーム／写真を投稿する／みんなの写真／地域から探す／年代から探す／ランキング／みんなのコメント／お知らせ＋検索＋ログイン）。本文＝①ヒーロー比較スライダー＋コピー「あの頃の街と、今の街をつなぐ。」＋CTA2つ（投稿／見る）＋統計カード（写真数・ユーザー数）②みんなの比較写真（PICK UP）③年代から探す（件数つき）④都道府県から探す（47県×探す/見つけた/合計＝<strong>場所同定のメカニクスが製品機能化</strong>）⑤お知らせ⑥人気ランキング（サムネ＋場所名）⑦最新の古写真⑧最新のコメント（VOICES）⑨投稿CTA帯⑩フッター（コンテンツリンク＋公式SNS。©表記は「© 2024 今昔写語」＝名称統一済み。<strong>法的表記リンクは無し</strong>→R-J12）。SP＝ハンバーガー＋同構成（崩れなし）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">動的コンテンツ</td><td class="py-1">カード・件数・ランキング・コメントは<strong>すべてJS描画</strong>（SSRは「読み込み中...」のシェルまで。/search はクエリ見出しのみ部分SSR）。お知らせ（2026.07.27 デザインリニューアル・2026.02.01 リニューアル）はSSRに含まれる</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">個別比較ページ<br><span class="font-normal text-xs text-gray-500">（C017 内容実査 2026-08-15）</span></td><td class="py-1"><span class="font-mono">/old-photos/{id}</span> の描画後の構成＝①場所名の見出し（例「石清水八幡宮」「大阪城」「神戸海岸オリエンタルホテル」）②タグ（例 #石清水八幡宮 #八幡市 #京都府 #男山）③<strong>古写真／今の写真の2枚並び</strong>＋投稿者・登録日④撮影位置の地図⑤古写真の登録情報（年代・場所・登録日・更新日）⑥コメント欄（未ログインは閲覧のみ）⑦フッター。<strong>レンダリング後の title は地名入りで生成される</strong>（「[京都府]石清水八幡宮の古写真 | …」）が、<strong>配信HTMLの title は全件「古写真詳細 | …」固定・本文は「読み込み中...」のみ</strong>（＝R-J02 は文言設計でなく generateMetadata への移動）。IDは連番ではなく歯抜け（1・2・1000 は実在、17000 は不在）。<strong>C018（9件サンプリング）で確定した実態</strong>＝①「古写真」欠落は<strong>低ID帯に集中</strong>（1・2・3・10・100 は全欠落／500・1000・2000・8000 は全て正常）②「今の写真はまだ登録されていません」は<strong>仕様どおりの表示</strong>（不具合ではない・9件中4件）で、その枠から投稿へ進む導線は無い③撮影位置未設定のページでは地図の代わりに「撮影場所が特定されていないため地図上に表示できません」が出る（9件中3件）④出典欄が入る登録もある（「絵葉書の世界」「ジャパンアーカイブズ」＝リンクつき）⑤存在しないIDでも HTTP 200（ソフト404＝R-J15）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">インデックス</td><td class="py-1">トップは登録済み（<span class="font-mono">site:</span> 陽性確認・C016＝M-15）。個別URLの登録状況は列挙不能（ツール限界）＝SC 接続後に確認</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">旧サイト構造（〜2026-08 リニューアル前の記録・C001〜C015）</h2>
+  <p class="text-sm text-gray-500 mb-3">旧トップ（ダークテーマ・縦長1枚）の構成。<strong>2026-08 リニューアルで置き換わったため履歴として保持</strong>（当時の観察に基づく R の背景理解用）。</p>
+  <table class="w-full text-sm border-collapse mb-4">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-44">URL・クロール面<br><span class="font-normal text-xs text-gray-500">（C014 ライブ実査 2026-07-20）</span></td><td class="py-1"><strong>robots.txt＝実在・全許可</strong>（<span class="font-mono">User-agent: * / Disallow:</span>）／<strong>sitemap.xml＝404（不存在）</strong>／存在しないパスは404を返す（SPA全200型でない・ルートはサーバ管理）／<span class="font-mono">/search</span>＝200 実在だが title・description は<strong>トップと同一</strong>・canonical/h1 無し／個別ページの既知URLパターン（<span class="font-mono">/photo/1</span>・<span class="font-mono">/photos/1</span>・<span class="font-mono">/detail/1</span>・<span class="font-mono">/api/photos</span>・<span class="font-mono">/ranking</span>・<span class="font-mono">/prefecture</span>）＝全404。配信HTMLのリンク1本＋sitemap無し＝<strong>クローラーが辿れる面は実質トップ1枚</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">コンテンツの成長<br><span class="font-normal text-xs text-gray-500">（C014 定点比較 6/27→7/20）</span></td><td class="py-1"><strong>サイトは能動的に成長中</strong>：都道府県件数が増加（読み取り：京都 590→614・秋田 76→81 等）・「最新の今昔フォト」の顔ぶれが入れ替わり（東大阪クラスタ・<strong>施設名タイトル主体</strong>）・最新コメント 2026/7/14＝UGC継続。フッター©表記は「© 2024 <strong>今昔フォト</strong>」＝サービス名と不一致（R-J12 で統一）</td></tr>
+    </tbody>
+  </table>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-44">① ヒーロー</td><td class="py-1">昔↔今の比較スライダー（複数・例 1964五輪↔現在）。実際に魅力的＝強いコンテンツ</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">① FV左（非ログイン時）</td><td class="py-1">ログインフォームが一等地を占有（PC）。SP fold 内には無し＝影響小（→R-J06）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">② 検索/フィルタ</td><td class="py-1">ヒーロー直下に検索バー＋フィルタ（ラジオ/チェック）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">③ 一覧カード</td><td class="py-1">before/after サムネ＋場所名＋件数＋日付。共有の単位として完成度高い。<strong>ただしタイトル（場所名）の品質にばらつき＝一部は住所断片のみ（例「364-1」「2-12-6」）で地名になっていない</strong>（PC/SP 両スクショ・C004 確認 → R-J09）。<strong>C006 追加観察</strong>：一覧カードの日付が一様に「2026/6/5」（PCフル・観察事実。<span class="text-gray-500">※推測：同日一括シード＝写真投稿がユーザー継続でなく運営投入寄り。GET/ログイン実査 Q-J01/Q-J02 で確定 → R-J11</span>）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">④ 閲覧数/ランキング</td><td class="py-1"><strong>数字タイルの大グリッド（例 49683/579 等が多数）。サムネ・場所名・リンク無し＝何が人気か視覚的に伝わらない</strong>（→R-J08 で入口化）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">⑤ コメントフィード</td><td class="py-1">実ユーザー名（例 minosun）＋日付（<strong>2025〜2026 と継続</strong>）＋本文＝UGC・コミュニティ稼働。<strong>このサイトで“今すぐ動いている唯一の資産”</strong>だが、数字タイルの巨大壁の下＝ページ最下部に死蔵（C005 でコメント観点から再確認 → R-J10 で浮上化）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">主ナビ</td><td class="py-1">歯車(⚙)アイコン＝初見でカテゴリ/エリア/ランキングを見つけにくい（→R-J07）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">⑥ フッター</td><td class="py-1"><strong>無し（C007 確認）</strong>：ページはコメント一覧→ボタンで終わり、運営者情報・利用規約・プライバシーポリシー・著作権/出典・削除依頼窓口へのリンク帯が描画後トップに存在しない（→R-J12）。<span class="text-gray-500">※規約類が別URLに存在するかは未確認（Q-J03）。左サイドバー下の小文字列はスクショ解像度限界で判読不可</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">on-page（配信HTML）</td><td class="py-1">title/description 有・OGP/JSON-LD/h1/canonical 無・配信HTMLに画像1件（本体JS描画）</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">役割分担</h2>
+  <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-8">
+    <li>診断・提案＝本ループ（<code>/hp-loop konjaku</code>）。実装＝<code>konjaku-dev</code>（✅ <strong>2026-08-15 接続完了</strong>）。意思決定・回答＝社長（<code>from-president.md</code>）。</li>
+    <li><strong>実装担当との往復（2026-08-15 確立）</strong>：本ループ → <code>konjaku-dev</code> へ mailbox で最新レポートを配信（1サイクル1通・要点集約＋着手推奨順）／<code>konjaku-dev</code> → 本ループへ<strong>本番変更の報告（R番号に紐づかない変更も含め 日付・内容・commit を1行）</strong>／本ループが本番GETで検証し <code>data/hp-loop/konjaku/deploy-log.md</code> に記帳。<span class="text-gray-500">※初配信＝<code>M-20260815T153958</code>（Cycle 018）。それ以前（C001〜C017）は配信先未接続のため掲示板のみに蓄積していた。</span></li>
+  </ul>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">確定した質問の回答</h2>
+  <table class="w-full text-sm border-collapse mb-8">
+    <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">Q-J04<br><span class="font-normal text-xs text-gray-500">計測の土台（GSC/GA4）</span></td><td class="py-1">✅ <strong>解決（2026-08-16・社長対応）</strong>。<strong>GA4＝新規プロパティ作成は不要</strong>＝既存 <span class="font-mono">analytics_254454527</span>（測定ID <span class="font-mono">G-YBRQK0Q7JC</span>）に <strong>2021-07-03 から約5年分</strong>が蓄積されており、C019 で初取得。<strong>GSC＝<span class="font-mono">searchconsole_konjaku</span> をエクスポート設定済み</strong>・着弾は 8/18 頃。<span class="text-gray-500">※ C013 以降「唯一の関門」として督促し続けた項目。<strong>ただし「計測が存在しない」という前提自体が誤りだった</strong>＝計測は .com 側に最初から存在していた（K-416）。残る確認は「GSC の対象プロパティが .jp か .com か」＝Q-J06。</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">Q-J02<br><span class="font-normal text-xs text-gray-500">個別ページのURL</span></td><td class="py-1">✅ <strong>個別URLは存在する</strong>＝<span class="font-mono">/old-photos/{id}</span>（<strong>実査で解決・C016・2026-08-10</strong>。2026-08 リニューアルで誕生・200確認。旧サイトでは既知パターン全404だった）。残る論点＝固有 title/meta（現状は全件「古写真詳細」固定）と本文SSR は R-J02 で継続</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-40">Q-J05<br><span class="font-normal text-xs text-gray-500">ループの回し方</span></td><td class="py-1">✅ <strong>週次で回す</strong>（<code>daily hp-loop-konjaku</code>＝<strong>月曜 04:30</strong>）。社長決定 <strong>2026-07-08</strong>：入力が凍結しているループ（konjaku / rally）は日次→週次に右サイズ化。<code>to: hp-loop-konjaku</code> の新着が来れば反応ティックで即起動するため取りこぼしはない。<strong>データ連携後は日次へ戻す</strong>。<span class="text-gray-500">（根拠＝<code>bin/agent-tick.sh</code> の cron 定義コメント＋<code>data/hp-loop/sites/konjaku.md</code>。掲示板は Cycle 012 までこれを「未回答」と誤表示していた＝Cycle 013 で訂正）</span></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">勝ちパターン・ライブラリの適用可否（2026-07-13 判定・2026-08-16 更新）</h2>
+  <p class="text-sm text-gray-700 mb-2">🎉 <strong>C019（2026-08-16）で状況が反転しました</strong>。GA4 が開通したため、<strong>これまで「適用不可」としていた GA4 前提の型が初めて解禁</strong>されます。GSC 前提の型も 8/18 の着弾で解禁見込み。<strong>次回サイクル（8/17 の日次 cron・週次定石の期日）で、共有ライブラリ <code>data/hp-loop/win-patterns.md</code> の全件を今昔写語に当てる初回判定を行います。</strong></p>
+  <p class="text-sm text-gray-700 mb-8"><span class="text-gray-500">（従前の記録）</span>Cycle 013 で「GSC/GA4 前提の型はすべて適用不可」と判定し、<strong>Search Console 連携を唯一の関門</strong>として督促し続けた。例外＝M-02（過去メモを信じずライブ再取得）は常時適用中、M-15（<span class="font-mono">site:</span> でインデックス有無を実見）は C016 で初適用。<br><strong>⚠️ 反省（C019）</strong>：この判定は<strong>「データが存在しない」という誤った前提</strong>の上に立っていた。実際には GA4 が5年分存在し、<span class="font-mono">.com</span> という別ドメインで計測されていた。<strong>＝「データが無い」は確認した事実ではなく、こちらの思い込みだった</strong>。今後、データ不在を結論づける前に「別ドメイン・別プロパティで測られていないか」を必ず確認する（→ 定石化を skill-kaizen へ K-416）。</p>
+
+</div>
+</body>
+</html>
