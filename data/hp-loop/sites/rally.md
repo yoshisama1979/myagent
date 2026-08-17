@@ -10,15 +10,15 @@
 | 対象URL | https://check-rally.com/ | ✅（到達200確認・2026-06-27） |
 | ゴール（北極星） | **参加者（B2C）の新規獲得と実利用＝アカウント作成→スタンプ収集を増やす**（下記「北極星」参照） | ✅ 確定（2026-07-13 更新・AI起草＝文言修正歓迎。原型＝社長確定 2026-06-27） |
 | 種別/前提 | **B2Cスタンプラリー Webアプリ**。アカウント作成→近くの素敵な場所を探す→スタンプ収集→バッジ図鑑／エリア・テーマ・マップで探す。**SPA（JS描画）＝配信HTMLに title/meta/h1 が無い**（hp-audit で判明）。主要導線：ホーム／エリアからさがす／テーマで探す／バッジ図鑑／マップでみる／アカウント登録／ログイン | ✅（初回サイクルで確認） |
-| GSC dataset | **未連携（要設定）**。hana-tools gsc_dataset は null。Search Console 未接続。接続後 BigQuery エクスポートを設定し dataset を登録（命名は `searchconsole_*` 慣例だが未確定）。それまで GSC 分析は「データ未取得」と明示 | 🔴 未連携 |
-| GA4 dataset | **未連携（接続待ち）**。社長より「Analytics データはまだ無し」。GA4→BigQuery エクスポート設定後、最新 intraday テーブルの `page_location` ホスト名（`check-rally.com`）で `analytics_<propertyId>` を自動特定して登録（yokohawaii と同手順）。それまで GA4 分析は「データ未取得」と明示 | 🔴 未連携 |
-| 実装担当エージェント | `rally-dev`（拠点PC・**専用機を立てる方針**＝社長決定 2026-06-27）。**コード側の許可リストは登録済**（`bin/mailbox.sh` の SENDERS に `hp-loop-rally`／RECIPIENTS に `rally-dev`・`hp-loop-rally`）。残るは **mailbox トークン＝社長手元作業**（VPS `data/secrets/mailbox-tokens.json` に `agent_id: rally-dev` を追加＋拠点PCの `.env` に `MAILBOX_TOKEN`/`MAILBOX_URL`）。**トークン登録＆拠点機の稼働を社長が確認するまでは最新レポートを配信せず**掲示板に「配信先準備中」と明示（new/ への孤児キュー化を避ける） | 🟡 トークン登録待ち |
+| GSC dataset | `searchconsole_rally`（**2026-08-15 社長がエクスポート設定**。データセット作成済み・実データ着弾は設定から〜48時間＝08-17頃見込み。着弾までは GSC 分析は「データ未取得」と明示） | 🟡 着弾待ち |
+| GA4 dataset | `analytics_543430115`（**2026-08-15 に BigQuery 実査で特定**＝最新 events テーブルの hostname が `check-rally.com`。**2026-06-27 から日次エクスポート稼働中・41日分蓄積済み**。⚠️ CV系カスタムイベント未設定＝event_name は自動収集のみ（page_view/session_start/first_visit/scroll/click＋form_start）。北極星のアカウント作成・スタンプ収集を直接測るイベントが無い＝`ga4-fetch.py` の CVモードは既定イベント名では 0 になる） | ✅ 連携済み |
+| 実装担当エージェント | `rally-dev`（拠点PC・専用機）。**2026-08-15 開通済み**＝VPS トークン表登録・拠点PC `.env` 設定・`bin/mailbox.sh` 配置・`inbox` 認証成功を社長が確認。websystem テンプレの通信ルール（mailbox.md／hp-loop-dialogue.md・commit 2f47b24）配布済み。同日 hanasaka-main が「稼働OK＝配信開始」を hp-loop-rally へ投函（M-20260815T125043） | ✅ 開通済み |
 | 掲示板 | `site/hp-analysis/rally/index.html`（spec/archive と3層） | ✅ 新規作成 |
 | 社長指示ファイル | `data/hp-loop/rally/from-president.md` | ✅ |
 | サイクル生データ（任意） | `data/hp-loop/cycles/rally/` | ✅ |
 | 案件記録 | （未設定） | 参考 |
 
-> **稼働前の確定待ち（2026-06-27 時点）**：(1) ✅ 対象URL（到達確認）、(2) ✅ ゴール（参加者の利用・アクセス増）、(3) 🔴 GSC/GA4 未連携＝当面は**サイト実査・hp-audit・スクショ中心**で機会発掘（効果実測はデータ接続後）、(4) 🟡 `rally-dev` のトークン登録。**SPA で検索エンジンに中身が見えない（SSR/プリレンダ）が最重要論点**。**週次 cron（`daily hp-loop-rally`・月曜04:00）**＝2026-07-08 社長決定で日次→週次に右サイズ化（入力凍結12サイクルのため。`to: hp-loop-rally` 新着＝社長回答・データ連携・実装報告が来れば反応tickで即起動＝取りこぼしなし。データ連携後は日次へ戻す）。
+> **稼働前の確定待ち（2026-06-27 時点・2026-08-15 全解消）**：(1) ✅ 対象URL（到達確認）、(2) ✅ ゴール（参加者の利用・アクセス増）、(3) ✅ GSC/GA4 連携（08-15：GA4=`analytics_543430115` 稼働中・GSC=`searchconsole_rally` 着弾待ち〜48h）、(4) ✅ `rally-dev` 開通（08-15）。**SPA で検索エンジンに中身が見えない（SSR/プリレンダ）が最重要論点**（リニューアルで一部前進＝R-R01）。**cron は日次（`daily hp-loop-rally`・毎日04:00）**＝2026-07-08 社長決定「データ連携後は日次へ戻す」に従い **2026-08-15 に週次（月曜）→日次へ復帰**（右サイズ化の経緯＝入力凍結12サイクル時代の週次化。実装配線・データ両方が開通したため入力凍結は解消）。
 
 ## 北極星（このループが収束させる成果・2026-07-13 制定）
 

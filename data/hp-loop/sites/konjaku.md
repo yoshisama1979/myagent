@@ -10,15 +10,15 @@
 | 対象URL | https://konjaku-photo.jp/ | ✅（到達200確認・2026-06-27） |
 | ゴール（北極星） | **比較ページが「見られる」こと（閲覧増）を主軸に、閲覧→投稿の好循環を作る**（下記「北極星」参照） | ✅ 確定（2026-07-13 更新・AI起草＝文言修正歓迎。原型＝社長確定 2026-06-27「まずは1（アクセス）からだが、すべて重点にしたい」） |
 | 種別/前提 | **昔↔今 写真比較ギャラリー**（同じ場所の昔の写真と今を見比べる）。ログイン・検索・多数の比較投稿。ダークテーマ。**配信HTMLに画像1件のみ＝ギャラリー本体もJS描画**（hp-audit）。title/description は有り、canonical/OGP/JSON-LD/h1 は無し | ✅（初回サイクルで確認） |
-| GSC dataset | **未連携（要設定）**。hana-tools gsc_dataset は null。Search Console 未接続。接続後 BigQuery エクスポートを設定し dataset を登録（命名は `searchconsole_*` 慣例だが未確定）。それまで GSC 分析は「データ未取得」と明示 | 🔴 未連携 |
-| GA4 dataset | **未連携（接続待ち）**。社長より「Analytics データはまだ無し」。GA4→BigQuery エクスポート設定後、最新 intraday テーブルの `page_location` ホスト名（`konjaku-photo.jp`）で `analytics_<propertyId>` を自動特定して登録（yokohawaii と同手順）。それまで GA4 分析は「データ未取得」と明示 | 🔴 未連携 |
-| 実装担当エージェント | `konjaku-dev`（拠点PC・**専用機を立てる方針**＝社長決定 2026-06-27）。**コード側の許可リストは登録済**（`bin/mailbox.sh` の SENDERS に `hp-loop-konjaku`／RECIPIENTS に `konjaku-dev`・`hp-loop-konjaku`）。残るは **mailbox トークン＝社長手元作業**（VPS `data/secrets/mailbox-tokens.json` に `agent_id: konjaku-dev` を追加＋拠点PCの `.env` に `MAILBOX_TOKEN`/`MAILBOX_URL`）。**トークン登録＆拠点機の稼働を社長が確認するまでは最新レポートを配信せず**掲示板に「配信先準備中」と明示（new/ への孤児キュー化を避ける） | 🟡 トークン登録待ち |
+| GSC dataset | `searchconsole_konjaku`（**2026-08-16 社長がエクスポート設定**。データセット作成済み・実データ着弾は〜48時間＝08-18頃見込み。着弾時に対象プロパティが `.jp` か `.com` か（下記ドメイン並存）を確認すること） | 🟡 着弾待ち |
+| GA4 dataset | **正＝`analytics_549912350`**（リプレイス後の新GA4・ホスト `konjaku-photo.jp`。2026-08-16 社長設定・daily エクスポート・初回テーブル events_20260816 着弾済み＝08-17 確認。カスタムCVイベント未設定＝自動収集のみ）。**旧（参考）＝`analytics_254454527`**（リプレイス前の旧サイト・ホスト `konjaku-photo.com`・streaming のみ・2021-07〜約5年分＝Before/After 比較素材）。⚠️ **重大な観察＝旧 .com がいまも稼働・被計測**（08-16 に .com 7,167イベント vs .jp 37イベント＝**トラフィックの大半がまだ旧ドメイン側**の疑い。bot 混在の検証要）。**両ドメイン 200 生存・相互リダイレクトなし**＝計測分裂＋SEO 重複・評価分散の疑い。ループへ通知済み（M-20260816T224740・M-20260817 続報） | ✅ 連携済み（新旧2系統・要ドメイン統合判断） |
+| 実装担当エージェント | `konjaku-dev`（拠点PC・konjaku_photo プロジェクト・websystem テンプレ）。**2026-08-15 開通済み**＝VPS トークン表登録・拠点PC `.env`・`bin/mailbox.sh` 配置・`inbox` 認証成功を確認。通信ルール（websystem mailbox.md／hp-loop-dialogue.md・commit 2f47b24）配布済み・project-config.md 宛先＝`hp-loop-konjaku` を確認済み（初回に hp-loop-rally 誤記入を検出→訂正済み）。同日 hanasaka-main が「稼働OK＝配信開始」を投函（M-20260815T145054） | ✅ 開通済み |
 | 掲示板 | `site/hp-analysis/konjaku/index.html`（spec/archive と3層） | ✅ 新規作成 |
 | 社長指示ファイル | `data/hp-loop/konjaku/from-president.md` | ✅ |
 | サイクル生データ（任意） | `data/hp-loop/cycles/konjaku/` | ✅ |
 | 案件記録 | （未設定） | 参考 |
 
-> **稼働前の確定待ち（2026-06-27 時点）**：(1) ✅ 対象URL（到達確認）、(2) ✅ ゴール（アクセス増主軸＋全方位）、(3) 🔴 GSC/GA4 未連携＝当面は**サイト実査・hp-audit・スクショ中心**で機会発掘（効果実測はデータ接続後）、(4) 🟡 `konjaku-dev` のトークン登録。**ビジュアル product なのに OGP 無し＝SNS シェアで映えない**・**ギャラリーがJS描画で個別ページがインデックスされにくい**が初期の重要論点。**週次 cron（`daily hp-loop-konjaku`・月曜04:30）**＝2026-07-08 社長決定で日次→週次に右サイズ化（入力凍結12サイクルのため。`to: hp-loop-konjaku` 新着が来れば反応tickで即起動＝取りこぼしなし。データ連携後は日次へ戻す）。
+> **稼働前の確定待ち（2026-06-27 時点・2026-08-16 全解消）**：(1) ✅ 対象URL（到達確認）、(2) ✅ ゴール（アクセス増主軸＋全方位）、(3) ✅ GSC/GA4 連携（08-16 設定・08-17 正を確定：GA4 正=`analytics_549912350`（.jp・daily・旧 .com 5年分は `analytics_254454527`＝参考）・GSC=`searchconsole_konjaku` 着弾待ち〜48h）、(4) ✅ `konjaku-dev` 開通（08-15）。**ビジュアル product なのに OGP 無し＝SNS シェアで映えない**・**ギャラリーがJS描画で個別ページがインデックスされにくい**に加え、**`.jp`/`.com` ドメイン並存（相互リダイレクトなし・GA4計測は .com のみ）が新たな重要論点**。**cron は日次（`daily hp-loop-konjaku`・毎日04:30）**＝2026-07-08 社長決定「データ連携後は日次へ戻す」に従い **2026-08-16 に週次（月曜）→日次へ復帰**。
 
 ## 北極星（このループが収束させる成果・2026-07-13 制定）
 
