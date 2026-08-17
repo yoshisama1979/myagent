@@ -151,6 +151,163 @@ bad = [w for w in ("events().insert", "events().update", "events().delete",
 (ok if "calendar.readonly" in src and "auth/calendar\"" not in src
    else ng)("スコープは calendar.readonly のみ")
 
+print("\n=== 失敗の通知（静かに壊れない）===")
+# 契機＝2026-08-17。カレンダーの OAuth が 8/11 に失効し、fetch-status.json には
+# 毎朝 失敗が記録されていたのに 7日間 誰も気づかなかった（社長が「今見れないの?」と
+# 聞いて初めて発覚）。記録するだけでは穴は塞がらない＝鳴らすところまでを機械で持つ。
+# ただし壊れっぱなしの間ずっと毎朝鳴らすと警報疲れで無視されるので、間引きを固定する。
+# 本物の Slack を物理的に叩けなくする（stub 関数の差し替えを忘れても飛ばない）
+cf.SLACK_SH = T / "slack-stub-not-exist.sh"
+if not str(cf.SLACK_SH).startswith(str(T)):
+    print("❌ Slack の送信先が一時ディレクトリの外", file=sys.stderr); sys.exit(2)
+try:
+    cf.send_slack("これは飛んではいけない")
+    ng("実体の無い slack.sh なら送信は失敗する（＝本番に飛ばない）")
+except Exception:
+    ok("テスト中は本物の Slack を叩けない（送信先が実在しない）")
+
+NOW = datetime(2026, 8, 17, 6, 55, tzinfo=cf.JST)
+def iso(d): return d.isoformat()
+
+d = cf.notify_decision(None, NOW)
+(ok if d["send"] else ng)("初回の失敗は必ず鳴らす")
+(ok if d["first_failed_at"] == iso(NOW) else ng)("初回は first_failed_at に今を入れる")
+(ok if d["days_down"] == 0 else ng)(f"初回の days_down は 0（{d['days_down']}）")
+
+# 現に本番に置かれている旧形式（failed_at と errors だけ）を食わせる
+old = {"failed_at": iso(NOW - timedelta(days=6)), "errors": ["RefreshError"]}
+d = cf.notify_decision(old, NOW)
+(ok if d["send"] else ng)("旧形式（notified_at 無し）は未通知とみなして鳴らす")
+(ok if d["first_failed_at"] == old["failed_at"] else ng)("旧形式でも failed_at を継続起点として引き継ぐ")
+(ok if d["days_down"] == 6 else ng)(f"継続日数を数える（{d['days_down']}）")
+
+base = {"first_failed_at": iso(NOW - timedelta(days=10))}
+d = cf.notify_decision({**base, "notified_at": iso(NOW)}, NOW)
+(ok if not d["send"] else ng)("同じ日に二度は鳴らさない")
+d = cf.notify_decision({**base, "notified_at": iso(NOW - timedelta(days=2))}, NOW)
+(ok if not d["send"] else ng)("2日後はまだ鳴らさない（間引きの境界・内側）")
+d = cf.notify_decision({**base, "notified_at": iso(NOW - timedelta(days=3))}, NOW)
+(ok if d["send"] else ng)("3日空いたら鳴らし直す（間引きの境界・外側）")
+(ok if d["first_failed_at"] == base["first_failed_at"] else ng)("鳴らし直しても継続起点は動かさない")
+
+for broken in ({}, {"first_failed_at": "こわれた日付"}, {"notified_at": None}):
+    try:
+        d = cf.notify_decision(broken, NOW)
+        (ok if d["send"] else ng)(f"壊れた状態は初回扱いで鳴らす（{broken}）")
+    except Exception as e:
+        ng(f"壊れた状態で例外を出さない（{broken}）", f"{type(e).__name__}: {e}")
+
+(ok if cf.recovery_decision({"notified_at": iso(NOW)}) else ng)("壊れたと知らせた相手には復旧も知らせる")
+(ok if not cf.recovery_decision({"first_failed_at": iso(NOW)}) else ng)("一度も鳴らしていなければ復旧も鳴らさない")
+(ok if not cf.recovery_decision(None) else ng)("そもそも壊れていなければ復旧を鳴らさない")
+
+# 送信が落ちても取得処理を巻き込まない（cron で毎朝 exit する事故を作らない）
+sent = []
+def boom(text):
+    sent.append(text); raise RuntimeError("webhook 落ちてる")
+real, cf.send_slack = cf.send_slack, boom
+try:
+    cf.notify_failure({"first_failed_at": iso(NOW)}, NOW, ["RefreshError: invalid_grant"])
+    ok("通知が失敗しても例外を投げない")
+except Exception as e:
+    ng("通知が失敗しても例外を投げない", f"{type(e).__name__}: {e}")
+cf.send_slack = real
+(ok if sent and "カレンダー" in sent[0] else ng)("通知本文に対象（カレンダー）が入る")
+(ok if sent and "invalid_grant" in sent[0] else ng)("通知本文に原因が入る＝受け取った人が次の手を選べる")
+(ok if sent and "calendar-fetch.py login" in sent[0] else ng)("通知本文に復旧コマンドが入る")
+
+# 状態ファイルに継続起点と通知時刻が残る（次回の間引き判断の材料）
+sent2 = []
+real, cf.send_slack = cf.send_slack, lambda t: sent2.append(t)
+cf.STATUS_FILE.unlink(missing_ok=True)
+cf.record_failure(["RefreshError: invalid_grant"], NOW)
+st = json.loads(cf.STATUS_FILE.read_text(encoding="utf-8"))
+(ok if st.get("first_failed_at") and st.get("notified_at") else ng)("状態ファイルに継続起点と通知時刻を残す")
+(ok if st.get("errors") == ["RefreshError: invalid_grant"] else ng)("既存の errors は残す（cmd_show が読む）")
+(ok if st.get("failed_at") else ng)("既存の failed_at も残す（後方互換）")
+(ok if len(sent2) == 1 else ng)(f"初回は1本だけ送る（{len(sent2)}）")
+cf.record_failure(["RefreshError: invalid_grant"], NOW + timedelta(hours=1))
+(ok if len(sent2) == 1 else ng)(f"同日の再実行では鳴らし直さない（{len(sent2)}）")
+cf.send_slack = real
+
+print("\n=== 通知の頑健性（2026-08-17 Codex クロスレビュー）===")
+# 🔴 naive な日時1つで通知経路そのものが死ぬ穴があった。
+#    _parse_dt はTZ無しISOも「正常値」として返すが now は aware＝(now - notified) が TypeError。
+#    しかも例外は notify_failure の try より手前＝握られず record_failure の保存にも到達しない。
+#    ＝状態ファイルを手で1回直しただけで、失敗記録も通知も両方止まる。
+#    ※ 現在の判定は .date() 同士なので減算は起きないが、**それは今の実装がそうなだけ**。
+#      正規化そのものを直接ピン留めしておく（後で差分を取る実装が来ても穴が再発しない）。
+#      ここを .date() 経由のケースだけで担保したつもりになっていた＝mutation で発覚。
+_n = cf._parse_dt("2026-08-14T06:55:00")
+(ok if _n is not None and _n.tzinfo is not None
+   else ng)("TZ無しの ISO を aware に正規化して返す（naive を素通しさせない）")
+(ok if _n is not None and _n.utcoffset() == cf.JST.utcoffset(None)
+   else ng)("補うTZは JST（このスクリプトの時刻は全部 JST）")
+(ok if cf._parse_dt("2026-08-14T06:55:00+09:00").utcoffset() == cf.JST.utcoffset(None)
+   else ng)("TZ付きはそのまま（上書きしない）")
+for key in ("notified_at", "first_failed_at"):
+    try:
+        d = cf.notify_decision({key: "2026-08-14T06:55:00"}, NOW)   # TZ無し
+        ok(f"TZ無しの {key} でも判定が落ちない")
+    except Exception as e:
+        ng(f"TZ無しの {key} でも判定が落ちない", f"{type(e).__name__}: {e}")
+d = cf.notify_decision({"first_failed_at": "2026-08-11T06:55:00"}, NOW)
+(ok if d["days_down"] == 6 else ng)(f"TZ無しでも継続日数を JST 基準で数える（{d['days_down']}）")
+
+# 🟡 .days は72時間の切り捨て＝秒のズレで「3日おき」が4日後にずれる。暦日で数える。
+d = cf.notify_decision({"notified_at": iso(NOW - timedelta(days=3) + timedelta(seconds=1))}, NOW)
+(ok if d["send"] else ng)("3日前の1秒後でも暦日3日なら鳴らす（cron の秒ズレを拾わない）")
+d = cf.notify_decision({"notified_at": iso(NOW - timedelta(days=2, hours=7))}, NOW)
+(ok if d["send"] else ng)("暦日で3日跨いでいれば鳴らす（前々日の23時台→3日目の朝）")
+d = cf.notify_decision({"notified_at": iso(NOW - timedelta(hours=23))}, NOW)
+(ok if not d["send"] else ng)("暦日1日しか経っていなければ鳴らさない")
+
+# 🟡 Slack のメンション記法・アドレスを本文に素通しさせない
+sent3 = []
+real, cf.send_slack = cf.send_slack, lambda t: sent3.append(t)
+cf.notify_failure({}, NOW, ["<!channel> 進捗会議 <someone@example.com>: RefreshError"])
+body = sent3[0] if sent3 else ""
+(ok if "<!channel>" not in body else ng)("Slack のメンション記法をそのまま流さない（全員に飛ぶ事故を防ぐ）")
+(ok if "someone@example.com" not in body else ng)("メールアドレス形式は伏せる（カレンダーIDが素で出る）")
+(ok if "RefreshError" in body else ng)("原因そのものは残す（伏せすぎて役に立たないのは困る）")
+cf.send_slack = real
+
+print("\n=== 配達経路そのもの（今回の事故は「検知」でなく「配達」だった）===")
+stub = T / "slack-stub.sh"
+log = T / "slack-stub.log"
+stub.write_text(f'#!/usr/bin/env bash\ncat > "{log}"\nexit ${{STUB_RC:-0}}\n', encoding="utf-8")
+os.chmod(stub, 0o755)
+cf.SLACK_SH = stub
+try:
+    cf.send_slack("本文テスト")
+    ok("slack.sh を実際に起動できる（正常系）")
+except Exception as e:
+    ng("slack.sh を実際に起動できる（正常系）", f"{type(e).__name__}: {e}")
+(ok if log.is_file() and log.read_text(encoding="utf-8").strip() == "本文テスト"
+   else ng)("本文が標準入力で渡る（引数でなく stdin）")
+os.environ["STUB_RC"] = "1"
+try:
+    cf.send_slack("落ちるはず"); ng("slack.sh が非0で終わったら例外にする")
+except Exception:
+    ok("slack.sh が非0で終わったら例外にする（＝呼び出し側が握って記録を残せる）")
+os.environ.pop("STUB_RC", None)
+cf.SLACK_SH = T / "slack-stub-not-exist.sh"
+
+print("\n=== 送信できない日が続いても記録は残り、翌朝もう一度試す ===")
+cf.STATUS_FILE.unlink(missing_ok=True)
+def always_fail(t): raise RuntimeError("webhook 落ちてる")
+real, cf.send_slack = cf.send_slack, always_fail
+cf.record_failure(["RefreshError"], NOW)
+st = json.loads(cf.STATUS_FILE.read_text(encoding="utf-8"))
+(ok if st.get("notified_at") is None else ng)("送信に失敗した日は「通知済み」にしない")
+(ok if st.get("errors") == ["RefreshError"] else ng)("送信に失敗しても失敗の記録自体は残す")
+d = cf.notify_decision(st, NOW + timedelta(days=1))
+(ok if d["send"] else ng)("翌朝もう一度送信を試す（通知経路の復旧を自動で拾う）")
+(ok if d["first_failed_at"] == st["first_failed_at"] else ng)("再試行しても継続起点は動かさない")
+cf.send_slack = real
+
+(ok if not cf.recovery_decision({"notified_at": "こわれた日付"}) else ng)("壊れた notified_at は「通知済み」と読まない")
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF

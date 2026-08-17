@@ -45,6 +45,8 @@ SECRETS_DIR = PROJ / "data" / "secrets"
 CAL_LIST = DATA / "calendars.md"
 OUT_FILE = DATA / "events.json"
 STATUS_FILE = DATA / "fetch-status.json"   # 直近の取得が失敗したときだけ置く
+SLACK_SH = PROJ / "bin" / "slack.sh"       # 失敗を知らせる先（記録だけでは誰も気づかない）
+NOTIFY_REPEAT_DAYS = 3                     # 壊れっぱなしのとき何日おきに鳴らし直すか（警報疲れ防止）
 
 SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 REDIRECT_URI = "http://localhost:8765/"
@@ -145,6 +147,127 @@ def api_call(fn):
             die("トークンが失効しています。login をやり直してください:\n"
                 "  python3 bin/calendar-fetch.py login")
         die(f"API 呼び出しに失敗: {type(e).__name__}\n  {msg[:300]}")
+
+
+# --- 失敗の通知（記録も検知もできていた。届かなかっただけ）--------------------
+# 契機＝2026-08-17。OAuth が 8/11 に失効。ここで効かなかったのは検知ではない：
+#   ・fetch-status.json には毎朝きちんと失敗が記録されていた
+#   ・朝礼も 8/11 当日に「予定は未取得（invalid_grant）」と検知し、P-045 として起票した
+# それでも社長に届かないまま7日が過ぎた（「今見れないの?」と聞かれて発覚）。理由は2つ＝
+#   (a) その 8/11 の朝礼自体が Slack へ未配達だった
+#   (b) お盆で実害が小さいと判断し「8/17 の朝が下限」として急がせない運用にした
+# つまり穴は「気づけない」ではなく **通知経路が朝礼1本しかない** こと＝
+# 朝礼が落ちても、朝礼が後回しにしても、誰も知らないまま日数だけ経つ。
+# だから機械から直接鳴らす経路を1本足す（朝礼の生死と判断に依存しない）。
+# ただし壊れっぱなしの間ずっと毎朝鳴らすと無視されるため、間引きを固定する。
+def _parse_dt(s):
+    """ISO文字列→datetime（JST）。壊れていれば None（判定は安全側＝「初回扱い」に倒す）。
+
+    ★TZ無し（naive）を必ず補う。ここを素通しすると now は aware なので
+      `now - notified` が TypeError になり、**通知どころか失敗の記録にも到達しない**
+      （例外は notify_failure の try より手前）＝状態ファイルを手で1回直しただけで
+      この見張りが丸ごと死ぬ。2026-08-17 Codex クロスレビュー🔴。
+      このスクリプトの時刻はすべて JST なので、naive は JST とみなす
+      （None に倒すと first_failed_at も失われ、継続日数が毎朝 0 に戻ってしまう）。
+    """
+    if not isinstance(s, str):
+        return None
+    try:
+        dt = datetime.fromisoformat(s)
+    except ValueError:
+        return None
+    return dt if dt.tzinfo else dt.replace(tzinfo=JST)
+
+
+def notify_decision(prev, now):
+    """今回の失敗を鳴らすか決める（純関数＝ここが判定の唯一の場所）。
+
+    間引きはするが「一度も鳴らしていない」状態だけは必ず鳴らす
+    ＝壊れている最中に本ツールを入れ替えた場合（旧形式の状態ファイル）でも
+      1回目が黙ると、そのまま永久に黙る側へ倒れるため。
+    """
+    prev = prev if isinstance(prev, dict) else {}
+    first = _parse_dt(prev.get("first_failed_at")) or _parse_dt(prev.get("failed_at")) or now
+    notified = _parse_dt(prev.get("notified_at"))
+    # 暦日で数える（timedelta.days は72時間の切り捨て＝発火時刻が1秒ずれるだけで
+    # 「3日おき」が4日後になる。cron の起動時刻は毎朝わずかに揺れる）
+    return {"send": notified is None or (now.date() - notified.date()).days >= NOTIFY_REPEAT_DAYS,
+            "first_failed_at": first.isoformat(),
+            "last_notified_at": prev.get("notified_at"),
+            "days_down": max(0, (now.date() - first.date()).days)}
+
+
+def recovery_decision(prev):
+    """復旧を知らせるか＝壊れたと知らせた相手にだけ知らせる（黙って直ったら黙ったまま）。"""
+    return bool(isinstance(prev, dict) and _parse_dt(prev.get("notified_at")))
+
+
+def _sanitize_for_slack(s: str) -> str:
+    """外部由来の文字列を Slack 本文に載せる前に無害化する。
+
+    載せるのは例外文とカレンダー名＝どちらも私が中身を決められない外部入力。
+    ①`<!channel>` 等のメンション記法が通ると**全員に通知が飛ぶ**（カレンダー名は
+      社長が自由に付けられるので現実的な経路）。Slack の作法どおり & < > を実体参照へ。
+    ②カレンダーIDはメールアドレス形式＝そのまま出すと相手先が読める。伏せる。
+    原因（例外の型・invalid_grant 等）は残す＝伏せすぎて次の手が選べないのは困る。
+    2026-08-17 Codex クロスレビュー🟡。
+    """
+    import re
+    s = re.sub(r"[\w.+-]+@[\w-]+\.[\w.-]+", "＜アドレスは伏せています＞", s)
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def send_slack(text: str):
+    """Slack へ1本送る。cron の空環境から呼ぶので PATH に頼らない。"""
+    import subprocess
+    subprocess.run(["bash", str(SLACK_SH)], input=text.encode("utf-8"),
+                   check=True, capture_output=True, timeout=30)
+
+
+def _read_status():
+    try:
+        return json.loads(STATUS_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def notify_failure(prev, now, errs):
+    """失敗を知らせる。**送信の失敗で取得処理を巻き込まない**（記録は必ず残す）。"""
+    d = notify_decision(prev, now)
+    if not d["send"]:
+        return d
+    cont = f"（{d['days_down']}日連続）" if d["days_down"] else ""
+    body = ("🔴 カレンダーの取得が失敗しています" + cont + "\n"
+            + "\n".join(f"  - {_sanitize_for_slack(str(e))}" for e in errs[:3])
+            + "\n\n予定は前回の取得結果で止まっています＝朝礼は「予定は未取得」と出ます。\n"
+              "復旧: python3 bin/calendar-fetch.py login → login-code '<貼り付け>'")
+    try:
+        send_slack(body)
+        d["notified_at"] = now.isoformat()
+    except Exception as e:                                   # 通知は best-effort＝取得処理を巻き込まない
+        print(f"⚠️ 失敗の通知を送れませんでした: {type(e).__name__}", file=sys.stderr)
+    return d
+
+
+def record_failure(errs, now):
+    """失敗を記録し、必要なら知らせる（cmd_fetch から呼ぶ唯一の入口）。"""
+    d = notify_failure(_read_status(), now, errs)
+    atomic_write(STATUS_FILE, json.dumps({
+        "failed_at": now.isoformat(),                        # 後方互換（cmd_show が読む）
+        "first_failed_at": d["first_failed_at"],
+        "notified_at": d.get("notified_at") or d.get("last_notified_at"),
+        "days_down": d["days_down"],
+        "errors": errs}, ensure_ascii=False, indent=1))
+
+
+def notify_recovery(prev):
+    """直ったことを知らせる（壊れたと知らせた相手にだけ）。ここも best-effort。"""
+    if not recovery_decision(prev):
+        return
+    try:
+        send_slack("✅ カレンダーの取得が復旧しました（朝礼で今日・明日の予定が見えます）")
+    except Exception as e:                                   # 通知は best-effort（同上）
+        print(f"⚠️ 復旧の通知を送れませんでした: {type(e).__name__}", file=sys.stderr)
 
 
 # --- OAuth（gmail-fetch.py と同じ2手方式：ブラウザ同意 → URL貼り付け）------------
@@ -329,8 +452,7 @@ def cmd_fetch(days: int):
     #   部分的な結果を保存すると、朝礼には「予定が少ない／無い」ようにしか見えず、
     #   トークン失効・通信断が「予定なし」に化ける＝いちばん静かに壊れる経路。
     if errs:
-        atomic_write(STATUS_FILE, json.dumps({
-            "failed_at": now.isoformat(), "errors": errs}, ensure_ascii=False, indent=1))
+        record_failure(errs, now)
         print(f"⚠️ {len(errs)} 本のカレンダーが取得できませんでした＝保存を中止します"
               f"（前回の結果はそのまま残しています）", file=sys.stderr)
         for e in errs:
@@ -343,7 +465,9 @@ def cmd_fetch(days: int):
         "window": [lo.isoformat(), hi.isoformat()],
         "calendars": [n or c for c, n in cals],
         "errors": [], "events": events}, ensure_ascii=False, indent=1), secret=True)
+    was_broken = _read_status()             # 消す前に読む（復旧を知らせる相手の判定に要る）
     STATUS_FILE.unlink(missing_ok=True)     # 直近が成功なら失敗記録は残さない
+    notify_recovery(was_broken)
     print(f"取得 {len(events)} 件 / カレンダー {len(cals)} 本 / {lo:%m-%d}〜{hi:%m-%d} → {OUT_FILE}")
 
 
