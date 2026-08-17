@@ -70,7 +70,13 @@ after(){ LC_ALL=C date -u -d "+$1 days 12 hours" '+%b %e %H:%M:%S %Y GMT'; }
 
 certs(){ : > "$SSL_FIX"; for kv in "$@"; do printf '%s\n' "$kv" >> "$SSL_FIX"; done; }
 domains(){ printf '%s\n' "$@" > "$T/list.txt"; }
-run(){ rm -f "$REC"/*; OUT="$(cd "$T" && bash "$T/bin/check-ssl.sh" "$@" 2>&1 </dev/null)"; RC=$?; }
+NSTATE="$T/data/ssl-check/notify-state"
+# 既定では通知状態を消してから流す＝ケース間で間引きが持ち越さないようにする
+# （ここを共有すると、前のケースが「今日 通知済み」を書いた副作用で次のケースが黙り、
+#   テストが「送らない」を誤って観測する＝実際に踏んだ）
+run(){      rm -f "$REC"/* "$NSTATE"; OUT="$(cd "$T" && bash "$T/bin/check-ssl.sh" "$@" 2>&1 </dev/null)"; RC=$?; }
+# 通知状態を残したまま流す＝間引きそのものを見るとき用
+run_keep(){ rm -f "$REC"/*;           OUT="$(cd "$T" && bash "$T/bin/check-ssl.sh" "$@" 2>&1 </dev/null)"; RC=$?; }
 
 echo "=== 引数と一覧ファイル ==="
 run --nosuch
@@ -122,7 +128,11 @@ want_in "⚠️ ERROR	weird.example.test" "$OUT" "日付として解釈できな
 want_in "日付解釈に失敗" "$OUT" "解釈失敗と分けて書く"
 want_in "⚠️ERROR 2" "$OUT" "ERROR も件数に数える"
 want_in "✅OK 1" "$OUT" "失敗を OK に数えない"
-want_eq "$RC" "0" "ERROR だけなら終了コードは0（🔴 のときだけ2）"
+# 🔴 2026-08-17 Codexレビューで是正：旧版はここが 0 で、**旧バグの方をテストが固定していた**。
+#   到達不能・証明書取得失敗が何件出ても「終了コード0＝全部OK」と名乗るのは、このリポジトリが
+#   何度も踏んだ「静かに壊れる」形そのもの（cron は 0 を成功として捨てる）。
+#   🔴緊急=2 と区別したいので 1 にする（重大度が上書きされない）。
+want_eq "$RC" "1" "ERROR があれば終了コードは1（0＝全部OK と名乗らせない。🔴緊急は2）"
 first="$(printf '%s' "$OUT" | sed -n '5p')"
 want_in "⚠️ ERROR" "$first" "危険なもの（ERROR）が一覧の先頭に来る"
 
@@ -170,6 +180,57 @@ certs "$(printf 'down.example.test\tFAIL')"
 domains down.example.test
 run --slack --only-problems "$T/list.txt"
 if [ -f "$REC/slack-body" ]; then say_ok "取得失敗も『問題あり』として送る（沈黙させない）"; else say_ng "取得失敗も『問題あり』として送る"; fi
+
+echo
+echo "=== 警報の間引き（毎日鳴らし続けない・ただし黙らせない）==="
+# ★設計の要点★ 問題は直るまで毎日続く＝素直に組むと毎朝同じ警報が鳴り、やがて読まれなくなる。
+#   かといって間引きを効かせすぎると「一度も鳴っていないのに黙る」側へ倒れる。境界を全部固定する。
+certs "$(printf 'crit.example.test\t%s' "$(after 3)")"
+domains crit.example.test
+
+run --slack --only-problems "$T/list.txt"     # 状態なし＝初回
+if [ -f "$REC/slack-body" ]; then say_ok "★状態が無ければ必ず鳴らす（初回は間引かない）"; else say_ng "★状態が無ければ必ず鳴らす"; fi
+want_eq "$(cat "$NSTATE" 2>/dev/null)" "$(date +%F)" "送信できたら『今日 通知済み』を記録する"
+
+run_keep --slack --only-problems "$T/list.txt" # 同日 2回目
+if [ -f "$REC/slack-body" ]; then say_ng "★同じ日に2回鳴らさない"; else say_ok "★同じ日に2回鳴らさない"; fi
+want_in "間引き" "$OUT" "間引いたことは画面に出す（黙って消えない）"
+
+printf '%s\n' "$(date -d '2 days ago' +%F)" > "$NSTATE"
+run_keep --slack --only-problems "$T/list.txt"
+if [ -f "$REC/slack-body" ]; then say_ng "★2日後はまだ鳴らさない（境界＝3日）"; else say_ok "★2日後はまだ鳴らさない（境界＝3日）"; fi
+
+printf '%s\n' "$(date -d '3 days ago' +%F)" > "$NSTATE"
+run_keep --slack --only-problems "$T/list.txt"
+if [ -f "$REC/slack-body" ]; then say_ok "★3日経ったら鳴らし直す（壊れっぱなしを忘れない）"; else say_ng "★3日経ったら鳴らし直す"; fi
+
+printf 'こわれた状態\n' > "$NSTATE"
+run_keep --slack --only-problems "$T/list.txt"
+if [ -f "$REC/slack-body" ]; then say_ok "★状態ファイルが壊れていたら『初回』に倒す（黙る側に倒さない）"; else say_ng "★状態ファイルが壊れていたら初回に倒す"; fi
+
+# 送信に失敗したら通知済みにしない＝翌日に必ず再試行される
+printf '%s\n' "$(date -d '9 days ago' +%F)" > "$NSTATE"
+mv "$T/bin/slack.sh" "$T/bin/slack.sh.bak"
+printf '#!/usr/bin/env bash\nexit 1\n' > "$T/bin/slack.sh"; chmod +x "$T/bin/slack.sh"
+run_keep --slack --only-problems "$T/list.txt"
+want_eq "$(cat "$NSTATE" 2>/dev/null)" "$(date -d '9 days ago' +%F)" "★送信に失敗したら通知済みにしない（翌日に再試行される）"
+want_eq "$RC" "2" "★🔴があれば送信に失敗しても終了コードは2のまま（重大度が送信の成否で入れ替わらない）"
+want_in "送信に失敗" "$OUT" "送信の失敗は黙らずに言う"
+mv "$T/bin/slack.sh.bak" "$T/bin/slack.sh"
+
+# 正常に戻ったら状態を消す＝次の障害は必ず初回として鳴る
+printf '%s\n' "$(date +%F)" > "$NSTATE"
+certs "$(printf 'ok.example.test\t%s' "$(after 100)")"
+domains ok.example.test
+run_keep --slack --only-problems "$T/list.txt"
+if [ -f "$NSTATE" ]; then say_ng "★正常に戻ったら通知状態を消す（次の障害を初回として鳴らす）"; else say_ok "★正常に戻ったら通知状態を消す（次の障害を初回として鳴らす）"; fi
+
+# 手動実行（--only-problems 無し）は人が見ている場なので常に送る＝間引かない
+printf '%s\n' "$(date +%F)" > "$NSTATE"
+certs "$(printf 'crit.example.test\t%s' "$(after 3)")"
+domains crit.example.test
+run_keep --slack "$T/list.txt"
+if [ -f "$REC/slack-body" ]; then say_ok "★手動実行（--slack のみ）は間引かない"; else say_ng "★手動実行（--slack のみ）は間引かない"; fi
 
 echo
 echo "=== 通知本文に秘密を入れない（automation.md §2）==="

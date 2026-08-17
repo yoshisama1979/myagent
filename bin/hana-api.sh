@@ -29,6 +29,19 @@ fi
 
 BASE_URL="${HANA_TOOLS_BASE_URL:-https://stg.hana-tools.com}"
 
+# ★ 送り先は https のみ。★ここは「証明書の検証を切らない」と同じ穴を塞ぐ2枚目★
+#   全 curl から `-k`（--insecure）を外しても、`HANA_TOOLS_BASE_URL` に http:// を書けば
+#   API トークン（-H X-API-TOKEN）は**平文で経路に流れる**＝偽サーバどころか盗聴で足りる。
+#   BASE_URL は環境ごとに変わる前提の値なので、規約ではなく機械で落とす（2026-08-17 Codexレビュー🔴）。
+#   自己署名・社内CA・TLS復号プロキシ配下で通らない場合も `-k` を戻さず、CA を渡して解決すること。
+case "$BASE_URL" in
+  https://*) ;;
+  *)
+    echo '{"success": false, "message": "HANA_TOOLS_BASE_URL は https:// で始まる必要があります（http だとAPIトークンが平文で流れます）"}' >&2
+    exit 1
+    ;;
+esac
+
 # --- 共通ヘルパー ---
 
 # 数値ID検証：^[0-9]+$ 以外は弾く（URL パス/クエリへの注入防止）
@@ -44,7 +57,7 @@ require_int() {
 
 # クライアント一覧取得
 get_clients() {
-  curl -s -k -X GET "$BASE_URL/api/external/clients" \
+  curl -s -X GET "$BASE_URL/api/external/clients" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
@@ -62,20 +75,20 @@ search_clients() {
   #    値は**環境変数で渡す**（mailbox.sh の JSON 生成と同じ作法＝クォート崩れ・注入の同時防止）。
   local encoded
   encoded=$(HANA_SEARCH_Q="$keyword" php -r 'echo rawurlencode(getenv("HANA_SEARCH_Q"));')
-  curl -s -k -X GET "$BASE_URL/api/external/clients/search?q=$encoded" \
+  curl -s -X GET "$BASE_URL/api/external/clients/search?q=$encoded" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
 # 外注先一覧取得
 get_outsources() {
-  curl -s -k -X GET "$BASE_URL/api/external/outsources" \
+  curl -s -X GET "$BASE_URL/api/external/outsources" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
 # オフィス状況取得（3Dオフィス連携・読み取り専用）
 # 全社員の「いま作業中か」「何の作業か」を返す。書き込み系は提供されない（タイマー操作不可）。
 get_office_status() {
-  curl -s -k -X GET "$BASE_URL/api/external/office-status" \
+  curl -s -X GET "$BASE_URL/api/external/office-status" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
@@ -106,7 +119,7 @@ get_todos() {
   if [ -n "$params" ]; then
     params="?${params:1}"
   fi
-  curl -s -k -X GET "$BASE_URL/api/external/todos${params}" \
+  curl -s -X GET "$BASE_URL/api/external/todos${params}" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
@@ -120,7 +133,7 @@ create_todo() {
     echo '{"success": false, "message": "JSON引数が必要です"}' >&2
     exit 1
   fi
-  echo "$json" | curl -s -k -X POST "$BASE_URL/api/external/todos" \
+  echo "$json" | curl -s -X POST "$BASE_URL/api/external/todos" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
     -H "Content-Type: application/json" \
     -d @-
@@ -130,7 +143,7 @@ create_todo() {
 # 引数: JSON文字列 '{"room_id":"123","message":"テスト"}'
 send_chatwork() {
   local json="${1:-{}}"
-  echo "$json" | curl -s -k -X POST "$BASE_URL/api/external/chatwork/send-message" \
+  echo "$json" | curl -s -X POST "$BASE_URL/api/external/chatwork/send-message" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
     -H "Content-Type: application/json" \
     -d @-
@@ -149,7 +162,7 @@ update_todo() {
     exit 1
   fi
   require_int "$id" "todo_id"
-  printf '%s' "$json" | curl -s -k -X PUT "$BASE_URL/api/external/todos/$id" \
+  printf '%s' "$json" | curl -s -X PUT "$BASE_URL/api/external/todos/$id" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
     -H "Content-Type: application/json" \
     --data-binary @-
@@ -174,7 +187,7 @@ get_projects() {
   done
   local params=""
   [ -n "$client_id" ] && params="?client_id=$client_id"
-  curl -s -k -X GET "$BASE_URL/api/external/projects${params}" \
+  curl -s -X GET "$BASE_URL/api/external/projects${params}" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
@@ -187,7 +200,7 @@ get_project() {
     exit 1
   fi
   require_int "$id" "project_id"
-  curl -s -k -X GET "$BASE_URL/api/external/projects/$id" \
+  curl -s -X GET "$BASE_URL/api/external/projects/$id" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
@@ -216,7 +229,7 @@ get_project_notes() {
   done
   local params=""
   [ -n "$user_id" ] && params="?user_id=$user_id"
-  curl -s -k -X GET "$BASE_URL/api/external/projects/$id/notes${params}" \
+  curl -s -X GET "$BASE_URL/api/external/projects/$id/notes${params}" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
 }
 
@@ -233,7 +246,7 @@ update_project_note() {
     exit 1
   fi
   require_int "$id" "project_id"
-  printf '%s' "$json" | curl -s -k -X POST "$BASE_URL/api/external/projects/$id/notes" \
+  printf '%s' "$json" | curl -s -X POST "$BASE_URL/api/external/projects/$id/notes" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
     -H "Content-Type: application/json" \
     --data-binary @-

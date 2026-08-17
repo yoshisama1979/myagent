@@ -24,6 +24,32 @@ CRIT_DAYS="${CRIT_DAYS:-7}"
 WARN_DAYS="${WARN_DAYS:-30}"
 TZ_BASE="Asia/Tokyo"
 
+# --- 警報の間引き（--only-problems のときだけ効く＝cron 用） -----------------
+# ★なぜ要るか★：問題は「直るまで毎日続く」ので、素直に組むと毎朝同じ警報が鳴り続ける。
+#   警報疲れを起こした見張りは、本当に切れる日にも読まれない＝見張っていないのと同じ。
+#   同日 calendar-fetch.py に入れた規律と同型にする（2026-08-17 Codexレビュー🔴）：
+#     ①壊れっぱなしの間は REPEAT_DAYS ごとに鳴らし直す（暦日で数える。時間差だと
+#       cron の秒ズレで「3日おき」が4日後にずれる）
+#     ②**一度も鳴らしていない状態だけは必ず鳴らす**（状態ファイルが無い・壊れている＝初回扱い。
+#       ここを「通知済み」に倒すと、いま壊れている最中のものが黙ったまま永久に黙る側へ落ちる）
+#     ③**送信に成功したときだけ**通知済みにする（失敗を通知済みにすると翌日に再試行されない）
+#     ④正常に戻ったら状態を消す＝次の障害は必ず初回として鳴る
+#   手動実行（--slack のみ）は常に送る＝人が見ている場で黙らない。
+NOTIFY_STATE="${NOTIFY_STATE:-$ROOT_DIR/data/ssl-check/notify-state}"
+REPEAT_DAYS="${REPEAT_DAYS:-3}"
+
+# ログのローテ（automation.md「ログを残す＝保存期間とローテーションを決める」）。
+# ★inode を差し替えない★＝cron が `>>` で開いている fd はそのまま生きているので、
+#   mv で置き換えるとこの実行ぶんの出力が迷子の inode へ消える。中身だけ切り詰める。
+SSL_LOG_MAX_BYTES="${SSL_LOG_MAX_BYTES:-262144}"
+if [ -n "${SSL_LOG:-}" ] && [ -f "$SSL_LOG" ]; then
+  if [ "$(wc -c < "$SSL_LOG")" -gt "$SSL_LOG_MAX_BYTES" ]; then
+    _keep="$(mktemp)"
+    tail -c "$(( SSL_LOG_MAX_BYTES / 2 ))" "$SSL_LOG" > "$_keep" && cat "$_keep" > "$SSL_LOG"
+    rm -f "$_keep"
+  fi
+fi
+
 command -v openssl >/dev/null 2>&1 || { echo "ERROR: openssl が必要です" >&2; exit 1; }
 
 # --- 引数解釈 ---
@@ -114,14 +140,47 @@ echo "$report"
 has_problem=0
 if [ "$n_crit" -gt 0 ] || [ "$n_warn" -gt 0 ] || [ "$n_err" -gt 0 ]; then has_problem=1; fi
 
+# 何日おきに鳴らし直すか＝暦日で判定する純粋な関数（テストから直接呼べるよう分離）
+# 引数: <前回通知日 YYYY-MM-DD or 空> <今日 YYYY-MM-DD>／戻り: 0=送る 1=間引く
+should_notify() {
+  local last="$1" today="$2" l t
+  # 空・書式違い・壊れた状態はすべて「一度も鳴らしていない」＝必ず送る
+  case "$last" in [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]) ;; *) return 0 ;; esac
+  l="$(date -d "$last" +%s 2>/dev/null)" || return 0
+  t="$(date -d "$today" +%s 2>/dev/null)" || return 0
+  [ $(( (t - l) / 86400 )) -ge "$REPEAT_DAYS" ]
+}
+
+slack_rc=0
+today_ymd="$(TZ="$TZ_BASE" date +%F)"
+
+if [ "$has_problem" = "0" ]; then
+  # ④ 正常に戻ったら状態を消す＝次の障害は必ず初回として鳴る
+  rm -f "$NOTIFY_STATE"
+fi
+
 if [ "$SEND_SLACK" = "1" ]; then
   if [ "$ONLY_PROBLEMS" = "1" ] && [ "$has_problem" = "0" ]; then
     echo "(--only-problems: 問題なしのため Slack 送信はスキップ)"
+  elif [ "$ONLY_PROBLEMS" = "1" ] && ! should_notify "$(cat "$NOTIFY_STATE" 2>/dev/null || true)" "$today_ymd"; then
+    echo "(--only-problems: 前回通知から $REPEAT_DAYS 日未満のため間引き＝状態は継続中)"
+  elif printf '%s' "$report" | bash "$SCRIPT_DIR/slack.sh"; then
+    # ③ 送信に成功したときだけ通知済みにする（原子的に置く）
+    if [ "$has_problem" = "1" ]; then
+      mkdir -p "$(dirname "$NOTIFY_STATE")"
+      printf '%s\n' "$today_ymd" > "$NOTIFY_STATE.tmp" && mv "$NOTIFY_STATE.tmp" "$NOTIFY_STATE"
+    fi
   else
-    printf '%s' "$report" | bash "$SCRIPT_DIR/slack.sh"
+    # 送信の失敗で「見張り自体」を落とさない。通知済みにもしない＝翌日に再試行される。
+    echo "ERROR: SSL チェック結果の Slack 送信に失敗しました（次回の実行で再試行します）" >&2
+    slack_rc=1
   fi
 fi
 
-# 緊急があれば非0終了（cron 等での検知用。警告のみ・OKは0）
+# 終了コード：2=🔴緊急あり／1=到達不能あり or 送信失敗／0=それ以外
+# ★ここは Codex レビュー🔴で直した点★＝旧版は (a) 到達不能が何件あっても 0 を返し
+#   (b) set -e のため Slack 送信の失敗が exit 2 の手前でスクリプトごと落として
+#   「🔴なのに終了コード1」に化けていた（＝重大度が送信の成否で入れ替わる）。
 if [ "$n_crit" -gt 0 ]; then exit 2; fi
+if [ "$n_err" -gt 0 ] || [ "$slack_rc" -ne 0 ]; then exit 1; fi
 exit 0

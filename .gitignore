@@ -36,6 +36,12 @@ data/office/
 # （原本ページの .gitignore 方針が索引経由で漏れる抜け穴の封鎖。`python3 bin/build-ai-index.py` で再生成）
 AI-INDEX.md
 
+# SSL 有効期限チェックの実行ログ（毎朝 06:30 の cron が追記・ドメイン名と残日数だけだが
+#  ランタイム生成物なので他のログと同じく git 非追跡。ドメイン一覧 domains.txt は追跡する）
+data/ssl-check/*.log
+# 警報の間引き状態（最後に通知できた日付。ランタイム状態）
+data/ssl-check/notify-state
+
 # Windows のファイル属性メタデータ（NTFS Zone.Identifier）
 *Zone.Identifier
 

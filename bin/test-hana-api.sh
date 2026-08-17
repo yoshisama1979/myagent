@@ -185,5 +185,79 @@ want_not_in "$FAKE_TOKEN" "$OUT" "トークンを標準出力・エラー出力�
 #     ps / /proc から見え得る）。挙動を変える判断は社長案件のため、ここでは固定せず起票する。
 
 echo
+echo "=== 通信の安全（証明書の検証）==="
+# 🔴 2026-08-17 検出：全12箇所の curl が `-k`（--insecure）付きで、TLS 証明書の検証を
+#    切ったまま **API トークンを載せて** 送っていた＝経路上の偽サーバにトークンを渡し得る。
+#    「1本直しても他11本が残る」形なので、①実行時の argv ②ソース全体 の両方で固定する。
+#    ⚠️ ここを緑に保つ条件＝証明書が実際に検証を通ること（2026-08-17 実測：通る）。
+#    将来 `-k` を戻したくなったら、それは証明書側の異常であり、隠さず直すこと。
+#
+# ⚠️ 初版（同日・Codex クロスレビューで否決）は2点とも緩く、mutation が素通りした：
+#   (a) 実行時の検査を `grep -qxE -- '-k|--insecure'`（行の完全一致）でやったため
+#       **`curl -sk` / `-ks` のような結合フラグを取りこぼす**（curl は結合形を受理する）
+#   (b) ソース検査を行単位の grep でやったため、**行継続で分けて書かれた `-k` を取りこぼす**
+#         curl -s \
+#           -k -X GET "$BASE_URL/..." \
+#   (c) さらに実行させていたのが `clients` 1本だけで、**残り11経路は誰も見ていなかった**
+#     ＝「1本直せば残り11本も直っている」という、まさに今回の穴と同じ思い込み。
+#   → いずれも実測で再現済み（ヒット0）。下の形に組み直した。
+# 「証明書の検証を切るフラグ」の定義は **1箇所だけ** 持つ（実行時検査とソース検査で
+# 別々に書くと必ず片方だけ腐る＝このリポジトリで繰り返した失敗の型）。
+# 標準入力は1行1トークン。該当が1つでもあれば 0 を返す。
+insecure_arg() {
+  awk '$0=="--insecure" || $0 ~ /^-[a-zA-Z]*k[a-zA-Z]*$/ { found=1 } END { exit found?0:1 }'
+}
+assert_secure() {  # 1経路ぶん実行し、curl に渡った argv を検査する
+  local label="$1"; shift
+  run "$@"
+  if argv | insecure_arg; then
+    say_ng "証明書の検証を切らない：$label" "$(argv | tr '\n' ' ' | cut -c1-200)"
+  else
+    say_ok "証明書の検証を切らない：$label"
+  fi
+}
+# 読み取り系・書き込み系の**全12サブコマンド**を実際に走らせる
+# （run は MYAGENT_UNATTENDED を立てない＝有人扱いなので、書き込み系もここでは通る）
+assert_secure "clients"       clients
+assert_secure "search"        search "テスト"
+assert_secure "outsources"    outsources
+assert_secure "office-status" office-status
+assert_secure "todos"         todos
+assert_secure "projects"      projects
+assert_secure "project"       project 1
+assert_secure "notes"         notes 1
+assert_secure "create-todo"   create-todo '{"content":"x"}'
+assert_secure "update-todo"   update-todo 1 '{"content":"x"}'
+assert_secure "update-note"   update-note 1 '{"note":"x"}'
+assert_secure "chatwork"      chatwork '{"body":"x"}'
+
+# ソース検査：**行継続をつないでから**、curl を含む行を空白で割ってトークン単位で見る。
+#   ・つながないと `curl -s \` / `  -k -X GET …` のように**分けて書かれた -k** を逃す
+#   ・トークンに割らないと `-X POST ".../chatwork/…"` の k を誤検知する（初版で実際に踏んだ）
+curl_flags() {
+  sed -e ':a' -e '/\\$/{N;s/\\\n//;ta' -e '}' "$PROJ/bin/hana-api.sh" \
+    | grep -F 'curl' | tr -s ' \t' '\n\n'
+}
+if curl_flags | insecure_arg; then
+  say_ng "ソース全体に curl の証明書検証オフが1つも残っていない" \
+         "$(curl_flags | awk '$0=="--insecure" || $0 ~ /^-[a-zA-Z]*k[a-zA-Z]*$/' | head -3 | tr '\n' ' ')"
+else
+  say_ok "ソース全体に curl の証明書検証オフが1つも残っていない"
+fi
+
+# 平文 HTTP も同じ穴（-k を消してもトークンは平文で流れる）＝BASE_URL は https のみ通す
+mk_env "HANA_TOOLS_API_TOKEN=$FAKE_TOKEN" "HANA_TOOLS_BASE_URL=http://stg.example.test" \
+       "HANA_TOOLS_DEFAULT_USER_ID=7"
+run clients
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "BASE_URL が http:// なら API を叩かずに落とす（トークンの平文送信を防ぐ）"
+else
+  say_ng "BASE_URL が http:// なら API を叩かずに落とす" "rc=$RC url=$(url)"
+fi
+want_not_in "$FAKE_TOKEN" "$OUT" "http:// で落とすときもトークンを出力しない"
+mk_env "HANA_TOOLS_API_TOKEN=$FAKE_TOKEN" "HANA_TOOLS_BASE_URL=https://stg.example.test" \
+       "HANA_TOOLS_DEFAULT_USER_ID=7"
+
+echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1
