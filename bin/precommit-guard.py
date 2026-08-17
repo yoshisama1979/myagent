@@ -194,6 +194,16 @@ def ignored_paths(paths):
 
 
 def main():
+    # `--paths-for <agent>` … そのエージェントの許可パスを1行1件で出す（未登録なら何も出さず 1）。
+    # bin/agent-commit.sh がステージ範囲をここから引く＝**許可パスの表を2箇所に持たない**
+    # （refactoring.md §6「片方だけ直して不整合になる芽」を作らない）。
+    if len(sys.argv) >= 3 and sys.argv[1] == "--paths-for":
+        allow = allowed_prefixes(sys.argv[2])
+        if not allow:
+            return 1
+        print("\n".join(allow))
+        return 0
+
     staged = collect_staged()
     if not staged:
         return 0

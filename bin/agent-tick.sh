@@ -515,6 +515,16 @@ dispatch() {
     local -a pipe_rc; pipe_rc=("${PIPESTATUS[@]}")
     rc=${pipe_rc[0]}
     rm -f "$inflight" 2>/dev/null || true   # ここまで来た＝終了処理に到達した（結果の良し悪しは以降で判定）
+    # --- サイクル末：このエージェントの成果物をコミットする（O-040・2026-08-17 社長判断）---
+    # 無人ループはコミット権を持たず、成果物が git 外に溜まり続けていた（最大146件・最古47日）。
+    # **claude に叩かせず、ここシェルから呼ぶ**＝許可リスト4形の片形欠けによる無言停止を
+    # 原理的に避ける（[[reference_allowlist-bash-prefix-gap]]＝実害5日の前例）。LLM が忘れることもない。
+    # rc に関わらず実行する＝タイムアウトした回でも「書けたところまで」を保存する方が損失が小さい。
+    # 失敗しても tick は落とさない（次サイクルで再試行される）。対象パスは agent-commit.sh が
+    # precommit-guard.py --paths-for から引く＝許可パスの表は1箇所だけ。
+    if [ -x "$PROJ/bin/agent-commit.sh" ]; then
+      "$PROJ/bin/agent-commit.sh" "$to" 2>&1 | sed 's/^/» /' >>"$LOG" || true
+    fi
     if [ "${pipe_rc[1]:-0}" -ne 0 ]; then
       fail "$label-logwrite"
       alert "ヘッドレス $label の実行ログを記録できませんでした（ディスク満杯・権限などの可能性）。クールダウン等の状態も書けない恐れがあります。"
