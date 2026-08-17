@@ -231,6 +231,20 @@ def _read_status():
         return None
 
 
+def _try_send(text: str, what: str) -> bool:
+    """通知は best-effort＝送れなくても取得処理を巻き込まない（cron を毎朝 exit させない）。
+
+    失敗系・復旧系の2箇所が同じ「送る→ダメなら stderr に1行」を持っていたので1箇所へ集約した
+    （このコミットが存在する目的は配達の信頼性なので、送信の作法が2箇所に散るのは芽のうちに摘む）。
+    """
+    try:
+        send_slack(text)
+        return True
+    except Exception as e:
+        print(f"⚠️ {what}の通知を送れませんでした: {type(e).__name__}", file=sys.stderr)
+        return False
+
+
 def notify_failure(prev, now, errs):
     """失敗を知らせる。**送信の失敗で取得処理を巻き込まない**（記録は必ず残す）。"""
     d = notify_decision(prev, now)
@@ -241,11 +255,8 @@ def notify_failure(prev, now, errs):
             + "\n".join(f"  - {_sanitize_for_slack(str(e))}" for e in errs[:3])
             + "\n\n予定は前回の取得結果で止まっています＝朝礼は「予定は未取得」と出ます。\n"
               "復旧: python3 bin/calendar-fetch.py login → login-code '<貼り付け>'")
-    try:
-        send_slack(body)
+    if _try_send(body, "失敗"):
         d["notified_at"] = now.isoformat()
-    except Exception as e:                                   # 通知は best-effort＝取得処理を巻き込まない
-        print(f"⚠️ 失敗の通知を送れませんでした: {type(e).__name__}", file=sys.stderr)
     return d
 
 
@@ -264,10 +275,7 @@ def notify_recovery(prev):
     """直ったことを知らせる（壊れたと知らせた相手にだけ）。ここも best-effort。"""
     if not recovery_decision(prev):
         return
-    try:
-        send_slack("✅ カレンダーの取得が復旧しました（朝礼で今日・明日の予定が見えます）")
-    except Exception as e:                                   # 通知は best-effort（同上）
-        print(f"⚠️ 復旧の通知を送れませんでした: {type(e).__name__}", file=sys.stderr)
+    _try_send("✅ カレンダーの取得が復旧しました（朝礼で今日・明日の予定が見えます）", "復旧")
 
 
 # --- OAuth（gmail-fetch.py と同じ2手方式：ブラウザ同意 → URL貼り付け）------------
