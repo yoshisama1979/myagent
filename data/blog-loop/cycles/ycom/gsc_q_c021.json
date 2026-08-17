@@ -1,0 +1,3510 @@
+{
+  "project": "myservice-219202",
+  "dataset": "searchconsole_ycom",
+  "table": "searchdata_url_impression",
+  "start": "2026-07-03",
+  "end": "2026-07-10",
+  "search_type": "WEB",
+  "queries": [
+    {
+      "query": "日本地図 svg",
+      "clicks": 10,
+      "impressions": 42,
+      "ctr": 0.23809523809523808,
+      "avg_position": 2.880952380952381
+    },
+    {
+      "query": "日本地図 svg フリー",
+      "clicks": 10,
+      "impressions": 20,
+      "ctr": 0.5,
+      "avg_position": 2.15
+    },
+    {
+      "query": "世界地図 フリー素材",
+      "clicks": 6,
+      "impressions": 337,
+      "ctr": 0.017804154302670624,
+      "avg_position": 7.706231454005935
+    },
+    {
+      "query": "世界地図",
+      "clicks": 3,
+      "impressions": 155,
+      "ctr": 0.01935483870967742,
+      "avg_position": 6.109677419354838
+    },
+    {
+      "query": "世界地図 ai",
+      "clicks": 3,
+      "impressions": 8,
+      "ctr": 0.375,
+      "avg_position": 1.75
+    },
+    {
+      "query": "amazon コンビニ受け取り バー コード ない",
+      "clicks": 3,
+      "impressions": 5,
+      "ctr": 0.6,
+      "avg_position": 1.6
+    },
+    {
+      "query": "ページ内リンク 位置調整",
+      "clicks": 3,
+      "impressions": 3,
+      "ctr": 1.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ssd 交換 やり方",
+      "clicks": 2,
+      "impressions": 54,
+      "ctr": 0.037037037037037035,
+      "avg_position": 4.185185185185185
+    },
+    {
+      "query": "パソコン ssd 交換",
+      "clicks": 2,
+      "impressions": 30,
+      "ctr": 0.06666666666666667,
+      "avg_position": 10.266666666666667
+    },
+    {
+      "query": "ssd交換方法",
+      "clicks": 2,
+      "impressions": 27,
+      "ctr": 0.07407407407407407,
+      "avg_position": 5.222222222222222
+    },
+    {
+      "query": "世界地図 svg",
+      "clicks": 2,
+      "impressions": 11,
+      "ctr": 0.18181818181818182,
+      "avg_position": 3.3636363636363638
+    },
+    {
+      "query": "ワードプレス 固定ページ編集 できない",
+      "clicks": 2,
+      "impressions": 10,
+      "ctr": 0.2,
+      "avg_position": 3.1
+    },
+    {
+      "query": "amazon ファミマ 受け取り メール こない",
+      "clicks": 2,
+      "impressions": 10,
+      "ctr": 0.2,
+      "avg_position": 1.3
+    },
+    {
+      "query": "日本地図 svg 無料",
+      "clicks": 2,
+      "impressions": 4,
+      "ctr": 0.5,
+      "avg_position": 2.0
+    },
+    {
+      "query": "css target blank",
+      "clicks": 2,
+      "impressions": 3,
+      "ctr": 0.6666666666666666,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ssd 交換",
+      "clicks": 1,
+      "impressions": 79,
+      "ctr": 0.012658227848101266,
+      "avg_position": 8.30379746835443
+    },
+    {
+      "query": "ssd交換",
+      "clicks": 1,
+      "impressions": 59,
+      "ctr": 0.01694915254237288,
+      "avg_position": 8.423728813559322
+    },
+    {
+      "query": "パソコン ssd交換 自分で",
+      "clicks": 1,
+      "impressions": 41,
+      "ctr": 0.024390243902439025,
+      "avg_position": 8.21951219512195
+    },
+    {
+      "query": "css vh",
+      "clicks": 1,
+      "impressions": 40,
+      "ctr": 0.025,
+      "avg_position": 14.45
+    },
+    {
+      "query": "osが入ってるssd交換",
+      "clicks": 1,
+      "impressions": 33,
+      "ctr": 0.030303030303030304,
+      "avg_position": 3.787878787878788
+    },
+    {
+      "query": "ssd 換装 やり方",
+      "clicks": 1,
+      "impressions": 29,
+      "ctr": 0.034482758620689655,
+      "avg_position": 6.0
+    },
+    {
+      "query": "ページ内リンク デザイン",
+      "clicks": 1,
+      "impressions": 23,
+      "ctr": 0.043478260869565216,
+      "avg_position": 9.391304347826088
+    },
+    {
+      "query": "pc ssd 交換",
+      "clicks": 1,
+      "impressions": 17,
+      "ctr": 0.058823529411764705,
+      "avg_position": 10.294117647058824
+    },
+    {
+      "query": "404ページ リダイレクト",
+      "clicks": 1,
+      "impressions": 14,
+      "ctr": 0.07142857142857142,
+      "avg_position": 1.0714285714285714
+    },
+    {
+      "query": "コーダー パートナー募集",
+      "clicks": 1,
+      "impressions": 11,
+      "ctr": 0.09090909090909091,
+      "avg_position": 3.0
+    },
+    {
+      "query": "amazon コンビニ受け取り メール来ない",
+      "clicks": 1,
+      "impressions": 11,
+      "ctr": 0.09090909090909091,
+      "avg_position": 1.6363636363636362
+    },
+    {
+      "query": "ssd 入れ替え方法",
+      "clicks": 1,
+      "impressions": 9,
+      "ctr": 0.1111111111111111,
+      "avg_position": 3.0
+    },
+    {
+      "query": "日本地図svg",
+      "clicks": 1,
+      "impressions": 8,
+      "ctr": 0.125,
+      "avg_position": 2.25
+    },
+    {
+      "query": "css 最後から2番目",
+      "clicks": 1,
+      "impressions": 7,
+      "ctr": 0.14285714285714285,
+      "avg_position": 3.142857142857143
+    },
+    {
+      "query": "amazon コンビニ受け取り メール 来ない",
+      "clicks": 1,
+      "impressions": 7,
+      "ctr": 0.14285714285714285,
+      "avg_position": 1.4285714285714286
+    },
+    {
+      "query": "amazon コンビニ受け取り メールこない",
+      "clicks": 1,
+      "impressions": 7,
+      "ctr": 0.14285714285714285,
+      "avg_position": 1.8571428571428572
+    },
+    {
+      "query": "amazon ローソン 受け取り メールが来ない",
+      "clicks": 1,
+      "impressions": 6,
+      "ctr": 0.16666666666666666,
+      "avg_position": 1.6666666666666665
+    },
+    {
+      "query": "amazonコンビニ受け取り",
+      "clicks": 1,
+      "impressions": 5,
+      "ctr": 0.2,
+      "avg_position": 9.0
+    },
+    {
+      "query": "amazon コンビニ受け取り バーコード",
+      "clicks": 1,
+      "impressions": 5,
+      "ctr": 0.2,
+      "avg_position": 1.8
+    },
+    {
+      "query": "amazon コンビニ受け取り バーコード出し方",
+      "clicks": 1,
+      "impressions": 5,
+      "ctr": 0.2,
+      "avg_position": 2.6
+    },
+    {
+      "query": "白地図 ai",
+      "clicks": 1,
+      "impressions": 4,
+      "ctr": 0.25,
+      "avg_position": 3.25
+    },
+    {
+      "query": "品質重視",
+      "clicks": 1,
+      "impressions": 4,
+      "ctr": 0.25,
+      "avg_position": 1.75
+    },
+    {
+      "query": "ssd 換装 方法",
+      "clicks": 1,
+      "impressions": 4,
+      "ctr": 0.25,
+      "avg_position": 8.0
+    },
+    {
+      "query": "ssd 容量 増やす",
+      "clicks": 1,
+      "impressions": 3,
+      "ctr": 0.3333333333333333,
+      "avg_position": 2.333333333333333
+    },
+    {
+      "query": "佐藤可士和 デザイン失敗例",
+      "clicks": 1,
+      "impressions": 3,
+      "ctr": 0.3333333333333333,
+      "avg_position": 7.333333333333333
+    },
+    {
+      "query": "フローティングボタン 参考 サイト",
+      "clicks": 1,
+      "impressions": 3,
+      "ctr": 0.3333333333333333,
+      "avg_position": 6.666666666666667
+    },
+    {
+      "query": "css 背景 斜め",
+      "clicks": 1,
+      "impressions": 3,
+      "ctr": 0.3333333333333333,
+      "avg_position": 2.666666666666667
+    },
+    {
+      "query": "css ボタン 作り方",
+      "clicks": 1,
+      "impressions": 3,
+      "ctr": 0.3333333333333333,
+      "avg_position": 9.666666666666666
+    },
+    {
+      "query": "地図 ベクターデータ",
+      "clicks": 1,
+      "impressions": 3,
+      "ctr": 0.3333333333333333,
+      "avg_position": 10.666666666666666
+    },
+    {
+      "query": "世界地図 ベクター 無料",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 1.5
+    },
+    {
+      "query": "世界地図 著作 権 フリー",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 2.0
+    },
+    {
+      "query": "amazon コンビニ 受け取り方",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 5.5
+    },
+    {
+      "query": "無料 世界地図",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 9.5
+    },
+    {
+      "query": "phpmailer smtp",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 39.5
+    },
+    {
+      "query": "amazon 受け取りバーコード",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 2.5
+    },
+    {
+      "query": "amazon 到着メール 届かない",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 2.0
+    },
+    {
+      "query": "view height",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 3.0
+    },
+    {
+      "query": "スタンプラリー 全国",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 19.0
+    },
+    {
+      "query": "テーブルレイアウト html",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 5.0
+    },
+    {
+      "query": "hanachat",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 2.0
+    },
+    {
+      "query": "css width vw",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 3.0
+    },
+    {
+      "query": "height vh",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 1.0
+    },
+    {
+      "query": "世界地図 ダウンロード",
+      "clicks": 1,
+      "impressions": 2,
+      "ctr": 0.5,
+      "avg_position": 19.0
+    },
+    {
+      "query": "アウトライン化とは",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 50.0
+    },
+    {
+      "query": "ボタンcss",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "amazon ファミリーマート 受け取り",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "昔 ロゴ",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 16.0
+    },
+    {
+      "query": "imapアカウントとは iphone",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "世界地図 サイト",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 17.0
+    },
+    {
+      "query": "web制作 パートナー募集",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "地図 商用利用 フリー",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 21.0
+    },
+    {
+      "query": "エクセル 読み込み",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "フリー素材 世界地図 白地図",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "css table レスポンシブ",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 19.0
+    },
+    {
+      "query": "php mail tls",
+      "clicks": 1,
+      "impressions": 1,
+      "ctr": 1.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "ページ内リンク",
+      "clicks": 0,
+      "impressions": 52,
+      "ctr": 0.0,
+      "avg_position": 13.903846153846153
+    },
+    {
+      "query": "ホームページ制作 料金表",
+      "clicks": 0,
+      "impressions": 40,
+      "ctr": 0.0,
+      "avg_position": 9.5
+    },
+    {
+      "query": "地図 著作権フリー",
+      "clicks": 0,
+      "impressions": 40,
+      "ctr": 0.0,
+      "avg_position": 1.75
+    },
+    {
+      "query": "パソコン 容量 増やす ssd",
+      "clicks": 0,
+      "impressions": 33,
+      "ctr": 0.0,
+      "avg_position": 8.878787878787879
+    },
+    {
+      "query": "html ページ内リンク",
+      "clicks": 0,
+      "impressions": 30,
+      "ctr": 0.0,
+      "avg_position": 10.666666666666666
+    },
+    {
+      "query": "テーブルレイアウト",
+      "clicks": 0,
+      "impressions": 30,
+      "ctr": 0.0,
+      "avg_position": 2.8666666666666667
+    },
+    {
+      "query": "ホームページ制作 料金",
+      "clicks": 0,
+      "impressions": 30,
+      "ctr": 0.0,
+      "avg_position": 15.366666666666667
+    },
+    {
+      "query": "ssd 換装",
+      "clicks": 0,
+      "impressions": 30,
+      "ctr": 0.0,
+      "avg_position": 6.7
+    },
+    {
+      "query": "vh",
+      "clicks": 0,
+      "impressions": 28,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "検索結果 サイトリンク",
+      "clicks": 0,
+      "impressions": 27,
+      "ctr": 0.0,
+      "avg_position": 29.25925925925926
+    },
+    {
+      "query": "有名企業 ロゴ",
+      "clicks": 0,
+      "impressions": 26,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "世界地図 無料",
+      "clicks": 0,
+      "impressions": 24,
+      "ctr": 0.0,
+      "avg_position": 4.083333333333334
+    },
+    {
+      "query": "web 起業",
+      "clicks": 0,
+      "impressions": 24,
+      "ctr": 0.0,
+      "avg_position": 43.75
+    },
+    {
+      "query": "著作権フリー地図",
+      "clicks": 0,
+      "impressions": 24,
+      "ctr": 0.0,
+      "avg_position": 1.75
+    },
+    {
+      "query": "世界地図 フリー",
+      "clicks": 0,
+      "impressions": 23,
+      "ctr": 0.0,
+      "avg_position": 8.130434782608695
+    },
+    {
+      "query": "css vw",
+      "clicks": 0,
+      "impressions": 22,
+      "ctr": 0.0,
+      "avg_position": 10.863636363636363
+    },
+    {
+      "query": "チェックボックス デザイン",
+      "clicks": 0,
+      "impressions": 21,
+      "ctr": 0.0,
+      "avg_position": 6.0476190476190474
+    },
+    {
+      "query": "amazon メール来ない",
+      "clicks": 0,
+      "impressions": 21,
+      "ctr": 0.0,
+      "avg_position": 8.095238095238095
+    },
+    {
+      "query": "css ボタン",
+      "clicks": 0,
+      "impressions": 20,
+      "ctr": 0.0,
+      "avg_position": 12.95
+    },
+    {
+      "query": "ssd換装",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0.0,
+      "avg_position": 5.7368421052631575
+    },
+    {
+      "query": "amazon ローソン 受け取り できない",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0.0,
+      "avg_position": 10.157894736842104
+    },
+    {
+      "query": "404 リダイレクト",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0.0,
+      "avg_position": 3.5789473684210527
+    },
+    {
+      "query": "検索結果 サムネイル",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0.0,
+      "avg_position": 41.63157894736842
+    },
+    {
+      "query": "佐藤可士和デザイン 失敗",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0.0,
+      "avg_position": 9.052631578947368
+    },
+    {
+      "query": "フローティングボタン",
+      "clicks": 0,
+      "impressions": 19,
+      "ctr": 0.0,
+      "avg_position": 7.368421052631579
+    },
+    {
+      "query": "google 検索 結果 サイト リンク",
+      "clicks": 0,
+      "impressions": 18,
+      "ctr": 0.0,
+      "avg_position": 23.88888888888889
+    },
+    {
+      "query": "ホームページ作成ソフト windows",
+      "clicks": 0,
+      "impressions": 18,
+      "ctr": 0.0,
+      "avg_position": 29.333333333333332
+    },
+    {
+      "query": "google検索 サムネイル",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr": 0.0,
+      "avg_position": 30.294117647058822
+    },
+    {
+      "query": "著作権フリー 地図",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr": 0.0,
+      "avg_position": 1.5294117647058822
+    },
+    {
+      "query": "ssd 入れ替え",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr": 0.0,
+      "avg_position": 7.647058823529412
+    },
+    {
+      "query": "パソコンssd交換",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr": 0.0,
+      "avg_position": 10.294117647058824
+    },
+    {
+      "query": "大阪 画像 フリー",
+      "clicks": 0,
+      "impressions": 16,
+      "ctr": 0.0,
+      "avg_position": 4.375
+    },
+    {
+      "query": "ycom",
+      "clicks": 0,
+      "impressions": 16,
+      "ctr": 0.0,
+      "avg_position": 2.8125
+    },
+    {
+      "query": "https 正規化",
+      "clicks": 0,
+      "impressions": 16,
+      "ctr": 0.0,
+      "avg_position": 12.1875
+    },
+    {
+      "query": "レスポンシブ対応 大阪",
+      "clicks": 0,
+      "impressions": 16,
+      "ctr": 0.0,
+      "avg_position": 14.0625
+    },
+    {
+      "query": "amazonメール来ない",
+      "clicks": 0,
+      "impressions": 15,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "phpmailer",
+      "clicks": 0,
+      "impressions": 15,
+      "ctr": 0.0,
+      "avg_position": 12.8
+    },
+    {
+      "query": "facebook ogp",
+      "clicks": 0,
+      "impressions": 15,
+      "ctr": 0.0,
+      "avg_position": 38.13333333333333
+    },
+    {
+      "query": "meo 構造化データ",
+      "clicks": 0,
+      "impressions": 15,
+      "ctr": 0.0,
+      "avg_position": 7.866666666666666
+    },
+    {
+      "query": "css 高さ",
+      "clicks": 0,
+      "impressions": 14,
+      "ctr": 0.0,
+      "avg_position": 5.071428571428571
+    },
+    {
+      "query": "apple psd",
+      "clicks": 0,
+      "impressions": 14,
+      "ctr": 0.0,
+      "avg_position": 7.928571428571429
+    },
+    {
+      "query": "世界地図 ベクター",
+      "clicks": 0,
+      "impressions": 14,
+      "ctr": 0.0,
+      "avg_position": 1.7142857142857144
+    },
+    {
+      "query": "ssd 付け替え",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 9.23076923076923
+    },
+    {
+      "query": "htmlページ内リンク",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 17.923076923076923
+    },
+    {
+      "query": "大阪市 北区 web制作会社 パートナー募集",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "世界地図 イラスト",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 9.076923076923077
+    },
+    {
+      "query": "追従ボタン",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 9.615384615384615
+    },
+    {
+      "query": "外注 ホームページ 大阪",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 32.38461538461539
+    },
+    {
+      "query": "日本地図 ベクター",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 8.923076923076923
+    },
+    {
+      "query": "pc 容量 増やす ssd",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 9.153846153846153
+    },
+    {
+      "query": "web制作パートナー募集 コーダー",
+      "clicks": 0,
+      "impressions": 13,
+      "ctr": 0.0,
+      "avg_position": 9.153846153846153
+    },
+    {
+      "query": "adobe スライドショー",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 9.416666666666666
+    },
+    {
+      "query": "地図 フリー素材",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 8.5
+    },
+    {
+      "query": "ホームページ 料金",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 12.25
+    },
+    {
+      "query": "target blank",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 13.583333333333334
+    },
+    {
+      "query": "webサーバー 日本語対応",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 2.666666666666667
+    },
+    {
+      "query": "神戸市中央区 web制作会社 パートナー募集",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 8.5
+    },
+    {
+      "query": "search analytics for sheets",
+      "clicks": 0,
+      "impressions": 12,
+      "ctr": 0.0,
+      "avg_position": 12.916666666666666
+    },
+    {
+      "query": "ブログ twitter",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 15.0
+    },
+    {
+      "query": "ssd 増設",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 26.727272727272727
+    },
+    {
+      "query": "datepickerとは",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 1.1818181818181819
+    },
+    {
+      "query": "株式会社はなさか",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 1.1818181818181819
+    },
+    {
+      "query": "ホームページ作成ソフト おすすめ",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 32.54545454545455
+    },
+    {
+      "query": "hdd ssd 換装",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 20.181818181818183
+    },
+    {
+      "query": "ホームページ制作 費用",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 29.09090909090909
+    },
+    {
+      "query": "指のジェスチャー",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "今の写真",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 1.3636363636363638
+    },
+    {
+      "query": "大阪市 西区 web制作会社 パートナー募集",
+      "clicks": 0,
+      "impressions": 11,
+      "ctr": 0.0,
+      "avg_position": 4.363636363636363
+    },
+    {
+      "query": "web制作会社 料金表",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0.0,
+      "avg_position": 8.3
+    },
+    {
+      "query": "アップルタッチアイコン",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0.0,
+      "avg_position": 4.9
+    },
+    {
+      "query": "ssdからssd データ移行",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "スピード重視",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0.0,
+      "avg_position": 2.2
+    },
+    {
+      "query": "テーブルレイアウトとは",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0.0,
+      "avg_position": 7.0
+    },
+    {
+      "query": "著作権フリーの地図",
+      "clicks": 0,
+      "impressions": 10,
+      "ctr": 0.0,
+      "avg_position": 1.8
+    },
+    {
+      "query": "コーディング パートナー",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 36.55555555555556
+    },
+    {
+      "query": "世界地図 デフォルメ",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 7.111111111111111
+    },
+    {
+      "query": "プレミアプロ スライドショー",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 6.111111111111111
+    },
+    {
+      "query": "ホームページ制作 大阪 価格",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 5.888888888888889
+    },
+    {
+      "query": "企業ロゴ 有名",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 1.8888888888888888
+    },
+    {
+      "query": "構造化マークアップ meo",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 11.444444444444445
+    },
+    {
+      "query": "ホームページ制作 大阪 価格 制作費",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 3.7777777777777777
+    },
+    {
+      "query": "地図 イラスト",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 19.666666666666668
+    },
+    {
+      "query": "内蔵ssd 交換",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 8.444444444444445
+    },
+    {
+      "query": "有名企業ロゴ",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "コンテンツ ブログ",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 27.125
+    },
+    {
+      "query": "amazon 受け取りコード",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 3.875
+    },
+    {
+      "query": "ホームページ 作成ソフト プロ 用",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 2.5
+    },
+    {
+      "query": "css 何番目",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 5.375
+    },
+    {
+      "query": "ホームページ制作 相場",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 28.875
+    },
+    {
+      "query": "amazonコンビニ受け取りメール来ない",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 2.125
+    },
+    {
+      "query": "hana-ta チャット",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 4.5
+    },
+    {
+      "query": "世界地図 png",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 9.375
+    },
+    {
+      "query": "世界地図無料",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 4.375
+    },
+    {
+      "query": "地図 フリー",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "html vh",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 14.75
+    },
+    {
+      "query": "ホームページ制作会社 費用",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 21.5
+    },
+    {
+      "query": "広告 ltv",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 21.125
+    },
+    {
+      "query": "フロートボタン",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0.0,
+      "avg_position": 8.625
+    },
+    {
+      "query": "アイコン食べ物",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 4.714285714285714
+    },
+    {
+      "query": "ホームページ作成ソフト 比較",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 33.57142857142857
+    },
+    {
+      "query": "vh css",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 31.857142857142858
+    },
+    {
+      "query": "有名企業ロゴ一覧",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "イラストや 健康",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 7.571428571428571
+    },
+    {
+      "query": "css button",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "大阪 フリー素材",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 9.714285714285714
+    },
+    {
+      "query": "ホームページ制作 大阪 レポート 費用",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "ページ 内 リンク",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 29.571428571428573
+    },
+    {
+      "query": "ファーストビュー 高さ 画面いっぱい",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "web制作 起業",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 19.428571428571427
+    },
+    {
+      "query": "url 正規化 htaccess",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 3.7142857142857144
+    },
+    {
+      "query": "ssd 交換 os",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 6.285714285714286
+    },
+    {
+      "query": "世界地図フリー",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 7.0
+    },
+    {
+      "query": "フロートメニュー",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0.0,
+      "avg_position": 9.714285714285714
+    },
+    {
+      "query": "css キャッシュ対策",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 9.5
+    },
+    {
+      "query": "日本地図 フリー素材",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 11.5
+    },
+    {
+      "query": "ssd 換装 手順",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 7.0
+    },
+    {
+      "query": "premiere pro スライドショー",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 7.333333333333333
+    },
+    {
+      "query": "ホームページ作成ソフト seo",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 36.833333333333336
+    },
+    {
+      "query": "jpg png 使い分け",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 25.0
+    },
+    {
+      "query": "pc ssd 増設",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 22.666666666666668
+    },
+    {
+      "query": "ppc広告",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 46.666666666666664
+    },
+    {
+      "query": "amazon 早く 届けてほしい メール",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "androidで異なるサイトに自動移動する対処法は",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 25.333333333333332
+    },
+    {
+      "query": "地図 ai",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "osの入ったssd 交換",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 4.166666666666666
+    },
+    {
+      "query": "nth-child",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 10.166666666666666
+    },
+    {
+      "query": "ssd 追加",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "ssd データ 移行",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 20.0
+    },
+    {
+      "query": "ノートパソコン ssd 交換",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 15.666666666666666
+    },
+    {
+      "query": "ssd クローン",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 23.833333333333332
+    },
+    {
+      "query": "amazon 近くの受け取りスポット 出てこない",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 10.833333333333334
+    },
+    {
+      "query": "seo ppc",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 20.0
+    },
+    {
+      "query": "ホームページ制作 相談",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 27.5
+    },
+    {
+      "query": "世界地図 高 画質 フリー",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 1.1666666666666667
+    },
+    {
+      "query": "windows ssd 移行",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "ホームページ運用代行 大阪",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 15.0
+    },
+    {
+      "query": "ssd交換 自分で",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 7.333333333333333
+    },
+    {
+      "query": "有名会社のロゴ",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "web制作 実績 ピューズ 会社案内",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 31.666666666666668
+    },
+    {
+      "query": "ホームページ作成ソフト html",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 37.666666666666664
+    },
+    {
+      "query": "今昔写真",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "サマリーカード とは",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 9.666666666666666
+    },
+    {
+      "query": "ssd 取り替え",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 9.166666666666666
+    },
+    {
+      "query": "php smtp",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 25.666666666666668
+    },
+    {
+      "query": "amazonメール届かない",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0.0,
+      "avg_position": 10.333333333333334
+    },
+    {
+      "query": "高画質 世界地図",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 3.4
+    },
+    {
+      "query": "ssd データ移行",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 17.6
+    },
+    {
+      "query": "コーディング 外注 大阪",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 21.0
+    },
+    {
+      "query": "amazon 受け取り バー コード 表示 されない",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 4.2
+    },
+    {
+      "query": "googleサムネイル表示させたい",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 22.6
+    },
+    {
+      "query": "web制作ソフト",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 32.8
+    },
+    {
+      "query": "css vh vw",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 17.6
+    },
+    {
+      "query": "svg 日本地図",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 5.2
+    },
+    {
+      "query": "wordpress 画像 アップロードできない",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 16.8
+    },
+    {
+      "query": "ノート pc ssd 換装",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 20.6
+    },
+    {
+      "query": "ホームページ作成ソフト ランキング",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 36.2
+    },
+    {
+      "query": "更新に失敗しました。返答が正しいjsonレスポンスではありません。",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 21.0
+    },
+    {
+      "query": "夜 デザイン",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 4.2
+    },
+    {
+      "query": "世界地図イラスト",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 8.4
+    },
+    {
+      "query": "amazon コンビニ受け取り",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 14.8
+    },
+    {
+      "query": "昔の写真と今の写真",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ssdデータ移行",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 9.6
+    },
+    {
+      "query": "amazonバーコード出し方",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 2.6
+    },
+    {
+      "query": "アイコン 食べ物",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 6.0
+    },
+    {
+      "query": "wordpress 外注 大阪",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 14.8
+    },
+    {
+      "query": "日本地図 ベクター フリー",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 9.6
+    },
+    {
+      "query": "web design 参考",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 76.8
+    },
+    {
+      "query": "デスクトップpc ssd 交換",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 9.8
+    },
+    {
+      "query": "ホームページ作成 料金",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 16.6
+    },
+    {
+      "query": "更新に失敗しました。返答が正しいjsonレスポンスではありません",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 22.4
+    },
+    {
+      "query": "ltv 広告費",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 20.6
+    },
+    {
+      "query": "ノートパソコン ssd 換装",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 26.8
+    },
+    {
+      "query": "ホームページ制作 大阪 レポート",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 38.0
+    },
+    {
+      "query": "パソコン ssd 交換 自分で",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 8.6
+    },
+    {
+      "query": "ホームページ作成ソフト",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 45.6
+    },
+    {
+      "query": "amazon コンビニ受け取り メール こない",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 1.6
+    },
+    {
+      "query": "データポータル スプレッドシート",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 14.2
+    },
+    {
+      "query": "ストレージ交換",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 3.6
+    },
+    {
+      "query": "ssd 載せ替え",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 9.2
+    },
+    {
+      "query": "ssd換装 ノート",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 31.6
+    },
+    {
+      "query": "hdd ssd 交換",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 23.6
+    },
+    {
+      "query": "hdd をssdに交換",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 19.4
+    },
+    {
+      "query": "amazon 店頭受け取り",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 7.2
+    },
+    {
+      "query": "gmail oauth api",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 29.0
+    },
+    {
+      "query": "世界地図 画像",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "css height vh",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 12.6
+    },
+    {
+      "query": "amazon コンビニ受け取り 番号",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 10.6
+    },
+    {
+      "query": "aタグtargetblank",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0.0,
+      "avg_position": 18.6
+    },
+    {
+      "query": "imap とは",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 45.25
+    },
+    {
+      "query": "ホームページ作成費用",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 37.25
+    },
+    {
+      "query": "大阪 写真 フリー",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 8.25
+    },
+    {
+      "query": "css aタグ target=\"_blank\"",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 1.5
+    },
+    {
+      "query": "著作権フリー 世界地図",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 1.75
+    },
+    {
+      "query": "ボタン css",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 5.75
+    },
+    {
+      "query": "ｖｈ",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 1.75
+    },
+    {
+      "query": "ホームページ 作成 費用",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 35.0
+    },
+    {
+      "query": "wordpress パスワードリセット",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 7.25
+    },
+    {
+      "query": "ssdに換装",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 7.25
+    },
+    {
+      "query": "htaccess 404 リダイレクト",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 3.75
+    },
+    {
+      "query": "laravel post",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 5.5
+    },
+    {
+      "query": "photo meti",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.25
+    },
+    {
+      "query": "kindle サイト",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "ページ 内 リンク html",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 25.75
+    },
+    {
+      "query": "今、昔",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 1.25
+    },
+    {
+      "query": "web制作 相談",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 35.0
+    },
+    {
+      "query": "ホームページ作成 大阪 24時間 相談",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 25.25
+    },
+    {
+      "query": "ssd載せ替え",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 8.25
+    },
+    {
+      "query": "世界地図 フリー素材 商用可",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 7.25
+    },
+    {
+      "query": "target=\"_blank\"",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 13.0
+    },
+    {
+      "query": "健康 アイコン",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 11.5
+    },
+    {
+      "query": "世界地図 アイコン",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 15.25
+    },
+    {
+      "query": "ホームページ制作料金",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 15.25
+    },
+    {
+      "query": "大阪フリー素材",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.5
+    },
+    {
+      "query": "ssdの容量を増やす",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 5.25
+    },
+    {
+      "query": "佐藤可士和 デザイン 失敗",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 10.25
+    },
+    {
+      "query": "今昔写語",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 2.25
+    },
+    {
+      "query": "ホームページ 制作費用",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 31.0
+    },
+    {
+      "query": "健康 イラストや",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "世界 地図 フリー",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 8.5
+    },
+    {
+      "query": "svg地図",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "世界 地図 無料",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 12.25
+    },
+    {
+      "query": "web 制作 パートナー",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 11.5
+    },
+    {
+      "query": "sendmail php",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 5.75
+    },
+    {
+      "query": "ssd換装 データ移行",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 13.25
+    },
+    {
+      "query": "企業ロゴ 面白い",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 2.5
+    },
+    {
+      "query": "ホームページ作成 費用",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 39.25
+    },
+    {
+      "query": "ssd 増やし方",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.75
+    },
+    {
+      "query": "右クリック禁止 なぜ",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "オリンピック イラスト ピクトグラム",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "premiere pro スライドショー テンプレート",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 18.25
+    },
+    {
+      "query": "大阪 ホームページ依頼",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 25.75
+    },
+    {
+      "query": "ホームページ制作 パートナー募集",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 14.0
+    },
+    {
+      "query": "imapアカウント",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "ssd 引越し",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 18.25
+    },
+    {
+      "query": "日本地図 ai フリー",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 10.75
+    },
+    {
+      "query": "スライド webデザイン",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "顔文字 アイコン",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.75
+    },
+    {
+      "query": "日本地図 フリー素材 ai",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "amazon メール 届かない",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 10.75
+    },
+    {
+      "query": "css 2個目以降",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.25
+    },
+    {
+      "query": "写真 昔の言い方",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 7.75
+    },
+    {
+      "query": "大阪 ウエブ依頼",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 18.25
+    },
+    {
+      "query": "大阪府 画像",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "今 昔",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "世界地図 フリーイラスト",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "apple-touch-icon とは",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "css キャッシュ",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 7.75
+    },
+    {
+      "query": "php sendmail",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 5.75
+    },
+    {
+      "query": "ssd入れ替え",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 9.25
+    },
+    {
+      "query": "世界地図 素材",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 7.5
+    },
+    {
+      "query": "ホームページ制作料金表",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0.0,
+      "avg_position": 3.25
+    },
+    {
+      "query": "css vw vh",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 24.666666666666668
+    },
+    {
+      "query": "地図 svg",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 3.3333333333333335
+    },
+    {
+      "query": "os入りssd データ移行",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "patakuso",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "aタグ target blank",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.333333333333332
+    },
+    {
+      "query": "ページ内遷移",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 38.0
+    },
+    {
+      "query": "amazonからメールが届かない",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "デートピッカー",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ホームページ 作成費用",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 36.0
+    },
+    {
+      "query": "amazon 受け取りメール",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 5.666666666666667
+    },
+    {
+      "query": "googleサジェスト ネガティブ",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 19.0
+    },
+    {
+      "query": "hrefblank",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 13.333333333333334
+    },
+    {
+      "query": "ssdの交換方法",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "pc ssd交換",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "ホームページ制作 大阪 価格 見積もり",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 59.666666666666664
+    },
+    {
+      "query": "php smtp メール送信",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 3.3333333333333335
+    },
+    {
+      "query": "yahooサジェスト",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 15.666666666666666
+    },
+    {
+      "query": "amazon ファミマ 受け取り",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 12.666666666666666
+    },
+    {
+      "query": "wp-blog-header.php",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 16.333333333333336
+    },
+    {
+      "query": "正規表現 で終わる",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 6.333333333333333
+    },
+    {
+      "query": "a target blank",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.333333333333332
+    },
+    {
+      "query": "pcssd交換",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.333333333333334
+    },
+    {
+      "query": "クオリティ重視",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "amazon 受け取りコードとは",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "フリー 世界地図",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 12.0
+    },
+    {
+      "query": "amazon コンビニ 受け取り",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 14.333333333333334
+    },
+    {
+      "query": "ホームページ 相談",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 19.333333333333332
+    },
+    {
+      "query": "ssd 移設",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.666666666666666
+    },
+    {
+      "query": "世界地図 フリー素材 ai",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.333333333333332
+    },
+    {
+      "query": "大阪 ホームページ相談",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 14.333333333333334
+    },
+    {
+      "query": "タッチアイコンとは",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 4.666666666666666
+    },
+    {
+      "query": "健康 アイコン フリー",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.666666666666666
+    },
+    {
+      "query": "右クリック禁止",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.666666666666668
+    },
+    {
+      "query": "大阪 フリー画像",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 6.666666666666667
+    },
+    {
+      "query": "いろんな会社のロゴ",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "web デザイン 参考 サイト",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 75.66666666666667
+    },
+    {
+      "query": "ssdクローン",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 21.333333333333332
+    },
+    {
+      "query": "y.com",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 3.3333333333333335
+    },
+    {
+      "query": "日本地図 svg 都道府県",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "大阪 web制作 パートナー募集",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 6.666666666666667
+    },
+    {
+      "query": "世界地図 白地図 svg",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 2.333333333333333
+    },
+    {
+      "query": "アマゾン コンビニ受け取り",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 16.0
+    },
+    {
+      "query": "画像 形式",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 47.0
+    },
+    {
+      "query": "はなさかいちろう",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 3.3333333333333335
+    },
+    {
+      "query": "世界地図フリー素材",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "世界地図 データ",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 5.0
+    },
+    {
+      "query": "ホームページ制作 外注 募集",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "amazon コンビニ受け取り ファミマ",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.333333333333334
+    },
+    {
+      "query": "css 何番目の要素",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.333333333333334
+    },
+    {
+      "query": "html vw",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "twitterカード",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 59.0
+    },
+    {
+      "query": "html カレンダー 日付選択",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "amazon受け取りメール",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 5.333333333333333
+    },
+    {
+      "query": "ホームページ制作 電話",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 16.333333333333336
+    },
+    {
+      "query": "chatgpt キャラクター設定",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 48.333333333333336
+    },
+    {
+      "query": "デスクトップ ssd交換 自分で",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.666666666666668
+    },
+    {
+      "query": "css child 2番目",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "airpods 使い方",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.666666666666666
+    },
+    {
+      "query": "jquery parent",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 36.0
+    },
+    {
+      "query": "button css",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 12.0
+    },
+    {
+      "query": "windows ssd",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 11.333333333333334
+    },
+    {
+      "query": "フローティングメニュー デザイン",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 16.666666666666664
+    },
+    {
+      "query": "table seo",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 29.666666666666668
+    },
+    {
+      "query": "html a target blank",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "wordpress パスワード 忘れた",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.666666666666668
+    },
+    {
+      "query": "ホームページ制作 5万円",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.333333333333334
+    },
+    {
+      "query": "ssd 換装 データ移行",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 14.666666666666666
+    },
+    {
+      "query": "vh vw",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 29.333333333333332
+    },
+    {
+      "query": "100vh",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 69.0
+    },
+    {
+      "query": "ウェブサイト作成 自分で作る vs ツールを使う",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 6.666666666666667
+    },
+    {
+      "query": "htaccess 404",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 14.666666666666666
+    },
+    {
+      "query": "オリンピック ピクトグラム フリー",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ssd交換 データ移行",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 13.333333333333334
+    },
+    {
+      "query": "大阪画像",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "wordpress 固定ページ 直接編集",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 21.333333333333332
+    },
+    {
+      "query": "ホームページ制作会社 大阪 安い 見積り",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 19.333333333333332
+    },
+    {
+      "query": "パソコン ssd交換",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "amazon ローソン 受け取り",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 13.333333333333334
+    },
+    {
+      "query": "target _blank",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 14.333333333333334
+    },
+    {
+      "query": "グーグル マップ 吹き出し 消す",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "都道府県 svg",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.333333333333332
+    },
+    {
+      "query": "日本地図 aiデータ",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.666666666666668
+    },
+    {
+      "query": "昔のロゴ",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "あさご本丸",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.333333333333332
+    },
+    {
+      "query": "フローティングメニューとは",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "windows ssd 換装",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "さくら インターネット ホームページ 公開",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 26.0
+    },
+    {
+      "query": "東京オリンピック ピクトグラム ダウンロード",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "スモールキーワード",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 38.333333333333336
+    },
+    {
+      "query": "健康イラストや",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 8.666666666666668
+    },
+    {
+      "query": "花鳥風月 フォント",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0.0,
+      "avg_position": 12.333333333333334
+    },
+    {
+      "query": "scss css 変換",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 22.0
+    },
+    {
+      "query": "seo htaccess",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 82.5
+    },
+    {
+      "query": "換装 ssd",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 5.5
+    },
+    {
+      "query": "日本地図 eps",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 9.5
+    },
+    {
+      "query": "日本地図 フリー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 8.5
+    },
+    {
+      "query": "amazon コンビニ受け取り メール 届かない",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.5
+    },
+    {
+      "query": "amazon コンビニ受取",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 28.5
+    },
+    {
+      "query": "ssl ev dv",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 25.0
+    },
+    {
+      "query": "404 エラー リダイレクト",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 5.5
+    },
+    {
+      "query": "ホームページ 大阪",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 16.5
+    },
+    {
+      "query": "速度重視",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ブレインハーツ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "今と昔 写真 比較 アプリ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "食べ物アイコン可愛い",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "cドライブ 増設 ssd",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.5
+    },
+    {
+      "query": "プレミアプロ 写真 スライドショー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 5.5
+    },
+    {
+      "query": "古写真 読み方",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.5
+    },
+    {
+      "query": "svg 地図",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 5.5
+    },
+    {
+      "query": "ホームページ制作 5万",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 7.0
+    },
+    {
+      "query": "プレミア プロ スライド エフェクト",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "アイコン アイデア",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 13.5
+    },
+    {
+      "query": "ハードディスク ssd 交換",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 23.5
+    },
+    {
+      "query": "nth-child 複数",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    },
+    {
+      "query": "大阪府 写真",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 18.0
+    },
+    {
+      "query": "ssd交換 os",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 6.0
+    },
+    {
+      "query": "php メール 送信 ライブラリ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 47.5
+    },
+    {
+      "query": "png jpeg 違い",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 40.5
+    },
+    {
+      "query": "css target",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "アイコン 食べ物イラストかわいい",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "神戸市中央区 web制作 会社 パートナー募集",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 9.5
+    },
+    {
+      "query": "ホームページ制作 編集ソフト",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 22.5
+    },
+    {
+      "query": "ssdに交換",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 11.5
+    },
+    {
+      "query": "アップルタッチアイコンとは",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ドメイン 認証 型 ssl",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 27.0
+    },
+    {
+      "query": "アウトライン化したデータとは",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "医療 アイコン フリー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "デスクトップ ssd 交換",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 16.0
+    },
+    {
+      "query": "^.*$",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "世界地図 素材 フリー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 3.5
+    },
+    {
+      "query": "世界地図リアル",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "jpeg png 違い",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 70.5
+    },
+    {
+      "query": "よくあるアイコン",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "ホームページ制作会社 提携",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 30.0
+    },
+    {
+      "query": "可愛いグラフ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "blank css",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 5.5
+    },
+    {
+      "query": "javascript コンソール",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 37.5
+    },
+    {
+      "query": "(not provided)_yahoo",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 35.0
+    },
+    {
+      "query": "素材",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "スプレッドシート データポータル",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 19.5
+    },
+    {
+      "query": "jquery 子要素",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 42.5
+    },
+    {
+      "query": "laravel smtp",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 70.0
+    },
+    {
+      "query": "kindle web",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 14.5
+    },
+    {
+      "query": "レスポンシブ対応 費用",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 32.0
+    },
+    {
+      "query": "php メール送信",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 25.0
+    },
+    {
+      "query": "youtubeサジェスト ネガティブ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 39.0
+    },
+    {
+      "query": "ssd 交換 データ移行",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 14.0
+    },
+    {
+      "query": "apple pencilは社会人のipadでの働き方をどのように変えましたか？",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 9.0
+    },
+    {
+      "query": "換装 交換 違い",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 4.5
+    },
+    {
+      "query": "さくらのブログ 見れない",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "海外地図",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 2.0
+    },
+    {
+      "query": "システムドライブ 移行",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 18.5
+    },
+    {
+      "query": "コンビニ 受け取り amazon",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 12.0
+    },
+    {
+      "query": "css 2番目",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.0
+    },
+    {
+      "query": "ホームページ 更新 されない",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 31.5
+    },
+    {
+      "query": "チェックボックス おしゃれ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 2.5
+    },
+    {
+      "query": "amazon 引き渡し準備中 メール来ない",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "カメラ 暗いところ 設定",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 8.5
+    },
+    {
+      "query": "フローティングメニュー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 6.0
+    },
+    {
+      "query": "大阪城 フリー写真",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 3.0
+    },
+    {
+      "query": "php mailer smtp",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 81.5
+    },
+    {
+      "query": "php メール 送信 smtp 認証",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "keep2share 安全",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "ssd 換装 クローン",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 17.0
+    },
+    {
+      "query": "世界地図 おしゃれ フリー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 16.0
+    },
+    {
+      "query": "世界地図 ダウンロード 無料",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 19.5
+    },
+    {
+      "query": "checkbox value on",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 4.0
+    },
+    {
+      "query": "web制作 相場",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 21.5
+    },
+    {
+      "query": "amazon メールこない",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 11.0
+    },
+    {
+      "query": "wordpress構築 大阪",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 15.0
+    },
+    {
+      "query": "日本地図 ベクター 商用 フリー",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 12.0
+    },
+    {
+      "query": "css nth-child",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.5
+    },
+    {
+      "query": "きんどるうぇぶ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 10.5
+    },
+    {
+      "query": "css 反映 されない",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 20.5
+    },
+    {
+      "query": "より良いpngまたはjpgれています",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 17.5
+    },
+    {
+      "query": "amazon コンビニ受け取り メール",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 1.0
+    },
+    {
+      "query": "ページ内ジャンプ",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 45.5
+    },
+    {
+      "query": "ホームページ 制作 費用",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 33.0
+    },
+    {
+      "query": "佐藤可士和 デザイン 失敗例",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0.0,
+      "avg_position": 8.0
+    }
+  ]
+}

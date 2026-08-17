@@ -1,0 +1,570 @@
+{
+  "project": "myservice-219202",
+  "dataset": "searchconsole_ycom",
+  "table": "searchdata_url_impression",
+  "start": "2026-06-25",
+  "end": "2026-07-08",
+  "search_type": "WEB",
+  "pages": [
+    {
+      "url": "https://y-com.info/contents/?p=2117",
+      "clicks": 162,
+      "impressions": 2899,
+      "ctr": 0.055881338392549156,
+      "avg_position": 7.316315971024491
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6141",
+      "clicks": 104,
+      "impressions": 2459,
+      "ctr": 0.0422936152907686,
+      "avg_position": 6.753151687677918
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7528",
+      "clicks": 69,
+      "impressions": 3382,
+      "ctr": 0.02040212891780012,
+      "avg_position": 8.42962743938498
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5641",
+      "clicks": 51,
+      "impressions": 689,
+      "ctr": 0.07402031930333818,
+      "avg_position": 8.595065312046444
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8192",
+      "clicks": 29,
+      "impressions": 362,
+      "ctr": 0.08011049723756906,
+      "avg_position": 10.303867403314918
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6568",
+      "clicks": 26,
+      "impressions": 628,
+      "ctr": 0.041401273885350316,
+      "avg_position": 6.671974522292993
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7306",
+      "clicks": 26,
+      "impressions": 498,
+      "ctr": 0.05220883534136546,
+      "avg_position": 7.883534136546185
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7548",
+      "clicks": 17,
+      "impressions": 709,
+      "ctr": 0.023977433004231313,
+      "avg_position": 8.330042313117065
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7030",
+      "clicks": 16,
+      "impressions": 458,
+      "ctr": 0.034934497816593885,
+      "avg_position": 7.6244541484716155
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8126",
+      "clicks": 14,
+      "impressions": 228,
+      "ctr": 0.06140350877192982,
+      "avg_position": 5.3201754385964914
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7596",
+      "clicks": 13,
+      "impressions": 252,
+      "ctr": 0.051587301587301584,
+      "avg_position": 9.51984126984127
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8061",
+      "clicks": 12,
+      "impressions": 84,
+      "ctr": 0.14285714285714285,
+      "avg_position": 5.154761904761905
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5960",
+      "clicks": 11,
+      "impressions": 253,
+      "ctr": 0.043478260869565216,
+      "avg_position": 5.276679841897233
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8285",
+      "clicks": 11,
+      "impressions": 207,
+      "ctr": 0.05314009661835749,
+      "avg_position": 6.371980676328502
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6624",
+      "clicks": 11,
+      "impressions": 147,
+      "ctr": 0.07482993197278912,
+      "avg_position": 7.360544217687075
+    },
+    {
+      "url": "https://y-com.info/partners/coder.html",
+      "clicks": 10,
+      "impressions": 779,
+      "ctr": 0.012836970474967908,
+      "avg_position": 7.825417201540437
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5755",
+      "clicks": 10,
+      "impressions": 175,
+      "ctr": 0.05714285714285714,
+      "avg_position": 4.5600000000000005
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7764",
+      "clicks": 10,
+      "impressions": 120,
+      "ctr": 0.08333333333333333,
+      "avg_position": 4.65
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8295",
+      "clicks": 9,
+      "impressions": 165,
+      "ctr": 0.05454545454545454,
+      "avg_position": 7.872727272727273
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7024",
+      "clicks": 8,
+      "impressions": 175,
+      "ctr": 0.045714285714285714,
+      "avg_position": 17.845714285714287
+    },
+    {
+      "url": "https://y-com.info/",
+      "clicks": 7,
+      "impressions": 226,
+      "ctr": 0.030973451327433628,
+      "avg_position": 19.18141592920354
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7323",
+      "clicks": 6,
+      "impressions": 150,
+      "ctr": 0.04,
+      "avg_position": 6.486666666666666
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7393",
+      "clicks": 6,
+      "impressions": 89,
+      "ctr": 0.06741573033707865,
+      "avg_position": 9.224719101123595
+    },
+    {
+      "url": "https://y-com.info/contents/?p=4346",
+      "clicks": 6,
+      "impressions": 89,
+      "ctr": 0.06741573033707865,
+      "avg_position": 7.247191011235955
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6115",
+      "clicks": 6,
+      "impressions": 60,
+      "ctr": 0.1,
+      "avg_position": 5.883333333333334
+    },
+    {
+      "url": "https://y-com.info/contents/?p=77",
+      "clicks": 5,
+      "impressions": 261,
+      "ctr": 0.019157088122605363,
+      "avg_position": 25.632183908045977
+    },
+    {
+      "url": "https://y-com.info/contents/?p=2330",
+      "clicks": 5,
+      "impressions": 244,
+      "ctr": 0.020491803278688523,
+      "avg_position": 21.991803278688526
+    },
+    {
+      "url": "https://y-com.info/contents/?p=388",
+      "clicks": 5,
+      "impressions": 233,
+      "ctr": 0.02145922746781116,
+      "avg_position": 6.4334763948497855
+    },
+    {
+      "url": "https://y-com.info/contents/?p=4450",
+      "clicks": 5,
+      "impressions": 117,
+      "ctr": 0.042735042735042736,
+      "avg_position": 5.239316239316239
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7964",
+      "clicks": 5,
+      "impressions": 92,
+      "ctr": 0.05434782608695652,
+      "avg_position": 5.880434782608695
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7284",
+      "clicks": 5,
+      "impressions": 50,
+      "ctr": 0.1,
+      "avg_position": 6.28
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7113",
+      "clicks": 5,
+      "impressions": 33,
+      "ctr": 0.15151515151515152,
+      "avg_position": 6.303030303030303
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5902",
+      "clicks": 4,
+      "impressions": 251,
+      "ctr": 0.01593625498007968,
+      "avg_position": 9.51792828685259
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5872",
+      "clicks": 4,
+      "impressions": 228,
+      "ctr": 0.017543859649122806,
+      "avg_position": 6.894736842105263
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5819",
+      "clicks": 4,
+      "impressions": 108,
+      "ctr": 0.037037037037037035,
+      "avg_position": 7.277777777777778
+    },
+    {
+      "url": "https://y-com.info/contents/?p=3066",
+      "clicks": 4,
+      "impressions": 67,
+      "ctr": 0.05970149253731343,
+      "avg_position": 5.3283582089552235
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7167",
+      "clicks": 4,
+      "impressions": 36,
+      "ctr": 0.1111111111111111,
+      "avg_position": 4.277777777777778
+    },
+    {
+      "url": "https://y-com.info/contents/?p=2082",
+      "clicks": 3,
+      "impressions": 312,
+      "ctr": 0.009615384615384616,
+      "avg_position": 3.298076923076923
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5500",
+      "clicks": 3,
+      "impressions": 220,
+      "ctr": 0.013636363636363636,
+      "avg_position": 9.281818181818181
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6181",
+      "clicks": 3,
+      "impressions": 187,
+      "ctr": 0.016042780748663103,
+      "avg_position": 6.037433155080214
+    },
+    {
+      "url": "https://y-com.info/free_photo/",
+      "clicks": 3,
+      "impressions": 180,
+      "ctr": 0.016666666666666666,
+      "avg_position": 6.116666666666666
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7291",
+      "clicks": 3,
+      "impressions": 125,
+      "ctr": 0.024,
+      "avg_position": 13.568
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6698",
+      "clicks": 3,
+      "impressions": 75,
+      "ctr": 0.04,
+      "avg_position": 4.84
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7205",
+      "clicks": 3,
+      "impressions": 66,
+      "ctr": 0.045454545454545456,
+      "avg_position": 7.045454545454546
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5489",
+      "clicks": 3,
+      "impressions": 56,
+      "ctr": 0.05357142857142857,
+      "avg_position": 8.553571428571429
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8078",
+      "clicks": 3,
+      "impressions": 35,
+      "ctr": 0.08571428571428572,
+      "avg_position": 5.6
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6874",
+      "clicks": 3,
+      "impressions": 32,
+      "ctr": 0.09375,
+      "avg_position": 11.71875
+    },
+    {
+      "url": "https://y-com.info/contents/?p=1908",
+      "clicks": 3,
+      "impressions": 32,
+      "ctr": 0.09375,
+      "avg_position": 5.4375
+    },
+    {
+      "url": "https://y-com.info/aichat/blog/?author=1",
+      "clicks": 3,
+      "impressions": 30,
+      "ctr": 0.1,
+      "avg_position": 4.3
+    },
+    {
+      "url": "https://y-com.info/price/basic.html",
+      "clicks": 2,
+      "impressions": 300,
+      "ctr": 0.006666666666666667,
+      "avg_position": 14.863333333333333
+    },
+    {
+      "url": "https://y-com.info/contents/?p=3028",
+      "clicks": 2,
+      "impressions": 161,
+      "ctr": 0.012422360248447204,
+      "avg_position": 20.70186335403727
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7097",
+      "clicks": 2,
+      "impressions": 147,
+      "ctr": 0.013605442176870748,
+      "avg_position": 4.482993197278912
+    },
+    {
+      "url": "https://y-com.info/aichat/blog/?p=82",
+      "clicks": 2,
+      "impressions": 123,
+      "ctr": 0.016260162601626018,
+      "avg_position": 8.065040650406505
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8137",
+      "clicks": 2,
+      "impressions": 104,
+      "ctr": 0.019230769230769232,
+      "avg_position": 8.346153846153847
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8183",
+      "clicks": 2,
+      "impressions": 97,
+      "ctr": 0.020618556701030927,
+      "avg_position": 16.402061855670105
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6209",
+      "clicks": 2,
+      "impressions": 86,
+      "ctr": 0.023255813953488372,
+      "avg_position": 5.209302325581396
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6908",
+      "clicks": 2,
+      "impressions": 57,
+      "ctr": 0.03508771929824561,
+      "avg_position": 17.280701754385966
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6128",
+      "clicks": 2,
+      "impressions": 57,
+      "ctr": 0.03508771929824561,
+      "avg_position": 11.894736842105264
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7434",
+      "clicks": 2,
+      "impressions": 55,
+      "ctr": 0.03636363636363636,
+      "avg_position": 6.6909090909090905
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7737",
+      "clicks": 2,
+      "impressions": 52,
+      "ctr": 0.038461538461538464,
+      "avg_position": 10.961538461538462
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5009",
+      "clicks": 2,
+      "impressions": 47,
+      "ctr": 0.0425531914893617,
+      "avg_position": 14.085106382978724
+    },
+    {
+      "url": "https://y-com.info/contents/?p=1956",
+      "clicks": 2,
+      "impressions": 44,
+      "ctr": 0.045454545454545456,
+      "avg_position": 5.568181818181818
+    },
+    {
+      "url": "https://y-com.info/matome/fonts.html",
+      "clicks": 2,
+      "impressions": 41,
+      "ctr": 0.04878048780487805,
+      "avg_position": 14.609756097560975
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6862",
+      "clicks": 2,
+      "impressions": 41,
+      "ctr": 0.04878048780487805,
+      "avg_position": 6.170731707317073
+    },
+    {
+      "url": "https://y-com.info/contents/?p=4539",
+      "clicks": 2,
+      "impressions": 29,
+      "ctr": 0.06896551724137931,
+      "avg_position": 13.068965517241379
+    },
+    {
+      "url": "https://y-com.info/contents/?p=1289",
+      "clicks": 2,
+      "impressions": 22,
+      "ctr": 0.09090909090909091,
+      "avg_position": 10.0
+    },
+    {
+      "url": "https://y-com.info/contents/?p=8299",
+      "clicks": 2,
+      "impressions": 20,
+      "ctr": 0.1,
+      "avg_position": 10.85
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6178",
+      "clicks": 2,
+      "impressions": 16,
+      "ctr": 0.125,
+      "avg_position": 10.0
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6000",
+      "clicks": 2,
+      "impressions": 11,
+      "ctr": 0.18181818181818182,
+      "avg_position": 4.909090909090909
+    },
+    {
+      "url": "https://y-com.info/contents/?p=4700",
+      "clicks": 2,
+      "impressions": 7,
+      "ctr": 0.2857142857142857,
+      "avg_position": 3.7142857142857144
+    },
+    {
+      "url": "https://y-com.info/contents/?p=1249",
+      "clicks": 2,
+      "impressions": 6,
+      "ctr": 0.3333333333333333,
+      "avg_position": 1.6666666666666665
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6964",
+      "clicks": 2,
+      "impressions": 3,
+      "ctr": 0.6666666666666666,
+      "avg_position": 4.0
+    },
+    {
+      "url": "https://y-com.info/company/",
+      "clicks": 1,
+      "impressions": 232,
+      "ctr": 0.004310344827586207,
+      "avg_position": 11.004310344827585
+    },
+    {
+      "url": "https://y-com.info/contents/?p=7190",
+      "clicks": 1,
+      "impressions": 185,
+      "ctr": 0.005405405405405406,
+      "avg_position": 25.686486486486487
+    },
+    {
+      "url": "https://y-com.info/contents/?p=6763",
+      "clicks": 1,
+      "impressions": 136,
+      "ctr": 0.007352941176470588,
+      "avg_position": 5.6911764705882355
+    },
+    {
+      "url": "https://y-com.info/contents/?p=3204",
+      "clicks": 1,
+      "impressions": 98,
+      "ctr": 0.01020408163265306,
+      "avg_position": 8.071428571428571
+    },
+    {
+      "url": "https://y-com.info/contact/normal/",
+      "clicks": 1,
+      "impressions": 97,
+      "ctr": 0.010309278350515464,
+      "avg_position": 18.577319587628867
+    },
+    {
+      "url": "https://y-com.info/contact/partner/",
+      "clicks": 1,
+      "impressions": 97,
+      "ctr": 0.010309278350515464,
+      "avg_position": 11.443298969072165
+    },
+    {
+      "url": "https://y-com.info/contents/?p=5479",
+      "clicks": 1,
+      "impressions": 95,
+      "ctr": 0.010526315789473684,
+      "avg_position": 6.568421052631579
+    },
+    {
+      "url": "https://y-com.info/contents/?p=3118",
+      "clicks": 1,
+      "impressions": 75,
+      "ctr": 0.013333333333333334,
+      "avg_position": 3.4133333333333336
+    }
+  ]
+}

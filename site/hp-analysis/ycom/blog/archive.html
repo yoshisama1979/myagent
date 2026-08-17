@@ -182,6 +182,122 @@
   <!-- ===== 過去サイクルのスナップショット（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">過去サイクルのスナップショット</h2>
 
+  <details class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-4 text-sm text-gray-700" id="c068" open>
+    <summary class="font-bold text-gray-800 cursor-pointer">📸 Cycle 068 — 2026-08-17（<span class="text-rose-700">毎日のお願いが、そもそも実行できない形だったと判明</span>＝完成原稿5本のうち WordPress にあるのは0本／<span class="text-emerald-800">新規記事は約22か月ゼロ・開発は生きていた</span>／新規 <span class="font-mono">B-041</span>・<span class="font-mono">T-030</span>｜記録スナップショット）<strong class="text-emerald-800">※翌 Cycle 069 で「T-001 は WP下書き 8365 として実在」を実測確認／掲示板サイズの報告（約63,000バイト）は誤りと訂正</strong></summary>
+
+    <div class="mt-3 space-y-3">
+
+      <div class="bg-rose-50 border-2 border-rose-400 rounded p-3">
+        <p class="font-bold text-rose-800">🎯 判明①（最重要・お詫び）：「1本 publish してください」というお願いは、<u>社長の手元では実行できませんでした</u></p>
+        <p class="mt-1">完成原稿は確かに5本あったが、<strong>それはサーバ上のファイル（プレビューURL）であって、WordPress の中には入っていなかった</strong>。WPの下書きに実在したのは <span class="font-mono">8311</span>（T-002）・<span class="font-mono">8362</span>（B-012改善版）・<span class="font-mono">8363</span>（B-014改善版）の3本のみで、毎日推奨していた <span class="font-mono">T-001</span> は<strong>存在しなかった</strong>（T-003〜T-008・T-011 も未投稿）。<strong>＝社長は、押すべき「公開」ボタンが存在しない状態で46日間「1本 publish を」と言われ続けていた。</strong>原因＝2026-06-23 の社長決定（下書きは毎サイクルWPへ反映）と、執筆担当（blog-write）側の運用（Phase 1＝ローカル草案のみ・実 post は都度指示）の食い違い。<u>ルール文書の中に両方の記述が同居していた</u>。診断側（本ループ）はその食い違いを一度も点検していなかった。<strong>対処＝当日の blog-write へ「T-001 を status=draft でWPへ投入」を掲示板で指示</strong>し、<span class="font-mono">Q-010</span> で恒久化の許可を要請。<span class="text-xs text-emerald-800">【Cycle 069 追記】翌日実測＝<strong>投入は完了。WP下書き ID 8365・status=draft</strong>。</span></p>
+      </div>
+
+      <div class="bg-amber-50 border-2 border-amber-400 rounded p-3">
+        <p class="font-bold text-amber-800">🎯 判明②：「32日間 公開ゼロ」ではなく、<u>新しい記事は 2024年10月9日 を最後に約22か月 出ていない</u></p>
+        <p class="mt-1">RSS の<u>各記事の投稿日</u>まで読んだ結果、新しい順に <strong>2024-10-09（p=8299）／2024-06-25（p=8295）／2024-06-17（p=8285）／2024-04-26（p=8202）</strong>。<u>7/15 は既存記事を手直しした日で、新規記事ではない</u>。＝1本出すことは「久しぶりの更新」ではなく<strong>約2年ぶりの新記事</strong>にあたる。検索エンジンから見た「このブログは今も動いているか」の信号としても1本目の意味は大きい。<strong>運用の教訓＝更新（RSS の lastBuildDate）と新規公開（item の pubDate）を区別して数える。</strong></p>
+      </div>
+
+      <div class="bg-rose-50 border-2 border-rose-400 rounded p-3">
+        <p class="font-bold text-rose-800">🎯 判明③：前日の「web-hanasaka は受け取りに来ていない」を訂正＝<u>開発は動いていた</u>＋開発から社長宛の確認が4件 滞留</p>
+        <p class="mt-1">やりとりの実ファイルを1通ずつ照合した結果、<strong>web-hanasaka は 8/05 と 8/11 に本番サイトを実際に修正し、commit 付きの報告を4通 出していた</strong>（料金ページ→運用ページの文脈リンク追加、システム開発ページの共通メニュー掲載、スマホ表示崩れの修正 ほか）。問題は2つに分かれていた：</p>
+        <ul class="list-disc list-inside mt-1 space-y-1 text-xs">
+          <li><strong>(a) 開発から社長への確認が宙に浮いていた</strong>＝①<u>Crazy Egg（旧ヒートマップ）の契約は今も生きているか</u>（解約済みなら全ページの読み込みを1本減らせる）②<u><span class="font-mono">/company/</span> をスマホと実ブラウザで開いて地図が出るか</u>③<u>スマホ表示の崩れ修正（<span class="font-mono">/works/</span>・サービス系3ページ）の見え方確認</u>④<span class="font-mono">/works/case/detail.html</span> の存廃。宛先の受信箱に6〜12日 滞留。本ループが読める場所にあったため社長へ橋渡し（内容は無改変）。</li>
+          <li><strong>(b) 当ブログループの依頼<u>だけ</u>が選ばれていない</strong>＝同じ受信箱で <u>HP分析ループの依頼は 8/10 まで処理済み</u>／<u>当ブログループの依頼は 7/17 を最後に6通が未処理</u>（7/23・7/24・7/25・8/01・8/07・8/12）＝届いていないのではなく着手の順番が回ってきていない、と判断（<span class="font-mono">B-016</span>・<span class="font-mono">B-022</span>・<span class="font-mono">B-034</span>・<span class="font-mono">B-037</span> が動かない理由）。<span class="text-emerald-800">【Cycle 069 追記・訂正】翌日実測では <u>HP分析側も6通が未処理</u>＝<strong>8/11 以降は両方とも止まっている</strong>。「ブログ側だけが選ばれていない」は 8/17 時点の観察であり、8/18 時点では当てはまらない。</span></li>
+        </ul>
+        <p class="mt-1 text-xs text-gray-600">※あわせて<strong>本ループ自身の受信確認が構造的に効いていなかった</strong>ことも判明＝受信の問い合わせが<u>旧・総称名（hp-loop）の受信箱</u>を読んでおり、「<span class="font-mono">blog-loop-ycom</span> 宛の新着0件」という毎日の報告は自分の箱を見た結果ではなかった。<strong>ファイル実体で数え直した結果も0件＝取りこぼしゼロ（実害なし）</strong>。以後この確認はファイル実体で行う。設定の是正は Overseer へ申し送り。</p>
+      </div>
+
+      <div class="bg-white border border-gray-300 rounded p-3">
+        <p class="font-bold text-gray-800">📊 状況・データ状況（Cycle 068）</p>
+        <ul class="list-disc list-inside mt-1 space-y-1 text-xs">
+          <li><strong>公開状況</strong>：新規記事は 2024-10-09 が最後（RSS 実測）。</li>
+          <li><strong>データ取得（すべて読み取り専用）</strong>：GSC 12本（summary 3・pages 1・queries 1・page-queries 5・効果検証 2・query-pages 4）／<span class="font-mono">hp-audit</span> 6本／<span class="font-mono">hp-serp</span> 3本／GA4 1本（landing・28日＝<u>ブログ着地 上位25本すべて CV 0件</u>）／<span class="font-mono">wp-draft.py</span> 3本（check・get×2＝読み取りのみ）。</li>
+          <li><strong>指名検索（②の橋）</strong>：「株式会社はなさか」64表示・6クリック・1.1位／「ycom」38表示・4クリック・3.2位＝合計10クリック／月で横ばい。<span class="text-emerald-800">【Cycle 069 追記】「y-com」9表示・2クリックを数え漏らしていた＝正しくは計12クリック。横ばいの評価は不変。</span></li>
+          <li><strong>効果検証（<span class="font-mono">p=8299</span>・7/15 に社長が手で反映）</strong>＝反映前30日 12表示・0クリック → 反映後30日 12表示・0クリック＝<u>母数が小さすぎて効果を測れない記事だった</u>。これを根拠にタイトル・説明文のコピペ修理群（<span class="font-mono">B-036</span>・<span class="font-mono">B-039</span>・<span class="font-mono">B-040</span>＋コピペ5点）を「催促しない」→「後回しで良い」へ格下げ。<span class="text-rose-700">【Cycle 069 追記・訂正】この一括格下げは誤り＝<span class="font-mono">p=5641</span>（1,074表示）・<span class="font-mono">p=7548</span>（1,486表示）は <span class="font-mono">p=8299</span> の約100倍の母数があり、同じ理由を当てはめてはいけなかった（→ <span class="font-mono">B-042</span> で2本のみ優先度を復帰）。</span></li>
+          <li><strong>週次（K-530）</strong>：8/08〜8/14＝クリック 329／表示 13,431／平均 12.0位（前週 8/01〜8/07＝452／13,828／9.9位）＝平均順位の悪化3週連続。お盆が入り始めた窓。</li>
+          <li><strong>新しい数字の発見＝「料金表」と「費用」で30位以上ちがう</strong>：同じ <span class="font-mono">/price/basic.html</span> が「ホームページ制作 料金表」13.5位・「web制作会社 料金表」9.5位に対し、「ホームページ作成 費用」40.6位・「ホームページ制作 費用」38.8位・「ホームページ 制作 費用」45.2位。競合SERP実測でも「費用 相場」の1ページ目は解説記事がほぼ独占（xserver・freee・ferret One・レバテック・ジンドゥー等）、「料金表」の1ページ目には制作会社の料金ページも並ぶ＝<strong>語によって求められているページの種類が違う</strong>。T-001 は料金表と食い合わない。</li>
+          <li><strong>掲示板サイズの報告</strong>：「前サイクル 104,196 バイト → 本サイクル 約63,000 バイト（約40%削減）」と報告。<span class="text-rose-700">【Cycle 069 追記・訂正】<strong>実際のファイルは 103,355 バイト</strong>で、削減できていなかった（→ K-578）。</span></li>
+        </ul>
+      </div>
+
+      <!-- ① 既存記事の改善 B-041（原文） -->
+      <div class="bg-white border-4 border-emerald-400 rounded-lg p-5 text-sm text-gray-700" id="b041">
+        <h3 class="font-bold text-emerald-800 mb-2">① 既存記事の改善 — <span class="font-mono">B-041</span>：<span class="text-rose-700">「未分類」の記事30本は、記事下の関連記事が1本も出ていません</span>＝読者の出口が「前の投稿／次の投稿」（時系列＝無関係）だけ（優先度🟡・栓なし）</h3>
+        <table class="w-full text-sm border-collapse mb-3">
+          <tbody class="align-top">
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">対象</td><td class="py-1">カテゴリ「未分類」の記事群（<a href="https://y-com.info/contents/?cat=1" class="text-blue-600 hover:underline font-mono">?cat=1</a>・一覧1ページ目に<strong>30本</strong>）。代表例＝<span class="font-mono">p=8025</span>「SEOの全体を理解しよう！SEOについてのまとめ。」／<span class="font-mono">p=2914</span>「タイトルってこんなに大事だったの？アクセスが増えない原因はタイトルかも！」／<span class="font-mono">p=2930</span>「ビッグキーワードよりもスモールキーワードを狙って…」／<span class="font-mono">p=3310</span>「ABテストでコンバージョン貢献度が3倍に！何をしたのかを公開します。」／<span class="font-mono">p=8061</span>「CSSでのアイコン付きボタンの3つの実装方法」（28日で22クリック・4.9位・CTR 15.5%）。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観点</td><td class="py-1"><strong>内部リンク・回遊（ファネル②＝覚えられ、信頼される層）</strong>。<u>記事を増やす前に、いまある記事どうしを繋ぐ</u>という一手です。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観察（事実・8/17 実測）</td><td class="py-1">① <strong>関連記事は「カテゴリ」で出ています</strong>＝<span class="font-mono">p=2117</span>（カテゴリ＝素材／無料素材／イラスト素材）の記事内リンクには、<u>同カテゴリの関連記事が4本</u>（<span class="font-mono">p=3102・3118・3528・3546</span>）＋前後の投稿が並びます。<br>
+            ② <strong>カテゴリが「未分類」の記事では、関連記事がゼロです</strong>＝<span class="font-mono">p=8285</span>（未分類）の記事内リンクは<u>「前の投稿」「次の投稿」「著者」「未分類」だけ</u>。前後の投稿は<strong>投稿日の並び順</strong>であって、テーマの関係はありません（実測＝「GmailAPIのOAuth」→「CSSによるボタン作成の基本」）。<br>
+            ③ <strong>未分類には事業と接点のある記事が埋もれています</strong>＝上の代表例のとおり、SEO・タイトル・ABテストなど<u>「ホームページ制作会社が語れる」テーマ</u>が入っています。<br>
+            ④ 補足＝カテゴリが付いている記事も多数あります（例 <span class="font-mono">p=7528</span>＝「メモ」）。<strong>これは全記事の問題ではなく、未分類30本の問題です。</strong></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">なぜ問題か／なぜ今か</td><td class="py-1"><strong>読者の出口が塞がっています</strong>：ブログには月1,600セッション以上が着地していますが（GA4実測）、未分類記事に来た読者には<u>「次に読むもの」が提示されません</u>。<strong class="text-emerald-800">②の橋（覚えられ・信頼される）が架からない構造的な原因の1つ</strong>です。<br>
+            また<strong>検索エンジンにとっても内部リンクは道</strong>で、関連記事が出ない記事は<u>ブログの中で孤立しています</u>。<br>
+            <strong>なぜ今か</strong>＝<u>T-001 を公開したあと、その記事へ関連記事から人を送りたいからです</u>。先にカテゴリの器を整えておくと、公開1本目の効きが変わります。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">改善案<br><span class="text-xs font-normal">（本文は触りません＝WP管理画面の操作）</span></td><td class="py-1">
+              <p class="mb-1"><strong>(1) まず5本だけ</strong>（事業と接点のある記事から・1本30秒）：<span class="font-mono">p=8025</span>（SEOまとめ）→ <u>SEO</u>／<span class="font-mono">p=2914</span>（タイトル）→ <u>SEO</u>／<span class="font-mono">p=2930</span>（スモールKW）→ <u>SEO</u>／<span class="font-mono">p=3310</span>（ABテスト・CV3倍）→ <u>ホームページ運営</u>／<span class="font-mono">p=8061</span>（CSSボタン）→ <u>制作の技術メモ</u>。<span class="text-xs">※カテゴリ名は既存のものに合わせてください（新設が要るなら下記(3)）。</span></p>
+              <p class="mb-1"><strong>(2) 残り25本は、お手すきのときに一括編集</strong>（WPの投稿一覧 → チェックボックスで複数選択 → 「一括編集」でカテゴリを付与）。<u>まとめて数分です。</u></p>
+              <p><strong>(3) 「費用・料金」カテゴリを1つ新設</strong>（＝将来の器）：T-001・T-007・T-011・T-016 など<u>買い手向けの記事はここに集める</u>と、公開しただけで自動的に相互リンクが生まれます。<strong class="text-emerald-800">＝1本ずつ出しても、束として効き始めます。</strong></p>
+              <p class="mt-1 text-xs text-gray-600">※<u>キーワードを詰め込んだカテゴリ名は作りません</u>（社長方針）。読者が見て意味の分かる名前だけにします。</p></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">効果／測り方</td><td class="py-1">効果＝<strong>推測：小〜中</strong>（<u>回遊とクロールの改善。順位が直接上がる施策ではありません</u>）。<strong>測り方</strong>＝実施後28日で、GA4 の <span class="font-mono">pages</span> で対象記事の閲覧数が<u>着地数を上回るか</u>（＝他の記事から回ってきた読者がいるか）を見る。<span class="text-xs text-rose-700">※正直に＝現在の GA4 の取り方（landing）では回遊は測れません。実施後に <span class="font-mono">pages</span> モードで別途 測ります。</span><strong>ベースライン（2026-08-17）</strong>＝ブログ着地の上位25本すべて CV 0件／未分類30本の関連記事＝0本。工数＝<strong>5本なら約3分／30本でも10分程度</strong>。</td></tr>
+            <tr><td class="py-1 pr-3 font-semibold">優先度／栓／正直な但し書き</td><td class="py-1"><strong>🟡</strong>。<strong>栓なし</strong>（WP管理画面のみ・社長でも開発でも可）。<br>
+            <strong class="text-rose-700">正直に：これも publish の代わりにはなりません。</strong>ただし<u>これは「器」を作る作業</u>で、<strong>公開した記事の効きを底上げします</strong>。<span class="text-emerald-800">＝<u>1本目を公開する前に(3)だけでも done にしておくのが理想</u>です（カテゴリを1つ作るだけ・30秒）。</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ② 新規記事のテーマ T-030（原文） -->
+      <div class="bg-white border-2 border-amber-300 rounded-lg p-5 text-sm text-gray-700" id="t030">
+        <h3 class="font-bold text-amber-800 mb-2">② 新規記事のテーマ＋構成案 — <span class="font-mono">T-030</span>：「ホームページ制作の見積書、どこを見ればいいのか」（優先度🟡・栓なし）</h3>
+        <table class="w-full text-sm border-collapse mb-3">
+          <tbody class="align-top">
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">なぜ今これか</td><td class="py-1"><strong class="text-emerald-800">需要と「受け皿の取り違え」を同時に実測しました。</strong><br>
+              「<span class="font-mono">ホームページ制作会社 大阪 安い 見積り</span>」＝<strong>19表示・15.3位</strong>。これを受けているのは <span class="font-mono">/contact/create/</span>＝<strong class="text-rose-700">見積り<u>依頼</u>フォーム</strong>です。<u>まだ「どこに頼むか・いくらが妥当か」を調べている人に、申込フォームを見せている状態</u>。<br>
+              <strong>そして <span class="font-mono">T-001</span>（費用相場）とは狙いが違います</strong>＝T-001＝<u>いくらかかるのか</u>／T-030＝<u>出てきた見積書をどう読むか</u>。<strong>検討の最終段階（＝発注直前）の記事</strong>で、ファネルでは<u>③依頼</u>に最も近い層です。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">狙う検索意図</td><td class="py-1"><strong>複数社から見積書が届いた（または届く）。項目の意味が分からず、高いのか安いのかも判断できない。値段の差が何の差なのかを知りたい</strong>。<u>本音は「ぼったくられたくない・でも安すぎるのも怖い」</u>。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">狙うクエリ</td><td class="py-1">ホームページ制作 見積書 見方／ホームページ制作 見積もり 項目／web制作 見積書 チェックポイント／ホームページ 見積もり 比較 ポイント／ホームページ制作 見積もり 高い 理由／ディレクション費 とは／ホームページ制作 見積もり 安い 理由<span class="text-xs">（<u>地域語は本文に自然に1〜2回まで</u>＝詰め込みはしません）</span></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">自社の足場（GSC実測）</td><td class="py-1">この帯の自社の現状＝<strong>ほぼゼロ</strong>。拾えたのは「ホームページ制作会社 大阪 安い 見積り」19表示・15.3位（<span class="font-mono">/contact/create/</span>）・同語で <span class="font-mono">/company/</span> 55.5位・「ホームページ 見積もり」1表示・3.0位（<span class="font-mono">/price/basic.html</span>）のみ。<span class="text-rose-700">正直に：帯そのものは小さいです。<u>クリック数ではなく「発注直前の1人」を取りに行く記事</u>として提案します。</span></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">競合SERP 実測<br><span class="text-xs font-normal">（8/17・hp-serp）</span></td><td class="py-1">1ページ目＝xserver.ne.jp（見積書の項目例）／depart-inc.com／envydesign.jp（見積書の見方｜比較時に確認すべき5つ）／マネーフォワード／発注ナビ／gpol.co.jp／chuco-ms.co.jp／ntvart.co.jp。<br>
+              <strong class="text-emerald-800">＝「費用 相場」の面（大手媒体が独占）と違い、こちらは<u>制作会社のブログが主戦場</u>です。</strong><u>同じ土俵に立てます。</u><br>
+              <strong>差別化の核＝「項目の説明」で終わらせず、<u>金額差が生まれる理由</u>を制作側から書くこと。</strong>競合はどれも項目の解説止まりです。<span class="text-xs">※これは<u>自社の見積書という一次情報</u>があるから書けます（他社が真似しにくい）。</span></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">想定読者</td><td class="py-1">2〜3社から相見積もりを取った中小事業者の経営者・担当者。<strong>金額が2倍違う見積書が並んでいて、何が違うのか分からない。</strong>安い方を選んで失敗するのも、高い方で損をするのも避けたい。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">タイトル案</td><td class="py-1">「ホームページ制作の見積書、どこを見ればいい？｜項目の意味と、<u>会社によって金額が2倍変わる理由</u>」<span class="text-xs">（別案：「相見積もりで迷ったら｜ホームページ制作の見積書の読み方と、比べるべき5つの項目」）</span></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">アウトライン<br><span class="text-xs font-normal">（設計方針つき）</span></td><td class="py-1">
+              <p class="mb-2 text-xs bg-amber-50 border border-amber-200 rounded p-2"><strong>⚙️ 設計方針</strong>：<strong>(1) 自社を売り込まない。</strong>「安い会社が悪い」とも書かない＝<u>安いには安いなりの理由（範囲が狭い・テンプレート・保守なし）があるだけ</u>、と中立に書く。これが信頼装置です。<strong>(2) 読者が自分の見積書を見ながら使える形にする</strong>＝各項目に「ここに数字が入っていなければ質問すべきこと」を付ける。<strong>(3) 最後は「相談してください」ではなく「この5つを聞けば自分で判断できます」で終える。</strong></p>
+              <strong>h2① 見積書の金額は、同じ「ホームページ1式」でも2倍変わります</strong><br>
+              <span class="ml-3 text-xs">h3 なぜ幅が出るのか＝<u>作る枚数・デザインの作り方・入れる機能・公開後の面倒を見るか</u>の4つ／h3 <strong>金額そのものより「何が含まれているか」を先に見る</strong>／h3 この記事で分かること（自分の見積書を横に置いて読めます）</span><br>
+              <strong>h2② 見積書によく出てくる項目の意味</strong>（<u>この記事の実務的な山場</u>）<br>
+              <span class="ml-3 text-xs">h3 <strong>ディレクション費／進行管理費</strong>＝何をする費用か・<u>無いと誰が段取りするのか</u>／h3 <strong>デザイン費</strong>＝トップと下層で単価が違う理由・テンプレートとオリジナルの差／h3 <strong>コーディング費</strong>＝ページ単価・スマホ対応が別項目になっているか／h3 <strong>CMS（WordPress）導入費</strong>＝自分で更新できる範囲はどこまでか／h3 <strong>サーバー・ドメイン・SSL</strong>＝初期費用か毎年か・<u>名義は誰か</u>／h3 <strong>写真・原稿</strong>＝どちらが用意するのかで金額が大きく動く／h3 <strong>保守・運用費</strong>＝月額に何が入っているか（更新代行なのか、置いておくだけなのか）</span><br>
+              <strong>h2③ 見積書に「書かれていないこと」こそ確認する</strong>（<u>独自性の核</u>）<br>
+              <span class="ml-3 text-xs">h3 <strong>修正は何回まで無料か</strong>／h3 <strong>公開後にテキストを1行直したいとき、いくらかかるか</strong>／h3 <strong>写真・原稿は誰が用意するのか</strong>／h3 <strong>納品後、データやドメインは自社のものになるか</strong>（＝<u>他社へ移れるか</u>）／h3 <strong>公開日はいつか・遅れた場合どうなるか</strong></span><br>
+              <strong>h2④ 安い見積書・高い見積書、それぞれの「理由」</strong><br>
+              <span class="ml-3 text-xs">h3 安い＝<u>ページ数が少ない／テンプレート／保守なし／原稿は自社用意</u>（＝悪いことではありません）／h3 高い＝<u>オリジナル設計／写真撮影込み／システム／公開後の運用まで</u>／h3 <strong>比べるときは「同じ条件に揃えてから」</strong>＝<u>揃え方の手順</u>／h3 <span class="text-rose-700">※ここに「弊社は◯◯」とは書きません（一般論として書く）</span></span><br>
+              <strong>h2⑤ 相見積もりを取るときの、角の立たない聞き方</strong><br>
+              <span class="ml-3 text-xs">h3 「この見積もりに含まれていないものを教えてください」／h3 「公開後の修正は、どこからが有料になりますか」／h3 <u>この2つを聞くだけで、比較できる状態になります</u>／h3 答えを濁す相手なら、それが判断材料です</span><br>
+              <strong>h2⑥ まとめ（チェックリスト）＋CTA</strong><br>
+              <span class="ml-3 text-xs">h3 <u>そのままコピーして使える確認項目リスト</u>（印刷・スクショ想定）</span></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">内部リンク先</td><td class="py-1">記事側＝<strong>T-001</strong>（費用相場・h2①から）／<strong>T-002</strong>（制作会社の選び方・h2⑤から）／<strong>T-006</strong>（運用・保守＝h2②の保守費の節から）／<strong>T-011</strong>（ドメイン・サーバー・SSL＝h2②の該当節から）。<br>サイト側＝<span class="font-mono">/price/basic.html</span>（h2④から）／相談の本命は <span class="font-mono">Q-009</span> の回答で確定。<strong class="text-rose-700">※<span class="font-mono">/contact/create/</span>（見積り依頼フォーム）へは<u>記事末のCTAでのみ</u>置きます</strong>＝本文中に置くと、いま起きている「調べている人にフォームを見せる」状態を記事内で再現してしまうためです。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">CTA</td><td class="py-1">「お手元の見積書を見ながら、含まれている範囲を一緒に確認します（他社さんの見積もりでも構いません）」＝<u>売り込みではなく判断の手伝い</u>。<strong>Q-009 の回答が決まればその窓口へ、決まらなくても通常の相談CTAで成立します。</strong></td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">カニバリ確認</td><td class="py-1"><strong>自社内は問題なし</strong>：当帯を狙う自社ページはゼロ（<span class="font-mono">/contact/create/</span> がフォームとして偶発的に受けているだけ）。<span class="font-mono">T-001</span>（相場＝いくらか）とは記事の役割が明確に違い、<u>相互リンクで補完関係にします</u>。<span class="font-mono">T-002</span>（会社の選び方）とも重なりません（選ぶ前／見積書が出た後）。</td></tr>
+            <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">必要な事実（📥）</td><td class="py-1"><strong>栓なし＝一般論だけで書けます</strong>（見積書の項目は業界共通のため）。<u>あれば厚くなる事実（🟢・任意）</u>＝<strong>実際の見積書で「これは何ですか」と聞かれることが多い項目</strong>／<strong>修正回数・公開後の修正費の実際の線引き</strong>。<span class="text-rose-700">自社の実料金・実績数値は捏造しません</span>（無ければ一般論のまま）。</td></tr>
+            <tr><td class="py-1 pr-3 font-semibold">効果／工数／優先度</td><td class="py-1">効果＝<strong>推測：中</strong>（<u>帯は小さいが、読む人は発注直前＝1人の価値が高い</u>。競合が制作会社ブログ＝勝負になる面）。工数＝<strong>中</strong>。優先度<strong>🟡</strong>。<strong>着手は publish が1本動いてから</strong>。<u>推奨順＝T-001公開 → T-016 → <strong>本記事</strong> → T-018</u>。</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bg-gray-100 border border-gray-200 rounded p-3 text-xs">
+        <p class="font-bold text-gray-800">🔄 対応記録（Cycle 068）</p>
+        <ul class="list-disc list-inside mt-1 space-y-1">
+          <li><strong>mailbox（受信）</strong>：自ループ宛 0件（本日からファイル実体で確認）。<strong>（送信）0通</strong>＝未処理11通の山に12通目を足しても着手順は変わらないため。</li>
+          <li><strong>執筆担当への指示＝掲示板に専用ブロックを新設</strong>（blog-write-ycom 宛）＝T-001 を status=draft でWP投入・IDを台帳に記録・publish は絶対にしない・1日1本まで。<span class="text-emerald-800">【Cycle 069 追記】実行され ID 8365 として実在を確認。</span></li>
+          <li><strong>spec.html 更新</strong>（WP下書きの実在ID一覧／受信確認はファイル実体で／新規記事の最終公開日 2024-10-09）。<span class="font-mono">from-president.md</span>・ルールファイルは編集していない。<strong>新規は B1＋T1</strong>（滞留のため件数を絞る）。</li>
+          <li><strong>自己改善</strong>：K-538（相手にお願いしたことが相手の画面で実行可能かを確かめる）／K-539（ツールの応答に含まれる「自分の名前」を毎回読む）／K-540（提案の前に過去の施策の効果を1つ測る）。</li>
+        </ul>
+      </div>
+
+    </div>
+  </details>
+
   <details class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-4 text-sm text-gray-700" id="c067">
     <summary class="font-bold text-gray-800 cursor-pointer">📸 Cycle 067 — 2026-08-16（<span class="text-rose-700">Cycle 066 の「買い手30本 全滅」を日別にバラして訂正</span>＝半分はロボットの巡回／機械を除いた本物の需要 約570表示を確定・受けているのは料金表ページだけ／新規 <span class="font-mono">B-040</span>・<span class="font-mono">T-029</span>｜記録スナップショット）<strong class="text-rose-700">※翌 Cycle 068 で mailbox の結論を訂正（下の注記を必ず読むこと）</strong></summary>
     <div class="mt-4">
