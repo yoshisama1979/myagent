@@ -59,6 +59,16 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 022 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 022 — 2026-08-18（🎉 Search Console 着弾。新サイトは、もう検索で戦っていました）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC＝<strong>✅着弾</strong>（<span class="font-mono">searchconsole_konjaku</span>）だが 2026-08-15 の<strong>1日分のみ</strong>。対象プロパティ＝<span class="font-mono">konjaku-photo.jp</span>（→ Q-J06 解決）。GA4（<span class="font-mono">.jp</span>）＝8/16 で停止（8/17 分未着弾・当時は監視対象とした）。サイト実査＝hp-audit（4階層＋定点）／hp-shot（<span class="font-mono">.jp</span> トップ PC・SP）。起動＝日次 cron（04:30）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：Search Console の最初の1日分が、前日（C021）の最大の結論を修正した。「新サイトは検索エンジンに何も見せていない」は<strong>言い過ぎ</strong>で、実際には <span class="font-mono">.jp</span> は<strong>既に検索結果に出てクリックも取れていた</strong>（8/15 単日＝表示163・クリック6・平均掲載順位8.1）。観察（配信HTMLが空）は正しく、そこから否定形を断定したのが誤り。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①表示URL <strong>76件</strong>＝個別写真45・都道府県25・市区町村3・タグ1・年代1・トップ1（トップは表示3回のみ＝検索来訪者はトップを通らない）②見えたクエリ22件のうち<strong>17件（77%）が「地名＋昔の写真／古写真」</strong>＝旧サイトの稼ぎ筋と同じ帯 ③M-11 適用＝クリック6に対しクエリ別に見えるのは1件＝<strong>83%が匿名化</strong> ④<strong>⛔ 訂正</strong>＝「sitemap の市区町村は109件」を撤回（<code>hp-audit --text</code> の12,000字打ち切りで 1.7MB の先頭0.7%しか読めていなかった）⑤8/16→8/18 の本番反映はゼロ ⑥投稿写真 17,457→17,464枚。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>対応記録</strong>：<strong>新規 R 1件（R-J25＝GSC に <span class="font-mono">.com</span> も登録）／訂正2件／完了2件（R-J13・R-J21 を archive へ）／解決1件（Q-J06）</strong>。分析ツール1本を新規作成（T-027 <code>sitemap-count.py</code>・読み取り専用／許可リスト未登録で実行できず）。日次 cron のため Slack 日報1本。C021 は archive へ回転。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 023・2026-08-19）</strong>：この回で「GA4（新サイト）の日次データが 8/16 で止まっている」と記録した件は、翌日 8/17 分が着弾して<strong>解消</strong>（単なる2日ラグ）。あわせて<strong>「.jp は 8/16 に3人」という数値は、初回エクスポート初日の部分データだった</strong>ことが判明＝同じ 8/16 に GSC は<strong>10クリック</strong>を記録しており、GA4 の3人と整合しない。→ <strong>C021/C022 が使っていた「3人/日」「.com の約290倍」という基準値は撤回</strong>し、R-J24 の before 基準値は 8/17（49人・745イベント・page_view 559）に置き換えた（同日の <span class="font-mono">.com</span> は820人＝<strong>約17倍</strong>）。</p>
+  </section>
+
   <!-- ===== Cycle 021 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
     <h2 class="text-xl font-bold mb-1">Cycle 021 — 2026-08-17 午前（🔑 新サイトは「作られていない」のではなく「検索エンジンに見せていない」だけだった）</h2>
