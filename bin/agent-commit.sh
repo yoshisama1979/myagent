@@ -43,6 +43,25 @@ fi
 
 cd "$PROJ" || exit 0
 
+# 許可パスのうち「まだ存在しないもの」を落とす。
+# ⚠️ git add は存在しない pathspec を **エラー**にする（"did not match any files"）＝
+#    共有台帳をまだ作っていない新サイトを足した瞬間、そのループのコミットが毎回失敗する。
+#    2026-08-18 のサイト別化でテストが検出した。除外指定（":!"）は常に残す（照合対象ではないため）。
+KEEP=()
+for x in "${PATHS[@]}"; do
+  case "$x" in
+    :!*) KEEP+=("$x"); continue ;;
+  esac
+  if [ -e "$x" ] || git ls-files --error-unmatch -- "$x" >/dev/null 2>&1; then KEEP+=("$x"); fi
+done
+# 実体のある対象が1つも無ければ何もしない（除外指定だけ残った状態でコミットしない）
+have=0; for x in "${KEEP[@]:-}"; do case "$x" in :!*) ;; *) have=1 ;; esac; done
+if [ "$have" = 0 ]; then
+  log "$AGENT: 対象パスがまだ存在しません（何もしません）"
+  exit 0
+fi
+PATHS=("${KEEP[@]}")
+
 # --- 対象に変更があるか（無ければ空コミットを作らない） ---
 if git diff --quiet -- "${PATHS[@]}" && git diff --cached --quiet -- "${PATHS[@]}" \
    && [ -z "$(git ls-files --others --exclude-standard -- "${PATHS[@]}")" ]; then

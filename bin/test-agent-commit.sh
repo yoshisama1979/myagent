@@ -87,6 +87,32 @@ run hp-loop-ycom
 want_in "wip.md" "$(g show --stat --format= HEAD)" "後から本人が回れば自分でコミットできる"
 
 echo
+echo "=== 許可パスにまだ存在しないファイルが混じっても落ちない ==="
+# 🔴→🟢 2026-08-18：サイト別化で共有台帳（tools-log.md 等）を許可に足したところ、
+# それが未作成のリポジトリで git add が "did not match any files" で失敗した＝
+# **新サイトを足した瞬間そのループのコミットが毎回落ちる**形。テストが検出したのでここで固定する。
+mkdir -p "$R/data/hp-loop/newsite"
+echo "新サイトの台帳" > "$R/data/hp-loop/newsite/coverage.md"   # 共有台帳はまだ無い状態
+before=$(count); run hp-loop-newsite
+want_eq "$RC" "0" "★共有台帳が未作成でもコミットできる"
+want_eq "$(count)" "$((before+1))" "コミットは作られる"
+want_in "coverage.md" "$(g show --stat --format= HEAD)" "自分の台帳は入る"
+rm -rf "$R/data/hp-loop/newsite"
+run hp-loop-newsite
+want_eq "$RC" "0" "対象が1つも無くなっても落ちない"
+
+echo
+echo "=== ★サイト別に切れているか（初回稼働で巻き込んだ経路）==="
+mkdir -p "$R/data/hp-loop/konjaku" "$R/site/hp-analysis/konjaku"
+echo "konjaku の書きかけ" > "$R/data/hp-loop/konjaku/coverage.md"
+echo "ycom 更新" > "$R/data/hp-loop/ycom/coverage.md"
+before=$(count); run hp-loop-ycom
+want_eq "$(count)" "$((before+1))" "ycom のコミットは作られる"
+changed="$(g show --stat --format= HEAD)"
+want_in "hp-loop/ycom" "$changed" "自分のサイトは入る"
+want_not_in "konjaku" "$changed" "★★konjaku の書きかけを巻き込まない（08-18 の実害の再発防止）"
+
+echo
 echo "=== 許可パス未登録のエージェントは何もしない ==="
 echo "x" > "$R/site/somewhere.html"
 before=$(count); run partner

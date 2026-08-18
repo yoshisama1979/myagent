@@ -33,12 +33,20 @@ GATED_PREFIXES = ("rules/", ".claude/")
 # エージェントごとの書き込み許可パス。**ここに載っているエージェントだけ**厳格に縛る
 # （未登録は universal な検査だけ通す＝間違った許可リストで正当なコミットを塞がないため。
 #  絞りたくなったら行を足す。それが唯一の締め方）。
+# 値の書き方：
+#   ・"{site}" はエージェント名の接尾辞に展開される（hp-loop-ycom → ycom）
+#   ・":!" で始まる要素は**除外**（git の pathspec magic と同じ書式なので agent-commit がそのまま渡せる）
+# ⚠️ サイト別に切ること。2026-08-18 の初回稼働で `hp-loop-*` を "data/hp-loop/" と粗く書いていたため、
+#    hp-loop-ycom が konjaku・rally の台帳と掲示板を巻き込んでコミットした（帰属が誤る）。
 AGENT_PATHS = {
     "overseer":      ["site/overseer/"],
-    "hp-loop-*":     ["data/hp-loop/", "site/hp-analysis/"],
+    "hp-loop-*":     ["data/hp-loop/{site}/", "site/hp-analysis/{site}/",
+                      ":!site/hp-analysis/{site}/blog/",      # blog 掲示板は blog-loop の領域
+                      "data/hp-loop/tools-log.md",            # ツール台帳（サイト横断・共有）
+                      "data/hp-loop/win-patterns.md",         # 勝ちパターン（同上）
+                      "site/hp-analysis/index.html"],         # 解析ハブ（同上）
     # site/drafts/ は 2026-08-17 に git 管理外へ（草案＝副次成果物）。
-    # 許可に残すと「コミットしてよい」と誤読されるので外す（ステージすれば [git外] 検査が止める）。
-    "blog-loop-*":   ["data/blog-loop/", "site/hp-analysis/"],
+    "blog-loop-*":   ["data/blog-loop/{site}/", "site/hp-analysis/{site}/blog/"],
     "memo":          ["site/notes.html"],
 }
 
@@ -79,13 +87,27 @@ def is_gated(path):
 
 
 def allowed_prefixes(agent):
-    """エージェント名から許可パスを引く。未登録なら None（＝この検査は行わない）。"""
+    """エージェント名から許可パスを引く。未登録なら None（＝この検査は行わない）。
+
+    "{site}" はワイルドカード部分（接尾辞）に展開する＝hp-loop-ycom なら ycom。
+    ":!" 始まりは除外指定としてそのまま返す（判定は path_allowed が行う）。
+    """
     if not agent:
         return None
     for pattern, paths in AGENT_PATHS.items():
-        if fnmatch.fnmatch(agent, pattern):
-            return paths
+        if not fnmatch.fnmatch(agent, pattern):
+            continue
+        site = agent[len(pattern[:-1]):] if pattern.endswith("*") else ""
+        return [p.replace("{site}", site) for p in paths]
     return None
+
+
+def path_allowed(path, allows):
+    """path が許可範囲か。除外（":!"）が最優先。"""
+    for a in allows:
+        if a.startswith(":!") and path.startswith(a[2:]):
+            return False
+    return any(path.startswith(a) for a in allows if not a.startswith(":!"))
 
 
 def _exempt_from_secret_scan(path):
@@ -149,7 +171,7 @@ def guard(staged, *, agent=None, unattended=False, ignored=(), deny_names=()):
     allow = allowed_prefixes(agent)
     if allow is not None:
         for p in sorted(paths):
-            if not any(p.startswith(a) for a in allow):
+            if not path_allowed(p, allow):
                 problems.append(
                     f"[領域外] {agent} は {p} をコミットできません"
                     f"（許可: {' / '.join(allow)}）。共有作業ツリーなので、"

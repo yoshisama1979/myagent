@@ -132,8 +132,12 @@ r = run([S("data/hp-loop/ycom/coverage.md")], agent="overseer")
 (ok if r and "[領域外]" in r[0] else ng)("★統括は hp-loop の台帳を巻き込めない", r)
 (ok if run([S("data/hp-loop/ycom/coverage.md")], agent="hp-loop-ycom") == [] else ng)(
     "hp-loop-<site> は自分の台帳を書ける（ワイルドカード照合）")
-(ok if run([S("site/hp-analysis/ycom/index.html")], agent="hp-loop-yoshida") == [] else ng)(
-    "hp-loop-* は解析掲示板も書ける")
+# 期待値の反転（2026-08-18）：粗い許可の時代は「hp-loop-* なら解析掲示板はどこでも書ける」が
+# 正だったが、それこそが他サイトを巻き込んだ原因。**自分のサイトだけ**が正しい。
+(ok if run([S("site/hp-analysis/yoshida/index.html")], agent="hp-loop-yoshida") == [] else ng)(
+    "hp-loop-<site> は自分のサイトの掲示板を書ける")
+(ok if run([S("site/hp-analysis/ycom/index.html")], agent="hp-loop-yoshida") else ng)(
+    "★yoshida は ycom の掲示板を書けない")
 # 2026-08-17：草案は git 管理外にしたので、許可パスからも外れていること（ルールと柵の整合）
 (ok if "site/drafts/blog/" not in str(g.allowed_prefixes("blog-loop-ycom")) else ng)(
     "草案は blog-loop の許可パスに含まれない（git 管理外にしたため）",
@@ -148,8 +152,31 @@ r = run([S("site/business/partner/index.html")], agent="blog-loop-ycom")
     "★未登録のエージェントは領域検査をしない（誤った許可リストで正当な作業を止めない）")
 (ok if run([S("anything/at/all.md")], agent=None) == [] else ng)(
     "エージェント名が無い（有人セッション）なら領域検査をしない")
-(ok if g.allowed_prefixes("hp-loop-konjaku") == g.allowed_prefixes("hp-loop-ycom") else ng)(
-    "同じワイルドカードに当たるエージェントは同じ許可を持つ")
+# 🔴→🟢 2026-08-18 初回稼働で検出：許可を "data/hp-loop/" と粗く書いていたため
+# hp-loop-ycom が konjaku・rally の台帳と掲示板を巻き込んでコミットした（帰属が誤る）。
+(ok if run([S("data/hp-loop/konjaku/coverage.md")], agent="hp-loop-ycom") else ng)(
+    "★★ycom は konjaku の台帳を巻き込めない（サイト別に切る）",
+    run([S("data/hp-loop/konjaku/coverage.md")], agent="hp-loop-ycom"))
+(ok if run([S("site/hp-analysis/rally/index.html")], agent="hp-loop-ycom") else ng)(
+    "★★ycom は rally の掲示板を巻き込めない")
+(ok if run([S("data/hp-loop/ycom/coverage.md")], agent="hp-loop-ycom") == [] else ng)(
+    "自分のサイトの台帳は書ける")
+(ok if run([S("data/hp-loop/tools-log.md")], agent="hp-loop-ycom") == [] else ng)(
+    "サイト横断の共有台帳（tools-log）は書ける")
+(ok if run([S("site/hp-analysis/index.html")], agent="hp-loop-konjaku") == [] else ng)(
+    "解析ハブ（共有）は書ける")
+(ok if run([S("site/hp-analysis/ycom/blog/index.html")], agent="hp-loop-ycom") else ng)(
+    "★blog 掲示板は blog-loop の領域＝hp-loop は触れない（除外指定 :! が効く）")
+(ok if run([S("site/hp-analysis/ycom/blog/index.html")], agent="blog-loop-ycom") == [] else ng)(
+    "blog-loop は blog 掲示板を書ける")
+(ok if run([S("data/blog-loop/ycom/drafts-log.md")], agent="blog-loop-ycom") == [] else ng)(
+    "blog-loop は自分のクライアント台帳を書ける")
+(ok if run([S("data/blog-loop/cycles/analyze.py")], agent="blog-loop-ycom") else ng)(
+    "blog-loop は cycles/（使い捨て）を領域外として弾く")
+(ok if "{site}" not in str(g.allowed_prefixes("hp-loop-ycom")) else ng)(
+    "{site} が展開されている（未展開のまま照合しない）")
+(ok if g.allowed_prefixes("hp-loop-konjaku") != g.allowed_prefixes("hp-loop-ycom") else ng)(
+    "★サイトが違えば許可も違う（同一だった時代の期待値を反転）")
 (ok if g.allowed_prefixes("partner") is None else ng)("未登録は None")
 
 print("\n=== 壊れたファイルを保存させない ===")
