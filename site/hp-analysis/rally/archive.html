@@ -40,9 +40,51 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 023 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 023 — 2026-08-18（<span class="text-red-700">出口のない404の「リンク元」と「実害」を実測で確定＝R-R24 を最優先へ</span>／<span class="text-amber-700">自分の観測手段の思い込みを1つ剪定</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC＝取得成功（<code>searchconsole_rally</code>・8/15 分が着弾して3日分に増加）。GA4＝取得成功（<code>analytics_543430115</code>・45日窓・最新日 8/16）。社長入力＝新規追記なし（23サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝実施（hp-audit 17本＝うちリンク一覧 11本 ✅／<code>hp-links.py</code>・素の <code>curl</code> は5回目の再試行も承認不可／hp-shot は未実施）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle023-20260818.md</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-18・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 px-2"><strong>404（<code>/spots</code>）の実害を数値化</strong></td><td class="py-1 px-2">GA4 45日で<strong>47回・8人</strong>が到達＝トップ195回・地図158回に次ぐ<strong>サイト内3位</strong>の閲覧数。<strong>着地（外部流入）は0セッション＝47回すべてがサイト内からの送り込み。</strong>直近2日では全体19人のうち<strong>6人（約3人に1人）</strong>が到達。→ Cycle 019 の「推測：当方の検証作業か」は<strong>否定</strong>＝実利用者。</td><td class="py-1 px-2">🔴 <strong>R-R24 を最優先へ格上げ</strong>（新規番号にしない）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 px-2"><strong>リンク元を1本 名指しで特定</strong></td><td class="py-1 px-2">11ページの配信HTMLのリンクを1本ずつ照合。<strong><code>/spots/areas</code> の「‹ スポット一覧に戻る」だけが <code>/spots</code>（404）を指す</strong>。※候補「トップの『すべてのスポットを見る ›』」は<strong>存在せず＝取り下げ</strong>。※<code>/spots/areas</code> の閲覧は45日19回のため47回すべては説明できず＝<strong>推測：描画後にJSが作るリンクに第2の経路</strong>。</td><td class="py-1 px-2">🔴 <strong>R-R24 に統合</strong>（推測→実測確定）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2"><strong>検索ページが孤立</strong></td><td class="py-1 px-2"><code>/spots/search</code> への被リンクは11ページ中<strong>0本</strong>。全ページのメニューの「スポットを探す」の行き先は <code>/map</code>＝同じ語で行き先が2つに分かれ、本来の検索ページが導線から外れている。それでも45日で7回・2人が到達（推測：ブックマークか描画後リンク）</td><td class="py-1 px-2">🟡 <strong>R-R31 に統合</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップ配信HTML <strong>57,978B ＝前回とバイト同一</strong>（応答 0.056秒）。<code>/people</code> 12,504B・<code>/spots/tags</code> 53,795B も不変＝R-R29・R-R30 未着手（起票翌日＝想定内）</td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">Search Console</td><td class="py-1 px-2">8/15 分が着弾して3日分（8/13〜8/15）。<strong>27表示・8クリック・CTR 29.6%・平均掲載順位 4.6</strong>。<strong>表示URLは相変わらずトップ1本のみ・検索語も指名系4語のみ</strong>（21サイクル連続）。新規1語「スタンプラリー 全国」は28位（1表示のため判断保留）</td><td class="py-1 px-2">経路①は未着手のまま</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">GA4</td><td class="py-1 px-2">45日で events <strong>1,401</strong>／users <strong>101</strong>。閲覧＝トップ195・<code>/map</code> 158（前回110から増加）・<code>/spots</code>(404) 47・<code>/spots/themes</code> 45。<strong>管理画面（<code>/admin/*</code>）が直近2日の閲覧の約1割</strong>＝分母が運営の作業で汚れている（→R-R17）</td><td class="py-1 px-2">R-R17 の必要性を数値で裏づけ</td></tr>
+        <tr><td class="py-1 px-2">継続確認</td><td class="py-1 px-2">www SSL証明書エラー（R-R18）／robots.txt・sitemap.xml 404（R-R06）／/privacy・/terms 404（R-R09）／<code>/spots</code> 404（R-R24）＝<strong>すべて継続</strong>。<strong>消化された提案は 26件中 0件</strong></td><td class="py-1 px-2">⚠️ Q-R11 の回答待ち</td></tr>
+      </tbody>
+    </table>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-4 mb-5">
+      <h3 class="font-bold text-amber-900 mb-2">🙇 反省点 — 使える道具を「使えない」と思い込んだまま、4サイクル引きずっていました</h3>
+      <p class="text-sm text-gray-800 mb-2">404のリンク元の特定は<strong>本来なら Cycle 019 の時点でできていたはず</strong>でした。当時「リンク一覧の道具（<code>hp-links.py</code>）が実行できない」という制約に当たり、それを<strong>「リンクは調べられない」という前提としてメモに残し、以後そのメモを疑わずに引き継いでいました</strong>。実際には <code>hp-audit</code> 側に 8/6 からリンク一覧機能が追加されており、問題なく動きました。結果として、サイト内3位の閲覧数を持つページが行き止まりであるという実害の大きさも、その日まで測っていませんでした。</p>
+      <p class="text-sm text-gray-800">再発防止＝台帳のブロッカー欄から失効した前提を削除し、「できない」と記録した制約は記録を根拠に回避せず<strong>毎回その場で試し直す</strong>という既存規律の適用漏れとして改善台帳にも記録。</p>
+    </div>
+
+    <h3 class="font-semibold mb-2">北極星との接続</h3>
+    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700 mb-4">
+      <li><strong>新規の提案・質問はゼロ</strong>。在庫26件・消化0件の状況で番号を増やしても判断材料にならないため、<strong>いちばん安く直せて実害が測れている1件（R-R24）を推測抜きで着手できる状態まで詰めた</strong>。</li>
+      <li><strong>経路②の最大の穴は R-R24</strong>：体裁の問題から「直近2日で3人に1人が踏む／全部サイト内から送られている」実害へ位置づけが変わった。直し方は<strong>リンク1本の向き先変更</strong>。</li>
+      <li><strong>経路①は変化なし</strong>：表示はトップ1本・指名系4語のみ。動かすのは R-R27 → R-R06 → R-R25 → R-R21 だが、いずれも未着手。</li>
+      <li><strong>種プール</strong>：①ナビの「スポットを探す」と検索ページの分裂（R-R29 でメニューを触る際にまとめる）②「スタンプラリー 全国」28位（1表示のみで保留）。</li>
+      <li><strong>追わない</strong>：GA4 の CV 欄（R-R17 まで指標にしない）。</li>
+    </ul>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">レポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>）。着手推奨順＝<strong>R-R24 → R-R30 → R-R17 → R-R27 → R-R31 → R-R25 → R-R21 → R-R22 → R-R28 → R-R26 → R-R23 → R-R02</strong>（R-R29 は Q-R11 の回答で分岐するため保留）。照会3本＝(a) <code>/spots</code> への残りの流入経路（描画後リンク）(b) 市区町村ページの全国総数 (c) スポット取得失敗時の画面仕様・「□」の実機での見え方・<code>/people</code> と <code>/spots/tags</code> で外枠の有無が分かれている理由。</p>
+
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝新規追記なし（23サイクル連続）。mailbox＝新着なし。deploy-log＝追記なし。定石＝#1・#2・#3・#4・#4b を実施／#5（08-24）・#6/#7/#8（08-22）・#9（09-02）・#10/#13（09-14）は未到来／#12 は対象外。<strong>定石 #14「サイト内リンク構造の実査」を新設</strong>（週次）。index を 82.4KB → 80.3KB に圧縮。</p>
+  </section>
+
   <!-- ===== Cycle 022 スナップショット ===== -->
   <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
     <h2 class="text-2xl font-bold mb-1">Cycle 022 — 2026-08-17（<span class="text-red-700">3週間ぶりに本番が動いた／新機能2本は中身が空</span>／<span class="text-emerald-700">Search Console の毎日連携が正常と確定</span>）</h2>
+    <p class="text-xs bg-rose-50 border border-rose-300 rounded p-2 my-2 text-rose-900"><strong>⚠️ 2026-08-19（Cycle 024）訂正</strong>：下記の「本サイクルのレポートを mailbox で配信」という記述は<strong>誤りです</strong>。Cycle 024 で <code>data/mailbox/</code> を実査したところ、<strong>Cycle 022 のレポートは投函されていませんでした</strong>（実際に配信されたのは Cycle 017・018・019・020・021・023 の6通）。内容は上位互換の Cycle 023 が伝えているため実害は小ですが、「配信した」と書く前に投函を機械確認する手順が無かった規律の穴として記録し、日次定石 #15（配信の到達確認）を新設しました。</p>
 
     <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功・<span class="text-emerald-700">8/14 分が着弾して2日分に増加＝前回の「増えていない」は解消</span></strong>（<code>searchconsole_rally</code>・14日窓）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/15）。社長入力（from-president.md）＝新規追記なし（22サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 16本 ✅／hp-shot 4ページ×PC/SP ✅／素の <code>curl</code>・<code>hp-links.py</code> は<strong>4回目の再試行も承認不可</strong>）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle022-20260817.md</code>、スクショ＝<code>cycles/rally/shots/c022-*.png</code>。</p>
 
