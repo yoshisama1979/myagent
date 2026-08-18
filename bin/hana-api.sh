@@ -53,12 +53,30 @@ require_int() {
   fi
 }
 
+# API 呼び出しの唯一の出口。★ここに集約する理由が今回まさに実害になった★＝
+#   証明書の検証を切る `-k` が12箇所に散っていたので、直すのも12箇所・
+#   テストも「1本だけ直して残り11本が残る」形になりかけた（2026-08-17）。
+#   TLS の設定・タイムアウト・CA の指定・認証ヘッダの隠し方を今後変えるときは、必ずここだけを触る。
+#   ⚠️ トークンを -H（argv）で渡す既知の課題も、直すならここ1箇所で済む（mailbox.sh の --config 方式）。
+api_get() {   # $1=/api/external/ 以降のパス（クエリ込み可）
+  curl -s -X GET "$BASE_URL/api/external/$1" \
+    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+}
+api_send() {  # $1=メソッド $2=パス $3=本文の渡し方（標準入力から読む）／本文は呼び出し側がパイプで渡す
+  curl -s -X "$1" "$BASE_URL/api/external/$2" \
+    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    "$3" @-
+}
+# ⚠️ $3 は今のところ `-d`（create-todo・chatwork）と `--data-binary`（update-todo・update-note）が
+#    混在している。**挙動を変えないため、ここでは揃えずそのまま引き継いだ**（本コミットはリファクタ）。
+#    `-d` は入力から改行を落とすので、揃えるなら --data-binary 側＝別途 A-NNN で起票する。
+
 # --- API関数 ---
 
 # クライアント一覧取得
 get_clients() {
-  curl -s -X GET "$BASE_URL/api/external/clients" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "clients"
 }
 
 # クライアント検索（部分一致）
@@ -75,21 +93,18 @@ search_clients() {
   #    値は**環境変数で渡す**（mailbox.sh の JSON 生成と同じ作法＝クォート崩れ・注入の同時防止）。
   local encoded
   encoded=$(HANA_SEARCH_Q="$keyword" php -r 'echo rawurlencode(getenv("HANA_SEARCH_Q"));')
-  curl -s -X GET "$BASE_URL/api/external/clients/search?q=$encoded" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "clients/search?q=$encoded"
 }
 
 # 外注先一覧取得
 get_outsources() {
-  curl -s -X GET "$BASE_URL/api/external/outsources" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "outsources"
 }
 
 # オフィス状況取得（3Dオフィス連携・読み取り専用）
 # 全社員の「いま作業中か」「何の作業か」を返す。書き込み系は提供されない（タイマー操作不可）。
 get_office_status() {
-  curl -s -X GET "$BASE_URL/api/external/office-status" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "office-status"
 }
 
 # ToDo一覧取得
@@ -119,8 +134,7 @@ get_todos() {
   if [ -n "$params" ]; then
     params="?${params:1}"
   fi
-  curl -s -X GET "$BASE_URL/api/external/todos${params}" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "todos${params}"
 }
 
 # ToDo登録
@@ -133,20 +147,14 @@ create_todo() {
     echo '{"success": false, "message": "JSON引数が必要です"}' >&2
     exit 1
   fi
-  echo "$json" | curl -s -X POST "$BASE_URL/api/external/todos" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
-    -H "Content-Type: application/json" \
-    -d @-
+  echo "$json" | api_send POST "todos" -d
 }
 
 # Chatwork通知送信
 # 引数: JSON文字列 '{"room_id":"123","message":"テスト"}'
 send_chatwork() {
   local json="${1:-{}}"
-  echo "$json" | curl -s -X POST "$BASE_URL/api/external/chatwork/send-message" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
-    -H "Content-Type: application/json" \
-    -d @-
+  echo "$json" | api_send POST "chatwork/send-message" -d
 }
 
 # ToDo編集（PUT /todos/{id}）
@@ -162,10 +170,7 @@ update_todo() {
     exit 1
   fi
   require_int "$id" "todo_id"
-  printf '%s' "$json" | curl -s -X PUT "$BASE_URL/api/external/todos/$id" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
-    -H "Content-Type: application/json" \
-    --data-binary @-
+  printf '%s' "$json" | api_send PUT "todos/$id" --data-binary
 }
 
 # プロジェクト一覧取得（GET /projects）
@@ -187,8 +192,7 @@ get_projects() {
   done
   local params=""
   [ -n "$client_id" ] && params="?client_id=$client_id"
-  curl -s -X GET "$BASE_URL/api/external/projects${params}" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "projects${params}"
 }
 
 # プロジェクト詳細取得（GET /projects/{id}）
@@ -200,8 +204,7 @@ get_project() {
     exit 1
   fi
   require_int "$id" "project_id"
-  curl -s -X GET "$BASE_URL/api/external/projects/$id" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "projects/$id"
 }
 
 # プロジェクトメモ取得（GET /projects/{id}/notes）
@@ -229,8 +232,7 @@ get_project_notes() {
   done
   local params=""
   [ -n "$user_id" ] && params="?user_id=$user_id"
-  curl -s -X GET "$BASE_URL/api/external/projects/$id/notes${params}" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+  api_get "projects/$id/notes${params}"
 }
 
 # プロジェクトメモ追加・更新（POST /projects/{id}/notes・upsert）
@@ -246,10 +248,7 @@ update_project_note() {
     exit 1
   fi
   require_int "$id" "project_id"
-  printf '%s' "$json" | curl -s -X POST "$BASE_URL/api/external/projects/$id/notes" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
-    -H "Content-Type: application/json" \
-    --data-binary @-
+  printf '%s' "$json" | api_send POST "projects/$id/notes" --data-binary
 }
 
 # --- メイン ---
