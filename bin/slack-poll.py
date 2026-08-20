@@ -16,15 +16,19 @@
 複数チャンネル（2026-06-24）:
 - 既定チャンネル SLACK_CHANNEL_ID … トップレベル投稿は会話担当(hanasaka-main)へ。
 - メモ専用チャンネル SLACK_MEMO_CHANNEL_ID（任意）… トップレベル投稿は memo へ（日常メモ窓口）。
-- 経営パートナー専用チャンネル SLACK_PARTNER_CHANNEL_ID（任意）… トップレベル投稿は partner へ（経営情報窓口）。
+- 相談チャンネル SLACK_TALK_CHANNEL_ID（既定＝従来の SLACK_PARTNER_CHANNEL_ID）… トップレベル投稿は
+  talk へ（軽い相談窓口。2026-08-19 に「会話」と「日1回の重い処理」を器ごと分離）。
+- レポートチャンネル SLACK_REPORT_CHANNEL_ID（任意）… トップレベル投稿は partner へ（日次/週次/月次レポート）。
+  ※ 相談chの**過去スレッドへの返信**は threads.json の持ち主に従うので、従来どおり partner に届く。
   未設定ならメモ窓口は無効（従来どおり1チャンネル運用）。last-seen はチャンネル別キーで保持。
   追跡スレッドは threads.json に channel を記録し、返信走査を正しいチャンネルで行う。
 
 使い方:
   slack-poll.py fetch            # 全チャンネルの新着(トップ+スレッド返信)→mailbox→last-seen更新（既定）
   slack-poll.py fetch --init     # 全チャンネルの last-seenを今にして終了（過去は読まない）
-  slack-poll.py post  [--as <agent>] [--channel main|memo|partner|<C...>] "本文"   # トップ投稿（戻り値thread_ts）
-  slack-poll.py reply <thread_ts> [--as <agent>] [--channel main|memo|partner|<C...>] "本文"  # スレッドへ返信
+  slack-poll.py post  [--as <agent>] [--channel main|memo|talk|report|<C...>] "本文"   # トップ投稿（戻り値thread_ts）
+  slack-poll.py reply <thread_ts> [--as <agent>] [--channel main|memo|talk|report|<C...>] "本文"  # スレッドへ返信
+  （talk＝相談ch／report＝レポートch。"partner" は talk の別名として移行期のみ残置）
   slack-poll.py done  <msg_id>      # 処理済みを cur/ へ（new/ または memo-stock/ から探す）
   slack-poll.py stock <msg_id>      # triage済みメモを new/ → memo-stock/（夜の /memo-intake がまとめて処理）
   slack-poll.py untrack <thread_ts> # 解決した確認スレッドを threads.json から外す（自己掃除）
@@ -45,6 +49,8 @@
 読み取りは groups:history（非公開）/ channels:history（公開）、投稿は chat:write。
 Bot は対象チャンネル（#memo 含む）に招待しておくこと。
 """
+import contextlib
+import fcntl
 import json
 import os
 import re
@@ -74,6 +80,13 @@ MEMO_AGENT = "memo"
 # 経営パートナー専用チャンネル（SLACK_PARTNER_CHANNEL_ID）のトップレベル投稿の受け先。
 # 社長が #partner（経営パートナーch）に渡した経営情報を /partner が取り込む（毎朝の朝礼もこのchへ）。
 PARTNER_AGENT = "partner"
+# 相談チャンネル（SLACK_TALK_CHANNEL_ID・未設定なら従来の #partner）のトップレベル投稿の受け先。
+# 2026-08-19 社長決定＝「会話」と「日1回の重い処理」を器ごと分ける。#partner は社長の定位置
+# （実績113件）なのでそのまま相談窓口に残し、レポートは新設 #report へ移した。
+#   ・#partner に新規投稿      → talk（軽い器。起動時に台帳を読まない＝1回$1〜2）
+#   ・#partner の過去スレに返信 → これまでどおり partner（threads.json がスレッド単位で持ち主を覚えている）
+#   ・#report                  → partner（日次/週次/月次レポート。重い器＝1回$70）
+TALK_AGENT = "talk"
 MAX_PER_POLL = 50
 # 追跡スレッドの保持期限（日）。最終活動（作成 or 最後に見た返信）からこの日数を超えたスレッドは
 # fetch 冒頭で自動 untrack する。目的は2つ：
@@ -128,6 +141,28 @@ def _write_json(path, data):
     os.replace(tmp, path)
 
 
+@contextlib.contextmanager
+def state_lock():
+    """last-seen.json / threads.json の read-modify-write を直列化する。
+
+    ★なぜ必要か（2026-08-19 Codexレビュー）：以前は「無人の書き手は agent-tick.sh の
+      flock で直列化されるから実害はない」という前提でロックを持っていなかった。
+      ところが (a) 取り込み(fetch)をメインロックの外へ出した (b) overseer は自分でも
+      `slack-poll.py fetch` を実行する、の2点でその前提は成り立たない。
+      ロック無しだと「fetch が古いスナップショットを読む → 別プロセスが新しい追跡スレッドを
+      登録 → fetch が古い内容で書き戻す → **社長の返信が永久に届かない**」が起こる。
+      os.replace は書きかけの破損を防ぐだけで、この上書きは防げない。
+    ロックは**呼び出し側でなくここ**に置く＝どの経路から使われても必ず掛かる。
+    """
+    os.makedirs(SLACK_DIR, exist_ok=True)
+    with open(os.path.join(SLACK_DIR, ".state.lock"), "w") as fh:
+        fcntl.flock(fh, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fh, fcntl.LOCK_UN)
+
+
 def channels():
     """走査対象 (channel_id, トップレベル投稿の受け先agent, トップ投稿をスレッド追跡するか) のリスト。
 
@@ -147,13 +182,23 @@ def channels():
     if memo and memo not in seen:
         out.append((memo, MEMO_AGENT, False))
         seen.add(memo)
-    # 経営パートナー専用チャンネル（任意）→partner。memo と同じく fetch では追跡しない（False）：
-    # トップ投稿は to: partner として ingest し、会話を続けたいスレッドだけ partner が reply 経由で
-    # 追跡する（threads.json を肥大させない）。未設定なら従来どおり対象に含めない。
-    partner = get_env("SLACK_PARTNER_CHANNEL_ID")
-    if partner and partner not in seen:
-        out.append((partner, PARTNER_AGENT, False))
-        seen.add(partner)
+    # 以下2つは memo と同じく fetch では追跡しない（False）：トップ投稿を ingest するだけで、
+    # 会話を続けたいスレッドだけ各エージェントが reply 経由で追跡する（threads.json を肥大させない）。
+    #
+    # 相談チャンネル→talk。既定は従来の #partner（SLACK_PARTNER_CHANNEL_ID）＝社長の定位置を
+    # そのまま相談窓口にする（2026-08-19）。**report より先に登録する**：同じIDを両方に設定して
+    # しまった場合、先に登録されたほうが既定の受け先になるため、軽い talk が勝つ順序にしておく
+    # （取り違えても $70 でなく $1 側に倒れる＝安全側の既定）。
+    talk = get_env("SLACK_TALK_CHANNEL_ID") or get_env("SLACK_PARTNER_CHANNEL_ID")
+    if talk and talk not in seen:
+        out.append((talk, TALK_AGENT, False))
+        seen.add(talk)
+    # レポートch（日次/週次/月次）→partner。ここへの社長のトップ投稿は「レポートへの指摘」なので
+    # 深掘りの partner が受ける。未設定なら対象に含めない（＝移行前は talk 側だけが動く）。
+    report = get_env("SLACK_REPORT_CHANNEL_ID")
+    if report and report not in seen:
+        out.append((report, PARTNER_AGENT, False))
+        seen.add(report)
     return out
 
 
@@ -165,9 +210,16 @@ def _resolve_channel(val):
         return get_env("SLACK_CHANNEL_ID")
     if val == "memo":
         return get_env("SLACK_MEMO_CHANNEL_ID")
-    if val == "partner":
-        # 経営パートナーch。未設定なら既定チャンネルへフォールバック（朝礼が宛先無しで失敗しない）。
-        return get_env("SLACK_PARTNER_CHANNEL_ID") or get_env("SLACK_CHANNEL_ID")
+    if val == "talk" or val == "partner":
+        # 相談ch（＝従来の #partner）。"partner" は移行期の別名として残す＝古い手順書や
+        # 途中のスレッドが宛先無しで失敗しない。未設定なら既定チャンネルへフォールバック。
+        return (get_env("SLACK_TALK_CHANNEL_ID") or get_env("SLACK_PARTNER_CHANNEL_ID")
+                or get_env("SLACK_CHANNEL_ID"))
+    if val == "report":
+        # レポートch（日次/週次/月次）。未設定なら従来の #partner へ落とす＝移行途中でも
+        # 朝礼が宛先無しで落ちない（黙って消えるより、見慣れた場所に出るほうが安全）。
+        return (get_env("SLACK_REPORT_CHANNEL_ID") or get_env("SLACK_PARTNER_CHANNEL_ID")
+                or get_env("SLACK_CHANNEL_ID"))
     return val
 
 
@@ -184,9 +236,10 @@ def load_channel_seen(channel):
 
 
 def save_channel_seen(channel, ts):
-    data = _read_json(LAST_SEEN, {})
-    data[channel] = ts
-    _write_json(LAST_SEEN, data)
+    with state_lock():
+        data = _read_json(LAST_SEEN, {})
+        data[channel] = ts
+        _write_json(LAST_SEEN, data)
 
 
 def register_thread(thread_ts, agent, last_seen, channel=None):
@@ -195,29 +248,31 @@ def register_thread(thread_ts, agent, last_seen, channel=None):
     channel は返信走査(conversations_replies)を正しいチャンネルで行うために記録する。
     未指定（既存仕様の呼び出し）なら省略＝走査時に既定チャンネルへフォールバック。
 
-    注：threads.json は read-modify-write でファイルロックはしていない。無人運用の書き手
-    （fetch/post/reply/untrack）は agent-tick.sh の flock で直列化されるため実害はない。
-    手動実行を並走させる場合は同時更新で取りこぼし得る点に留意（必要になれば flock 化する）。
+    read-modify-write は state_lock() で直列化する（2026-08-19）。以前は「agent-tick.sh の
+    flock で直列化されるから不要」としていたが、取り込みをメインロックの外へ出したこと、
+    および overseer が自分でも fetch することで、その前提は成り立たなくなった。
     """
-    data = _read_json(THREADS, {})
-    cur = data.get(thread_ts)
-    if cur is None:
-        entry = {"agent": agent, "last_seen": last_seen}
-        if channel:
-            entry["channel"] = channel
-        data[thread_ts] = entry
-    else:
-        cur.setdefault("agent", agent)
-        if channel:
-            cur.setdefault("channel", channel)
-    _write_json(THREADS, data)
+    with state_lock():
+        data = _read_json(THREADS, {})
+        cur = data.get(thread_ts)
+        if cur is None:
+            entry = {"agent": agent, "last_seen": last_seen}
+            if channel:
+                entry["channel"] = channel
+            data[thread_ts] = entry
+        else:
+            cur.setdefault("agent", agent)
+            if channel:
+                cur.setdefault("channel", channel)
+        _write_json(THREADS, data)
 
 
 def set_thread_seen(thread_ts, last_seen):
-    data = _read_json(THREADS, {})
-    if thread_ts in data:
-        data[thread_ts]["last_seen"] = last_seen
-        _write_json(THREADS, data)
+    with state_lock():
+        data = _read_json(THREADS, {})
+        if thread_ts in data:
+            data[thread_ts]["last_seen"] = last_seen
+            _write_json(THREADS, data)
 
 
 def agent_for_thread(thread_ts):
@@ -390,10 +445,11 @@ def cmd_fetch(args):
     # --- (b2) 期限掃除の確定：強制走査で新着が無かった候補＋壊れた ts だけ削除 ---
     to_remove = {t for t in expired_candidates if t in scanned_ok} | broken_ts
     if to_remove:
-        threads = _read_json(THREADS, {})  # 走査中の set_thread_seen を上書きしないよう読み直す
-        for ts_ in to_remove:
-            threads.pop(ts_, None)
-        _write_json(THREADS, threads)
+        with state_lock():
+            threads = _read_json(THREADS, {})  # 走査中の set_thread_seen を上書きしないよう読み直す
+            for ts_ in to_remove:
+                threads.pop(ts_, None)
+            _write_json(THREADS, threads)
         print(f"追跡期限切れ {len(to_remove)} 件を untrack（保持 {retention_days:g}日・残り {len(threads)} 件）")
 
     if skipped_rotation or skipped_budget:
@@ -419,6 +475,11 @@ def _pop_as(args):
             val = args[i + 1] if i + 1 < len(args) else ""
             if not val or val.startswith("-"):   # 空・フラグ様の値を持ち主に保存させない
                 sys.exit("ERROR: --as にはエージェント名が必要です")
+            # ★重複は即エラー（2026-08-19 Codexレビュー）：ここが「後勝ち」だと、
+            #   呼び出し側のガードが最初の値を見て許可し、実行時は最後の値が使われる
+            #   ＝検査時と実行時で主体が変わる（`--as talk ... --as overseer` で騙れる）。
+            if agent is not None:
+                sys.exit("ERROR: --as は1回だけ指定できます（重複指定は認めません）")
             agent = val
             i += 2
             continue
@@ -436,6 +497,8 @@ def _pop_channel(args):
             val = args[i + 1] if i + 1 < len(args) else ""
             if not val or val.startswith("-"):
                 sys.exit("ERROR: --channel には main/memo またはチャンネルIDが必要です")
+            if chan is not None:      # 重複禁止の理由は _pop_as と同じ（後勝ち偽装の封じ）
+                sys.exit("ERROR: --channel は1回だけ指定できます（重複指定は認めません）")
             chan = val
             i += 2
             continue
@@ -462,16 +525,35 @@ def _guard_memo_channel(agent, channel):
 
 
 def _guard_partner_channel(agent, channel):
-    """partner エージェントは #partner（SLACK_PARTNER_CHANNEL_ID）以外へ投稿させない。
+    """partner エージェントは「レポートch」と「相談ch」以外へ投稿させない。
 
-    未設定なら既定チャンネル(SLACK_CHANNEL_ID)のみ許可。経営情報が他チャンネルや生ID指定で
-    暴発するのをコード側で物理的に防ぐ（memo と対称・automation.md「外部送信暴発を潰す」）。
+    経営情報が他チャンネルや生ID指定で暴発するのをコード側で物理的に防ぐ
+    （memo と対称・automation.md「外部送信暴発を潰す」）。
+
+    2026-08-19、レポートを #report へ分離した。**相談ch（旧#partner）も許可に残す**のは、
+    そこに partner が立てた過去の朝礼スレッドが残っており、社長がそこへ返信したとき
+    partner が同じスレッドへ返せなくなる（＝会話が片道になる）のを防ぐため。
+    どちらも元から partner の場所なので、許可範囲は実質広がっていない。
     """
     if agent != PARTNER_AGENT:
         return
-    allowed = get_env("SLACK_PARTNER_CHANNEL_ID") or get_env("SLACK_CHANNEL_ID")
+    allowed = {c for c in (_resolve_channel("report"), _resolve_channel("talk")) if c}
+    if channel not in allowed:
+        sys.exit("ERROR: --as partner は #report（SLACK_REPORT_CHANNEL_ID）か "
+                 "相談ch（SLACK_TALK_CHANNEL_ID／旧SLACK_PARTNER_CHANNEL_ID）へのみ投稿できます")
+
+
+def _guard_talk_channel(agent, channel):
+    """talk（相談役）は相談ch以外へ投稿させない。
+
+    talk は軽い器で、判断材料を持たないまま素早く答える。だからこそ投稿先を1つに固定する
+    ＝取り違えて #report やクライアント向けチャンネルへ出すことがコード上ありえないようにする。
+    """
+    if agent != TALK_AGENT:
+        return
+    allowed = _resolve_channel("talk")
     if not allowed or channel != allowed:
-        sys.exit("ERROR: --as partner は #partner（SLACK_PARTNER_CHANNEL_ID／未設定時は既定ch）へのみ投稿できます")
+        sys.exit("ERROR: --as talk は相談ch（SLACK_TALK_CHANNEL_ID／旧SLACK_PARTNER_CHANNEL_ID）へのみ投稿できます")
 
 
 def cmd_post(args):
@@ -482,6 +564,7 @@ def cmd_post(args):
         sys.exit("ERROR: 投稿先チャンネルが特定できません（--channel か .env を確認）")
     _guard_memo_channel(as_agent or DEFAULT_AGENT, channel)
     _guard_partner_channel(as_agent or DEFAULT_AGENT, channel)
+    _guard_talk_channel(as_agent or DEFAULT_AGENT, channel)
     text = _body_from(args).strip()
     if not text:
         sys.exit("ERROR: 投稿本文が空です")
@@ -509,6 +592,7 @@ def cmd_reply(args):
     owner = as_agent or agent_for_thread(thread_ts)
     _guard_memo_channel(owner, channel)
     _guard_partner_channel(owner, channel)
+    _guard_talk_channel(owner, channel)   # post 側と対で必ず掛ける（片方だけだと抜け道になる）
     # 先に投稿し、成功してから追跡登録する（投稿失敗時に未質問のスレッドを threads.json に残さない）。
     r = client().chat_postMessage(channel=channel, text=text, thread_ts=thread_ts)
     # 既存スレッドは持ち主/チャンネルを保持（register_thread が setdefault）。未知スレッドは owner/channel で主張
@@ -533,6 +617,19 @@ def cmd_done(args):
             break
     if src is None:
         sys.exit(f"ERROR: {msg_id} は new/ にも memo-stock/ にも見つかりません")
+    # ★自分宛の便しか処理済みにできない（2026-08-19 Codexレビュー）。
+    #   これが無いと、外部入力に誘導された無人エージェントが他モード宛の便を done でき、
+    #   その仕事は**二度とディスパッチされず黙って消える**（最も気づきにくい壊れ方）。
+    #   MYAGENT_AGENT は agent-tick / talk-tick が無人起動時にだけ渡す＝有人セッションは従来どおり。
+    me = os.environ.get("MYAGENT_AGENT", "")
+    if me:
+        try:
+            with open(src, encoding="utf-8") as f:
+                owner = (json.load(f) or {}).get("to", "")
+        except Exception:
+            owner = ""
+        if owner != me:
+            sys.exit(f"ERROR: {msg_id} は {owner or '不明'} 宛です。{me} は自分宛の便しか done できません")
     os.makedirs(MAILBOX_CUR, exist_ok=True)
     os.replace(src, os.path.join(MAILBOX_CUR, f"{msg_id}.json"))
     print(f"done: {msg_id} → cur/")
@@ -564,10 +661,12 @@ def cmd_untrack(args):
     if not args:
         sys.exit("ERROR: untrack <thread_ts> が必要です")
     thread_ts = args[0]
-    data = _read_json(THREADS, {})
-    if thread_ts in data:
-        del data[thread_ts]
-        _write_json(THREADS, data)
+    with state_lock():
+        data = _read_json(THREADS, {})
+        removed = data.pop(thread_ts, None) is not None
+        if removed:
+            _write_json(THREADS, data)
+    if removed:
         print(f"untrack: {thread_ts} を追跡解除しました")
     else:
         print(f"untrack: {thread_ts} は追跡対象にありません（スキップ）")

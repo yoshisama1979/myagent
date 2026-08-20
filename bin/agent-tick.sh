@@ -5,8 +5,11 @@
 # ヘッドレス起動する。fetch は last-seen を進めるため「1プロセスが所有」する＝多重 fetch 競合を防ぐ。
 #
 #   1) slack-poll.py fetch … 社長Slackの新着を mailbox へ取り込む（純シェル・確実・低コスト）
+#      ＊メインロックの**外**・専用ロックで実行する（重い解析の完走を待たない＝相談の返事を遅らせない）
 #   2) 宛先ごとに振り分け：
 #        to: hanasaka-main あり        → claude -p /chat        （社長との会話・スレッド返信）
+#      （to: talk ＝相談chは**このスクリプトが扱わない**。bin/talk-tick.sh が別ロック・別cronで捌く
+#        ＝重い解析が回っていても会話だけは止めない。2026-08-19 の分離）
 #        to: memo あり（反応tick）     → claude -p /memo-triage （#memo の新着メモを軽く点検・曖昧点だけ確認→memo-stock へ退避）
 #        daily memo（夜バッチ）        → claude -p /memo-intake （memo-stock の当日メモを notes.html へまとめて整理）
 #        to: overseer あり / daily指定 → claude -p /overseer    （統括）
@@ -146,6 +149,26 @@ if [[ "${oom_now:-}" =~ ^[0-9]+$ ]]; then
   exec 8>&-
 fi
 
+# --- 1) 新着取り込み（純シェル・LLM不要）---
+# ★メインロックより前に置く理由（2026-08-19 社長決定「会話と日1回の重い処理を分ける」）：
+#   取り込みをメインロックの内側に置くと、hp-loop 等が最大25分回っている間ずっと Slack の
+#   新着が mailbox に入らない＝相談チャンネルに書いても最悪25分返事が来ない。会話の価値は
+#   速さなので、重い処理の完走を待たせない。OOM 通知を先に出しているのと同じ判断
+#   （「いちばん効いてほしい場面で毎回25分遅れる」を避ける）。
+# ★専用ロックで直列化する：fetch は last-seen を進めるので同時に2本走らせてはいけない。
+#   取れなければ他の tick が今まさに取り込み中＝取りこぼしゼロで黙って抜ける。
+# 出力は「» 」接頭辞つきで記録（Slack本文由来の改行が偽の制御マーカー行になるのを防ぐ＝claude出力と同じ理由）
+exec 7>"$PROJ/data/overseer/.fetch.lock"
+if flock -n 7; then
+  "$PY" bin/slack-poll.py fetch 2>&1 | sed 's/^/» /' >>"$LOG"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    echo "$(now) [warn] fetch失敗" >>"$LOG"
+    fail "fetch-fail"
+    alert "Slack新着の取り込み(fetch)に失敗しました。トークン/ネットワークを確認してください。"
+  fi
+fi
+exec 7>&-
+
 # --- 多重起動防止 ---
 # normal（反応ティック）は前回が走っていれば静かにスキップ（取りこぼしても次の */N で拾える）。
 # daily（強制起動）は取りこぼすと「毎日忘れず解析」の規律が崩れるので、ロックを最大15分待つ。
@@ -188,18 +211,9 @@ partner_alert() {
     [ "$age" -lt 3600 ] && return 0
   fi
   printf '⚠️ 朝礼ブリーフィングが正常に完了しませんでした\n%s\n（%s）\n※自動警報です（次の実行で自動再試行します）。\n生存確認: http://100.123.104.87/overseer/last-tick.txt' \
-    "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post --as partner --channel partner >>"$LOG" 2>&1 \
+    "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post --as partner --channel report >>"$LOG" 2>&1 \
     && date +%s >"$PARTNER_ALERT"
 }
-
-# --- 1) 新着取り込み（純シェル・LLM不要・このスクリプトが fetch の唯一の所有者） ---
-# 出力は「» 」接頭辞つきで記録（Slack本文由来の改行が偽の制御マーカー行になるのを防ぐ＝claude出力と同じ理由）
-"$PY" bin/slack-poll.py fetch 2>&1 | sed 's/^/» /' >>"$LOG"
-if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-  echo "$(now) [warn] fetch失敗" >>"$LOG"
-  fail "fetch-fail"
-  alert "Slack新着の取り込み(fetch)に失敗しました。トークン/ネットワークを確認してください。"
-fi
 
 # --- 受信箱の健全性（new/ 不在・権限異常を「idle」に化けさせない＝Codex🔴3） ---
 MAILBOX_OK=1
@@ -631,6 +645,10 @@ dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
 # rally / konjaku は daily が月曜だけ＝待機に回すと最大7日待つ。社長の判断待ちのため従来どおり全便で起動する
 dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"
 dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"
+# hikita は手動運転（cron 登録なし＝費用の関係・2026-08-19 社長決定）。起動は
+# 手動 `agent-tick.sh daily hp-loop-hikita` か mailbox 便のみ。待機(defer)にすると
+# 拾う定時が存在せず永久に眠るため、第4引数なし＝全便で起動する
+dispatch "hp-loop:hikita"   "/hp-loop hikita"   "hp-loop-hikita"
 # ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
 # blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
 dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"    1

@@ -70,6 +70,7 @@ for _p in (sp.ENV_FILE, sp.SLACK_DIR, sp.LAST_SEEN, sp.THREADS,
         print(f"❌ 書き先の差し替えに失敗: {_p}", file=sys.stderr); sys.exit(2)
 
 MAIN, MEMO, PARTNER = "C_MAIN", "C_MEMO", "C_PARTNER"
+REPORT = "C_REPORT"   # 2026-08-19 新設：日次/週次/月次レポートの置き場
 ME = "UBOT"                                   # 自分（bot）の user_id
 PRES = "UPRES"                                # 社長
 
@@ -129,13 +130,25 @@ print("\n=== 投稿先チャンネルの決定 ===")
 write_env(SLACK_CHANNEL_ID=MAIN, SLACK_MEMO_CHANNEL_ID=MEMO, SLACK_PARTNER_CHANNEL_ID=PARTNER)
 (ok if sp._resolve_channel("main") == MAIN else ng)("alias main")
 (ok if sp._resolve_channel("memo") == MEMO else ng)("alias memo")
-(ok if sp._resolve_channel("partner") == PARTNER else ng)("alias partner")
+(ok if sp._resolve_channel("talk") == PARTNER else ng)(
+    "alias talk＝相談ch（SLACK_TALK_CHANNEL_ID 未設定なら従来の #partner）")
+(ok if sp._resolve_channel("partner") == PARTNER else ng)(
+    "alias partner は talk の別名として残る（移行期の古い手順書が宛先無しで落ちない）")
 (ok if sp._resolve_channel("C_RAW") == "C_RAW" else ng)("生のチャンネルIDはそのまま")
 (ok if sp._resolve_channel("") is None else ng)("未指定は None")
 write_env(SLACK_CHANNEL_ID=MAIN)
 (ok if sp._resolve_channel("partner") == MAIN else ng)(
     "partner 未設定なら既定chへフォールバック（朝礼が宛先無しで失敗しない）")
 (ok if sp._resolve_channel("memo") == "" else ng)("memo 未設定はフォールバックしない（暴発防止）")
+write_env(SLACK_CHANNEL_ID=MAIN, SLACK_PARTNER_CHANNEL_ID=PARTNER, SLACK_REPORT_CHANNEL_ID=REPORT)
+(ok if sp._resolve_channel("report") == REPORT else ng)("alias report＝レポートch")
+(ok if sp._resolve_channel("talk") == PARTNER else ng)("report を足しても talk は相談chのまま")
+write_env(SLACK_CHANNEL_ID=MAIN, SLACK_PARTNER_CHANNEL_ID=PARTNER)
+(ok if sp._resolve_channel("report") == PARTNER else ng)(
+    "★report 未設定なら従来の #partner へ落とす（移行途中でも朝礼が宛先無しで消えない）")
+write_env(SLACK_CHANNEL_ID=MAIN, SLACK_TALK_CHANNEL_ID="C_TALK", SLACK_PARTNER_CHANNEL_ID=PARTNER)
+(ok if sp._resolve_channel("talk") == "C_TALK" else ng)(
+    "SLACK_TALK_CHANNEL_ID を明示したらそちらが勝つ（旧キーより優先）")
 
 print("\n=== 走査対象チャンネルの組み立て ===")
 write_env(SLACK_CHANNEL_ID=MAIN)
@@ -143,8 +156,18 @@ write_env(SLACK_CHANNEL_ID=MAIN)
 write_env(SLACK_CHANNEL_ID=MAIN, SLACK_MEMO_CHANNEL_ID=MEMO, SLACK_PARTNER_CHANNEL_ID=PARTNER)
 got = sp.channels()
 (ok if got == [(MAIN, sp.DEFAULT_AGENT, True), (MEMO, sp.MEMO_AGENT, False),
-               (PARTNER, sp.PARTNER_AGENT, False)] else ng)(
-    "3ch＝それぞれの受け先agent、追跡は既定chだけ True", got)
+               (PARTNER, sp.TALK_AGENT, False)] else ng)(
+    "★旧#partner のトップ投稿は talk（軽い器）が受ける＝2026-08-19 の分離", got)
+write_env(SLACK_CHANNEL_ID=MAIN, SLACK_MEMO_CHANNEL_ID=MEMO,
+          SLACK_PARTNER_CHANNEL_ID=PARTNER, SLACK_REPORT_CHANNEL_ID=REPORT)
+got = sp.channels()
+(ok if got == [(MAIN, sp.DEFAULT_AGENT, True), (MEMO, sp.MEMO_AGENT, False),
+               (PARTNER, sp.TALK_AGENT, False), (REPORT, sp.PARTNER_AGENT, False)] else ng)(
+    "4ch＝相談は talk・レポートは partner、追跡は既定chだけ True", got)
+write_env(SLACK_CHANNEL_ID=MAIN, SLACK_PARTNER_CHANNEL_ID=PARTNER, SLACK_REPORT_CHANNEL_ID=PARTNER)
+got = sp.channels()
+(ok if got == [(MAIN, sp.DEFAULT_AGENT, True), (PARTNER, sp.TALK_AGENT, False)] else ng)(
+    "★相談chとレポートchに同じIDを入れてしまっても、軽い talk 側に倒れる（$70の誤爆を防ぐ）", got)
 write_env(SLACK_CHANNEL_ID=MAIN, SLACK_MEMO_CHANNEL_ID=MAIN)
 (ok if len(sp.channels()) == 1 else ng)("同じIDを2役に設定しても1つに畳む（二重取り込み防止）")
 
@@ -188,6 +211,97 @@ write_env(SLACK_CHANNEL_ID=MAIN)
 write_env(SLACK_CHANNEL_ID=MAIN, SLACK_PARTNER_CHANNEL_ID=PARTNER)
 (ok if caught(sp._guard_memo_channel, "memo", MEMO) else ng)(
     "memo 未設定なら memo はどこへも投稿できない（既定chへ落ちない）")
+
+# --- 相談ch／レポートch の分離（2026-08-19）---
+write_env(SLACK_CHANNEL_ID=MAIN, SLACK_MEMO_CHANNEL_ID=MEMO,
+          SLACK_PARTNER_CHANNEL_ID=PARTNER, SLACK_REPORT_CHANNEL_ID=REPORT)
+(ok if caught(sp._guard_partner_channel, "partner", REPORT) is None else ng)(
+    "partner → #report は通す（レポートの本来の宛先）")
+(ok if caught(sp._guard_partner_channel, "partner", PARTNER) is None else ng)(
+    "★partner → 相談ch も通す（そこに残る過去の朝礼スレッドへ返信できないと会話が片道になる）")
+(ok if caught(sp._guard_partner_channel, "partner", MAIN) else ng)(
+    "partner → 既定ch は止める（経営情報の暴発）")
+(ok if caught(sp._guard_partner_channel, "partner", MEMO) else ng)(
+    "partner → #memo も止める")
+(ok if caught(sp._guard_talk_channel, "talk", PARTNER) is None else ng)(
+    "talk → 相談ch は通す")
+(ok if caught(sp._guard_talk_channel, "talk", REPORT) else ng)(
+    "★talk → #report は止める（軽い器がレポートchへ書き込まない）")
+(ok if caught(sp._guard_talk_channel, "talk", MAIN) else ng)("talk → 既定ch は止める")
+(ok if caught(sp._guard_talk_channel, "talk", "C_OTHER") else ng)("talk → 生ID指定も止める")
+(ok if caught(sp._guard_talk_channel, sp.DEFAULT_AGENT, MAIN) is None else ng)(
+    "talkガードは他エージェントを縛らない")
+
+print("\n=== 二重防御：フラグの後勝ちを封じる（2026-08-19 Codexレビュー）===")
+# ガードが最初の値を見て許可し、実装が最後の値を使う＝検査時と実行時で主体が変わる。
+# ガード側だけ直しても、ガードを通らない経路（有人・他ツール）が残るのでここでも塞ぐ。
+(ok if caught(sp._pop_as, ["--as", "talk", "--as", "overseer"]) else ng)(
+    "★--as の重複はエラー（後勝ちで主体を偽装させない）")
+(ok if caught(sp._pop_channel, ["--channel", "talk", "--channel", "C_OTHER"]) else ng)(
+    "★--channel の重複はエラー（後勝ちで投稿先を偽装させない）")
+got = sp._pop_as(["--as", "talk", "x"])
+(ok if got == ("talk", ["x"]) else ng)("1回だけの指定は従来どおり通る", got)
+got = sp._pop_channel(["--channel", "talk", "x"])
+(ok if got == ("talk", ["x"]) else ng)("1回だけの指定は従来どおり通る（channel）", got)
+
+print("\n=== 二重防御：返信側にもチャンネルガードが掛かる ===")
+src = Path(sp.__file__).read_text(encoding="utf-8") if hasattr(sp, "__file__") else ""
+if not src:
+    src = Path("bin/slack-poll.py").read_text(encoding="utf-8")
+reply_body = src[src.index("def cmd_reply("):src.index("def cmd_done(")]
+(ok if "_guard_talk_channel" in reply_body else ng)(
+    "★cmd_reply も talk ガードを呼ぶ（post 側だけだと reply が抜け道になる）")
+(ok if "_guard_partner_channel" in reply_body else ng)("cmd_reply の partner ガード（非回帰）")
+
+print("\n=== 二重防御：自分宛の便しか done できない ===")
+def _put(mid, to):
+    os.makedirs(sp.MAILBOX_NEW, exist_ok=True)
+    os.makedirs(sp.MAILBOX_CUR, exist_ok=True)
+    Path(sp.MAILBOX_NEW, f"{mid}.json").write_text(
+        json.dumps({"id": mid, "to": to, "body": "架空のテスト便"}), encoding="utf-8")
+
+os.environ["MYAGENT_AGENT"] = "talk"
+_put("M-other", "partner")
+(ok if caught(sp.cmd_done, ["M-other"]) else ng)(
+    "★talk は partner 宛の便を done できない（他モードの仕事を黙って消させない）")
+(ok if Path(sp.MAILBOX_NEW, "M-other.json").exists() else ng)("拒否された便は new/ に残る")
+_put("M-mine", "talk")
+sp.cmd_done(["M-mine"])
+(ok if Path(sp.MAILBOX_CUR, "M-mine.json").exists() else ng)("自分宛の便は従来どおり done できる")
+os.environ.pop("MYAGENT_AGENT", None)
+_put("M-manual", "partner")
+sp.cmd_done(["M-manual"])
+(ok if Path(sp.MAILBOX_CUR, "M-manual.json").exists() else ng)(
+    "有人セッション（MYAGENT_AGENT なし）は従来どおり誰の便でも done できる")
+
+print("\n=== 状態ファイルの同時更新を直列化する ===")
+# 旧コメントは「agent-tick.sh の flock で直列化されるから不要」としていたが、
+# 取り込みをメインロックの外へ出したこと・overseer が自分でも fetch することで前提が崩れた。
+(ok if "def state_lock" in src else ng)("★state_lock() がこのファイルの中にある（呼び出し側に任せない）")
+# 実際に並行で書かせて、取りこぼしが無いかを見る（ロックが無いと read-modify-write が競合し、
+# 後から書いた側が前の登録を消す＝社長の返信が届かないスレッドが生まれる）。
+import subprocess as _sp
+_N = 12
+_prog = (
+    "import sys, importlib.util\n"
+    "spec = importlib.util.spec_from_file_location('sp', %r)\n"
+    "m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)\n"
+    "m.SLACK_DIR = %r; m.THREADS = %r; m.LAST_SEEN = %r\n"
+    "m.register_thread(sys.argv[1], 'talk', sys.argv[1])\n"
+) % (str(Path("bin/slack-poll.py").resolve()), sp.SLACK_DIR, sp.THREADS, sp.LAST_SEEN)
+os.makedirs(sp.SLACK_DIR, exist_ok=True)
+Path(sp.THREADS).write_text("{}", encoding="utf-8")
+_procs = [_sp.Popen([sys.executable, "-c", _prog, f"{900 + i}.0"]) for i in range(_N)]
+for _p in _procs:
+    _p.wait()
+_got = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
+(ok if len(_got) == _N else ng)(
+    f"★{_N}並行で登録しても1件も失われない（ロックが効いている）", f"{len(_got)}/{_N}件")
+lines = src.split("\n")
+unlocked = [i + 1 for i, l in enumerate(lines)
+            if "_write_json(" in l and "def _write_json" not in l
+            and not any("state_lock()" in x for x in lines[max(0, i - 30):i])]
+(ok if not unlocked else ng)("★状態ファイルの書き込みが全てロック下にある", f"ロック外: {unlocked}")
 
 print("\n=== カーソル（last-seen.json / threads.json）===")
 reset()

@@ -2,9 +2,15 @@
 declare(strict_types=1);
 require_once __DIR__ . '/_financial-lib.php';
 
+// 仕訳帳の置き場は2つある（F-017・社長決定 2026-08-18「案①」）。
+//   JOURNAL_MCP_DIR … bin/journal-mcp-export.sh が MCP から取って書く**現行の正**
+//   JOURNAL_DIR     … 社長が手でアップロードしていた旧データ。取り込み前や失敗時の受け皿として残す
+// 画面は MCP 側があればそちらを読み、無ければ旧データへ落ちる。どちらを見ているかは
+// 必ず画面に出す＝**古いデータが黙って最新の顔をしない**（これがこの改修の主目的）。
 const JOURNAL_DIR = FINANCIAL_ROOT . '/journal';
-const JOURNAL_MAX_FILE_SIZE = 5 * 1024 * 1024;
-const JOURNAL_TARGET_FYS = [2025, 2026];
+const JOURNAL_MCP_DIR = FINANCIAL_ROOT . '/generated/journal-mcp';
+const JOURNAL_MCP_STATUS = JOURNAL_MCP_DIR . '/status.json';
+const JOURNAL_STALE_HOURS = 48;      // これを過ぎたら「古い」と赤字で出す（日次更新の2回ぶん）
 
 const CARD_STATEMENT_DIR = FINANCIAL_ROOT . '/card-statements';
 const CARD_MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -73,29 +79,6 @@ function safe_save_uploaded(string $tmp_name, string $dest, ?callable $validate 
         return ['type' => 'error', 'text' => '保存に失敗しました（rename）'];
     }
     return ['type' => 'success', 'text' => ''];
-}
-
-function handle_journal_upload(): array {
-    $fy = (int)($_POST['fy'] ?? 0);
-    if ($fy < 2020 || $fy > 2100) return ['type' => 'error', 'text' => '年度の指定が不正です'];
-
-    if (!isset($_FILES['journal_csv']) || $_FILES['journal_csv']['error'] === UPLOAD_ERR_NO_FILE) {
-        return ['type' => 'error', 'text' => 'ファイルが選択されていません'];
-    }
-    $f = $_FILES['journal_csv'];
-    if ($f['error'] !== UPLOAD_ERR_OK) return ['type' => 'error', 'text' => "アップロードエラー (code: {$f['error']})"];
-    if ($f['size'] > JOURNAL_MAX_FILE_SIZE) return ['type' => 'error', 'text' => 'ファイルサイズが5MBを超えています'];
-
-    $dest = JOURNAL_DIR . "/FY{$fy}.csv";
-    $result = safe_save_uploaded(
-        $f['tmp_name'],
-        $dest,
-        fn(string $p) => validate_csv_headers($p, JOURNAL_REQUIRED_HEADERS)
-    );
-    if ($result['type'] === 'success') {
-        $result['text'] = "✅ FY{$fy}.csv を保存しました（" . number_format($f['size']) . "バイト）";
-    }
-    return $result;
 }
 
 function detect_sbi_period(string $file): ?string {
@@ -191,9 +174,24 @@ function list_card_statements(): array {
     return $result;
 }
 
+/** 仕訳帳の実体があるディレクトリ。MCP 生成物を優先し、無ければ旧アップロード先。 */
+function journal_source_dir(): array {
+    $mcp = glob(JOURNAL_MCP_DIR . '/FY????.csv') ?: [];
+    if ($mcp) return [JOURNAL_MCP_DIR, 'mcp'];
+    return [JOURNAL_DIR, 'upload'];
+}
+
+/** 自動取得の状態（bin/journal-mcp-export.sh が成功・失敗のたびに書く）。 */
+function journal_mcp_status(): ?array {
+    if (!is_file(JOURNAL_MCP_STATUS)) return null;
+    $j = json_decode((string)file_get_contents(JOURNAL_MCP_STATUS), true);
+    return is_array($j) ? $j : null;
+}
+
 function list_journal_files(): array {
-    if (!is_dir(JOURNAL_DIR)) return [];
-    $files = glob(JOURNAL_DIR . '/FY????.csv') ?: [];
+    [$dir] = journal_source_dir();
+    if (!is_dir($dir)) return [];
+    $files = glob($dir . '/FY????.csv') ?: [];
     sort($files);
     $result = [];
     foreach ($files as $f) {
@@ -210,7 +208,8 @@ function list_journal_files(): array {
 }
 
 function load_journal(int $fy): ?array {
-    $file = JOURNAL_DIR . "/FY{$fy}.csv";
+    [$dir] = journal_source_dir();
+    $file = $dir . "/FY{$fy}.csv";
     if (!is_file($file)) return null;
     $rows = read_csv_rows($file);
     if (count($rows) < 2) return null;
@@ -629,11 +628,14 @@ function analyze_journal(array $journal): array {
 
 $message = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $upload_type = (string)($_POST['upload_type'] ?? 'journal');
-    if ($upload_type === 'card') {
+    // 仕訳帳のアップロードは廃止（F-017）＝POST を受け付けるのはカード明細だけ。
+    // 旧フォームが残ったブラウザから飛んできても、黙って無視せず理由を出す。
+    if ((string)($_POST['upload_type'] ?? '') === 'card') {
         $message = handle_card_upload();
     } else {
-        $message = handle_journal_upload();
+        $message = ['type' => 'error',
+                    'text' => '仕訳帳のアップロードは廃止しました（MCPで自動取得しています）。'
+                            . 'カード明細のアップロードのみ受け付けます。'];
     }
 }
 
@@ -673,7 +675,6 @@ foreach ($pending_groups as $desc => &$g) {
 unset($g);
 $pending_matched_count = count(array_filter($pending, fn($p) => $p['card'] !== null));
 
-$default_fy = 2026;
 ?><!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -692,8 +693,8 @@ $default_fy = 2026;
 
   <h1 class="text-3xl font-bold mb-2">📒 仕訳チェック</h1>
   <p class="text-gray-600 mb-6 text-sm">
-    MFクラウド「会計帳簿 → 仕訳帳」CSV を **年度単位（期首〜現時点）** でアップロードし、
-    形式チェック・集計・重複検知を行う。
+    MFクラウドの仕訳帳を <strong>MCP 経由で毎日自動取得</strong>し、形式チェック・集計・重複検知を行う。
+    エクスポートとアップロードの手作業は不要（カード明細のみ手動アップロード）。
   </p>
 
   <?php if ($message): ?>
@@ -701,35 +702,51 @@ $default_fy = 2026;
     <div class="border-l-4 rounded p-3 mb-6 text-sm <?= $bg ?>"><?= h($message['text']) ?></div>
   <?php endif; ?>
 
-  <!-- アップロード -->
-  <details class="mb-8 bg-white border border-gray-300 rounded-lg" <?= empty($files) ? 'open' : '' ?>>
-    <summary class="cursor-pointer p-4 font-semibold text-blue-700 hover:bg-blue-50">📤 仕訳帳CSVをアップロード</summary>
-    <div class="p-4 border-t border-gray-200 space-y-3">
-      <form method="POST" enctype="multipart/form-data" class="space-y-3">
-        <input type="hidden" name="upload_type" value="journal">
-        <div class="flex gap-4 items-center">
-          <label class="font-semibold text-sm">対象年度：</label>
-          <?php foreach (JOURNAL_TARGET_FYS as $fy): ?>
-            <label class="inline-flex items-center gap-1">
-              <input type="radio" name="fy" value="<?= $fy ?>" <?= $fy === $default_fy ? 'checked' : '' ?> required>
-              <span>FY<?= $fy ?></span>
-            </label>
-          <?php endforeach; ?>
-        </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">仕訳帳 CSV（期首〜現時点）</label>
-          <input type="file" name="journal_csv" accept=".csv,text/csv" required
-                 class="text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-blue-600 file:text-white file:font-semibold">
-        </div>
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded">アップロード</button>
-        <p class="text-xs text-gray-500">保存先：<code>data/financial/journal/FY{年度}.csv</code>（gitignored）/ 最大5MB / 同年度は上書き</p>
-        <div class="text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded p-2">
-          <strong>📥 MFクラウドでの取得手順</strong><br>
-          会計帳簿 → <strong>仕訳帳</strong> → 期間を期首〜現時点（FY2026 なら 2026-04-01〜本日）に指定 → エクスポート → ここにアップロード
-        </div>
-      </form>
+  <!-- 自動取得の状態（F-017）＝画面を見た人が「いつ時点のデータか」を必ず分かるようにする -->
+  <?php
+    $mcp_status = journal_mcp_status();
+    [$src_dir, $src_kind] = journal_source_dir();
+    $last = $mcp_status['last_success'] ?? null;
+    $age_h = $last ? (time() - (int)strtotime($last)) / 3600 : null;
+    $is_stale = ($age_h === null) || ($age_h > JOURNAL_STALE_HOURS);
+    $state = $mcp_status['state'] ?? null;
+  ?>
+  <div class="mb-8 rounded-lg border <?= $is_stale || $state === 'error'
+        ? 'border-red-300 bg-red-50' : 'border-emerald-300 bg-emerald-50' ?> p-4">
+    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <span class="font-semibold"><?= $is_stale || $state === 'error' ? '⚠️' : '🔄' ?> 仕訳データの最終更新</span>
+      <span class="font-mono text-lg"><?= h($last ?: '— 未取得 —') ?></span>
+      <?php if ($age_h !== null): ?>
+        <span class="text-sm text-gray-600">（<?= h(number_format($age_h, 1)) ?> 時間前）</span>
+      <?php endif; ?>
     </div>
-  </details>
+    <div class="mt-2 text-sm text-gray-700 space-y-1">
+      <?php if ($src_kind === 'upload'): ?>
+        <p class="text-red-700 font-semibold">
+          自動取得のデータがまだありません。表示中の内容は旧アップロード分
+          （<code>data/financial/journal/</code>）です。
+          <code>bash bin/journal-mcp-export.sh --seed</code> を実行してください。
+        </p>
+      <?php elseif ($state === 'error'): ?>
+        <p class="text-red-700 font-semibold">
+          直近の自動取得は失敗しました。表示中の内容は前回取得時のままです。
+        </p>
+      <?php elseif ($is_stale): ?>
+        <p class="text-red-700 font-semibold">
+          <?= JOURNAL_STALE_HOURS ?> 時間以上更新されていません。cron と MCP 認証を確認してください。
+        </p>
+      <?php endif; ?>
+      <?php if (!empty($mcp_status['note'])): ?>
+        <p class="text-gray-600"><?= h($mcp_status['note']) ?></p>
+      <?php endif; ?>
+      <p class="text-xs text-gray-500">
+        取得＝<code>bin/journal-mcp-export.sh</code>（日次）／ 表示元＝<code><?= h(str_replace(FINANCIAL_PROJECT_ROOT . '/', '', $src_dir)) ?></code>
+        <?php if (!empty($mcp_status['last_run']) && $mcp_status['last_run'] !== $last): ?>
+          ／ 最終実行 <?= h($mcp_status['last_run']) ?>
+        <?php endif; ?>
+      </p>
+    </div>
+  </div>
 
   <!-- カード明細アップロード -->
   <details class="mb-8 bg-white border border-gray-300 rounded-lg" <?= empty($card_files) ? 'open' : '' ?>>

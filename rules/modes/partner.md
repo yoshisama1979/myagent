@@ -1,6 +1,6 @@
 # 経営パートナー（右腕）モード — 動作ルール
 
-> **version 1.2**（2026-08-10）｜ changelog はファイル末尾「変更履歴」を参照。
+> **version 1.3**（2026-08-19）｜ changelog はファイル末尾「変更履歴」を参照。
 > **北極星：売上を主軸に、全体最適で「今いちばん効くレバー」を1つ選んで社長を動かす**（A-051・2026-08-10 社長◎＝現行文言のまま確定）
 > このモードは **使いながら育てる**（reviewer 型：記録と反映を分け、棚卸しでルールへ昇格）。気づきは hp-loop と同じく `data/hp-improve/skill-kaizen.md` に溜める。
 
@@ -64,7 +64,7 @@
         │  追記（AIが書く）
         ▼
 （掲示板）site/business/partner/index.html ＝ 社長が朝イチで読む（Tailscale）
-（Slack #partner）朝礼をスレッド投稿／社長はいつでも #partner に情報を投函 → 翌朝/日中に拾う
+（Slack #report）朝礼をスレッド投稿／社長は #report に情報を投函・朝礼スレッドに返信 → 翌朝/日中に拾う
         └──────────────（ループ）──────────────┘
 ```
 
@@ -74,7 +74,7 @@
 | 社長の指示・回答・宣言（やること） | `data/partner/from-president.md` | **社長のみ**（AIは読むだけ） |
 | 掲示板（3層：朝礼／確定・仕様／アーカイブ） | `site/business/partner/{index,spec,archive}.html` | **AIのみ**（社長は読む） |
 | 判断state（台帳・約束追跡・優先度・機会・リスク） | `data/partner/ledger.md` | AI（source of truth） |
-| 毎朝の朝礼ブリーフィング／社長からの情報受け取り | Slack **#partner** チャンネル（`post --as partner --channel partner`・社長の投函は `to: partner`） | AI（投稿）／社長（情報投函） |
+| 毎朝の朝礼ブリーフィング／社長からの情報受け取り | Slack **#report** チャンネル（`post --as partner --channel report`・社長の投函は `to: partner`） | AI（投稿）／社長（情報投函） |
 
 > **責務分離（reviewer 流）**：社長の領域（from-president.md・目標の確定）と AI の領域（掲示板・台帳）を混ぜない。AI は from-president.md を編集しない。掲示板＝社長向け報告ビュー、台帳＝AIの判断state（[hp-loop.md](hp-loop.md) と同じく二重台帳にしない・ズレたら台帳が正）。
 
@@ -130,8 +130,8 @@
 | Write/Edit: `site/clients/<client>/projects/<project>/backlog.html`（**社長投函の機能・仕様メモを正本へ転記＝追記のみ**） | ✅ 可（2026-07-31 社長承認。**追記と出典明記だけ**＝既存項目の書き換え・削除・完了操作はしない。出典に台帳 A-NNN と投函日を必ず添える。下記 Step 5-7 の書き戻し規律） |
 | `python3 bin/check-writeback.py`（正本への書き戻し漏れ検出・読み取り専用） | ✅ 可（Step 0 で必ず流す） |
 | `python3 bin/calendar-fetch.py show`（今日・明日の予定・読み取り専用／通信しない） | ✅ 可（Step 0。取得は 06:55 の cron。`fetch` を自分で叩かない＝朝礼のたびに API を呼ばない） |
-| `bin/.venv/bin/python3 bin/slack-poll.py post --as partner --channel partner "本文"`（**#partner チャンネル**へ朝礼ブリーフィング） | ✅ 可（社長本人への内部報告＝合意済の運用。`--channel partner` 未設定時は既定chへフォールバック。[[feedback_slack-report-notify]]） |
-| `bin/.venv/bin/python3 bin/slack-poll.py reply <thread_ts> --as partner --channel partner "本文"`（社長返信・#partner 投稿への応答） | ✅ 可（返信先は登録スレッドから自動解決） |
+| `bin/.venv/bin/python3 bin/slack-poll.py post --as partner --channel report "本文"`（**#report チャンネル**へ朝礼ブリーフィング） | ✅ 可（社長本人への内部報告＝合意済の運用。`SLACK_REPORT_CHANNEL_ID` 未設定時は旧#partner→既定chへフォールバック。[[feedback_slack-report-notify]]） |
+| `bin/.venv/bin/python3 bin/slack-poll.py reply <thread_ts> --as partner --channel report "本文"`（社長返信・#report 投稿への応答。**相談ch(旧#partner)に残る過去の朝礼スレッドへの返信も可**＝ガードが両方を許可） | ✅ 可（返信先は登録スレッドから自動解決） |
 | `bin/.venv/bin/python3 bin/slack-poll.py done <msg_id>`（処理済みを `cur/` へ） | ✅ 可（本文編集しない） |
 | **Write/Edit: `data/partner/from-president.md`** | **❌ 不可（社長の領域）**。読むだけ |
 | **本番サイト・本番システムの改変** | ❌ 不可（草案は `site/drafts/`） |
@@ -149,7 +149,14 @@
 1. `data/partner/ledger.md`（台帳）を読む。**未整備（初回）なら立ち上げフェーズ**へ＝目標・KPI の共同整備を最優先に組む。
 2. `data/partner/from-president.md` を読む（社長の指示・回答・宣言＝やること）。
 3. 掲示板 `site/business/partner/index.html` を読む（前回までの状態・未完了・通し番号）。
-4. **自分宛 mailbox**：`bash bin/mailbox.sh inbox`（`to: partner`）。社長が **#partner チャンネル**に投げた情報のトップ投稿、および朝礼スレッドへの返信が、ともに `from: president` / `to: partner` でここに届く（#partner ＝経営パートナーの Slack 窓口）。処理後 `done <id>` で `cur/` へ。社長の返信・投稿には元スレッドへ `reply <thread_ts> --as partner --channel partner` で応じ、会話を続けたいものはそのスレッドが追跡される。
+4. **自分宛 mailbox**：`bash bin/mailbox.sh inbox`（`to: partner`）。ここに届くのは次の2つ（2026-08-19 に会話と分離）：
+   - **#report のトップ投稿**＝レポートへの社長の指摘・追加情報
+   - **朝礼スレッドへの返信**（#report・相談ch(旧#partner) に残る過去スレッドの両方。スレッドの持ち主は threads.json が覚えている）
+
+   ⚠️ **相談ch(旧#partner)への新規トップ投稿はここに来ない**＝軽い相談役（`/talk`）が受ける。
+   そちらで「調べる必要がある」と判断されたものだけ `from: talk` の便として渡ってくる。
+   処理後 `done <id>` で `cur/` へ。社長の返信・投稿には元スレッドへ
+   `reply <thread_ts> --as partner --channel report` で応じる（過去スレッドは登録チャンネルへ自動で返る）。
 5. **会社の現況を取りに行く**（毎朝最新を）：
    - hana-tools：`bin/hana-api.sh projects` / `todos --status=incomplete`（案件・期日超過・担当未設定）
    - **財務（週1・記録ベース）**：台帳 §2 の `財務スナップ取得: YYYY-MM-DD` を grep し**6日以上前なら** `python3 bin/finance-snapshot.py` を実行（60秒ほど。Sheets を叩かず速く済ませたい日は `--no-fetch`）。⚠️ 行＝経理入力の遅れ・費目欠落・未分類残高・資金の危険信号。取得日を台帳に書き戻す。**6日以内なら実行せず**、前回スナップの数字と ⚠️ の消化状況だけを見る
@@ -201,7 +208,7 @@
 7. **月次財務レビュー（先月分が未完了なら毎朝・日付で発火させない）**＝`reviews/index.html` に先月の行が**無ければ**、①ページを1回の Write で丸ごと起票（finance-snapshot の数字＋所見＋翌月の一手＋`<!-- slack-reported: no -->`）→②index に行を追加（ここで作成完了）→③Step 6 の投稿成功後に `slack-reported: yes`。途中で落ちた場合は翌朝この判定が続きから拾う。
 
 ### Step 6: Slack 朝礼ブリーフィング
-- **#partner チャンネル**へ朝礼を投稿：`bin/.venv/bin/python3 bin/slack-poll.py post --as partner --channel partner "本文"`（複数行は heredoc。`SLACK_PARTNER_CHANNEL_ID` 未設定なら既定chへフォールバック）。**#partner ＝経営パートナーの専用Slack窓口**＝社長はここにいつでも情報を投げられ（top投稿は `to: partner` で取り込み）、朝礼もここに出て会話が1か所にまとまる。
+- **#report チャンネル**へ朝礼を投稿：`bin/.venv/bin/python3 bin/slack-poll.py post --as partner --channel report "本文"`（複数行は heredoc。`SLACK_REPORT_CHANNEL_ID` 未設定なら旧#partner→既定chへフォールバック）。**#report ＝日次/週次/月次レポートの置き場**（2026-08-19 分離。理由＝#partner が朝礼に占領されて社長の相談窓口が無くなっていた。頻度の高い相談を社長の定位置に残し、1日1回のレポートを新しい場所へ移した）。社長がレポートへ返信・追記したものは `to: partner` で取り込む。
 - 中身＝下記「朝礼フォーマット」を短く。**毎日必ず1本**（変化が無い日も「今日の一手」と昨日の約束確認は出す＝伴走の規律）。末尾に掲示板URL `http://100.123.104.87/business/partner/`。
 - `--as partner` で朝礼スレッドの持ち主を partner にし、社長がそのスレッドに返信したら次サイクルで拾う。日中の社長返信は反応tickがその用件にスレッド返信で応じる（別途の重複投稿はしない）。
 - **停止条件**：社長の停止指示／合意待ち（hana書込・外部送信）が溜まった → その作用だけ止める。**分析・今日の一手・伴走は止めない**。
@@ -277,7 +284,7 @@
 - [ ] index は最新＋未完了だけにし、完了を archive・確定を spec へ移したか？台帳と掲示板は揃っているか？
 - [ ] **完了の archive 移設を冪等な順序（archive→確認→milestones ID検索→追記→本体削除）で行ったか？**（月初なら未反映行の journey 反映＋投稿後の「Slack報告済み分」更新も）今日の一手・機会に北極星結線（→枝）を添えたか？
 - [ ] 朝礼を Slack に1本投稿し、掲示板URLを添えたか？（変化が無い日も伴走は出したか）
-- [ ] 処理した `to: partner`（#partner 投稿・返信）を**全件 `done` で `cur/` へ移したか？**（残すと反応tickが2分ごとに空回りする。返信/掲示板更新済みなら再返信せず done だけでも必ず行う）
+- [ ] 処理した `to: partner`（#report 投稿・朝礼スレッド返信・talk からの申し送り）を**全件 `done` で `cur/` へ移したか？**（残すと反応tickが2分ごとに空回りする。返信/掲示板更新済みなら再返信せず done だけでも必ず行う）
 - [ ] from-president.md を編集していないか？このモードで commit していないか？
 - [ ] Step 7 の振り返りをしたか？（無ければ「特記なし」）
 - [ ] 編集ファイルを回答末尾に markdown リンクで一覧表示したか？
@@ -289,6 +296,7 @@
 ## 変更履歴
 | version | 日付 | 内容 |
 |---------|------|------|
+| 1.3 | 2026-08-19 | **朝礼の投稿先を #partner → #report へ移した（社長承認）**。契機＝社長ご指摘「#partner が本来の会話用途だったのに、朝礼のためのものになってしまっていた」。実測でも #partner に一言書くたびに本モードがフル起動し**1回あたり約$70**（Opus・約170ターン・キャッシュ読み3,000万トークン）かかっていた一方、軽い会話の器なら$1〜2で済む＝**140倍**。頻度の高い相談を社長の定位置（#partner）に残し、1日1回のレポートを新設 #report へ移す形で分離した。**本モードの中身と重さは変えていない**（じっくり調べる役割はそのまま）。変わったのは①投稿先が `--channel report` ②`to: partner` に届くものが「#report のトップ投稿」「朝礼スレッドへの返信」「talk からの申し送り」の3つになったこと（**相談ch への新規トップ投稿は来ない**＝`/talk` が受ける）。相談ch に残る過去の朝礼スレッドへは引き続き返信できる（ガードが両方を許可・threads.json がスレッドの持ち主を覚えている）。名称は将来の週次・月次レポートも同じ場所に置けるよう #report とした（社長案） |
 | 1.2 | 2026-08-10 | **冒頭に北極星1行を明記**（A-051「各ルール冒頭に北極星を1行」の実装・社長◎＝文言は現行のまま確定）。あわせて変更履歴の誤番号を是正（0.9.1→1.1・表の並びも1.0の上へ） |
 | 1.1 | 2026-08-10 | **北極星の枝「解放」を `G0.4 社長の時間を「売る仕組み」に振り向ける` へ改称**（社長承認「ルールもOK」）。契機＝社長ご質問「社長を開発から売りに戻す、これは開発が終わって実際に売れる状態かということ？」＝**言い回しが曖昧で、しかも記録と食い違っていた**。2026-06-07 の経営対話の記録は「**営業に集中するため開発をやめる」は誤り。コモディティな納品は手放し、説得力を生む先端開発は続ける**」としており、旧称はその否定された読み方をそのまま枝名にしていた。goals.html に G0.4 を新設（定義・含まないもの・前提の引用を枝の中に埋め込み、同じ取り違えが再発しないようにした）。**数値目標＝未完了ToDoの社長保有率 100%→70%以下**（2026-08-10 実測 64/64＝100%・7/31 は 83% で悪化）。本ファイルの変更は結線タグの定義1行のみ＝今後は `🧭 解放` でなく `🧭 G0.4` と書く（**過去のタグは履歴として書き換えない**） |
 | 1.0 | 2026-08-06 | **`🙋要・社長判断` の印を導入（社長承認・A-058）**：Step 7 に1行＝自己改善で書く気づきのうち、社長の判断・許可・情報がないと前に進めないものに印を付ける。**partner はこの印の読み手**＝朝礼で `grep` し「📥 欲しい情報」欄に**1日最大3件**だけ出す（上限を超えた分は翌日／多く出すと社長が動けなくなる）。◎×の返答を受けて台帳側のステータスを `✅反映済み(日付)`／`❌却下` に更新する。原則の全文は共通ベース [ledger-discipline.md](../ledger-discipline.md) §7。**あわせてヘッダの version 表記を実態（changelog 最新 0.9）に合わせて是正**＝0.7 のまま止まっていた版ズレを解消し 1.0 とした |

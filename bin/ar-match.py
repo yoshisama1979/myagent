@@ -46,7 +46,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 FIN = ROOT / "data" / "financial"
-JOURNAL_DIR = FIN / "journal"
+# 仕訳帳は MCP 自動取得（generated/journal-mcp/）が現行の正。旧アップロード先は受け皿として残す
+# ＝F-017 で journal-check.php と同じ切り替えにする。ここを揃えないと、画面は最新なのに
+# 入金突合だけ 7/24 で止まった古い仕訳帳を見る、という**片肺の食い違い**が起きる。
+JOURNAL_MCP_DIR = FIN / "generated" / "journal-mcp"
+JOURNAL_DIR = JOURNAL_MCP_DIR if list(JOURNAL_MCP_DIR.glob("FY*.csv")) else FIN / "journal"
 ALIASES = FIN / "payer-aliases.md"          # 社長が編集・AIは読むだけ
 GENERATED = FIN / "generated"
 PAGE = ROOT / "site" / "finance" / "ar-match.html"   # .gitignore 済み

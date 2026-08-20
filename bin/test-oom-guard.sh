@@ -112,8 +112,13 @@ echo
 echo "③-B agent-tick.sh：OOM kill の即時検知（実ソースからブロックを抽出して実行）"
 BLOCK="$T/oom-block.sh"
 # ヘルパー定義（oom_kill_count / mem_avail_mb）ごと取り出す＝スタブで代用せず実装を検証する
-awk '/^# --- proc 読み取りヘルパー/,/^# --- 多重起動防止/' "$PROJ/bin/agent-tick.sh" \
+# ⚠️ 終わりの目印は「取り込みブロックの開始」。2026-08-19 に取り込み(fetch)をメインロックの
+#    外＝OOMブロックの直後へ移したため、旧来の目印（多重起動防止）まで取ると fetch まで
+#    巻き込んで実行してしまい、fetch の失敗 alert を「OOMで鳴った」と誤判定していた。
+awk '/^# --- proc 読み取りヘルパー/,/^# --- 1\) 新着取り込み/' "$PROJ/bin/agent-tick.sh" \
   | sed '$d' > "$T/raw-block.sh"
+grep -q 'slack-poll.py fetch' "$T/raw-block.sh" \
+  && ng "OOMブロックの抽出" "取り込み(fetch)まで巻き込んでいる＝この検証は OOM を見ていない"
 grep -q 'oom_kill_count()' "$T/raw-block.sh" || ng "ヘルパーの抽出" "oom_kill_count の定義が範囲に入っていない"
 [ -s "$T/raw-block.sh" ] || { ng "OOMブロックの抽出" "見つからない（マーカーが変わった？）"; }
 # /proc を偽物に差し替え（置換できなければ本物を読んで偽の合格になるので必ず検証する）

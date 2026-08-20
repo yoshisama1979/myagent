@@ -121,15 +121,19 @@ print(json.dumps({
     # mailbox.sh(HTTP)の from はトークン由来＝1マシン1トークンで「相手の名」を名乗れないため、
     # 同居モード間の転送は from を自己申告でローカル投函する（規約 mailbox.md 同一マシン例外）。
     # needs_approval は常に false（外部送信/本番改変/書込を促すものはこの近道を使わず HTTP send + hold/ へ）。
-    from="" to="" subject="" type="request" thread=""
+    from="" to="" subject="" type="request" thread="" type_set=""
     body_args=()
     while [ $# -gt 0 ]; do
+      # ★同じフラグの2度目は即エラー（2026-08-19 Codexレビュー）：後勝ちにすると、
+      #   呼び出し側のガードが最初の値を見て許可し、実行時は最後の値が使われる
+      #   ＝`--from talk --to partner --from overseer --to yoshida-dev` で送信者と宛先を偽装できた。
+      dup() { echo "local-send: $1 は1回だけ指定できます（重複指定は認めません）" >&2; exit 2; }
       case "$1" in
-        --from)    from="${2:-}"; shift 2 ;;
-        --to)      to="${2:-}"; shift 2 ;;
-        --subject) subject="${2:-}"; shift 2 ;;
-        --type)    type="${2:-}"; shift 2 ;;
-        --thread)  thread="${2:-}"; shift 2 ;;
+        --from)    [ -n "$from" ]    && dup --from;    from="${2:-}"; shift 2 ;;
+        --to)      [ -n "$to" ]      && dup --to;      to="${2:-}"; shift 2 ;;
+        --subject) [ -n "$subject" ] && dup --subject; subject="${2:-}"; shift 2 ;;
+        --type)    [ -n "$type_set" ] && dup --type;   type="${2:-}"; type_set=1; shift 2 ;;
+        --thread)  [ -n "$thread" ]  && dup --thread;  thread="${2:-}"; shift 2 ;;
         --) shift; body_args+=("$@"); break ;;
         *)  body_args+=("$1"); shift ;;
       esac
@@ -165,16 +169,27 @@ ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 SENDERS    = {"overseer", "hanasaka-main",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "hp-loop-rally", "hp-loop-konjaku",
-              "blog-loop-ycom"}
+              "blog-loop-ycom",
+              # 相談役（軽い会話・2026-08-19）。深掘りが要る話を partner へ渡す唯一の経路。
+              "talk"}
 RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
               "rally-dev", "konjaku-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "hp-loop-rally", "hp-loop-konjaku",
-              "blog-loop-ycom"}
+              "blog-loop-ycom",
+              # 経営パートナー（レポート）。talk からの申し送りを受ける。
+              "partner"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
 if not ID.match(frm) or frm not in SENDERS:
     sys.exit("local-send: 不正な --from（許可: %s）: %r" % (",".join(sorted(SENDERS)), frm))
+# ★無人実行では「自分の名」しか名乗れない（2026-08-19 Codexレビュー）。
+#   名簿を通るだけだと、外部入力に誘導されたモードが他モードを騙って内部指示を投函できる
+#   （受け手はそれを正規の依頼として実行してしまう＝指示注入が横に伝播する経路）。
+#   MYAGENT_AGENT は無人起動時にだけ渡る＝有人セッションの代筆・検証は従来どおり通す。
+_me = os.environ.get("MYAGENT_AGENT", "")
+if _me and frm != _me:
+    sys.exit("local-send: 無人実行では --from は自分（%s）だけです: %r" % (_me, frm))
 if not ID.match(to) or to not in RECIPIENTS:
     sys.exit("local-send: 不正な --to（許可: %s）: %r" % (",".join(sorted(RECIPIENTS)), to))
 if typ not in TYPES:

@@ -194,6 +194,37 @@ want_eq "$RC" "0" "サイト別ループ hp-loop-<site> は送信者になれる
 run_mb local-send --from blog-loop-ycom --to web-hanasaka --subject "ブログ解析" "本文"
 want_eq "$RC" "0" "blog-loop-<client> も送信者になれる"
 
+# ── 相談レーンの申し送り経路（2026-08-19）──────────────────────
+# ★「通すべきものが通るか」も検証する：talk を名簿に入れ忘れていたため、
+#   /talk の申し送りコマンドは**書いた時点から一度も成功していなかった**（実機テストで発覚）。
+run_mb local-send --from talk --to partner --subject "深掘り依頼" "本文"
+want_eq "$RC" "0" "★talk → partner の申し送りが通る（相談役が深掘りを渡す唯一の経路）"
+
+# ── 後勝ちによる偽装の封じ（2026-08-19 Codexレビュー）────────────
+# 呼び出し側のガードは最初の値を見て許可する。実装が最後の値を採ると、
+# 検査時と実行時で送信者・宛先が変わる＝talk が overseer を名乗って任意の宛先へ投函できた。
+# ⚠️ --from だけを重複させる（--to も一緒に重複させると --to 側の検査で落ちてしまい、
+#    --from の検査が効いているかを確かめられない＝変異テストで実際に素通りした）
+deny "★--from の重複は拒否（後勝ちで送信者を偽装させない）" \
+     local-send --from talk --to partner --from overseer --subject s b
+deny "★--from と --to を同時に重複させても拒否" \
+     local-send --from talk --to partner --from overseer --to yoshida-dev --subject s b
+deny "★--to の重複は拒否" \
+     local-send --from talk --to partner --to yoshida-dev --subject s b
+deny "--subject の重複も拒否" \
+     local-send --from overseer --to yoshida-dev --subject a --subject b "本文"
+
+# ── 無人実行では自分の名しか名乗れない ──────────────────────────
+# 名簿を通るだけだと、外部入力に誘導されたモードが他モードを騙って内部指示を投函でき、
+# 受け手はそれを正規の依頼として実行する（指示注入が横に伝播する経路）。
+MYAGENT_AGENT=talk run_mb local-send --from overseer --to yoshida-dev --subject s "本文"
+if [ "$RC" -ne 0 ]; then want_in "自分" "$OUT" "★無人実行で他人を名乗ると拒否される"
+else say_ng "無人実行で他人を名乗ると拒否される" "rc=$RC"; fi
+MYAGENT_AGENT=talk run_mb local-send --from talk --to partner --subject s "本文"
+want_eq "$RC" "0" "無人実行でも自分の名なら通る"
+run_mb local-send --from overseer --to yoshida-dev --subject s "本文"
+want_eq "$RC" "0" "有人セッション（MYAGENT_AGENT なし）は従来どおり代筆できる"
+
 mv "$T/data/mailbox/new" "$T/data/mailbox/new.off"
 run_mb local-send --from overseer --to yoshida-dev --subject s b
 if [ "$RC" -ne 0 ]; then want_in "new/" "$OUT" "new/ が無ければ止まる（黙って作らない）"; else say_ng "new/ が無ければ止まる" "rc=$RC"; fi

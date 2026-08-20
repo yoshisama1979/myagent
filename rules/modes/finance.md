@@ -23,7 +23,8 @@
 | データ | 場所 | 備考 |
 |--------|------|------|
 | PL/BS（年度） | `data/financial/<西暦>/pl.csv, bs.csv` | Shift-JIS・MFクラウド書き出し。**期間ヘッダ（開始月/終了月）を必ず確認** |
-| 仕訳帳 | `data/financial/journal/FY<西暦>.csv` | Shift-JIS。未分類は借方科目「★要確認」 |
+| 仕訳帳（**正**） | `data/financial/generated/journal-mcp/FY<西暦>.csv` | Shift-JIS。**MFクラウドから毎晩1:30に自動取得**（F-017・`bin/journal-mcp-export.sh`）＝社長のエクスポート作業は不要。未分類は借方科目「★要確認」。**鮮度は同ディレクトリの `status.json`（`last_success`）で必ず確認する**＝取得に失敗した日は前回CSVがそのまま残るので、古いデータを黙って最新として扱わない |
+| 仕訳帳（旧・手アップロード分） | `data/financial/journal/FY<西暦>.csv` | 2026-08-19 以降は更新されない**受け皿**。journal-check.php も ar-match.py も上の generated 側を読む。**集計や突合の根拠にしない**（7/24 で止まっている） |
 | カード明細 | `data/financial/card-statements/<カード>/` | Shift-JIS。**「決済不可」行は集計から除外**（りそなはリトライ行が並ぶ） |
 | 仕訳ルール | `data/financial/journal-rules.json` | 店名→科目のマッピング（仕訳案の根拠） |
 | ストック収益 | `site/business/recurring-revenue.html` | 保守契約の月額 |
