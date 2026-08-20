@@ -216,7 +216,7 @@ assert_secure() {  # 1経路ぶん実行し、curl に渡った argv を検査�
     say_ok "証明書の検証を切らない：$label"
   fi
 }
-# 読み取り系・書き込み系の**全12サブコマンド**を実際に走らせる
+# 読み取り系・書き込み系の**全14サブコマンド**を実際に走らせる
 # （run は MYAGENT_UNATTENDED を立てない＝有人扱いなので、書き込み系もここでは通る）
 assert_secure "clients"       clients
 assert_secure "search"        search "テスト"
@@ -230,6 +230,8 @@ assert_secure "create-todo"   create-todo '{"content":"x"}'
 assert_secure "update-todo"   update-todo 1 '{"content":"x"}'
 assert_secure "update-note"   update-note 1 '{"note":"x"}'
 assert_secure "chatwork"      chatwork '{"body":"x"}'
+assert_secure "create-project" create-project '{"project_name":"x","client_id":1}'
+assert_secure "create-work"    create-work '{"name":"x","project_id":1}'
 
 # ソース検査：**行継続をつないでから**、curl を含む行を空白で割ってトークン単位で見る。
 #   ・つながないと `curl -s \` / `  -k -X GET …` のように**分けて書かれた -k** を逃す
@@ -257,6 +259,36 @@ fi
 want_not_in "$FAKE_TOKEN" "$OUT" "http:// で落とすときもトークンを出力しない"
 mk_env "HANA_TOOLS_API_TOKEN=$FAKE_TOKEN" "HANA_TOOLS_BASE_URL=https://stg.example.test" \
        "HANA_TOOLS_DEFAULT_USER_ID=7"
+
+# --- create-project / create-work（2026-08-20 追加） --------------------------
+# ★ここを守りたい★＝どちらも「類似名があれば登録せず requires_confirmation を返す」API。
+#   200 で success:false が返るので、**成功扱いにも失敗リトライにもしない**のが要点。
+#   ラッパー側でできるのは (a) 引数が無いときに叩かない (b) 本文をそのまま渡す (c) 送り先が正しい。
+echo
+echo "--- create-project / create-work ---"
+
+run create-project
+want_eq "$RC" "1" "create-project：JSON 無しで叩かない"
+want_in "使い方: create-project" "$OUT" "create-project：使い方を示す"
+want_eq "$(url)" "" "create-project：JSON 無しのとき API を叩かない"
+
+run create-work
+want_eq "$RC" "1" "create-work：JSON 無しで叩かない"
+want_in "使い方: create-work" "$OUT" "create-work：使い方を示す"
+want_eq "$(url)" "" "create-work：JSON 無しのとき API を叩かない"
+
+run create-project '{"project_name":"テスト","client_id":1}'
+want_in "/api/external/projects" "$(url)" "create-project：projects へ POST する"
+want_in "POST" "$(argv | tr '\n' ' ')" "create-project：メソッドは POST"
+want_in '"project_name":"テスト"' "$(cat "$REC/stdin" 2>/dev/null)" "create-project：本文をそのまま送る"
+
+run create-work '{"name":"テスト案件","project_id":12}'
+want_in "/api/external/works" "$(url)" "create-work：works へ POST する"
+want_in "POST" "$(argv | tr '\n' ' ')" "create-work：メソッドは POST"
+want_in '"project_id":12' "$(cat "$REC/stdin" 2>/dev/null)" "create-work：本文をそのまま送る"
+
+# 本文は --data-binary で渡す＝`-d` は改行を落とすため、note や message の改行が壊れる
+want_in "data-binary" "$(argv | tr '\n' ' ')" "create-work：本文は --data-binary で渡す（改行を壊さない）"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"

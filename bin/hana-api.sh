@@ -141,6 +141,32 @@ get_todos() {
 # 引数: JSON文字列 '{"work_id":3,"user_id":1,"assignee_user_id":2,"content":"タスク名",...}'
 # 注: assignee_user_id を user_id と同値で指定するとサーバ側で null に正規化される
 #     （「作成者が担当」の意味、未指定時と等価）
+# --- プロジェクト／案件の登録 -------------------------------------------------
+# ⚠️ どちらも **類似名があると登録せず** `requires_confirmation: true` を 200 で返す
+#    （＝失敗ではない・この時点では登録されていない）。similar_* を人に見せて確認を取り、
+#    それでも作るときだけ本文に "confirm": true を足して呼び直す。
+#    ★ここを「エラーだから再送」で自動リトライしてはいけない★＝重複案件を量産する。
+#    confirm は**真偽値**で送る（文字列 "true" は 422）。
+create_project() {
+  local json="$1"
+  if [ -z "$json" ]; then
+    echo '{"success": false, "message": "使い方: create-project <JSON>（project_name・client_id が必須）"}' >&2
+    exit 1
+  fi
+  printf '%s' "$json" | api_send POST "projects" --data-binary
+}
+
+# 案件（work）＝プロジェクトにぶら下がる作業の単位。ToDo はさらにこの下に付く。
+# ⚠️ due_date は **今日（Asia/Tokyo）より前だと 422**。過去日の案件は API からは作れない。
+create_work() {
+  local json="$1"
+  if [ -z "$json" ]; then
+    echo '{"success": false, "message": "使い方: create-work <JSON>（name・project_id が必須）"}' >&2
+    exit 1
+  fi
+  printf '%s' "$json" | api_send POST "works" --data-binary
+}
+
 create_todo() {
   local json="$1"
   if [ -z "$json" ]; then
@@ -273,6 +299,8 @@ case "$command" in
   office-status) get_office_status ;;
   todos)        get_todos "$@" ;;
   create-todo)  create_todo "$@" ;;
+  create-project) create_project "$@" ;;
+  create-work)  create_work "$@" ;;
   update-todo)  update_todo "$@" ;;
   projects)     get_projects "$@" ;;
   project)      get_project "$@" ;;
@@ -299,6 +327,10 @@ hana-tools APIラッパー
 
 コマンド（登録・編集＝書き込み。共有システムへの書き込みは社長合意の上で）:
   create-todo '{"work_id":N,...}'  ToDo登録（assignee_user_id 省略 or user_id と同値で「作成者が担当」）
+  create-project '{...}'           プロジェクト登録（project_name・client_id が必須）
+  create-work '{...}'              案件登録（name・project_id が必須。due_date は今日以降のみ）
+                                   ※ どちらも類似名があると **登録せず** requires_confirmation を返す
+                                     （200・成功ではない）。人に確認してから "confirm": true で呼び直す
   update-todo <id> '{...}'         ToDo編集（部分更新。work_id変更不可。completed_at で完了/未完了）
   update-note <project_id> '{...}' プロジェクトメモ追加・更新（upsert。visibility=shared|private）
   chatwork '{"message":"..."}'     Chatwork通知送信（外部送信）
