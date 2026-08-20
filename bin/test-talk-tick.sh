@@ -75,6 +75,23 @@ setup; printf 'これはJSONではない' > "$T/data/mailbox/new/broken.json"; o
 [ "$(ncalls)" -eq 0 ] && ok "壊れた便があっても落ちない・起動しない" || ng "壊れた便で起動した"
 
 echo
+echo "=== 走査は1箇所（起動条件と完了判定が食い違わない）==="
+# 以前は「起動するスレッドを決める処理」と「終わったか確かめる処理」が別々に同じ判定を
+# 持っていた。片方だけ直すと両者が食い違い、起動はするのに完了と判定されない＝毎分燃える。
+[ "$(grep -c 'm.get("to") != "talk"' "$SRC")" -eq 1 ] \
+  && ok "★自分宛の判定がスクリプト内に1箇所だけ（起動条件＝完了判定）" \
+  || ng "自分宛の判定が複数ある（片方だけ直すと食い違う）" "$(grep -c 'm.get("to")' "$SRC")箇所"
+setup; mail a.json talk 111.1; mail b.json talk 111.1
+[ "$(MYAGENT_PROJ="$T" MYAGENT_PY="$(command -v python3)" bash -c '
+  MAILBOX_NEW="'"$T"'/data/mailbox/new"; PY="$(command -v python3)"
+  source /dev/stdin <<SRCIN
+$(sed -n "/^mb_scan() {/,/^}/p" "'"$SRC"'")
+SRCIN
+  mb_scan ids 111.1 | wc -l')" -eq 2 ] \
+  && ok "同じ走査関数が「便IDの列挙」にも使える（重複実装を作らない）" \
+  || ng "mb_scan ids が期待どおり動かない"
+
+echo
 echo "=== スレッド単位で捌く ==="
 setup; mail a.json talk 111.1; mail b.json talk 111.1; mail c.json talk 222.2; run >/dev/null
 [ "$(ncalls)" -eq 2 ] && ok "同じスレッドの2通はまとめて1回・別スレッドは別回（計2回）" \

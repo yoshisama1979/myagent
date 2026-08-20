@@ -71,16 +71,20 @@ if ! flock -n 9; then
   exit 0
 fi
 
-# --- 扱うスレッドを決める（pending が無ければ claude を起動しない＝0円で終わる）---
-# 出力: "<thread_ts> <件数>" を古い順に。JSON は python で読む（grep でJSONを判定しない）。
-threads=$("$PY" - "$MAILBOX_NEW" <<'PYEOF'
+# --- 受信箱の走査（この1箇所だけが「自分宛の便とは何か」を知っている）---
+# ★2つに分けてはいけない：以前は「起動するスレッドを決める処理」と「終わったか確かめる処理」が
+#   別々に同じ判定（to == talk・thread_ts を見る）を持っていた。片方だけ直すと両者が食い違い、
+#   「起動はするのに終わったと判定されない」＝毎分claudeを起動し続ける形になりうる。
+#   mode=threads … "<thread_ts> <件数>" を古い順に／mode=ids … 指定スレッドの便IDを列挙
+mb_scan() {
+  "$PY" - "$MAILBOX_NEW" "$1" "${2:-}" <<'SCAN'
 import json, os, sys
-d = sys.argv[1]
-best = {}
+d, mode, want_ts = sys.argv[1], sys.argv[2], sys.argv[3]
 try:
     names = sorted(os.listdir(d))
 except OSError:
-    sys.exit(0)
+    raise SystemExit
+groups = {}
 for name in names:
     if not name.endswith(".json"):
         continue
@@ -93,13 +97,21 @@ for name in names:
         continue
     ts = (m.get("slack") or {}).get("thread_ts") or ""
     if not ts:
-        continue
-    e = best.setdefault(ts, {"n": 0, "first": name})
-    e["n"] += 1
-for ts, e in sorted(best.items(), key=lambda kv: kv[1]["first"]):
-    print(f"{ts} {e['n']}")
-PYEOF
-)
+        continue                      # 返信先が無い便は扱えない（起動もしない）
+    if mode == "ids":
+        if ts == want_ts:
+            print(name[:-5])
+    else:
+        e = groups.setdefault(ts, {"n": 0, "first": name})
+        e["n"] += 1
+if mode != "ids":
+    for ts, e in sorted(groups.items(), key=lambda kv: kv[1]["first"]):
+        print(f"{ts} {e['n']}")
+SCAN
+}
+
+# 扱うスレッドを決める（pending が無ければ claude を起動しない＝0円で終わる）
+threads=$(mb_scan threads)
 [ -z "$threads" ] && exit 0
 
 # --- 状態ファイルの読み書き（セッションID・連続失敗・冷却）---
@@ -157,27 +169,6 @@ save_state() {
   return 1
 }
 
-ids_for() {
-  "$PY" - "$MAILBOX_NEW" "$1" <<'IDS'
-import json, os, sys
-d, ts = sys.argv[1], sys.argv[2]
-try:
-    names = os.listdir(d)
-except OSError:
-    raise SystemExit
-for name in sorted(names):
-    if not name.endswith(".json"):
-        continue
-    try:
-        with open(os.path.join(d, name), encoding="utf-8") as f:
-            m = json.load(f)
-    except Exception:
-        continue
-    if m.get("to") == "talk" and (m.get("slack") or {}).get("thread_ts") == ts:
-        print(name[:-5])
-IDS
-}
-
 # 起動時に居た便が「1つ残らず処理済みへ移ったか」で成功を測る。
 # ★件数の差で測ってはいけない（2026-08-19 Codexレビュー）：取り込み(fetch)は
 # このレーンと並行して走るので、実行中に同じスレッドへ新着が1通入ると、正しく返信・done
@@ -212,14 +203,16 @@ while read -r ts n; do
     mode=(--session-id "$sid"); how="新規"
   fi
 
-  snapshot=$(ids_for "$ts")
+  snapshot=$(mb_scan ids "$ts")
   log "[run] スレッド $ts（$how・便${n}通・session=${sid:0:8}）"
-  out=$(MYAGENT_UNATTENDED=1 MYAGENT_AGENT=talk     timeout --kill-after=20s "${TIMEOUT_SEC}s" "${CHOOM[@]}"     "$CLAUDE" -p "/talk $ts" "${mode[@]}" --permission-mode acceptEdits </dev/null 2>&1)
+  out=$(MYAGENT_UNATTENDED=1 MYAGENT_AGENT=talk \
+    timeout --kill-after=20s "${TIMEOUT_SEC}s" "${CHOOM[@]}" \
+    "$CLAUDE" -p "/talk $ts" "${mode[@]}" --permission-mode acceptEdits </dev/null 2>&1)
   rc=$?
   echo "$out" | sed 's/^/» /' >>"$LOG"
   handled=$((handled + 1))
 
-  remain=$(ids_for "$ts")
+  remain=$(mb_scan ids "$ts")
   if [ "$rc" -eq 0 ] && all_gone "$remain" "$snapshot"; then
     if ! save_state "$ts" session "$sid" fails 0 cooldown_until 0 alerted "" last_ok "$(now)"; then
       break
@@ -259,7 +252,8 @@ while read -r ts n; do
   #   旧実装は fails==2 の1回だけ鳴らし、その Slack 投稿が失敗すると || true で捨てられ
   #   以降二度と鳴らなかった＝黙って止まる。送れたときだけ印を付ける。
   alerted=$(state_get "$ts" alerted "")
-  if [ "$fails" -ge "$ALERT_AFTER" ] && [ -z "$alerted" ]      && [ -x "$PROJ/bin/slack.sh" ] && [ "${TALK_NO_SLACK:-0}" != "1" ]; then
+  if [ "$fails" -ge "$ALERT_AFTER" ] && [ -z "$alerted" ] \
+     && [ -x "$PROJ/bin/slack.sh" ] && [ "${TALK_NO_SLACK:-0}" != "1" ]; then
     if printf '⚠️ 相談チャンネルの返事ができていません（連続%d回）
 %s
 スレッド: %s
