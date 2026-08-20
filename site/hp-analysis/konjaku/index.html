@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-1">📋 今昔写語 — 最新レポート</h1>
   <p class="text-gray-600 mb-2"><span class="font-mono">konjaku-photo.jp</span> ／ <span class="font-mono">konjaku-photo.com</span>（自社プロダクト）／ゴール：<strong>比較ページの閲覧増（主軸）＋閲覧→投稿の好循環</strong></p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：<strong>Cycle 023（2026-08-19）</strong>＝<strong>新サイトの実力は昨日の見立ての約16倍</strong>（1日3人→49人・「290倍の差」は約17倍へ訂正）。そして<strong>どの階層から直すべきかが実測で確定</strong>しました＝<strong>市区町村ページ</strong>。最新サイクル＋未完了の繰り越しだけを表示。背景は確定・仕様、完了の履歴はアーカイブへ。</p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：<strong>Cycle 024（2026-08-21）</strong>＝<strong>市区町村ページは「検索に出さえすれば、いちばん刺さる」ことが実測で出ました</strong>（クリック率 17.9%＝サイト平均の2.5倍）。一方で<strong>本番の反映は6日連続ゼロ</strong>＝<strong>提案が実装担当の手前で止まっています</strong>（→🔔）。最新サイクル＋未完了の繰り越しだけを表示。背景は確定・仕様、完了の履歴はアーカイブへ。</p>
 
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
     <span class="px-3 py-1 rounded-full bg-slate-200 text-slate-800 font-semibold">📋 最新レポート（このページ）</span>
@@ -33,7 +33,17 @@
     <p class="text-xs text-gray-500 mb-3">回答は <code>data/hp-loop/konjaku/from-president.md</code> へ（または Slack 日報スレッドに返信）。<strong>ご確認が必要なのはこの🔔節の項目だけ</strong>（🔧表の✅行は回答不要）。</p>
 
     <div class="bg-rose-50 border-2 border-rose-400 rounded p-4 mb-4 text-sm">
-      <p class="font-bold text-rose-900 mb-2">🚨 最優先のご判断 — 2つのドメインをどうするか（R-J19・4日連続でお願いしています）</p>
+      <p class="font-bold text-rose-900 mb-2">🚨 Q-J07（新規・8/21）— 実装担当（konjaku-dev）は動いていますか？　提案が6日間まったく実装に入っていません</p>
+      <p class="text-gray-800 mb-2"><strong>本番サイトに、6日間まったく変化がありません</strong>（8/16 → 8/21）。毎日 5項目を実測していますが、すべて1バイトも動いていません＝ソフト404（<span class="font-mono">/old-photos/999999</span>）はいまも200／写真ページのタイトルは「古写真詳細」固定／4階層の配信HTMLは「読み込み中...」のまま／サイトマップ 1,718,788B で不変／canonical 無し。</p>
+      <p class="text-gray-800 mb-2">あわせて、<strong>こちらから実装担当へ送ったレポート6通（8/15・8/16・8/17×2・8/18・8/19）が、すべて「未処理」の状態で受信箱に溜まっています</strong>（最古で6日）。</p>
+      <div class="bg-white border border-rose-200 rounded p-3 mt-2">
+        <p class="text-gray-800 mb-2"><strong>お聞きしたいのは1点だけです：拠点PCの <span class="font-mono">konjaku-dev</span> は、いま稼働していますか？</strong>　①稼働中（読んでいるが着手待ち）／②止まっている（PCが落ちている・エージェントを回していない）／③そもそも今は今昔写語の開発工数を取っていない——のどれでしょうか。</p>
+        <p class="text-xs text-gray-600">※ 「未処理のまま」＝必ずしも「未読」ではありません（読んでも完了マークを打たない運用の可能性があり、他サイトの実装担当も同様に溜まっています）。<strong>断定できるのは本番側の事実＝6日間ゼロ</strong>のほうです。<br>※ これが分からないと、こちらの督促の出し方が決められません（「読まれているのに止まっている」なら優先度の伝え方の問題、「読まれていない」なら配信経路の問題で、打つ手が正反対になります）。</p>
+      </div>
+    </div>
+
+    <div class="bg-rose-50 border-2 border-rose-400 rounded p-4 mb-4 text-sm">
+      <p class="font-bold text-rose-900 mb-2">🚨 最優先のご判断 — 2つのドメインをどうするか（R-J19・6日連続でお願いしています）</p>
       <p class="text-gray-800 mb-2">今昔写語が<strong>2つのドメインで同時に公開されたまま</strong>動いています。</p>
       <ul class="list-disc list-inside text-gray-800 space-y-1 mb-2">
         <li><strong><span class="font-mono">konjaku-photo.com</span>（旧システム）</strong>＝実際にお客さんが来ているのはこちら。<strong>1日あたり約800人</strong>（8/17＝820人・8/18＝799人。ほぼ全部が Google・Yahoo・Bing の検索から）。</li>
@@ -42,16 +52,18 @@
       </ul>
       <p class="text-gray-800 mb-2">この移行は <strong>①予定どおり進行中（.jp を本番にして .com は畳む）</strong> ／ <strong>②当面は両方このまま</strong> ／ <strong>③.com を本番のまま .jp は開発・検証用</strong> のどれでしょうか。<strong>この一言だけで、止まっている提案の順序がすべて確定します。</strong></p>
       <div class="bg-white border border-rose-200 rounded p-3 mt-2">
-        <p class="font-semibold text-rose-900 mb-1">⚠️ 今回（8/19）の実測で、判断材料がまた1つ良い方向に動きました</p>
-        <p class="text-gray-800 mb-2">①<strong>新サイトの実力は、見立ての約16倍ありました</strong>（1日3人 → <strong>49人</strong>。ページ閲覧559回）。②<strong>旧サイトから新サイトへ、1日23セッションが自然に流れています</strong>（新サイトへの流入で最多。旧サイトの「新しいサイトはこちら」を踏んだ方々です）。③<strong>新サイトの検索からの流入も既に19セッション/日</strong>（Google 10・Bing 6・Yahoo 3）。</p>
-        <p class="text-gray-800">つまり<strong>移行（①）はすでに静かに始まっていて、新サイトはそれを受け止められています</strong>。<strong>ただし旧サイトを畳むのは R-J24（下記）の完了後にしてください</strong>——新サイトは<strong>市区町村ページの検索露出がまだ3ページしかなく</strong>（旧サイトでは911種が閲覧されている最大の入口）、いま切り替えるとその流入を受け止めきれません。</p>
+        <p class="font-semibold text-rose-900 mb-1">📈 今回（8/21）の実測＝移行は「進行中」がはっきり数字に出ました</p>
+        <p class="text-gray-800 mb-2">新サイトの1日の利用者：<strong>8/17＝49人 → 8/18＝56人 → 8/19＝77人</strong>（2日で約1.6倍）。<br>
+        旧サイトの1日の利用者：<strong>8/16＝867人 → 8/17＝820 → 8/18＝799 → 8/19＝770人</strong>（毎日じわじわ減少）。<br>
+        旧サイト → 新サイトへの遷移：<strong>23セッション（8/17）→ 33セッション（8/19）</strong>。新サイトの検索からの流入：<strong>19 → 37セッション</strong>（Google 15・Bing 14・Yahoo 8）。</p>
+        <p class="text-gray-800 mb-2">つまり<strong>移行（①）はすでに静かに、しかし着実に進んでいます</strong>。<span class="text-xs text-gray-600">（※ 減った分と増えた分はきれいには一致しません＝合計は 3日で約2.5%減。曜日の影響を切り分けられないので、「旧の減少＝新への移行」と断定はしません。）</span></p>
+        <p class="text-gray-800"><strong>ただし旧サイトを畳むのは R-J24（下記）の完了後にしてください</strong>——新サイトは<strong>市区町村ページの検索露出がまだ8ページしかなく</strong>（旧サイトでは911種が閲覧されている最大の入口）、いま切り替えるとその流入を受け止めきれません。</p>
       </div>
     </div>
 
     <div class="bg-emerald-50 border border-emerald-300 rounded p-3 mb-4 text-sm">
-      <p class="font-semibold text-emerald-900 mb-1">✅ 計測は3つとも通りました（2026-08-16 社長対応の成果）</p>
-      <p class="text-gray-700 mb-1">GA4（新サイト <span class="font-mono">analytics_549912350</span>）・GA4（旧サイト <span class="font-mono">analytics_254454527</span>）に続き、<strong>本日 Search Console のデータも着弾しました</strong>（<span class="font-mono">searchconsole_konjaku</span>）。<strong>Q-J06 は実データで解決＝登録されているのは <span class="font-mono">konjaku-photo.jp</span>（新サイト）です</strong>（表示のあった76URLすべてが .jp）。<br>
-      これで<strong>「どんな言葉で検索されて何位に出ているか」が初めて見えるようになりました</strong>。ありがとうございます。</p>
+      <p class="font-semibold text-emerald-900 mb-1">✅ 計測3系統は安定稼働中（2026-08-16 社長対応の成果）</p>
+      <p class="text-gray-700">GA4（新サイト）・GA4（旧サイト）・Search Console（新サイト）とも、毎日データが届いています。<strong>Search Console は4日分（8/15〜8/18）に伸び、クリック44・表示625・平均掲載順位8.1</strong>。判断に使える厚みが出てきました。<span class="text-xs text-gray-600">（データの届き方＝GA4 は「当日の2日前」まで／Search Console は「当日の3日前」まで。これが正常です。）</span></p>
     </div>
 
     <ul class="space-y-3 text-sm text-gray-800">
@@ -66,6 +78,7 @@
   <div class="border border-gray-300 bg-white rounded-lg p-5 mb-6">
     <h2 class="text-lg font-semibold mb-2">📥 分析に欲しい情報</h2>
     <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li><strong>実装担当（konjaku-dev）の稼働状況</strong>（→ 上の🔔 Q-J07。<strong>今サイクル最大の詰まり</strong>＝提案が実装に入らないと、どれだけ良い発見をしても北極星は動きません）</li>
       <li><strong>ドメイン移行の方針</strong>（→ 上の🔔 R-J19。これが決まらないと他の提案の優先順位が確定しません）</li>
       <li><strong>Search Console に <span class="font-mono">konjaku-photo.com</span> を追加登録</strong>（→ 上の🔔 R-J25。社長の管理画面操作・各5分）</li>
       <li><strong>読み取り専用ツールの許可リスト追加1行</strong>（→ 上の🔔。<code>bin/sitemap-count.py</code>）<span class="text-xs text-gray-500">※ C023 で<strong>優先度は下がりました</strong>＝この数値が無くても R-J24 の着手順は階層別の露出実測で決められました。急ぎではありません。</span></li>
@@ -84,13 +97,13 @@
   <!-- 🔧 進行中の提案 -->
   <div class="border border-gray-300 bg-white rounded-lg p-5 mb-8">
     <h2 class="text-lg font-semibold mb-3">🔧 進行中の提案（ステータス）</h2>
-    <p class="text-xs text-gray-600 mb-2"><strong>ご確認が必要なのは🔔の行だけ</strong>（✅＝回答不要でそのまま実装に渡せる）。<strong>着手の推奨順（C023 で<span class="text-rose-700">R-J24 の内訳を実測で確定</span>）＝<span class="text-rose-700">R-J24 ①市区町村 → ②都道府県 → ③個別写真</span>（この一手で R-J02/J20 も同時に解決） → R-J26（件数表示の修正） → 応急処置 R-J17・R-J15 → <span class="text-blue-700">計測</span> R-J22 → R-J01 → R-J05（canonical は R-J19 の回答待ち）</strong>。<br><span class="text-emerald-700">✅ C023 の新規は R-J26 の1本です（🟡・回答不要）。</span><br><span class="text-rose-700">⚠️ C019 で順序が乱れた件は継続中：sitemap が先に本番へ入り、中身が空のまま約1.6万URLの申告が続いています（R-J24 が入るまでこの状態）。</span><br><span class="text-gray-500">※ 8/16→8/19 の本番反映はゼロです（配信から3日目のため督促ではなく事実の記録）。</span></p>
+    <p class="text-xs text-gray-600 mb-2"><strong>ご確認が必要なのは🔔の行だけ</strong>（✅＝回答不要でそのまま実装に渡せる）。<strong>着手の推奨順＝<span class="text-rose-700">R-J24 ①市区町村 → ②都道府県 → ③個別写真</span>（この一手で R-J02/J20 も同時に解決） → <span class="text-rose-700">R-J26（件数表示の修正・🟡→🔴に格上げ）</span> → 応急処置 R-J17・R-J15 → <span class="text-blue-700">計測</span> R-J22 → R-J01 → R-J05（canonical は R-J19 の回答待ち）</strong>。<br><span class="text-emerald-700">✅ C024 の新規提案はありません（在庫16件・実装が6日止まっているため、新規を積むより既存の優先度と根拠を固める回にしました）。</span><br><span class="text-rose-700">⚠️ 8/16→8/21 の本番反映は<strong>ゼロ（6日連続）</strong>＝この表の🆕・引き渡し済の行は<strong>すべて未着手のまま</strong>です。原因の切り分けを🔔 Q-J07 でお願いしています。</span><br><span class="text-rose-700">⚠️ C019 で順序が乱れた件も継続中：sitemap が先に本番へ入り、中身が空のまま約1.6万URLの申告が続いています（R-J24 が入るまでこの状態）。</span></p>
     <table class="w-full text-sm border-collapse">
       <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">ID</th><th class="py-1 pr-2">提案</th><th class="py-1 pr-2">優先</th><th class="py-1 pr-2">着手区分</th><th class="py-1">状態</th></tr></thead>
       <tbody class="align-top">
-        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J19</td><td class="py-1 pr-2"><strong>ドメイン統合の方針決定と実装（.com ↔ .jp）</strong>（C019）。<span class="text-xs text-amber-700">C020 で重みが増した＝<strong>旧サイトの稼ぎ頭は市区町村911ページ・個別写真3,000ページ以上のロングテール</strong>（トップは3%）。新サイトに市区町村階層が無いため、<strong>いまのまま畳むと最大の入口を失う</strong></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答（移行方針＝①.jpへ移行／②両方維持／③.comが本番）</td><td class="py-1">🆕提案・<strong>最優先</strong>（2日目）</td></tr>
-        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J24</td><td class="py-1 pr-2"><strong>ページの中身を、検索エンジンに配るHTMLに載せる（SSR化）</strong>（C021）＝<strong>この1件が R-J02・R-J20 の共通の根</strong>。<span class="text-xs text-amber-700">実査＝4階層すべて配信HTMLの本文が「読み込み中...」だけ（C023 再実査でも不変）。<span class="text-blue-700"><strong>C023＝着手順を実測で確定＝①市区町村 →②都道府県 →③個別写真</strong>。根拠＝GSC の階層別「検索に出ているページ数 ÷ 存在するページ数」＝都道府県 <strong>66%</strong>（47中31・配るHTMLに階層固有のタイトル有）／個別写真 <strong>0.5%</strong>（約1.6万中77・タイトルは全ページ「古写真詳細」）／市区町村 <strong>2.8%以下</strong>（3件のみ・タイトルがトップと同一）＝<strong>タイトルの区別と露出率が同一サイト内で一致</strong>。市区町村は旧サイトで911種が閲覧されている最大の入口。<strong>描画後のタイトルは既に正しい地名</strong>（「愛知県で撮影された古い写真」）＝文言設計不要・<span class="font-mono">generateMetadata</span> へ移すだけ</span></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・未反映・<strong>最上位</strong></td></tr>
-        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J26</td><td class="py-1 pr-2"><strong>都道府県ページの「絞り込み件数」「市区町村ごとの件数」を全件で数える</strong>（新規・C023）。<span class="text-xs text-amber-700">愛知県ページは見出し「376件の古写真が見つかりました」に対しタブが「すべて（<strong>50</strong>）／今の写真あり（8）／今の写真なし（42）」＝<strong>表示中の1ページ分の内訳</strong>。「市区町村から探す」も<strong>名古屋市が0</strong>（推測：同じく表示中50件で集計）。<strong>＝比較が成立しているページに閲覧者がたどり着けず、最大の稼ぎ頭である市区町村ページへの送客も自ら止めている</strong>。あわせて初期表示を件数の多い順へ（現在は五十音順で0件が上位）</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🆕提案</td></tr>
+        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J19</td><td class="py-1 pr-2"><strong>ドメイン統合の方針決定と実装（.com ↔ .jp）</strong>（C019）。<span class="text-xs text-amber-700">C020 で重みが増した＝<strong>旧サイトの稼ぎ頭は市区町村911ページ・個別写真3,000ページ以上のロングテール</strong>（トップは3%）。新サイトに市区町村階層が無いため、<strong>いまのまま畳むと最大の入口を失う</strong>。<span class="text-blue-700">C024＝移行は数字の上で進行中（新 49→56→77人／旧 820→799→770人／旧→新の遷移 23→33セッション）＝<strong>「②当面は両方」を選んでも、実態は①へ動いています</strong></span></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答（移行方針＝①.jpへ移行／②両方維持／③.comが本番）</td><td class="py-1">🆕提案・<strong>最優先</strong>（6日目）</td></tr>
+        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J24</td><td class="py-1 pr-2"><strong>ページの中身を、検索エンジンに配るHTMLに載せる（SSR化）</strong>（C021）＝<strong>この1件が R-J02・R-J20 の共通の根</strong>。<span class="text-xs text-amber-700">実査＝4階層すべて配信HTMLの本文が「読み込み中...」だけ（C023 再実査でも不変）。<span class="text-blue-700"><strong>C023＝着手順を実測で確定＝①市区町村 →②都道府県 →③個別写真</strong>。根拠＝GSC の階層別「検索に出ているページ数 ÷ 存在するページ数」＝都道府県 <strong>66%</strong>（47中31・配るHTMLに階層固有のタイトル有）／個別写真 <strong>0.5%</strong>（約1.6万中77・タイトルは全ページ「古写真詳細」）／市区町村 <strong>2.8%以下</strong>（3件のみ・タイトルがトップと同一）＝<strong>タイトルの区別と露出率が同一サイト内で一致</strong>。市区町村は旧サイトで911種が閲覧されている最大の入口。<strong>描画後のタイトルは既に正しい地名</strong>（「愛知県で撮影された古い写真」）＝文言設計不要・<span class="font-mono">generateMetadata</span> へ移すだけ</span><span class="text-rose-700"><strong>C024＝①市区町村が最優先である根拠が二重になった</strong>。供給側（露出率が最低）に加え<strong>需要側＝出れば最も刺さる</strong>＝GSC 4日分で市区町村は露出8URL・クリック5・<strong>クリック率17.9%</strong>（サイト平均7.04%の2.5倍／個別写真の約3倍）。実例＝<span class="font-mono">/cities/7</span>（札幌市南区）は表示2・クリック2＝<strong>CTR 100%・平均4.0位</strong>。<strong>①の実装時は「近隣・同都道府県の他の市区町村」への内部リンクも同時に入れてください</strong>＝実査した市区町村ページには「◯◯県に戻る」以外の回遊リンクが無く、配信HTMLに個別写真ページへの内部リンクも0本（＝Google が sitemap 以外でページを見つける経路が存在しない）</span></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・<strong>未反映（6日目）</strong>・<strong>最上位</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J26</td><td class="py-1 pr-2"><strong>都道府県ページの「絞り込み件数」「市区町村ごとの件数」を全件で数える</strong>（新規・C023）。<span class="text-xs text-amber-700">愛知県ページは見出し「376件の古写真が見つかりました」に対しタブが「すべて（<strong>50</strong>）／今の写真あり（8）／今の写真なし（42）」＝<strong>表示中の1ページ分の内訳</strong>。「市区町村から探す」も<strong>名古屋市が0</strong>（推測：同じく表示中50件で集計）。<strong>＝比較が成立しているページに閲覧者がたどり着けず、最大の稼ぎ頭である市区町村ページへの送客も自ら止めている</strong>。あわせて初期表示を件数の多い順へ（現在は五十音順で0件が上位）。<span class="text-rose-700"><strong>C024＝🟡→🔴に格上げ</strong>。理由＝①都道府県ページの検索露出は<strong>70%で天井</strong>（47中33）＝この階層はもう伸びず、価値は「来た人を次へ送ること」に移った ②その送り先である市区町村ページは<strong>出れば最も刺さる層</strong>（クリック率17.9%＝サイト平均の2.5倍）③<strong>唯一の導線が件数バグで塞がれている</strong>。＝R-J24 が入るまでの間、<strong>すでに来ている人を最も刺さるページへ送れる唯一の手</strong></span>。<span class="text-emerald-700">C024 で対照ケースを確認＝<span class="font-mono">/cities/7</span>（札幌市南区・2件）はタブが「すべて(2)／今の写真あり(2)／今の写真なし(0)」で<strong>正しい</strong>＝<strong>50件を超えるページだけで壊れる</strong>という見立ての裏づけ</span></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🆕提案（3日目・<strong>C024 で🟡→🔴</strong>）</td></tr>
         <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2 font-mono">R-J25</td><td class="py-1 pr-2"><strong>Search Console に <span class="font-mono">konjaku-photo.com</span> も登録し BigQuery エクスポートを通す</strong>（新規・C022）。<span class="text-xs text-amber-700">着弾した GSC は <span class="font-mono">.jp</span> のみ（76URLすべて .jp・.com は0件）。一方、実トラフィックの本体は <span class="font-mono">.com</span>。<strong>＝いま稼いでいる面の検索実績が見えず、移行の前後比較も、2ドメインの共食い判定もできない</strong>。開発作業なし＝管理画面の操作のみ</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答（社長の GSC 操作・各5分）</td><td class="py-1">🆕提案</td></tr>
         <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J17</td><td class="py-1 pr-2"><strong>「比較が成立しているページ」を優先的に露出する</strong>（C018）＝応急処置。<span class="text-xs text-amber-700">C020 再実査＝<strong>sitemap.xml は 1,718,018B のまま</strong>（絞り込み未実施）。実査9件のうち昔＋今が両方そろうのは1件だけ。まず sitemap の対象を「完全形のみ」に絞るのが最も安い手</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・未反映</td></tr>
         <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J15</td><td class="py-1 pr-2"><strong>存在しないIDのソフト404を本物の404にする</strong>（C017）＝応急処置。<span class="text-xs text-amber-700">C020 再実査＝<span class="font-mono">/old-photos/999999</span> は<strong>いまも HTTP 200</strong>（未反映）</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">引き渡し済・未反映</td></tr>
@@ -115,84 +128,87 @@
   <hr class="my-8 border-gray-300">
 
 
-  <!-- ===== Cycle 023 ===== -->
+  <!-- ===== Cycle 024 ===== -->
   <section class="mb-10">
-    <h2 class="text-2xl font-bold mb-1">Cycle 023 — 2026-08-19（🔑 新サイトの実力は昨日の見立ての「16倍」でした。そして、どの階層が損をしているかが確定しました）</h2>
-    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝2日分に増えました</strong>（<span class="font-mono">searchconsole_konjaku</span>・8/15＋8/16＝クリック16・表示297・表示URL <strong>115件</strong>）。<strong>GA4（<span class="font-mono">.jp</span>）＝8/17 分が着弾</strong>（「8/16 で停止」は解消＝単なる2日遅れでした）。GA4（<span class="font-mono">.com</span>）＝8/18 まで取得可。サイト実査＝hp-audit（4階層＋定点＋<span class="font-mono">.com</span> トップ）／hp-shot（<span class="font-mono">.jp</span> トップ・都道府県ページ PC/SP）。起動＝日次 cron（04:30）。</p>
+    <h2 class="text-2xl font-bold mb-1">Cycle 024 — 2026-08-21（🔑 市区町村ページは「出せば刺さる」と実測で出ました。ただし本番は6日間まったく動いていません）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝4日分に伸長</strong>（<span class="font-mono">searchconsole_konjaku</span>・8/15〜8/18＝クリック44・表示625・平均掲載順位8.1・表示URL <strong>168件</strong>）。<strong>GA4（<span class="font-mono">.jp</span>）＝8/19 まで</strong>／GA4（<span class="font-mono">.com</span>）＝8/19 まで（どちらも正常なラグ）。サイト実査＝hp-audit（定点6URL＋<span class="font-mono">.com</span> トップ）／hp-shot（<span class="font-mono">.jp</span> トップ・市区町村ページ・コメント一覧 PC/SP）。起動＝日次 cron（04:30）。<span class="text-amber-700">※ 8/20 のサイクルは実行されていません（本日が前回から2日ぶり＝差分は2日分です）。</span></p>
 
     <div class="bg-white border border-gray-200 rounded-lg p-5 mb-5">
       <h3 class="font-semibold mb-2">総評</h3>
-      <p class="text-sm text-gray-700 mb-3"><strong>また1つ、こちらの数字の読み違いを訂正します（今回も良い方向です）。</strong>「新サイトには1日3人しか来ていない／旧サイトの約290倍の差がある」とお伝えしてきましたが、<strong>この「3人」は計測を始めた初日の“途中まで”のデータでした</strong>。8/17 分が届いてみると、新サイトの実力は<strong>1日49人・ページ閲覧559回</strong>。同じ日の旧サイトは820人ですので、<strong>差は290倍ではなく約17倍</strong>です。</p>
-      <p class="text-sm text-gray-700 mb-3"><span class="text-xs text-gray-500">（根拠：同じ 8/16 に Search Console は新サイトへの検索クリックを<strong>10回</strong>記録していました。GA4 の「3人」とは辻褄が合わず、GA4 側が初日の部分データだったと判断できます。）</span></p>
-      <p class="text-sm text-gray-700 mb-3"><strong>そして今日、いちばん大事な発見がありました。</strong>「新サイトのどこを直すと一番効くか」が、推測ではなく<strong>自社サイト内の実測の比較</strong>で確定しました。新サイトは階層によって<strong>検索エンジンに配るHTMLの「タイトル」の作り込みがバラバラ</strong>で、その差がそのまま検索での露出の差になっていました。</p>
-      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-3">
-        <li><strong>都道府県ページ</strong>（配るHTMLに階層ごとのタイトルが有る）→ 47ページ中 <strong>31ページが検索に露出（66%）</strong>・クリックも最多</li>
-        <li><strong>写真1枚ごとのページ</strong>（タイトルは全ページ「古写真詳細」で共通）→ 約1.6万ページ中 <strong>77ページ（0.5%）</strong></li>
-        <li><strong>市区町村ページ</strong>（タイトルがトップページと完全に同一）→ <strong>わずか3ページ</strong>（旧サイトでは911種が実際に閲覧されている、最大の稼ぎ頭の階層です）</li>
-      </ul>
-      <p class="text-sm text-gray-700"><strong>＝ R-J24（配るHTMLに中身を載せる）の効果は、もう社内の実測で裏づけられています。</strong>しかも<strong>着手の順番も決まりました＝いちばん損をしているのは市区町村ページ</strong>です。加えて朗報が1つ——画面を描画したあとのタイトルは<strong>すでに「愛知県で撮影された古い写真」と正しく地名が入っています</strong>。つまり文言を新しく考える必要はなく、<strong>すでにある文字列を「配る側」に移すだけ</strong>の作業です。</p>
+      <p class="text-sm text-gray-700 mb-3"><strong>良い知らせと、厳しい知らせが1つずつあります。</strong></p>
+      <p class="text-sm text-gray-700 mb-3"><strong>【良い知らせ】市区町村ページは「検索に出しさえすれば、いちばん刺さる」ことが数字で出ました。</strong>Search Console のデータが4日分に伸び、階層ごとのクリック率を比べられるようになりました。市区町村ページは<strong>まだ8ページしか検索に出ていない</strong>のに、<strong>そのうち4ページがクリックを獲得</strong>——クリック率は<strong>17.9%</strong>で、サイト平均（7.04%）の<strong>2.5倍</strong>、写真1枚ごとのページの約3倍です。極めつけは <span class="font-mono">/cities/7</span>（札幌市南区）で、<strong>表示2回・クリック2回＝クリック率100%・平均掲載順位4.0位</strong>。写真がたった2枚しかないページです。</p>
+      <p class="text-sm text-gray-700 mb-3">昨日まで「市区町村ページを最優先に」とお伝えしていた根拠は<strong>「いちばん損をしている（露出が少ない）から」という“供給側”の話だけ</strong>でした。今日、<strong>“需要側”＝「出せば刺さる」という別の証拠が加わりました</strong>。同じ結論に、独立した2本の実測が立ったことになります。<strong>R-J24 の①市区町村は、迷わず着手して大丈夫です。</strong></p>
+      <p class="text-sm text-gray-700 mb-3"><strong>【厳しい知らせ】その提案が、6日間まったく実装に入っていません。</strong>毎日 5項目を本番で実測していますが、8/16 から今日まで<strong>1バイトも変化がありません</strong>。こちらから実装担当（konjaku-dev）へ送ったレポート<strong>6通も、すべて「未処理」のまま受信箱に溜まっています</strong>（最古で6日）。<strong>どれだけ良い発見をしても、実装に入らなければ北極星（比較ページが見られること）は1ミリも動きません。</strong>→ 🔔 Q-J07 で、拠点PCの稼働状況の確認をお願いしています。</p>
+      <p class="text-sm text-gray-700">なお<strong>移行は数字の上で確実に進んでいます</strong>：新サイトの利用者は 8/17＝49人 → 8/18＝56人 → <strong>8/19＝77人</strong>、旧サイトは 867 → 820 → 799 → <strong>770人</strong>。旧サイトから新サイトへの遷移も 23 → <strong>33セッション</strong>に増えました。<strong>ご判断（R-J19）を待たずに、実態のほうが先に動いています。</strong></p>
     </div>
 
     <div class="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-5">
       <h3 class="font-semibold text-blue-800 mb-2">🔍 新規事実（観察＝事実）</h3>
       <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
-        <li><strong>🔑 階層ごとに「検索に出ている割合」が桁違いです</strong>（GSC 2日分・表示URL115件の内訳）：<strong>都道府県ページ 31件</strong>（うち7件はクリックも獲得）・<strong>写真1枚ごとのページ 77件</strong>（うち5件がクリック）・<strong>市区町村ページ 3件</strong>（うち1件）・年代1・タグ1・一覧1・トップ1。<span class="text-gray-500">存在するページ数で割ると、都道府県 <strong>66%</strong>（47中31）／個別写真 <strong>0.5%</strong>（約1.6万中77）／市区町村 <strong>2.8%以下</strong>（109件以上のうち3）。</span></li>
-        <li><strong>🔑 その差は、配るHTMLのタイトルの作りと完全に一致しています</strong>（実査）：都道府県＝<span class="font-mono">「都道府県ID: 28の古い写真」</span>＝内部IDながら<strong>階層ごとに違うタイトル</strong>／個別写真＝<span class="font-mono">「古写真詳細」</span>＝<strong>全ページ同一</strong>／市区町村＝<strong>トップページとまったく同じタイトル</strong>。<span class="text-gray-500">＝タイトルが区別できる階層ほど検索に出ている、という関係が<strong>同一サイト内で観測</strong>できました（推測：Google 側が JavaScript を描画して読む処理は全ページには回らず、配るHTMLだけで判別できるページが優先されている）。</span></li>
-        <li><strong>🎁 描画後のタイトルは、すでに正しい地名になっています</strong>：<span class="font-mono">/prefectures/28/old-photos</span> は画面上「<strong>愛知県の古写真</strong>」、タイトルも「<strong>愛知県で撮影された古い写真</strong>」と表示されます。<span class="text-gray-500">＝R-J24 は<strong>文言を新規に設計する作業ではなく、すでにある文字列を配信HTML側に移す作業</strong>です（工数の見立てが下がりました）。</span></li>
-        <li><strong>⚠️ 訂正：「新サイトは1日3人」「旧サイトの約290倍の差」を撤回します</strong>。GA4（新サイト）の 8/17 分が着弾し、<strong>1日 49人・745イベント・ページ閲覧559回</strong>と判明しました。8/16 の「3人」は<strong>計測開始初日の部分データ</strong>だったと考えられます（同じ 8/16 に Search Console はクリック10回を記録＝3人と整合しない）。<span class="text-gray-500">同日の旧サイトは820人ですので、実際の差は<strong>約17倍</strong>です。→ R-J24 の効果測定の基準値も 8/17 の数字に置き換えました。</span></li>
-        <li><strong>新サイトへの流入の内訳（8/17）</strong>：<strong>旧サイトからの遷移が23セッション（最多）</strong>・Google 検索10・直接8・Bing 6・Yahoo 3。<span class="text-gray-500">＝「旧サイトの“新しいサイトはこちら”を踏んだ人」と「検索から直接来た人」が、ほぼ同じ規模で入ってきています。検索から来た人は<strong>都道府県・市区町村・写真ページに直接着地</strong>し、旧サイトから来た人はトップに着地する、という違いも見えました。</span></li>
-        <li><strong>⚠️ 都道府県ページの件数表示が、実際の件数と合っていません</strong>（愛知県ページで確認）：見出しは「<strong>376件の古写真が見つかりました</strong>」なのに、絞り込みタブは「すべて（<strong>50</strong>）／今の写真あり（8）／今の写真なし（42）」＝<strong>いま表示中の50件の内訳</strong>になっています。同じページの「市区町村から探す」も、<strong>名古屋市が「0」</strong>と表示されます（376件の愛知県で名古屋市が0件は考えにくく、<strong>推測：こちらも表示中50件で数えている</strong>）。→ <strong>R-J26 として起票</strong>。</li>
-        <li><strong>Search Console は2日分になりました</strong>（8/15＋8/16）＝クリック16・表示297・平均掲載順位8.6・表示URL <strong>115件</strong>（8/15単日は76件）。<span class="text-gray-500">検索語は前回同様「地名＋昔の写真／古写真」が中心（「延岡市 昔の写真」4.7位・「呉 昔の写真」1.0位・「昔の愛媛県」8.2位・「日本橋 昔の写真」8.3位 ほか）。ただし<strong>クリック16件のうち検索語まで分かるのは1件だけ（94%が匿名化）</strong>＝検索語単位の判断はまだしません。</span></li>
-        <li><strong>8/18→8/19 の本番反映もゼロ</strong>：ソフト404（<span class="font-mono">/old-photos/999999</span>）はいまも200／写真ページのタイトルは「古写真詳細」固定／4階層すべて配信HTMLは「読み込み中...」のまま／サイトマップ 1,718,788B で不変／canonical は両ドメインとも無し。投稿写真数 17,464枚・登録ユーザー 6,828人＝<strong>いずれも前日から変化なし</strong>。<span class="text-gray-500">（配信から3日目です。督促ではなく事実の記録です。）</span></li>
+        <li><strong>🔑 市区町村ページは「露出が最低」なのに「クリック率は最高」でした</strong>（GSC 4日分・8/15〜8/18）：<br>
+        <span class="ml-4">・<strong>市区町村</strong>＝表示のあったURL <strong>8件</strong>／クリック <strong>5</strong>／表示 28 ＝ <strong>クリック率 17.9%</strong></span><br>
+        <span class="ml-4">・<strong>都道府県</strong>＝URL 33件／クリック 24／表示 324 ＝ クリック率 7.4%</span><br>
+        <span class="ml-4">・<strong>写真1枚ごと</strong>＝URL 123件／クリック 約15／表示 約273 ＝ クリック率 約5.5%</span><br>
+        <span class="ml-4">・サイト全体＝クリック44／表示625＝<strong>7.04%</strong>・平均掲載順位 8.1</span><br>
+        <span class="text-gray-500">＝市区町村はサイト平均の<strong>2.5倍</strong>、写真1枚ごとのページの<strong>約3倍</strong>のクリック率。実例＝<span class="font-mono">/cities/7</span>（札幌市南区・写真2枚だけ）＝<strong>表示2・クリック2＝100%・4.0位</strong>／<span class="font-mono">/cities/919</span> 25%（4.0位）／<span class="font-mono">/cities/1092</span> 20%（5.6位）／<span class="font-mono">/cities/334</span> 8.3%（7.2位）。<strong>⚠️ 表示28回の小さな標本です</strong>＝断定でなく「強い傾向」として扱います。</span></li>
+        <li><strong>🔑 都道府県ページの検索露出は、もう天井に達しました</strong>：47ページ中 <strong>33ページ（70%）</strong>。前回（2日分）は31ページでしたので、<strong>2日増やしても +2 で頭打ち</strong>です。<span class="text-gray-500">一方、市区町村は 3→8件、写真1枚ごとは 77→123件と伸びています（＝観測日数が増えたぶんの自然増）。<strong>意味＝都道府県層はこれ以上「露出を増やす」余地が無く、価値は「来た人を次へ送ること」に移りました</strong>。その送り先が市区町村ページで、唯一の導線が R-J26 の件数バグで塞がれています。→ <strong>R-J26 を🟡から🔴へ格上げしました。</strong></span></li>
+        <li><strong>🔑 実際の利用と検索露出のギャップが数字で出ました</strong>：GA4（新サイト・8/19 単日）で実際に閲覧されたURLは <strong>254件</strong>——うち<strong>市区町村 52ページ</strong>・都道府県 27・写真1枚ごと 144。<span class="text-gray-500">＝<strong>実際には市区町村ページが1日52ページ分も見られている</strong>のに、<strong>検索に出ているのは4日間で8ページだけ</strong>。「ページの中身は良いが、検索エンジンに配れていない」という R-J24 の診断が、利用側の数字からも裏づけられました。</span></li>
+        <li><strong>移行が加速しています</strong>（GA4 実測）：新サイトの1日の利用者＝<strong>8/17 49人 → 8/18 56人 → 8/19 77人</strong>（イベント 745→492→866）。旧サイト＝<strong>8/16 867人 → 8/17 820 → 8/18 799 → 8/19 770人</strong>。<span class="text-gray-500">新サイトへの流入（8/19）＝<strong>旧サイトからの遷移 33セッション（最多・8/17は23）</strong>・Google 15・Bing 14・直接13・Yahoo 8＝<strong>検索からの流入は37セッションで、2日前の19からほぼ倍増</strong>。着地は、旧サイトから来た人＝トップ（35セッション）、検索から来た人＝都道府県・市区町村・写真ページに直接、という分かれ方も前回と同じでした。<strong>推測：旧の減少と新の増加は同じ移行の裏表</strong>ですが、合計は3日で約2.5%減っており曜日要因を切り分けられないため、断定はしません。</span></li>
+        <li><strong>R-J26（件数表示）の見立てを補強する対照ケースが取れました</strong>：<span class="font-mono">/cities/7</span>（札幌市南区）は写真が2枚しかなく、絞り込みタブも「すべて（2）／今の写真あり（2）／今の写真なし（0）」で<strong>正しく表示されています</strong>。<span class="text-gray-500">＝「1ページに表示する50件を基準に数えている」という見立てどおり、<strong>50件を超えるページでだけ壊れる</strong>ことが確かめられました（愛知県＝376件で発現・札幌市南区＝2件で正常）。</span></li>
+        <li><strong>⚠️ 検索エンジンがページを見つける経路が、サイトマップ以外に存在しません</strong>（実査）：<span class="font-mono">/cities/7</span> の画面には「<strong>← 北海道に戻る</strong>」以外の回遊リンクがありません（近隣の市区町村・関連ページへのリンクなし）。加えて配信HTMLには写真1枚ごとのページへの内部リンクが<strong>0本</strong>です。<span class="text-gray-500">＝約1.6万ページをサイトマップで申告しているのに、リンクをたどって到達する道が無い状態です。→ <strong>R-J24 の①市区町村を実装するとき、内部リンクも同時に入れるよう実装担当へ伝えました</strong>（新規提案には起票せず、R-J24 の実装指示に含めます）。</span></li>
+        <li><strong>🚨 本番反映は6日連続ゼロ／レポート6通が未処理のまま滞留</strong>：ソフト404（<span class="font-mono">/old-photos/999999</span>）はいまも200／写真ページのタイトルは「古写真詳細」固定／<span class="font-mono">/cities/608</span>・<span class="font-mono">/prefectures/28</span> の配信HTMLは「読み込み中...」のまま／<span class="font-mono">/prefectures/28</span> のタイトルは「都道府県ID: 28の古い写真」／<span class="font-mono">/eras/meiji</span> のタイトルはトップと同一／サイトマップ 1,718,788B で不変／canonical 無し。<span class="text-gray-500">サイト自体は生きています＝投稿写真 17,464 → <strong>17,471枚</strong>（+7）。登録ユーザーは 6,828人で変化なし。コメントは <strong>1,494件・最新 2026/7/14 のまま＝停滞7週目</strong>（R-J11 の前提は不変）。</span></li>
       </ul>
     </div>
 
-    <div class="bg-amber-50 border border-amber-300 rounded-lg p-4 mb-5 text-sm">
-      <p class="font-semibold text-amber-800 mb-1">🧭 3日続けて数値の訂正が出ています（原因と手当て）</p>
-      <p class="text-gray-700 mb-2">C021＝「市区町村ページが無い」（実在した）／C022＝「サイトマップに109件」（測定ツールの打ち切り）／今回＝「1日3人・290倍」（初日の部分データ）。<strong>3件とも「その日に手に入った1つの数字を、そのまま確定値として書いた」</strong>のが共通の原因です。</p>
-      <p class="text-gray-700">手当て＝<strong>①計測を始めた直後のデータは、最低でも2日分そろうまで「暫定」と明示する（初日は部分データを疑う）②別系統の数字と突き合わせられるなら必ず突き合わせてから書く</strong>（今回は GSC のクリック数と GA4 の人数を突き合わせて誤りに気づけました）。カイゼン台帳へ記録します。<span class="text-xs text-gray-500">※ 訂正の方向は3件とも「思ったより悪くない」側です。悪い側に倒れた訂正は今のところありません。</span></p>
+    <div class="bg-rose-50 border-2 border-rose-300 rounded-lg p-4 mb-5 text-sm">
+      <p class="font-semibold text-rose-900 mb-1">🚧 いま止まっているのは「発見」ではなく「実装」です（率直な現状認識）</p>
+      <p class="text-gray-700 mb-2">この4サイクル（8/17〜8/21）で、<strong>どこを直せばいいかは実測で確定しました</strong>——①市区町村ページを検索エンジンに配るHTMLに載せる（R-J24）②都道府県ページの件数バグを直して市区町村へ送客する（R-J26）。文言の設計も不要で、<strong>すでにある文字列を移すだけ</strong>だと分かっています。</p>
+      <p class="text-gray-700 mb-2">それでも<strong>本番は6日間ゼロ</strong>です。分析側でこれ以上できることは多くありません＝<strong>これ以上ここで新しい提案を積んでも、在庫が増えるだけで北極星は動きません</strong>。今サイクルで新規提案をゼロにし、代わりに既存の優先度と根拠を固めたのはそのためです。</p>
+      <p class="text-gray-700">お願いは<strong>「konjaku-dev が動いているかどうか」の一言だけ</strong>です（🔔 Q-J07）。それが分かれば、督促の出し方（優先度の伝え方の問題なのか、配信経路の問題なのか）をこちらで決められます。</p>
     </div>
 
     <!-- 新規提案 -->
     <div class="border border-gray-300 bg-white rounded-lg p-5 mb-5">
-      <h3 class="font-semibold mb-3">💡 新規提案（1件）＋既存の見直し2件<span class="text-xs font-normal text-gray-500">※ 今回の主な成果は「R-J24 をどの階層から着手すべきかが、実測で決まったこと」です</span></h3>
+      <h3 class="font-semibold mb-3">💡 新規提案：<strong>0件</strong>（意図的です）／既存の見直し3件<span class="text-xs font-normal text-gray-500">※ 在庫16件・本番反映6日ゼロのため、新しく積むより「どれから着手すべきか」の根拠を固める回にしました</span></h3>
 
-      <div class="border-l-4 border-amber-500 pl-4 mb-5">
-        <p class="font-bold text-gray-900">R-J26 — 都道府県ページの「絞り込み件数」と「市区町村ごとの件数」を、表示中の50件ではなく全件で数える　<span class="text-sm font-normal">🟡 中／工数：小／✅AI即応</span></p>
-        <ul class="text-sm text-gray-700 mt-2 space-y-1">
-          <li><strong>観点</strong>：回遊・情報設計（＝北極星の経路③「回遊して深く見る」→ ②市区町村ページへの送客）</li>
-          <li><strong>観察（事実）</strong>：<span class="font-mono">/prefectures/28/old-photos</span>（愛知県）は見出しが「376件の古写真が見つかりました」なのに、絞り込みタブは「すべて（<strong>50</strong>）／今の写真あり（8）／今の写真なし（42）」＝<strong>8+42=50＝表示中の1ページ分</strong>。同じ画面の「市区町村から探す」も、一宮市6・刈谷市11・半田市8 に対し<strong>名古屋市が0</strong>と表示されます。</li>
-          <li><strong>なぜ問題か</strong>：①<strong>「今の写真あり」で絞り込んでも、全376件から選ばれない</strong>＝このサイトの主役である<strong>「昔↔今の比較が成立しているページ」に閲覧者がたどり着けません</strong>（R-J17 と同じ問題を、ユーザー側の操作面で起こしています）②市区町村の件数が0と出ると、<strong>いちばん写真が多いはずの市区町村へのリンクを閲覧者が自分で避けます</strong>——その市区町村ページこそ、旧サイトで911種が閲覧されていた最大の稼ぎ頭の階層です。<span class="text-gray-500">（②は推測を含みます＝名古屋市が実際に0件である可能性も残ります。開発側で「愛知県の市区町村別の登録件数」を1本クエリすれば即断できます。）</span></li>
-          <li><strong>改善案</strong>：件数（タブ・市区町村チップ）を<strong>取得済みの配列ではなくサーバ側の集計値で出す</strong>。あわせて「市区町村から探す」の初期表示を<strong>件数の多い順</strong>に（現在は五十音順のため、0件の市区町村が上位を占めています）。</li>
-          <li><strong>効果（測れる窓）</strong>：GA4（<span class="font-mono">analytics_549912350</span>）で <span class="font-mono">/cities/</span> のページ閲覧数（8/17 実測＝4URL・計11views）が増えるか。二次的に GSC の市区町村URLの露出数（<strong>基準3件</strong>）。</li>
-        </ul>
+      <div class="border-l-4 border-rose-500 pl-4 mb-5 bg-rose-50 py-2">
+        <p class="font-bold text-gray-900">① R-J26 — <strong>🟡 → 🔴 に格上げします</strong>（都道府県ページの件数を全件で数える）</p>
+        <p class="text-sm text-gray-700 mt-1">昨日は「回遊の改善」として🟡で出しましたが、<strong>今日の実測で位置づけが変わりました</strong>：<br>
+        <strong>ⓐ 都道府県ページの検索露出は 70%（47中33）で天井</strong>——2日増やしても +2 しか増えず、この階層は「もっと出す」余地がありません。<strong>残った価値は「来た人を次へ送ること」です。</strong><br>
+        <strong>ⓑ その送り先＝市区町村ページは、出れば最も刺さる層</strong>（クリック率17.9%＝サイト平均の2.5倍）。<br>
+        <strong>ⓒ ところが唯一の導線（都道府県ページの「市区町村から探す」）が件数バグで塞がっています</strong>——名古屋市が「0」と表示されれば、閲覧者は自分でそのリンクを避けます。<br>
+        <span class="text-gray-800">＝<strong>R-J24（SSR化）が入るまでの間、すでに来ている人を最も刺さるページへ送れる唯一の手</strong>です。しかも工数は小。<strong>R-J24 の次に着手してください。</strong></span><br>
+        <span class="text-xs text-gray-600">※ 対照ケースを確認済み＝<span class="font-mono">/cities/7</span>（写真2枚）はタブが「すべて(2)／今の写真あり(2)／今の写真なし(0)」で正常＝<strong>50件を超えるページでだけ壊れる</strong>という見立ての裏づけ。／※「名古屋市 0件」が集計バグか実データかは、開発側の1本クエリ（愛知県の市区町村別登録件数）で即断できます。<br>
+        ※ 効果（測れる窓）＝GA4 で <span class="font-mono">/cities/</span> の閲覧が増えるか（<strong>基準＝8/19 で52URL</strong>）／GSC の市区町村の露出URL数（<strong>基準＝8件・8/15〜18</strong>）／都道府県ページのタブ件数が全件（376）で出るか＝<strong>これは実装当日に画面で確認できます</strong>。</span></p>
       </div>
 
       <div class="border-l-4 border-rose-500 pl-4 mb-5 bg-rose-50 py-2">
-        <p class="font-bold text-gray-900">R-J24 — 優先度🔴のまま。<strong>着手する階層の順番が実測で決まりました</strong></p>
-        <p class="text-sm text-gray-700 mt-1">これまで「まず個別写真ページ1階層から」とお伝えしていましたが、<strong>今日の階層別の実測を受けて推奨を変えます</strong>：<br>
-        <strong>① 市区町村 <span class="font-mono">/cities/{id}/old-photos</span>（最優先）</strong>——いま検索露出が<strong>3ページだけ</strong>で最も損をしており、かつ旧サイトで<strong>911種が実際に閲覧されている最大の稼ぎ頭</strong>。タイトルがトップと同一という<strong>いちばん直しやすい状態</strong>でもあります。<br>
-        <strong>② 都道府県 <span class="font-mono">/prefectures/{id}/old-photos</span></strong>——すでに66%が露出しており<strong>この階層が「効く」ことの実証済みサンプル</strong>。内部IDのタイトル（「都道府県ID: 28の古い写真」）を、描画後と同じ「愛知県で撮影された古い写真」に置き換えるだけ。<br>
-        <strong>③ 個別写真 <span class="font-mono">/old-photos/{id}</span>（約1.6万ページ・最後）</strong>——効果は最大ですが件数が桁違いなので、①②で型と効果を確かめてから。<br>
-        <span class="text-xs text-gray-600">※ 文言の設計は不要です（描画後のタイトルをそのまま <span class="font-mono">generateMetadata</span> へ移すだけ）。効果は GSC の「表示のあったURL数」で測ります＝<strong>基準値＝市区町村3件・都道府県31件・個別写真77件（8/15〜16）</strong>。</span></p>
+        <p class="font-bold text-gray-900">② R-J24 — 🔴のまま最上位。<strong>①市区町村を最優先にする根拠が「二重」になりました</strong>＋実装時のお願いを1つ追加</p>
+        <p class="text-sm text-gray-700 mt-1"><strong>昨日までの根拠（供給側）</strong>＝市区町村は検索露出がいちばん少なく、最も損をしている。<br>
+        <strong>今日加わった根拠（需要側）</strong>＝<strong>市区町村は出れば最も刺さる</strong>。GSC 4日分で露出8URL中4URLがクリックを獲得、クリック率 <strong>17.9%</strong>（サイト平均7.04%の2.5倍・写真1枚ごとの約3倍）。<span class="font-mono">/cities/7</span>（写真2枚だけのページ）が<strong>クリック率100%・4.0位</strong>。<span class="text-gray-600">＝「写真が多いページだけが強い」のではなく、<strong>地名で探している人に地名のページを出せば刺さる</strong>ということです。</span><br>
+        <strong>着手順は変わりません＝① 市区町村 → ② 都道府県 → ③ 個別写真（約1.6万ページ・最後）。</strong><br>
+        <strong class="text-rose-800">🆕 実装時のお願い：①の際に「近隣・同都道府県の他の市区町村」への内部リンクも一緒に入れてください。</strong><span class="text-gray-600">実査したところ、市区町村ページには「← ◯◯県に戻る」以外の回遊リンクが無く、配信HTMLには写真1枚ごとのページへの内部リンクも0本でした＝<strong>検索エンジンがサイトマップ以外の道でページを見つけられません</strong>。SSR 化と同時に入れるのが最も安く済みます。</span><br>
+        <span class="text-xs text-gray-600">※ 文言の設計は不要（描画後のタイトルをそのまま <span class="font-mono">generateMetadata</span> へ移すだけ）。<br>
+        ※ 効果測定の基準値を更新しました＝GSC の「表示のあったURL数」（8/15〜18・4日窓）＝<strong>市区町村8件・都道府県33件・個別写真123件</strong>。<strong>⚠️ この件数は観測日数が増えるだけでも自然に増えます</strong>＝比較は必ず<strong>同じ日数の窓</strong>か<strong>露出率（存在するページ数で割った値＝市区町村7%以下・都道府県70%・個別写真0.77%）</strong>で行います。</span></p>
       </div>
 
       <div class="border-l-4 border-blue-500 pl-4">
-        <p class="font-bold text-gray-900">R-J23 — 状態は変わらず（許可リスト待ち）</p>
-        <p class="text-sm text-gray-700 mt-1">サイトマップの市区町村収録数を正確に数える読み取り専用ツール（T-027）は、<strong>本日も許可リスト未登録のため実行できませんでした</strong>。→ 🔔でお願いしている1行の設定追加が入るまで「109件以上・実数未確認」のままです。<span class="text-xs text-gray-500">※ ただし R-J26 と今日の階層別実測により、<strong>この件数が分からなくても R-J24 の着手順は決められる</strong>ことがはっきりしました（＝この待ちは、もうブロッカーではありません）。</span></p>
+        <p class="font-bold text-gray-900">③ R-J23 — 状態は変わらず（許可リスト待ち・急ぎではありません）</p>
+        <p class="text-sm text-gray-700 mt-1">サイトマップの市区町村収録数を正確に数える読み取り専用ツール（T-027）は、本日も許可リスト未登録のため実行できませんでした。「109件以上・実数未確認」のままです。<span class="text-xs text-gray-500">※ 昨日と同じく、この件数が分からなくても R-J24 の着手順は決められています＝<strong>ブロッカーではありません</strong>。同じ先送りを繰り返し書かないよう、次回以降は変化があったときだけ記載します。</span></p>
       </div>
     </div>
 
     <div class="bg-slate-100 border border-slate-300 rounded p-4 mt-5 text-sm">
       <p class="font-semibold text-slate-800 mb-1">次の一手（社長へ）</p>
-      <p class="text-gray-700"><strong>★ お願いは3点で、前回から変わりません</strong>（いずれも管理画面・設定のみ。開発の手は要りません）：<br>
-      <strong>① ドメインをどうするか（🔔 R-J19・4日目）</strong>——①.jp へ移行／②当面は両方／③.com が本番。<strong>今日の実測で、①の現実味はさらに上がりました</strong>（差は290倍ではなく約17倍。しかも旧サイトから新サイトへ1日23セッションが自然に流れています）。ただし<strong>R-J24 の完了前に旧サイトを畳むことだけは避けてください</strong>。<br>
-      <strong>② Search Console に <span class="font-mono">.com</span> も追加（🔔 R-J25・5分）</strong>——いま稼いでいる面が見えないままだと、移行の成否を判定できません。<br>
-      <strong>③ 許可リストに1行（🔔）</strong>——読み取り専用ツールの登録。<span class="text-xs text-gray-600">（優先度は下がりました＝この数値が無くても R-J24 の着手順は今日決められました。）</span><br>
-      <span class="text-xs text-gray-600">※ 方針の回答を待たずに進められるもの（<strong>R-J24 SSR化＝市区町村→都道府県→個別写真の順</strong>／R-J26 件数表示／R-J17 サイトマップの絞り込み／R-J15 ソフト404／R-J22 参加イベントの計測）は、実装担当へ「先行して着手可」として配信済みです。</span></p>
+      <p class="text-gray-700"><strong>★ 今日いちばんお願いしたいのは①です</strong>（①だけ新規。②〜④は継続）：<br>
+      <strong class="text-rose-800">① konjaku-dev は動いていますか（🔔 Q-J07・新規）</strong>——本番6日間ゼロ／レポート6通が未処理のまま。<strong>稼働中／止まっている／今は工数を取っていない</strong>のどれか、一言だけお聞かせください。<span class="text-xs text-gray-600">これが今いちばんのボトルネックで、ここが動かないと他のどの発見も成果になりません。</span><br>
+      <strong>② ドメインをどうするか（🔔 R-J19・6日目）</strong>——①.jp へ移行／②当面は両方／③.com が本番。<strong>実態はすでに①へ動いています</strong>（新 49→77人／旧 820→770人／旧→新の遷移 23→33セッション）。ただし<strong>R-J24 の完了前に旧サイトを畳むことだけは避けてください</strong>。<br>
+      <strong>③ Search Console に <span class="font-mono">.com</span> も追加（🔔 R-J25・5分）</strong>——いま稼いでいる面が見えないままだと、移行の成否を判定できません。<br>
+      <strong>④ 許可リストに1行（🔔）</strong>——読み取り専用ツールの登録。<span class="text-xs text-gray-600">（急ぎではありません。）</span><br>
+      <span class="text-xs text-gray-600">※ ②の回答を待たずに進められるもの（<strong>R-J24 SSR化＝市区町村→都道府県→個別写真の順</strong>／<strong>R-J26 件数表示（🔴へ格上げ）</strong>／R-J17 サイトマップの絞り込み／R-J15 ソフト404／R-J22 参加イベントの計測）は、実装担当へ「先行して着手可」として配信済みです——ただし①が解決しないと着手されません。</span></p>
     </div>
 
-    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（Q-J01・Q-J03 未回答）。mailbox＝<code>to: hp-loop-konjaku</code> の新着なし（<code>new/</code> 直読で確認＝<code>hp-loop-konjaku</code> を含む6件はいずれも本ループ発の送信控え）。<strong>定石</strong>＝GSC 日次チェック・hp-audit 差分（4階層＋定点＋<span class="font-mono">.com</span>）・スクショ定点（<code>konjaku-c023-jp-top</code>／<code>konjaku-c023-jp-pref28</code> PC/SP）・mailbox 検算・レポート配信を実施。<strong>勝ちパターン</strong>＝M-11 を再適用（クリック16 に対しクエリ別に見えるのは1件＝<strong>94%が匿名化</strong>＝クエリ単位の判断は引き続き保留）。GSC 前提の残りの型（W-01/W-02・L-01〜03・M-01/03/04/12/13/14/23/25）は<strong>次の週次 8/24 に一括適用</strong>（M-05／M-18 により2日分はなお参考値）。週次2本（勝ちパターン適用・在庫生存確認）は 8/17 実施済みで期日前・月次 #9 は 8/16 実施済み・#12 は当月実施済みのため対象外。<strong>新規 R 1件（R-J26）／訂正1件（「3人・290倍」の基準値を撤回し 8/17 の実測へ置換）／既存の見直し2件（R-J24 の着手順を確定・R-J23 の待ちをブロッカーから外す）</strong>。<strong>新規の勝ちパターン1件を全サイト共有ライブラリへ昇格</strong>（M-28＝階層別の露出率で SSR 化の効果を事前推定する測り方）。日次 cron のため Slack 日報1本。C022 は archive へ回転。</p>
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（Q-J01・Q-J03 未回答）。mailbox＝<code>to: hp-loop-konjaku</code> の新着なし。<strong>あわせて <code>to: konjaku-dev</code> 宛の6通（8/15・8/16・8/17×2・8/18・8/19）が <code>new/</code> に未処理で滞留していることを確認</strong>（→ Q-J07）。<strong>定石</strong>＝GSC 日次チェック（4日窓へ伸長・階層別の露出とクリック率を集計）・hp-audit 差分（定点6URL＋<span class="font-mono">.com</span> トップ）・スクショ定点（<code>konjaku-c024-jp-top</code>／<code>konjaku-c024-jp-city7</code>／<code>konjaku-c024-jp-comments</code> PC/SP）・mailbox 検算・レポート配信を実施。<strong>勝ちパターン</strong>＝M-11 を再適用（クリック44 に対しクエリ別に見えるのは1件＝匿名化は依然として高く、<strong>クエリ単位の判断は引き続き保留</strong>＝階層・URL単位で読む）。GSC 前提の残りの型（W-01/W-02・L-01〜03・M-01/03/04/12/13/14/23/25）は<strong>次の週次 8/24 に一括適用</strong>。週次2本（勝ちパターン適用・在庫生存確認）は 8/17 実施済みで期日前（次回 8/24）・月次 #9 は 8/16 実施済み・#12 は当月実施済みのため対象外。<strong>新規 R 0件（意図的）／格上げ1件（R-J26 🟡→🔴）／根拠の追加1件（R-J24 ①市区町村に需要側の実測を追加＋内部リンクの同梱指示）／新規 Q 1件（Q-J07＝実装担当の稼働確認）</strong>。<strong>在庫前進トリップワイヤ</strong>＝🆕提案のまま7日超の R は無し（最古 R-J19/R-J20 が6日目）だが、<strong>本番反映6日ゼロの原因を「konjaku-dev の稼働不明」としてブロッカーに名指し</strong>（自分で課した前提ではない外部要因）。日次 cron のため Slack 日報1本。C023 は archive へ回転。</p>
   </section>
 
 </div>

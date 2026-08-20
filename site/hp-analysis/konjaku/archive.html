@@ -59,6 +59,16 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 023 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 023 — 2026-08-19（🔑 新サイトの実力は見立ての「16倍」でした。そして、どの階層が損をしているかが確定しました）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC＝<strong>2日分に増加</strong>（<span class="font-mono">searchconsole_konjaku</span>・8/15＋8/16＝クリック16・表示297・表示URL 115件）。GA4（<span class="font-mono">.jp</span>）＝8/17 分が着弾（「8/16 で停止」は解消＝単なる2日ラグ）。GA4（<span class="font-mono">.com</span>）＝8/18 まで。サイト実査＝hp-audit（4階層＋定点＋<span class="font-mono">.com</span> トップ）／hp-shot（<span class="font-mono">.jp</span> トップ・都道府県ページ PC/SP）。起動＝日次 cron（04:30）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：2つの成果。①<strong>基準値の訂正</strong>＝「新サイトは1日3人・旧サイトの約290倍の差」を撤回（8/16 は計測初日の部分データ）。実測は <strong>8/17 で49人・ページ閲覧559回＝差は約17倍</strong>。②<strong>🔑「どこから直すか」が自社サイト内の自然実験で確定</strong>＝階層ごとの「検索に出ているページ数 ÷ 存在するページ数」が、配信HTMLのタイトルの作り込みと<strong>完全に一致</strong>した。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①露出率＝<strong>都道府県 66%</strong>（47中31・階層固有タイトル有）／<strong>個別写真 0.5%</strong>（約1.6万中77・全ページ「古写真詳細」）／<strong>市区町村 2.8%以下</strong>（3件のみ・タイトルがトップと同一）→ <strong>R-J24 の着手順を①市区町村→②都道府県→③個別写真に確定</strong>（M-28 として全サイト共有ライブラリへ昇格）②描画後のタイトルは<strong>すでに正しい地名</strong>（「愛知県で撮影された古い写真」）＝文言設計不要・<span class="font-mono">generateMetadata</span> へ移すだけ ③<strong>移行は既に静かに始まっている</strong>＝8/17 の新サイト流入の最多は旧サイトからの遷移 23セッション ④<strong>R-J26 起票</strong>＝都道府県ページの絞り込み件数・市区町村件数が「表示中50件」基準（見出しは376件） ⑤クリック16のうちクエリ別に見えるのは1件＝<strong>94%匿名化</strong>（M-11 再適用） ⑥8/18→8/19 の本番反映はゼロ。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>対応記録</strong>：<strong>新規 R 1件（R-J26）／訂正1件（「3人・290倍」の基準値を撤回し 8/17 の実測へ置換）／既存の見直し2件（R-J24 の着手順を確定・R-J23 の許可リスト待ちをブロッカーから外す）／勝ちパターン1件を共有ライブラリへ昇格（M-28）</strong>。台帳ローテを実施（C008〜C017 を coverage-archive.md へ）。日次 cron のため Slack 日報1本。C022 は archive へ回転。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 024・2026-08-21）</strong>：この回の結論（①市区町村が最優先）は<strong>翌々日の実測でさらに補強された</strong>＝GSC 4日分で市区町村は露出8URL・クリック5・<strong>クリック率17.9%＝サイト平均7.04%の2.5倍</strong>（<span class="font-mono">/cities/7</span> は表示2・クリック2＝100%・4.0位）。C023 の根拠は「露出率が最低＝供給側」だけだったが、<strong>「出れば最も刺さる＝需要側」という独立した2本目の実測が加わった</strong>。あわせて<strong>都道府県層は 70%（47中33）で天井</strong>と判明し、R-J26 は「回遊の改善（🟡）」から「<strong>天井に達した層から最も刺さる層へ送る唯一の手（🔴）</strong>」へ格上げした。</p>
+  </section>
+
   <!-- ===== Cycle 022 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
     <h2 class="text-xl font-bold mb-1">Cycle 022 — 2026-08-18（🎉 Search Console 着弾。新サイトは、もう検索で戦っていました）</h2>
