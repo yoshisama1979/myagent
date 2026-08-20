@@ -67,8 +67,10 @@
 |---------|------|
 | [OVERVIEW.md](OVERVIEW.md) | リポジトリ全体像・ディレクトリ早見表（スレッド開始時の把握用） |
 | [SYSTEM.md](SYSTEM.md) | 動くモード同士の地図（役割・一次情報源・承認ゲート・ハンドオフ）。統括者の入口 |
-| [rules/modes/](rules/modes/) | **モード別ルール15本の置き場**（hp-loop・blog-loop・partner・overseer・memo系・mailbox 等）。自動ロードされない＝各スラッシュコマンド冒頭の「まず読む」で必要時に読む（2026-07-24 `.claude/rules/` から移設・トークン節約） |
+| [rules/modes/](rules/modes/) | **モード別ルールの置き場**（hp-loop・blog-loop・partner・overseer・memo系・intake・mailbox 等）。自動ロードされない＝各スラッシュコマンド冒頭の「まず読む」で必要時に読む（2026-07-24 `.claude/rules/` から移設・トークン節約） |
 | [rules/modes/overseer.md](rules/modes/overseer.md) | 統括（Overseer）モード：システム全体の整合・健全性を見張り改善提案（`/overseer`） |
+| [rules/modes/intake.md](rules/modes/intake.md) | **走り書き・打ち合わせメモ・口頭報告を、質問で補いながら整理して hana-tools（ToDo・案件メモ）と `site/` に振り分けて登録する**（`/intake`・対話型。2026-08-19 社長ご指示で新設） |
+| [rules/command-map.md](rules/command-map.md) | **コマンド早見表＝振り分けの正**。`/do`（何でも窓口）はこれ<u>だけ</u>を読んで最適なモードへ振り分け、迷えば選択肢で聞き、該当が無ければモードを使わず普通に答える。社長がブラウザで見る `site/docs/command-map.html` は `python3 bin/build-command-map.py` で**生成**（手書き禁止＝二重管理を避ける）。ダッシュボードのメニューから辿れる |
 | `AI-INDEX.md`（git外・ローカル生成物） | AI用の在処マップ（site/全ページのタイトル・見出し・リード＋data/一覧）。`python3 bin/build-ai-index.py` で生成（**git追跡外**＝git外のクライアント分析ページの見出しを含むため。無い環境ではまず生成する）。データを探す前にまず見る |
 | [rules/partnership.md](rules/partnership.md) | 秘書＋パートナーとしての協働ルール |
 | [rules/memo.md](rules/memo.md) | プロジェクトメモ運用（4ファイル構成） |
