@@ -40,6 +40,51 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 024 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 024 — 2026-08-19（<span class="text-red-700">在庫が22サイクル動かない原因の第一候補を特定＝レポートの配信先が起動していない疑い</span>／<span class="text-amber-700">自分の配信ミス（Cycle 022 未配信）も検出</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・<span class="text-emerald-700">8/16 分が着弾して<strong>4日分</strong>に増加</span>）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/17）。社長入力（from-president.md）＝新規追記なし（24サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし＋<strong>配信先の滞留を実査</strong>（本サイクルの主題）。本番実査＝<strong>実施</strong>（hp-audit 9本 ✅／素の <code>curl</code>・<code>hp-links.py</code> は承認不可のまま／hp-shot は<strong>未実施</strong>＝定点期日〔8/24〕前かつ配信サイズに変化なし）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle024-20260819.md</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-19・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 px-2"><strong>配信先が<br>4日間 無反応</strong></td><td class="py-1 px-2">受け渡し箱（mailbox）の実査＝<code>rally-dev</code> 宛の<strong>未処理6通</strong>（Cycle 017・018・019・020・021・023）・<strong>処理済み0通</strong>・<strong><code>rally-dev</code> からの発信0通</strong>。対照＝<code>web-hanasaka</code> 処理71通/発信50通、<code>yoshida-dev</code> 21/14、<code>fujisaka-dev</code> 9/6。<span class="text-red-800"><strong>推測：拠点PCのループが開通（8/15）後まだ一度も起動していない可能性が高い</strong></span>（別解＝起動しているが処理印を付けない運用。ただし発信0通は説明できない）</td><td class="py-1 px-2">🔴 <strong>Q-R12 起票</strong>（在庫26件すべての上流ブロッカー）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-100"><td class="py-1 px-2"><strong>当方の配信漏れ<br>（自己申告の誤り）</strong></td><td class="py-1 px-2">箱を全文検索したところ<strong>Cycle 022 のレポートが存在しません</strong>。掲示板には「配信（1サイクル1通）」と記載していたが<strong>実際には未投函</strong>（届いていたのは017・018・019・020・021・023 の6通）。<span class="text-gray-500">内容は上位互換の Cycle 023 が伝えているため実害は小。規律の穴＝「送った」と書く前に投函を機械確認していなかった</span></td><td class="py-1 px-2">🟡 <strong>archive の Cycle 022 に訂正注記</strong>／<strong>定石 #15 を新設</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知<br>（デプロイ）</td><td class="py-1 px-2">トップの配信内容は <strong>57,978B ＝2日連続でバイト単位まで同一</strong>（応答 0.159秒）。新機能2本も <code>/people</code> 12,504B・<code>/spots/tags</code> 53,794B で<strong>不変</strong>＝R-R29・R-R30 は未着手</td><td class="py-1 px-2">変化なし（基準値を維持）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">Search Console</td><td class="py-1 px-2"><strong>8/16 分が着弾して4日分に</strong>（8/13〜8/16）。<strong>31表示・8クリック・CTR 25.8%・平均掲載順位 4.5</strong>。<span class="text-red-800"><strong>表示されているのは今日もトップ1本だけ</strong>で、検索語も指名系の4語のみ＝<strong>地名・スポット名・テーマ名では1回も出ていません（22サイクル連続）</strong></span><span class="text-gray-500">。「スタンプラリー 全国」28位は2日連続で1表示のまま＝判断材料が増えず引き続き保留</span></td><td class="py-1 px-2">経路①は未着手のまま</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">GA4</td><td class="py-1 px-2">45日で <strong>events 1,383／users 107</strong>（最新日 8/17）。閲覧＝トップ195・<code>/map</code> <strong>159</strong>・<code>/spots</code>(404) 47・<code>/spots/themes</code> 40。<span class="text-sky-700"><strong>直近2日だけで <code>/map</code> が49回・3人＝1人あたり16回の反復閲覧</strong>（推測：歩きながらの実利用か運営の検証。切り分けは R-R17 待ち）</span>。前回1割あった管理画面の混入は直近2日窓では出現せず（集計期間による揺れ）</td><td class="py-1 px-2">種プールへ（<code>/map</code> の反復の正体）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">未知URLの検出<br>（定石 #13 前倒し）</td><td class="py-1 px-2">GA4 の直近2日に<strong>これまで知らなかった <code>/ranking/distance</code></strong>（距離ランキング）が出現。GET＝<strong>200・51,852B・title と説明文はトップと同一の既定値・h1 は1</strong>。<span class="text-gray-500">＝既知の <code>/ranking/points</code> と同じ「名札が無い」状態</span></td><td class="py-1 px-2">🟡 <strong>R-R01 の残件に追加</strong>（新規番号にしない）</td></tr>
+        <tr><td class="py-1 px-2">継続確認<br>（在庫の生存）</td><td class="py-1 px-2"><code>www</code> SSL証明書エラー（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code> 404（R-R06）／<code>/spots</code> 404の行き止まり（R-R24）＝<strong>すべて継続</strong>。<span class="text-gray-500">※<code>sitemap.xml</code> は404を返しつつ中身はアプリの画面（11,374B）を返している＝R-R06 を実装するときの注意点として記録</span>。<strong>消化された提案は 26件中 0件</strong></td><td class="py-1 px-2">⚠️ <strong>Q-R12・Q-R11 の回答待ち</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-4 mb-5">
+      <h3 class="font-bold text-amber-900 mb-2">🙇 反省点 — 「渡した」と報告し続けていましたが、渡した先が受け取っているかを一度も確かめていませんでした</h3>
+      <p class="text-sm text-gray-800 mb-2">私はこの4日間、毎サイクル「実装担当へレポートを配信しました」とご報告してきました。<strong>しかし確認していたのは「送信の処理が成功したこと」だけで、「相手が実際に開いたか」を一度も見ていませんでした。</strong>今日それを数えたところ、<strong>6通すべてが未開封で、相手からの返信も1通もありませんでした</strong>。しかも自分自身、<strong>Cycle 022 では送信そのものを取りこぼしていた</strong>のに、掲示板には「配信しました」と書いていました。</p>
+      <p class="text-sm text-gray-800 mb-2">前回（Cycle 023）は「使えない道具だと思い込んで4サイクル引きずった」ことを反省点としてご報告しました。<strong>今回は同じ形の失敗の別バージョンです</strong>＝<u>自分の自己申告（送った・使えない）を、実測で裏取りしないまま前提にしていた</u>。<strong>結果として、22サイクル分の分析が誰にも読まれずに積み上がっていた可能性があります。</strong></p>
+      <p class="text-sm text-gray-800"><strong>再発防止</strong>＝毎日の確認項目に<strong>定石 #15「配信の到達確認」</strong>を新設しました。①前サイクルのレポートが実際に箱に入ったか ②相手側に何通たまっているか ③相手からの発信があるか——の3点を毎回機械で数え、<strong>滞留3通以上／発信ゼロ7日以上で掲示板と日報に晒す</strong>ようにします。<span class="text-gray-600">※ この確認方法は他サイトの解析ループにも効くので、共通の気づきとして改善台帳に記録しました。</span></p>
+    </div>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>今日いちばん北極星に効く行動は、新しい分析ではありませんでした</strong>：北極星（発見→登録→スタンプ収集）へ向かう経路①②③は、どれも<u>提案が実装に届く</u>ことを前提にしています。<strong>その前提が実測で崩れている以上、ここを繋ぎ直すことが最優先</strong>です。今日の新規提案を0件にしたのはそのためです（在庫26件・消化0件の上に番号を積んでも北極星は動きません）。</li>
+        <li><strong>経路②（参加の障壁）でいま最大の穴は引き続き R-R24</strong>：<code>/spots</code> の行き止まりは本日も継続（404）。直し方は<strong>リンク1本の向き先変更</strong>で、着手推奨の先頭に置いたままです。<span class="text-gray-600">＝<u>直せば効くと分かっている最安の一手が、届いていない可能性のある箱の中で4日間眠っている</u>——これが今日の状況を一番よく表しています。</span></li>
+        <li><strong>経路①（発見される）は変化なし</strong>：Search Console は4日分に増えましたが、<strong>表示されているのは今日もトップ1本だけ</strong>・検索語も指名系4語のみ。<strong>「まだ知らない人」には22サイクル連続で1度も出会えていません</strong>。動かすのは R-R27 → R-R06 → R-R25 → R-R21 で、<strong>いずれも未着手</strong>。</li>
+        <li><strong>種プールへ（まだ提案にしないもの）</strong>：①<code>/map</code> の反復閲覧（直近2日で3人が49回）の正体＝実利用か検証か。R-R17 の計測が入れば切り分きます ②「スタンプラリー 全国」28位（2日連続1表示のため保留を継続）③<code>sitemap.xml</code> が404を返しながらアプリ画面の中身を返す件＝R-R06 の実装時に「404のまま中身だけ返る」形にならないよう注意点として記録。</li>
+        <li><strong>追わないもの</strong>：GA4 の「コンバージョン」欄は全ページ0と出ますが、これは<strong>他社サイト用の設定を流用しているため構造的に0になる</strong>もので、rally の成績ではありません（R-R17 が入るまで指標として使いません）。</li>
+        <li><strong>本サイクルの新規Rは0件・新規Qは1件（Q-R12）</strong>。成果＝<strong>在庫が動かない原因の第一候補を実測で特定／自分の配信漏れ（Cycle 022）の検出と訂正／定石 #15 の新設／<code>/ranking/distance</code> の発見（R-R01 へ統合）／GSC・GA4 の継続計測</strong>。</li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。<span class="text-emerald-700"><strong>※ Cycle 025（8/21）で投函を実測確認済み＝この回の配信は実在します。</strong></span><strong>着手推奨の順序は前回のまま＝<span class="text-red-700">R-R24</span> → R-R30 → R-R17 → R-R27 → R-R31 → R-R25 → R-R21 → R-R22 → R-R28 → R-R26 → R-R23 → R-R02</strong>（R-R29 は Q-R11 の回答で分岐するため保留）。<span class="text-rose-700"><strong>今回の配信には冒頭に1点だけ追記しました</strong>＝「<strong>このメッセージを読んだら、処理済みの印を付けて一言返信してください</strong>」。受け取り確認が取れれば経路は生きていると確定でき、返信が無ければ Q-R12 の推測（起動していない）が裏づけられます。</span><span class="text-gray-600">照会3本（<code>/spots</code> への残りの流入経路／市区町村ページの全国総数／スポット取得失敗時の画面仕様・「□」の実機での見え方・<code>/people</code> と <code>/spots/tags</code> で外枠の有無が分かれている理由）は継続。</span></p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（24サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理6通・処理0・発信0（→Q-R12）</strong>。deploy-log＝<strong>本サイクルは追記なし</strong>（本番の変更なし）。定石＝#1変化検知（<strong>57,978B で2日連続同一</strong>）・#2進捗追跡・#3到達性・#4 GA4・#4b GSC を実施／<strong>#15「配信の到達確認」を新設し即日実施</strong>／#13 は期日（09-14）前だが未知URL検出のため1本だけ前倒し実施／<strong>#5 ビジュアル定点は未実施</strong>＝週次期日 08-24 かつ前倒し条件（配信サイズの変化）に非該当。</p>
+  </section>
+
   <!-- ===== Cycle 023 スナップショット ===== -->
   <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
     <h2 class="text-2xl font-bold mb-1">Cycle 023 — 2026-08-18（<span class="text-red-700">出口のない404の「リンク元」と「実害」を実測で確定＝R-R24 を最優先へ</span>／<span class="text-amber-700">自分の観測手段の思い込みを1つ剪定</span>）</h2>
