@@ -104,5 +104,5 @@ def t_generated_fresh():
 
 check("生成物が正と一致している（生成忘れの検出）", t_generated_fresh)
 
-print(f"\n{ok} 件成功 / {ng} 件失敗")
+print(f"\n合計: 合格 {ok} ／ 不合格 {ng}")
 sys.exit(1 if ng else 0)

@@ -117,6 +117,7 @@
     <a href="../clients/index.html" target="_top">👥 クライアント記録</a>
     <a href="../drafts/index.html" target="_top">📄 ドラフト置き場</a>
     <a href="../docs/command-map.html" target="_top">🧭 コマンド早見表（迷ったら /do）</a>
+    <a href="../docs/system-map.html" target="_top">🗺 システム全体マップ（全モードの設計図）</a>
     <a href="../hub.html" target="_top">🗂 すべてのリンク（旧トップ）</a>
   </nav>
 </div>
@@ -140,7 +141,7 @@
   <span style="color:#f9a8d4">🌳 オフィス西どなりの森（HUDの「🌳 森」で見に行く） ＝ <b>クライアントサイトの実データ</b>（Search Console / GA4・毎日更新）。木の大きさ＝直近7日の検索クリック／🍎 実がなる＝直近にCV（問い合わせ・WEB予約）があった／🌼 地面の花＝全サイト合計の勢い／支柱つきの苗木＝データ未接続。待機中のキャラクターは森を散歩します</span><br>
   <span style="color:#cbd5e1">🚗 奥の通り・🚃 線路を通る電車・🛝 川向こうの公園・🚪 道路側の玄関と小道・🐈🐕🐇 やってくる動物・🐦 飛んでくる鳥・🦋 蝶 ＝ <b>背景の演出でデータとは無関係</b>。数や動きに意味はありません（見て楽しむための層）</span><br>
   <span style="color:#7dd3fc">📻 上の活動ティッカー＝直近24時間の出来事（🔨起動 ✉️便 📋成果 ⚠️警報）。クリックで🌙夜間ダイジェスト＝夜のうちの働きをまとめて確認</span><br>
-  <span style="color:#a5b4fc">🎮 視点：左ドラッグ＝回転／<b>W前・S後・A左・D右</b>（矢印キーも可・Shiftで速く）／右ドラッグ＝つかんで平行移動／ホイール＝ズーム／<b>0キーで最初の位置に戻る</b>。<b>キャラクターに合わせると光る→クリックでズーム＋役割カード</b>（✕・Esc・0で戻る）。書類の山・コルクボード・吹き出しはクリックで詳細</span>
+  <span style="color:#a5b4fc">🎮 視点：左ドラッグ＝回転／<b>W前・S後・A左・D右</b>（矢印キーも可・Shiftで速く）／右ドラッグ＝つかんで平行移動／ホイール＝ズーム／<b>0キーで最初の位置に戻る</b>。<b>キャラクターや奥の壁の🏢全社ボードに合わせると光る→クリックでズーム＋役割カード</b>（✕・Esc・0で戻る）。書類の山・コルクボード・吹き出しはクリックで詳細</span>
   </div>
 </div>
 <div class="hud" id="tip">データ：/tools/office/status.php ＋ activity.php（どちらも読み取り専用）<br>AIの状態＝5秒ごと／社員の稼働＝5分ごと／ToDo・案件数＝30分ごと／活動ティッカー＝60秒ごと</div>
@@ -2361,7 +2362,7 @@ let qNotes = null, qShown = -1;
  * 会社全体の数字を1枚で見せる掲示板。中身は hana-tools 由来（30分ごと更新）。
  * 数字が取れないときは「未取得」と描く＝0件と偽らない。 */
 const companyBoard = new THREE.Group();
-let companyPanel = null, companyKey = '';
+let companyPanel = null, companyKey = '', companyCache = null;
 {
   const frame = new THREE.Mesh(new THREE.BoxGeometry(3.62, 2.18, 0.1),
     new THREE.MeshStandardMaterial({ color: 0x4a3a26, roughness: 0.8 }));
@@ -2410,6 +2411,7 @@ function paintCompanyBoard(rows, footer) {
 }
 
 function updateCompanyBoard(co) {
+  companyCache = co;                 // フォーカスカードが最新の数字を読めるように（盤面と別に保持）
   const key = co ? `${co.activeProjects}|${co.todoOpen}|${co.todoOverdue}|${co.stale ? 1 : 0}` : 'none';
   if (companyKey === key) return;
   companyKey = key;
@@ -3422,6 +3424,42 @@ function focusViewOf(obj3d, d = 9) {
   obj3d.getWorldPosition(p);
   return { at: [p.x, 0.7, p.z], dist: d };
 }
+
+/* ---- 全社ボード（黒板）もフォーカス対象に（第二弾・社長指示 2026-08-21）------
+ * クリックで壁のボードへ寄り、会社の数字＋オフィスの役割マップ（島ごとの顔ぶれ）を表示。
+ * 全体設計のくわしい図は生成ページ（docs/system-map.html）へリンクで渡す。
+ * ここは focusables の const 初期化より後＝この位置で登録する（前だと TDZ で落ちる）。 */
+function focusBoardBody() {
+  const co = companyCache;
+  // 数値も HTML に流し込む前に正規化する＝status.php が整数キャストを外しても素通りさせない
+  // （多層防御・2026-08-21 Codexレビュー🟡）
+  const num = v => Number.isFinite(+v) ? String(+v) : '—';
+  const nums = co
+    ? `進行中の案件 <b>${num(co.activeProjects)}</b>件／未完了ToDo <b>${num(co.todoOpen)}</b>件` +
+      (+co.todoOverdue > 0 ? `（⏰期日超過 ${num(co.todoOverdue)}）` : '') +
+      (co.stale ? '　※データが古い可能性' : '')
+    : '数字は未取得です（hana-tools から取得できていません）';
+  const rows = [];
+  for (const [key, isl] of Object.entries(ISLANDS)) {
+    if (isl.human) continue;                       // 社員席（人）はエージェントの役割マップに混ぜない
+    const names = [...avatars.values()]
+      .filter(a => a.agent?.island === key)
+      .map(a => esc(a.agent.label ?? a.agent.id ?? ''));
+    if (names.length) rows.push(`<b>${esc(isl.name)}</b>＝${names.join('・')}`);
+  }
+  const roleMap = rows.length ? rows.join('<br>')
+    : '役割情報は取得中です…（数秒おいてもう一度開いてください）';
+  return `${esc('会社全体の数字（hana-tools・30分ごと更新）')}<div class="sub2">${nums}</div>` +
+    `<div class="sub2">🗺 オフィスの役割マップ<br>${roleMap}<br>` +
+    `<span style="color:#94a3b8">各キャラクターをクリックすると個別の役割が読めます。</span></div>` +
+    `<div class="sub2"><a href="../docs/system-map.html" style="color:#7dd3fc">📖 システム全体マップ（全モードの設計図）を開く →</a></div>`;
+}
+registerFocusable(companyBoard, {
+  title: () => '🏢 全社ボード',
+  body: focusBoardBody,
+  // ボードの正面（部屋の内側・θ=0＝真南から）へ寄る。φ1.35＝ほぼ水平にボードを見る
+  view: () => ({ at: [-4.5, 2.5, -9.4], theta: 0, phi: 1.35, dist: 7 }),
+});
 
 canvas.addEventListener('wheel', e => { e.preventDefault(); camTween = null; dist *= (1 + Math.sign(e.deltaY) * 0.08); updateCamera(); }, { passive:false });
 
