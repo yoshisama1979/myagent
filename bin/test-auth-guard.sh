@@ -141,5 +141,35 @@ printf '%s' "$auth_block" | grep -q 'last-alert-noauth' \
   && ok "専用のスロットル先を使う（他の警報に握り潰されない）" || ng "スロットルが共用"
 
 echo
+echo "=== 「claude が動き出す前に落ちた」判定の作法が守られているか ==="
+# クレジット切れ・認証切れは同じ形の7行ブロックで、うち3行（cooldown_hold / ACTIONS+= / return 0）は
+# どちらも同一。関数に切り出そうとしても **早期 return は呼び出し元でしか書けない**＝
+# いちばん間違えやすい部分を閉じ込められないため、まとめずに「作法が守られているか」を機械で見張る。
+# 次に3つ目を足す人がコピペで1行落としたときに、ここで落ちる。
+for kind in nocredit noauth; do
+  # 該当ブロック＝`fail "$label-<kind>"` から直後の `return 0` まで
+  blk=$(awk -v k="$kind" '
+    $0 ~ ("label-" k) {f=1}
+    f {print}
+    f && /return 0/ {exit}' "$SRC")
+  [ -n "$blk" ] || { ng "$kind ブロックを抽出できない"; continue; }
+  printf '%s' "$blk" | grep -q 'cooldown_hold' \
+    && ok "$kind: 冷却をかける（毎分claudeを起動し続けない）" \
+    || ng "$kind: cooldown_hold が無い＝毎分起動して費用が止まらない"
+  printf '%s' "$blk" | grep -q 'cooldown_apply' \
+    && ng "$kind: cooldown_apply を使っている＝連続失敗に数えられ復旧後も長時間ロックされる" \
+    || ok "$kind: 連続失敗には数えない（こちらの不具合ではない）"
+  printf '%s' "$blk" | grep -q 'ACTIONS+=' \
+    && ok "$kind: ACTIONS に積む（heartbeat の status に出る）" \
+    || ng "$kind: ACTIONS+= が無い＝status 行に現れず気づけない"
+  printf '%s' "$blk" | grep -q 'return 0' \
+    && ok "$kind: 早期 return する（下の rc 分類まで流れて二重に鳴らさない）" \
+    || ng "$kind: return 0 が無い＝そのまま流れて二重通知になる"
+  printf '%s' "$blk" | grep -qE 'last-alert-[a-z]+' \
+    && ok "$kind: 専用スロットルを使う（他の警報に握り潰されない）" \
+    || ng "$kind: スロットルが共用"
+done
+
+echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1
