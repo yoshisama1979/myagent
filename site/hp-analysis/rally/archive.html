@@ -40,6 +40,34 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 025 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 025 — 2026-08-21（<span class="text-emerald-700">検索結果に「トップ以外のページ」が23サイクルぶりに初めて出ました</span>／<span class="text-red-700">25サイクル未踏だった「バッジ図鑑」を初実査＝新規 R-R32</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・8/17 分が着弾して<strong>5日分</strong>に増加）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/19）。社長入力（from-president.md）＝新規追記なし（25サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし＋<strong>配信先の滞留を実査</strong>（定石 #15）。本番実査＝<strong>実施</strong>（hp-audit 8本＋リンク実査4本＋スクリーンショット2本 ✅／素の <code>curl</code>・<code>crontab -l</code> は承認不可のまま）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle025-20260821.md</code>。<span class="text-amber-800">⚠️ <strong>8/20 のサイクルは成果物を残していません</strong>（掲示板の最終更新が 8/19＝<strong>欠測1日</strong>。起動ログが保存期間を過ぎており原因は特定できませんでした）。</span></p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-21・ライブ）</h3>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-1 mb-4">
+      <li><strong>🔑 検索結果にトップ以外が初出現</strong>：GSC 5日分（8/13〜8/17・33表示・8クリック・CTR 24.2%・平均掲載順位 4.6）のなかに <code>/spots/themes</code> が<strong>1回だけ表示</strong>（順位 10.0・クリック0）。23サイクル続いた「トップ1本だけ」が初めて崩れた。※どの検索語かは匿名化枠で特定不能・まだ1回だけ・R-R25 は未着手なので<u>施策の成果ではない</u> → 🌱 種プール（R-R25 の効果測定の基準線に採用）</li>
+      <li><strong>🔑 バッジ図鑑を初実査（25サイクル未踏）</strong>：①未ログインで <code>/badges</code> を開くと<strong>無言でトップへ戻される</strong>（<code>/footprints</code> は正しく <code>/login</code> へ）②トップ・地図・エリア一覧の<strong>どこからもリンクなし＝メニューから消滅</strong>③GA4 45日で<strong>閲覧が実質ゼロ</strong> → 🔴 <strong>R-R32 起票</strong>（本サイクル唯一の新規提案）</li>
+      <li><strong>配信先が6日間 無反応</strong>：<code>rally-dev</code> 宛の<strong>未処理7通・処理0・発信0</strong>（開通 8/15 から6日）。※Cycle 024 のレポートは<strong>箱の中に実在を確認</strong>＝定石 #15 の裏取りが機能 → 🔴 Q-R12 継続・緊急度↑</li>
+      <li><strong>変化検知</strong>：トップ <strong>57,978B ＝4日連続バイト同一</strong>（8/17 のデプロイ以降 変更なし）。R-R24 のリンク（<code>/spots/areas</code> の「‹ スポット一覧に戻る」→404の <code>/spots</code>）も<strong>実測で存在＝未修正</strong></li>
+      <li><strong>GA4</strong>：45日 events 1,386／users 109（最新日 8/19）。<code>/</code>196・<code>/map</code> 161・<code>/spots</code>(404) 47・<code>/spots/themes</code> 44・<code>/login</code> 17。直近2日は総閲覧16件＝小サンプルのため短期の増減は読まない</li>
+      <li><strong>継続確認</strong>：www SSL エラー（R-R18）／robots・sitemap 404（R-R06）／<code>/spots</code> の行き止まり（R-R24）＝<strong>すべて継続</strong>。<strong>消化された提案は 26件中 0件</strong>（23サイクル連続）</li>
+    </ul>
+
+    <h3 class="font-semibold mb-2">北極星との接続</h3>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-1 mb-4">
+      <li><strong>経路③</strong>：バッジ図鑑＝「集める楽しさ」を見せる面が、<u>メニューから消え・未登録者には無言でトップへ戻され・誰も到達していない</u>＝<strong>続ける動機を見せる場所が導線上ほぼ存在しない</strong>（→R-R32）</li>
+      <li><strong>経路①</strong>：<code>/spots/themes</code> の初表示で「下層ページも載り得る」ことが実データで確認＝<strong>R-R25 → R-R21 の順序の見立てを補強</strong>（ただし1回のみ・未着手のため成果ではない）</li>
+      <li><strong>経路②</strong>：最大の穴は引き続き R-R24（<code>/spots</code> の行き止まり・送り込みリンク1本も現存）</li>
+      <li><strong>すべての前提</strong>＝提案が実装に届くこと（滞留7通・返信0通・6日間）→ 🔔 Q-R12</li>
+      <li><strong>追わないもの</strong>：直近2日の閲覧増減（総16件＝サンプル過小）／GA4 の「コンバージョン」欄の全ページ0（他社用設定の流用による構造的な0＝R-R17 が入るまで指標に使わない）</li>
+    </ul>
+
+    <p class="text-xs text-gray-500">実装担当への引き渡し＝mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。着手推奨順＝R-R24 → R-R30 → R-R17 → R-R27 → R-R31 → R-R25 → R-R21 → R-R22 → R-R28 → R-R26 → R-R23 → R-R02（R-R29 は Q-R11 の回答で分岐）。照会1本を追加＝「<code>/badges</code> がログイン画面ではなくトップへ戻る挙動は意図的か」。定石＝#1・#2・#3・#4・#4b・#15 を実施／#5 は週次期日 08-24 かつ前倒し条件に非該当で未実施。<span class="text-amber-800">⚠️ 8/20 は欠測（成果物なし・起動ログの保存期間切れで原因特定不能）。</span></p>
+  </section>
+
   <!-- ===== Cycle 024 スナップショット ===== -->
   <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
     <h2 class="text-2xl font-bold mb-1">Cycle 024 — 2026-08-19（<span class="text-red-700">在庫が22サイクル動かない原因の第一候補を特定＝レポートの配信先が起動していない疑い</span>／<span class="text-amber-700">自分の配信ミス（Cycle 022 未配信）も検出</span>）</h2>
