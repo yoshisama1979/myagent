@@ -375,15 +375,18 @@ def audit(items: list[dict]) -> int:
             tally["⚠️ アンカーが raw に見つからない"] += 1
             broken_anchor.append(f"{cid}（cw: {m.group(1)}-{m.group(2)} が raw に無い）")
             continue
+        def flag(how: str) -> None:
+            """この行に『こう直す』を1件立てる。差出人・宛先の取り出し方を1箇所にする。"""
+            fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]), how))
+
         if it["excluded"]:
             tally["除外ルームを指している"] += 1
-            fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]), "除外ルーム＝起票対象外。残す理由を書くか取り下げる"))
+            flag("除外ルーム＝起票対象外。残す理由を書くか取り下げる")
         elif it["to_me"]:
             tally["社長宛（そのままでよい）"] += 1
             if state == "👥":
                 # 社長宛を 👥 に落とすと最重要のボールが把握用の枠に埋もれる（社長ご指示＝最重要は社長宛）。
-                fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]),
-                            "👥 を 🔴 へ（社長宛＝最重要）"))
+                flag("👥 を 🔴 へ（社長宛＝最重要）")
         elif it["to_ids"]:
             internal = any(int(i) in INTERNAL for i in it["to_ids"])
             tally["社内の方宛（👥）" if internal else "他の方宛"] += 1
@@ -391,11 +394,9 @@ def audit(items: list[dict]) -> int:
                 # v0.9＝社内の方宛は「はなさか側のボール」。🟢 に落とすと督促対象から外れて落ちる。
                 # ⚠️ 📌（確定記録）と ✅（完了）は**ボールではない**＝資産・履歴なので触らない。
                 if state in ("🔴", "🟢"):
-                    fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]),
-                                f"{state} を 👥 社内ボールへ（v0.9・はなさか側のボール）"))
+                    flag(f"{state} を 👥 社内ボールへ（v0.9・はなさか側のボール）")
             elif state == "🔴":
-                fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]),
-                            "🔴 を外し ※社長宛でない（周辺情報）を付す"))
+                flag("🔴 を外し ※社長宛でない（周辺情報）を付す")
         else:
             tally["社長ご自身の発信を指している"] += 1
 
