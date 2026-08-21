@@ -122,6 +122,46 @@
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
 
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 099 — 2026-08-21（y-com.info・日次＋週次3本＋月次1本＝4本同時到来の「深い日」）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・最新 08-18＝遅れ3日・28日 per-URL・全量600件）✅／広告（ads-fetch）✅／オンページ実査（hp-audit・定点8ページ）✅／画面取得（hp-shot）✅／競合対比（hp-serp→hp-compete）✅／受信箱の直接実査 ✅／Clarity ❌（許可リスト未登録44日目）。<strong class="text-amber-700">※ 本サイクルは掲示板の「最新サイクル」ブロックの差し替えを落としていました（ヘッダー要約と繰り越し表のみ更新）。Cycle 100 で気づき、以下を事後に記録しています。</strong></p>
+    <p class="text-sm text-gray-700 mb-3"><strong>① 月次の配管点検（30日ぶり）が、ご報告のないまま完了していた作業を掘り当てました</strong>＝<strong class="text-emerald-700">robots.txt / sitemap.xml が実体として設置済み</strong>（7/22 時点では両方ともトップへ転送＝実質未設置でした）。30日間ストックしていた R-039 の (a) が、実は完了していたことになります。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>② その sitemap（52ページ）を「サイトの正しいページ一覧」として検索データと突き合わせた結果、14ページが28日間で一度も検索に出ていない</strong>と判明し、その中に <strong class="text-rose-700">AIサービスのページ（AI-OCR）＝事業3本柱の1つ</strong>がありました。実査したところ<strong>サイト内のどこからもリンクされておらず</strong>（4ページで確認して全て0本）、画面で見ると中身は完成度の高い買い手向けページでした＝<strong>R-048 として起票</strong>。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 競合対比から R-049 を起票</strong>＝運用代行ページは構造化データ・問い合わせ導線で競合に勝っており、<strong>負けているのは本文の厚みだけ</strong>（見出し15本 vs 33本）。当社で実証済みの型（料金ページで14.1位→10.3位）の適用条件にぴったり当てはまります。</p>
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 前日の報告を訂正</strong>＝「施策していない WordPress ページも同じ形で伸びている」と申し上げましたが、<strong>その比較対象にも7月に施策を入れていました</strong>（当方の記録にも書いてありました）。同じ階層の11ページを全部並べ直すと、<strong>動いたのは施策を打った2ページだけで、残り9ページは横ばい</strong>＝「たまたま全体が動いた」説は否定されました。ただし施策の効果とも断定していません（判定 ~09-10）。</p>
+    <p class="text-sm text-gray-700"><strong>⑤ レスポンシブ対応ページ（R-036）は21回連続で不動＝❌不発として正式クローズ</strong>／定点8ページ 退行なし／提携募集ページ（R-040）は未着手28日目として「実装側の着手待ち」と記載 <strong class="text-rose-700">← この判定は Cycle 100 で誤りと判明（実際は社長の事実確認待ちでした）</strong>。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 098 — 2026-08-18（y-com.info・日次のみ〔週次はすべて未到来〕）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・転送正常＝最新 08-15＝遅れ3日・28日 per-URL・<strong>全量600件</strong>＋<strong>実装日で切った日単位バケット</strong>）✅／広告（ads-fetch・日次）✅／オンページ実査（hp-audit・定点8ページ）✅／受信箱の直接実査 ✅／Clarity ❌（許可リスト未登録41日目）。入力＝本ループ宛の新着なし・from-president 新規なし。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① 本日の主産物＝<strong>昨日ご報告した「撤回」自体が、まだ測り方を間違えていました</strong>（訂正のうえ再訂正します）</p>
+      <p class="text-sm text-gray-700 mb-2">昨日（Cycle 097）、<strong>システム開発ページ（R-042・8/11 実装）は「実装前 0表示 → 実装後 6表示・17.0位」＝ゼロから出はじめた</strong>とご報告し、それまでの「効果なし」判定を撤回しました。<strong class="text-rose-700">本日、日単位で切り直したところ、この撤回が誤りでした。</strong></p>
+      <p class="text-sm text-gray-700 mb-2"><strong>何を間違えたか</strong>＝実装日は <strong>8/11</strong> なのに、昨日は「実装後」の期間を <strong>8/8〜8/14</strong> と置きました。<strong class="text-rose-700">この中の 8/8・8/9・8/10 は、まだ実装されていない日です。</strong>＝実装前の3日を「実装後」に混ぜて数えていました。</p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">ページ</th><th class="py-1 pr-3">8/1〜8/5<br><span class="font-normal">（実装前）</span></th><th class="py-1 pr-3">8/6〜8/8<br><span class="font-normal">（実装前）</span></th><th class="py-1 pr-3">8/9〜8/10<br><span class="font-normal">（実装前）</span></th><th class="py-1 pr-3">8/11〜8/15<br><span class="font-semibold">（実装後）</span></th><th class="py-1">読み方</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-rose-100 bg-rose-50"><td class="py-1 pr-3">システム開発（R-042）</td><td class="py-1 pr-3">0表示</td><td class="py-1 pr-3 font-semibold">6表示・17.0位</td><td class="py-1 pr-3">0表示</td><td class="py-1 pr-3 font-semibold text-rose-700">0表示</td><td class="py-1"><strong class="text-rose-700">6表示は全部「実装前」でした</strong></td></tr>
+          <tr class="border-b border-rose-100 bg-emerald-50"><td class="py-1 pr-3">運用代行（R-045）</td><td class="py-1 pr-3">0表示</td><td class="py-1 pr-3">1表示</td><td class="py-1 pr-3">9表示</td><td class="py-1 pr-3 font-semibold text-emerald-800">51表示・14.1位</td><td class="py-1">伸びは本物。<strong>ただし上がり始めは実装2日前</strong></td></tr>
+          <tr class="bg-emerald-50"><td class="py-1 pr-3">WordPress（<strong>施策していない</strong>）</td><td class="py-1 pr-3">2表示</td><td class="py-1 pr-3">0表示</td><td class="py-1 pr-3">5表示</td><td class="py-1 pr-3 font-semibold text-emerald-800">27表示・21.7位</td><td class="py-1">運用代行と<strong>まったく同じ形</strong>で動いている <strong class="text-rose-700">← Cycle 099 で「この比較対象にも施策を入れていた」と再訂正</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>正しい現状</strong>＝<strong class="text-rose-700">システム開発ページは、実装後5日間で検索結果に一度も出ていません</strong>（念のため検索語別でも確認＝データなし）。<strong class="text-emerald-700">運用代行と WordPress は確かに伸びています</strong>が、<strong>上がり始めたのは 8/9〜8/10＝実装の2日前</strong>で、しかも<strong>施策していない WordPress ページが同じ形で動いています</strong>。＝現時点では「今回の内部リンク改修の効果」と言い切れず、<strong>ページの束（/service/web/ 配下）全体で起きている別の変動</strong>の可能性のほうが説明力があります（推測）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-amber-700">ただし、まだ結論は出しません</strong>＝実装後5日・表示数も一桁〜数十の規模です。<strong>正式な判定は予定どおり ~09-10</strong>（約30日後）に行います。システム開発ページを「効果なし」と決めつけることもしません。</p>
+      <p class="text-sm text-gray-700"><strong>再発防止</strong>＝「実装日で前後に割る」は昨日手順書に入れましたが、<strong class="text-rose-700">肝心の割る位置を間違えました</strong>。本日、<strong>「前後の期間は実装日そのもので切る（実装日を含む側が“後”）／週の区切りに合わせない」</strong>を手順に追加しました。<span class="text-gray-600">※同じ性質の誤り（測り方の欠陥）は通算4種類目です。いずれも「気をつける」ではなく手順・コマンドの既定値そのものを変えることで対処しています。<strong>2日連続で同じ論点を訂正することになり、失礼しました。</strong></span></p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>② サイト全体は引き続き縮小</strong>（昨日の観察を再確認）＝6/21〜7/18 が 73,882表示・2,305クリック → 7/19〜8/15 は <strong>56,304表示・1,619クリック</strong>（<strong class="text-rose-700">表示 -23.8%／クリック -29.8%</strong>）。<strong>＝全体が縮んでいる中で運用代行・WordPress が伸びている</strong>という切り分けは有効です（季節や検索側の追い風では説明できない）。<span class="text-gray-600">※減少そのものは事業外テーマのブログ流入が主体の面で起きており、当ループが追う買い手クエリの帯（料金・大阪・外注）は健在です。</span> <strong class="text-rose-700">← Cycle 100 で保留：ブログ配下の侵害（スパムURL 1万件超）が判明したため、サイト全体の増減は当面 baseline に使いません。</strong></p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 効果検証（日次）</strong>＝<strong>R-036（レスポンシブページの見え方刷新）は20回目の不動</strong>（「レスポンシブ対応 大阪」53表示・<strong>5.4位</strong>・0クリック／基準 5.6位）＝<strong>不発でほぼ確定・正式クローズは予定どおり ~08-21</strong>。「ホームページ制作 料金表」は<strong>13.6位</strong>（200表示・12.8〜13.6 の帯の内側＝転換とは読みません）・「同 大阪」2.6位＝<strong>クリックは依然ゼロ</strong>。<strong>相談ページの重複（R-047）</strong>＝4ページ計 <strong>84表示・クリック0</strong>で構図は不変（free_advice.html は今日も検索結果に出ていません）。<strong class="text-emerald-700">🆕 実績一覧ページ（/works/）に1クリック</strong>（34表示・5.3位）＝長くゼロだった面ですが1件なので転換とは読みません。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 日次定点＝退行なし</strong>（8ページすべて HTTP200・基準値と完全一致）。<strong class="text-rose-700">提携募集ページ（R-040）＝タイトル48字のまま＝未着手25日目</strong>＝配信の到達は確認済みなので、<strong>実装側の着手待ちです</strong>（社長のご回答は不要）。<strong class="text-rose-700">← Cycle 100 で撤回：実際は社長の事実確認待ちでした。</strong>前提は本日も健在＝「外注 ホームページ 大阪」で<strong>23表示・2.5位</strong>。<strong>広告＝異常なし</strong>（6日 ¥4,308≒日¥718・データ到着は 8/16 まで＝2日遅れ）。<strong>受信箱＝新着なし</strong>（実装担当からの最新は 8/11 分で処理済み）。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑤ 新しい提案・質問はゼロです</strong>（在庫6件のまま）。本日は<strong>「自分の訂正を、もう一度訂正する日」</strong>でした。これを放置していたら、<strong>効いていないものを「効いた型」として他のサイトにも横展開するところでした</strong>（当ループは効果が確認できた型を全サイト共有ライブラリに昇格させる運用のため、誤った成功譚は他社の施策にまで波及します）。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 097 — 2026-08-17（y-com.info・日次＋週次1本〔広告週次〕）</h3>
     <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・転送正常＝最新 08-14・28日 per-URL・全量600件）✅／広告（ads-fetch・日次＋週次）✅／オンページ実査（hp-audit・定点8ページ）✅／受信箱の直接実査 ✅／Clarity ❌（許可リスト未登録40日目）。入力＝本ループ宛の新着なし・from-president 新規なし。</p>
 
