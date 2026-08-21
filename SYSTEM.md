@@ -3,7 +3,7 @@
 > **統括者（overseer）が毎ループ冒頭に読む入口。** 変わりにくい**構造**だけをここに置く。
 > 滞り・版ズレ・未回答などの**変わりやすい状態は保存しない**（統括者が都度生成する＝[rules/modes/overseer.md](rules/modes/overseer.md)）。
 > 役割分担：`OVERVIEW.md`＝ディレクトリの地図／`AI-INDEX.md`＝site/中身の地図／**本ファイル＝動くモード同士の関係の地図**。
-> version 0.3（2026-07-28）｜ changelog は末尾。
+> version 0.4（2026-08-21）｜ changelog は末尾。
 
 ---
 
@@ -33,6 +33,8 @@
 |--------|------|------|------------------|--------------------|-----------|---------|-------------|
 | **Main（業務）** | 蓄積記録を運用・実装に反映 | 通常会話 | site/・data/・hana-tools | site/ 各所・コード | 外部送信/本番は社長 | 社長 | CLAUDE.md / rules/* |
 | **chat（会話窓口）** | 社長Slackの会話・相談・質問に答える＝Slack既定受け先（`hanasaka-main`） | `/chat`（反応tick・`to: hanasaka-main`） | Slack新着・site/・data/ | Slackスレッド返信・mailbox転送（解析依頼を hp-loop 等へ） | 外部送信/本番は社長 | 社長（Slack） | [.claude/commands/chat.md](.claude/commands/chat.md) |
+| **talk（相談窓口）** | 社長の相談・雑談・確認に**その場で即答**する軽い器。**起動時に台帳も掲示板も読まない**（必要になったときだけ取りに行く）＝1回$1〜2。重い調査は自分でやらず partner へ渡す | `/talk <thread_ts>`（`bin/talk-tick.sh`・毎分cron・`to: talk`。**agent-tick とは別ロック**＝hp-loop が25分回っていても待たされない） | 自分宛 mailbox（相談ch＝旧#partner の新規投稿）／答えるのに要る範囲だけ site/・data/ | 相談chのスレッド返信・partner への申し送り（mailbox）。**ファイルは1つも書かない**（フックが物理的に拒否） | 調査・実装・記録・外部送信はしない＝partner へ渡す | 社長（Slack 相談ch） | [.claude/commands/talk.md](.claude/commands/talk.md) |
+| **partner（経営パートナー）** | 全社横断で「今日の一手」を出し実行まで伴走。日次レポート（朝礼）＋将来の週次・月次 | `/partner`（daily 07:00・`to: partner` の反応tick） | `data/partner/`（台帳・from-president）・掲示板・hana-tools・財務スナップ・各ループの頭出し・予定・talk からの申し送り | Slack **#report**・`site/business/partner/`・`data/partner/` | 外部送信/本番は社長 | 社長（Slack #report） | [rules/modes/partner.md](rules/modes/partner.md)（1.3） |
 | **Memo** | 断片メモを精度高く記録（一次入力・手動） | `/memo` | 社長の口頭メモ | `site/notes.html`・`site/clients/*/memo.html`（AI追記のみ） | — | 社長 | [rules/modes/memo.md](rules/modes/memo.md) |
 | **memo-triage** | #memo の新着メモを日中その場で会話返信・軽く点検（曖昧点だけ確認）→memo-stock へ退避 | `/memo-triage`（反応tick・`to: memo`） | `data/mailbox/new/`（`to: memo`） | #memo スレッド返信・`data/mailbox/memo-stock/` 退避（notes は書かない） | — | 社長（#memo） | [rules/modes/memo-triage.md](rules/modes/memo-triage.md)（0.3） |
 | **memo-intake** | 夜バッチで memo-stock の当日メモを notes.html へまとめて清書＋#memo に要約1本 | `/memo-intake`（daily memo・23:00） | `data/mailbox/memo-stock/`（＋取りこぼし救済の new/） | `site/notes.html`（AI追記のみ）・#memo に要約投稿 | — | 社長（#memo・非同期） | [rules/modes/memo-intake.md](rules/modes/memo-intake.md)（0.4） |
@@ -80,7 +82,12 @@
 ## ハンドオフ・トポロジ（誰がどのチャネルで非同期会話するか）
 
 ```
-社長(Slack) ──fetch──▶ mailbox ──▶ chat / overseer / hp-loop-<site>（各々スレッド返信で会話）
+社長(Slack) ──fetch──▶ mailbox ──▶ chat / talk / partner / overseer / hp-loop-<site>（各々スレッド返信で会話）
+
+  ＊会話と重い処理はレーンごと別（2026-08-19 社長決定）：
+    相談ch(旧#partner)へ新規投稿 ─▶ talk（軽い器・毎分・別ロック）─調べる必要あり─▶ partner
+    #report / 朝礼スレッドへ返信 ─▶ partner（重い器・daily 07:00）
+    ＊fetch は agent-tick のメインロックの外＝重い解析が回っていても会話は届く
 
 Memo / memo-triage ──(memo-stock)──▶ memo-intake ──(site/notes.html追記)──▶ Main（後で運用反映）
 
@@ -89,6 +96,7 @@ hp-loop  ⇄ サイト別実装担当       … 掲示板 site/hp-analysis/<site
 blog-loop ⇄ 執筆/実装担当(web-hanasaka) … 掲示板 hp-analysis/<client>/blog/ ＋ mailbox to:blog-loop-<client>（fact質問も blog-loop が集約）
 blog-write/blog-improve → WP下書き（公開は人間）
 task-partner ⇄ プロジェクト側     … hana-tools の ToDo（一次）＋ 社長橋渡し
+talk → partner                    … 深掘りが要る相談の申し送り（mailbox local-send・talk は自分で調べない）
 全拠点エージェント間              … mailbox（VPS API・Tailscale・hold/=社長承認ゲート／同一VPS内は local-send）
 
 社長 = すべてのハブ。AIの提案は社長を介して相手へ渡り、報告は社長を介して戻る。
@@ -109,6 +117,8 @@ task-partner ⇄ プロジェクト側     … hana-tools の ToDo（一次）�
 | Reviewer会話 | `ai-loop/conversation.md` | Reviewer提案・人判断 | append中心 |
 | 拠点横断メッセージ | `data/mailbox/{new,cur,hold}/`（API: `site/tools/mailbox/`） | 各エージェント（append-only） | hold/=社長ゲート |
 | 日常メモ窓口 | Slack **#memo**（`SLACK_MEMO_CHANNEL_ID`）→ `to: memo` → `data/mailbox/memo-stock/` → `site/notes.html` | 社長(Slack)／memo-triage退避／memo-intake清書 | 2層（日中triage・夜intake） |
+| 相談窓口 | Slack **相談ch**（`SLACK_TALK_CHANNEL_ID`／未設定なら旧 `SLACK_PARTNER_CHANNEL_ID`）→ 新規投稿は `to: talk` → `bin/talk-tick.sh`（毎分・別ロック） | 社長(Slack)／talk が返信 | **スレッド＝claudeセッション**（`--resume`）＝会話が続く。過去の朝礼スレッドへの返信は threads.json の持ち主に従い partner に届く |
+| レポート窓口 | Slack **#report**（`SLACK_REPORT_CHANNEL_ID`）→ `to: partner` → daily 07:00 の `/partner` | partner（投稿）／社長（返信・追加情報） | 日次・将来の週次/月次も同じ場所。2026-08-19 に会話（相談ch）と分離＝#partner が朝礼に占領され相談の場が無くなっていたため |
 | 社長⇄エージェント（Slack双方向） | Slack専用チャンネル ⇄ `bin/slack-poll.py`（fetch/post/reply）⇄ mailbox。`data/slack/last-seen.json`・`threads.json` で既読/追跡管理 | 社長(Slack)／エージェント(reply) | ループが各回 fetch。返信は元スレッドへ |
 | メモ（横断/案件） | `site/notes.html` / `site/clients/*/memo.html` | Memo/memo-intake（追記のみ） | 履歴消さない |
 | 統括所見 | `site/overseer/index.html`（統括レポート掲示板・Web閲覧） | Overseer（追記） | append・reviewer型 |
@@ -164,6 +174,7 @@ task-partner ⇄ プロジェクト側     … hana-tools の ToDo（一次）�
 ## 変更履歴
 | version | 日付 | 内容 |
 |---------|------|------|
+| 0.4 | 2026-08-21 | **talk（相談窓口）と partner（経営パートナー）をモード表へ追加（社長ご指示）**。⚠️ **partner は毎朝7:00に走っているのに、これまで地図に一度も載っていなかった**（＝統括の点検・改善提案から漏れていた）。talk 追加のために表を開いて初めて気づいた。あわせて①ハンドオフ図に「会話と重い処理はレーンごと別」を明記（相談ch新規投稿→talk／#report・朝礼スレッド返信→partner／fetch はメインロックの外＝重い解析中でも会話は届く）②チャネル表に相談ch・#report を追加。**未反映の既知の漏れ**＝`/do`（振り分け窓口）と `/intake` の一部は別エージェントが整備中のため本版では触っていない。 |
 | 0.1 | 2026-06-18 | 初版。モード地図・ハンドオフトポロジ・チャネル/一次情報マップ・ツール一覧・健康シグナル候補・保守責任を定義 |
 | 0.3 | 2026-07-28 | **Finance（経理）モード追加（社長合意・同日）**＝`/finance`＋サブエージェント委任（`.claude/agents/finance.md`・本システム初のサブエージェント型）。台帳 `data/financial/ledger.md`（F-NNN・git外）新設。partner との棲み分け＝数字の整備・検証=finance／経営判断への翻訳・督促=partner。報告は4部構成（結論/根拠/🔍気づき/記録）＝サブエージェントの見聞をメインへ確実に伝える設計 |
 | 0.2 | 2026-06-26 | **O-008 反映（社長承認）＝地図を実態に同期**。①新モード追加：chat・memo-triage(0.3)・memo-intake(0.4)・blog-loop(0.1)・blog-write(0.1)・blog-improve(0.1)。②版ズレ修正：hp-loop 0.1→**0.5（マルチサイト4サイト ycom/yoshida/fujisaka/yokohawaii）**・overseer 0.1→0.2。③無人ディスパッチャ（agent-tick.sh）と cron スケジュール節を新設。④エージェントID/トークン登録状況・旧称hp-loop孤児の定点監視を明記。⑤ツール群に ga4-fetch/hp-shot/hp-serp/hp-compete/hp-diff/wp-draft/agent-tick を追加。⑥チャネルマップに coverage台帳・ブログ会話・#memo 2層を追加。⑦健康シグナルに往復切れ・地図ドリフト・流用整合を追加 |
