@@ -59,6 +59,16 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 024 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 024 — 2026-08-21（🔑 市区町村ページは「出せば刺さる」と実測で出ました。ただし本番は6日間まったく動いていません）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC＝<strong>4日分に伸長</strong>（<span class="font-mono">searchconsole_konjaku</span>・8/15〜8/18＝クリック44・表示625・平均掲載順位8.1・表示URL 168件）。GA4（<span class="font-mono">.jp</span>）＝8/19 まで／GA4（<span class="font-mono">.com</span>）＝8/19 まで。サイト実査＝hp-audit（定点6URL＋<span class="font-mono">.com</span> トップ）／hp-shot（<span class="font-mono">.jp</span> トップ・市区町村ページ・コメント一覧 PC/SP）。起動＝日次 cron（04:30）。※ 8/20 のサイクルは実行されず（前回から2日ぶり）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：良い知らせと厳しい知らせが1つずつ。①<strong>【良】市区町村ページは「検索に出しさえすれば、いちばん刺さる」</strong>＝まだ8ページしか出ていないのにクリック率 <strong>17.9%</strong>（サイト平均 7.04% の2.5倍・個別写真の約3倍）。<span class="font-mono">/cities/7</span>（札幌市南区・写真2枚）は<strong>クリック率100%・4.0位</strong>。前日までの根拠は「露出が最低＝供給側」だけだったが、<strong>独立した2本目の実測（需要側）が同じ結論を指した</strong>。②<strong>【厳】その提案が6日間まったく実装に入っていない</strong>＝本番の定点5項目が 8/16→8/21 で1バイトも動かず、実装担当へのレポート6通も未処理で滞留。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①階層別クリック率＝市区町村 17.9%（5/28）／都道府県 7.4%（24/324）／個別写真 約5.5%／全体 7.04% ②<strong>都道府県の検索露出は 70%（47中33）で天井</strong>（2日増やして +2）＝この層の残り価値は「露出増」でなく「送客」→ <strong>R-J26 を🟡→🔴へ格上げ</strong> ③<strong>実利用と検索露出のギャップ</strong>＝GA4 で市区町村は1日52ページ見られているのに、検索に出ているのは4日で8ページ ④移行の進行＝新 49→56→77人／旧 867→820→799→770人／旧→新の遷移 23→33セッション（合計は2.5%減で完全には相殺せず＝曜日要因を排除できないため断定しない） ⑤<strong>サイトマップ以外にクローラの到達経路が無い</strong>（市区町村ページの回遊リンクは「◯◯県に戻る」のみ・配信HTMLの個別写真リンクは0本）→ R化せず R-J24 ①の実装指示に同梱。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>提案</strong>：<strong>新規 0件（意図的＝在庫16件・実装ゼロで積んでも在庫が増えるだけ）</strong>／格上げ1件（R-J26 🟡→🔴）／根拠追加1件（R-J24 ①に需要側の実測＋内部リンク同梱指示）／<strong>新規 Q 1件＝Q-J07（実装担当 konjaku-dev の稼働確認）</strong>。在庫前進トリップワイヤ＝7日超の R は無し（最古6日目）だが、本番反映6日ゼロを「konjaku-dev の稼働不明」としてブロッカーに名指し。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md 新規追記なし／mailbox <code>to: hp-loop-konjaku</code> 新着なし（<code>to: konjaku-dev</code> 宛6通の滞留を新たに検算＝以後の定点に追加）。定石＝GSC 日次・hp-audit 差分・スクショ定点（<code>konjaku-c024-*</code>）・mailbox 検算・レポート配信（<code>M-20260821T045250</code>・10,751B 検算済）。M-11 再適用（クリック44 に対しクエリ別に見えるのは1件）。台帳ローテ第2回（C017〜C020 を coverage-archive へ・98.5KB→79.7KB）。</p>
+  </section>
+
   <!-- ===== Cycle 023 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
     <h2 class="text-xl font-bold mb-1">Cycle 023 — 2026-08-19（🔑 新サイトの実力は見立ての「16倍」でした。そして、どの階層が損をしているかが確定しました）</h2>
