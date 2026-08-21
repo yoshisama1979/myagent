@@ -179,6 +179,81 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 071（2026-08-21）＝掲示板に出ないまま中断したサイクルの記録 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-rose-300 pb-2 mb-4" id="c071">📦 Cycle 071 — 2026-08-21（<span class="text-rose-700">掲示板に反映されないまま中断していたサイクル</span>）</h2>
+  <div class="bg-rose-50 border-2 border-rose-300 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <p class="mb-2"><strong class="text-rose-800">何が起きたか</strong>：2026-08-21 05:00 の日次サイクルは起動し（<span class="font-mono">tick.log</span> は <span class="font-mono">status=ok</span>）、<u>アーカイブへの Cycle 070 の退避までは完了しました</u>が、<strong>最新レポート（index.html）を書き換える前に終了していました</strong>。生成物は <span class="font-mono">data/blog-loop/_c071.html</span> 等に残っていました。<strong class="text-emerald-800">2026-08-22 の Cycle 072 でこれを発見し、提案2件（<span class="font-mono">B-044</span>・<span class="font-mono">T-033</span>）は捨てずに 8/22 の最新レポートで社長へお届けしています。</strong></p>
+    <p class="mb-2"><strong>Cycle 071 が出していた主な内容</strong>（記録として残します）：<br>
+    ① <strong class="text-rose-700">Slack の日報が 8/15 を最後に登録されていない</strong>ことを <span class="font-mono">data/slack/threads.json</span> の実体で発見（＝「公開してください」のお願いが届いていなかった疑い）。<span class="text-emerald-800">8/22 の Cycle 072 で再確認し、同じ結論。</span><br>
+    ② <strong>8/20 のサイクルの記録が一切ない</strong>ことを報告（原因は未特定・推測で埋めず）。<br>
+    ③ <strong class="text-rose-700">Cycle 070 で執筆担当へ渡した <span class="font-mono">B-043</span> の指示に誤り2件</strong>を自ら発見して訂正＝(a)<span class="font-mono">blog-write</span> は週次・月曜起動なので「本日の作業」ではない (b)<span class="font-mono">wp-draft.py update</span> は <span class="font-mono">--html-file</span> が必須のため渡したコマンドは実行時にエラーになる。<br>
+    ④ ブログの上位40クエリに<strong>買い手のクエリが1つもない</strong>ことを実測。<br>
+    ⑤ <strong>「順位1位なのにクリック0」の正体＝画像意図</strong>（<span class="font-mono">p=2082</span> 企業ロゴ＝1,987表示・平均2.9位・CTR 0.86%／「有名 ロゴマーク 一覧」153表示 1.1位 0クリック）。<u>タイトルや説明文をどう直しても取れない・かつ買い手でもない</u>と判断し、<strong class="text-emerald-800">あえて B として起票しませんでした</strong>（掲示板を「同じ話の言い換え」で太らせないため）。<span class="text-rose-700">※2026-08-22 に侵害が判明したため、この判定は保留に戻しています。</span><br>
+    ⑥ 指名検索＝計13クリック／月（横ばい＝②の橋は未架設）。</p>
+    <p class="text-xs text-gray-600">※このブロックは、<u>実際には社長の目に触れなかったサイクル</u>の記録です。提案の全文（<span class="font-mono">B-044</span>・<span class="font-mono">T-033</span>）は下の「📦 Cycle 072 で初報告した 8/21 分の提案」に原文で置いています。</p>
+  </div>
+
+  <!-- ===== 📦 Cycle 072（2026-08-22）で初報告した 8/21 分の提案 全文 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-emerald-300 pb-2 mb-4" id="c072-carry">📦 Cycle 072（2026-08-22）で初報告した <span class="font-mono">B-044</span>・<span class="font-mono">T-033</span> の全文</h2>
+
+  <div class="bg-white border-2 border-emerald-400 rounded-lg p-5 mb-6 text-sm text-gray-700" id="b044">
+    <h3 class="font-bold text-emerald-800 mb-2">① 既存記事の改善 — <span class="font-mono">B-044</span>：8365 を公開するその画面で、あと30秒だけ（優先度🟡・栓なし・<u>公開の前提ではありません</u>）</h3>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">対象</td><td class="py-1"><strong>WordPress 下書き <span class="font-mono">8365</span></strong>（T-001「ホームページ制作の費用相場」）の<strong>抜粋欄</strong>と<strong>カテゴリ欄</strong>。<u>公開ボタンと同じ画面で完結します。</u></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観点</td><td class="py-1"><strong>スニペット（検索結果の説明文）</strong>＋<strong>回遊（カテゴリ→記事下の関連記事）</strong>。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観察（事実）</td><td class="py-1">① <strong>ブログ全記事の説明文は「本文の自動切り出し」</strong>（<span class="font-mono">B-036</span>）。<span class="text-emerald-800">8/21 開発回答＝入力欄は<u>あります</u>（AIOSEO 4.4.0.1 有効）。空欄でフォールバックしていただけでした。</span><br>
+        ② <strong>順位に対して CTR が構造的に低い</strong>（8/22 実測）：<span class="font-mono">p=7528</span> 6,390表示・9.5位で<strong>CTR 2.02%</strong>／<span class="font-mono">p=2117</span> 4,823表示・6.4位で<strong>4.44%</strong>／<span class="font-mono">p=2082</span> 1,930表示・2.9位で<strong>0.88%</strong>（ブログ全体の平均CTR＝<strong>2.88%</strong>）。<br>
+        ③ 8365 が挑む面「ホームページ制作 費用 相場」の1ページ目は<strong>大手メディアの独占</strong>（8/19 実測）＝<u>同じ順位に並んだとき、選ばれるかどうかは説明文で決まります</u>。<br>
+        ④ <strong>カテゴリが「未分類」だと記事下の関連記事が0本</strong>（<span class="font-mono">B-041</span>・未分類30本）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">なぜ問題か</td><td class="py-1"><strong>22か月ぶりの1本目を、「説明文が本文の途中で切れた状態」で、しかも「関連記事が1本も出ない状態」で公開することになります。</strong><u>どちらも公開後に直せますが、公開直後のクロールで最初に読まれるのはその状態です。</u>そしてこの1本目は<strong>ブログで唯一の買い手向け記事</strong>＝最初の印象を捨てる必要はありません。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">改善案<br><span class="text-xs font-normal">（そのままコピペ）</span></td><td class="py-1"><strong>(1) 抜粋欄に貼る文（全角118字）</strong><br>
+        <span class="font-mono bg-emerald-50 border border-emerald-300 px-2 py-1 inline-block my-1">ホームページ制作の費用は「何をどこまで作るか」で変わります。LP・小規模コーポレート・中規模サイトの目的別の相場目安と、料金が決まる5つの要素、見積書のどこを見れば高い・安いを判断できるかを、大阪の制作会社の視点で整理しました。</span><br>
+        <span class="text-xs text-gray-600">※WordPress の編集画面 右サイドバー「投稿」タブ →「抜粋」。見当たらない場合は右上「⋮」→「設定」→「パネル」で「抜粋」をオンに。</span><br>
+        <strong>(2) カテゴリ</strong>＝<strong>「費用・料金」を新規作成して割り当て</strong>（<span class="font-mono">B-041</span> と同じ操作）。<u>これで公開直後から記事下に関連記事が出ます。</u></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">効果／測り方</td><td class="py-1">効果＝<strong>推測：小〜中</strong>。<u>順位ではなく CTR に効く提案です。</u><strong>測り方</strong>＝公開日を起点に <u>3日・7日・14日・28日</u>で 8365 の<strong>表示回数と CTR</strong> を GSC で追い、<strong>ブログ平均 CTR 2.88%</strong> と比べます。<u>下回っていれば説明文かタイトルを直します。</u></td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">工数／優先度／栓</td><td class="py-1">工数＝<strong>30秒</strong>（公開ボタンを押す前でも後でも構いません）。優先度 <strong>🟡</strong>。<strong>栓なし。</strong><br>
+        <strong class="text-rose-700">念のため＝これは公開の前提条件ではありません。</strong><u>6日待っている一手を、私の提案で7日目に延ばしたくありません。まず公開してください。</u></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="bg-white border-2 border-amber-300 rounded-lg p-5 mb-6 text-sm text-gray-700" id="t033">
+    <h3 class="font-bold text-amber-800 mb-2">② 新規記事のテーマ＋構成案 — <span class="font-mono">T-033</span>：「そのフリー素材、会社の資料やホームページに使って大丈夫ですか？」（優先度🟡・栓なし）</h3>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">なぜ今これか</td><td class="py-1"><strong class="text-emerald-800">このブログで唯一 大きい流入（素材系）を、初めて②「覚えられ、信頼される」につなぐ記事だからです。</strong><br>
+        実測＝<span class="font-mono">p=2117</span>（地図素材）<strong>4,823表示・214クリック＝ブログ最大の入口</strong>／<span class="font-mono">p=2082</span>（企業ロゴ）1,930表示／<span class="font-mono">/free_photo/</span> 448表示。<br>
+        <strong>そして「仕事で使う人」の語が実在します（GSC・28日）</strong>＝「世界地図 <u>著作権フリー</u>」23表示・1.6位・<strong>CTR 13.0%</strong>／「世界地図 フリー素材 <u>ai</u>」5表示・2.6位・<strong>CTR 60%</strong>／「日本地図 svg 無料」9表示・CTR 33%／「世界地図 フリー素材 <u>商用可</u>」7表示・7.3位。<br>
+        <strong class="text-emerald-800">＝「画像だけ見て帰る人」（<span class="font-mono">p=2082</span> は 2.9位でCTR 0.88%）と違い、<u>この修飾語をつける人はリンクを押しています</u>。</strong>探しているのが「画像」ではなく「判断」だからです。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">正直に<br><span class="text-xs font-normal">（先に書きます）</span></td><td class="py-1"><strong class="text-rose-700">これは問い合わせに直結する記事ではありません。</strong><u>測るのは②の指標（指名検索・再訪）で、③（問い合わせ）ではありません。</u>北極星の「層ごとに、その層の指標で測る」に従います。<strong>③に効かせる記事は 8365・T-016・T-022・T-030 です</strong>（この記事はその前段）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">狙う検索意図／クエリ</td><td class="py-1"><strong>フリー素材を見つけたが、会社の資料・自社サイトに使ってよいのか確信が持てない。</strong>法務に聞くほどではないが、<u>あとで問題になるのは怖い</u>。<br>
+        クエリ＝フリー素材 商用利用 可否／著作権フリー とは／フリー素材 クレジット表記 必要／フリー素材 加工 改変 していい／会社 資料 フリー素材 使える／フリー素材 再配布／フリー素材 ライセンス 読み方<span class="text-xs">（<u>地域語は使いません</u>＝この記事は地域と無関係です）</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">既存との棲み分け</td><td class="py-1"><span class="font-mono">p=2117</span> の本文冒頭には<strong>すでに「確認4点（商用可否／クレジット／加工／再配布）」の表があります</strong>（2026-07-15 反映済み）。<strong class="text-emerald-800">T-033 はその表を独立記事として深掘りし、素材記事群の共通の受け皿にします。</strong><strong class="text-rose-700">重複を避けるため、<span class="font-mono">p=2117</span> 側は表を残したまま「詳しくは→」の1行を足すだけ</strong>にしてください（<u>表ごと移すと、いま取れている「著作権フリー」帯を落とします</u>）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">想定読者／タイトル案</td><td class="py-1">会社の資料・提案書・自社サイトを<strong>自分で作っている担当者</strong>（総務・営業・広報・ひとり情シス）。デザイナーではないので、ライセンス表記の読み方を習ったことがない。<br>
+        タイトル案＝「フリー素材は会社の資料に使っていい？｜<u>商用利用・改変・クレジット</u>の確認3点と、ライセンス表記の読み方」<span class="text-xs">（別案：「『著作権フリー』は著作権が無いという意味ではありません｜フリー素材を仕事で使う前の確認3点」）</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">アウトライン<br><span class="text-xs font-normal">（設計方針つき）</span></td><td class="py-1">
+          <p class="mb-2 text-xs bg-amber-50 border border-amber-200 rounded p-2"><strong>⚙️ 設計方針</strong>：<strong>(1) 売り込まない。</strong>目的は信頼＝②です。自社の話は h2⑤ に1段落だけ。<strong>(2) 法律の解説をしない。</strong>「弁護士ではないので個別の可否は断定しない」と明記し、<u>確認の手順</u>だけを渡します。<strong>(3) 個別サービスの可否を断定しない</strong>＝規約は変わるため「必ず配布元の規約を見る」に寄せます（<u>古くなって嘘になる記事にしない</u>）。<strong>(4) 自社の素材記事へ内部リンク</strong>し、「配っている側が書いている」を作文でなく事実で示します。</p>
+          <strong>h2① まず結論：見るのは3つだけ（商用利用の可否／改変の可否／クレジットの要否）</strong><br>
+          <span class="ml-3 text-xs">h3 なぜこの3つで足りるのか／h3 <strong>3つとも書かれていない素材は使わない</strong>（これが最短の判断）</span><br>
+          <strong>h2② 「無料」と「著作権フリー」と「パブリックドメイン」は別の意味です</strong>（<u>この記事の核・いちばんの誤解</u>）<br>
+          <span class="ml-3 text-xs">h3 無料＝タダで手に入るだけ／h3 <strong>著作権フリー＝著作権が無いという意味ではありません</strong>／h3 パブリックドメイン／h3 <strong>CCライセンスの読み方</strong>（BY／NC／ND／SA を1行ずつ）</span><br>
+          <strong>h2③ 会社で使うとき、特に注意する場面</strong><br>
+          <span class="ml-3 text-xs">h3 提案書・営業資料に入れる（社外に出る＝商用）／h3 自社サイト・LPに使う／h3 <strong>SNS・広告に使う</strong>／h3 <strong>ロゴ・地図・人物写真は別枠</strong>（商標・肖像。→ <span class="font-mono">p=2082</span>・<span class="font-mono">p=2117</span> へ内部リンク）</span><br>
+          <strong>h2④ 確認の手順（そのまま使えるチェック）</strong><br>
+          <span class="ml-3 text-xs">h3 配布元の規約ページを開く／h3 見出しの探し方（「利用規約」「ライセンス」「Terms」「License」）／h3 <strong>ダウンロード日と規約のスクリーンショットを残す</strong>（<u>後で規約が変わっても、当時の条件を説明できます</u>）／h3 <strong>迷ったら使わない</strong></span><br>
+          <strong>h2⑤ 使える素材が見つからないときの選択肢</strong><br>
+          <span class="ml-3 text-xs">h3 有料素材を買う／h3 自分で作る（→ <span class="font-mono">p=3028</span> 画像形式の選び方へ）／h3 <strong>制作会社に作ってもらう</strong>（<u>ここで初めて自社の話・1段落だけ</u>）</span><br>
+          <strong>h2⑥ まとめ</strong>　<span class="ml-3 text-xs">h3 持ち帰り1行＝<strong>「無料でも、規約は読む」</strong></span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">内部リンク先／CTA</td><td class="py-1"><strong class="text-emerald-800">この記事の要は「既存の素材記事 → この記事」の逆流線です</strong>＝<u>公開後に <span class="font-mono">p=2117</span>・<span class="font-mono">p=2082</span>・<span class="font-mono">p=3528</span>・<span class="font-mono">/free_photo/</span> の末尾から1本ずつ張ってください</u>（＝🅿️パーク中の <span class="font-mono">B-004</span> と同じ設計の、素材群版）。<br>
+        CTA＝「<strong>使ってよいか判断がつかない・欲しい素材が見つからないときは、作るべきか流用できるかの切り分けだけでもお答えします。</strong>」<strong>記事末に1つだけ</strong>。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">カニバリ確認／必要な事実</td><td class="py-1"><strong>自社内に同テーマの記事はゼロ</strong>（素材記事は「素材の紹介」、<span class="font-mono">p=3028</span> は「画像形式の選び方」）。<br>
+        <strong>栓なし＝一般論と公開情報だけで書けます。</strong><u>あれば厚くなる（🟢・任意）</u>＝①「この素材、使って大丈夫ですか」と実際に相談された例／②<span class="font-mono">/free_photo/</span> で素材を配っている経緯。<span class="text-rose-700">実績数値・お客様の声は捏造しません。</span></td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">効果／工数／優先度</td><td class="py-1">効果＝<strong>推測：中</strong>（<u>新規流入ではなく、既存 月1,456クリックの再利用です</u>）。工数＝<strong>中</strong>（<u>取材は不要</u>）。優先度 <strong>🟡</strong>。<strong>着手は publish が1本動いてから。</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <!-- ===== 過去サイクルのスナップショット（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">過去サイクルのスナップショット</h2>
 
