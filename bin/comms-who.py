@@ -49,11 +49,55 @@ LEDGER = DATA / "ledger.md"
 ROSTER = DATA / "roster.json"
 ROOMS = DATA / "rooms.md"          # ルームの役割と除外（社長が編集・AIは読むだけ）
 
-# 社長の Chatwork account_id。ボール判定の基準はここ1箇所（chatwork-fetch.py の注記と同じ値）。
+# 社長の Chatwork account_id。正本は config/comms-members.json（下の load_members）。
+# ここの値は設定が読めなかったときの保険＝**判定を止めないための既定**（不備は MEMBER_PROBLEMS で申告する）。
 ME = 757779
 # 古い生ログ（35件）は from_account_id を保存していない時代のもの＝**その場合に限り**表示名で本人判定する。
 # ID があるのに名前で判定すると、同姓同名の別アカウントを社長扱いしてしまう（Codex🟡）。
 ME_NAME = "松田 祥宗"
+
+# 社長・社内メンバーの Chatwork account_id は **git管理の設定ファイル**が正（Codex🔴・2026-08-21）。
+# コードに直書きすると、社員が増えたときに直し忘れて「その方宛＝社外の反応待ち(🟢)」に静かに化ける
+# ＝2026-08-21 に実際に起きた事故（長谷さん宛140件のうち台帳12行が🟢に埋もれた）の再発経路そのもの。
+# 名前は持たない（表示名の正本は roster.json＝git外）。
+MEMBERS = Path(__file__).resolve().parent.parent / "config" / "comms-members.json"
+
+
+def load_members() -> tuple[int, set[int], list[str]]:
+    """設定ファイルから (社長ID, 社内メンバーID集合, 不備の一覧) を返す。
+
+    **黙って既定値に倒れない**＝不備はそのまま返し、--audit / --strict で失敗させる。
+    社外扱いへの取り違えは静かに起きるので、気づけないまま回るほうが危ない。
+    """
+    probs: list[str] = []
+    if not MEMBERS.exists():
+        return 0, set(), [f"{MEMBERS} がありません＝社内・社長の判定ができません"]
+    try:
+        raw = json.loads(MEMBERS.read_text(encoding="utf-8"))
+    except Exception as e:
+        return 0, set(), [f"{MEMBERS.name} を JSON として読めません（{e}）"]
+    pres = raw.get("president_id")
+    if not isinstance(pres, int):
+        probs.append("president_id が整数で入っていません")
+        pres = 0
+    ids = raw.get("internal_account_ids")
+    internal: set[int] = set()
+    if not isinstance(ids, list) or not ids:
+        probs.append("internal_account_ids が空か配列ではありません＝社内宛が社外宛に化けます")
+    else:
+        for v in ids:
+            if isinstance(v, int):
+                internal.add(v)
+            else:
+                probs.append(f"internal_account_ids に整数でない値: {v!r}")
+    if pres and pres in internal:
+        probs.append("president_id が internal_account_ids に混ざっています（社長は 🔴・社内は 👥＝別扱い）")
+    return pres, internal, probs
+
+
+_PRES, INTERNAL, MEMBER_PROBLEMS = load_members()
+if _PRES:
+    ME = _PRES
 
 # rooms.md の見出しは「見出し語」の完全一致で判定する。
 # 部分一致（"除外" in 見出し）だと "## 除外しない" まで除外扱いになる（Codex🔴）ので、
@@ -294,9 +338,17 @@ def audit(items: list[dict]) -> int:
     蒸留は新着しか読まないので、放っておくと古い誤りが残り続ける＝ここで1回洗い直す。
 
     照合できない行が残っていたら **非0で終わる**（「監査済み」と記録して未監査行を固定化しない）。
+    **直す行が1件でも残っていれば非0**（2026-08-21・Codex🟡）＝v0.9 の移行が終わったことを機械で言える。
+    設定ファイル（config/comms-members.json）に不備があるときも非0＝社内宛が社外扱いのまま通らないように。
     """
     if not LEDGER.exists():
         print("台帳がありません", file=sys.stderr)
+        return 1
+    if MEMBER_PROBLEMS:
+        # 社内・社長の判定ができないまま監査を通すと、社内宛が静かに社外扱いのまま残る。
+        print(f"⚠️ {MEMBERS.name} に不備＝社内/社長の判定ができません", file=sys.stderr)
+        for pr in MEMBER_PROBLEMS:
+            print(f"    - {pr}", file=sys.stderr)
         return 1
     # room_id と message_id の**両方**で引く（message_id だけだと別ルームの同番に当たりうる）
     by_key = {(str(i.get("room_id")), str(i.get("message_id"))): i for i in items}
@@ -305,8 +357,10 @@ def audit(items: list[dict]) -> int:
     tally, fix, broken_anchor = Counter(), [], []
     for line in rows:
         cid = LEDGER_ROW.match(line).group(1)
-        head = line[:30]
-        state = next((s for s in ("🔴", "🟢", "📌", "✅") if s in head), "?")
+        # 状態は「2列目」を見る。先頭N文字から絵文字を探すと、ルーム名に絵文字が入った行を取り違える（Codex🟡）。
+        cells = line.split("|")
+        cell = cells[1].strip() if len(cells) > 1 else ""
+        state = next((s for s in ("🔴", "👥", "🟢", "📌", "✅") if s in cell), "?")
         m = ANCHOR.search(line)
         if not m:
             # cw: アンカーが無い行。メール専用行（gm:）は Chatwork の監査対象外＝正常。
@@ -326,9 +380,20 @@ def audit(items: list[dict]) -> int:
             fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]), "除外ルーム＝起票対象外。残す理由を書くか取り下げる"))
         elif it["to_me"]:
             tally["社長宛（そのままでよい）"] += 1
+            if state == "👥":
+                # 社長宛を 👥 に落とすと最重要のボールが把握用の枠に埋もれる（社長ご指示＝最重要は社長宛）。
+                fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]),
+                            "👥 を 🔴 へ（社長宛＝最重要）"))
         elif it["to_ids"]:
-            tally["他の方宛"] += 1
-            if state == "🔴":
+            internal = any(int(i) in INTERNAL for i in it["to_ids"])
+            tally["社内の方宛（👥）" if internal else "他の方宛"] += 1
+            if internal:
+                # v0.9＝社内の方宛は「はなさか側のボール」。🟢 に落とすと督促対象から外れて落ちる。
+                # ⚠️ 📌（確定記録）と ✅（完了）は**ボールではない**＝資産・履歴なので触らない。
+                if state in ("🔴", "🟢"):
+                    fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]),
+                                f"{state} を 👥 社内ボールへ（v0.9・はなさか側のボール）"))
+            elif state == "🔴":
                 fix.append((cid, it.get("from", "?"), "、".join(it["to_names"]),
                             "🔴 を外し ※社長宛でない（周辺情報）を付す"))
         else:
@@ -349,6 +414,10 @@ def audit(items: list[dict]) -> int:
             print(f"    - {u}")
         return 1
     print("\n✅ Chatwork アンカーを持つ行はすべて照合できました")
+    if fix:
+        # 直す行が残っている間は非0＝「監査が通った」を移行完了の意味で使えるようにする（Codex🟡）。
+        print(f"⚠️ 直す行が {len(fix)} 件残っています＝台帳を直してからもう一度流してください")
+        return 1
     return 0
 
 
@@ -398,7 +467,7 @@ def main() -> int:
     ap.add_argument("--stats", action="store_true", help="件数だけ（固有名詞を出さない）")
     ap.add_argument("--json", action="store_true", help="JSONL で出す")
     ap.add_argument("--audit", action="store_true",
-                    help="既存の台帳 C-NNN 行を洗い直す（照合できない行が残れば非0）")
+                    help="既存の台帳 C-NNN 行を洗い直す（**直す行またはアンカー切れが残れば非0**＝「監査が通った」を移行完了の意味で使える）")
     ap.add_argument("--rooms", action="store_true",
                     help="ルーム一覧と役割・除外の設定状況を出す（rooms.md の点検用）")
     ap.add_argument("--strict", action="store_true",
@@ -443,7 +512,11 @@ def main() -> int:
         print(f"    ├ 明示的に社長へ（To/rp/全員）: {len(inbound) - len(noto)} 件")
         print(f"    └ 宛先タグなし＝社長宛        : {len(noto)} 件"
               f"（1対1 {sum(1 for i in noto if i['solo_room'])} ／ グループ {sum(1 for i in noto if not i['solo_room'])}）")
-        print(f"  ・ 他の方宛（周辺情報として読む）: {sum(1 for i in live if not i['to_me'] and not i['from_me'])} 件")
+        others = [i for i in live if not i["to_me"] and not i["from_me"]]
+        inside = [i for i in others if any(int(x) in INTERNAL for x in (i.get("to_ids") or []))]
+        print(f"  ・ 他の方宛（周辺情報として読む）: {len(others)} 件")
+        print(f"    ├ 社内の方宛（👥 社内ボール候補）  : {len(inside)} 件")
+        print(f"    └ 社外の方宛                      : {len(others) - len(inside)} 件")
         print(f"  ▶ 社長ご自身の発信（相手ボール）: {sum(1 for i in live if i['from_me'])} 件")
         print(f"  🗑 削除済みの発言（用件にしない）: {sum(1 for i in live if i['deleted'])} 件")
         print(f"  ⚠️ 引用が閉じていない（要確認）  : {sum(1 for i in live if i['quote_broken'])} 件")

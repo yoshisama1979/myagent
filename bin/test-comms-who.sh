@@ -182,6 +182,142 @@ src = (proj / "bin/comms-who.py").read_text(encoding="utf-8")
 bad = [w for w in ("requests.post", "urlopen", "api.chatwork.com", "X-ChatWorkToken") if w in src]
 (ok if not bad else ng)(f"通信・書き込みのコードを持たない（{bad or 'なし'}）")
 
+# --- v0.9: 社内の方宛は 👥 社内ボール（audit の助言） -----------------------
+# Red の再現＝2026-08-21。監査は社内宛(長谷さん)の 🔴/🟢 を「※社長宛でない（周辺情報）」と助言していた。
+# それに従うと、はなさか側のボールが督促対象から外れて静かに落ちる。
+def _audit_advice(state, to_id):
+    """1行だけの台帳を作って audit を流し、その行への助言を返す（無ければ ''）。"""
+    import io, contextlib
+    (T / "ledger.md").write_text(
+        f"C-999 | {state} | 💬 ルーム〔A→B〕 | 用件 | 次 | 最終: 08/21 | cw: 11-22 |\n",
+        encoding="utf-8")
+    cw.LEDGER = T / "ledger.md"
+    items = [{"room_id": 11, "message_id": 22, "excluded": False, "to_me": False,
+              "to_ids": [to_id], "to_names": ["宛先"], "from": "差出人"}]
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        cw.audit(items)
+    for line in buf.getvalue().splitlines():
+        if line.strip().startswith("C-999"):
+            return line
+    return ""
+
+HASE = next(iter(cw.INTERNAL), None)    # 社内メンバー（ID のみ・名前は持たない）
+if HASE is None:                        # INTERNAL が空＝社内宛が社外宛に化ける＝ここで止めずに落とす
+    ng("INTERNAL が空＝社内宛の判定ができない"); HASE = -1
+OUTSIDE = 999999999                     # 社内リストに無い＝社外
+
+for st in ("🔴", "🟢"):
+    a = _audit_advice(st, HASE)
+    m = f"audit: 社内宛の {st} は 👥 社内ボールへ誘導する"
+    ok(m) if "👥" in a else ng(m, a or "助言が出ていない")
+
+a = _audit_advice("👥", HASE)
+ok("audit: 既に 👥 の社内宛は直す対象にしない") if a == "" else ng("audit: 既に 👥 の社内宛は直す対象にしない", a)
+
+for st in ("📌", "✅"):
+    a = _audit_advice(st, HASE)
+    m = f"audit: {st} はボールではない＝👥 に変えない"
+    ok(m) if a == "" else ng(m, a)
+
+a = _audit_advice("🔴", OUTSIDE)
+m = "audit: 社外宛の 🔴 は従来どおり周辺情報へ"
+ok(m) if "周辺情報" in a else ng(m, a or "助言が出ていない")
+
+a = _audit_advice("🟢", OUTSIDE)
+m = "audit: 社外宛の 🟢 はそのまま（相手の反応待ち）"
+ok(m) if a == "" else ng(m, a)
+
+def _audit_advice_to_me(state):
+    """社長宛のメッセージを指す1行に対する助言を返す。"""
+    import io, contextlib
+    (T / "ledger.md").write_text(
+        f"C-998 | {state} | 💬 ルーム〔A→社長〕 | 用件 | 次 | 最終: 08/21 | cw: 33-44 |\n", encoding="utf-8")
+    cw.LEDGER = T / "ledger.md"
+    items = [{"room_id": 33, "message_id": 44, "excluded": False, "to_me": True,
+              "to_ids": [cw.ME], "to_names": ["社長"], "from": "差出人"}]
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        cw.audit(items)
+    for line in buf.getvalue().splitlines():
+        if line.strip().startswith("C-998"):
+            return line
+    return ""
+
+a = _audit_advice_to_me("👥")
+m = "audit: 社長宛を 👥 にしている行は 🔴 へ戻す（最重要は社長宛）"
+ok(m) if "🔴" in a else ng(m, a or "助言が出ていない")
+
+a = _audit_advice_to_me("🔴")
+m = "audit: 社長宛の 🔴 はそのまま"
+ok(m) if a == "" else ng(m, a)
+
+# --- v0.9(Codexレビュー反映): 設定ファイル・終了コード・状態の取り違え ---------
+import json as _json
+
+def _members(obj):
+    """設定ファイルを差し替えて load_members() を呼ぶ（本物の config は触らない）。"""
+    f = T / "members.json"
+    f.write_text(_json.dumps(obj), encoding="utf-8")
+    orig = cw.MEMBERS
+    cw.MEMBERS = f
+    try:
+        return cw.load_members()
+    finally:
+        cw.MEMBERS = orig
+
+pres, ids, probs = _members({"president_id": 1, "internal_account_ids": [2, 3]})
+m = "設定: 正しい設定は社長ID・社内IDを読めて不備なし"
+ok(m) if (pres == 1 and ids == {2, 3} and not probs) else ng(m, f"{pres} {ids} {probs}")
+
+for bad, label in (({"president_id": 1, "internal_account_ids": []}, "社内IDが空"),
+                   ({"president_id": 1}, "社内IDが無い"),
+                   ({"internal_account_ids": [2]}, "社長IDが無い"),
+                   ({"president_id": 1, "internal_account_ids": [1, 2]}, "社長IDが社内IDに混入")):
+    _, _, probs = _members(bad)
+    m = f"設定: {label} は不備として申告する"
+    ok(m) if probs else ng(m, "不備なしと判定された")
+
+orig = cw.MEMBERS
+cw.MEMBERS = T / "does-not-exist.json"
+_, _, probs = cw.load_members()
+cw.MEMBERS = orig
+m = "設定: ファイルが無いときは不備として申告する（黙って既定に倒れない）"
+ok(m) if probs else ng(m, "不備なしと判定された")
+
+# 終了コード＝「監査が通った」を移行完了の意味で使えるか
+import io, contextlib
+def _audit_rc(ledger_line, items):
+    (T / "ledger.md").write_text(ledger_line, encoding="utf-8")
+    cw.LEDGER = T / "ledger.md"
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        return cw.audit(items)
+
+dirty = [{"room_id": 11, "message_id": 22, "excluded": False, "to_me": False,
+          "to_ids": [HASE], "to_names": ["宛先"], "from": "差出人"}]
+rc = _audit_rc("C-999 | 🟢 | 💬 ルーム〔A→B〕 | 用件 | 次 | 最終: 08/21 | cw: 11-22 |\n", dirty)
+m = "audit: 直す行が残っている間は非0"
+ok(m) if rc != 0 else ng(m, f"rc={rc}")
+
+rc = _audit_rc("C-999 | 👥 | 💬 ルーム〔A→B〕 | 用件 | 次 | 最終: 08/21 | cw: 11-22 |\n", dirty)
+m = "audit: 直す行がゼロなら0（移行完了と言える）"
+ok(m) if rc == 0 else ng(m, f"rc={rc}")
+
+# 状態はルーム名の絵文字に引きずられない
+a = _audit_advice("🟢", HASE)
+m0 = "audit: 状態は2列目から取る（ルーム名の絵文字に釣られない）"
+(T / "ledger.md").write_text(
+    "C-997 | 👥 | 💬 🔴🟢混じりのルーム名〔A→B〕 | 用件 | 次 | 最終: 08/21 | cw: 11-22 |\n", encoding="utf-8")
+cw.LEDGER = T / "ledger.md"
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    cw.audit(dirty)
+hit = [l for l in buf.getvalue().splitlines() if l.strip().startswith("C-997")]
+ok(m0) if not hit else ng(m0, hit[0])
+
+m = "INTERNAL は空でなく、社長自身を含まない"
+ok(m) if (cw.INTERNAL and cw.ME not in cw.INTERNAL) else ng(m, f"ME={cw.ME}")
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF
