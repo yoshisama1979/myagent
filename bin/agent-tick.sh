@@ -94,13 +94,27 @@ alert() {
     age=$(( $(date +%s) - last ))
     [ "$age" -lt 3600 ] && return 0              # 1時間以内に通知済みなら鳴らさない（スパム防止）
   fi
-  printf '⚠️ agent-tick 異常\n%s\n（%s）\n生存確認: http://100.123.104.87/overseer/last-tick.txt' \
-    "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post >>"$LOG" 2>&1 \
-    && date +%s >"$throttle"
+  # ★送信結果を $LOG へ直接リダイレクトしない（2026-08-20 Codexレビュー）：
+  #   リダイレクト先が書けない状況（ディスク満杯・権限異常）では**コマンドそのものが実行されない**。
+  #   ところが「ログが書けない」は、まさに警報を出したい場面のひとつ（label-logwrite で検知している）。
+  #   つまり最も鳴ってほしいときに鳴らない構造だった。送信を先に済ませ、記録は後から best-effort で行う。
+  local out send_rc
+  out=$(printf '⚠️ agent-tick 異常\n%s\n（%s）\n生存確認: http://100.123.104.87/overseer/last-tick.txt' \
+        "$msg" "$(now)" | "$PY" "$PROJ/bin/slack-poll.py" post 2>&1)
+  send_rc=$?
+  printf '%s\n' "$out" >>"$LOG" 2>/dev/null || true
+  [ "$send_rc" -eq 0 ] && date +%s >"$throttle" 2>/dev/null
 }
 
 # --- proc 読み取りヘルパー（OOM検知と137判別で共用）---
 # 同じ awk を3箇所に散らすと、片方だけ直して静かに食い違う（例：vmstat の項目名が変わったとき）。
+# 単調増加の秒（実行時間の計測用）。時刻補正の影響を受けない。
+mono_sec() {
+  local up
+  up=$(cut -d' ' -f1 /proc/uptime 2>/dev/null)
+  if [[ "$up" =~ ^([0-9]+) ]]; then echo "${BASH_REMATCH[1]}"; else date +%s; fi
+}
+
 oom_kill_count() { awk '/^oom_kill /{print $2; exit}' /proc/vmstat 2>/dev/null || true; }
 mem_avail_mb()   { awk '/^MemAvailable/{printf "%dMB", $2/1024}' /proc/meminfo 2>/dev/null; }
 
@@ -239,6 +253,37 @@ fi
 COOLDOWN_1ST=1800     # 30分（★提案既定値）
 COOLDOWN_NTH=21600    # 6時間（★提案既定値）
 COOLDOWN_RESET=86400  # 前回の冷却明けからこれ以上経っていれば「連続」とみなさず1回目に戻す（★提案既定値）
+
+# 「claude が仕事を始める前に落ちた」を、文言に頼らず見分けるための境目。
+#
+# ⚠️ 2026-08-20、最初は「60秒未満なら異常」だけで出して**その晩に誤報を出した**。
+#    /memo-intake が「本日のメモは0件」を正しく確認して 43秒で正常終了したのを異常として
+#    社長へ通知した（ts 1787234443）。「正常なサイクルは必ず分単位かかる」という前提が
+#    実データで誤りだった＝検証せずに書いた。狼少年になれば通知そのものが無価値になる。
+#
+# 実測（tick.log から集計・2026-08-20）:
+#   認証切れ 3回     … 4〜6秒 /  200〜202バイト / 2行
+#   正常・入力0件    …   43秒 /    1,342バイト / 22行   ← これを鳴らしてしまった
+#   正常・通常17回   … 60秒〜 / 1,606バイト以上
+# 時間だけでは 6秒と43秒が近すぎる。**出力量（＝仕事の形跡）のほうが差がはっきりしている**。
+# そこで「速すぎる」と「何も書いていない」の**両方が揃ったときだけ**鳴らす（片方では鳴らさない）。
+QUICK_SEC=30      # 認証切れ最大6秒／正常最小43秒 の間。どちらからも5倍以上の余裕
+QUICK_BYTES=600   # 認証切れ最大202B／正常最小1342B の間。どちらからも2倍以上の余裕
+
+# 実行が「仕事を始める前に落ちた」形かどうか。テストから直接呼べるように関数にしてある
+# （閾値やコードの文字列を grep するだけのテストでは、判定そのものが壊れても気づけない）。
+run_looks_broken() {   # run_looks_broken <経過秒> <claude出力バイト数>
+  # ⚠️ ${1:-0} と書いてはいけない：値が取れなかったとき 0 に化けて「0秒・0バイト」＝
+  #    必ず鳴る側に倒れる（2026-08-20 テストが検出）。空のまま下の数値検査で弾く。
+  local sec="${1-}" bytes="${2-}"
+  # 測れなかったときは鳴らさない（誤報より見逃しを選ぶ）。
+  # ※この2行を外しても結果は同じ（空値なら [ "" -lt N ] が bash 側でエラーになり非0を返す）＝
+  #   変異テストでは検知できない。意図の明示と、ログにエラーを吐かせないために残している。
+  [[ "$sec" =~ ^[0-9]+$ ]] || return 1
+  [[ "$bytes" =~ ^[0-9]+$ ]] || return 1
+  [ "$sec" -lt "$QUICK_SEC" ] && [ "$bytes" -lt "$QUICK_BYTES" ]
+}
+
 # 待ち時間の決定はここ1箇所。cooldown_set（実際の待ち）と cooldown_note（通知文）が同じ分岐を
 # 各自に持つと、片方だけ直したとき「30分待つのに6時間と通知する」ような食い違いが静かに生まれる。
 cooldown_wait_for() { [ "${1:-1}" -ge 2 ] && echo "$COOLDOWN_NTH" || echo "$COOLDOWN_1ST"; }
@@ -520,14 +565,22 @@ dispatch() {
     # 実行前後の oom_kill 差分で「タイムアウトの137」と「OOM で殺された137」を見分ける（Codex🟡）。
     # choom -n 800 を付けた結果、この claude は OOM の第一候補になった＝137=OOM の経路が現実的になり、
     # 素朴に 137=タイムアウトと決め打つと「25分でタイムアウト」と誤報して原因調査を誤らせる。
-    local oom_pre oom_post log_off
+    local oom_pre oom_post log_off started elapsed
     oom_pre=$(oom_kill_count)
+    # 壁時計だと実行中の時刻補正で経過が負になり、長い正常処理まで「速すぎる」と誤判定する。
+    # /proc/uptime は単調増加。無い環境では壁時計に落とす。
+    started=$(mono_sec)
     log_off=$(stat -c%s "$LOG" 2>/dev/null || echo 0)   # この実行が書いた分だけを後で読むための目印
     MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
     # ログ側（sed >>$LOG）の失敗も拾う（Codex🟡11）＝ログが書けない状況ではクールダウンの記録も
     # 書けない可能性が高く、この安全機構そのものが効かなくなる。ログに書けないので Slack で鳴らす。
     local -a pipe_rc; pipe_rc=("${PIPESTATUS[@]}")
     rc=${pipe_rc[0]}
+    elapsed=$(( $(mono_sec) - started ))
+    # この実行が $LOG に書いた分だけを見る（＝claude の出力量。並行 fetch の行も混じり得るが、
+    # 混じれば「多い」側に倒れる＝誤報でなく見逃しに倒れるので安全側）
+    local out_bytes; out_bytes=$(( $(stat -c%s "$LOG" 2>/dev/null || echo "$log_off") - log_off ))
+    [ "$out_bytes" -lt 0 ] && out_bytes=0
     rm -f "$inflight" 2>/dev/null || true   # ここまで来た＝終了処理に到達した（結果の良し悪しは以降で判定）
     # --- サイクル末：このエージェントの成果物をコミットする（O-040・2026-08-17 社長判断）---
     # 無人ループはコミット権を持たず、成果物が git 外に溜まり続けていた（最大146件・最古47日）。
@@ -558,6 +611,27 @@ dispatch() {
       alert "ヘッドレス $label が実行できません＝**クレジットが尽きています**（claude が案内だけ出して終了）。補充するまで無人処理は動きません。仕事は消していません（未処理 $pending 件は残置）。$((COOLDOWN_1ST / 60))分おきに自動で再挑戦するので、補充すれば自然に再開します。" \
         "$PROJ/data/overseer/.last-alert-nocredit"
       [ "$to" = "partner" ] && partner_alert "クレジットが尽きているため朝礼・返信ができません。補充をお願いします（お預かりした用件は消えていません）。"
+      ACTIONS+=("$label:$pending:$action")
+      return 0
+    fi
+    # --- 認証切れの判定（2026-08-20 社長承認）---
+    # 契機＝08-19 20:10〜08-20 10:10 の約14時間、claude の OAuth が失効して**全ループが全滅**した。
+    # ところが claude は exit 0 で終わるため rc では分からず、上のクレジット判定は文言が違って
+    # 素通りし、朝礼のような定時実行は「処理すべき便が0」なので無進捗判定も効かない
+    # ＝**14時間 status=ok を出し続け、社長には一度も通知されなかった**（08-03 のクレジット切れと同型の再発）。
+    #   ・クレジット切れと違い**自然回復しない**＝社長が再ログインするまで動かない。だから
+    #     「補充を待つ」ではなく「あなたの操作が要ります」と伝える。
+    #   ・連続回数に数えない（こちらの不具合ではない）。冷却だけ入れて、再ログインされれば自力で復帰する。
+    #   ・通知は claude を通さない（alert は Slack の Bot トークンを使う）＝認証が死んでいても届く。
+    #   ・**行頭に固定する**：ログ行は「» 」接頭辞つきで記録される。固定しないと、統括が
+    #     「認証が切れていました」と報告を書いただけで誤検知する（その本文もログに載るため）。
+    if grep -qiE "^» *(Failed to authenticate|OAuth session expired|Not logged in|Please run /login|Invalid API key)" \
+         <(tail -c "+$((log_off + 1))" "$LOG" 2>/dev/null); then
+      fail "$label-noauth"; action="$action(NOAUTH)"
+      cooldown_hold "$label" "$COOLDOWN_1ST"
+      alert "ヘッドレス $label が実行できません＝**claude の認証が切れています**（OAuth セッションの期限切れ）。**社長の再ログインが必要です**（VPS で \`claude\` を起動して認証）。クレジット切れと違い、待っていても直りません。仕事は消していません（未処理 $pending 件は残置）。再ログインされれば $((COOLDOWN_1ST / 60))分以内に自動で再開します。" \
+        "$PROJ/data/overseer/.last-alert-noauth"
+      [ "$to" = "partner" ] && partner_alert "claude の認証が切れているため朝礼を出せません。VPS で再ログインをお願いします（お預かりした用件は消えていません）。"
       ACTIONS+=("$label:$pending:$action")
       return 0
     fi
@@ -596,6 +670,16 @@ dispatch() {
       if [ "$progressed" -eq 0 ]; then
         fail "$label-noprogress"; action="$action(NOPROG)"
         alert "ヘッドレス $label は正常終了しましたが、起動の引き金になった便が1件も処理されていません（new/ に残ったまま＝このままだと次の tick で同じ処理が再起動します）。$(cooldown_apply "$label")。"
+      elif run_looks_broken "$elapsed" "$out_bytes"; then
+        # --- 文言に頼らない見張り（2026-08-20 社長承認・同日 誤報を受けて作り直し）---
+        # 認証切れは exit 0・数秒で終わるため rc でも無進捗でも捕まらなかった（08-19 の14時間の全滅）。
+        # 文言判定だけだと**次に別の文言が来ればまた素通りする**ので、形そのものを見る層を置く。
+        # 判定基準は run_looks_broken（上部）＝「速すぎる」かつ「何も書いていない」の両方。
+        # 冷却はかけない（原因が分からないので止めるより回して様子を見る）。
+        # スロットルは**ラベル別**＝あるループの通知が、別のループの本物の異常を握り潰さない。
+        fail "$label-tooquick"; action="$action(QUICK${elapsed}s/${out_bytes}B)"
+        alert "ヘッドレス $label が**${elapsed}秒・出力${out_bytes}バイトで終了しました**（正常終了扱いですが、仕事をした形跡がありません）。認証・設定・クレジットなど、claude が動き出す前に止まっている可能性があります。ログの該当箇所をご確認ください: $LOG" \
+          "$PROJ/data/overseer/.last-alert-tooquick-$label"
       else
         # 一度こけただけの重い日を、以後ずっと引きずらない
         cooldown_clear "$label" || true

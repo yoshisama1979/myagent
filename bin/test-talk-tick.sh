@@ -229,6 +229,30 @@ sys.exit(0 if not s['111.1'].get('alerted') else 1)" \
   && ok "送れていないのに「通知済み」の印を付けない" || ng "送れていないのに印が付いた"
 
 echo
+echo "=== 認証切れは原因をそのまま伝える ==="
+setup; mail a.json talk 111.1
+cat > "$T/bin/claude" <<'FAKE3'
+#!/bin/bash
+echo "$*" >> "$FAKE_CALLS"
+echo "Failed to authenticate: OAuth session expired and could not be refreshed"
+exit 0
+FAKE3
+chmod +x "$T/bin/claude"
+run >/dev/null
+python3 - "$T/data/slack/talk-state.json" <<'PYA'
+import json,sys
+p=sys.argv[1]; s=json.load(open(p)); s["111.1"]["cooldown_until"]="0"
+json.dump(s, open(p,"w"))
+PYA
+run >/dev/null
+grep -q '認証が切れ' "$T/slack.txt" \
+  && ok "★通知に「認証が切れている」と原因が出る（待っても直らない種類の停止）" \
+  || ng "原因を伝えていない" "$(cat "$T/slack.txt")"
+grep -q '再ログイン' "$T/slack.txt" \
+  && ok "★何をすればよいか（再ログイン）が書いてある" || ng "行動が書いていない"
+[ -f "$T/data/mailbox/new/a.json" ] && ok "認証切れでも社長の質問は残る" || ng "便が消えた"
+
+echo
 echo "=== 暴発の歯止め ==="
 setup; for i in 1 2 3 4 5; do mail "m$i.json" talk "33$i.1"; done
 run >/dev/null

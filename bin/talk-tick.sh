@@ -234,6 +234,13 @@ while read -r ts n; do
     why="実行が失敗しました（rc=$rc）"
     keep_sid=""
   fi
+  # 認証切れは原因が特定できるので、そのまま伝える（2026-08-20）。
+  # 08-19〜08-20 に OAuth 失効で全ループが14時間止まった際、通知文が原因を言わないと
+  # 社長が何をすればよいか分からない＝待っていても直らない種類の停止だから。
+  # 行頭固定は agent-tick と同じ理由（自分の応答本文に同じ語が出ても誤検知しない）。
+  if printf '%s' "$out" | grep -qiE "^(Failed to authenticate|OAuth session expired|Not logged in|Please run /login|Invalid API key)"; then
+    why="claude の認証が切れています（OAuth 失効）。**社長の再ログインが必要です**（VPS で claude を起動して認証）。待っていても直りません"
+  fi
 
   fails=$(state_get "$ts" fails 0); [[ "$fails" =~ ^[0-9]+$ ]] || fails=0
   fails=$((fails + 1))
