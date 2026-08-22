@@ -40,6 +40,40 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 026 スナップショット ===== -->
+  <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
+    <h2 class="text-2xl font-bold mb-1">Cycle 026 — 2026-08-22（<span class="text-sky-700">競合の実測で「いちばん効く一手」の中身が固まりました</span>／<span class="text-red-700">ログインが要る画面の作りが揃っていないことを確定</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・<span class="text-amber-800">8/13〜8/17 の5日分＝前回から新しい日が増えていません</span>）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/20）。社長入力＝新規追記なし（26サイクル連続）。mailbox＝新着なし＋配信先の滞留を実査（定石 #15）。本番実査＝hp-audit 8本＋スクリーンショット2本＋<strong>検索結果の実見3クエリ</strong>。実測ログ＝<code>data/hp-loop/cycles/rally/cycle026-20260822.md</code>。<span class="text-sky-700">週次の点検3本（全体棚卸し・競合対比・勝ちパターン点検）が同時に期日到来したため、新規提案を作らず<u>既にある提案を確かなものにすること</u>に充てました。</span></p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-22・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🔑 テーマ名の検索結果を<br>実際に見て測った</strong></td><td class="py-1 px-2">当サイトが実際に持っているテーマ名で検索結果を調べました。<br>・<strong>「現存十二天守」</strong>1ページ目＝Wikipedia／松山市公式／じゃらん／刀剣ワールド城／<span class="text-emerald-800"><strong>攻城団「現存天守12城」（<code>kojodan.jp/badge/2/</code>）＝6位</strong></span>／城びと ほか<br>・<strong>「日本三名瀑」</strong>1ページ目＝アクティビティジャパン／コトバンク／滝いろ／<strong>袋田の滝 公式・華厳滝 公式</strong> ほか<br><strong>＝どちらも「そのテーマを説明したページ」と「そのスポットの公式ページ」で埋まっています。</strong><span class="text-emerald-800"><strong>「テーマ別に巡る＋バッジ」という当サイトとほぼ同じ形のページが実際に1ページ目に入っています。</strong></span></td><td class="py-1 px-2">🔴 <strong>R-R25 に目標値を投入</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 px-2"><strong>🎯 求められる<br>「厚み」の実測</strong></td><td class="py-1 px-2">・攻城団（6位）＝見出し <strong>4本</strong>／写真128／説明文172字／title 先頭にテーマ名<br>・アクティビティジャパン（1位）＝見出し <strong>11本</strong>／写真39／説明文78字／title にテーマ名<br>・<span class="text-red-800"><strong>当サイト <code>/spots/themes/nihon-sanmeibaku</code>＝見出し <u>0本</u>／写真 <u>2枚</u>／説明文は汎用文／<u>title にテーマ名なし</u></strong></span><br><strong>＝求められる厚みは「見出し4〜11本＋写真」で決して高くない。勝負を分けているのは名札（title）</strong>で、1ページ目の10件すべてがテーマ名を title に持ちます。</td><td class="py-1 px-2">🔴 <strong>R-R25 は「先行実例のある勝ち筋」</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 px-2"><strong>🔑 <code>/account</code> 初実査<br>（26サイクル目で初）</strong></td><td class="py-1 px-2"><strong>アカウント画面（<code>/account</code>）も、未登録の人が開くと何の説明もなくトップへ戻されます</strong>。<br>3画面の比較＝<code>/footprints</code> → <strong><code>/login</code>（正しい）</strong>／<code>/badges</code>・<code>/account</code> → <strong>ともにトップへ無言リダイレクト</strong>。<span class="text-red-800"><strong>＝3画面中2画面が同じ壊れ方＝構造の問題です。</strong></span><span class="text-gray-500">※<code>/account</code> の title は固有＝R-R01 の残件からは外れます。</span></td><td class="py-1 px-2">🔴 <strong>R-R32 の対象を拡大</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>配信先が<br>7日間 無反応</strong></td><td class="py-1 px-2">mailbox 実査＝<code>rally-dev</code> 宛の<strong>未処理8通</strong>・<strong>処理済み0通</strong>・<strong>発信0通</strong>＝開通（8/15）から7日、変化なし。<span class="text-emerald-700">※前回レポート（Cycle 025）は箱の中に実在を確認＝2回連続で裏取り。</span></td><td class="py-1 px-2">🔴 <strong>Q-R12 継続・7日目</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップ <strong>57,978B ＝5日連続でバイト同一</strong>（0.112秒）＝8/17 のデプロイ以降 変更なし</td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2">Search Console<br>（要監視）</td><td class="py-1 px-2"><strong>5日分・33表示・8クリック・pos4.6＝前回と数値まで完全に同一</strong>。<span class="text-amber-800">2日続けて新しい日が着弾せず。</span><span class="text-gray-600">断定は避け、<strong>判定条件を先に決定＝「翌 8/23 も 8/17 のままなら質問に上げる」</strong>。<span class="text-emerald-700">※Cycle 027（8/23）で 8/20 まで前進を確認＝この条件は<strong>否定</strong>されました。</span></span></td><td class="py-1 px-2">🌱 監視（→C027 で解消）</td></tr>
+        <tr><td class="py-1 px-2">週次棚卸し</td><td class="py-1 px-2"><strong>27件すべての前提が今も成立していることをライブで確認</strong>＝www SSL（R-R18）／robots・sitemap 404（R-R06）／<code>/spots</code> の行き止まり（R-R24）／トップ OGP 0件（R-R02）＝すべて継続。<strong>撤回・統合なし。消化された提案は 27件中 0件</strong>（24サイクル連続）</td><td class="py-1 px-2">⚠️ Q-R12・Q-R11 待ち</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路①</strong>：テーマ帯の1ページ目の要求水準を実測し <strong>R-R25 に目標値を投入</strong>。<strong>個別スポットの公式ページも1ページ目に入る</strong>＝R-R21 が狙える帯であることの傍証。</li>
+        <li><strong>経路③</strong>：<code>/account</code> も無言リダイレクト＝<strong>入口の閉じ方が揃っていない構造の問題</strong>と確定 → R-R32 の対象を拡大。競合実測で<strong>「バッジページを未ログインで公開すると検索の入口になる」実例</strong>も確認。</li>
+        <li><strong>追わないもの</strong>：総称語「全国スタンプラリー」の順位改善＝既に3〜5位・5日で33表示＝<u>天井が低い</u>。テーマ名・地名・スポット名の帯に寄せます。</li>
+        <li><strong>種プールへ</strong>：①ログインが要る画面が未ログインでも中身を返し noindex も canonical も無い ②Search Console の着弾停滞（→判定は翌日）。</li>
+        <li><strong>本サイクルの新規R・新規Q はともにゼロ</strong>。成果＝週次点検3本の完遂・R-R25 の目標値確定・R-R32 の対象拡大・未踏だった <code>/account</code> の消化・在庫27件の生存確認・GSC 停滞の検出と判定条件の事前設定。</li>
+      </ul>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（26サイクル連続）。<strong>配信先の実査＝未処理8通・処理0・発信0（→Q-R12）</strong>。deploy-log＝追記なし。定石＝#1〜#4b・#15（日次）に加え<strong>期日到来の週次3本＝#6 全体棚卸し＋面の母集団の差集合（探索枠＝<code>/account</code>）・#7 競合対比・#8 win-patterns 点検</strong>を実施／#5 ビジュアル定点は未実施（期日 08-24・前倒し条件に非該当）。</p>
+  </section>
+
   <!-- ===== Cycle 025 スナップショット ===== -->
   <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
     <h2 class="text-2xl font-bold mb-1">Cycle 025 — 2026-08-21（<span class="text-emerald-700">検索結果に「トップ以外のページ」が23サイクルぶりに初めて出ました</span>／<span class="text-red-700">25サイクル未踏だった「バッジ図鑑」を初実査＝新規 R-R32</span>）</h2>
