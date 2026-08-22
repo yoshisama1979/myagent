@@ -59,6 +59,17 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 025 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 025 — 2026-08-22（🎉 7週間止まっていたコメントが1件つきました。そして「どう直すか」の設計図が旧サイトから取れました）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC＝<strong>6日分に拡大</strong>（8/13〜8/18＝クリック74・表示948・平均掲載順位8.2・表示URL 218件。※ 新しい日ではなく過去2日分のバックフィル）。GA4（<span class="font-mono">.jp</span>／<span class="font-mono">.com</span>）＝8/20 まで。サイト実査＝hp-audit（新サイト定点6URL＋旧サイトのトップと市区町村ページ）／hp-shot（市区町村ページ・コメント一覧 PC/SP）。起動＝社長による手動実行。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：①<strong>【良】7週間ゼロだったコメントが1件ついた</strong>＝1,494→1,495件・最新 7/14→8/22。書いたのは<strong>ログインしていない匿名ユーザー</strong>で、内容は<strong>古写真の現在地の同定＋幼少期の記憶</strong>（「現在の中央区上大川前通6番、ロピアの駐車場です。私は生まれてから3歳まで、この阿部医院の3階に住んでいました」）＝<strong>R-J11 の仮説が実地で成立</strong>→🟡から🔴へ格上げ（※ n=1＝トレンド転換とは言わない）。②<strong>【良】R-J24 ①の実装仕様が旧サイトから丸ごと取れた</strong>＝同じ市区町村ページの配信HTML内部リンクが<strong>旧 245本（139種）／新 17本（9種・すべてナビとフッター）</strong>。旧が持ち新が失った3点＝<strong>(a) 個別写真ページへのリンク約120本（アンカーテキストが実際の場所名）(b) ページ送りがHTMLリンク (c) 絞り込みが独立URL</strong>＝<strong>新規設計でなく移植</strong>。<strong>(c) は R-J26 を構造的に解消する</strong>。③<strong>【厳】本番反映ゼロが7日に到達</strong>＝社内の警戒ラインを超えたため日報の見出しへ掲出。配信7通が未処理滞留（最古7.0日）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①市区町村のクリック率は標本がほぼ倍（表示28→48）でも <strong>16.7%</strong> を維持＝小標本の疑いが1段弱まった（※この見立ては C026 でさらに検証され、優位が縮んでいることが判明） ②都道府県の露出率は <strong>76.6%（47中36）</strong>で天井を再確認 ③<strong>最多露出の市区町村ページ <span class="font-mono">/cities/334</span>（山形市・表示20・7.0位）は 13件中10件（77%）が「今の写真なし」</strong>＝検索から来た人の多くが比較に触れずに帰っている→ <strong>R-J18 の価値を上方修正</strong> ④GSC はバックフィルされた（first_date 8/15→8/13）が、同一窓の再取得では C024 と完全一致＝<strong>「過去データの改訂は無い」と結論</strong>（※この結論は C026 で誤りと判明＝数%の範囲で改訂される）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>提案</strong>：<strong>新規 0件（意図的・2サイクル連続）</strong>／格上げ1件（R-J11 🟡→🔴）／根拠追加3件（R-J24 に新旧内部リンク実測＝実装の設計図／R-J18 に最多露出ページの実害／R-J26 に2件目の対照ケース）／訂正2件（C024 の「近隣市区町村への回遊リンクを同梱」＝旧サイトにも無い／「旧の減少と新の増加は移行の裏表」＝8/20 に旧が増加に転じたため取り下げ）／<strong>新規 Q 1件＝Q-J08（止まったままの場合の打ち手＝①待つ／②社長からひと声／③別ルート／④工数を割かない＝週次へ）</strong>。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md 新規追記なし／mailbox <code>to: hp-loop-konjaku</code> 新着なし（<code>to: konjaku-dev</code> 宛の滞留は6→7通）。定石＝GSC 日次・hp-audit 差分・スクショ定点（<code>konjaku-c025-*</code>）・mailbox 検算（往復）・レポート配信（<code>M-20260822T045441</code>・10,767B 検算済）。M-11 再適用。台帳ローテ第3回（C021〜C022 を coverage-archive へ・96.5KB→約80KB）。ツール＝<code>bin/gsc-layer.py</code>（T-028）を作成したが許可リスト未登録で無人実行できず、grep での手集計で代替。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 026・2026-08-23）</strong>：この回の結論のうち<strong>2点が翌日の実測で修正された</strong>。①<strong>「GSC の過去データの改訂は無い」は誤り</strong>＝同一窓 8/15〜18 が 44/625 →<strong>46/628</strong>、8/13〜18 が 74/948 →<strong>76/951</strong> に微増していた＝<strong>数%の範囲で後から改訂される</strong>（規律を「完全一致するとは限らない・差が数%以内なら改訂／それ以上なら実増」に更新）。②<strong>市区町村クリック率の優位は縮んでいる</strong>＝サイト平均比 2.5倍(C024)→2.1倍(C025)→<strong>1.6倍(C026)</strong>、新しい2日（8/19〜20）だけでは <strong>5.9%</strong> でサイト平均を下回った＝C024/C025 が自ら付けた「小標本ゆえ断定しない」という留保が現実化。<strong>R-J24 ① の着手順は維持（供給側＝露出率の伸びしろという2本目の根拠が健在）だが、根拠の重心を需要側から供給側へ戻した。</strong></p>
+  </section>
+
   <!-- ===== Cycle 024 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
     <h2 class="text-xl font-bold mb-1">Cycle 024 — 2026-08-21（🔑 市区町村ページは「出せば刺さる」と実測で出ました。ただし本番は6日間まったく動いていません）</h2>
