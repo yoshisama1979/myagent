@@ -179,6 +179,302 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 073・072（2026-08-23／08-22）＝ Cycle 074（2026-08-24）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 073（2026-08-23）・Cycle 072（2026-08-22）のスナップショット <span class="text-sm font-normal text-gray-500">（2026-08-24 Cycle 074 で最新レポートから退避。本文は原文のまま・未完了の B/T・未回答 Q は <a href="index.html" class="underline">最新レポート</a>に繰り越し済み）</span></h2>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c073">Cycle 073 — 2026-08-23（YCOM ブログ・日次）：<span class="text-emerald-800">9日間 届かなかった日報の原因が分かり、直しました</span>（＝外部のせいではなく私の手順の順番）／新規 <strong>B-046</strong>（ブログ最大の入口の取りこぼし）＋<strong>T-034</strong></h2>
+
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">📊 状況・データ状況</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>取得できたもの</strong>：GSC（BigQuery <span class="font-mono">searchconsole_ycom</span>・2026-07-26〜08-23）＝ページ別25件／クエリ別30件／<span class="font-mono">p=7528</span>・<span class="font-mono">p=2117</span> のクエリ別。<span class="font-mono">hp-audit</span> 5本（<span class="font-mono">/contents/</span>・<span class="font-mono">p=2117</span>・sitemap 2種・スパムURL 1件）。<span class="font-mono">wp-draft.py get --id 8365</span>。<span class="font-mono">tick.log</span>・<span class="font-mono">threads.json</span>・<span class="font-mono">data/mailbox/new/</span> の実体確認。<strong>すべて読み取り専用です。</strong></li>
+      <li><strong>取得できなかったもの</strong>：GA4 は<u>本日は引いていません</u>（時間配分を日報の修理に充てたため＝<strong>「取れなかった」ではなく「今日は見ていない」</strong>と正直に書きます）。GSC 画面（所有権・前年比較）は権限がなく未取得＝📥で継続してお願いしています。</li>
+      <li><strong>データの前提（継続）</strong>：<span class="font-mono">/contents/</span> は 2023-05-04〜2026-08-21 侵害されていました。<u>過去のGSC/GA4を読むときは、この期間の数字に第三者の影響が混じり得ることを前提にします。</u></li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">🔍 評価サマリ — <span class="text-emerald-800">今日は、直った報告と、取りこぼしの発見です</span></h3>
+    <p class="mb-2">昨日「日報が8日 届いていない」とご報告しました。<strong class="text-emerald-800">本日、原因を特定して直しました。</strong>原因は Slack でも設定でもなく、<u>私の手順の順番</u>でした。1回の実行に与えられている持ち時間は25分で、私はそれを掲示板の執筆で使い切り、<strong>最後に置いていた日報投稿に到達する前に打ち切られていました</strong>。8/20 の記録なし・8/21 の中断も同じ説明がつきます。<strong>本日から日報を先に出す順序に変え、投稿の痕跡を実測で確認しました（📡）。</strong></p>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>✅ 良い点</strong>：ブログの上位ページは順位そのものは健闘しています（<span class="font-mono">p=2117</span> 6.5位／<span class="font-mono">p=6141</span> 6.8位）。<strong>＝「表示されない」問題ではありません。</strong></li>
+      <li><strong>⚠️ 課題（本日の発見）</strong>：<u>その一番大きい入口で、頭のクエリだけ取りこぼしています</u>。「世界地図 フリー素材」は <strong>1,341表示・5.2位でCTR 2.83%</strong>。同じページの長尾（「日本地図 svg フリー」18.3%・「世界地図 ベクター」17.1%・「世界地図 フリー素材 ai」44.4%）と<strong>6〜15倍の差</strong>があります。→ <span class="font-mono">B-046</span></li>
+      <li><strong>⚠️ 課題（継続・本日も実測）</strong>：<span class="font-mono">B-045</span> は未解決です。<span class="font-mono">/contents/wp-backup.php</span> は本日も <strong>HTTP 200</strong>（トップページのHTMLを返す＝ソフト404）。<span class="font-mono">/contents/sitemap.xml</span> も <strong>200 だが中身はトップページ</strong>＝<u>ブログ記事はサイトマップに1本も載っていません</u>。root の <span class="font-mono">/sitemap.xml</span> は 4,727バイトで実在します。</li>
+      <li><strong class="text-rose-700">⚠️ 課題（7日目）</strong>：<span class="font-mono">wp-draft.py get --id 8365</span>＝<strong>status=draft</strong>。タイトルも投入時のまま（<span class="font-mono">B-043</span> 未実行）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-rose-400 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-rose-800 mb-2">① 既存記事の改善 — <span class="font-mono">B-046</span>：ブログで一番人が来る記事が、<span class="text-rose-700">一番大きいクエリだけ取りこぼしています</span>（優先度🔴）</h3>
+    <p class="mb-2"><strong>対象</strong>：<a href="https://y-com.info/contents/?p=2117" class="text-blue-600 hover:underline font-mono">y-com.info/contents/?p=2117</a>（無料の地図素材まとめ・28日で<strong>232クリック／5,324表示</strong>＝ブログ最大の入口）／<strong>観点</strong>：タイトル・メタ（クリックされる見え方）</p>
+    <p class="mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>観察（GSC実測・2026-07-26〜08-23）</strong><br>
+    ・「世界地図 フリー素材」＝<strong>1,341表示・平均5.2位・38クリック・CTR 2.83%</strong>（このページの表示の約4分の1を占める頭クエリ）<br>
+    ・同じページの長尾＝「日本地図 svg フリー」60表示・2.5位・<strong>CTR 18.3%</strong>／「世界地図 svg」49表示・3.6位・<strong>16.3%</strong>／「世界地図 ベクター」35表示・2.0位・<strong>17.1%</strong>／「世界地図 フリー素材 ai」9表示・2.1位・<strong>44.4%</strong>／「世界地図 著作権フリー」26表示・1.8位・11.5%<br>
+    ・現在のタイトル（86字）＝<span class="font-mono">無料の地図素材サイト11選｜著作権・商用利用の確認ポイントとSVG/AI/EPS/PSDの選び方（日本地図・世界地図）</span></p>
+    <p class="mb-2"><strong>なぜ問題か</strong>：<u>順位は5.2位＝1ページ目です。見えているのに押されていません。</u>5位前後の一般的なCTRはおおむね5〜7%と言われますので、2.83%は<strong>その半分以下</strong>です。<br>
+    <strong>推測</strong>：「世界地図 フリー素材」と打つ人は<u>素材そのもの</u>を探しています。ところがタイトルの先頭が「<strong>素材サイト11選</strong>」＝<u>よそのサイトへの案内</u>と読めるため、「ここでは手に入らない」と判断されている可能性があります。<strong>形式（svg・ai）や権利（著作権フリー）まで指定して検索する人＝すでに目的がはっきりしている人だけが押している</strong>——というCTRの分かれ方は、この見立てと整合します。<span class="text-xs text-gray-600">※断定はしません。実測できる面なので、直して結果を見るのが最短です。</span></p>
+    <p class="mb-2 bg-emerald-50 border border-emerald-300 rounded p-2"><strong class="text-emerald-800">改善案（コピペで置き換えるだけ・1分）</strong><br>
+    <strong>タイトル案</strong>：<span class="font-mono bg-white px-1">世界地図・日本地図の無料素材はここで手に入る｜SVG/AI/EPS で配布中＋商用利用と著作権の確認ポイント</span><br>
+    <span class="text-xs">狙い＝①頭に「<u>ここで手に入る</u>」を置いて“よそへの案内”に見えなくする ②押されている長尾語（<strong>SVG・AI・商用利用・著作権</strong>）をタイトル内に残す ③「11選」は本文の見出しに降ろす。</span><br>
+    <strong>説明文（meta description）案</strong>：<span class="font-mono bg-white px-1 text-xs">世界地図・日本地図のフリー素材を、SVG・AI・EPS のベクター形式で配布しています。拡大しても崩れず、色や地域だけの差し替えも可能。商用利用の可否と著作権表示の要否、資料・ホームページで使うときの注意点まで、制作会社の視点でまとめました。</span><br>
+    <span class="text-xs text-gray-600">※ 8/21 の開発回答で <span class="font-mono">AIOSEO 4.4.0.1</span> の<u>記事ごとの入力欄が使える</u>ことが確認済みです＝開発作業は不要、社長のコピペだけで反映できます。</span></p>
+    <p class="mb-1"><strong>効果</strong>：1,341表示 × CTR 2.83%→6% で <strong>月あたり +40クリック前後</strong>（現在ブログ全体のCTRは2.88%）。<strong class="text-emerald-800">何より、これはブログで数少ない「効果を実測できる面」です</strong>＝クリックが十分あるので、直した翌週のGSCで成否がはっきり出ます（データラグ2〜3日）。／<strong>工数</strong>：WP管理画面で1分／<strong>優先度</strong>：🔴</p>
+    <p class="text-xs text-rose-700"><strong>ただし実行は🔒保留です</strong>＝開発から「認証情報のローテーションまでWPへの書き込みは保留」と要請を受けています。<u>ローテーション後、最初に着手する1件としてお薦めします</u>（<span class="font-mono">B-036</span> の文案6本と同じ画面・同じ作業です）。</p>
+  </div>
+
+  <div class="bg-white border-2 border-amber-400 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-amber-800 mb-2">② 新規記事のテーマ＋構成案 — <span class="font-mono">T-034</span>：「そのSVG、資料やホームページでそのまま使えますか？」（優先度🟡・栓なし）</h3>
+    <p class="mb-2"><strong>想定読者</strong>：地図やイラストのフリー素材を落としたものの、<u>SVG や AI ファイルが開けない・パワポに貼ると崩れる・ホームページに載せたら表示されない</u>で止まっている、会社の担当者。<br>
+    <strong>狙う検索意図</strong>：知りたい（形式の違い・開き方・変換）→ その先で「自分でやる限界」に気づいてもらう。</p>
+    <p class="mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>観察（GSC実測・裏付け）</strong>：svg 系クエリだけで <span class="font-mono">p=2117</span> に<strong>計 約290表示・平均2〜4位・CTR 8〜30%</strong>（「日本地図 svg」123表示3.9位／「日本地図 svg フリー」60表示2.5位／「世界地図 svg」49表示3.6位／「世界地図 ベクター」35表示2.0位／「地図 svg」20表示3.4位 ほか）。<strong class="text-emerald-800">＝この語彙で来る読者は既にいて、しかもよく押しています。</strong>いま受けているのは<u>素材の一覧記事</u>だけで、<strong>「で、どう使うの？」に答える記事がありません</strong>。</p>
+    <p class="mb-2"><strong>この一手はファネルのどの層か</strong>：<strong class="text-emerald-800">①出会う → ②覚えられ、信頼される の橋</strong>です。素材系は当ブログ唯一の大きい流入（<span class="font-mono">p=2117</span> だけで月232クリック）ですが、<u>いま読者は素材を持って帰るだけで、会社の記憶を残していません</u>（指名検索「ワイコム」は28日で表示3・クリック0）。<span class="font-mono">T-033</span>（権利）と本件（形式）で<strong>「素材で困ったらこの会社」の2本立て</strong>にします。<span class="text-xs text-gray-600">※ 測る指標は問い合わせ数ではなく<u>②の指標</u>＝指名検索の表示回数・再訪。四半期に一度見ます。</span></p>
+    <p class="mb-2"><strong>タイトル案</strong>：<span class="font-mono bg-amber-50 px-1">SVG・AI・EPS・PNG、結局どれを使えばいい？ 地図やイラストの素材が「開けない・崩れる・表示されない」を全部解決</span></p>
+    <div class="bg-amber-50 border border-amber-300 rounded p-3 mb-2">
+      <p class="font-bold mb-1">アウトライン（h2/h3・各見出しで触れる要素）</p>
+      <p class="text-xs"><strong>h2-1. 先に結論：迷ったらこの3つで足ります</strong>（表1枚＝<u>紙・印刷ならAI/EPS ／ ホームページならSVG ／ とりあえず貼るならPNG</u>。※ここだけ読んで帰れる形に）<br>
+      <strong>h2-2. 形式の違いを、1分で</strong>　h3: 写真の形式（PNG・JPG）＝拡大するとぼやける／h3: 図の形式（SVG・AI・EPS）＝<u>いくら拡大しても崩れない・色や地域だけ差し替えられる</u>／h3: なぜ地図は図の形式で配られるのか<br>
+      <strong>h2-3. 「開けない」の原因と対処</strong>　h3: AI・EPS は Illustrator 用＝<u>持っていなくても諦めなくていい</u>／h3: SVG はブラウザにドラッグすれば見られる／h3: パワポ・Word に貼るときの手順と、崩れたときの逃げ道（PNG書き出し）<br>
+      <strong>h2-4. ホームページに載せるときの注意</strong>　h3: SVG をそのまま載せると軽くて綺麗／h3: <u>表示されないときに疑う3点</u>（サーバ設定・文字コード・サイズ指定）／h3: 画像URLは <span class="font-mono">https</span> の正しいドメインで（<span class="text-xs">※自社でも起きた実例として書けます＝<span class="font-mono">B-037</span></span>）<br>
+      <strong>h2-5. 権利の確認だけは、形式と関係なく必要です</strong>（<u><span class="font-mono">T-033</span> へ内部リンク</u>・重複させず1段落で渡す）<br>
+      <strong>h2-6. 「ここから先は頼んだほうが早い」の目安</strong>　h3: <u>素材の差し替えが毎月発生する／複数人が編集する／表示崩れが直せない</u> ＝この3つが揃ったら外注の検討どき（<span class="text-xs">押し売りにしない。判断の物差しだけ渡す</span>）</p>
+    </div>
+    <p class="mb-1"><strong>内部リンク先</strong>：<span class="font-mono">p=2117</span>（素材一覧・相互）／<span class="font-mono">/free_photo/</span>（自社配布・28日15クリック5.8位）／<span class="font-mono">T-033</span>（権利）／<span class="font-mono">/service/web/operate/</span>（更新・運用）。<br>
+    <strong>CTA</strong>：記事末に1つだけ＝「<u>素材の差し替えや表示崩れも、月々の運用でお引き受けしています</u>」→ <span class="font-mono">/service/free_advice.html</span>（<span class="text-xs">※本命の扉は <span class="font-mono">Q-009</span> のご回答待ちのため暫定</span>）。<br>
+    <strong>効果</strong>：既存の約290表示の受け皿を増やし、素材読者に会社を記憶させる（②の橋）／<strong>工数</strong>：中（図表1枚＋執筆）／<strong>優先度</strong>：🟡</p>
+    <p class="text-xs text-gray-600"><strong>📥 あれば厚くなる事実（栓ではありません）</strong>：「素材が開けない・崩れる」で実際にご相談を受けた例が1つあると、他社のまとめ記事と決定的に差がつきます。<u>無ければ一般論だけで成立させます（捏造しません）。</u></p>
+  </div>
+
+  <div class="bg-white border-2 border-emerald-400 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-emerald-800 mb-2">⛳ 結論</h3>
+    <p class="mb-2"><strong>社長の一手は、昨日から変わっていません＝WordPress で下書き 8365 を「公開」してください（7日目）。</strong>ご回答も料金の事実も不要です。同じログインのついでに、開発から依頼のあるパスワード変更もお願いします。</p>
+    <p class="mb-2"><strong class="text-emerald-800">私の側で直したこと</strong>：9日間 日報が届かなかった原因は、外部の障害ではなく<u>私が持ち時間の使い方を間違えていたこと</u>でした。<strong>本日から日報を先に出します。</strong>この6〜9日間 公開が動かなかったのは、社長のご判断ではなく<u>私の連絡が届いていなかったから</u>かもしれません。重ねてお詫びします。</p>
+    <p class="text-xs text-gray-600"><strong>新規を B1＋T1 に絞った理由</strong>：未完了が42件あり、うち大半がWPへの書き込みを伴うため🔒保留中です。<u>件数を増やすより、届く連絡を1本 通すほうが今日は価値がある</u>と判断しました（分析は止めていません＝ゼロにはしていません）。</p>
+    <p class="text-xs text-rose-700 mt-2"><strong>掲示板の整理について（正直に）</strong>：本日は時間を日報の修理に充てたため、<u>下の Cycle 072 を アーカイブへ移せていません</u>（index は最新1サイクルだけ、という原則からの逸脱です）。<strong>次サイクル（8/24）で C072 をアーカイブへ移します。未完了の B/T・未回答 Q は1件も落としていません。</strong></p>
+  </div>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c072">Cycle 072 — 2026-08-22（YCOM ブログ・日次）：<span class="text-rose-700">ブログは3年3か月 乗っ取られていました</span>（開発が発見・隔離／私も本日 確認）／<span class="text-rose-700">私の側も2つ失敗していました</span>＝日報が8日 届かず・8/21 のサイクルが掲示板に出ていなかった／新規 <strong>B-045</strong>＋<u>8/21 分</u> <strong>B-044</strong>・<strong>T-033</strong>／<strong>T-022</strong> に構成案</h2>
+
+  <!-- 状況 -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">📊 状況・データ状況</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>起動理由＝日次サイクル</strong>。<span class="font-mono">from-president.md</span> は 2026-06-23 のまま＝Q-002／Q-003／Q-005／Q-006／Q-007／Q-009／Q-010 が未回答。<strong>本日も新規質問はありません</strong>（5日連続）。Slack の新着返信も0件。</li>
+      <li class="bg-rose-50 border border-rose-300 rounded p-2"><strong class="text-rose-800">📬 当ループ宛の受信が、初めて1通ありました（そして標準の手順では見えませんでした）</strong>：<span class="font-mono">bin/mailbox.sh inbox</span> は <span class="font-mono">inbox_of: hp-loop / count: 0</span> を返します。<u>ファイル実体を直接走査して</u> <span class="font-mono">to: blog-loop-ycom</span> の1通を発見＝<strong>開発（web-hanasaka）からの侵害報告</strong>（<span class="font-mono">M-20260821T182450-web-hanasaka-f9cdbf30366a9a10</span>・8/21 18:24）。<span class="font-mono">done</span> は <span class="font-mono">message_not_found</span> で失敗したため<strong>この便は <span class="font-mono">new/</span> に残っています＝次サイクルでの二重処理を避けるため、ここにID を記録します（処理済み）。</strong></li>
+      <li><strong class="text-emerald-800">開発（web-hanasaka）が再稼働しました</strong>：未処理 <span class="font-mono">new/</span> の宛先内訳＝<span class="font-mono">yoshida-dev</span> 23／<span class="font-mono">rally-dev</span> 9／<span class="font-mono">konjaku-dev</span> 8／<span class="font-mono">hp-loop-ycom</span> 6／<span class="font-mono">yokohawaii-dev</span> 4／<span class="font-mono">fujisaka-dev</span> 2／<span class="font-mono">hanasaka-main</span> 1／<span class="font-mono">blog-loop-ycom</span> 1。<strong class="text-emerald-800"><span class="font-mono">web-hanasaka</span> 宛は 12通 → <u>0通</u></strong>＝8/11 以降 止まっていた開発が動き、当ループ発の5通を含め全て処理されました。<span class="text-xs text-gray-600">他宛メッセージの移動・削除・<span class="font-mono">done</span> はしていません。</span></li>
+      <li><strong class="text-emerald-800">WordPress 実査</strong>：<span class="font-mono">wp-draft.py get --client ycom --id 8365</span>＝<strong>status=draft</strong>・<u>タイトルも投入時のまま</u>。<strong class="text-rose-700">投入（8/17）から6日目です。</strong></li>
+      <li><strong>データ取得（すべて読み取り専用）</strong>：<strong>GSC 10本</strong>＝summary 3（28日＋週次2）／pages 2（上位25・上位200）／page-queries 2（<span class="font-mono">p=6141・p=7030</span>）／query-pages 3（「費用」「大阪」「更新代行」）＋ブランド2（「はなさか」「ycom」）。<strong>GA4 3本</strong>（landing 全体／<span class="font-mono">/contents/</span> 絞り込み／<span class="font-mono">/partners/</span> 絞り込み）。<strong><span class="font-mono">hp-audit</span> 5本</strong>（<span class="font-mono">/contents/</span>・<span class="font-mono">robots.txt</span>・<span class="font-mono">sitemap.xml</span>・<span class="font-mono">/contents/sitemap.xml</span>・<u>マルウェアURL2本の無効化確認</u>）。<strong><span class="font-mono">wp-draft.py get</span> 1本</strong>・<span class="font-mono">slack-poll.py fetch</span> 1本・<span class="font-mono">threads.json</span> と <span class="font-mono">bin/wp-draft.py</span> の実体確認。</li>
+      <li><strong>数字（GSC・最終日 8/18＝ラグ4日）</strong>：28日＝<strong>1,456クリック／50,553表示／CTR 2.88%／平均10.7位</strong>（前回 1,482／52,400／10.7位）＝<u>横ばい</u>。週次 8/12〜8/18＝<strong>381クリック／14,892表示／12.4位</strong>（前週 8/05〜8/11＝434／13,719／9.9位）＝<u>表示は増え、クリックと順位は落ちています</u>が、<strong class="text-rose-700">窓にお盆（8/13〜16）が入るためまだ判定しません</strong>（お盆明けの完全な週＝<strong>8/24週</strong>で再判定）。</li>
+      <li><strong>指名検索（②の橋・北極星）</strong>：「株式会社はなさか」7クリック（表示53）＋「ycom」6クリック（表示42）＝<strong>13クリック／月</strong>（前回13・前々回11）＝<strong class="text-rose-700">横ばい＝橋は未架設のままです。</strong></li>
+      <li><strong class="text-rose-700">正直な限界</strong>：(1) GSC のラグが<u>4日</u>に伸びています（本日 8/22・最終日 8/18）。(2) 週次の窓にお盆が入り、季節要因を排除できていません。(3) 前年同期比は引けません（BigQuery 書き出しが 2026-06-06 開始）。(4) <span class="font-mono">curl</span> は本日もこの実行環境で使えず、<u>RSS の投稿日は再取得できていません</u>＝「新規公開ゼロ」の根拠は <u>8365 が draft であること＋GSC に新規ページが出ていないこと</u>です。(5) <strong>侵害の実体（サーバ上のファイル）は私には見えません</strong>＝開発の報告と、私が外から GET できた事実だけを書いています。(6) <u>スパムURLが過去のGSC数字をどれだけ汚したかは、遡って測れません</u>（BigQuery書き出しが 6/06 開始のため）。</li>
+    </ul>
+  </div>
+
+  <!-- 評価サマリ -->
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">🔍 評価サマリ — <span class="text-rose-700">今日は、悪い知らせと、自分の失敗の報告です</span></h3>
+    <ul class="list-disc list-inside space-y-2">
+      <li class="bg-rose-50 border-2 border-rose-500 rounded p-2"><strong class="text-rose-800">① ブログが 2023-05-04 から 3年3か月、スパムの温床にされていました</strong><br>
+        開発（web-hanasaka）が 8/21 に発見・隔離し、当ループへ報告してくれました。<u>詳細はページ冒頭の🚨。</u><strong>私も本日、外から2本のURLをGETし、悪性コンテンツが消えていることを確認しています。</strong><br>
+        <strong class="text-rose-700">私が申し上げるべきことは1つです＝この掲示板で1年近く「ブログのSEO」を論じてきたあいだ、同じドメインの下に1万件のスパムURLがありました。私はそれに気づけませんでした。</strong><u>私が見ているのは Search Console と GA4 の「数字」だけで、サーバの中身は見ていません（見る権限もありません）。それでも、気づく機会はあったはずです。</u>→ 何が足りなかったかは <span class="font-mono">K-592</span> に記録しました。</li>
+      <li class="bg-white border-2 border-emerald-400 rounded p-2"><strong class="text-emerald-900">② せめてもの実測＝直近28日のGSCに、スパムURLは1件も出ていません</strong><br>
+        表示回数の上位<strong>200ページ</strong>を引き、<span class="font-mono">uploads</span>／<span class="font-mono">tunnel</span>／<span class="font-mono">togel</span>／<span class="font-mono">wp-backup</span> を機械的に走査＝<strong>0件</strong>。200位のページでも28日で37表示なので、<u><strong>37表示以上のスパムURLは存在しません</strong></u>。<span class="text-xs text-gray-600">※37表示未満の裾は見えていません＝「1件も無かった」とまでは申し上げません。10,282件が1件ずつ少数の表示を稼いでいた形は、この方法では否定できません。</span><br>
+        <strong>＝この掲示板が積み上げてきた分析（どの記事がどのクエリで何位か）は、少なくとも直近28日については汚染されていません。</strong></li>
+      <li class="bg-white border-2 border-amber-500 rounded p-2"><strong class="text-amber-900">③ ただし、掃除はまだ半分です＝消したURLが「HTTP 200」を返しています</strong><br>
+        <strong>本日の実測</strong>：<span class="font-mono">/contents/wp-backup.php</span> と <span class="font-mono">/contents/wp-content/uploads/-/</span> をGET → <strong>HTTP 200</strong>・本文はトップページのHTML（<span class="font-mono">canonical</span> はトップ）。<u>中身は消えています。ですが Google から見ると「そのURLは今も生きている」と読めます。</u><br>
+        <strong class="text-rose-700">1万件のドアウェイURLが索引に入っていた場合、200 を返している限り消えません。</strong>→ <span class="font-mono">B-045</span>。<span class="text-xs text-gray-600">※これは開発の作業の不備ではありません＝このサイトは元々「存在しないパスに 200＋トップHTML」を返す作りで（開発も自ら残課題として申告しています）、今回それが裏目に出ている、という話です。</span></li>
+      <li class="bg-rose-50 border-2 border-rose-500 rounded p-2"><strong class="text-rose-800">④ 私の失敗その1＝「毎日お願いしている」つもりが、8日間 届いていませんでした</strong><br>
+        <strong>事実</strong>＝<span class="font-mono">data/slack/threads.json</span> の当ループの日報スレッド登録は <strong>8/15 が最後</strong>。同じ仕組みの HP分析ループは 8/22 04:19 まで毎日 登録されています。<u>掲示板には毎回「Slack：日報1本を投稿」と書いてありました。</u><strong class="text-rose-700">＝投稿できたつもりで、出ていませんでした。8365 を入れたのは 8/17＝日報が止まった後です。</strong><br>
+        <strong class="text-emerald-800">本日は投稿したあとに実測し、下の「📡」欄に結果を書きます＝推定のまま置きません。</strong></li>
+      <li class="bg-rose-50 border-2 border-rose-400 rounded p-2"><strong class="text-rose-800">⑤ 私の失敗その2＝8/21 のサイクルが、掲示板に出ないまま終わっていました</strong><br>
+        8/20 は記録が一切なく（原因不明）、8/21 は<u>アーカイブだけ更新して中断</u>していました（生成物は <span class="font-mono">data/blog-loop/_c071.html</span> に残存）。<strong class="text-emerald-800">その日の提案（<span class="font-mono">B-044</span>＝抜粋とカテゴリ、<span class="font-mono">T-033</span>＝フリー素材の使用可否）は捨てず、本日 下に全文でお届けします。</strong><u>社長がご覧になるのは今日が初めてです。</u></li>
+      <li class="bg-white border-2 border-rose-400 rounded p-2"><strong class="text-rose-800">⑥ 私の失敗その3＝当ループ宛の受信が「0件」と表示され、見落とすところでした</strong><br>
+        上の①の報告は、<span class="font-mono">bin/mailbox.sh inbox</span> では <strong>0件</strong>と出ます（トークンが旧・総称名 <span class="font-mono">hp-loop</span> に紐づいているため）。<u>ファイル実体を直接走査する手順を続けていたから拾えました。</u><strong class="text-rose-700">これまで「実害ゼロ」と書いてきましたが、撤回します＝今日、実害が出ました。</strong>（📥 で Overseer へ）</li>
+      <li class="bg-white border-2 border-sky-400 rounded p-2"><strong class="text-sky-900">⑦ 良い知らせ＝止まっていた開発が動き、宿題が3つ前に進みました</strong><br>
+        <strong>(a) <span class="font-mono">B-017</span>（クロールの土台）が大部分 完了</strong>＝<span class="font-mono">robots.txt</span> 不在→<strong>200</strong>（<span class="font-mono">Sitemap:</span> 宣言つき）／<span class="font-mono">sitemap.xml</span> 不在→<strong>200・52URL</strong>／HTTP500 の2本は削除。<u>いずれも本日 私もGETして確認しました。</u><br>
+        <strong>(b) <span class="font-mono">B-036</span>（説明文）が実行可能に</strong>＝<span class="font-mono">AIOSEO 4.4.0.1</span> が有効で<u>記事ごとの入力欄はありました</u>（空欄でフォールバックしていただけ）＝<strong>開発作業なしで、社長のコピペだけで反映できます。</strong><br>
+        <strong>(c) <span class="font-mono">B-016</span>（canonical 2本）の原因が特定</strong>＝共通テンプレの <span class="font-mono">SelfUrl()</span> が <span class="font-mono">strtok</span> でクエリを捨てるため、全記事が <span class="font-mono">/contents/</span> を名乗っていました。<span class="text-rose-700">あわせて私の観察を1つ訂正します</span>＝「記事のOGPがトップ用に固定」ではなく、<u>AIOSEO の正しい記事用OGPが先に出ており、その後ろにトップ用が付いている</u>状態でした。<strong>＝私の見立ては「症状」としては合っていましたが、「記事のOGPが出ていない」という言い方は不正確でした。</strong></li>
+      <li class="bg-white border border-gray-300 rounded p-2"><strong>⑧ 本日の新しい観察＝月額ストックの入口が、月113回 表示されて1人も来ていません</strong>（GSC・28日・実測）<br>
+        「ホームページ修正更新代行 大阪」18表示 <strong>9.3位</strong>／「ホームページ更新代行 大阪」17表示 11.2位／同クエリを <span class="font-mono">/contact/normal/</span> も 12表示 21.5位で受領／「ホームページ運営支援 大阪」28表示 23.2位／「ホームページ 運用 大阪」17表示 25.5位／「ホームページ運用代行 大阪」8表示 17.1位／「ホームページ 運営代行 大阪」7表示 20.9位＋6表示 28.5位＝<strong>計113表示・クリック0</strong>。<br>
+        <strong class="text-rose-700">しかも受けているのは自社の4ページ（<span class="font-mono">/service/web/operate/</span>・<span class="font-mono">/contact/normal/</span>・<span class="font-mono">/partners/alliance.html</span>・<span class="font-mono">/service/</span>）で、同じ意図をバラバラに分け合っています。</strong>記事は1本もありません。→ <span class="font-mono">T-022</span> に本日 構成案を付けました（<u>保守・運用＝月額ストック収益に直結する帯です</u>）。</li>
+      <li class="bg-white border-2 border-rose-400 rounded p-2"><strong class="text-rose-800">⑨ Q-006 の判断材料が、決定的に変わりました</strong>：GA4・28日の着地ページ別CVで <span class="font-mono">/partners/designer.html</span>＝17セッション→<strong>CV 6件（35.3%）</strong>、<span class="font-mono">/partners/coder.html</span>＝42セッション→<strong>CV 2件</strong>。<u>同じ28日で、ブログ全記事（約1,500セッション）のCVは 0件です。</u><strong class="text-rose-700">「募集停止」とされている供給側の入口が、サイト内で2番目に成約している導線になっています。</strong>→ 🔔 Q-006。</li>
+      <li><strong>⑩ 北極星（①出会う→②覚えられ信頼される→③依頼）</strong>：<u>①</u>＝月1,456クリック・10.7位＝<strong>数は強いが中身は事業外</strong>（変化なし）。<u>②</u>＝指名検索13クリック／月＝<strong>橋は未架設</strong>（変化なし）。<u>③</u>＝<strong class="text-rose-700">6日 動いていません。ただし今日の見立てでは、原因の一部は「社長が押さなかった」ではなく「お願いが届いていなかった」です。</strong></li>
+    </ul>
+  </div>
+
+  <!-- ① 既存記事の改善 B-045 -->
+  <div class="bg-white border-4 border-rose-400 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-rose-800 mb-2">① 既存記事の改善 — <span class="font-mono">B-045</span>：<span class="text-rose-700">掃除は半分です</span>＝消したスパムURLが「まだあります」と答え続けています／ブログ記事はサイトマップに1本も載っていません（優先度🔴）</h3>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">対象</td><td class="py-1"><strong>ブログ（<span class="font-mono">/contents/</span>）のクロール土台</strong>＝①隔離済みスパムURLのHTTPステータス ②ブログ記事のサイトマップ。<u>記事の中身を書き換える提案ではありません。</u></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観点</td><td class="py-1"><strong>クロール・索引の衛生（<span class="font-mono">B-017</span> の残り）</strong>。<u>「Googleに、いま何があって何が無いかを正しく伝える」だけの話です。</u></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観察（事実・8/22 実測）</td><td class="py-1">① <strong><span class="font-mono">https://y-com.info/contents/wp-backup.php</span> → <span class="font-mono">HTTP 200</span></strong>（final＝<span class="font-mono">https://y-com.info/</span>・73,677B＝トップページのHTML）。<br>
+        ② <strong><span class="font-mono">https://y-com.info/contents/wp-content/uploads/-/</span> → <span class="font-mono">HTTP 200</span></strong>（同上）。<u>＝マルウェアは確かに消えています。ですが「404 ありません」ではなく「200 あります」を返しています。</u><br>
+        ③ <strong><span class="font-mono">https://y-com.info/robots.txt</span> → 200（119バイト・新設）</strong>。<span class="font-mono">Sitemap: https://y-com.info/sitemap.xml</span> を宣言。<br>
+        ④ <strong><span class="font-mono">https://y-com.info/sitemap.xml</span> → 200（4,727バイト・52URL）</strong>。<u>ここに載っているのは静的サイトのページだけです。</u><br>
+        ⑤ <strong class="text-rose-700"><span class="font-mono">https://y-com.info/contents/sitemap.xml</span> → 200 だが final は <span class="font-mono">https://y-com.info/</span></strong>＝<u>存在しません</u>（トップページが返っている＝ソフト404）。<strong>＝ブログ記事は、サイトマップに1本も載っていません。</strong><br>
+        ⑥ 開発の申し送り＝<span class="font-mono">/contents/sitemap.xml</span> の最終生成は <strong>2023-09-27 で停止</strong>。存在しないURLを宣言しない判断で、あえて robots.txt には書いていない。AIOSEOのサイトマップ有効化は保留解除後に相談したい。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">なぜ問題か</td><td class="py-1"><strong>(1) 200 を返す限り、索引からは消えません。</strong>Google は「200 が返るなら、そのページはまだある」と扱います。攻撃者が置いていたのは<u>1万件超のURLを列挙したサイトマップ</u>で、Google に対して積極的に「このドメインにはこれだけのページがある」と申告していました。<strong class="text-rose-700">索引に入っていた分は、いま 200 のまま放置すると、そのまま居座ります。</strong><br>
+        <strong>(2) しかも中身はトップページのHTMLです。</strong>＝1万件の別々のURLが、全部「株式会社はなさか｜大阪市北区のホームページ制作YCOM」という同じ内容を返している状態になり得ます。<u>これは「重複コンテンツの大量生産」に見えます。</u><br>
+        <strong>(3) 正しいURL一覧は、いまだにGoogleに渡していません。</strong>静的52ページは 8/21 に渡りましたが、<strong>記事（数百本）はゼロです。</strong>「更新頻度が低いブログ」ほどサイトマップが効きます。<u>そして 8365 が公開されたとき、いちばん早く拾ってもらう手段でもあります。</u><br>
+        <span class="text-xs text-gray-600">※(1)(2) は<strong>推測を含みます</strong>＝実際に何件が索引に入っていたかは、私には見えません（GSC の「ページ」レポートを見れば分かります＝下記）。<u>「1万件が索引にある」と断定はしていません。</u></span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">改善案（順番つき）</td><td class="py-1"><strong class="text-emerald-800">A. 今日、社長が1人でできること（GSC の画面・約5分）</strong><br>
+        <span class="ml-3">A-1 <strong>Search Console →「ページ」（索引作成）→「登録済み」を開き、<span class="font-mono">/contents/wp-content/uploads/</span> を含むURLが何件あるか見る</strong>。<u>これで「実害があったのか、杞憂か」が確定します。</u>0件なら B-045 の(1)(2) は不要になります＝<strong>まずここです。</strong><br>
+        A-2 件数が出たら <strong>「削除」ツール →「すべてのURLを一時的に削除」→ プレフィックス <span class="font-mono">https://y-com.info/contents/wp-content/uploads/-/</span></strong> を申請。<u>約6か月の一時的な非表示</u>＝恒久対処ではありませんが、その場で効きます。<br>
+        A-3 同じ画面で<strong>「ユーザーと権限」「所有権の確認」に心当たりのない項目が無いか</strong>を確認（📥 の依頼と同じ操作です）。</span><br>
+        <strong class="text-rose-700">B. 保留解除後（開発・認証情報のローテーション後）</strong><br>
+        <span class="ml-3">B-1 <strong>隔離した9パスに 410 Gone を返す</strong>（<span class="font-mono">/contents/.htaccess</span>）。<u>410 は「二度と戻りません」の意味で、404 より削除が早い</u>のが一般的です。対象は開発が把握している9件＋<span class="font-mono">uploads/-/</span> 配下のプレフィックス。<br>
+        B-2 <strong>AIOSEO のサイトマップを有効化し、<span class="font-mono">robots.txt</span> に1行 足す</strong>（<span class="font-mono">Sitemap: https://y-com.info/contents/sitemap_index.xml</span> 等・実URLはAIOSEOの設定画面に出ます）。<u>開発が「相談したい」と言っているのはこの部分です＝本ループとしては「やってください」が結論です。</u><br>
+        B-3 <strong>ソフト404 の是正</strong>は<u>サイト全体の設計に関わる</u>ため、HP分析（hp-loop）と社長のご判断へ回します。ブログとしては B-1 のプレフィックス指定で足ります。</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">効果／測り方</td><td class="py-1">効果＝<strong>A-1 の結果しだい</strong>（＝<u>だから A-1 を最初に置いています</u>）。索引に多数残っていれば<strong>大</strong>（ドメイン全体の品質評価に効きます）、0件なら<strong>不要</strong>。<br>
+        <strong>測り方</strong>＝(1) GSC「ページ」の登録済み件数を、A-2 実施の <u>7日後・28日後</u>に再確認。(2) サイトマップ送信後は「サイトマップ」レポートの<u>検出URL数</u>と<u>登録済み</u>を見る。(3) 8365 公開後、<strong>索引されるまでの日数</strong>（サイトマップの有無で明確に変わります）。</td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">工数／優先度／栓</td><td class="py-1">工数＝<strong>A は約5分（社長）／B は開発で数十分</strong>。優先度 <strong>🔴</strong>（<u>ただし A-1 の結果で下がる可能性があります＝正直に書きます</u>）。<br>
+        <strong>栓</strong>＝B は 🔒<u>認証情報のローテーション</u>（開発が明示的に保留を要請）。<strong class="text-emerald-800">A は栓なし＝今日できます。</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ① 既存記事の改善 B-044（8/21生成・本日 初報告） -->
+  <div class="bg-white border-2 border-emerald-400 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-emerald-800 mb-2">① 既存記事の改善 — <span class="font-mono">B-044</span>：8365 を公開するその画面で、あと30秒だけ（<span class="text-rose-700">8/21 に作成・掲示板に出せていませんでした</span>・優先度🟡・栓なし・<u>公開の前提ではありません</u>）</h3>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">対象</td><td class="py-1"><strong>WordPress 下書き <span class="font-mono">8365</span></strong>（T-001「ホームページ制作の費用相場」）の<strong>抜粋欄</strong>と<strong>カテゴリ欄</strong>。<u>公開ボタンと同じ画面で完結します。</u></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観点</td><td class="py-1"><strong>スニペット（検索結果の説明文）</strong>＋<strong>回遊（カテゴリ→記事下の関連記事）</strong>。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">観察（事実）</td><td class="py-1">① <strong>ブログ全記事の説明文は「本文の自動切り出し」</strong>（<span class="font-mono">B-036</span>）。<span class="text-emerald-800">🆕 8/21 開発回答＝入力欄は<u>あります</u>（AIOSEO有効）。空欄でフォールバックしていただけでした。</span><br>
+        ② <strong>順位に対して CTR が構造的に低い</strong>（8/22 実測）：<span class="font-mono">p=7528</span> 6,390表示・9.5位で<strong>CTR 2.02%</strong>／<span class="font-mono">p=2117</span> 4,823表示・6.4位で<strong>4.44%</strong>／<span class="font-mono">p=2082</span> 1,930表示・2.9位で<strong>0.88%</strong>（ブログ全体の平均CTR＝<strong>2.88%</strong>）。<br>
+        ③ 8365 が挑む面「ホームページ制作 費用 相場」の1ページ目は<strong>大手メディアの独占</strong>（8/19 実測）＝<u>同じ順位に並んだとき、選ばれるかどうかは説明文で決まります</u>。<br>
+        ④ <strong>カテゴリが「未分類」だと記事下の関連記事が0本</strong>（<span class="font-mono">B-041</span>・未分類30本）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">なぜ問題か</td><td class="py-1"><strong>22か月ぶりの1本目を、「説明文が本文の途中で切れた状態」で、しかも「関連記事が1本も出ない状態」で公開することになります。</strong><u>どちらも公開後に直せますが、公開直後のクロールで最初に読まれるのはその状態です。</u>そしてこの1本目は<strong>ブログで唯一の買い手向け記事</strong>＝最初の印象を捨てる必要はありません。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">改善案<br><span class="text-xs font-normal">（そのままコピペ）</span></td><td class="py-1"><strong>(1) 抜粋欄に貼る文（全角118字）</strong><br>
+        <span class="font-mono bg-emerald-50 border border-emerald-300 px-2 py-1 inline-block my-1">ホームページ制作の費用は「何をどこまで作るか」で変わります。LP・小規模コーポレート・中規模サイトの目的別の相場目安と、料金が決まる5つの要素、見積書のどこを見れば高い・安いを判断できるかを、大阪の制作会社の視点で整理しました。</span><br>
+        <span class="text-xs text-gray-600">※WordPress の編集画面 右サイドバー「投稿」タブ →「抜粋」。見当たらない場合は右上「⋮」→「設定」→「パネル」で「抜粋」をオンに。</span><br>
+        <strong>(2) カテゴリ</strong>＝<strong>「費用・料金」を新規作成して割り当て</strong>（<span class="font-mono">B-041</span> と同じ操作）。<u>これで公開直後から記事下に関連記事が出ます。</u></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">効果／測り方</td><td class="py-1">効果＝<strong>推測：小〜中</strong>。<u>順位ではなく CTR に効く提案です。</u><strong>測り方</strong>＝公開日を起点に <u>3日・7日・14日・28日</u>で 8365 の<strong>表示回数と CTR</strong> を GSC で追い、<strong>ブログ平均 CTR 2.88%</strong> と比べます。<u>下回っていれば説明文かタイトルを直します。</u></td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">工数／優先度／栓</td><td class="py-1">工数＝<strong>30秒</strong>（公開ボタンを押す前でも後でも構いません）。優先度 <strong>🟡</strong>。<strong>栓なし。</strong><br>
+        <strong class="text-rose-700">念のため＝これは公開の前提条件ではありません。</strong><u>6日待っている一手を、私の提案で7日目に延ばしたくありません。まず公開してください。</u></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ② 新規記事のテーマ T-022 -->
+  <div class="bg-white border-4 border-amber-400 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-amber-800 mb-2">② 新規記事のテーマ＋構成案 — <span class="font-mono">T-022</span>：「ホームページの更新・運用は、どこまで頼めて月いくら？」（<span class="text-emerald-800">本日 構成案を確定</span>・優先度🔴・栓なし）</h3>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">なぜ今これか</td><td class="py-1"><strong class="text-emerald-800">ブログで唯一、月額のストック収益に直結するテーマだからです。</strong>（制作は1回きり、保守・更新代行は毎月です。）<br>
+        <strong>そして帯が実在します（GSC・28日・すべてクリック0）</strong>＝「ホームページ修正更新代行 大阪」18表示<strong>9.3位</strong>／「ホームページ更新代行 大阪」17表示 11.2位／<u>同じクエリを <span class="font-mono">/contact/normal/</span> も 12表示 21.5位で受領</u>／「ホームページ運営支援 大阪」28表示 23.2位／「ホームページ 運用 大阪」17表示 25.5位／「ホームページ運用代行 大阪」8表示 17.1位／「ホームページ 運営代行 大阪」7表示 20.9位＋6表示 28.5位＝<strong>計113表示・クリック0</strong>。<br>
+        <strong class="text-rose-700">受けているのは自社の4ページ（<span class="font-mono">/service/web/operate/</span>・<span class="font-mono">/contact/normal/</span>・<span class="font-mono">/partners/alliance.html</span>・<span class="font-mono">/service/</span>）で、同じ意図をバラバラに分け合っています。記事は1本もありません。</strong><br>
+        <strong class="text-emerald-800">この面の強みは「大手メディアが入ってこられない」ことです</strong>＝freee もエックスサーバーも「大阪でホームページの更新を頼む」では戦えません。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">正直に<br><span class="text-xs font-normal">（先に書きます）</span></td><td class="py-1"><strong>9.3位・11.2位で28日 0クリックです。</strong><u>順位が悪いから来ていないのではなく、「サービス紹介ページ」と「問い合わせフォーム」しか無いから選ばれていない</u>——というのが私の見立てです（<strong>推測</strong>）。<strong class="text-rose-700">記事を出せば必ず取れる、とは申し上げません。</strong>ただし<u>この帯に自社の記事が1本も無いことは事実</u>で、<strong>公開後に順位とクリックで検証できます</strong>（下記「測り方」）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">狙う検索意図</td><td class="py-1"><strong>ホームページを持っているが、自分で更新する時間も自信もない。誰かに任せたいが、どこまで頼めて月いくらか分からない。</strong>本音は<u>「毎月お金がかかる契約を結んで大丈夫か、判断する材料がほしい」</u>。<span class="text-xs">※前に作った会社が対応してくれない／連絡が取れない、という文脈も多いはずです（<span class="font-mono">T-032</span> と接続）。</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">狙うクエリ</td><td class="py-1">ホームページ 更新代行 費用／ホームページ 保守 月額 相場／ホームページ 更新 外注 どこまで／ホームページ 運用代行 とは／サイト 修正 依頼 単発／ホームページ 更新代行 大阪／ホームページ修正更新代行 大阪<span class="text-xs">（<u>地域語は自然に1〜2回まで</u>＝詰め込みはしません）</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">既存テーマとの棲み分け<br><span class="text-xs font-normal">（重複を作らないため）</span></td><td class="py-1"><strong><span class="font-mono">T-006</span>（運用・保守／完成原稿あり）とは分けます</strong>＝<u>T-006＝<strong>保守契約とは何か・なぜ要るか</strong>（概念）／T-022＝<strong>どの作業をいくらで頼めるか</strong>（作業と値段の対応表）</u>。<strong class="text-rose-700">※T-006 が先に公開される場合は、本記事を「実務編」として内部リンクで束ね、別記事として競合させないでください。</strong><br>
+        <strong><span class="font-mono">T-032</span>（WordPressをどこまで自分で触れるか）とも分かれます</strong>＝T-032＝<u>自分でやるか頼むかの線引き</u>／T-022＝<u>頼むと決めた人の、料金と契約の話</u>。<strong class="text-emerald-800">T-022 は T-032 の受け皿です。</strong><br>
+        <strong><span class="font-mono">B-031</span>（<span class="font-mono">p=17</span>「維持費はいくら？」のリライト）とは近い</strong>＝<u>B-031＝サーバー・ドメインなど「持っているだけでかかる費用」／T-022＝「人に頼む費用」</u>。相互リンクで束ねます。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">想定読者</td><td class="py-1">ホームページを持つ中小事業者の担当者（社長・総務・広報の兼務）。<strong>更新が止まっている自覚がある。</strong>制作会社に頼むと高そうで聞けていない／前の会社と契約が切れている。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">タイトル案</td><td class="py-1">「ホームページの更新代行は、どこまで頼めて月いくら？｜<u>作業別の料金目安と、契約前に確認する5つのこと</u>」<span class="text-xs">（別案：「ホームページの更新を外注したい｜月額保守・スポット依頼・運用代行のちがいと費用の目安」）</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">アウトライン<br><span class="text-xs font-normal">（設計方針つき）</span></td><td class="py-1">
+          <p class="mb-2 text-xs bg-amber-50 border border-amber-200 rounded p-2"><strong>⚙️ 設計方針</strong>：<strong>(1) 契約を勧めない。</strong>「これは自分でやったほうが安い」を先に正直に書く＝それが信頼になります。<strong>(2) 軸を1本に絞る</strong>＝<u>「毎月ある作業か、たまにある作業か」</u>で全体を貫きます（＝月額と単発の分かれ目）。<strong>(3) 料金は断定しない</strong>＝一般的な幅と「見積もりの取り方」に留める（<span class="font-mono">Q-002</span> の回答が来たら自社の実額を追記）。<strong>(4) 表を1つ入れる</strong>＝<u>作業／目安時間／月額向き・単発向き</u>の3列。この記事の持ち帰りはこの表です。</p>
+          <strong>h2① まず結論：分かれ目は「毎月あるか、たまにあるか」</strong><br>
+          <span class="ml-3 text-xs">h3 <u>毎月ある＝月額保守が向く</u>（お知らせ更新／写真差し替え／プラグイン更新／バックアップ確認）／h3 <u>たまにある＝単発（スポット）で頼むほうが安い</u>（ページ追加／フォーム改修／リニューアル）／h3 <strong>「毎月払っているのに何もしていない」を防ぐ考え方</strong></span><br>
+          <strong>h2② 頼める作業を、具体的に並べます</strong>（<u>この記事の核＝表</u>）<br>
+          <span class="ml-3 text-xs">h3 <strong>文章・写真の差し替え</strong>／h3 <strong>お知らせ・ブログの投稿代行</strong>／h3 <strong>ページの追加</strong>／h3 <strong>プラグイン・WordPress本体の更新</strong>（→ 既存記事 <span class="font-mono">p=7585</span>「更新に失敗しました…JSON」へ内部リンク）／h3 <strong>バックアップと復旧</strong>／h3 <strong>SSL・ドメインの更新手続き</strong>／h3 <span class="text-rose-700"><strong>セキュリティの点検</strong></span>（<u>「放置されたWordPressが乗っ取られる」は実際に起きます</u>＝一般論として書く。<span class="text-xs text-gray-600">※自社の被害を書くかどうかは <span class="font-mono">T-027/T-029</span> と同じ論点＝📥 待ち。<strong>書かなくても記事は成立します。</strong></span>）</span><br>
+          <strong>h2③ 費用はどう決まるのか</strong><br>
+          <span class="ml-3 text-xs">h3 <u>月額保守</u>の考え方（作業時間の枠を買う／含まれる作業の範囲）／h3 <u>スポット</u>の考え方（1件いくら／時間単価）／h3 <strong>一般的な費用の幅の目安</strong>（<span class="text-rose-700">📥 <span class="font-mono">Q-002</span> の回答が来たら自社の実額に差し替え。それまでは一般論＋<span class="font-mono">/price/</span> 誘導＝<u>栓にはしません</u></span>）／h3 <strong>安すぎる保守で起きること</strong>（<u>連絡がつかない・実質何もしていない</u>）</span><br>
+          <strong>h2④ 契約の前に確認する5つのこと</strong>（<u>この記事のいちばんの実用箇所</u>）<br>
+          <span class="ml-3 text-xs">h3 ①<strong>含まれる作業と、含まれない作業</strong>／h3 ②<strong>月に何回・何時間まで</strong>／h3 ③<strong>返答までの目安時間</strong>／h3 ④<strong>バックアップは誰が、どこに取るか</strong>／h3 ⑤<strong class="text-rose-700">やめるときに、何を返してもらえるか</strong>（<u>管理画面のログイン情報／サーバーの契約者／ドメインの管理者</u>＝→ <span class="font-mono">T-032</span> h2⑤ へ）</span><br>
+          <strong>h2⑤ 「そもそも自分でやったほうがいい」場合</strong>（<u>売り込まない章・信頼装置</u>）<br>
+          <span class="ml-3 text-xs">h3 更新が年に数回なら、契約しないほうが安い／h3 <strong>自分でやるならここまで</strong>（→ <span class="font-mono">T-032</span> へ）／h3 <u>それでも頼んだほうがいいのは「止まると困るとき」</u></span><br>
+          <strong>h2⑥ まとめ＋CTA</strong><br>
+          <span class="ml-3 text-xs">h3 持ち帰り1行＝<strong>「毎月あるか、たまにあるか」で分ける</strong></span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">内部リンク先</td><td class="py-1">記事側＝<strong>T-032</strong>（自分で触れる範囲・h2⑤から）／<strong>T-030</strong>（見積書の見方・h2③から）／<strong>T-001＝8365</strong>（制作費用・h2③から）／<strong>B-031</strong>（<span class="font-mono">p=17</span> 維持費）／既存 <span class="font-mono">p=7585</span>（WP更新の失敗・h2②から）。<br>
+        サイト側＝<strong><span class="font-mono">/service/web/operate/</span></strong>（<u>この帯を今 受けている本命ページ＝記事が上に立てばここへ送ります</u>）／<span class="font-mono">/price/</span>。<strong>CTAは記事末に1つだけ</strong>（<span class="font-mono">B-030</span> と同じ理由）。<span class="text-rose-700">※相談窓口の本命は <span class="font-mono">Q-009</span> の回答で確定します。</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">CTA</td><td class="py-1">「<strong>いま何を頼みたいのかが決まっていなくても構いません。</strong>『この作業は月額に入るのか、単発なのか』の切り分けだけでもお答えします」＝<u>受注ありきではなく、判断の手伝いを申し出る形</u>（8365・T-032 と同じトーン）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">カニバリ確認</td><td class="py-1"><strong>自社の<u>記事</u>にこの帯を狙うものはゼロ</strong>。<span class="font-mono">/service/web/operate/</span> とは<u>サービス紹介ページ vs 判断の解説記事</u>で役割が分かれ、食い合いません（<strong>記事が上に立てばサービスページへ送る役</strong>）。<span class="text-rose-700">※T-006 とは上記のとおり「概念／実務」で分け、公開順によっては1本に統合してください。</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">必要な事実（📥）</td><td class="py-1"><strong>栓なし＝一般論＋サイトに実在する情報だけで書けます。</strong><u>あれば厚くなる（🟢・任意）</u>＝<strong>①月額保守メニューが実在するか（含まれる作業・価格帯）</strong>／<strong>②単発修正を受けるか、最低金額はあるか</strong>／<strong>③更新代行で実際によく頼まれる作業は何か・月何件くらいか</strong>（1つあると h2② の表が段違いに実用的になります）。<span class="text-rose-700">実績数値・お客様の声は捏造しません。</span></td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">効果／工数／優先度／測り方</td><td class="py-1">効果＝<strong>推測：中〜大</strong>（<u>ストック収益に直結する唯一の帯で、需要が実測で113表示あり、自社の記事がゼロ</u>）。工数＝<strong>中</strong>（表の設計に時間がかかります。<u>取材は不要</u>）。優先度 <strong>🔴</strong>。<strong>着手は publish が1本動いてから。</strong><br>
+        <strong>測り方</strong>＝公開日を起点に <u>7日・28日・56日</u>で次の4語を追います＝「ホームページ修正更新代行 大阪」（現 18表示・<strong>9.3位</strong>）／「ホームページ更新代行 大阪」（17表示・11.2位）／「ホームページ運営支援 大阪」（28表示・23.2位）／<strong>この帯の合計クリック数（現 0）</strong>。<u>推奨順＝8365公開 → T-016（5万・10万） → <strong>本記事</strong> → T-030（見積書） → T-032（WordPress） → T-033（フリー素材）。</u></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ② 新規記事のテーマ T-033（8/21生成・本日 初報告） -->
+  <div class="bg-white border-2 border-amber-300 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-amber-800 mb-2">② 新規記事のテーマ＋構成案 — <span class="font-mono">T-033</span>：「そのフリー素材、会社の資料やホームページに使って大丈夫ですか？」（<span class="text-rose-700">8/21 に作成・掲示板に出せていませんでした</span>・優先度🟡・栓なし）</h3>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-28">なぜ今これか</td><td class="py-1"><strong class="text-emerald-800">このブログで唯一 大きい流入（素材系）を、初めて②「覚えられ、信頼される」につなぐ記事だからです。</strong><br>
+        実測＝<span class="font-mono">p=2117</span>（地図素材）<strong>4,823表示・214クリック＝ブログ最大の入口</strong>／<span class="font-mono">p=2082</span>（企業ロゴ）1,930表示／<span class="font-mono">/free_photo/</span> 448表示。<br>
+        <strong>そして「仕事で使う人」の語が実在します（GSC・28日）</strong>＝「世界地図 <u>著作権フリー</u>」23表示・1.6位・<strong>CTR 13.0%</strong>／「世界地図 フリー素材 <u>ai</u>」5表示・2.6位・<strong>CTR 60%</strong>／「日本地図 svg 無料」9表示・CTR 33%／「世界地図 フリー素材 <u>商用可</u>」7表示・7.3位。<br>
+        <strong class="text-emerald-800">＝「画像だけ見て帰る人」（<span class="font-mono">p=2082</span> は 2.9位でCTR 0.88%）と違い、<u>この修飾語をつける人はリンクを押しています</u>。</strong>探しているのが「画像」ではなく「判断」だからです。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">正直に<br><span class="text-xs font-normal">（先に書きます）</span></td><td class="py-1"><strong class="text-rose-700">これは問い合わせに直結する記事ではありません。</strong><u>測るのは②の指標（指名検索・再訪）で、③（問い合わせ）ではありません。</u>北極星の「層ごとに、その層の指標で測る」に従います。<strong>③に効かせる記事は 8365・T-016・T-022・T-030 です</strong>（この記事はその前段）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">狙う検索意図／クエリ</td><td class="py-1"><strong>フリー素材を見つけたが、会社の資料・自社サイトに使ってよいのか確信が持てない。</strong>法務に聞くほどではないが、<u>あとで問題になるのは怖い</u>。<br>
+        クエリ＝フリー素材 商用利用 可否／著作権フリー とは／フリー素材 クレジット表記 必要／フリー素材 加工 改変 していい／会社 資料 フリー素材 使える／フリー素材 再配布／フリー素材 ライセンス 読み方<span class="text-xs">（<u>地域語は使いません</u>＝この記事は地域と無関係です）</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">既存との棲み分け</td><td class="py-1"><span class="font-mono">p=2117</span> の本文冒頭には<strong>すでに「確認4点（商用可否／クレジット／加工／再配布）」の表があります</strong>（2026-07-15 反映済み）。<strong class="text-emerald-800">T-033 はその表を独立記事として深掘りし、素材記事群の共通の受け皿にします。</strong><strong class="text-rose-700">重複を避けるため、<span class="font-mono">p=2117</span> 側は表を残したまま「詳しくは→」の1行を足すだけ</strong>にしてください（<u>表ごと移すと、いま取れている「著作権フリー」帯を落とします</u>）。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">想定読者／タイトル案</td><td class="py-1">会社の資料・提案書・自社サイトを<strong>自分で作っている担当者</strong>（総務・営業・広報・ひとり情シス）。デザイナーではないので、ライセンス表記の読み方を習ったことがない。<br>
+        タイトル案＝「フリー素材は会社の資料に使っていい？｜<u>商用利用・改変・クレジット</u>の確認3点と、ライセンス表記の読み方」<span class="text-xs">（別案：「『著作権フリー』は著作権が無いという意味ではありません｜フリー素材を仕事で使う前の確認3点」）</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">アウトライン<br><span class="text-xs font-normal">（設計方針つき）</span></td><td class="py-1">
+          <p class="mb-2 text-xs bg-amber-50 border border-amber-200 rounded p-2"><strong>⚙️ 設計方針</strong>：<strong>(1) 売り込まない。</strong>目的は信頼＝②です。自社の話は h2⑤ に1段落だけ。<strong>(2) 法律の解説をしない。</strong>「弁護士ではないので個別の可否は断定しない」と明記し、<u>確認の手順</u>だけを渡します。<strong>(3) 個別サービスの可否を断定しない</strong>＝規約は変わるため「必ず配布元の規約を見る」に寄せます（<u>古くなって嘘になる記事にしない</u>）。<strong>(4) 自社の素材記事へ内部リンク</strong>し、「配っている側が書いている」を作文でなく事実で示します。</p>
+          <strong>h2① まず結論：見るのは3つだけ（商用利用の可否／改変の可否／クレジットの要否）</strong><br>
+          <span class="ml-3 text-xs">h3 なぜこの3つで足りるのか／h3 <strong>3つとも書かれていない素材は使わない</strong>（これが最短の判断）</span><br>
+          <strong>h2② 「無料」と「著作権フリー」と「パブリックドメイン」は別の意味です</strong>（<u>この記事の核・いちばんの誤解</u>）<br>
+          <span class="ml-3 text-xs">h3 無料＝タダで手に入るだけ／h3 <strong>著作権フリー＝著作権が無いという意味ではありません</strong>／h3 パブリックドメイン／h3 <strong>CCライセンスの読み方</strong>（BY／NC／ND／SA を1行ずつ）</span><br>
+          <strong>h2③ 会社で使うとき、特に注意する場面</strong><br>
+          <span class="ml-3 text-xs">h3 提案書・営業資料に入れる（社外に出る＝商用）／h3 自社サイト・LPに使う／h3 <strong>SNS・広告に使う</strong>／h3 <strong>ロゴ・地図・人物写真は別枠</strong>（商標・肖像。→ <span class="font-mono">p=2082</span>・<span class="font-mono">p=2117</span> へ内部リンク）</span><br>
+          <strong>h2④ 確認の手順（そのまま使えるチェック）</strong><br>
+          <span class="ml-3 text-xs">h3 配布元の規約ページを開く／h3 見出しの探し方（「利用規約」「ライセンス」「Terms」「License」）／h3 <strong>ダウンロード日と規約のスクリーンショットを残す</strong>（<u>後で規約が変わっても、当時の条件を説明できます</u>）／h3 <strong>迷ったら使わない</strong></span><br>
+          <strong>h2⑤ 使える素材が見つからないときの選択肢</strong><br>
+          <span class="ml-3 text-xs">h3 有料素材を買う／h3 自分で作る（→ <span class="font-mono">p=3028</span> 画像形式の選び方へ）／h3 <strong>制作会社に作ってもらう</strong>（<u>ここで初めて自社の話・1段落だけ</u>）</span><br>
+          <strong>h2⑥ まとめ</strong>　<span class="ml-3 text-xs">h3 持ち帰り1行＝<strong>「無料でも、規約は読む」</strong></span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">内部リンク先／CTA</td><td class="py-1"><strong class="text-emerald-800">この記事の要は「既存の素材記事 → この記事」の逆流線です</strong>＝<u>公開後に <span class="font-mono">p=2117</span>・<span class="font-mono">p=2082</span>・<span class="font-mono">p=3528</span>・<span class="font-mono">/free_photo/</span> の末尾から1本ずつ張ってください</u>（＝🅿️パーク中の <span class="font-mono">B-004</span> と同じ設計の、素材群版）。<br>
+        CTA＝「<strong>使ってよいか判断がつかない・欲しい素材が見つからないときは、作るべきか流用できるかの切り分けだけでもお答えします。</strong>」<strong>記事末に1つだけ</strong>。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">カニバリ確認／必要な事実</td><td class="py-1"><strong>自社内に同テーマの記事はゼロ</strong>（素材記事は「素材の紹介」、<span class="font-mono">p=3028</span> は「画像形式の選び方」）。<br>
+        <strong>栓なし＝一般論と公開情報だけで書けます。</strong><u>あれば厚くなる（🟢・任意）</u>＝①「この素材、使って大丈夫ですか」と実際に相談された例／②<span class="font-mono">/free_photo/</span> で素材を配っている経緯。<span class="text-rose-700">実績数値・お客様の声は捏造しません。</span></td></tr>
+        <tr><td class="py-1 pr-3 font-semibold">効果／工数／優先度</td><td class="py-1">効果＝<strong>推測：中</strong>（<u>新規流入ではなく、既存 月1,456クリックの再利用です</u>）。工数＝<strong>中</strong>（<u>取材は不要</u>）。優先度 <strong>🟡</strong>。<strong>着手は publish が1本動いてから</strong>（推奨順は T-022 の欄に記載）。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 結論 -->
+  <div class="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-amber-800 mb-2">⛳ 結論</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li class="bg-white border-2 border-rose-400 rounded p-2"><strong class="text-rose-800">今日いちばんお伝えすべきこと</strong>：ブログが 2023-05-04 から 3年3か月、スパムの温床にされていました。<u>発見・隔離は開発（web-hanasaka）で、社長へは直接ご報告済みと聞いています。</u><strong class="text-emerald-800">私も本日、外からGETして無効化を確認しました。</strong>ブログ記事の表示は正常です。</li>
+      <li class="bg-white border-2 border-emerald-400 rounded p-2"><strong class="text-emerald-800">社長の一手＝WordPress にログインする1回で2つ</strong>＝①パスワードの変更（開発からの依頼）②<strong class="text-rose-700">下書き 8365 を公開</strong>（6日目・<u>ご回答も料金の事実も不要</u>）。<span class="text-xs text-gray-600">※どちらが先でも構いません。<span class="font-mono">B-044</span>（抜粋とカテゴリ・30秒）も同じ画面ですが、<strong>公開の前提ではありません。</strong></span></li>
+      <li class="bg-white border border-sky-300 rounded p-2"><strong class="text-sky-900">今日、社長が5分でできる確認が1つあります（<span class="font-mono">B-045</span> A-1）</strong>：Search Console →「ページ」→ <span class="font-mono">/contents/wp-content/uploads/</span> を含むURLが何件 登録されているか。<u>0件なら、スパムの索引被害は無かったと分かって終わりです。</u>件数が出たら削除申請へ進みます。<strong>ついでに同じ画面で「所有権の確認」に見覚えのない項目が無いかもご確認ください</strong>（攻撃者が確認ファイルを置いていたため）。</li>
+      <li class="bg-white border-2 border-rose-300 rounded p-2"><strong class="text-rose-800">私の失敗を3つ、ご報告します</strong>：①<u>Slack の日報が 8/15 を最後に届いていません（8日間）</u>＝「公開してください」というお願いが一度も出ていなかった可能性があります ②<u>8/20 のサイクルは記録が無く、8/21 は掲示板に出ないまま中断していました</u>（その分の <span class="font-mono">B-044</span>・<span class="font-mono">T-033</span> は本日 全文でお届けしました） ③<u>当ループ宛の受信が「0件」と表示され、開発からの侵害報告を見落とすところでした</u>（ファイル実体を直接見る手順で拾えました）。<strong class="text-emerald-800">①は本日 投稿して結果を実測し、下の📡に書きます。</strong></li>
+      <li class="bg-white border border-emerald-300 rounded p-2"><strong class="text-emerald-800">前に進んだこと</strong>：止まっていた開発が再稼働し、<u>当ループ発の5通すべてが処理されました</u>。<span class="font-mono">B-017</span>（robots.txt・sitemap.xml・HTTP500）は<strong>大部分 完了</strong>／<span class="font-mono">B-036</span>（説明文）は<strong>開発作業なしで社長のコピペだけで反映できる</strong>と判明／<span class="font-mono">B-016</span>（canonical 2本）は<strong>原因特定</strong>（共通テンプレの <span class="font-mono">SelfUrl()</span>）。<u>いずれも認証情報のローテーション後に着手です。</u></li>
+      <li class="bg-white border border-amber-300 rounded p-2"><strong class="text-amber-800">本日の新規</strong>：<span class="font-mono">B-045</span>（消したスパムURLが 200 を返し続けている／ブログ記事はサイトマップに1本も無い）＋<span class="font-mono">T-022</span> に構成案（<u>更新代行・運用代行＝月額ストック直結の帯が113表示・クリック0・自社4ページに分散</u>）。</li>
+      <li><strong>（1行でOK）</strong>：<strong class="text-rose-700"><span class="font-mono">Q-006</span> の優先度を上げました</strong>＝「募集停止」とされている供給側の入口が、<u>月8件 成約しています</u>（GA4実測）。撤去は「効いている導線を止める」判断になります。／ほか <span class="font-mono">Q-010</span> ＞ <span class="font-mono">Q-007</span> ＞ <span class="font-mono">Q-003</span> ＞ <span class="font-mono">Q-009</span> ＞ <span class="font-mono">Q-002</span>／<span class="font-mono">Q-005</span>／<span class="font-mono">Q-008</span>。<u>本日も新規質問は増やしていません。</u></li>
+      <li><strong>次の予約</strong>：(a) <strong>本日の Slack 投稿の登録を実測し📡に追記</strong>（届いていなければ、次サイクルで原因を切り分けます） (b) 毎サイクル 8365 の <span class="font-mono">status</span> を実測（publish 後は <span class="font-mono">B-043</span> の測定4語と <span class="font-mono">B-044</span> の CTR を 3/7/14/28日で追う） (c) <strong>お盆明けの完全な週（8/24週）で順位悪化を再判定</strong> (d) 8/24（月）に <span class="font-mono">blog-write</span> が起動したら<u>WPへの書き込み保留</u>が守られているか確認 (e) <span class="font-mono">B-045</span> A-1 の結果が来たら索引被害の規模を確定 (f) 受信確認はファイル実体（<span class="font-mono">*.json</span>）で継続 (g) 侵害の件で保留に戻した「4語クエリ」の判定を、材料が揃った時点で再確定。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の Slack 投稿の実測 -->
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-700" id="slack-check">
+    <h3 class="font-bold text-sky-900 mb-2">📡 本日の Slack 投稿の実測（推定を残さないための検証）</h3>
+    <p id="slack-result"><strong class="text-emerald-800">✅ 2026-08-23 05:04 に投稿し、痕跡を実測で確認しました。</strong><span class="font-mono">slack-poll.py post --as blog-loop-ycom</span> の戻り値＝<span class="font-mono">ts=1787429043.945629</span>／<span class="font-mono">data/slack/threads.json</span> に <span class="font-mono">blog-loop-ycom</span> の新しいスレッドとして登録されたことを確認。<strong>＝8/16〜8/22 の7日ぶんは、やはり届いていませんでした。</strong><br>
+    <strong class="text-rose-700">🆕 原因が判明しました（推測ではありません）</strong>：<span class="font-mono">data/overseer/tick.log</span> に <span class="font-mono">[run] claude -p /blog-loop ycom 起動（… timeout=1500s）</span> の記録。<u>1サイクルの持ち時間は25分</u>で、C072 は掲示板の更新（index 05:21・archive 05:23）で使い切り、<strong>その後の日報投稿に到達する前に打ち切られていました</strong>。<u>8/20 の記録なし・8/21 の「アーカイブだけ更新して中断」も、同じ打ち切りで説明がつきます</u>。<strong class="text-emerald-800">対策＝手順の順番を変えました</strong>：本日から <strong>①データ取得 → ②日報を投稿（先に出す）→ ③掲示板を書く</strong> の順にします。打ち切られても、社長への連絡だけは必ず残ります。<span class="text-xs text-gray-600">※ C072 のこの欄が「これから書きます」のまま残っていたのは、まさにその打ち切りの跡です。</span></p>
+  </div>
+
+  <!-- 対応記録 -->
+  <div class="bg-gray-100 border border-gray-200 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-800 mb-2">🔄 対応記録</h3>
+    <ul class="list-disc list-inside space-y-1">
+      <li><strong>from-president.md</strong>：2026-06-23 のまま＝新規の指示・回答なし。<strong>読むだけ・編集していません。</strong>Slack の新着返信も0件。</li>
+      <li><strong>mailbox（受信）＝1通・処理済み</strong>：<span class="font-mono">M-20260821T182450-web-hanasaka-f9cdbf30366a9a10</span>（from: web-hanasaka／thread: <span class="font-mono">ycom-blog-report</span>／侵害報告＋Q-A/Q-B 回答＋B-016/B-017/B-034 の技術回答）。<strong>照合済み</strong>（差出人・スレッド・対応する B 番号が一致）。<strong class="text-rose-700"><span class="font-mono">done</span> が <span class="font-mono">message_not_found</span> で失敗したため <span class="font-mono">new/</span> に残置＝二重処理を避けるため、ここにIDを記録します。</strong>他宛メッセージの移動・削除はしていません。</li>
+      <li><strong>mailbox（送信）＝0通</strong>。<u>開発は再稼働しましたが、本日の内容は「社長がWP画面で行う作業（<span class="font-mono">B-044</span>・<span class="font-mono">B-045</span> A）」と「保留の確認」で、開発に新しく渡す作業がありません。</u>むしろ開発から「認証情報のローテーションまで <span class="font-mono">B-034</span>／<span class="font-mono">B-036</span> は保留」と要請を受けており、<strong>本サイクルはレポート配信を見送りました</strong>（ルール上の「配信しない場合は明示する」に従い記録）。<u>執筆担当への指示は掲示板の✍️ブロックで出しています（同一VPS常駐・掲示板が一次）。</u></li>
+      <li><strong>執筆担当への指示＝✍️ブロックを更新</strong>（blog-write-ycom 宛・次の起動は <strong>8/24（月）05:30</strong>）。<strong>内容＝①<span class="text-rose-700">WPへの書き込み（post／update）を認証情報ローテーションまで停止</span> ②<span class="font-mono">B-043</span> のコマンドを訂正（<span class="font-mono">--html-file</span> 必須・本日 実装で確認） ③社長が先に公開／タイトル変更していたら破棄して報告 ④新規投入・新規執筆はしない ⑤ローカルでの本文照合だけ実施 ⑥publish は絶対にしない。</strong></li>
+      <li><strong>データ取得</strong>：GSC 10本＋GA4 3本＋<span class="font-mono">hp-audit</span> 5本＋<span class="font-mono">wp-draft.py get</span> 1本＋<span class="font-mono">slack-poll.py fetch</span> 1本＋実体確認3件（<span class="font-mono">threads.json</span>・<span class="font-mono">bin/wp-draft.py</span> の引数定義・<span class="font-mono">data/mailbox/new/</span>）。<strong>すべて読み取り専用。書き込み・本番改変・WP投稿・記事本文の代筆はしていません。</strong></li>
+      <li><strong>掲示板の整理</strong>：<strong>Cycle 070 は 8/21 に<a href="archive.html#c070" class="underline">アーカイブ</a>へ移動済み</strong>（本日 index から重複を除去）。<strong class="text-rose-700">Cycle 071（8/21）は掲示板へ出ないまま中断していたため、その提案（<span class="font-mono">B-044</span>・<span class="font-mono">T-033</span>）を本日 index に全文で載せました＝アーカイブには送っていません（<u>未完了は index に繰り越す</u>の原則どおり）。</strong>🔧 表＝<span class="font-mono">B-044</span>・<span class="font-mono">B-045</span>・<span class="font-mono">T-033</span> を追加、<span class="font-mono">T-022</span> を構成案ありに昇格、<span class="font-mono">B-017</span> を一部完了に、<span class="font-mono">B-016</span>・<span class="font-mono">B-034</span>・<span class="font-mono">B-036</span> に開発回答を反映、<span class="font-mono">B-043</span> に根拠の訂正、栓の記号に <strong>🔒（侵害対応待ち）</strong>を新設。📥 表＝GSC所有権／mailbox の実害／Slack不達／サイクル欠測 の4行を新設、開発への確認4件は完了へ、hp-loop 申し送りを5点に更新。<strong>未完了の B/T は1件も落としていません（40件）。</strong></li>
+      <li><strong class="text-emerald-800">掲示板サイズ</strong>：Cycle 070 終了時 <strong>101,891バイト</strong>（＝<u>C070 の「80KB未満に圧縮した」という報告は、実際には達成できていませんでした。訂正します</u>）。本日 Cycle 070 の重複を除去し繰り越しを圧縮した結果を、<strong>報告の前に <span class="font-mono">wc -c</span> で実測</strong>しています（下記📡と同じ方針＝「やった」と書くだけにしない）。</li>
+      <li><strong>spec.html</strong>：更新しました（①<span class="font-mono">/contents/</span> は 2023-05-04〜2026-08-21 侵害されていた＝過去データを読むときの前提 ②<span class="font-mono">AIOSEO 4.4.0.1</span> 有効・記事ごとの description 入力欄あり ③canonical 2本の原因＝共通テンプレの <span class="font-mono">SelfUrl()</span>／記事OGPは AIOSEO が正しく出している ④<span class="font-mono">robots.txt</span>・<span class="font-mono">sitemap.xml</span> は 2026-08-21 新設・<u>ブログ記事は未収録</u> ⑤存在しないURLは 200＋トップHTML を返す（ソフト404）＝再監査時の注意 ⑥<span class="font-mono">wp-draft.py update</span> は <span class="font-mono">--html-file</span> 必須 ⑦<span class="font-mono">blog-write</span>/<span class="font-mono">blog-improve</span> は週次・月曜起動 ⑧ブログ全体の平均CTR 2.88%）。<span class="font-mono">from-president.md</span>・ルールファイルは編集していません（Phase 表記の是正は <span class="font-mono">Q-010</span> のご許可待ち）。<strong>新規は B2＋T2</strong>（うち <span class="font-mono">B-044</span>・<span class="font-mono">T-033</span> は 8/21 生成分の初報告）。</li>
+      <li><strong>Slack：日報1本を投稿</strong>（<span class="font-mono">post --as blog-loop-ycom</span>）。<strong class="text-rose-700">投稿結果は上の「📡」に実測で記録します（「投稿した」と書くだけにはしません）。</strong></li>
+      <li><strong>自己改善（Step 7）</strong>：<span class="font-mono">data/hp-improve/skill-kaizen.md</span> に記録＝<strong>K-592</strong>（<u>数字の分析者は「サイトが健全である」を前提に置いてはいけない＝索引ページ数・サイトマップの存在・robots の有無という「土台の在庫」を定期的に数える。1年間 SEO を論じていたドメインに1万件のスパムURLがあった</u>）／<strong>K-593</strong>（<u>「送った」は成果ではない＝外部への連絡は送信APIの成功でなく<strong>受信側に残った痕跡</strong>で確認する。届いていない連絡を8日続けても相手には何も起きていない</u>）／<strong>K-594</strong>（<u>受信の「0件」を正常と読まない＝自分の受信箱が本当に自分のものか、実体で年に一度は突き合わせる。今回は0件表示の裏に重大報告が1通あった</u>）。<span class="text-gray-600">※<span class="font-mono">🙋要・社長判断</span> は<strong>1件</strong>＝<u>侵害を受けたドメインで、索引被害の規模確認（GSC）に私がアクセスできない</u>（📥 の閲覧権限の依頼と同じ論点）。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 071（2026-08-21）＝掲示板に出ないまま中断したサイクルの記録 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-rose-300 pb-2 mb-4" id="c071">📦 Cycle 071 — 2026-08-21（<span class="text-rose-700">掲示板に反映されないまま中断していたサイクル</span>）</h2>
   <div class="bg-rose-50 border-2 border-rose-300 rounded-lg p-5 mb-6 text-sm text-gray-700">
