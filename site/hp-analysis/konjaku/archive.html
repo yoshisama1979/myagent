@@ -59,6 +59,17 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 026 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 026 — 2026-08-23（🔑 残っていた「どう直すか」も旧サイトから取れました。あわせて、自分の結論を2つ訂正します）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC＝<strong>8日分に拡大</strong>（8/13〜8/20＝クリック111・表示1,325・クリック率8.38%・平均掲載順位8.0・表示URL 267件。※ データの遅れは4日→3日に回復）。GA4（<span class="font-mono">.jp</span>／<span class="font-mono">.com</span>）＝8/21 まで。サイト実査＝hp-audit（新サイト定点5URL＋旧サイトのトップ・個別写真ページ・絞り込みページ）／hp-shot（トップ・コメント一覧 PC/SP）。起動＝社長による手動実行。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>総評</strong>：①<strong>【良】R-J24 ③（個別写真ページ）の実装仕様も旧サイトから取れた</strong>＝同一写真 ID 1000 の配信HTML内部リンクが<strong>旧 73本（66種）／新 18本（9種・すべてナビとフッター）</strong>。旧が持ち新が失った6点＝親の市区町村ページ／親の都道府県ページ／タグ面／全47都道府県リスト（枚数つき）／SNSシェア3種／<strong>「撮影年代を教えてください」＝写真を持たない人の参加導線</strong>。②<strong>【良】着手順の考え方を変更＝①と③は相補</strong>＝個別写真は GSC 露出 267ページ中206ページ（最多）＝ここから地名アンカーで市区町村へ内部リンクが張られれば①の露出そのものが増える＝<strong>③は「最後の3番目」ではなく①と同時に入れるのが最も効率的</strong>。③<strong>【良】R-J11／R-J18 の実装型も旧サイトに実在</strong>＝「参加ハードルを下げる」は仮説ではなく<strong>旧サイトで動いていたものを新サイトが落とした</strong>話だった。④<strong>【厳】本番反映ゼロが8日に到達／<span class="text-rose-700">実装担当からの発信は開通（8/15）以来 通算0件</span></strong>（滞留 7→8通）。一方で同じ8日間に投稿写真 +11枚・登録ユーザー +1人＝<strong>止まっているのは開発だけ</strong>。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>新規事実</strong>：①<strong>旧サイトをそのまま移すときの但し書き2件</strong>＝(a) 絞り込みの独立URL（<span class="font-mono">?p_city=138&amp;p_type=posted</span>）は title が絞り込み無しと<strong>完全同一</strong>＝そのまま移すと重複タイトルのURLが3倍に増える（title の差別化か canonical が必須）(b) <strong>旧サイトの OGP はタグが入れ違い</strong>（<span class="font-mono">og:title</span> が「今昔写語」固定・本来のタイトルが <span class="font-mono">og:site_name</span> に入っている）＝R-J01 で移植する際にこの入れ違いごと移さない。②GSC のラグは 4日→<strong>3日</strong>に回復。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>提案</strong>：<strong>新規 0件（意図的・3サイクル連続）</strong>／根拠追加2件（R-J24 ③に新旧内部リンク実測／R-J11・R-J18 に「旧サイトに実装済み」という独立根拠）／着手順の変更1件（R-J24 は①と③を同時に）／<strong>自分の結論の訂正2件</strong>（下記の注記参照）／新規 Q 0件。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md 新規追記なし／mailbox <code>to: hp-loop-konjaku</code> 新着なし（<code>to: konjaku-dev</code> 宛の滞留は 7→8通・<code>from: konjaku-dev</code> は通算0件）。定石＝GSC 日次・hp-audit 差分・スクショ定点（<code>konjaku-c026-*</code>）・mailbox 検算（往復＋発信数）。M-11 再適用。台帳ローテ第4回（113.6KB＝100KB 超過してからの実施＝後手→閾値を90KBへ前倒し）。<code>bin/gsc-layer.py</code>（T-028）は許可リスト未登録で無人実行できず手集計で代替。</p>
+    <p class="text-xs text-gray-500 mt-3">⚠️ <strong>後日の注記（Cycle 027・2026-08-24）</strong>：<strong>この回のレポートは実装担当へ配信されていなかった</strong>（mailbox の最終配信は C025＝<code>M-20260822T045441</code>・8/22）。C027 のレポートに C026 分の内容を含めて配信し直した。<br>また、この回で「市区町村クリック率の優位が縮んだので<strong>根拠の重心を需要側（CTR）から供給側（露出率）へ戻す</strong>」と判断したが、<strong>C027 のクエリ逆引きにより需要側の根拠がまったく別の粒度で復活した</strong>＝集計値の CTR ではなく<strong>「検索語がタイトルに1文字も無いページが page1 圏で0クリックになっている」というクエリ単位の直接証拠</strong>が3階層すべてで確認された。＝この回の「重心を戻す」判断は誤りではないが、<strong>需要側の根拠は消えたのではなく、集計値では見えない粒度に隠れていた</strong>。</p>
+  </section>
+
   <!-- ===== Cycle 025 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
     <h2 class="text-xl font-bold mb-1">Cycle 025 — 2026-08-22（🎉 7週間止まっていたコメントが1件つきました。そして「どう直すか」の設計図が旧サイトから取れました）</h2>
