@@ -40,6 +40,56 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 027 スナップショット ===== -->
+  <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-2">
+    <p class="text-sm text-gray-800">⚠️ <strong>このスナップショットは 2026-08-23 時点の記録です。翌 2026-08-24（Cycle 028）の実測で一部が誤りと判明し、訂正されています。</strong><br>
+    誤り＝<u>「スポット14,477件は検索エンジンから見ると存在しない」</u>。実際には<strong>スポットの個別ページは検索エンジンに登録されており</strong>（<code>/spots/12418</code> ほか複数を実測）、問題は「登録されていない」ことではなく<strong>「登録されているが名札が『スポット詳細 #NNNNN』のままで、どの検索語にも当たらない」</strong>ことでした。<br>
+    これに伴い、下記で述べている<strong>「R-R25・R-R21 は R-R33 が前提」という順番待ちは撤回</strong>されています（名札は単独で着手可）。R-R33 自体は射程を縮小のうえ継続。最新の見解は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> を参照してください。<br>
+    <span class="text-gray-600">※ 記録は改変せず、当時の内容のまま残しています（この注記のみ後から追加）。</span></p>
+  </div>
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 027 — 2026-08-23（<span class="text-red-700">25サイクル追ってきた「検索に出ない」の根本原因を特定</span>＝<span class="text-sky-700">検索エンジンが辿れるページは実質7ページだけ／新規 R-R33</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・<span class="text-emerald-700">8/13〜8/20 の<strong>8日分</strong>＝<strong>3日分がまとめて着弾し、前回の「停止かも」は解消</strong></span>）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/21）。社長入力（from-president.md）＝新規追記なし（27サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし＋配信先の滞留を実査（定石 #15）。本番実査＝<strong>実施</strong>（hp-audit 9本＝うち<strong>リンク実査4本</strong> ✅／素の <code>curl</code>・<code>hp-links.py</code> は承認不可のまま）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle027-20260823.md</code>。<span class="text-sky-700">本サイクルは<strong>探索枠を「一覧ページから詳細ページへ、検索エンジンが辿れるリンクがあるか」に充当</strong>し、根本原因の特定に至りました。</span></p>
+
+    <div class="border-2 border-sky-400 bg-sky-50 rounded-lg p-4 mb-5">
+      <h3 class="font-bold text-sky-900 mb-2">🔍 本日いちばんお伝えしたいこと — 名札を直す前に、そもそも「道」がありませんでした</h3>
+      <p class="text-sm text-gray-800 mb-2">25サイクル、<strong>「14,477件のスポットも23のテーマも検索結果に1件も出てこない」</strong>という事実を追い続け、原因を<u>「名札（title）が中身どおりでないから」</u>と診断してきました（R-R25・R-R21）。<strong>本日、その診断が<span class="text-red-800">半分しか当たっていなかった</span>ことが分かりました。</strong></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>実際に起きていること</strong>＝一覧ページ（テーマ・エリア・都道府県）を<u>ブラウザで開くと</u>カードがきれいに並びます。ところが<strong>サーバが最初に返すHTMLには、そのカードが1枚も入っていませんでした</strong>（画面はブラウザ側で後から組み立てられています）。<span class="text-red-800"><strong>カードが無い＝そこから個別ページへ進むリンクも無い</strong></span>ということです。実測でも、テーマ一覧のリンクは<strong>共通メニューの6種類だけ</strong>、23テーマへのリンクは<strong>0本</strong>でした（他の一覧も同じ）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>結果として</strong>＝検索エンジンが辿れるURLは、サイト全体で<span class="text-red-800"><strong>実質7ページ</strong></span>（トップ／地図／人物／エリア一覧／タグ／テーマ一覧／都道府県一覧）。<strong>スポット14,477件・テーマ23件・都道府県47件・市区町村（推定数百〜1,500件）は、検索エンジンから見ると「存在しない」</strong>状態です。<code>sitemap.xml</code> も404なので、<u>URLを知らせる代替手段もありません</u>。</p>
+      <p class="text-sm text-gray-800"><span class="text-emerald-800"><strong>この診断は、独立した2つの実測が一致しています</strong></span>＝①サイト側（配信HTMLにリンクも本文も無い）②検索側（Search Console の表示URLは25サイクルを通じて<strong>トップと <code>/spots/themes</code> の2本だけ</strong>——<u>どちらも「辿れる7ページ」の中</u>で、辿れない14,000件超は表示ゼロ）。<strong>→ 本日 <span class="text-red-700">R-R33</span> を起票し、R-R25・R-R21 に「R-R33 が前提」と明記、R-R06（sitemap）を「衛生」から<u>発見の唯一の代替経路</u>へ格上げしました。</strong></p>
+    </div>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-23・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🔑 配信HTMLの<br>リンクを数えた</strong></td><td class="py-1 px-2">サーバが返すHTMLに含まれる <code>&lt;a&gt;</code> を4ページで実測しました。<br>・<code>/spots/themes</code>（テーマ一覧）＝9本／<strong>全部が共通メニュー6種</strong>／<span class="text-red-800"><strong>23テーマ詳細へのリンク 0本</strong></span><br>・<code>/spots/areas</code>（エリア一覧）＝11本／<span class="text-red-800"><strong>11エリア詳細へのリンク 0本</strong></span><br>・<code>/spots/prefectures</code>（都道府県一覧）＝10本／<span class="text-red-800"><strong>47都道府県へのリンク 0本</strong></span><br>・<code>/spots/themes/kyoto-gozan</code>（テーマ詳細）＝10本／<span class="text-red-800"><strong>収録スポットへのリンク 0本</strong></span></td><td class="py-1 px-2">🔴 <strong>R-R33 起票</strong><br>（本サイクル唯一の新規R）</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🔑 配信HTMLの<br>本文を数えた</strong></td><td class="py-1 px-2">同じ4ページで見出しと画像を実測。<br>・<code>/</code>（トップ）＝見出し<strong>7本</strong>・画像<strong>10枚</strong>＝<span class="text-emerald-700"><strong>本文あり</strong></span><br>・<code>/spots/themes</code>＝見出し<strong>0</strong>・画像<strong>2</strong>／<code>/spots/areas</code>＝見出し<strong>0</strong>・画像<strong>2</strong>／<code>/spots/496</code>＝見出し<strong>0</strong>・画像<strong>2</strong><br><span class="text-red-800"><strong>＝47〜58KB という配信サイズの正体は JS の部品一式であって、本文ではありません。</strong></span>画面に出る23テーマの解説文は、配信HTMLに1文字も入っていません。<br><span class="text-amber-800"><strong>※ 私のこれまでの記述を訂正します</strong>＝これらを「下ごしらえ済み（プリレンダ済み）」と表現してきましたが誤りでした。固有の title・説明文が付いているのは<u>ルートごとの静的な設定</u>で、本文が出ているわけではありません。</span></td><td class="py-1 px-2">🔴 <strong>R-R25・R-R21 に<br>前提を明記</strong>（名札だけでは効かない）</td></tr>
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2">Search Console<br><span class="text-emerald-700">（前回の懸念は解消）</span></td><td class="py-1 px-2"><strong>8/13〜8/20 の8日分・35表示・9クリック・平均掲載順位4.3</strong>。<span class="text-emerald-700"><strong>前回「データが止まっているかも」とご報告し「本日も 8/17 のままなら質問に上げる」と判定条件を決めていました。実測は 8/20 まで前進＝3日分がまとめて着弾し、条件は否定。</strong></span><span class="text-gray-600">＝止まっていたのではなく<strong>数日分をまとめて送ってくる仕様</strong>。誤検知2度目のため<strong>基準を緩めます</strong>（3サイクル＝実日数5日以上の据え置きで初めて疑う）。</span><br>表示URLは <code>/</code>（34表示）と <code>/spots/themes</code>（<strong>1表示のまま3サイクル据え置き</strong>）の2本。検索語は指名系4語のまま＝<strong>地名・スポット名・テーマ名は表示ゼロが25サイクル連続</strong></td><td class="py-1 px-2">✅ <strong>監視終了</strong><br>（表示URL2本＝R-R33 の裏づけ）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>配信先が<br>8日間 無反応</strong></td><td class="py-1 px-2">受け渡し箱（mailbox）の実査＝<code>rally-dev</code> 宛の<strong>未処理9通</strong>（Cycle 017〜021・023〜026）・<strong>処理済み0通</strong>・<strong>発信0通</strong>＝<span class="text-red-800"><strong>開通（8/15）から8日、状況は変わっていません</strong></span>。<span class="text-gray-600">＝私が自分に課した警報の基準（滞留3通以上／発信ゼロ7日以上）を<strong>両方とも超過し続けています</strong>。</span><span class="text-emerald-700">※前回のレポート（Cycle 026）は<strong>箱の中に実在を確認</strong>＝3回連続で送る側の正常を裏取り。</span></td><td class="py-1 px-2">🔴 <strong>Q-R12 継続・8日目</strong>（在庫28件すべての上流）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知<br>（デプロイ）</td><td class="py-1 px-2">トップの配信内容は <strong>57,978B ＝6日連続でバイト単位まで同一</strong>（応答 0.150秒）＝<strong>8/17 のデプロイ以降、本番に変更はありません</strong></td><td class="py-1 px-2">変化なし（基準値を維持）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">到達性・衛生</td><td class="py-1 px-2">apex（http→https）＝<strong>200 正常</strong>／<code>www</code> 付き＝<strong>証明書エラー継続</strong>（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code>＝<strong>両方404 継続</strong>（R-R06）</td><td class="py-1 px-2">継続（変化なし）</td></tr>
+        <tr><td class="py-1 px-2">GA4</td><td class="py-1 px-2">45日で <strong>events 1,386／users 110</strong>（最新日 8/21）。閲覧＝トップ195・<code>/map</code> <strong>163</strong>・<code>/spots</code>(404) 47・<code>/spots/themes</code> 43・<code>/login</code> 17。<span class="text-gray-600">テーマ詳細ページ（全日本タワー連盟5・鎌倉五山4・Jリーグ本拠地4・世界遺産4）にも閲覧があり＝<strong>サイト内を回遊する人には届いている一方、検索からは1件も来ていない</strong>という R-R33 の構図と整合</span></td><td class="py-1 px-2">傾向は据え置き</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路①（発見される）＝本日の主戦場</strong>：配信HTMLにリンクも本文も無い → <strong>R-R33 起票</strong>。<span class="text-red-800"><strong>これが25サイクル「経路①が1ミリも動かない」ことの根本原因</strong></span>。あわせて<strong>R-R25・R-R21 の順序依存を明記</strong>、<strong>R-R06 を発見の唯一の代替経路へ格上げ</strong>。</li>
+        <li><strong>追わないもの</strong>：<strong>Search Console の着弾リズムの監視</strong>＝「数日まとめて着弾する仕様」と判明したため監視自体をやめます（誤検知2度目）。<span class="text-gray-600">＝北極星に効かない監視に毎サイクルの注意を割かない。</span></li>
+        <li><strong>解像度が上がったもの</strong>：<code>/spots/themes</code> の1表示が3サイクル据え置きであることも、R-R33 で説明がつきます（＝辿れる7ページの1つなので表示は出るが、そこから先が無いので広がらない）。</li>
+        <li><strong>すべての前提＝提案が実装に届くこと</strong>：滞留9通・返信0通・8日間。<span class="text-red-800"><strong>本日特定した根本原因も、開発担当に届かなければ北極星を1ミリも動かしません</strong></span>（→ 🔔 Q-R12）。</li>
+        <li><strong>本サイクルの成果</strong>＝<strong>新規R 1件（R-R33＝根本原因）・新規Q ゼロ</strong>／既存3件（R-R25・R-R21・R-R06）の位置づけ更新／前サイクルの事前判定条件を実測で決着（GSC 監視終了）／自分の過去記述（「プリレンダ済み」）の誤りを訂正。</li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。<strong>着手推奨の順序を本日から変更＝<span class="text-red-700">R-R33（新規・根本原因）</span> → R-R24 → R-R32＋R-R30（<u>認証ガードと共通レイアウトは同じ場所なのでまとめて</u>）→ R-R17 → R-R27 → R-R25 → R-R31 → R-R21 → R-R22 → R-R28 → R-R26 → R-R23 → R-R02</strong>（R-R29 は Q-R11 の回答で分岐するため保留）。<span class="text-gray-600">照会は継続5本（<code>/spots</code> への残りの流入経路／市区町村ページの全国総数／スポット取得失敗時の画面仕様／<code>/people</code> と <code>/spots/tags</code> で外枠の有無が分かれている理由／<code>/badges</code>・<code>/account</code> がトップへ戻るのは意図的か）＋<strong>本日1本を追加</strong>＝「配信HTMLで本文を出さないのは意図的な設計か、未実装か」。</span></p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（27サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理9通・処理0・発信0（→Q-R12）／前回レポート（Cycle 026）の実在は確認</strong>。deploy-log＝<strong>本サイクルは追記なし</strong>（本番の変更なし）。定石＝#1変化検知（<strong>57,978B で6日連続同一</strong>）・#2進捗追跡・#3到達性・#4 GA4・#4b GSC（<strong>前サイクルの判定条件を決着＝否定</strong>）・#15 配信の到達確認（日次）を実施／<strong>#14 リンク実査は探索枠として4ページに部分前倒し実施</strong>（本日の発見はここから。全体実施は期日 08-25 に繰越）／<strong>#5 ビジュアル定点は未実施</strong>＝週次期日 08-24（明日）かつ前倒し条件（配信サイズの変化）に非該当／#6・#7・#8（08-29）・#9 配管点検（09-02）・#10／#13（09-14）は未到来／#12 月次実績は対象外（9月最初のサイクルで 2026-08 分を作成）。Cycle 026 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へスナップショット移動。</p>
+  </section>
   <!-- ===== Cycle 026 スナップショット ===== -->
   <section class="mb-10 border border-gray-200 rounded-lg p-5 bg-white">
     <h2 class="text-2xl font-bold mb-1">Cycle 026 — 2026-08-22（<span class="text-sky-700">競合の実測で「いちばん効く一手」の中身が固まりました</span>／<span class="text-red-700">ログインが要る画面の作りが揃っていないことを確定</span>）</h2>
