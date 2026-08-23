@@ -71,6 +71,13 @@
       "Bash(grep:*)",
       "Bash(stat:*)",
       "Bash(date:*)"
+    ],
+    "deny": [
+      "mcp__mfc-ca__mfc_ca_postJournals",
+      "mcp__mfc-ca__mfc_ca_putJournals",
+      "mcp__mfc-ca__mfc_ca_postTransactions",
+      "mcp__mfc-ca__mfc_ca_postTransactionJournalize",
+      "mcp__mfc-ca__mfc_ca_postTradePartners"
     ]
   },
   "hooks": {
