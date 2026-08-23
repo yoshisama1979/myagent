@@ -121,6 +121,57 @@
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
 
+  <!-- ===== Cycle 101（2026-08-23 日次＋週次#10）＝Cycle 102 の index 更新で移送 ===== -->
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 101 — 2026-08-23（y-com.info・日次＋週次1本〔CV実測〕）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・<strong class="text-emerald-700">最新 08-20＝2日ぶんの新規データが届きました</strong>・28日 per-URL・全量600件＋固定期間の前後比較）✅／GA4（CV実測・週次）✅／広告（ads-fetch・最新 08-21）✅／オンページ実査（hp-audit）✅／受信箱の直接実査 ✅（本ループ宛の新着なし）／Clarity ❌（許可リスト未登録46日目＝📥参照）。from-president 新規なし。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ① まずお詫びと是正＝<strong>8/21・8/22 の2日分が、このページに反映されていませんでした</strong></p>
+      <p class="text-sm text-gray-700 mb-2">当ループは「内部の判断台帳」と「社長がご覧になるこのページ」の二本立てで動いています。<strong class="text-rose-700">8/21 と 8/22 は台帳側だけを更新し、このページの本文の差し替えを落としていました</strong>（ヘッダーの要約だけが 8/21 のまま、本文は 8/18 のものが残っていました）。本日、台帳を正として全面的に揃え直しました。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">とくに影響が大きかったのは、8/22 にいただいた「HANAチャット広告を見直したい」というご指示への回答です</strong>＝分析と5件の提案（R-050〜R-054）は作成して内部台帳と実装担当には渡っていましたが、<strong>社長がご覧になるこのページには載っていませんでした</strong>。下の 🔔 と 🔧 表に載せ直しています。<strong>ご指示から本日で2日、回答が届いていない状態でした。申し訳ありません。</strong></p>
+      <p class="text-xs text-gray-600">再発防止＝このページの更新は「①ヘッダー ②繰り越し表 ③本文の最新サイクル ④アーカイブへの移送」の4点セットで、どれか1つだけ更新して終わらない、という規律を内部手順に追加済み（8/22 に一度追加しましたが、その当日にまた落としたため、本日はチェック項目として台帳の必須入力に組み込みました）。</p>
+    </div>
+
+    <div class="border-2 border-emerald-400 bg-emerald-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-emerald-900 mb-1">📊 ② 週次のCV実測（期日到来）＝<strong>「人が来ている面」と「問い合わせが生まれている面」が、まったく別です</strong></p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-emerald-300 text-emerald-900"><th class="py-1 pr-3">最初に着地したページ</th><th class="py-1 pr-3">28日のセッション</th><th class="py-1 pr-3">問い合わせ・見積の完了</th><th class="py-1">転換率</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-emerald-100 bg-rose-50"><td class="py-1 pr-3">AIチャットLP 3枚（<span class="font-mono">/aichat/</span>）</td><td class="py-1 pr-3"><strong>3,399</strong>（サイト最大）</td><td class="py-1 pr-3"><strong class="text-rose-700">1件</strong></td><td class="py-1 text-rose-700">0.03%</td></tr>
+          <tr class="border-b border-emerald-100 bg-rose-50"><td class="py-1 pr-3">ブログ記事群（<span class="font-mono">/contents/</span>）</td><td class="py-1 pr-3"><strong>1,500以上</strong></td><td class="py-1 pr-3"><strong class="text-rose-700">0件</strong></td><td class="py-1 text-rose-700">0%</td></tr>
+          <tr class="border-b border-emerald-100 bg-emerald-100"><td class="py-1 pr-3">トップページ</td><td class="py-1 pr-3">302</td><td class="py-1 pr-3"><strong class="text-emerald-800">11件</strong></td><td class="py-1 font-semibold text-emerald-800">3.64%</td></tr>
+          <tr class="border-b border-emerald-100 bg-emerald-100"><td class="py-1 pr-3">問い合わせフォームに直接着地</td><td class="py-1 pr-3">56</td><td class="py-1 pr-3"><strong class="text-emerald-800">37件</strong></td><td class="py-1 font-semibold text-emerald-800">66.1%</td></tr>
+          <tr><td class="py-1 pr-3">コーダー募集ページ</td><td class="py-1 pr-3">41</td><td class="py-1 pr-3">2件（採用系）</td><td class="py-1">4.9%</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>読み方</strong>＝<strong class="text-rose-700">サイトへの入り口として最大の2つ（広告LP・ブログ）が、合わせて約5,000セッションでほぼ0件</strong>。一方で<strong class="text-emerald-700">トップページに着地した人は 3.64%、フォームに直接来た人は 66%</strong>が完了しています。<strong>＝「サイトがCVしない」のではなく、「CVする人が来る面と、来ない面がはっきり分かれている」</strong>ということです。広告LP側の原因分析は下の R-050／R-054 に、ブログ側は事業外テーマの流入が主体という既知の構造です。</p>
+      <p class="text-xs text-gray-600">※ 着地ページ単位の集計なので、ブログを読んで後日トップから問い合わせた方はトップ側に計上されます＝ブログの認知貢献を否定するものではありません。またトップ・フォームは母数が数十〜数百と小さいため、前回（8/16＝4.32%／62.8%）との差は転換とは読みません。</p>
+    </div>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-amber-900 mb-1">🔍 ③ 本日の新発見＝<strong>提携募集ページ（R-040）は「検索2位」なのに、8週間クリックがゼロです</strong></p>
+      <p class="text-sm text-gray-700 mb-2">これまで「買い手の検索枠を占有している」とご説明してきた件について、重なりのない28日ずつの2期間で測り直しました（「外注 ホームページ 大阪」・URL別）：</p>
+      <table class="w-full text-sm border-collapse my-2 bg-white">
+        <thead><tr class="text-left border-b border-amber-300 text-amber-900"><th class="py-1 pr-3">期間</th><th class="py-1 pr-3">表示</th><th class="py-1 pr-3">平均掲載順位</th><th class="py-1">クリック</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-amber-100"><td class="py-1 pr-3">6/23〜7/20</td><td class="py-1 pr-3">39</td><td class="py-1 pr-3">5.5位</td><td class="py-1 font-semibold text-rose-700">0</td></tr>
+          <tr><td class="py-1 pr-3">7/21〜8/17</td><td class="py-1 pr-3">19</td><td class="py-1 pr-3"><strong class="text-emerald-700">1.9位</strong></td><td class="py-1 font-semibold text-rose-700">0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700 mb-2"><strong>順位は 5.5位 → 1.9位＝実質1〜2番手まで上がっているのに、8週間・計58回表示されて1クリックもありません。</strong>検索2位のページは通常15〜20%程度クリックされますので、本来なら10回近くクリックされていておかしくない位置です。<strong class="text-rose-700">＝「タイトルを見た人が、自分向けではないと判断して素通りしている」という説明が最も自然です</strong>＝これは R-040 でご提案していた「受け手が曖昧」という診断を、より強い形で裏づけます。</p>
+      <p class="text-sm text-gray-700"><strong class="text-rose-700">この件は、社長のご確認（Q-014）を待っています。</strong>実装担当によると、タイトルを直す前に「<strong>いま現在も下請け・外注の仕事を受けているのか</strong>」が分からないと、直し方を誤って誤誘導になる、とのことです。→ 🔔 最上部の Q-014 に一言ください。<span class="text-gray-500">※表示回数が 39→19 と減っているのは順位が下がったからではありません（順位はむしろ上昇）＝この検索語を検索する人自体が減っている可能性が高い読みです（断定はしません）。</span></p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 効果追跡（新規データで更新）</strong>＝<strong class="text-emerald-700">運用代行ページ（R-045）は伸び続けています</strong>＝28日で<strong>145表示・15.1位</strong>（基準15表示＝<strong>9.7倍</strong>／前回103表示）。ただし<strong>クリックは引き続きゼロ</strong>で、施策の効果かどうかの判定は予定どおり ~09-10 です（同じ階層の WordPress ページも 62→82表示と同方向に動いており、切り分けはまだ終わっていません）。<strong class="text-amber-700">システム開発ページ（R-042）は 6表示・17.0位で、8/11 の実装から12日たっても動いていません</strong>（判定 ~09-10・まだ不発とは呼びません）。<strong>AIサービスページ（R-048）は本日も表示ゼロ・サイト内リンク0本</strong>（実装待ち）。<strong>料金表（R-029）は 1,516表示・12.0位・11クリック</strong>（前回1,451表示・9クリック）。<strong>相談ページ4枚（R-047）は計79表示・クリック0＝5サイクル連続で構図不変</strong>。<strong>実績の個別ページ（R-046）は、8/21 に実装着手のご報告をいただきましたが、本日時点で本番にはまだ反映されていません</strong>（canonical は変わらず）＝正常な進行中です。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑤ 日次定点＝退行なし</strong>（トップ・料金表・サービス・システム開発・運用代行など HTTP200・基準値と一致）。<strong>広告＝費用は異常なし</strong>（6日 ¥4,296≒日¥716＝15サイクル連続で ¥3,900〜4,500 の帯の内側）。<strong class="text-rose-700">ただしクリック率 5.61% は依然として異常値です</strong>（ディスプレイ広告の一般値の10倍超＝誤タップ／無効クリックの典型的なサイン＝R-050 の根拠）。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑥ 新しい提案はゼロです（意図的です）</strong>＝現在ストックしている提案が<strong>12件と過去最多</strong>で、<strong>そのうち8件が社長のご判断待ち</strong>です。この状態で新規を積み増すのは逆効果なので、本日は<strong>「積む」ではなく「前に進める・削る」</strong>に時間を使いました（掲示板の是正・効果測定の更新・R-040 の証拠の強化）。<strong class="text-emerald-700">あわせて、ご判断待ちの8件を「まとめて一度に決められる形」に束ね直して 🔔 最上部に置きました</strong>＝個別に考えていただく必要はありません。</p>
+
+    <p class="text-sm text-gray-700"><strong class="text-amber-700">次の見どころ</strong>：広告週次 ~08-29・ビジュアル再監査／競合対比／総点検 ~08-28・CV実測 ~08-30・<strong>R-042／R-045 の効果判定 ~09-10</strong>・配管点検 ~09-20・9月初に8月分の対応実績レポート。<strong class="text-rose-700">社長へのお願い＝🔔最上部のとおり（最優先＝<strong>広告の3点セット（R-050→R-051→R-052 の順で・管理画面15分）</strong>／次点＝<strong>Q-014（下請け・外注を今も受けているか＝一言）</strong>／その次＝R-044＋R-047 の重複ページ方針＝2件まとめて一言）</strong>。</p>
+  </section>
+
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 100 — 2026-08-22（y-com.info・日次＋社長の直接ご指示による広告の深掘り）</h3>
     <p class="text-sm text-gray-600 mb-3">データ状況：GSC（最新 08-18＝<strong>前サイクルから進まず＝新規データなし</strong>）／広告（ads-fetch・最新 08-20）✅／GA4 ✅／オンページ実査 ✅／受信箱の直接実査 ✅。<strong class="text-amber-700">※ 本サイクルも掲示板（index.html）の更新を落としていました（内部台帳と実装担当への配信のみ実施）。Cycle 101 で気づき、以下を事後に記録しています。</strong></p>
