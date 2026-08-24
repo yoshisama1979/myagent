@@ -40,6 +40,53 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 028 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 028 — 2026-08-24（<span class="text-emerald-700">初めて「Google に何ページ載っているか」を実測し、前日の診断を訂正</span>＝<span class="text-red-700">検索結果の約半分が「開けない www アドレス」／R-R18 を最優先へ</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・8/14〜8/20・35表示／窓10日）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/22・events 1,391／users 112）。社長入力（from-president.md）＝新規追記なし（28サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 6本・スクリーンショット2本・<strong>検索エンジンへの登録状況の問い合わせ5本</strong>）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle028-20260824.md</code>。<span class="text-sky-700">本サイクルは<strong>探索枠を「そもそも Google に何ページ載っているのか」の実測に充当</strong>しました（28サイクルで一度も測っていなかった項目です）。</span></p>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-4 mb-5">
+      <h3 class="font-semibold text-amber-900 mb-2">🔍 補足 — 危うく誤った数字をご報告するところでした</h3>
+      <p class="text-sm text-gray-800">最初に「このサイトのページを一覧して」と問い合わせたとき、<strong>返ってきたのはトップ1ページだけ</strong>。そのまま読めば<u>「登録されているのは1ページだけ」</u>という衝撃的な報告になります。<strong>念のため答えを知っているサイト（はなさか自社 <code>y-com.info</code>）で同じ問い合わせをしたところ、そちらも1ページ</strong>——明らかにおかしい。原因は<span class="text-red-800"><strong>私の道具側にあった「同じサイトからは1件しか拾わない」制限</strong></span>でした（競合他社を並べる用途で作った道具なので、その設計自体は正しいものです）。道具に切り替えスイッチを足し（既定の動作は不変）、<strong>自社サイトで10ページ返ることを確認してから</strong>本番を測り直しています。<span class="text-gray-600">＝<u>新しい測り方の初回は、答えを知っているもので検算してから読む</u>を規律として残します（T-028）。</span></p>
+    </div>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-24・ライブ）</h3>
+    <p class="text-xs text-gray-500 mb-2">※ 本日の主要な2件（①前日の診断の訂正 ②<code>www</code> の取りこぼし）は、このページ上部の <strong>🔍 見出しブロック</strong>に結論をまとめています。以下はその根拠と、その他の定点観測です。</p>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>🔑 検索エンジンへの<br>登録状況（初実測）</strong></td><td class="py-1 px-2"><code>site:check-rally.com</code> の1ページ目（自社分）＝<code>/</code>・<code>/register</code>・<code>/spots/themes</code>・<strong><code>/spots/12418</code></strong>・<strong><code>/spots/12426</code></strong>＋<code>www.</code> 側5本。<span class="text-emerald-800"><strong>＝スポットの個別ページは登録されている</strong></span>。裏取りに <code>/spots/12418</code> をライブ取得＝<strong>200・名札は「スポット詳細 #12418」・見出し0本</strong>＝<u>登録されているが名前が無い</u>。</td><td class="py-1 px-2">✅ <strong>前日の診断を訂正</strong><br>R-R21・R-R25 の順番待ちを撤回</td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 px-2"><strong>🔴 <code>www</code> の<br>登録と到達性</strong></td><td class="py-1 px-2"><code>site:www.check-rally.com</code>＝<strong>1ページ目10件すべてが www</strong>（<code>/map</code>・<code>/spots/140</code>・<code>/13074</code>・<code>/52</code>・<code>/133</code>・<code>/2</code>・<code>/1670</code>・<code>/14697</code>・<code>/14692</code>・<code>/14691</code>）。一方その www は<strong>実ブラウザで読み込み中断／通信ツールで証明書エラー</strong>（<u>独立2手段で確認</u>）。GA4 45日をアドレス単位で見ても <strong>www の閲覧は0件</strong>＝到達していない。</td><td class="py-1 px-2">🔴 <strong>R-R18 を最優先へ格上げ</strong><br>（→ 🔔 Q-R08）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>こちら側の<br>配信漏れ（2度目）</strong></td><td class="py-1 px-2">受け渡し箱を全文検索＝<strong>Cycle 027 のレポートが投函されていませんでした</strong>（掲示板には「配信」と記載＝誤り）。<strong>Cycle 022 に続き2度目</strong>。あわせて <code>rally-dev</code> 宛は<strong>未処理9通・処理0・発信0＝開通から9日</strong>で変化なし。<span class="text-gray-600">詳細と対処は冒頭の 🚨 ブロックへ。</span></td><td class="py-1 px-2">🔧 <strong>手順を是正</strong><br>🔴 Q-R12 継続・9日目</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2"><strong>ビジュアル定点</strong><br><span class="text-xs text-gray-500">（週次・本日が期日）</span></td><td class="py-1 px-2">トップを PC・スマホで撮影して前回（8/17）と比較＝<strong>見た目の変化なし</strong>（配信内容がバイト単位で同一なので整合）。<span class="text-red-800">スマホの初期画面で<strong>浮動ボタン「近くのスポットを探す」がログイン導線を覆う状態が継続</strong></span>＝R-R23 は未修正（悪化もなし）。</td><td class="py-1 px-2">✅ 実施（次回 8/31）<br>R-R23 継続</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知<br>（デプロイ）</td><td class="py-1 px-2">トップの配信内容は <strong>57,978B ＝7日連続でバイト単位まで同一</strong>（応答 0.057秒）＝<strong>8/17 のデプロイ以降、本番に変更はありません</strong></td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">到達性・衛生</td><td class="py-1 px-2">apex（http→https）＝<strong>200 正常</strong>／<code>www</code> 付き＝<strong>証明書エラー継続</strong>（→ 本日 R-R18 を格上げ）／<code>robots.txt</code>・<code>sitemap.xml</code>＝<strong>両方404 継続</strong>（R-R06）</td><td class="py-1 px-2">継続</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2">GA4<br><span class="text-xs text-gray-500">（アドレス単位で再集計）</span></td><td class="py-1 px-2">45日で <strong>events 1,391／users 112</strong>（最新日 8/22）。閲覧＝トップ196・<code>/map</code> <strong>163</strong>・<code>/spots</code>(404) 47・<code>/spots/themes</code> 43。<span class="text-red-800"><strong>【新規検出】開発環境（<code>localhost</code>）のアクセスが本番の数字に混入</strong></span>＝<code>localhost/</code> <strong>31回</strong>・<code>localhost/spots/areas</code> <strong>8回</strong>。→ <strong>R-R17</strong>（内部除外）の対象に「開発環境」を追加。</td><td class="py-1 px-2">🔧 R-R17 の根拠に追加</td></tr>
+        <tr><td class="py-1 px-2">Search Console</td><td class="py-1 px-2">最新日は <strong>8/20 で前回と同じ</strong>（2サイクル連続）。<span class="text-emerald-700">前回「3サイクル・実日数5日以上 止まって初めて疑う」と基準を緩めたばかりなので<strong>本日は騒ぎません</strong>（判定＝<u>8/25 も 8/20 のままなら質問に上げます</u>）。</span>表示URLは <code>/</code> と <code>/spots/themes</code> の2本のまま。<span class="text-emerald-700">※ Cycle 029（8/25）で <strong>8/22 まで前進</strong>を確認＝この条件は<strong>否定</strong>されました。</span></td><td class="py-1 px-2">監視のみ（基準どおり）</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>経路①（発見される）＝本日の主戦場</strong>：<span class="text-red-800"><strong>「発見されているのに、到達できない／名前が無い」</strong></span>という構図が初めて見えました。→ <strong>R-R18 を最優先へ格上げ</strong>（到達できない）＋<strong>R-R21・R-R25 の順番待ちを撤回</strong>（名前が無い）。<span class="text-emerald-700">どちらも<u>新しく集客せずに効く</u>層です。</span></li>
+        <li><strong>診断の訂正</strong>：R-R33 の「14,477件は存在しない」を<strong>実測で否定し、射程を縮小</strong>（撤回はせず＝テーマ・都道府県・市区町村層と全件到達には依然必要）。あわせて開発環境の混入を検出し R-R17 の根拠に追加。</li>
+        <li><strong>すべての前提＝提案が実装に届くこと</strong>：滞留9通・返信0通・9日間。<span class="text-red-800"><strong>本日の2つの発見も、開発担当に届かなければ北極星を1ミリも動かしません</strong></span>（→ 🔔 Q-R12）。</li>
+        <li><strong>本サイクルの成果</strong>＝<strong>新規R・新規Q ともゼロ</strong>／既存4件の位置づけ更新／前日の自分の診断の訂正／週次のビジュアル定点を実施／<strong>自分の配信漏れを検出して手順を是正</strong>。</li>
+      </ul>
+    </div>
+
+    <div class="border-2 border-red-400 bg-red-50 rounded p-3 mb-4">
+      <p class="text-sm text-gray-800">⚠️ <strong>後日訂正（Cycle 029・2026-08-25 追記）</strong>：本節の「実装担当（rally-dev）への引き渡し＝本サイクルのレポートを mailbox で配信」は<strong>誤りで、Cycle 028 のレポートは実際には投函されていませんでした</strong>（Cycle 029 の到達確認で検出＝3度目）。原因は<u>投函コマンドの本文の渡し方が無人実行時の安全チェックに弾かれていたこと</u>で、Cycle 029 から「本文をファイルから流し込む形」に変更し投函成功を確認済みです。<span class="text-gray-600">※ 記録は改変せず、当時の内容のまま残しています（この注記のみ後から追加）。</span></p>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）。<strong>着手推奨の順序を本日から変更＝<span class="text-red-700">R-R18（www の転送・要サーバ権限）</span> → <span class="text-red-700">R-R21・R-R25（名札＝順番待ちが外れました）</span> → R-R24 → R-R32＋R-R30 → R-R17 → R-R27 → R-R33 → R-R31 → R-R22 → R-R28 → R-R26 → R-R23 → R-R02</strong>（R-R29 は Q-R11 の回答で分岐するため保留）。<span class="text-gray-600">開発担当への照会は継続6本（レポート本文に記載）。</span></p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（28サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理9通・処理0・発信0（→Q-R12）／<span class="text-red-700">前回レポート（Cycle 027）は未投函だったことを検出し、手順を是正</span></strong>。deploy-log＝<strong>追記なし</strong>（本番の変更なし）。定石＝日次6本（#1変化検知＝<strong>57,978B で7日連続同一</strong>・#2・#3・#4・#4b・#15）を実施／<strong>#5 ビジュアル定点を実施</strong>（週次・期日到来／次回 08-31）／#14（08-25）・#6/#7/#8（08-29）・#9（09-02）・#10/#13（09-14）は未到来／#12 は9月最初のサイクルで 2026-08 分を作成。<strong>道具の改善＝T-028</strong>（検索エンジンへの登録状況を数えられるよう <code>hp-serp</code> に切り替えスイッチを追加。既定の動作は不変）。Cycle 027 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へスナップショット移動。</p>
+  </section>
+
   <!-- ===== Cycle 027 スナップショット ===== -->
   <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-2">
     <p class="text-sm text-gray-800">⚠️ <strong>このスナップショットは 2026-08-23 時点の記録です。翌 2026-08-24（Cycle 028）の実測で一部が誤りと判明し、訂正されています。</strong><br>
