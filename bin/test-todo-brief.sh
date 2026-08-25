@@ -394,5 +394,33 @@ assert not re.search(r'[ぁ-んァ-ヶ一-龠]', t), ('状態ファイルに日�
 " && ok "★状態ファイルに日本語（＝固有名詞が入りうる文字）が1文字も無い" || ng "日本語が入っている"
 
 echo
+echo "=== ★日付は JST として読む（2026-08-25 partner セッションの指摘）==="
+# hana-tools は日付を「JSTの0時」を UTC で表した形で返す：
+#   投げた値 2026-08-28 → 返る値 2026-08-27T15:00:00.000000Z
+# 先頭10文字を切ると1日前倒しになり、**督促が全件1日早く鳴る**（期限当日を「昨日が期限」と言う）。
+TZ_CASE='[{"id":1,"assignee_user_id":37,"due_date":"2026-08-27T15:00:00.000000Z","updated_at":"2026-08-01","content":"JST では8/28が期限"},
+          {"id":2,"assignee_user_id":37,"due_date":"2026-08-25","updated_at":"2026-08-01","content":"素の日付は そのまま"}]'
+setj "$TZ_CASE" "$TZ_CASE"
+r=$(tb 2026-08-28 candidates --assignee 37)
+echo "$r" | python3 -c "
+import json,sys; d=json.load(sys.stdin)
+m={c['id']:c for c in d['candidates']}
+assert m[1]['due']=='2026-08-28', ('UTC のまま切って1日ずれている', m[1]['due'])
+assert m[1]['overdue_days']==0, ('期限当日なのに超過扱い', m[1])
+assert m[1]['due_reason']=='期限が今日・明日', m[1]
+" && ok "★UTC表記の期限を JST の日付として読む（1日早く鳴らない）" || ng "1日ずれる" "$r"
+echo "$r" | python3 -c "
+import json,sys; d=json.load(sys.stdin)
+m={c['id']:c for c in d['candidates']}
+assert m[2]['due']=='2026-08-25' and m[2]['overdue_days']==3, m[2]
+" && ok "タイムゾーンの無い素の日付はそのまま JST として扱う" || ng "素の日付が壊れる" "$r"
+r=$(tb 2026-08-29 candidates --assignee 37)
+echo "$r" | python3 -c "
+import json,sys; d=json.load(sys.stdin)
+m={c['id']:c for c in d['candidates']}
+assert m[1]['overdue_days']==1, ('翌日になって初めて1日超過のはず', m[1])
+" && ok "★期限の翌日に初めて「1日超過」になる（境界がずれない）" || ng "境界がずれている" "$r"
+
+echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1

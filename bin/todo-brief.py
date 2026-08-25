@@ -71,9 +71,29 @@ def today():
         os.environ.get("TODO_BRIEF_TODAY") or datetime.date.today().isoformat())
 
 
+JST = datetime.timezone(datetime.timedelta(hours=9))
+
+
 def _date(s):
+    """hana-tools の日付を **JST の日付** として読む。
+
+    ★文字列の先頭10文字を切ってはいけない（2026-08-25 partner セッションの指摘で発覚）★
+      hana-tools は日付を「JST の 0時」を UTC で表した形で返す。
+        投げた値 due_date=2026-08-28  →  返る値 2026-08-27T15:00:00.000000Z
+      先頭10文字を切ると **2026-08-27**＝1日前倒しになり、督促が全件1日早く鳴る。
+      期限当日のものを「昨日が期限」と言い、前日のものを「今日が期限」と言う。
+      タイムゾーンの無い素の日付（"2026-08-28"）はそのまま JST の日付として扱う。
+    """
+    v = str(s or "")
+    if not v:
+        return None
     try:
-        return datetime.date.fromisoformat(str(s)[:10])
+        if "T" in v:
+            dt = datetime.datetime.fromisoformat(v.replace("Z", "+00:00"))
+            if dt.tzinfo is None:                 # タイムゾーン無しは JST とみなす
+                dt = dt.replace(tzinfo=JST)
+            return dt.astimezone(JST).date()
+        return datetime.date.fromisoformat(v[:10])
     except Exception:
         return None
 
