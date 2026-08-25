@@ -270,8 +270,24 @@ COOLDOWN_RESET=86400  # 前回の冷却明けからこれ以上経っていれ�
 QUICK_SEC=30      # 認証切れ最大6秒／正常最小43秒 の間。どちらからも5倍以上の余裕
 QUICK_BYTES=600   # 認証切れ最大202B／正常最小1342B の間。どちらからも2倍以上の余裕
 
+# ★「長時間かけて何も出力しない」も異常（2026-08-25 実測で追加）★
+#   8/24・8/25 の定時の朝礼は、claude が**1行も出力せずに25分の制限時間まで居座って**いた。
+#   速すぎる判定（上の QUICK_*）は形が逆なので捕まえられず、しかも当時は fetch のログが
+#   同じファイルに混ざって「5,278バイト書いた」ように見えていた＝二重に見逃していた。
+#   完走・タイムアウトのどちらでも、**出力がこれ未満なら仕事をしていない**とみなす。
+SILENT_SEC=300     # 5分以上かけて
+SILENT_BYTES=200   # 200バイト未満しか出していない（認証切れの回でも202B出ている）
+
 # 実行が「仕事を始める前に落ちた」形かどうか。テストから直接呼べるように関数にしてある
 # （閾値やコードの文字列を grep するだけのテストでは、判定そのものが壊れても気づけない）。
+# 「長くかかったのに何も出していない」形。完走・タイムアウトのどちらでも使う。
+run_looks_silent() {   # run_looks_silent <経過秒> <claude出力バイト数>
+  local sec="${1-}" bytes="${2-}"
+  [[ "$sec" =~ ^[0-9]+$ ]] || return 1
+  [[ "$bytes" =~ ^[0-9]+$ ]] || return 1
+  [ "$sec" -ge "$SILENT_SEC" ] && [ "$bytes" -lt "$SILENT_BYTES" ]
+}
+
 run_looks_broken() {   # run_looks_broken <経過秒> <claude出力バイト数>
   # ⚠️ ${1:-0} と書いてはいけない：値が取れなかったとき 0 に化けて「0秒・0バイト」＝
   #    必ず鳴る側に倒れる（2026-08-20 テストが検出）。空のまま下の数値検査で弾く。
@@ -571,16 +587,23 @@ dispatch() {
     # /proc/uptime は単調増加。無い環境では壁時計に落とす。
     started=$(mono_sec)
     log_off=$(stat -c%s "$LOG" 2>/dev/null || echo 0)   # この実行が書いた分だけを後で読むための目印
-    MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits 2>&1 | sed 's/^/» /' >>"$LOG"
+    # ★claude の出力は**いったん専用ファイルへ**捕まえる（2026-08-25）。
+    #   取り込み(fetch)をメインロックの外へ出したため、claude の実行中に fetch が同じ $LOG へ
+    #   並行して書き込む。すると「この実行が書いた分」に fetch のログが混ざり、
+    #   **claude が1行も出していないのに 5,278バイト書いたように見える**（8/24・8/25 の朝礼で実際に発生）。
+    #   仕事の形跡を出力量で測る判定が、他人のログで水増しされていた。
+    local ctmp; ctmp=$(mktemp "${TMPDIR:-/tmp}/agent-tick-out.XXXXXX")
+    MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits >"$ctmp" 2>&1
     # ログ側（sed >>$LOG）の失敗も拾う（Codex🟡11）＝ログが書けない状況ではクールダウンの記録も
     # 書けない可能性が高く、この安全機構そのものが効かなくなる。ログに書けないので Slack で鳴らす。
-    local -a pipe_rc; pipe_rc=("${PIPESTATUS[@]}")
-    rc=${pipe_rc[0]}
+    rc=$?
     elapsed=$(( $(mono_sec) - started ))
-    # この実行が $LOG に書いた分だけを見る（＝claude の出力量。並行 fetch の行も混じり得るが、
-    # 混じれば「多い」側に倒れる＝誤報でなく見逃しに倒れるので安全側）
-    local out_bytes; out_bytes=$(( $(stat -c%s "$LOG" 2>/dev/null || echo "$log_off") - log_off ))
-    [ "$out_bytes" -lt 0 ] && out_bytes=0
+    # claude 自身の出力量（fetch のログは混ざらない）
+    local out_bytes; out_bytes=$(stat -c%s "$ctmp" 2>/dev/null || echo 0)
+    # 記録へ流す（「» 」接頭辞つき＝claude 出力による制御マーカーの偽装を防ぐ）
+    local -a pipe_rc
+    sed 's/^/» /' "$ctmp" >>"$LOG"; pipe_rc=(0 $?)
+    rm -f "$ctmp" 2>/dev/null || true
     rm -f "$inflight" 2>/dev/null || true   # ここまで来た＝終了処理に到達した（結果の良し悪しは以降で判定）
     # --- サイクル末：このエージェントの成果物をコミットする（O-040・2026-08-17 社長判断）---
     # 無人ループはコミット権を持たず、成果物が git 外に溜まり続けていた（最大146件・最古47日）。
@@ -648,7 +671,12 @@ dispatch() {
         [ "$to" = "partner" ] && partner_alert "朝礼がメモリ不足で強制終了されました（OOM kill）。時間切れではなくメモリ側の問題です。"
       elif [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
         fail "$label-timeout"; action="$action(TIMEOUT)"
-        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。$cd_msg（すぐ再実行すると同じ結果になり負荷だけ倍になるため）。"
+        local silent_note=""
+        # ★出力ゼロのままタイムアウトは「重かった」ではなく「動き出せていない」＝原因が別。
+        #   これを「時間内に終わらなかった」とだけ伝えると、台帳が重いのだと誤診させる。
+        run_looks_silent "$elapsed" "$out_bytes" \
+          && silent_note="⚠️ しかも**出力が${out_bytes}バイトしかありません**＝重くて終わらなかったのではなく、そもそも何も出していません。"
+        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。${silent_note}$cd_msg（すぐ再実行すると同じ結果になり負荷だけ倍になるため）。"
         [ "$to" = "partner" ] && partner_alert "朝礼が制限時間（$((tmo/60))分）内に終わりませんでした。台帳・掲示板が重くなっている可能性があります。"
       else
         fail "$label-fail($rc)"; action="$action(ERR$rc)"
@@ -670,6 +698,14 @@ dispatch() {
       if [ "$progressed" -eq 0 ]; then
         fail "$label-noprogress"; action="$action(NOPROG)"
         alert "ヘッドレス $label は正常終了しましたが、起動の引き金になった便が1件も処理されていません（new/ に残ったまま＝このままだと次の tick で同じ処理が再起動します）。$(cooldown_apply "$label")。"
+      elif run_looks_silent "$elapsed" "$out_bytes"; then
+        # 起動して長く居座ったのに、claude が何も出していない（2026-08-25 の朝礼で実在）。
+        # 冷却はかける＝毎分この形を繰り返すと1回$70級の処理が空回りし続ける。
+        fail "$label-silent"; action="$action(SILENT${elapsed}s/${out_bytes}B)"
+        cooldown_hold "$label" "$COOLDOWN_1ST"
+        alert "ヘッドレス $label が**${elapsed}秒 動いたのに出力が${out_bytes}バイトしかありません**（何もせずに終わっています）。モードの中で止まっている可能性があります。ログをご確認ください: $LOG" \
+          "$PROJ/data/overseer/.last-alert-silent-$label"
+        [ "$to" = "partner" ] && partner_alert "朝礼が${elapsed}秒動いたのに何も出力していません（中身が空のまま終了）。"
       elif run_looks_broken "$elapsed" "$out_bytes"; then
         # --- 文言に頼らない見張り（2026-08-20 社長承認・同日 誤報を受けて作り直し）---
         # 認証切れは exit 0・数秒で終わるため rc でも無進捗でも捕まらなかった（08-19 の14時間の全滅）。
