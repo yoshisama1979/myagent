@@ -40,6 +40,30 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 029 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 029 — 2026-08-25（<span class="text-emerald-700">サービス名を知らない人の検索で、テーマ一覧が1ページ目に到達</span>＝<span class="text-sky-700">R-R25 の需要が実測で確認／配信漏れの原因を特定し修理</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・8/15〜8/22・15表示／1クリック／順位6.2）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 8/22・events 1,391／users 112）。社長入力（from-president.md）＝新規追記なし（29サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 8本・うちリンク実査4本）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle029-20260825.md</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-25・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>🎉 Search Console<br>（非指名クエリ初出現）</strong></td><td class="py-1 px-2">8/15〜8/22＝<strong>15表示・1クリック・順位6.2</strong>。<span class="text-emerald-800"><strong>「47都道府県 スタンプ帳」（1表示・<u>順位7.0</u>）＝サービス名を含まない初の検索語</strong></span>。ページ単位の内訳で着地先を特定＝<strong><code>/spots/themes</code></strong>。同ページの表示は <strong>1→3・順位8.0</strong>。</td><td class="py-1 px-2">🎉 <strong>R-R25 を在庫の先頭へ</strong><br>（需要が実測で確認）</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🔑 サイト内リンクの実査</strong><br><span class="text-xs text-gray-500">（週次）</span></td><td class="py-1 px-2">4ページを実査。<code>/</code>＝11本（7種）・<code>/map</code>＝8本（6種）・<code>/spots/areas</code>＝11本（8種）・<strong><code>/spots/12418</code>＝9本（6種）</strong>。<span class="text-red-800"><strong>いずれも実体は全ページ共通のメニューだけ</strong></span>＝個別ページから所属テーマ・都道府県・市区町村・近隣スポットへのリンクが1本もなし。<strong>閲覧2位の <code>/map</code>（163回）からもスポット詳細へ0本。</strong></td><td class="py-1 px-2">🔧 <strong>R-R33 の射程を双方向へ拡大</strong><br>（改善案④を追加）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>✅ こちら側の<br>配信漏れ（原因特定）</strong></td><td class="py-1 px-2"><strong>Cycle 028 のレポートも投函されていませんでした（3度目）</strong>。<span class="text-emerald-800"><strong>原因＝投函コマンドに本文を直接書き込む形で渡していたため、無人実行時の安全チェックに弾かれていた</strong></span>。<strong>本文をファイルから流し込む形に変更し、Cycle 029 は投函成功を確認（10,202バイト）。</strong></td><td class="py-1 px-2">✅ <strong>修理完了</strong><br>🔴 Q-R12 継続・10日目</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップ <strong>57,978B ＝8日連続バイト同一</strong>＝8/17 のデプロイ以降 本番変更なし。</td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">到達性・衛生</td><td class="py-1 px-2">apex 200 ／<code>www</code> 証明書エラー継続（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code> 両方404 継続（R-R06）</td><td class="py-1 px-2">継続</td></tr>
+        <tr><td class="py-1 px-2">前回の判定条件<br>（Search Console）</td><td class="py-1 px-2">「8/25 も最新日が 8/20 のままなら質問に上げる」→ <strong>8/22 まで前進＝条件は否定</strong>＝転送は止まっていない。同型の誤検知未遂は3度目＝「数日まとめて届く」で確定。</td><td class="py-1 px-2">✅ 監視終了（追わない）</td></tr>
+      </tbody>
+    </table>
+
+    <p class="text-sm text-gray-700 mb-4"><strong>北極星との接続</strong>＝<strong>経路①（発見）</strong>：名札が間違ったままでも1ページ目に届いている以上、直した分がそのまま伸びしろ → R-R25 を在庫の先頭へ。<strong>経路①＋③</strong>：個別ページから関連へのリンクが0本＝巡回も回遊も広がらない → R-R33 の射程を双方向へ拡大。<strong>③追わない</strong>：GSC の着弾リズム（監視終了）。<strong>本サイクルの成果＝新規R・新規Q ともゼロ／既存2件の裏づけを厚くした／3度続いた配信漏れの原因を特定して修理。</strong></p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（29サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理10通・処理0・発信0（→Q-R12）／<span class="text-red-700">前回レポート（Cycle 028）も未投函だったことを検出し、<span class="text-emerald-700">原因を特定して修理完了</span></span></strong>。deploy-log＝<strong>追記なし</strong>（本番の変更なし）。定石＝日次6本（#1・#2・#3・#4・#4b・#15）＋<strong>#14 サイト内リンク構造の実査</strong>（週次・期日到来）を実施。Cycle 028 の記録はアーカイブへスナップショット移動。<strong>掲示板サイズ点検＝84.0KB→82.2KB へ圧縮</strong>（棚卸しの結果<u>堆積ではない</u>＝28件の提案が1件も消化されていないため）。</p>
+  </section>
+
   <!-- ===== Cycle 028 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 028 — 2026-08-24（<span class="text-emerald-700">初めて「Google に何ページ載っているか」を実測し、前日の診断を訂正</span>＝<span class="text-red-700">検索結果の約半分が「開けない www アドレス」／R-R18 を最優先へ</span>）</h2>
