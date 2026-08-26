@@ -40,6 +40,34 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 030 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 030 — 2026-08-26（<span class="text-red-700">サイトのほぼ全ページが「たった3種類の名札」を使い回していると判明</span>＝<span class="text-sky-700">検索に2ページしか出てこない理由の説明がついた／新規 R-R34</span>）</h2>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-4 my-3">
+      <p class="text-sm text-gray-800">⚠️ <strong>後日訂正（Cycle 031・2026-08-27 追記）</strong>：本サイクルの<strong>「固有の名札を持つのは <code>/spots/areas</code> ただ1ページ」は誤り</strong>でした＝翌日の実測で <code>/spots/areas/kansai</code> など広域エリアの各ページも親と同じ名札を共有していると判明（＝ページ1枚ごとに固有の名札を持てているページは実質ありません）。<br>また本サイクルの<strong>「表示URL 2本＝名札の種類数と一致」という説明は、一覧ページ層にしか当てはまりません</strong>＝最大層のスポット個別14,477ページは名札が1件ずつ違う（使い回しではない）のに表示ゼロで、そちらの原因は別（名札にスポット名が入っていない＝R-R21）。<br><span class="text-emerald-800">なお<strong>工数の見立て（小・仕組みは実装済み）は訂正後も変わりません</strong></span>。<span class="text-gray-600">※ 記録は改変せず当時の内容のまま残し、この注記のみ後から追加しています。</span></p>
+    </div>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（8/16〜8/23・16表示／1クリック／順位5.6）。<strong>GA4＝取得成功</strong>（45日窓・最新日 8/22・events 1,353／users 112）。社長入力＝新規追記なし（30サイクル連続）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle030-20260826.md</code>。</p>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-26・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-amber-100"><td class="py-1 px-2"><strong>🔑 名札の実測<br>（主要10ページ）</strong></td><td class="py-1 px-2">10ページの名札（title・説明文）が<strong>3種類</strong>＝【A】都道府県一覧の文面を6種類のページが共有（都道府県一覧・テーマ一覧・タグ・検索・47県・23テーマ）／【B】トップの名札を3ページ（<code>/</code>・<code>/map</code>・<code>/people</code>）が共有／【C】<code>/spots/areas</code>（<span class="text-amber-800">※ 翌日 訂正＝エリア各ページとも共有</span>）。<strong>canonical は10ページすべてに無し。</strong></td><td class="py-1 px-2">🆕 <strong>R-R34 を起票</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>Search Console</strong></td><td class="py-1 px-2">8/16〜8/23＝16表示・1クリック・順位5.6（最新日 8/23 へ前進＝転送は正常）。表示URLは <code>/</code>（28表示）と <code>/spots/themes</code>（3表示）の2本。<code>/spots/prefectures</code> は表示ゼロ。非指名「47都道府県 スタンプ帳」は順位7.0のまま1表示で横ばい。</td><td class="py-1 px-2">🔑 名札の種類数と<br>表示URL数が一致</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>配信の到達確認</strong></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ 前日直した投函の不具合は正常に動作</strong></span>＝Cycle 029 のレポートの実在を確認（2サイクル連続で投函成功）。<span class="text-red-800"><strong>受け取り側は11日間停止</strong></span>＝<code>rally-dev</code> 宛の未処理10通・処理0通・返信0通。</td><td class="py-1 px-2">🔴 Q-R12 継続・11日目</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知</td><td class="py-1 px-2">トップの配信内容は <strong>57,978B ＝9日連続でバイト単位まで同一</strong>＝8/17 のデプロイ以降 本番に変更なし。</td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">到達性・衛生</td><td class="py-1 px-2">apex＝200 正常／<code>www</code>＝証明書エラー継続（R-R18）／<code>robots.txt</code>・<code>sitemap.xml</code>＝両方404 継続（R-R06）</td><td class="py-1 px-2">継続</td></tr>
+        <tr><td class="py-1 px-2"><strong>GA4 の「最新日が<br>進まない」件</strong></td><td class="py-1 px-2">最新日が3サイクル続けて 8/22 のまま。2段構えで検証＝①他サイト比較（y-com は 8/24 まで着弾＝基盤全体の遅延ではない）②<strong>自サイトの過去計測＝7月以降すでに6日分の欠測・最長3日連続</strong>（GA4 は訪問0件の日に記録を作らない）。現在の欠測3日＝過去最長タイ＝異常とは言えない。<span class="text-emerald-700">※ Cycle 031（8/27）で <strong>8/25 まで前進</strong>を確認＝判定条件は<strong>否定</strong>され監視終了。</span></td><td class="py-1 px-2">🟡 判定条件を更新<br>（4日連続で質問へ）</td></tr>
+      </tbody>
+    </table>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（30サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理10通・処理0・発信0（→Q-R12・11日目）／前回レポート（Cycle 029）の実在を確認</strong>。deploy-log＝<strong>追記なし</strong>（本番の変更なし）。定石＝日次6本を実施／週次・月次は期日未到来。<strong>掲示板サイズ点検＝86.4KB</strong>（棚卸しの結果<u>堆積ではない</u>＝29件の提案が1件も消化されていないため）。</p>
+  </section>
+
+  <hr class="my-8 border-gray-200">
+
   <!-- ===== Cycle 029 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 029 — 2026-08-25（<span class="text-emerald-700">サービス名を知らない人の検索で、テーマ一覧が1ページ目に到達</span>＝<span class="text-sky-700">R-R25 の需要が実測で確認／配信漏れの原因を特定し修理</span>）</h2>
