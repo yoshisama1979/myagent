@@ -157,6 +157,42 @@ except SystemExit:
     bad = 1
 (ok if bad else ng)("items が辞書でなければ止まる")
 
+print("\n=== 在庫上限（2026-08-27 社長決定＝15件・新規起票だけ止める）===")
+# 社長のお言葉＝「一定数貯まれば止める…上がった問題を対応仕分けできたら、その分新しく回していく」。
+# AI は作る側の速度で走り、社長は捌く側の速度でしか走れない＝上限が無ければ差は必ず開く。
+import io as _io2
+def wip_rc(items):
+    """items = {キー: 状態} を state.json に流し込んで wip の終了コードを取る"""
+    st = {"v": 1, "items": {k: {"lane": "L", "id": k, "src": "x", "line": 1,
+                                "first_seen": "2026-08-27", "last_seen": "2026-08-27",
+                                "status": v} for k, v in items.items()}}
+    ps.STATE_FILE.write_text(json.dumps(st, ensure_ascii=False), encoding="utf-8")
+    ps.sources = lambda: []          # 走査で上書きさせない
+    ps.cmd_scan = lambda quiet=True: ps.load_state()
+    import contextlib
+    with contextlib.redirect_stdout(_io2.StringIO()):
+        return ps.cmd_wip("L")
+
+_scan_backup, _src_backup = ps.cmd_scan, ps.sources
+L = ps.WIP_LIMIT
+(ok if L == 15 else ng)(f"上限は社長が決めた15件（{L}）")
+(ok if wip_rc({f"k{i}": "open" for i in range(L - 1)}) == 0 else ng)(
+    f"上限の1件手前では止めない（{L-1}件）")
+(ok if wip_rc({f"k{i}": "open" for i in range(L)}) == 1 else ng)(
+    f"★上限ちょうどで止める（{L}件）＝「以上」で判定（境界で1件すり抜けない）")
+(ok if wip_rc({f"k{i}": "asked" for i in range(L)}) == 1 else ng)(
+    "★社長に提示済み（asked）も在庫に数える＝提示しただけで枠が空くと上限が意味を失う")
+(ok if wip_rc({f"k{i}": "decided" for i in range(L)}) == 0 else ng)(
+    "★決定済みは在庫に数えない（社長の手を離れた＝所有モードの作業）")
+(ok if wip_rc({f"k{i}": "gone" for i in range(L)}) == 0 else ng)(
+    "閉じた項目は在庫に数えない")
+ps.cmd_scan, ps.sources = _scan_backup, _src_backup
+
+src_txt2 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
+(ok if "分析" in src_txt2.split("WIP_LIMIT")[0][-600:] else ng)(
+    "★止めるのは新規起票だけで分析は止めない、と根拠が実装に書いてある"
+    "（2026-07 の社長ご指示と両立させるため）")
+
 print("\n=== 他モードの台帳を横から書き換えない（所有者が閉じる）===")
 src_txt = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
 bad = [w for w in ("write_text(", ".unlink(", "os.remove", "shutil.")

@@ -24,6 +24,7 @@
   pending-scan.py ask <key>...    # 社長に提示した印（同じものを翌日また聞かない）
   pending-scan.py decide <key> --kind <president|ai-close|do-now> [--note ...]
   pending-scan.py verify          # 決めたのに台帳から消えていないものを洗い出す（書き戻しの実測）
+  pending-scan.py wip [--lane X]  # 在庫上限に達したレーンを出す（達していれば終了コード1）
 """
 import argparse
 import fcntl
@@ -48,6 +49,14 @@ ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
 RESOLVED_RE = re.compile(r"🔔\s*→\s*[✅❌]|^\**\s*[✅❌]")
 
 HP_SITES = ("ycom", "fujisaka", "yoshida", "yokohawaii", "konjaku", "hikita", "rally")
+
+# ★在庫上限（WIP limit・2026-08-27 社長決定）★
+#   社長のお言葉＝「一定数貯まれば止めるようにしましょうか。溜まっている状態で新たな課題を
+#   見つけても対応できないので、上がった問題を対応仕分けできたら、その分新しく回していく」。
+#   AI は作る側の速度で走り、社長は捌く側の速度でしか走れない＝上限が無ければ差は必ず開く。
+#   **止めるのは「新規の起票」だけで、分析そのものは止めない**（効果検証・既存提案の根拠の
+#   深掘り・台帳の整理は続ける）＝2026-07 の社長ご指示「回答待ちで分析を止めるな」と両立させる。
+WIP_LIMIT = 15
 
 
 def sources():
@@ -336,6 +345,33 @@ def cmd_verify():
     return 1
 
 
+def cmd_wip(lane=None):
+    """レーンごとの在庫が上限に達しているか。達していれば終了コード1（＝新規起票を止める合図）。
+
+    ★必ず走査し直してから判定する。古い状態で判定すると「止めるべきときに止まらない／
+    もう減っているのに止め続ける」の両方が起きる。
+    """
+    st = cmd_scan(quiet=True)
+    per = {}
+    for r in st["items"].values():
+        if r["status"] in ("open", "asked"):
+            per[r["lane"]] = per.get(r["lane"], 0) + 1
+    lanes = [lane] if lane else sorted(set(per) | {f"hp-loop:{s}" for s in HP_SITES})
+    blocked = []
+    for l in lanes:
+        n = per.get(l, 0)
+        if n >= WIP_LIMIT:
+            blocked.append(l)
+            print(f"🛑 {l}: 判断待ち {n}/{WIP_LIMIT} ＝ **新規の起票を止める**"
+                  f"（分析・効果検証・根拠の深掘り・台帳の整理は続ける）")
+        else:
+            print(f"✅ {l}: 判断待ち {n}/{WIP_LIMIT} ＝ 起票可（残り {WIP_LIMIT - n}件）")
+    if blocked:
+        print(f"\n止まっているレーン {len(blocked)}件。"
+              f"減らすには `/triage` で仕分けて回答する（1回5件まで）。")
+    return 1 if blocked else 0
+
+
 def main():
     ap = argparse.ArgumentParser(add_help=True)
     sub = ap.add_subparsers(dest="cmd")
@@ -348,6 +384,7 @@ def main():
     p = sub.add_parser("decide"); p.add_argument("key")
     p.add_argument("--kind", required=True); p.add_argument("--note")
     sub.add_parser("verify")
+    p = sub.add_parser("wip"); p.add_argument("--lane")
     a = ap.parse_args()
     if a.cmd == "scan":
         cmd_scan()
@@ -361,6 +398,8 @@ def main():
         cmd_decide(a.key, a.kind, a.note)
     elif a.cmd == "verify":
         sys.exit(cmd_verify())
+    elif a.cmd == "wip":
+        sys.exit(cmd_wip(a.lane))
     else:
         print(__doc__)
         sys.exit(2)
