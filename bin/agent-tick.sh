@@ -278,14 +278,47 @@ QUICK_BYTES=600   # 認証切れ最大202B／正常最小1342B の間。どち�
 SILENT_SEC=300     # 5分以上かけて
 SILENT_BYTES=200   # 200バイト未満しか出していない（認証切れの回でも202B出ている）
 
+# ★★ 出力量だけで測ってはいけない（2026-08-27 社長報告で判明・誤報13/13）★★
+#   comms は **わざと何も出力しない**よう設計されている（rules/modes/comms.md＝クライアント名が
+#   tick.log に残るのを防ぐため「標準出力にも出さない・最終報告は件数のみの固定形式1行」）。
+#   その1行は 45〜66バイト＝SILENT_BYTES=200 に必ず引っかかる。**機密のための「黙る」を
+#   故障として通報していた**。導入から3日で鳴った13件は全部これで、本物は1件も無い。
+#   → モードが「完了しました」の署名を持つなら、**量ではなく署名の有無**で判定する。
+#     署名があれば量が少なくても正常。署名を持つモードで署名が無ければ量が多くても未完了。
+done_signature() {   # done_signature <label> → そのモードが完了時に必ず出す文字列（無ければ空）
+  case "${1%%:*}" in
+    comms) printf 'comms done:' ;;
+    *)     printf '' ;;
+  esac
+}
+
 # 実行が「仕事を始める前に落ちた」形かどうか。テストから直接呼べるように関数にしてある
 # （閾値やコードの文字列を grep するだけのテストでは、判定そのものが壊れても気づけない）。
 # 「長くかかったのに何も出していない」形。完走・タイムアウトのどちらでも使う。
-run_looks_silent() {   # run_looks_silent <経過秒> <claude出力バイト数>
-  local sec="${1-}" bytes="${2-}"
+run_looks_silent() {   # run_looks_silent <経過秒> <claude出力バイト数> [署名 1=あり/0=無い/空=モードが署名を持たない]
+  local sec="${1-}" bytes="${2-}" signed="${3-}"
   [[ "$sec" =~ ^[0-9]+$ ]] || return 1
   [[ "$bytes" =~ ^[0-9]+$ ]] || return 1
+  # 完了署名が出ている＝量にかかわらず仕事を終えている（comms の 45〜66バイトはこれ）
+  [ "$signed" = "1" ] && return 1
+  # 署名を持つモードなのに署名が無い＝量が多くても終わっていない（量で見るより厳しい）
+  if [ "$signed" = "0" ]; then
+    [ "$sec" -ge "$SILENT_SEC" ]
+    return
+  fi
+  # 署名を持たないモードは従来どおり量で見る
   [ "$sec" -ge "$SILENT_SEC" ] && [ "$bytes" -lt "$SILENT_BYTES" ]
+}
+
+# ★ タイムアウトした実行が「途中まで進んでいた」のかを、成果物の更新で測る（2026-08-27）★
+#   `claude -p` は**終わるまで標準出力に1バイトも書かない**（同日 30秒サンプリングで実測＝
+#   5/10/15/20/25/30秒すべて0バイト）。つまり打ち切られた実行は**必ず0バイト**になり、
+#   出力量からは進捗を何も読み取れない。「0バイト＝そもそも何も出していない」と伝えていたのは
+#   常に誤りだった（実際 8/27 のタイムアウト4本は全部、台帳・掲示板を更新してから切られていた）。
+work_touched() {   # work_touched <基準ファイル> → 実行中に更新された成果物の件数（最大50で打ち切り）
+  [ -e "${1-}" ] || { printf 0; return; }
+  find "$PROJ/data" "$PROJ/site" -type f -newer "$1" \
+       ! -name '*.log' ! -name '*.lock' ! -name '.*' 2>/dev/null | head -50 | wc -l | tr -d ' '
 }
 
 run_looks_broken() {   # run_looks_broken <経過秒> <claude出力バイト数>
@@ -593,6 +626,8 @@ dispatch() {
     #   **claude が1行も出していないのに 5,278バイト書いたように見える**（8/24・8/25 の朝礼で実際に発生）。
     #   仕事の形跡を出力量で測る判定が、他人のログで水増しされていた。
     local ctmp; ctmp=$(mktemp "${TMPDIR:-/tmp}/agent-tick-out.XXXXXX")
+    # 進捗を測る基準時刻。この後に更新された成果物＝この実行が進めた分
+    local wstamp; wstamp=$(mktemp "${TMPDIR:-/tmp}/agent-tick-stamp.XXXXXX")
     MYAGENT_UNATTENDED=1 MYAGENT_AGENT="$to" timeout --kill-after=30s "${tmo}s" "${CHOOM[@]}" "$CLAUDE" -p "$slash" --permission-mode acceptEdits >"$ctmp" 2>&1
     # ログ側（sed >>$LOG）の失敗も拾う（Codex🟡11）＝ログが書けない状況ではクールダウンの記録も
     # 書けない可能性が高く、この安全機構そのものが効かなくなる。ログに書けないので Slack で鳴らす。
@@ -600,6 +635,14 @@ dispatch() {
     elapsed=$(( $(mono_sec) - started ))
     # claude 自身の出力量（fetch のログは混ざらない）
     local out_bytes; out_bytes=$(stat -c%s "$ctmp" 2>/dev/null || echo 0)
+    # 完了署名の有無（署名を持たないモードは空＝従来どおり量で見る）
+    local sig signed=""; sig=$(done_signature "$label")
+    if [ -n "$sig" ]; then
+      if grep -qF -- "$sig" "$ctmp" 2>/dev/null; then signed=1; else signed=0; fi
+    fi
+    # この実行中に更新された成果物の件数（タイムアウト時の「進んでいたか」の判断材料）
+    local touched; touched=$(work_touched "$wstamp")
+    rm -f "$wstamp" 2>/dev/null || true
     # 記録へ流す（「» 」接頭辞つき＝claude 出力による制御マーカーの偽装を防ぐ）
     local -a pipe_rc
     sed 's/^/» /' "$ctmp" >>"$LOG"; pipe_rc=(0 $?)
@@ -670,14 +713,17 @@ dispatch() {
           "$PROJ/data/overseer/.last-alert-oom"
         [ "$to" = "partner" ] && partner_alert "朝礼がメモリ不足で強制終了されました（OOM kill）。時間切れではなくメモリ側の問題です。"
       elif [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; then
-        fail "$label-timeout"; action="$action(TIMEOUT)"
-        local silent_note=""
-        # ★出力ゼロのままタイムアウトは「重かった」ではなく「動き出せていない」＝原因が別。
-        #   これを「時間内に終わらなかった」とだけ伝えると、台帳が重いのだと誤診させる。
-        run_looks_silent "$elapsed" "$out_bytes" \
-          && silent_note="⚠️ しかも**出力が${out_bytes}バイトしかありません**＝重くて終わらなかったのではなく、そもそも何も出していません。"
-        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。${silent_note}$cd_msg（すぐ再実行すると同じ結果になり負荷だけ倍になるため）。"
-        [ "$to" = "partner" ] && partner_alert "朝礼が制限時間（$((tmo/60))分）内に終わりませんでした。台帳・掲示板が重くなっている可能性があります。"
+        fail "$label-timeout"; action="$action(TIMEOUT${touched}f)"
+        # ★出力量では進捗を測れない（claude -p は終わるまで1バイトも出さない＝打ち切られた実行は
+        #   必ず0バイト）。代わりに**実行中に更新された成果物の件数**で「進んでいたか」を伝える。
+        local prog_note
+        if [ "$touched" -gt 0 ]; then
+          prog_note="実行中に成果物が **${touched}件** 更新されています＝**途中までは進んでいました**（時間が足りていない側の問題）。"
+        else
+          prog_note="⚠️ 実行中に更新された成果物が**1件もありません**＝重くて終わらなかったのではなく、動き出せていない可能性があります。"
+        fi
+        alert "ヘッドレス $label が$((tmo/60))分でタイムアウトしました（pending=$pending force=$force）。${prog_note}$cd_msg（すぐ再実行すると同じ結果になり負荷だけ倍になるため）。"
+        [ "$to" = "partner" ] && partner_alert "朝礼が制限時間（$((tmo/60))分）内に終わりませんでした（実行中の成果物の更新 ${touched}件）。"
       else
         fail "$label-fail($rc)"; action="$action(ERR$rc)"
         alert "ヘッドレス $label が異常終了しました（exit=$rc pending=$pending force=$force）。$cd_msg。設定・認証の誤りなら、間を置いても直りません＝ログをご確認ください。"
@@ -698,12 +744,12 @@ dispatch() {
       if [ "$progressed" -eq 0 ]; then
         fail "$label-noprogress"; action="$action(NOPROG)"
         alert "ヘッドレス $label は正常終了しましたが、起動の引き金になった便が1件も処理されていません（new/ に残ったまま＝このままだと次の tick で同じ処理が再起動します）。$(cooldown_apply "$label")。"
-      elif run_looks_silent "$elapsed" "$out_bytes"; then
+      elif run_looks_silent "$elapsed" "$out_bytes" "$signed"; then
         # 起動して長く居座ったのに、claude が何も出していない（2026-08-25 の朝礼で実在）。
         # 冷却はかける＝毎分この形を繰り返すと1回$70級の処理が空回りし続ける。
-        fail "$label-silent"; action="$action(SILENT${elapsed}s/${out_bytes}B)"
+        fail "$label-silent"; action="$action(SILENT${elapsed}s/${out_bytes}B/${touched}f)"
         cooldown_hold "$label" "$COOLDOWN_1ST"
-        alert "ヘッドレス $label が**${elapsed}秒 動いたのに出力が${out_bytes}バイトしかありません**（何もせずに終わっています）。モードの中で止まっている可能性があります。ログをご確認ください: $LOG" \
+        alert "ヘッドレス $label が**${elapsed}秒 動いたのに完了の形跡がありません**（出力${out_bytes}バイト／実行中に更新された成果物 ${touched}件${sig:+／完了行「$sig」が出ていません}）。モードの中で止まっている可能性があります。ログをご確認ください: $LOG" \
           "$PROJ/data/overseer/.last-alert-silent-$label"
         [ "$to" = "partner" ] && partner_alert "朝礼が${elapsed}秒動いたのに何も出力していません（中身が空のまま終了）。"
       elif run_looks_broken "$elapsed" "$out_bytes"; then
