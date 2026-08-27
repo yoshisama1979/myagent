@@ -29,7 +29,7 @@ GROUPS = [
     ("分析・提案ループ", "emerald",
      ["hp-improve", "hp-prospect", "hp-loop", "blog-loop", "blog-write", "blog-improve", "Reviewer"]),
     ("経営・記録", "amber", ["partner", "Finance", "Comms", "task-partner"]),
-    ("統括", "violet", ["Overseer"]),
+    ("統括", "violet", ["Overseer", "triage"]),
 ]
 COLORS = {
     "sky":     {"fill": "#e0f2fe", "line": "#0284c7", "text": "#075985"},

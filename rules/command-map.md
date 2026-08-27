@@ -32,6 +32,7 @@
 | コミット済みの差分を整えたい | `/refactor` | 挙動を変えずに内部を整える | — |
 | 許可リスト（permissions）を整理したい | `/cleanup-permissions` | `.claude/settings.local.json` の整理 | — |
 | HP分析ループに社長コメントを反映したい | `/hp-reply` | コメントを `from-president.md` へ代筆転記 | — |
+| 溜まった「回答待ち」を片付けたい／残課題を仕分けたい | `/triage` | 全レーンの判断待ちを集め、社長に出す分を**5件まで**に絞って決める（回答は `from-president.md` へ返し、所有モードが閉じる） | **1件だけ答えるなら hp-reply**／全体を棚卸しするなら triage |
 | 提案書・営業デッキ・スライドを作りたい | （モード無し） | `rules/modes/deck-format.md` に従い `site/decks/<案件名>/` に作る | — |
 
 ## B. 機械が起動するもの（社長は打たない・`/do` の振り分け先にしない）
