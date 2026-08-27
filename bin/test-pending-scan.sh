@@ -50,11 +50,17 @@ html = """<table>
 <tr><td>🔔 要回答</td><td>この列は凡例です</td><td>-</td><td>-</td></tr>
 <tr><td>凡例</td><td>🔔 は要回答の印です（例: R-999 を参照）</td><td>-</td><td>-</td></tr>
 <tr><td>R-J12</td><td>終わったもの</td><td>✅ 完了</td><td>-</td></tr>
+<tr><td>R-F02</td><td>解錠済み</td><td>✅ AI即応（🔔→✅）</td><td>-</td></tr>
+<tr><td>R-F09</td><td>まだ待ち</td><td>🔔 要回答（前は✅だった）</td><td>-</td></tr>
 </table>""" % CLIENT
 f = T / "board.html"; f.write_text(html, encoding="utf-8")
 got = ps.extract(f, "html_table")
 ids = sorted(g["id"] for g in got)
-(ok if ids == ["R-R29", "R-Y31"] else ng)(f"3列目でも4列目でも印を拾う（{ids}）")
+(ok if ids == ["R-F09", "R-R29", "R-Y31"] else ng)(f"3列目でも4列目でも印を拾う（{ids}）")
+# ★台帳は「🔔→✅」と解錠の履歴を同じセルに残す。印だけを見ると解決済みを判断待ちに数える
+#   （実測 2026-08-27＝R-F02 は 08-21 に解決していた）。過少計上と同じく、水増しも社長を誤らせる。
+(ok if "R-F02" not in ids else ng)(f"★「🔔→✅」＝解錠済みの履歴を判断待ちに数えない（{ids}）")
+(ok if "R-F09" in ids else ng)("本文に✅の語があっても、状態が🔔なら判断待ちのまま残す")
 (ok if "R-J12" not in ids else ng)("印の無い行（完了）は項目にしない")
 (ok if not any(g["id"].startswith("🔔") for g in got) else ng)(
     "先頭セルに ID が無い凡例行を項目にしない")
@@ -97,7 +103,7 @@ extra = {k for r in recs.values() for k in r} - {
 
 print("\n=== 閉じたものを追い続けない／閉じ切れていないものを見失わない ===")
 before = len(recs)
-(ok if before == 3 else ng)(f"2ソースから3件を集める（{before}）")
+(ok if before == 4 else ng)(f"2ソースから4件を集める（{before}）")
 # 行ごと消す＝所有モードが閉じてアーカイブへ移した状態。
 # （ID を書き換えるだけでは R-Y31 が部分一致で残る＝テストとして無効になる。実際に踏んだ）
 f.write_text("\n".join(l for l in html.split("\n") if "R-Y31" not in l), encoding="utf-8")

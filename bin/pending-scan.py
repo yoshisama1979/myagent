@@ -44,6 +44,8 @@ LOCK_FILE = STATE_DIR / ".scan.lock"
 PENDING_MARK = "🔔"
 # ID の形。レーンごとに接頭辞が違う（R-014c / R-F17(B) / A-078 / Q-F10 / O-056）
 ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
+# 解決済みの表記。印と同じセルに「🔔→✅」と履歴を残す台帳があるため、印だけを見ると水増しになる。
+RESOLVED_RE = re.compile(r"🔔\s*→\s*[✅❌]|^\**\s*[✅❌]")
 
 HP_SITES = ("ycom", "fujisaka", "yoshida", "yokohawaii", "konjaku", "hikita", "rally")
 
@@ -102,6 +104,11 @@ def extract(path, kind):
         if not m:
             continue          # 先頭セルに ID が無い＝項目行ではない（凡例・見出し・グループ見出し）
         status = next((c for c in cells[1:] if PENDING_MARK in c), cells[0])
+        # ★台帳は「🔔→✅」のように**解錠された履歴**を同じセルに残す（実測 2026-08-27＝R-F02 は
+        #   08-21 に解決済みなのに判断待ちに数えていた）。少なく数えるのと同じくらい、
+        #   水増しも悪い＝社長に「まだ40件あります」と誤って言うことになる。
+        if RESOLVED_RE.search(status):
+            continue
         out.append({"id": m.group(0), "line": line,
                     "head": cells[0][:80], "status": status[:160]})
     return out
