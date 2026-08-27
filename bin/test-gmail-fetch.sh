@@ -200,6 +200,173 @@ lines = [json.loads(l) for l in raw_f.read_text(encoding="utf-8").splitlines()]
 n = gf.rewrite_rows({(raw_f, 99): {"message_id": "m0", "body": "x"}})
 (ok if n == 0 else ng)(f"行番号が範囲外ならファイルごと中止（written={n}）＝poll の追記と競合しても消さない")
 
+print("\n=== 承認待ちの件名（アドレスだけでは要否を判断できない・2026-08-26 社長指摘）===")
+
+# 純関数 merge_subjects
+M = gf.PEND_SUBJ_MAX
+mk = lambda t, sub, d="in", m=None: {"t": t, "s": sub, "d": d, "m": m or f"m{t}"}
+
+got = gf.merge_subjects([mk(100, "古い")], [mk(300, "新しい"), mk(200, "中間")])
+(ok if [x["s"] for x in got] == ["新しい", "中間", "古い"] else ng)(
+    f"新しい順に並ぶ（{[x['s'] for x in got]}）")
+
+many = [mk(i, f"件名{i}") for i in range(1, M + 5)]
+got = gf.merge_subjects(None, many)
+(ok if len(got) == M and got[0]["s"] == f"件名{M + 4}" else ng)(
+    f"{M}件で打ち切り・落ちるのは古い側（残={len(got)}・先頭={got[0]['s']}）")
+
+# poll と backfill が同じメールを拾っても二重に並ばない（backfill は poll と別経路）
+same = mk(500, "見積の件", m="dup1")
+got = gf.merge_subjects([same], [dict(same)])
+(ok if len(got) == 1 else ng)(f"同じ message_id は一度だけ（{len(got)}件）")
+
+got = gf.merge_subjects([mk(500, "見積の件", m="a")], [mk(500, "見積の件", m="b")])
+(ok if len(got) == 2 else ng)(
+    f"message_id が違えば同じ件名でも別扱い（{len(got)}件）＝同題の連投を1件に潰さない")
+
+got = gf.merge_subjects(None, [mk(1, "あ" * 500)])
+(ok if len(got[0]["s"]) == gf.PEND_SUBJ_LEN else ng)(
+    f"長い件名は {gf.PEND_SUBJ_LEN} 字で切る（{len(got[0]['s'])}字）＝pending.json を太らせない")
+
+got = gf.merge_subjects(None, [mk(1, "送信", "out"), mk(2, "受信", "in"), mk(3, "壊れ", "???")])
+dirs = {x["s"]: x["d"] for x in got}
+(ok if dirs == {"送信": "out", "受信": "in", "壊れ": "in"} else ng)(
+    f"受/送を保ち、不明な値は受信側に寄せる（{dirs}）")
+
+got = gf.merge_subjects(["文字列", None, 42], [mk(9, "正常")])
+(ok if [x["s"] for x in got] == ["正常"] else ng)(
+    f"壊れた要素があっても落ちない（{got}）＝古い pending.json を読んでも死なない")
+
+# 実際の poll 経路で「無視の相手の件名は残らない」ことまで確かめる
+gf.SENDERS_FILE.write_text("""## 許可（本文を取得し蒸留対象にする）
+ok@allow.jp
+## 無視（承認待ちにも出さない）
+@blocked.jp
+""", encoding="utf-8")
+lists = gf.parse_senders()
+
+MSGS = {
+    "i1": ("ok@allow.jp",      "許可の人からの件名", 3_000_000, True),
+    "i2": ("who@unknown.jp",   "承認待ちの人からの件名", 2_000_000, False),
+    "i3": ("dm@blocked.jp",    "無視の人からの件名", 1_000_000, False),
+}
+
+class FakeMessages:
+    def list(self, userId=None, q=None, maxResults=None, pageToken=None):
+        assert userId == "me" and q and q.startswith("after:"), f"想定外の list 呼び出し: {userId} {q}"
+        # 本物と同じく新しい順で返す（_poll_account は自分で reverse する前提）
+        return self._resp({"messages": [{"id": m} for m in
+                                        sorted(MSGS, key=lambda k: -MSGS[k][2])]})
+    def list_next(self, req, resp):
+        return None
+    def get(self, userId=None, id=None, format=None, metadataHeaders=None):
+        assert userId == "me", f"想定外の get 呼び出し: {userId}"
+        if id not in MSGS:
+            raise AssertionError(f"存在しない message_id を取りに行った: {id}")
+        addr, subj, ts, _ = MSGS[id]
+        payload = {"headers": [{"name": "From", "value": f"担当 <{addr}>"},
+                               {"name": "To", "value": "me@self.jp"},
+                               {"name": "Subject", "value": subj},
+                               {"name": "Authentication-Results", "value": "spf=pass"}]}
+        if format == "full":
+            payload = dict(payload, mimeType="text/plain",
+                           body={"data": b64u("本文です".encode("utf-8"))})
+        elif format != "metadata":
+            raise AssertionError(f"想定外の format: {format}")
+        return self._resp({"id": id, "threadId": "t" + id, "labelIds": ["INBOX"],
+                           "internalDate": str(ts * 1000), "payload": payload})
+    @staticmethod
+    def _resp(d):
+        return type("R", (), {"execute": staticmethod(lambda: d)})()
+
+class FakeSvc:
+    def users(self):
+        return self
+    def messages(self):
+        return FakeMessages()
+
+cur = {"cursor_ms": 0, "recent_ids": []}
+_new_cur, recs, pend, counts = gf._poll_account(
+    FakeSvc(), "me@self.jp", cur, lists, {}, {"me@self.jp"})
+
+(ok if list(pend) == ["who@unknown.jp"] else ng)(
+    f"承認待ちに載るのは未振り分けの相手だけ（{list(pend)}）")
+(ok if [x["s"] for x in pend["who@unknown.jp"]["subs"]] == ["承認待ちの人からの件名"] else ng)(
+    "承認待ちの相手は件名が残る")
+blob = json.dumps(pend, ensure_ascii=False)
+(ok if "無視の人からの件名" not in blob else ng)(
+    "無視の相手の件名は残らない＝「記録を残さない」を件名でも守る")
+(ok if "許可の人からの件名" not in blob else ng)(
+    "許可の相手の件名は pending に混ざらない（本文つきで raw に入る側）")
+(ok if len(recs) == 1 and recs[0]["subject"] == "許可の人からの件名" else ng)(
+    f"許可の相手は従来どおり本文つきで raw へ（{len(recs)}件）")
+(ok if counts == {"new": 3, "saved": 1, "pending": 1, "ignored": 1} else ng)(
+    f"件数の内訳が変わっていない（{counts}）")
+
+print("\n=== 件名の後埋め backfill（受/送を取り違えない・変な文字列で検索しない）===")
+
+# 実データで判明: 「差出人が当人でなければ社長が送った」と略すと、第三者が当人と社長の
+# 両方に出したメールが「社長が返信済み」に化ける。この画面ではそれが最強の許可シグナルになる
+BF = {
+    "b1": ("me@self.jp",    "社長が出した件名",   9_000_000),
+    "b2": ("third@x.jp",    "第三者が両方に出した件名", 8_000_000),
+    "b3": ("who@unknown.jp", "当人が出した件名",   7_000_000),
+}
+
+class BFMessages:
+    def list(self, userId=None, q=None, maxResults=None):
+        assert userId == "me", f"想定外の userId: {userId}"
+        assert q.startswith("(from:") and " OR to:" in q, f"想定外の q: {q}"
+        assert q.count("@") == 2, f"q にアドレス以外が混ざっている: {q}"
+        return self._resp({"messages": [{"id": i} for i in
+                                        sorted(BF, key=lambda k: -BF[k][2])]})
+    def get(self, userId=None, id=None, format=None, metadataHeaders=None):
+        frm, subj, ts = BF[id]
+        return self._resp({"id": id, "internalDate": str(ts * 1000), "payload": {"headers": [
+            {"name": "From", "value": f"だれか <{frm}>"},
+            {"name": "To", "value": "who@unknown.jp, me@self.jp"},
+            {"name": "Subject", "value": subj}]}})
+    @staticmethod
+    def _resp(d):
+        return type("R", (), {"execute": staticmethod(lambda: d)})()
+
+class BFSvc:
+    def users(self): return self
+    def messages(self): return BFMessages()
+
+_orig = (gf.get_accounts, gf.get_self_addrs, gf.gmail_service)
+gf.get_accounts = lambda: ["me@self.jp"]
+gf.get_self_addrs = lambda: {"me@self.jp"}
+gf.gmail_service = lambda acct: BFSvc()
+try:
+    gf.PENDING_FILE.write_text(json.dumps({
+        "who@unknown.jp": {"name": "", "count": 1, "first": 1, "last": 1, "in": 1, "out": 0},
+        "変な アドレス@x.jp": {"name": "", "count": 1, "first": 1, "last": 1, "in": 1, "out": 0},
+    }, ensure_ascii=False), encoding="utf-8")
+    import contextlib, io as _io, re as _re
+    _buf = _io.StringIO()
+    with contextlib.redirect_stdout(_buf):
+        gf.cmd_backfill_subjects()
+    _line = [l for l in _buf.getvalue().splitlines() if l.startswith("件名を埋めました")][-1]
+    _n = [int(x) for x in _re.findall(r"(\d+) 件", _line)]
+    (ok if sum(_n) == 2 else ng)(
+        f"報告の内訳が対象件数と一致する（{_n} 合計{sum(_n)} / 対象2）＝二重計上しない")
+    after = json.loads(gf.PENDING_FILE.read_text(encoding="utf-8"))
+    subs = {x["s"]: x["d"] for x in after["who@unknown.jp"]["subs"]}
+    (ok if subs.get("社長が出した件名") == "out" else ng)(
+        f"社長が出したメールは送信（{subs.get('社長が出した件名')}）")
+    (ok if subs.get("第三者が両方に出した件名") == "in" else ng)(
+        f"第三者が当人と社長の両方に出したメールを『社長が返信済み』にしない（{subs.get('第三者が両方に出した件名')}）")
+    (ok if subs.get("当人が出した件名") == "in" else ng)(
+        f"当人が出したメールは受信（{subs.get('当人が出した件名')}）")
+    (ok if not after["変な アドレス@x.jp"].get("subs") else ng)(
+        "検索に使えない形のアドレスは Gmail に投げない＝別人の件名を混ぜない")
+    (ok if [x["t"] for x in after["who@unknown.jp"]["subs"]] ==
+           sorted([x["t"] for x in after["who@unknown.jp"]["subs"]], reverse=True) else ng)(
+        "後埋めした件名も新しい順")
+finally:
+    gf.get_accounts, gf.get_self_addrs, gf.gmail_service = _orig
+
 print("\n=== 読み取り専用（送信・削除・既読化のコードを持たない）===")
 src = (proj / "bin/gmail-fetch.py").read_text(encoding="utf-8")
 bad = [w for w in (".send(", "messages().delete", "messages().trash", "messages().modify",

@@ -4,8 +4,10 @@
 
 設計（2026-07-28 社長合意・オプトイン方式）:
 - senders.md の許可リスト該当だけ本文を取得して raw へ保存（蒸留対象）。
-- 未承認の送信者は本文を取得すらしない＝メタデータ（アドレス・表示名・件数・日時）
+- 未承認の送信者は本文を取得すらしない＝メタデータ（アドレス・表示名・件数・日時・件名）
   だけを pending.json に記録し「承認待ち一覧」として社長が選べるようにする。
+  件名は 2026-08-26 追加（社長指摘「アドレスだけでは要否を判断しにくい」）。件名はヘッダ＝
+  もともと取得済みのメタデータで、追加のAPI取得も本文取得も発生しない。
 - 無視リスト該当は承認待ちにも出さない（記録を残さない）。
 - forward-only: 初回実行時刻を baseline とし、それ以前のメールは扱わない（Chatworkと同合意）。
 - スコープは gmail.readonly のみ＝送信・削除・既読化は権限レベルで不可能。
@@ -26,6 +28,8 @@
   gmail-fetch.py auth     # 疎通確認（getProfile のみ・メールは読まない）
   gmail-fetch.py poll     # 差分取得（cron 用）
   gmail-fetch.py pending  # 承認待ちアドレス一覧を表示（手動確認用）
+  gmail-fetch.py backfill-subjects [--limit N] [--redo]
+                          # 件名記録より前から溜まっている承認待ちに件名を後から埋める
 """
 import base64
 import fcntl
@@ -55,6 +59,12 @@ BODY_MAX = 10000          # 蒸留に十分な長さで打ち切り（長文の�
 LIST_HARD_CAP = 1000      # 1アカウント1回の処理上限（古い側から処理＝残りは次回に持ち越し）
 LIST_PAGE_MAX = 200       # ID列挙の暴走ガード（200ページ=2万件超えは異常＝カーソル未前進で停止）
 RECENT_WINDOW_MS = 2000   # after: クエリが秒精度のための境界重複をIDで除外する窓
+# 承認待ちアドレスには件名も残す。アドレスだけでは許可/無視を判断できないという社長指摘
+# （2026-08-26）への対応。件名はメタデータヘッダ＝poll がすでに取得済みで追加取得は無い。
+# 本文は従来どおり許可リスト該当だけ。
+PEND_SUBJ_MAX = 5         # 1アドレスあたり保持する件名の数（新しい順）
+PEND_SUBJ_LEN = 120       # 1件名の保存上限（pending.json の肥大防止）
+SAFE_ADDR_RE = re.compile(r"[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}")
 
 SENDERS_TEMPLATE = """# Gmail 送信者リスト（社長が編集してよいファイル）
 #
@@ -120,6 +130,28 @@ def load_pending():
         # 黙って {} にすると次回保存で承認待ちの蓄積を消してしまう
         die(f"pending.json が想定外の型: {PENDING_FILE}")
     return p
+
+
+def merge_subjects(old, new):
+    """承認待ちアドレスの件名を新しい順に PEND_SUBJ_MAX 件だけ保持する。
+
+    同じメール（message_id）を二度数えない＝poll の重複除外窓をすり抜けた場合や
+    backfill と poll が同じメールを拾った場合でも件名が重複しない。
+    """
+    out, seen = [], set()
+    for it in list(new or []) + list(old or []):
+        if not isinstance(it, dict):
+            continue
+        subj = str(it.get("s") or "").strip()[:PEND_SUBJ_LEN]
+        mid = str(it.get("m") or "")
+        key = mid or ("t:%s|%s" % (it.get("t"), subj))
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({"t": int(it.get("t") or 0), "s": subj,
+                    "d": "out" if it.get("d") == "out" else "in", "m": mid})
+    out.sort(key=lambda x: x["t"], reverse=True)
+    return out[:PEND_SUBJ_MAX]
 
 
 def parse_senders():
@@ -648,6 +680,7 @@ def _poll_account(svc, acct: str, cur: dict, lists, pending: dict, self_addrs=No
         counts["new"] += 1
         verdicts = [(n, a, classify(a, lists)) for n, a in counterparts]
         ts = internal // 1000
+        subj = hdec(h.get("subject", ""))
         for n, a, v in verdicts:
             if v == "pending":
                 p = pend_local.get(a) or dict(pending.get(a) or
@@ -657,6 +690,8 @@ def _poll_account(svc, acct: str, cur: dict, lists, pending: dict, self_addrs=No
                 p["out" if outgoing else "in"] += 1
                 if not p["name"] and n:
                     p["name"] = n
+                p["subs"] = merge_subjects(p.get("subs"), [
+                    {"t": ts, "s": subj, "d": "out" if outgoing else "in", "m": mid}])
                 pend_local[a] = p
         if any(v == "allow" for _, _, v in verdicts):
             full = svc.users().messages().get(userId="me", id=mid, format="full").execute()
@@ -786,6 +821,96 @@ def cmd_pending():
         last = time.strftime("%m/%d %H:%M", time.localtime(p.get("last", 0)))
         print(f"{addr:<40} {p.get('name', ''):<20} {p.get('count', 0):>4} "
               f"{p.get('in', 0):>3}/{p.get('out', 0):<3} {last}")
+        for it in (p.get("subs") or []):
+            d = time.strftime("%m/%d", time.localtime(it.get("t", 0)))
+            arrow = "→" if it.get("d") == "out" else "←"
+            print(f"    {arrow} {d} {it.get('s') or '(件名なし)'}")
+
+
+def cmd_backfill_subjects(limit=None, redo=False):
+    """既存の承認待ちアドレスに、件名を後から埋める（読み取り専用）。
+
+    契機＝2026-08-26 社長指摘「アドレスだけでは要否を判断しにくい」。
+    件名の記録は poll に入れたが、それ以前から溜まっているアドレスには件名が無いため
+    Gmail から取り直す。cmd_repair と同じく読み取り専用で、カーソル(state.json)は動かさない
+    ＝取りこぼし・二重取得を起こさない。
+    """
+    # poll（2時間おき）と同じロックを取る。poll は開始時に読んだ pending をまとめて書き戻すため、
+    # ロック無しで並走すると backfill が埋めた件名を poll の書き戻しが黙って消す
+    lockf = open(LOCK_FILE, "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        print("backfill: poll が動作中のため中止（数分後にやり直してください）")
+        sys.exit(1)
+
+    pending = load_pending()
+    if not pending:
+        print("承認待ちアドレスはありません")
+        return
+    targets = [a for a, p in sorted(pending.items(), key=lambda kv: kv[1].get("last", 0), reverse=True)
+               if redo or not (isinstance(p, dict) and p.get("subs"))]
+    if limit:
+        targets = targets[:limit]
+    if not targets:
+        print(f"件名は全 {len(pending)} 件に記録済み（--redo で取り直せます）")
+        return
+    print(f"承認待ち {len(pending)} 件のうち、件名が無い {len(targets)} 件を取得します")
+
+    selfs = get_self_addrs()   # 受/送は poll と同じ基準で判定する。「差出人が当人でなければ送信」
+                               # と略すと、第三者が当人と自分の両方に出したメールが「自分が送った」
+                               # に化ける（＝社長が返信済みという最強の許可シグナルを誤って立てる）
+    total = len(targets)
+    # 集合で数える。件数カウンタを足し引きすると、形が不正で飛ばした1件を
+    # 「見つからない」と「失敗」の両方に数えるような二重計上が起きる
+    done, skipped, errored = set(), set(), set()   # このrunで件名を取れたアドレス。既存 subs の有無で判定すると
+                   # --redo のとき1アカウント目で必ず「済」になり2アカウント目を見なくなる
+    for acct in get_accounts():
+        try:
+            svc = gmail_service(acct)
+        except Exception as e:
+            print(f"⚠️ {acct}: 接続失敗（{type(e).__name__}: {str(e)[:100]}）＝このアカウントは飛ばします")
+            continue
+        for i, addr in enumerate(targets, 1):
+            if not SAFE_ADDR_RE.fullmatch(addr):
+                # q に空白や演算子が混ざると Gmail 検索が別の意味になり、
+                # 無関係のメールの件名を当人のものとして並べてしまう
+                print(f"⚠️ 検索に使えない形のアドレスのため飛ばします（{len(addr)}文字）")
+                skipped.add(addr)
+                continue
+            try:
+                res = svc.users().messages().list(
+                    userId="me", q=f"(from:{addr} OR to:{addr})",
+                    maxResults=PEND_SUBJ_MAX).execute()
+                ids = [m["id"] for m in (res.get("messages") or [])]
+                got = []
+                for mid in ids:
+                    meta = svc.users().messages().get(
+                        userId="me", id=mid, format="metadata",
+                        metadataHeaders=["From", "To", "Cc", "Subject", "Date"]).execute()
+                    h = _headers_map(meta)
+                    _, from_addr = parseaddr(h.get("from", ""))
+                    got.append({"t": int(meta.get("internalDate", 0)) // 1000,
+                                "s": hdec(h.get("subject", "")),
+                                "d": "out" if from_addr.lower() in selfs else "in",
+                                "m": mid})
+                if got:
+                    pending[addr]["subs"] = merge_subjects(pending[addr].get("subs"), got)
+                    done.add(addr)
+                    errored.discard(addr)
+            except Exception as e:
+                print(f"⚠️ 取得失敗（{type(e).__name__}: {str(e)[:80]}）＝1件飛ばします")
+                errored.add(addr)
+            if i % 10 == 0:
+                atomic_write(PENDING_FILE, json.dumps(pending, ensure_ascii=False, indent=1))
+                print(f"  …{i}/{len(targets)}（{acct}）")
+        targets = [a for a in targets if a not in done]
+        if not targets:
+            break
+    atomic_write(PENDING_FILE, json.dumps(pending, ensure_ascii=False, indent=1))
+    notfound = total - len(done | skipped | errored)
+    print(f"件名を埋めました: {len(done)} 件 ／ Gmail に残っていない {notfound} 件 "
+          f"／ アドレスの形が不正 {len(skipped)} 件 ／ 取得失敗 {len(errored)} 件")
 
 
 def cmd_repair(apply: bool):
@@ -922,6 +1047,14 @@ def main():
         cmd_poll()
     elif cmd == "pending":
         cmd_pending()
+    elif cmd == "backfill-subjects":
+        lim = None
+        if "--limit" in sys.argv:
+            i = sys.argv.index("--limit") + 1
+            if i >= len(sys.argv) or not sys.argv[i].isdigit():
+                die("--limit には件数を続けて指定します（例: --limit 10）")
+            lim = int(sys.argv[i])
+        cmd_backfill_subjects(limit=lim, redo="--redo" in sys.argv)
     else:
         print(__doc__)
         sys.exit(2)
