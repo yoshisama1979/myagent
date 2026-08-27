@@ -40,6 +40,60 @@
     </ul>
   </div>
 
+  <!-- ===== 解決済みの質問（Cycle 032 でクローズ） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 032（2026-08-28）でクローズ</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong><code>Q-R08</code> サーバ／ホスティングを触れるのは誰ですか — ✅解決（2026-08-27・社長回答）</strong><br>
+      <strong>回答＝①社長ご自身。</strong>あわせて「着手にあたり、社長の操作が要るものは<u>手順を1つずつ短く</u>書き出すこと（コンソールの画面名・押す場所まで）。まとめて長い手順書を出さない＝<u>1回のやり取りで1歩進む形</u>にする」とのご指示（<code>data/hp-loop/rally/from-president.md</code> 2026-08-27・<code>/triage</code> で回答）。<br>
+      <span class="text-gray-600">→ <strong>Cycle 032 で解錠4件を仕分けました</strong>：<span class="text-emerald-800"><strong>R-R06 は社長の作業ではなかった</strong></span>（Next.js のコード作業と実測で判明＝🔔→✅AI即応）／<strong>R-R18・R-R19・8/15 障害の原因特定</strong>は管理画面での操作＝<u>どのサービスの管理画面かが未確定</u>のため <strong>Q-R13</strong> として1問だけ新規に起票（当方からはヘッダー取得・DNS照会がいずれも権限外で特定できず）。生死は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の Q-R13 で追跡します。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== Cycle 031 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 031 — 2026-08-27（<span class="text-sky-700">昨日の自分の結論を反証しにいったサイクル</span>＝<span class="text-emerald-700">直す価値は桁違いに大きいと判明</span>／<span class="text-red-700">ただし最大の層は昨日の説明では直らないと確定</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・累計 8/13〜8/24＝51表示／9クリック／CTR 17.65%／順位5.6）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 <strong>8/25</strong>・events 1,281／users 115）。社長入力（from-president.md）＝新規追記なし（31サイクル連続）。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 8本）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle031-20260827.md</code>。</p>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-4 mb-5">
+      <h3 class="font-semibold text-amber-900 mb-2">🔑 本日やったこと — 昨日ご報告した結論を、わざと疑って測り直しました</h3>
+      <p class="text-sm text-gray-800">昨日（8/26）の「名札が3種類しかない」という報告には、<u>調べたのが主要10ページだけ</u>という限界がありました。<strong>「この説明で本当にサイト全体が説明できるのか」を確かめるため、まだ測っていなかった3種類のページ（市区町村・広域エリア個別・スポット個別）を実測しました。</strong>結果、<span class="text-emerald-800"><strong>良い知らせ（対象が桁違いに広い）</strong></span>と<span class="text-red-800"><strong>訂正（最大の層は別の病）</strong></span>が1つずつ出ました。</p>
+    </div>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-27・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>🔑 市区町村ページの<br>名札（初実測）</strong></td><td class="py-1 px-2">新潟市（<code>/spots/cities/11100</code>）の名札を取得＝<span class="text-red-800"><strong>title 42字・説明文65字ともに【名札A】と一字一句同一</strong></span>（＝都道府県一覧・テーマ一覧・47県・23テーマと同じもの）。市区町村ページは<strong>全国で数百〜1,500ページ以上</strong>あります。</td><td class="py-1 px-2"><span class="text-emerald-800"><strong>⭐ R-R34 の対象が<br>「8ページ」→<br>「数百〜1,500超」へ</strong></span><br>（作業量は変わりません）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 px-2"><strong>🔑 スポット個別ページの<br>名札（反証テスト）</strong></td><td class="py-1 px-2"><code>/spots/11624</code>＝「スポット詳細 <strong>#11624</strong>」、<code>/spots/14702</code>＝「スポット詳細 <strong>#14702</strong>」＝<strong>名札は1件ずつ違いました（使い回しではありません）</strong>。<span class="text-red-800"><strong>それでも検索結果には27サイクル一度も出ていません。</strong></span>説明文は14,477件すべて同一の汎用文・<strong>見出しは0本</strong>。</td><td class="py-1 px-2"><span class="text-red-800"><strong>⚠️ 昨日の説明の射程を訂正</strong></span><br>最大層は<strong>別の病</strong>＝<br><strong>R-R21 が必要</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2">広域エリア個別ページ<br><span class="text-xs text-gray-500">（8/26 の記述の検証）</span></td><td class="py-1 px-2"><code>/spots/areas/kansai</code> の名札は<strong>親の <code>/spots/areas</code> と一字一句同一</strong>。<span class="text-amber-800">⇒ 昨日の<strong>「固有の名札を持つのは <code>/spots/areas</code> ただ1ページ」は誤り</strong>でした（訂正）。ページ1枚ごとに固有の名札を持てているページは実質ありません。</span><span class="text-emerald-700">※ ただし<u>工数の見立て（小）は変わりません</u>＝「ページ種別ごとに名札を設定する仕組み」自体は動いているためです。</span></td><td class="py-1 px-2">🔧 <strong>R-R34 に統合</strong><br>（新規番号は起こさず）</td></tr>
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>Search Console</strong></td><td class="py-1 px-2">最新日 <strong>8/24 へ前進</strong>＝転送は正常。<strong>累計（8/13〜8/24・12日分）＝51表示・9クリック・CTR 17.65%・順位5.6</strong>。<span class="text-red-800"><strong>表示されているURLは、いまも <code>/</code>（46表示）と <code>/spots/themes</code>（5表示）の2本だけ</strong></span>。非指名の「47都道府県 スタンプ帳」は<strong>順位7.0・1表示で3日連続横ばい</strong>。<span class="text-gray-600">総称語「スタンプラリー」が初出現しましたが順位18.0（＝2ページ目）・1表示のみ＝<u>判断せず監視のみ</u>。</span></td><td class="py-1 px-2">継続監視</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>配信の到達確認</strong><br><span class="text-xs text-gray-500">（日次）</span></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ こちら側の投函は正常です</strong></span>＝Cycle 030 のレポートが受け渡し箱に実在することを確認（<strong>3サイクル連続で投函成功</strong>）。<span class="text-red-800"><strong>しかし受け取り側は 12日間ずっと動いていません</strong></span>＝<code>rally-dev</code> 宛の<strong>未処理11通・処理0通・返信0通</strong>。</td><td class="py-1 px-2">🔴 <strong>Q-R12 継続・12日目</strong><br>（こちら側の原因は解消済み）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知<br>（デプロイ）</td><td class="py-1 px-2">トップの配信内容は <strong>57,978B ＝10日連続でバイト単位まで同一</strong>＝<strong>8/17 のデプロイ以降、本番に変更はありません</strong>。title・description・canonical・OGP・見出し・リンク数もすべて据え置き。</td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">到達性・衛生</td><td class="py-1 px-2">apex（http→https）＝<strong>200 正常</strong>／<code>www</code> 付き＝<strong>証明書エラー継続</strong>（R-R18・最優先）／<code>robots.txt</code>・<code>sitemap.xml</code>＝<strong>両方404 継続</strong>（R-R06）</td><td class="py-1 px-2">継続</td></tr>
+        <tr><td class="py-1 px-2"><strong>GA4 の「最新日が進まない」<br>件＝決着</strong></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ 正常に進みました＝最新日 8/22 → 8/25（3日分まとめて着弾）。</strong></span>昨日置いた判定条件「本日も 8/22 のままなら質問に上げる」は<strong>実測で否定</strong>されました。<u>昨日の結論（訪問が0件の日は記録自体が作られないだけ）が実測で裏づけられた</u>ことになります。</td><td class="py-1 px-2"><span class="text-emerald-800"><strong>③ 追わない＝監視終了</strong></span><br>（「怪しい」を実測で潰しました）</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>① R化＝経路①（発見される）／R-R34 の射程拡大</strong>：市区町村ページが同じ名札を共有していた＝<u>検索に出るページ数を縛っている対象が、昨日の見立てより桁違いに広い</u>。<strong>作業量は変わらないのに効果の分母が桁で増える</strong>ため、着手推奨の先頭は据え置きます。</li>
+        <li><strong>① R化＝R-R21 の位置づけが確定</strong>：<u>最大層（スポット個別14,477ページ）は名札が1件ずつ違うのに表示ゼロ</u>＝<strong>R-R34 を直しても、この層は1ミリも動きません</strong>。原因は「名札にスポット名が入っていない＝どの検索語とも一致しようがない」ことで、これは <strong>R-R21</strong> が扱っている問題です。<span class="text-red-800"><strong>＝R-R21 は R-R34 の後続ではなく、別々に必要な治療だと確定しました。</strong></span></li>
+        <li><strong>⚠️ 昨日の自分の結論を2点訂正</strong>：(a)「固有の名札を持つのは <code>/spots/areas</code> のみ」→ <u>誤り</u>（エリア各ページも共有）。(b)「表示URL2本＝名札の種類数と一致」という説明 → <u>一覧ページ層にしか当てはまらない</u>（最大層は説明できない）。<span class="text-emerald-700">※ 工数の見立て（小）と着手推奨の先頭は、訂正後も変わりません。</span></li>
+        <li><strong>実務判断＝切り分けより前進を優先</strong>：R-R34・R-R25・R-R21 は実装側から見ると<u>同じ1つの作業</u>。1本ずつ入れれば効果の切り分けは楽ですが、<strong>提案29件が29サイクル1件も着手されていない現状では、まとめて1回で直すほうが北極星に効く</strong>と判断し、実装担当にそう伝えました。</li>
+        <li><strong>② 種プールへ（まだ判断しない）</strong>：非指名クエリ「47都道府県 スタンプ帳」は<strong>1表示のまま3日連続横ばい</strong>。総称語「スタンプラリー」も初出現しましたが順位18.0・1表示のみ。どちらも判断は保留します。</li>
+        <li><strong>③ 追わない＝監視をひとつ終了</strong>：GA4 の最新日が進まない件は<u>本日 8/25 まで前進し、判定条件が否定されました</u>。</li>
+        <li><strong>すべての前提＝提案が実装に届くこと</strong>：滞留11通・返信0通・12日間。<span class="text-emerald-800"><strong>こちら側の送信不具合は直り、3サイクル連続で投函できています</strong></span>。残るは受け取り側の起動＝<strong>🔔 Q-R12</strong>。</li>
+        <li><strong>本サイクルの成果</strong>＝<strong>新規R ゼロ・新規Q ゼロ</strong>／R-R34 の対象を桁で拡大／R-R21 が別建てで必要だと確定／昨日の結論2点を実測で訂正／GA4 の停滞監視を決着・終了。</li>
+      </ul>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：from-president.md＝新規追記なし（31サイクル連続）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理11通・処理0・発信0（→Q-R12・12日目）／<span class="text-emerald-700">前回レポート（Cycle 030）の実在を確認＝3サイクル連続で投函成功</span></strong>。deploy-log＝<strong>追記なし</strong>（本番の変更なし）。定石＝日次6本（#1変化検知＝<strong>57,978B で10日連続同一</strong>・#2・#3・#4・#4b・#15）を実施。<strong>掲示板サイズ点検＝93.1KB</strong>（棚卸しの結果<u>堆積ではない</u>＝29件の提案が1件も消化されていないため）。</p>
+    <p class="text-xs text-amber-800 mt-2">※ <strong>Cycle 032（2026-08-28）による後日の補足</strong>：本サイクル時点で「R-R06 は Q-R08（サーバ管理者）待ち」と扱っていましたが、翌日の実測で <strong>R-R06 はサーバ設定ではなくコード側（Next.js）の作業</strong>と判明し、🔔要回答 → ✅AI即応 へ変更しました。<u>記録は改変せず、注記で残します</u>。</p>
+  </section>
+
   <!-- ===== Cycle 030 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 030 — 2026-08-26（<span class="text-red-700">サイトのほぼ全ページが「たった3種類の名札」を使い回していると判明</span>＝<span class="text-sky-700">検索に2ページしか出てこない理由の説明がついた／新規 R-R34</span>）</h2>
