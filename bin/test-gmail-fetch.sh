@@ -44,6 +44,19 @@ for p in (gf.SENDERS_FILE, gf.PENDING_FILE, gf.STATE_FILE, gf.LOCK_FILE, gf.RAW_
 
 b64u = lambda b: base64.urlsafe_b64encode(b).decode().rstrip("=")
 
+
+def fake_resp(d):
+    """Google API クライアントの .execute() だけを真似た戻り値。"""
+    return type("R", (), {"execute": staticmethod(lambda: d)})()
+
+
+def fake_svc(messages_obj):
+    """svc.users().messages() が messages_obj を返すだけの偽サービス。
+    list/get の中身（＝本物と同じだけ厳しく検査する部分）は各テストが自前で持つ
+    ＝土台だけを共有し、「本物より優しい偽物」に寄せない"""
+    return type("S", (), {"users": lambda self: self,
+                          "messages": lambda self: messages_obj})()
+
 print("=== 送信者の振り分け（許可していない相手の本文は取得しない＝ここが門番）===")
 
 gf.SENDERS_FILE.write_text("""# コメント
@@ -255,8 +268,8 @@ class FakeMessages:
     def list(self, userId=None, q=None, maxResults=None, pageToken=None):
         assert userId == "me" and q and q.startswith("after:"), f"想定外の list 呼び出し: {userId} {q}"
         # 本物と同じく新しい順で返す（_poll_account は自分で reverse する前提）
-        return self._resp({"messages": [{"id": m} for m in
-                                        sorted(MSGS, key=lambda k: -MSGS[k][2])]})
+        return fake_resp({"messages": [{"id": m} for m in
+                                       sorted(MSGS, key=lambda k: -MSGS[k][2])]})
     def list_next(self, req, resp):
         return None
     def get(self, userId=None, id=None, format=None, metadataHeaders=None):
@@ -273,21 +286,12 @@ class FakeMessages:
                            body={"data": b64u("本文です".encode("utf-8"))})
         elif format != "metadata":
             raise AssertionError(f"想定外の format: {format}")
-        return self._resp({"id": id, "threadId": "t" + id, "labelIds": ["INBOX"],
-                           "internalDate": str(ts * 1000), "payload": payload})
-    @staticmethod
-    def _resp(d):
-        return type("R", (), {"execute": staticmethod(lambda: d)})()
-
-class FakeSvc:
-    def users(self):
-        return self
-    def messages(self):
-        return FakeMessages()
+        return fake_resp({"id": id, "threadId": "t" + id, "labelIds": ["INBOX"],
+                          "internalDate": str(ts * 1000), "payload": payload})
 
 cur = {"cursor_ms": 0, "recent_ids": []}
 _new_cur, recs, pend, counts = gf._poll_account(
-    FakeSvc(), "me@self.jp", cur, lists, {}, {"me@self.jp"})
+    fake_svc(FakeMessages()), "me@self.jp", cur, lists, {}, {"me@self.jp"})
 
 (ok if list(pend) == ["who@unknown.jp"] else ng)(
     f"承認待ちに載るのは未振り分けの相手だけ（{list(pend)}）")
@@ -318,26 +322,19 @@ class BFMessages:
         assert userId == "me", f"想定外の userId: {userId}"
         assert q.startswith("(from:") and " OR to:" in q, f"想定外の q: {q}"
         assert q.count("@") == 2, f"q にアドレス以外が混ざっている: {q}"
-        return self._resp({"messages": [{"id": i} for i in
-                                        sorted(BF, key=lambda k: -BF[k][2])]})
+        return fake_resp({"messages": [{"id": i} for i in
+                                       sorted(BF, key=lambda k: -BF[k][2])]})
     def get(self, userId=None, id=None, format=None, metadataHeaders=None):
         frm, subj, ts = BF[id]
-        return self._resp({"id": id, "internalDate": str(ts * 1000), "payload": {"headers": [
+        return fake_resp({"id": id, "internalDate": str(ts * 1000), "payload": {"headers": [
             {"name": "From", "value": f"だれか <{frm}>"},
             {"name": "To", "value": "who@unknown.jp, me@self.jp"},
             {"name": "Subject", "value": subj}]}})
-    @staticmethod
-    def _resp(d):
-        return type("R", (), {"execute": staticmethod(lambda: d)})()
-
-class BFSvc:
-    def users(self): return self
-    def messages(self): return BFMessages()
 
 _orig = (gf.get_accounts, gf.get_self_addrs, gf.gmail_service)
 gf.get_accounts = lambda: ["me@self.jp"]
 gf.get_self_addrs = lambda: {"me@self.jp"}
-gf.gmail_service = lambda acct: BFSvc()
+gf.gmail_service = lambda acct: fake_svc(BFMessages())
 try:
     gf.PENDING_FILE.write_text(json.dumps({
         "who@unknown.jp": {"name": "", "count": 1, "first": 1, "last": 1, "in": 1, "out": 0},
