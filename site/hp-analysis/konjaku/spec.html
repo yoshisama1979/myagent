@@ -143,6 +143,18 @@
     <p class="text-xs text-gray-600"><strong>⚠️ 比較の作法</strong>：<strong>「表示URL数」は観測日数が増えるだけでも自然に増える</strong>（市区町村 3→8・個別写真 77→123 は日数増ぶんを含む）。効果検証は必ず<strong>同じ日数の窓</strong>か<strong>露出率（存在ページ数で割った値）</strong>で行う。<br><strong>⚠️ 市区町村の CTR 17.9% は表示28回の小標本</strong>＝断定でなく「強い傾向」として扱う。<br><strong>⚠️ クエリ単位では判定しない</strong>（M-11＝クリック44に対しクエリ別に見えるのは1件＝匿名化率が高い）。階層・URL単位で読む。</p>
   </div>
 
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">📌 URL の正しい形（C031・2026-08-28 確定＝定点観測の前提）</h2>
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-8 text-sm text-gray-700">
+    <p class="mb-2">新サイト（<span class="font-mono">.jp</span>）の一覧ページは<strong>末尾に <span class="font-mono">/old-photos</span> が必要</strong>です。付けない形は<strong>正しく HTTP 404 を返します</strong>（C031 で実測）。</p>
+    <ul class="list-disc list-inside space-y-1 mb-2">
+      <li>市区町村：<span class="font-mono">/cities/{id}/old-photos</span>（✅ 200）／<span class="font-mono">/cities/{id}</span>（❌ 404・9,259B）</li>
+      <li>都道府県：<span class="font-mono">/prefectures/{id}/old-photos</span>（✅ 200）／<span class="font-mono">/prefectures/{id}</span>（❌ 404・9,263B）</li>
+      <li>タグ：<span class="font-mono">/tags/{id}/old-photos</span>／個別写真：<span class="font-mono">/old-photos/{id}</span>（末尾なし）／年代：<span class="font-mono">/eras/{key}</span>（末尾なし）</li>
+    </ul>
+    <p class="mb-2"><strong>この結果、ソフト404（R-J15）の対象範囲が確定しました</strong>＝HTTP 200 を返してしまうのは <strong><span class="font-mono">/old-photos/{存在しないID}</span> だけ</strong>で、市区町村・都道府県の階層は正常に 404 を返します。</p>
+    <p class="text-xs text-gray-500">※ C021〜C030 の記録では定点URLを <span class="font-mono">/cities/334</span> のように略記していましたが、実際に観測していたのは <span class="font-mono">/old-photos</span> 付きのほうです（数値・結論に誤りはありません）。以後は完全URLで記録します。</p>
+  </div>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">⚠️ 計測データの読み違い防止（C023・2026-08-19 確定）</h2>
   <p class="text-sm text-gray-700 mb-2"><strong>BigQuery エクスポートを設定した初日のテーブルは、部分データの可能性がある</strong>。実例＝GA4（<span class="font-mono">analytics_549912350</span>・<span class="font-mono">.jp</span>）の初日 2026-08-16 は <strong>events 37／users 3</strong> だったが、翌 08-17 は <strong>events 745／users 49</strong>。<strong>同じ 08-16 に GSC は .jp への検索クリックを10回記録しており、GA4 の「3人」と整合しない</strong>＝初日は途中からの記録と判断。</p>
   <p class="text-xs text-gray-500 mb-8">→ <strong>C021/C022 が使っていた「.jp は1日3人」「.com の約290倍」という基準値は撤回</strong>。<strong>正しい基準値＝2026-08-17：users 49／events 745／page_view 559／流入は <span class="font-mono">.com</span> referral 23S・google organic 10S・direct 8S・bing 6S・yahoo 3S</strong>（同日の <span class="font-mono">.com</span> は users 820＝<strong>約17倍</strong>）。<strong>規律＝①計測開始直後は2日分そろうまで「暫定」と明示する ②別系統の数字（GSC のクリック数 ↔ GA4 の人数）と突き合わせてから断定する</strong>。あわせて「GA4(.jp) の日次が 08-16 で停止」も<strong>誤警報</strong>だった（単なる2日ラグ）＝<strong>日次エクスポートは2日遅れが正常</strong>と理解する。</p>
