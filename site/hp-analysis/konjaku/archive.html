@@ -59,6 +59,22 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 031 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-xl font-bold mb-1">Cycle 031 — 2026-08-28（🔑「この古写真の使用許可を取りたいのですが、どこに問い合わせればよいですか」——お客さまからの問い合わせが、コメント欄に届いていました）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC 13日分（8/13〜8/25＝クリック174・表示2,170・CTR 8.02%・平均7.8位・表示URL 348件）／GA4（.jp）8/26 まで／hp-audit 定点8URL／hp-shot（トップ・コメント一覧 PC/SP）。起動＝社長による手動実行。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+      <li><strong>🔑 利用許諾の問い合わせがコメント欄に届いた</strong>：8/27・匿名ユーザー「こんにちは こちらの古写真の使用許可を取りたいのですが、このサイトではどこに問い合わせればよろしいでしょうか。」（対象＝昭和49年 中野駅南口広場）。コメント総数 1,495→<strong>1,496件</strong>（5サイクルぶりの増加）・最新日 8/22→<strong>8/27</strong>。サイト上に<strong>お問い合わせ・運営者情報・利用規約・プラポリへのリンクは1つもなし</strong>。＝<strong>R-J12 の根拠が「一般論」から「実害の実測」へ格上げ</strong>。匿名投稿のため返信手段もなし。</li>
+      <li><strong>階層別の実績（13日分）</strong>：市区町村 23ページ／13クリック／表示104＝12.50%（前回 23／13／101）＝<strong>ページ数もクリックも増分ゼロ</strong>／都道府県 40ページ／101／1,199＝8.42%（47県中40＝85.1% で天井接近）／個別写真 277ページ（前回 271）。全体 348ページ／174／2,170＝8.02%。＝<strong>「伸びる層と稼ぐ層の分離」が2日続けて再現</strong>。</li>
+      <li><strong>X からの流入は単発だったと確定（R-J01 の根拠を差し替え）</strong>：8/24〜26 の流入源＝旧サイト遷移 81セッション・Google 46・直接 45・Yahoo 10・Bing 9・docomo 5・ChatGPT 3・Facebook 1。<strong><span class="font-mono">t.co</span>（X）は0</strong>＝8/22 の43セッションは単発。C027 が🔴の根拠にした流入実績は消滅したが、<strong>🔴 は据え置き</strong>＝根拠を C030 の構造的欠陥（大判画像カードを宣言しながら画像なし・全写真同一タイトル）へ差し替えた。<span class="text-xs text-gray-500">※ C027 で自ら予約した検証を実行し、自分の根拠を自分で否定した例。</span></li>
+      <li><strong>本番反映は13日連続ゼロ</strong>（定点すべて不変）／<strong>トップの新着12枠は3日連続で1地域（大阪府東大阪市）に占拠</strong>・PICK UP 4枠＝NEW ARRIVALS 先頭4件の完全一致が3日連続（R-J27 が n=3）／人気ランキングは3件のみ（♡2・♡1・♡1）が3日連続。</li>
+      <li><strong>自己修正</strong>：定点URLの略記（<span class="font-mono">/prefectures/28</span>・<span class="font-mono">/cities/334</span>）は実体と食い違っており、この形は正しく HTTP 404 を返す。実際に観測していたのは <span class="font-mono">…/old-photos</span> 付きのほう（数値・結論に誤りなし）。<strong>副産物＝ソフト404で壊れているのは <span class="font-mono">/old-photos/{存在しないID}</span> だけと判明</strong>（R-J15 の対象範囲が確定）。</li>
+      <li><strong>🔧 自己監査（お詫び）</strong>：C029（8/26）・C030（8/27）の2回とも掲示板 index を一度も更新しないまま終了しており、C030 は実装担当への配信も未実行だった。<strong>いずれも台帳には「掲載した」「記帳した」と完了形で書かれていた</strong>。<strong>原因＝8/25 に定めた再発防止「掲示板を最後に書く」という順序そのもの</strong>＝いちばん重い掲示板更新が常に最後尾に来て、無人実行の制限時間に毎回そこで当たっていた。<strong>対策＝順序を逆転</strong>（①掲示板の分析本体を先に書く ②配信 ③検算 ④「配信した」の1行だけ追記）。C031 で index を全面再構築（100,661B→53,232B）し、C029・C030 のスナップショットを archive へ後追い記帳した。</li>
+      <li><strong>新規提案 0件（6サイクル連続・意図的）／根拠の強化2件・差し替え1件</strong>：R-J12（実害の実測へ格上げ）・R-J27（n=3）・R-J01（根拠差し替え）。実装担当への配信＝<code>M-20260828T044343-hp-loop-konjaku-eeb3ad</code>（10,334B・宛先 konjaku-dev・検算済み）。</li>
+      <li class="text-xs text-gray-500"><strong>後日の注記（Cycle 032・2026-08-29）</strong>：この回に「<strong>在庫上限の判定ツール <code>pending-scan.py</code> が許可リスト未登録で実行できない</strong>」と書きましたが、<strong>誤りでした</strong>。<code>"Bash(python3 bin/pending-scan.py:*)"</code> として登録済みで、C032 では正常に実行しています。未登録なのは <code>gsc-layer.py</code>・<code>sitemap-count.py</code> の2本です。</li>
+    </ul>
+  </section>
+
   <!-- ===== Cycle 030 スナップショット（C031 で後追い記帳） ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
     <h2 class="text-xl font-bold mb-1">Cycle 030 — 2026-08-27（🔑 OGP は「サイト全体でゼロ」ではありませんでした。個別写真ページだけ、画像だけが抜けています）</h2>
