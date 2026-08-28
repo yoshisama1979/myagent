@@ -40,6 +40,16 @@
     </ul>
   </div>
 
+  <!-- ===== 解決済みの質問（Cycle 033 でクローズ） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 033（2026-08-29）でクローズ</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong><code>Q-R13</code> <code>check-rally.com</code> のサーバはどこの管理画面から操作されていますか — ✅解決（2026-08-28・社長回答）</strong><br>
+      <strong>回答＝XServer の VPS（Xserver VPS）。</strong>あわせて進め方のご指示＝①<strong>まず R-R18 だけ</strong>を出す（Xserver VPS のどの画面の・どこを押すかまで書く）②<strong>「VPSパネルの操作か・サーバ内の設定か、先に1問で切り分けてから手順を書く」</strong>（切り分けずに長い手順書を出さない）③R-R19 の①/②の選択は R-R18 が片づいてから ④8/15 障害の原因特定は Xserver VPS のログの在処が分かってから（<code>data/hp-loop/rally/from-president.md</code> 2026-08-28・<code>/triage</code> で回答）。<br>
+      <span class="text-gray-600">→ <strong>Cycle 033 での対応</strong>：<span class="text-emerald-800"><strong>②の切り分けは、社長にお聞きせず<u>実測で決着させました</u></strong></span>＝証明書の有効期間がちょうど90日（2026-08-15〜11-13）＝Let's Encrypt の自動更新＝<u>サーバの中に仕組みがある</u>⇒<strong>「サーバ内の設定」と確定</strong>。<span class="text-red-800">あわせて<strong>発行日 2026-08-15 ＝ 8/15 のダウンタイムと同日</strong>と判明し、④の原因仮説（証明書の自動更新が引き金）がログを見る前に立ちました</span>。<span class="text-amber-800">さらに <strong>R-R18 の従来の改善案（301リダイレクトのみ）が誤りだった</strong>と分かり訂正しました（TLS が先に失敗するため 301 は届かない＝証明書に www を追加するのが必須）。</span>1問は「当方に測れない唯一のこと」＝<strong>Q-R14（サーバの中に入れるか）</strong>に充てました。生死は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の Q-R14 で追跡します。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 解決済みの質問（Cycle 032 でクローズ） ===== -->
   <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 032（2026-08-28）でクローズ</h2>
@@ -49,6 +59,51 @@
       <span class="text-gray-600">→ <strong>Cycle 032 で解錠4件を仕分けました</strong>：<span class="text-emerald-800"><strong>R-R06 は社長の作業ではなかった</strong></span>（Next.js のコード作業と実測で判明＝🔔→✅AI即応）／<strong>R-R18・R-R19・8/15 障害の原因特定</strong>は管理画面での操作＝<u>どのサービスの管理画面かが未確定</u>のため <strong>Q-R13</strong> として1問だけ新規に起票（当方からはヘッダー取得・DNS照会がいずれも権限外で特定できず）。生死は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の Q-R13 で追跡します。</span></li>
     </ul>
   </div>
+
+  <!-- ===== Cycle 032 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 032 — 2026-08-28（<span class="text-emerald-700">社長のご回答で解錠した4件を仕分けたら、1件は社長の手を借りずに進められると判明</span>／<span class="text-sky-700">テーマ一覧が初のクリックを獲得</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝取得成功</strong>（<code>searchconsole_rally</code>・14日窓 8/14〜8/25＝43表示／8クリック／CTR 18.60%／順位8.1）。<strong>GA4＝取得成功</strong>（<code>analytics_543430115</code>・45日窓・最新日 <strong>8/26</strong>・events 1,286／users 117）。<span class="text-emerald-700"><strong>社長入力（from-president.md）＝<u>32サイクル目にして初めての記載</u>＝Q-R08 のご回答</strong></span>。mailbox＝<code>hp-loop-rally</code> 宛の新着なし。本番実査＝<strong>実施</strong>（hp-audit 14本）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle032-20260828.md</code>。</p>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded p-3 mb-4">
+      <p class="text-sm text-gray-800"><strong class="text-amber-900">⚠️ 後日の補足（Cycle 033・2026-08-29）</strong>：本サイクルで「<code>robots.txt</code> と <code>favicon.ico</code> だけが 153バイトの素の404＝<u>Next.js の予約パスが空</u>」と読みましたが、翌日の証明書の実測で<strong>サーバの中に Web サーバ（nginx 等）が立っていることがほぼ確定</strong>したため、<u>同じ観察に「Web サーバ側が横取りして自分の404を返している」という対抗仮説</u>が立ちました。<span class="text-emerald-700"><strong>R-R06 の着手方針（まず <code>app/robots.ts</code> を1本置いて1デプロイで白黒）は変わりません</strong></span>が、「出なかった場合はサーバ内の設定＝R-R18 と同じ作業」という見立てを追加しています。<span class="text-gray-600">※記録は改変せず、注記で残します。</span></p>
+    </div>
+
+    <div class="border-2 border-emerald-400 bg-emerald-50 rounded p-4 mb-5">
+      <h3 class="font-semibold text-emerald-900 mb-2">🔑 本日やったこと — ご指示どおり「1回のやり取りで1歩」に分解しました</h3>
+      <p class="text-sm text-gray-800">Q-R08 のご回答（＝サーバは社長ご自身が触れる）で <strong>R-R18・R-R06・R-R19・8/15 障害の原因特定</strong> の4件が解錠されました。ご指示は<strong>「手順は1つずつ短く。まとめて長い手順書を出さない」</strong>。<u>そこでまず「本当に社長の操作が要るのはどれか」を4件それぞれ調べ直しました。</u><br><strong>結果＝<span class="text-emerald-800">1件（R-R06）は社長の作業ではありませんでした</span></strong>。残る3件は同じ管理画面の中の話なので、<strong>本日お願いするのは「その管理画面はどれですか」の1問だけ</strong>にしました（→ 🔔 Q-R13）。</p>
+    </div>
+
+    <h3 class="font-semibold mb-2">実査で確認した事実（2026-08-28・ライブ）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2">項目</th><th class="py-1 px-2">観察（事実）</th><th class="py-1 px-2 w-44">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>🔑 サイトの作りを初特定<br>＝Next.js</strong></td><td class="py-1 px-2">配信されているプログラムの構造を調べたところ、<strong>Next.js（App Router）</strong>で作られていることが分かりました（<code>/_next/static/chunks/app/layout</code>・<code>app/page</code>・<code>app/not-found</code>・<code>app/error</code> など。トップ18本／テーマ一覧15本）。<span class="text-gray-600">32サイクルのあいだ「JSで描画するアプリ」としか書けていなかった部分です。</span></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>⭐ 在庫の「どこを触るか」が<br>まとめて具体化</strong></span><br>（R-R34・R-R21・R-R25・<br>R-R27・R-R33 に追記）</td></tr>
+        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>🔑 R-R06 は社長の作業<br>ではなかった</strong></td><td class="py-1 px-2">存在しないURLを8本叩いて404の返り方を比べました＝<span class="text-red-800"><strong><code>/robots.txt</code> と <code>/favicon.ico</code> の2つだけが 153バイトの素っ気ない404</strong></span>、<code>/sitemap.xml</code>・<code>/manifest.json</code>・<code>/zzz-test.txt</code>・<code>/zzz-test.xml</code> ほかは<strong>すべて 11,374バイトのアプリ404画面</strong>。<span class="text-gray-600">拡張子でも場所でもなく「この2つの名前だけ」が特別扱い＝<u>推測：</u>Next.js が「ここに置くもの」として予約しているのに中身が空の状態。<span class="text-amber-800">（→ 8/29 に対抗仮説あり＝上の補足）</span></span><br><strong>⇒ sitemap.xml・robots.txt は「サーバ設定」ではなく<u>プログラムにファイルを1本ずつ足す</u>だけで出せます。</strong></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ R-R06 を<br>🔔要回答 → ✅AI即応 へ</strong></span><br><span class="text-red-700">（29サイクル引き継いだ<br>当方の前提の誤りを訂正）</span></td></tr>
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🎉 Search Console<br>＝初のクリック</strong></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>テーマ一覧（<code>/spots/themes</code>）が初めてクリックを獲得＝2クリック／8表示／CTR 25.0%／順位11.5</strong></span>（8/14〜8/25）。<u>28サイクルのあいだ、クリックはトップ1本だけでした。</u>トップは6クリック／35表示／順位7.4。<span class="text-gray-600">※どの検索語からのクリックかは Search Console の匿名化枠のため特定できません。</span>非指名の「47都道府県 スタンプ帳」は順位7.0・1表示で<strong>4日連続横ばい</strong>。最新日は 8/25 へ前進＝転送正常。</td><td class="py-1 px-2"><span class="text-emerald-800"><strong>⭐ R-R25 の裏づけが<br>もう1段固まる</strong></span><br>効果検証の基準線を更新</td></tr>
+        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 px-2"><strong>当方の調査手段の限界<br>（正直にご報告）</strong></td><td class="py-1 px-2">サーバの所在を特定するため<strong>ヘッダー取得（<code>curl -I</code>）と DNS 照会（<code>dig</code>）を試しましたが、どちらも権限で実行できませんでした</strong>。Cloudflare 経由でないこと・Vercel 固有の痕跡が無いことは間接的に確認できましたが、<span class="text-red-800"><strong>「どのサービスの管理画面か」は当方からは特定できません</strong></span>。</td><td class="py-1 px-2">🔔 <strong>Q-R13 として<br>社長へ1問だけ</strong></td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>配信の到達確認</strong><br><span class="text-xs text-gray-500">（日次）</span></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ こちら側の投函は正常です</strong></span>＝Cycle 031 のレポートが受け渡し箱に実在することを確認（<strong>4サイクル連続で投函成功</strong>）。<span class="text-red-800"><strong>しかし受け取り側は 13日間ずっと動いていません</strong></span>＝<code>rally-dev</code> 宛の<strong>未処理12通・処理0通・返信0通</strong>。</td><td class="py-1 px-2">🔴 <strong>Q-R12 継続・13日目</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">変化検知<br>（デプロイ）</td><td class="py-1 px-2">トップの配信内容は <strong>57,978B ＝11日連続でバイト単位まで同一</strong>（応答 0.085秒）＝<strong>8/17 のデプロイ以降、本番に変更はありません</strong>。</td><td class="py-1 px-2">変化なし</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 px-2">到達性・衛生</td><td class="py-1 px-2">apex（http→https）＝<strong>200 正常</strong>／<code>www</code> 付き＝<strong>証明書エラー継続</strong>（R-R18・最優先）／<code>robots.txt</code>・<code>sitemap.xml</code>＝<strong>両方404 継続</strong>（R-R06＝<span class="text-emerald-700">本日 ✅ へ解錠</span>）</td><td class="py-1 px-2">継続</td></tr>
+        <tr><td class="py-1 px-2">GA4</td><td class="py-1 px-2">最新日 <strong>8/26 へ前進</strong>（正常）。45日窓＝events <strong>1,286</strong>／users <strong>117</strong>。閲覧＝<code>/</code>169・<code>/map</code>158・<code>/spots</code>(404)<strong>48</strong>・<code>/spots/themes</code>30・<code>/spots/496</code>18。長い裾にスポット詳細・市区町村・都道府県が1〜2件ずつ多数＝<u>サイト内の回遊は各層に届いています</u>（届いていないのは検索からの入口だけ）。</td><td class="py-1 px-2">構図に変化なし</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>① 経路①（発見される）／R-R06 が29サイクルぶりに動ける状態に</strong>：sitemap.xml は「14,477件の存在を検索エンジンに知らせる唯一の代替経路」です（配信HTMLにリンクが無いため）。<u>それが「サーバ管理者が決まらないと動かせない」という<strong>誤った前提</strong>で29サイクル止まっていました</u>。<span class="text-red-800"><strong>止めていたのは技術ではなく、私が検証せずに引き継いだラベルでした。</strong></span></li>
+        <li><strong>① 経路①／R-R25 の需要がさらに裏づけ</strong>：テーマ一覧が初のクリックを獲得。<u>名札が別ページのもののままで、すでにクリックが発生している</u>＝直せばそのまま伸びる位置。効果検証の基準線を「2クリック／8表示／順位11.5」へ更新しました。</li>
+        <li><strong>① 在庫全体の解像度</strong>：Next.js と分かったことで、R-R34・R-R21・R-R25 は <code>generateMetadata()</code>、R-R27 は <code>notFound()</code>、R-R33 は Server Component 側でのリンク描画、と<u>触る場所まで指定できるようになりました</u>。<strong>新しい提案は1件も増やさず、既存の着手障壁だけを下げています。</strong></li>
+        <li><strong>③ 追わない</strong>：総称語「スタンプラリー」は順位18.0・1表示のまま横ばい（判断しない条件どおり）。GA4・GSC の日付前進はいずれも正常＝監視事項なし。</li>
+        <li><strong>すべての前提＝提案が実装に届くこと</strong>：滞留12通・返信0通・13日間。<span class="text-emerald-800"><strong>こちら側の送信は4サイクル連続で成功しています</strong></span>。残るは受け取り側の起動＝<strong>🔔 Q-R12</strong>。</li>
+        <li><strong>本サイクルの成果</strong>＝<strong>新規R ゼロ／新規Q 1件（Q-R13）／✅Q-R08 解決</strong>／R-R06 を 🔔→✅ へ解錠／在庫5件に実装口を追記／R-R25 の基準線を更新。</li>
+      </ul>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：<span class="text-emerald-700"><strong>from-president.md＝2026-08-27 のご記載（Q-R08 の回答）に対応＝Cycle 032</strong></span>（32サイクル目にして初の社長入力）。mailbox＝<code>to: hp-loop-rally</code> の新着なし。<strong>配信先の実査＝未処理12通・処理0・発信0（→Q-R12・13日目）／<span class="text-emerald-700">前回レポート（Cycle 031）の実在を確認＝4サイクル連続で投函成功</span></strong>。deploy-log＝<strong>追記なし</strong>（本番の変更なし＝11日連続同一）。定石＝日次6本（#1・#2・#3・#4・#4b・#15）を実施。<span class="text-amber-800"><strong>⚠️ 在庫上限（WIP）チェックは機械実行できませんでした</strong></span>＝<code>bin/pending-scan.py</code> が実行許可リストに無いため、直近のスキャン結果（判断待ち <strong>8/15件</strong>＝起票可）を読んで<u>暫定判定</u>としました（<span class="text-emerald-700">→ 8/29 に実行できることを確認＝解消済み</span>）。<strong>掲示板サイズ点検＝101.1KB（80KB の目安を超過）</strong>：棚卸しの結果<u>堆積ではありません</u>＝構造的な原因は<u>29件の提案が1件も消化されないまま各提案の根拠だけが厚くなり続けていること</u>（＝Q-R12 と同じ根）。</p>
+  </section>
 
   <!-- ===== Cycle 031 スナップショット ===== -->
   <section class="mb-10">
