@@ -5,6 +5,10 @@
 
 **対話型です。無人では動かしません。** 社長がメモを貼って `/intake` と打つ、それが起動の合図です。
 
+起動したらまず `bash bin/office-beacon.sh start intake "メモの取り込み" "" cmd-intake` で3Dオフィスの机を点灯する
+（見た目専用＝失敗しても本作業は続ける。TTL=10分なので長丁場は同じコマンドで延長）。
+終わるときは `bash bin/office-beacon.sh stop intake cmd-intake` で消灯（忘れても10分で自然消灯）。
+
 ## まず読む
 
 1. `rules/modes/intake.md` — このモードの詳細ルール（手順・必ず聞く6項目・制約・出力）

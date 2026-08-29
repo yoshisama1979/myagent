@@ -18,6 +18,8 @@ description: 社長の判断待ちを棚卸しして、その場で決めて閉�
 
 ## 起動時にやること（この順に）
 
+0. `bash bin/office-beacon.sh start triage "残課題の仕分け" "" cmd-triage` — 3Dオフィスの机を点灯
+   （見た目専用＝失敗しても本作業は続ける。TTL=10分なので、長丁場は区切りごとに同じコマンドで延長）
 1. `python3 bin/pending-scan.py scan` — 走査して状態を更新する
 2. `python3 bin/pending-scan.py stats` — レーン別の件数と、**取りこぼしの件数**を必ず社長に見せる
 3. `python3 bin/pending-scan.py list --status open --limit 40` — 中身を読む
@@ -54,6 +56,10 @@ description: 社長の判断待ちを棚卸しして、その場で決めて閉�
 3. **次回の起動時に `python3 bin/pending-scan.py verify` を必ず流す**
    ＝決めたのに台帳から消えていない項目を洗い出す。**書いて終わりにしない**
    （[[feedback_writeback-to-source-of-truth]]）
+
+## セッションを終えるとき
+
+`bash bin/office-beacon.sh stop triage cmd-triage` — 机を消灯（stop し忘れても TTL で10分後に自然消灯）
 
 ## やってはいけないこと
 

@@ -20,6 +20,8 @@
 
 ## 実行
 
+0. `bash bin/office-beacon.sh start hp-prospect "営業レポート作成" "" cmd-hp-prospect` — 3Dオフィスの机を点灯
+   （見た目専用＝失敗しても続行。⚠️ task に見込み客名・URLを渡さない。終了時 `bash bin/office-beacon.sh stop hp-prospect cmd-hp-prospect`）
 1. `rules/modes/hp-prospect.md` を読み、Step 0〜6 を実行する
 2. URL が無ければ質問して終了。業種・ゴール等が不明でも止まらない（読み取れる範囲＋「推測：」明示で進める）
 3. 終了時：社長への要約に**営業トークの示唆**（どの指摘を入口にすると刺さりそうか）を添える

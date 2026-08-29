@@ -205,10 +205,13 @@ while read -r ts n; do
 
   snapshot=$(mb_scan ids "$ts")
   log "[run] スレッド $ts（$how・便${n}通・session=${sid:0:8}）"
+  # 在席ビーコン＝応答中だけ3Dオフィスの机を点灯（見た目専用・失敗しても本作業は続ける）
+  bash "$PROJ/bin/office-beacon.sh" start talk "社長に応答中" "" "tick-$$" >/dev/null 2>&1 || true
   out=$(MYAGENT_UNATTENDED=1 MYAGENT_AGENT=talk \
     timeout --kill-after=20s "${TIMEOUT_SEC}s" "${CHOOM[@]}" \
     "$CLAUDE" -p "/talk $ts" "${mode[@]}" --permission-mode acceptEdits </dev/null 2>&1)
   rc=$?
+  bash "$PROJ/bin/office-beacon.sh" stop talk "tick-$$" >/dev/null 2>&1 || true
   echo "$out" | sed 's/^/» /' >>"$LOG"
   handled=$((handled + 1))
 

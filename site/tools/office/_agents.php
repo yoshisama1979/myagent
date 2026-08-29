@@ -21,17 +21,24 @@ if (!defined('JSON_OPT')) {
 $VPS_AGENTS = [
     // tickラベル            id(=mailbox宛先)      表示名                       島          daily起床
     'chat'              => ['id' => 'hanasaka-main',      'label' => '会話窓口',             'island' => 'office',   'wake' => null],
+    'talk'              => ['id' => 'talk',               'label' => '相談窓口',             'island' => 'office',   'wake' => null],   // talk-tick.sh（毎分・応答中はビーコン点灯）
     'memo-triage'       => ['id' => 'memo',               'label' => 'メモ係',               'island' => 'office',   'wake' => '23:00'],
+    'intake'            => ['id' => 'intake',             'label' => '取り込み係',           'island' => 'office',   'wake' => null],   // /intake＝対話型・無人不可
     'comms'             => ['id' => 'comms',              'label' => '会話整理｜Chatwork',   'island' => 'office',   'wake' => '2時間おき 6-22時'],
     'finance'           => ['id' => 'finance',            'label' => '経理',                 'island' => 'office',   'wake' => null],
     'overseer'          => ['id' => 'overseer',           'label' => '統括',                 'island' => 'exec',     'wake' => '01:00'],
     'partner'           => ['id' => 'partner',            'label' => '経営パートナー',        'island' => 'exec',     'wake' => '07:00'],
+    'triage'            => ['id' => 'triage',             'label' => '残課題の仕分け',        'island' => 'exec',     'wake' => null],   // /triage＝社長が呼んだときだけ（定時実行しない）
     'hp-loop:ycom'      => ['id' => 'hp-loop-ycom',       'label' => '解析｜自社YCOM',        'island' => 'analysis', 'wake' => '02:00'],
     'hp-loop:yoshida'   => ['id' => 'hp-loop-yoshida',    'label' => '解析｜よしだ歯科',      'island' => 'analysis', 'wake' => '02:30'],
     'hp-loop:fujisaka'  => ['id' => 'hp-loop-fujisaka',   'label' => '解析｜藤阪ガス',        'island' => 'analysis', 'wake' => '03:00'],
     'hp-loop:yokohawaii'=> ['id' => 'hp-loop-yokohawaii', 'label' => '解析｜ヨーコハワイ',    'island' => 'analysis', 'wake' => '03:30'],
     'hp-loop:rally'     => ['id' => 'hp-loop-rally',      'label' => '解析｜スタンプラリー',  'island' => 'analysis', 'wake' => '月 04:00'],
     'hp-loop:konjaku'   => ['id' => 'hp-loop-konjaku',    'label' => '解析｜今昔写語',        'island' => 'analysis', 'wake' => '月 04:30'],
+    'hp-improve'        => ['id' => 'hp-improve',         'label' => 'HP改善（単発）',        'island' => 'analysis', 'wake' => null],   // /hp-improve＝社長が呼んだときだけ
+    'hp-prospect'       => ['id' => 'hp-prospect',        'label' => '営業レポート',          'island' => 'analysis', 'wake' => null],   // /hp-prospect＝営業用単発
+    'hp-reply'          => ['id' => 'hp-reply',           'label' => '回答の代筆',            'island' => 'analysis', 'wake' => null],   // /hp-reply＝社長コメントの書記
+    'reviewer'          => ['id' => 'reviewer',           'label' => 'プロジェクトレビュー',  'island' => 'analysis', 'wake' => null],   // /reviewer-cycle（ビーコン未搭載＝書込禁止の規律を優先）
     'blog-loop:ycom'    => ['id' => 'blog-loop-ycom',     'label' => 'ブログ分析｜YCOM',      'island' => 'blog',     'wake' => '05:00'],
     'blog-write:ycom'   => ['id' => 'blog-write-ycom',    'label' => 'ブログ執筆｜YCOM',      'island' => 'blog',     'wake' => '月 05:30'],
     'blog-improve:ycom' => ['id' => 'blog-improve-ycom',  'label' => 'ブログ改善｜YCOM',      'island' => 'blog',     'wake' => '月 06:00'],

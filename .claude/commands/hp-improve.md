@@ -16,6 +16,8 @@
 
 ## 実行
 
+0. `bash bin/office-beacon.sh start hp-improve "HP改善の診断" "" cmd-hp-improve` — 3Dオフィスの机を点灯
+   （見た目専用＝失敗しても続行。長丁場は同じコマンドで延長。終了時 `bash bin/office-beacon.sh stop hp-improve cmd-hp-improve`）
 1. `rules/modes/hp-improve.md` を読み、ルールを把握する
 2. その「手順」セクションに従って Step 1 〜 Step 6 を実行する
 3. 対象サイト・改善ゴールが曖昧なら、**Step 1 で必ず質問**してから着手する

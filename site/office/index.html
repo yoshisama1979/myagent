@@ -154,25 +154,30 @@ import * as THREE from 'three';
  * 1. レイアウト定義（島＝ラグの上に机を並べる）
  * ============================================================ */
 /* 島の配置（フロア実寸に合わせて格子状に整列）
- *   床 x -15〜15 / z -10〜10、左壁 x=-15.15、奥壁 z=-10.15、開発ルームのガラス壁 x=4.6（z -7.5〜4.5）
+ *   床 x -15〜15 / z -14〜10、左壁 x=-15.15、奥壁 z=-14.15、開発ルームのガラス壁 x=4.6（z -14〜-1）
  *   ラグ幅＝cols*gapX+0.8・奥行＝rows*3.0+0.6 で、cols2 と cols3 は pos.x を揃えると
  *   ラグの左端が一致する（＝奥列と中列が縦にきれいに揃う）。
  *
- *      奥  (z -6.0)   [役員席]      [事務島]
- *      中  (z  2.0)   [ブログ島]    [解析島]    ‖ガラス‖ [開発ルーム]
- *      手前(z  7.0)                                      [社員席（人）]
+ *      奥  (z -10.0)  [役員席]      [解析島]    ‖ガラス‖ [開発ルーム]
+ *      中  (z  3.0)   [ブログ島]    [事務島]              [社員席（人）]
+ *      手前                       （庭・テラスへの通路）
+ *   机が増えて部屋からはみ出したため、2026-08-28 建物を奥へ4m拡張（z -10→-14）し、
+ *   いちばん人数の多い解析島（4行）を奥列へ・事務島（3列2行）を中列へ入れ替えた。
+ *   同日、東側も再配置＝開発ルーム（ガラス部屋）を奥壁づけ（北東角の死にスペース解消）、
+ *   社員席は空いた南東へ移して前縁 z=10 から離す（2列目を足しても収まる＝増員余地）。
  */
 const ISLANDS = {
-  exec:       { name:'役員席',   rug:0x4c3a6e, accent:0xa78bfa, pos:[-11.5, -6.0], cols:2 },
-  office:     { name:'事務島',   rug:0x1e3a5f, accent:0x38bdf8, pos:[ -3.2, -6.0], cols:2 },
-  blog:       { name:'ブログ島', rug:0x5c2440, accent:0xfb7185, pos:[-11.5,  2.0], cols:2 },
-  analysis:   { name:'解析島',   rug:0x1f4d3d, accent:0x34d399, pos:[ -3.2,  2.0], cols:3 },
-  // 開発ルームはガラスの内側（x>4.6・z -7.5〜4.5）に収める＝机がガラスからはみ出さない
-  'dev-remote': { name:'開発ルーム（別拠点）', rug:0x2b3242, accent:0x94a3b8, pos:[7.2, -4.0], cols:1, remote:true },
+  exec:       { name:'役員席',   rug:0x4c3a6e, accent:0xa78bfa, pos:[-11.5, -10.0], cols:2 },
+  office:     { name:'事務島',   rug:0x1e3a5f, accent:0x38bdf8, pos:[ -3.2,   3.0], cols:3 },
+  blog:       { name:'ブログ島', rug:0x5c2440, accent:0xfb7185, pos:[-11.5,   3.0], cols:2 },
+  analysis:   { name:'解析島',   rug:0x1f4d3d, accent:0x34d399, pos:[ -3.2, -10.0], cols:3 },
+  // 開発ルームはガラスの内側（x>4.6・z -14〜-1）に収める＝机がガラスからはみ出さない
+  // ブログ島と同じ2列ブロック（1列の縦並びは他の島とそろわず違和感＝2026-08-28 社長指摘）
+  'dev-remote': { name:'開発ルーム（別拠点）', rug:0x2b3242, accent:0x94a3b8, pos:[8.5, -9.0], cols:2, remote:true },
   // 人間の社員席（hana-tools の作業タイマー由来。AIエージェントとは別島にして人/AIを混同させない）
-  // ガラス壁の手前（z>4.5＝仕切りの無い本社フロア側）に置き、開発ルームに紛れ込ませない
-  // 3席を1列に（2列にすると奥行 6.6m で床の手前端 z=10 をはみ出すため）
-  staff:      { name:'社員席（人）', rug:0x6b4f2a, accent:0xfbbf24, pos:[6.5, 7.0], cols:3, gapX:3.05, human:true },
+  // ガラス壁の手前（z>-1＝仕切りの無い本社フロア側）の南東に置き、開発ルームに紛れ込ませない
+  // こちらもブログ島と同じ2列ブロック。2行目（z=7.0・アバター7.7）まで床の手前端 z=10 に収まる＝増員は4席目に足す
+  staff:      { name:'社員席（人）', rug:0x6b4f2a, accent:0xfbbf24, pos:[8.3, 4.0], cols:2, gapX:3.05, human:true },
 };
 const DESK_W = 2.0, DESK_D = 1.1, GAP_X = 2.6, GAP_Z = 3.0;
 
@@ -207,9 +212,9 @@ scene.add(fill);
 
 // 床（フローリング）＋壁
 const floor = new THREE.Mesh(
-  new THREE.BoxGeometry(30, 0.3, 20),
+  new THREE.BoxGeometry(30, 0.3, 24),
   new THREE.MeshStandardMaterial({ color: 0x8a6f52, roughness: 0.85 }));
-floor.position.y = -0.15; floor.receiveShadow = true;
+floor.position.set(0, -0.15, -2); floor.receiveShadow = true;
 scene.add(floor);
 // 壁紙（プロシージャル：縦ストライプ＋ダマスク風ひし形モチーフ）
 function makeWallpaperTexture(repeatX, repeatY) {
@@ -245,7 +250,7 @@ function wallpaperMat(w, h) {
 function wallSegment(w, h, cx, cy) {
   const seg = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.3),
     [wallOutMat, wallOutMat, wallOutMat, wallOutMat, wallpaperMat(w, h), wallOutMat]);
-  seg.position.set(cx, cy, -10.15); seg.receiveShadow = true; scene.add(seg);
+  seg.position.set(cx, cy, -14.15); seg.receiveShadow = true; scene.add(seg);
 }
 const WIN_XS = [-9, 0, 9], WIN_W = 4.6, WIN_H = 2.6, WIN_Y = 3.4;   // 窓3つの中心と大きさ
 wallSegment(3.7, 6, -13.15, 3); wallSegment(4.4, 6, -4.5, 3);        // 窓間の柱（全高）
@@ -261,25 +266,25 @@ const frostedMat = new THREE.MeshPhysicalMaterial({
 const sashMat = new THREE.MeshStandardMaterial({ color: 0xf2efe6, roughness: 0.6 });
 for (const wx of WIN_XS) {
   const pane = new THREE.Mesh(new THREE.PlaneGeometry(WIN_W, WIN_H), frostedMat);
-  pane.position.set(wx, WIN_Y, -10.15); scene.add(pane);
+  pane.position.set(wx, WIN_Y, -14.15); scene.add(pane);
   for (const [w2, h2, ox, oy] of [
     [WIN_W + 0.24, 0.12, 0, WIN_H / 2 + 0.06], [WIN_W + 0.24, 0.12, 0, -(WIN_H / 2 + 0.06)],
     [0.12, WIN_H + 0.24, -(WIN_W / 2 + 0.06), 0], [0.12, WIN_H + 0.24, WIN_W / 2 + 0.06, 0],
     [0.08, WIN_H, 0, 0]]) {                                          // 上下左右の枠＋中桟
     const bar = new THREE.Mesh(new THREE.BoxGeometry(w2, h2, 0.34), sashMat);
-    bar.position.set(wx + ox, WIN_Y + oy, -10.15); scene.add(bar);
+    bar.position.set(wx + ox, WIN_Y + oy, -14.15); scene.add(bar);
   }
 }
 // 左の壁（窓なし・絵を掛ける）
-const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 20),
-  [wallpaperMat(20, 6), wallOutMat, wallOutMat, wallOutMat, wallOutMat, wallOutMat]);
-wallL.position.set(-15.15, 3, 0); wallL.receiveShadow = true; scene.add(wallL);
+const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 6, 24),
+  [wallpaperMat(24, 6), wallOutMat, wallOutMat, wallOutMat, wallOutMat, wallOutMat]);
+wallL.position.set(-15.15, 3, -2); wallL.receiveShadow = true; scene.add(wallL);
 // 巾木（壁の足元に白いライン＝壁紙を引き締める）
 const skirtMat = new THREE.MeshStandardMaterial({ color: 0xe8e4d8, roughness: 0.8 });
 const skirtB = new THREE.Mesh(new THREE.BoxGeometry(30, 0.32, 0.06), skirtMat);
-skirtB.position.set(0, 0.16, -9.96); scene.add(skirtB);
-const skirtL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.32, 20), skirtMat);
-skirtL.position.set(-14.96, 0.16, 0); scene.add(skirtL);
+skirtB.position.set(0, 0.16, -13.96); scene.add(skirtB);
+const skirtL = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.32, 24), skirtMat);
+skirtL.position.set(-14.96, 0.16, -2); scene.add(skirtL);
 // 額入りの絵（左の壁・抽象画をCanvasで描く）
 function painting(z, hue0, hue1) {
   const c = document.createElement('canvas'); c.width = 128; c.height = 88;
@@ -366,11 +371,11 @@ const glassMat = new THREE.MeshPhysicalMaterial({
   color: 0xbcd8e8, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0,
   side: THREE.DoubleSide });
 const glass = new THREE.Mesh(new THREE.BoxGeometry(0.12, 4.2, 13), glassMat);
-glass.position.set(4.6, 2.1, -1.0);
+glass.position.set(4.6, 2.1, -7.5);
 scene.add(glass);
 const glassFrame = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.25, 13),
   new THREE.MeshStandardMaterial({ color: 0x1f2637 }));
-glassFrame.position.set(4.6, 4.25, -1.0); scene.add(glassFrame);
+glassFrame.position.set(4.6, 4.25, -7.5); scene.add(glassFrame);
 const glassBase = glassFrame.clone(); glassBase.position.y = 0.12; scene.add(glassBase);
 
 // 観葉植物（角にちょこん）
@@ -387,7 +392,7 @@ function plant(x, z) {
   }
   g.position.set(x, 0, z); scene.add(g);
 }
-plant(-14, -9); plant(-14, 8.6); plant(14, 8.6); plant(2.2, -9);
+plant(-14, -13.2); plant(-14, 8.6); plant(14, 8.6); plant(2.2, -13.2);
 
 /* ============================================================
  * 2.5 屋外（芝生・小川・並木・月）
@@ -1096,7 +1101,7 @@ function tickTraffic(dt) {
 
 /* ============================================================
  * 2.7b 玄関と小道（社長ご指示 2026-08-07「道路側に玄関・道へ向かう小道」）
- *   ・奥の壁（z=-10.15・厚み0.3）の窓と窓のあいだ x=4.5 の柱に貼り付ける
+ *   ・奥の壁（z=-14.15・厚み0.3）の窓と窓のあいだ x=4.5 の柱に貼り付ける
  *     ＝壁に開口は開けない（室内側の壁紙・巾木に影響しない見せかけの玄関）。
  *   ・小道は玄関ポーチから歩道（ROAD.walkZ）まで一直線。門柱に表札つき。
  *   ・玄関そのものは既定カメラだと建物の陰＝カメラを回すと見える。
@@ -1113,12 +1118,12 @@ function makeSignTexture(text, w, h, bg, fg, font) {
   return new THREE.CanvasTexture(c);
 }
 {
-  const EX = 4.5, WALL_OUT = -10.31;   // 玄関の中心 x／奥の壁の外面 z
+  const EX = 4.5, WALL_OUT = -14.31;   // 玄関の中心 x／奥の壁の外面 z
   const doorFrameMat = new THREE.MeshStandardMaterial({ color: 0x39414a, roughness: 0.55, metalness: 0.4 });
   const entGlass = new THREE.MeshStandardMaterial({ color: 0x9fc3cf, roughness: 0.3, metalness: 0.2 });
   // ポーチ（張り出しの土間）と両開きのガラス戸
   const porch = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.18, 2.0), stoneLight);
-  porch.position.set(EX, -0.21, -11.35); porch.receiveShadow = true; scene.add(porch);
+  porch.position.set(EX, -0.21, -15.35); porch.receiveShadow = true; scene.add(porch);
   const frame = new THREE.Mesh(new THREE.BoxGeometry(2.7, 2.5, 0.18), doorFrameMat);
   frame.position.set(EX, 1.11, WALL_OUT - 0.05); scene.add(frame);
   for (const s of [-1, 1]) {
@@ -1129,10 +1134,10 @@ function makeSignTexture(text, w, h, bg, fg, font) {
   stile.position.set(EX, 1.05, WALL_OUT - 0.16); scene.add(stile);
   // 庇（ひさし）と社名サイン
   const canopy = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.13, 1.5), doorFrameMat);
-  canopy.position.set(EX, 2.55, -11.0); canopy.castShadow = true; scene.add(canopy);
+  canopy.position.set(EX, 2.55, -15.0); canopy.castShadow = true; scene.add(canopy);
   for (const s of [-1, 1]) {   // 庇の前端から壁へ斜めに戻る吊りロッド（傾きは +x回転＝上端が壁側）
     const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.5, 6), doorFrameMat);
-    rod.rotation.x = 0.97; rod.position.set(EX + s * 1.5, 2.97, -10.98); scene.add(rod);
+    rod.rotation.x = 0.97; rod.position.set(EX + s * 1.5, 2.97, -14.98); scene.add(rod);
   }
   const sign = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 0.46),
     new THREE.MeshStandardMaterial({
@@ -1141,10 +1146,10 @@ function makeSignTexture(text, w, h, bg, fg, font) {
   sign.rotation.y = Math.PI; sign.position.set(EX, 3.25, WALL_OUT - 0.02); scene.add(sign);
   // 小道（ポーチ→歩道）。歩道と同じタイルだが目地の実寸を合わせて別テクスチャにする
   const pathTex = makePavingTexture(); pathTex.repeat.set(1, 6);
-  const path = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.14, 12.2),
+  const path = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.14, 8.2),
     new THREE.MeshStandardMaterial({ map: pathTex, roughness: 1 }));
-  path.position.set(EX, -0.24, -18.4); scene.add(path);
-  lantern(EX - 1.6, -11.9); lantern(EX + 1.6, -11.9);
+  path.position.set(EX, -0.24, -20.4); scene.add(path);
+  lantern(EX - 1.6, -15.9); lantern(EX + 1.6, -15.9);
   // 門柱（歩道ぎわ）＋表札
   for (const s of [-1, 1]) {
     const pillar = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.95, 0.36), stoneLight);
@@ -2113,7 +2118,8 @@ function addAgentDesk(agent, index) {
 
   const root = new THREE.Group();
   root.position.set(x, 0, z);
-  if (isl.remote) root.rotation.y = -Math.PI / 2;   // 開発ルームはガラス側（左）を向く
+  // 開発ルームも他の島と同じ向き（以前は remote だけガラス側へ90度回していたが、
+  // 部屋を奥壁づけにした 2026-08-28 に「1部屋だけ横向きは違和感」と社長指摘で揃えた）
 
   // 個体差の種：エージェントIDのFNV-1aハッシュ（決定的＝リロードしても同じ見た目。文字コード和より衝突しにくい＝Codex🟢）
   let seed = 2166136261;
@@ -2332,7 +2338,7 @@ const holdTable = new THREE.Group();
   leg.position.y = 0.4; holdTable.add(leg);
   const lbl = makeTextSprite('🗂 社長の承認待ち', { font: '600 22px "Noto Sans JP"', scale: 0.010 });
   lbl.position.y = 1.7; holdTable.add(lbl);
-  holdTable.position.set(-12.6, 0, -8.9);   // 役員席ラグ（z -7.8まで）の奥・壁際に寄せる
+  holdTable.position.set(-12.6, 0, -12.9);   // 役員席ラグ（z -11.8まで）の奥・壁際に寄せる
   scene.add(holdTable);
 }
 let holdPile = null;
@@ -2352,7 +2358,7 @@ const qBoard = new THREE.Group();
   cork.position.y = 1.55; cork.castShadow = true; qBoard.add(cork);
   const lbl = makeTextSprite('🔔 社長への質問', { font: '600 22px "Noto Sans JP"', scale: 0.010 });
   lbl.position.y = 2.45; qBoard.add(lbl);
-  qBoard.position.set(-9.0, 0, -9.0);       // 同上（役員席の背後の壁際）
+  qBoard.position.set(-9.0, 0, -13.0);      // 同上（役員席の背後の壁際）
   qBoard.rotation.y = 0.35;   // 部屋の中心を向ける
   scene.add(qBoard);
 }
@@ -2370,7 +2376,7 @@ let companyPanel = null, companyKey = '', companyCache = null;
   companyPanel = new THREE.Mesh(new THREE.PlaneGeometry(3.44, 2.0),
     new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.95 }));
   companyPanel.position.z = 0.025; companyBoard.add(companyPanel);
-  companyBoard.position.set(-4.5, 2.6, -9.92);   // 壁(z=-10.15,厚0.3)の室内面より少し手前
+  companyBoard.position.set(-4.5, 2.6, -13.92);  // 壁(z=-14.15,厚0.3)の室内面より少し手前
   scene.add(companyBoard);
 }
 
@@ -3399,6 +3405,13 @@ const ROLE_BY_ID = {
   'overseer': '統括。システム全体の整合と健全性を見張り、改善を提案する。',
   'memo': 'メモ係。たまったメモを毎晩整理して各プロジェクトの記録へ落とす。',
   'comms': '会話整理。Chatworkとメールの新着を2時間ごとに取り込み、会話台帳に蒸留する。',
+  'triage': '残課題の仕分け係。各レーンに溜まった「社長の判断待ち」を1箇所に集め、1回5件までに絞って決め切るのを手伝う。社長が /triage を呼んだときだけ動く（定時実行しない）。',
+  'talk': '相談窓口。Slackでの社長の相談・雑談・確認にその場で即答する軽い器（毎分の便で新着を見る）。重い調査は自分でやらず経営パートナーへ渡す。',
+  'intake': '取り込み係。走り書き・打ち合わせメモ・口頭報告を、足りない情報を質問で補いながら整理し、hana-tools と記録へ振り分けて登録する。社長との対話型。',
+  'hp-improve': 'HP改善（単発）。クライアントのホームページを観点を漏らさず診断し、効果の高い改善から提案・実装する。',
+  'hp-prospect': '営業レポート係。見込み客のホームページを公開情報だけで1回解析し、社長が営業に使えるレポートを発行する。受注したら解析ループへ卒業。',
+  'hp-reply': '書記係。社長のコメントを整理して分析ループへの指示書（from-president.md）へ代筆転記する。記録が仕事で、分析はしない。',
+  'reviewer': 'プロジェクトレビュー。プロジェクトを俯瞰レビューして改善提案を書く（提案のみ・自分では直さない）。',
 };
 const ROLE_BY_ISLAND = {
   analysis: 'HP分析ループ。担当サイトの検索データ（Search Console）を毎晩読み、改善提案を積み上げる。森の「サイトの木」もこのデータで育つ。',
@@ -3458,7 +3471,7 @@ registerFocusable(companyBoard, {
   title: () => '🏢 全社ボード',
   body: focusBoardBody,
   // ボードの正面（部屋の内側・θ=0＝真南から）へ寄る。φ1.35＝ほぼ水平にボードを見る
-  view: () => ({ at: [-4.5, 2.5, -9.4], theta: 0, phi: 1.35, dist: 7 }),
+  view: () => ({ at: [-4.5, 2.5, -13.4], theta: 0, phi: 1.35, dist: 7 }),
 });
 
 canvas.addEventListener('wheel', e => { e.preventDefault(); camTween = null; dist *= (1 + Math.sign(e.deltaY) * 0.08); updateCamera(); }, { passive:false });
