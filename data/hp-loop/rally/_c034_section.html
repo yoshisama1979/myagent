@@ -1,0 +1,51 @@
+  <!-- ===== Cycle 034 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 034 — 2026-08-29（<span class="text-emerald-700">🎉 開発担当が32サイクルぶりに応答・13通を読み6件を実装</span>／<span class="text-red-700">ただし全件マージ待ち＝詰まりが「読まれない」から「本番に出せない」へ移動</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>mailbox＝<code>hp-loop-rally</code> 宛に新着2通</strong>（<code>rally-dev</code> より・受領確認＋実装報告）＝<span class="text-emerald-700"><strong>本サイクルはこの受信を起点にした反応型サイクル</strong></span>。<strong>本番実査＝実施</strong>（hp-audit 4本＝トップ／<code>/spots</code>／<code>/people</code>／<code>/spots/496</code> ＋ <code>/spots/areas</code> のリンク実査）。<span class="text-gray-600">GSC・GA4 は本日未明の Cycle 033 で取得済み（同日中に数字は動かないため再取得せず＝14日窓 36表示/4クリック・45日窓 events 1,290/users 118）。</span>社長入力（from-president.md）＝<strong>新規の記載なし</strong>（8/28 分は Cycle 033 で対応済み）。在庫上限チェック＝<strong>判断待ち 10/15＝起票可</strong>。</p>
+
+    <div class="border-2 border-emerald-400 bg-emerald-50 rounded p-4 mb-5">
+      <h3 class="font-semibold text-emerald-900 mb-2">🎉 本サイクルの中身 — <u>31サイクル続いた最大の詰まりが解けました</u></h3>
+      <p class="text-sm text-gray-800"><code>rally-dev</code> から <strong>2通</strong>（受領確認・実装報告）。<strong>Cycle 017〜032 の13通すべてを受領・読了</strong>し、<strong>提案6件を実装</strong>。沈黙の理由＝<u>拠点PCの環境移行があり、8/15 開通以降の受信箱を本日初めて処理した</u>とのこと。以後は作業サイクルの先頭で受信箱を確認する運用にする、と明言がありました。<br><span class="text-red-800"><strong>ただし実装はすべて開発ブランチ止まり＝本番未反映。</strong></span><u>反映には社長の PR マージ＋フロント再ビルドが要る</u>と報告に明記されています（→🔔 Q-R15）。</p>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装報告の検証（＝報告を鵜呑みにせず本番を測る）</h3>
+    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-40">検証項目</th><th class="py-1 px-2">観察（事実・2026-08-29 ライブ）</th><th class="py-1 px-2 w-40">判定</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>「本番未反映」という<br>自己申告の裏取り</strong></td><td class="py-1 px-2">トップ＝<strong>57,978B で13日連続バイト同一</strong>／<code>/spots</code>＝<strong>404 継続</strong>／<code>/people</code>＝<strong>12,504B のまま</strong>（＝外枠なしの状態）／<code>/spots/areas</code> のリンク実査＝<strong>「スポット一覧に戻る」→<code>/spots</code> が1本 継続</strong>。<span class="text-emerald-800"><strong>＝6件すべて未反映で、報告の内容と完全に一致</strong></span>。</td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ 報告は正確</strong></span><br><span class="text-xs text-gray-600">（「デプロイした」と誤って報告されていない＝信頼できる相手と判断）</span></td></tr>
+        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🔑 私の実測の限界が<br>1つ判明</strong></td><td class="py-1 px-2"><code>/spots</code>（404）へのリンク元を、私は<strong>1本</strong>と実測確定していました。実際は<strong>4本</strong>で、残り3本は<u>スポット詳細ページの戻りリンク</u>。<span class="text-gray-700">＝私が使える手段は<strong>サーバが返すHTMLしか読めない</strong>ため、画面を開いてから作られるリンクが写りません。</span></td><td class="py-1 px-2"><span class="text-sky-800"><strong>⭐ 数量の食い違いが解けた</strong></span><br><span class="text-xs text-gray-600">「リンク元は19回しか見られない1ページなのに、なぜ48回も来るのか」＝スポット詳細が多く見られているため</span></td></tr>
+        <tr class="border-b border-gray-100 bg-amber-100"><td class="py-1 px-2"><strong>⚠️ 私の観察の誤り<br>（R-R02・訂正）</strong></td><td class="py-1 px-2">Cycle 018 で「トップの OGタグは<u>コメントアウトされている</u>＝解除すれば出せる」としましたが、<span class="text-red-800"><strong>ソース上に OGタグは存在せず＝私の誤認</strong></span>（見ていたのは仕組みが挿入する別の印）。</td><td class="py-1 px-2"><span class="text-amber-800"><strong>🔧 R-R02 を訂正</strong></span><br><span class="text-xs text-gray-600">トップは「解除」ではなく新規実装</span></td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2"><strong>逆に1件だけ<br>差し戻し（認識合わせ）</strong></td><td class="py-1 px-2">先方は「実態は OGタグ皆無」と総括しましたが、<strong>本日 <code>/spots/496</code> を実測すると <code>og:title</code>・<code>og:description</code>・<code>og:type</code> が配信されています</strong>。<span class="text-gray-700">＝スポット層は「ゼロから実装」ではなく「<code>og:image</code> の追加＋タイトルを実スポット名に」だけで済み、工数が変わるためお返ししました。</span></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ 返信済み</strong></span><br><span class="text-xs text-gray-600">（相手の指摘も検証してから受け入れる）</span></td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>当方の配信不具合が<br>1件追加で発覚</strong></td><td class="py-1 px-2">先方の指摘＝<strong>Cycle 020 の1通が「本文が空で、送信コマンドの文字列だけ」</strong>。受け渡し箱の実物を確認したところ<u>指摘のとおり</u>でした（本文＝<code>--body-file …</code> の文字列のみ）。</td><td class="py-1 px-2"><span class="text-amber-800"><strong>🔧 手順を修理</strong></span><br><span class="text-xs text-gray-600">投函後に本文の中身も点検する項目を定石に追加</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="font-semibold mb-2">開発側から得られた「中の事実」（当方からは測れなかったもの）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>市区町村マスタ＝1,918件</strong>（政令市の区を含む・スポットは常に最詳コードを指す設計）。<span class="text-gray-600">⇒ R-R34／R-R21 の射程「数百〜1,500ページ超」は<u>実数で確定</u>。「スポットを1件以上持つ市区町村数」は次回デプロイ確認時に実測して回答するとのこと。</span></li>
+        <li><strong>一覧カードに写真が出ない原因＝一覧APIが写真を返していなかった</strong>（カード側は対応済み）。<span class="text-amber-800">残＝<code>/map</code> カルーセル（軽量API維持のため専用サムネが要る）と<strong>テーマ一覧＝アイキャッチ画像そのものが未登録＝データ登録の作業</strong>。</span></li>
+        <li><strong>実在IDでデータ取得に失敗した場合</strong>＝「エラー＋再読み込み」画面（<u>無限スピナーではない</u>）。<span class="text-gray-600">無限スピナーは非数値IDのみ＝修正済み。ただし都道府県・エリア・市区町村の「見つかりません」画面は<strong>今も HTTP 200</strong>＝R-R27 の残件。</span></li>
+        <li><strong><code>/people</code> の外枠欠落は実装漏れ</strong>（レイアウトの作り忘れ）／<strong>ログインが要る3画面の不統一も実装の不揃い</strong>＝いずれも<u>私の見立てどおり</u>。</li>
+        <li><span class="text-red-800"><strong>バッジ図鑑がメニューに無いのは「意図的」</strong></span>＝機能公開を見送り中という判断。<span class="text-gray-700">＝私が「入口を自分で閉じている」と指摘してきた件は、判断の結果でした ⇒ <strong>🔔 Q-R16</strong>（公開の是非・時期）。</span></li>
+        <li><strong>人物・タグの中身＝数週間以内に投入予定</strong> ⇒ R-R29 は「準備中表示」で確定（🔔→✅）。</li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
+    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>① 経路②（参加の障壁）が実際に薄くなる見込み</strong>：マージされれば、<u>45日で48回・9人が落ちていた行き止まり（<code>/spots</code>）</u>・<u>スマホで次の一手を覆っていた浮動ボタン</u>・<u>出口の無い <code>/people</code></u> が同時に解消します。<strong>＝今回の6件はすべて「来ている人を取りこぼさない」側の修正</strong>で、経路②に直結します。</li>
+        <li><strong>① 経路①（発見される）は<u>まだ1件も動いていない</u></strong>：名札（R-R34・R-R25・R-R21）・robots/sitemap（R-R06）・配信HTMLの本文とリンク（R-R33）は<strong>すべて未着手</strong>。<u>検索に出ているURLは依然2本のまま</u>＝北極星の最上流は変わっていません。<span class="text-emerald-800"><strong>だから次の開発分の指定（🔔 Q-R11(2)）が今いちばん効きます。</strong></span></li>
+        <li><strong>② 種プール</strong>：<strong>テーマのアイキャッチ画像が未登録</strong>という新事実は、R-R25（テーマ層を発見の入口にする）の前提条件です。<u>開発ではなくデータ登録の担当・時期を決める必要があり</u>、📥 に追加しました（単独では起票せず R-R25 の実装条件として保持）。</li>
+        <li><strong>③ 追わない</strong>：Cycle 020 の配信不具合は<u>内容が後続サイクルで伝わっており実害なし</u>＝再送しません（手順の修理だけ）。</li>
+        <li><strong>手法の学び</strong>：私の実査は<u>サーバが返すHTMLしか見えない</u>という限界が、R-R24 のリンク元（1本 vs 実際は4本）で具体的に確認できました。<strong>⇒ 今後「リンクは0本／1本」と言い切るときは「配信HTML上は」と限定して書きます。</strong></li>
+      </ul>
+    </div>
+
+    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
+    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）＋<strong>認識合わせの返信1通</strong>（OGタグの差し戻し・照会への謝意・次の着手順）。<strong>着手推奨＝<span class="text-red-700">① R-R34</span> → <span class="text-red-700">② R-R25</span> → <span class="text-red-700">③ R-R21</span> → <span class="text-emerald-700">③' R-R06</span> → <span class="text-red-700">④ R-R33（＋R-R27 の残りをセットで）</span></strong>。<span class="text-sky-800"><strong>【本サイクルで伝えた変更点】</strong>①<u>R-R27 の残り（404ステータス）は R-R33 と同一作業として扱う</u>（先方の設計判断を採用）②<u>スポット層の OGタグは既にあるので og:image 追加＋実名化だけ</u>③R-R29 は「準備中表示」で確定＝回答不要で着手可。</span></p>
+
+    <p class="text-xs text-gray-500 mt-4">対応記録：<span class="text-emerald-700"><strong>mailbox＝<code>rally-dev</code> からの2通（<code>M-20260829T124925</code>・<code>M-20260829T132010</code>）に対応＝Cycle 034</strong></span>（処理後 <code>cur/</code> へ移動）。from-president.md＝新規記載なし。<strong>deploy-log＝6行を追記</strong>（<u>「未反映（開発ブランチ）」と明記</u>＝本番で確認できた時点であらためて反映日つきの行を追記する）。定石＝#1 変化検知・#2 在庫の進捗追跡・#15 配信の到達確認を実施（<span class="text-emerald-700">#15 は本サイクルで<strong>「本文の中身の点検」を手順に追加</strong></span>）。<span class="text-gray-600">#3・#4・#4b は本日未明の Cycle 033 で実施済み（同日中に数字は動かないため再実行せず）。週次（#5 08-31／#14 09-01）・月次（#9 09-02／#10・#13 09-14）・#12（9月最初）は未到来。</span>Cycle 033 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へスナップショット移動。<strong>掲示板サイズ点検＝99.2KB → 約100KB（<span class="text-amber-800">目安の 80KB を超過中</span>）</strong>：<u>本サイクルは実装報告の反映で各提案に「開発の対応」欄が増えたため一時的に増加</u>。<span class="text-red-800"><strong>Cycle 033 でご提案した構造変更（提案の詳細を「確定・仕様」へ移し、この表は1行要約＋リンクにする）を、次サイクルで実施してよいかご意見をいただきたいです</strong></span>＝<span class="text-gray-600">マージが進めば完了行を archive へ落とせるため、状況が変わる可能性もあります。</span></p>
+  </section>

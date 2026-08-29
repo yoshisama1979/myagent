@@ -40,6 +40,18 @@
     </ul>
   </div>
 
+  <!-- ===== 解決済みの質問（Cycle 034 でクローズ） ===== -->
+  <div class="border-2 border-emerald-400 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 034（2026-08-29）でクローズ</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong><code>Q-R12</code> 開発担当（<code>rally-dev</code>）は実際に起動していますか — ✅解決（2026-08-29・<u>本人からの返信で自然解決</u>）</strong><br>
+      <strong>答え＝②「開通させたが、その後まだ動かしていなかった」</strong>に相当。<strong>8/29 午後に <code>rally-dev</code> 本人から2通の返信</strong>があり、<strong>Cycle 017〜032 の13通すべてを受領・読了</strong>したと報告。理由＝<u>拠点PCの環境移行があり、8/15 開通以降の受信箱を 8/29 に初めて処理した</u>。以後は作業サイクルの先頭で受信箱を確認する運用にする、とのこと。<br>
+      <span class="text-gray-600">→ <strong>Cycle 024 で初検出してから 11 サイクル（15日）、掲示板の最上部と Slack 日報で毎回晒し続けた項目</strong>。当方の投函側は5サイクル連続で正常だったことを実査で裏取りしており、その診断（＝受け取り側が起動していない）は正しかったことになる。<span class="text-amber-800">なお同じ返信で<strong>当方の配信不具合が1件追加で発覚</strong>＝Cycle 020 の本文が空（送信コマンドの文字列のみ）。実物を確認し、定石 #15 に「本文の中身の点検」を追加した。</span><br><strong class="text-red-800">⚠️ ただし詰まりは消えていない＝移動した</strong>：実装6件はすべて開発ブランチ止まりで、本番反映には<u>社長の PR マージ＋フロント再ビルド</u>が要る（→<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の <strong>Q-R15</strong>）。</span></li>
+      <li><strong><code>Q-R11(1)</code> 人物データ・タグの中身はいつ頃入りますか — ✅解決（2026-08-29・rally-dev 回答）</strong><br>
+      <strong>回答＝「数週間以内に投入予定」。</strong>⇒ R-R29 は分岐 <strong>(A)＝メニューは残し「準備中（近日公開）」表示を足す</strong>で確定し、<strong>🔔要回答 → ✅AI即応</strong> へ。<span class="text-gray-600">(2)（開発の作業順を誰がどう決めるか）は未解決のまま index に残す＝rally-dev が「社内（社長）確認のうえ決める」としており、<u>次の開発が始まる栓になっている</u>。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 解決済みの質問（Cycle 033 でクローズ） ===== -->
   <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 033（2026-08-29）でクローズ</h2>
@@ -59,6 +71,23 @@
       <span class="text-gray-600">→ <strong>Cycle 032 で解錠4件を仕分けました</strong>：<span class="text-emerald-800"><strong>R-R06 は社長の作業ではなかった</strong></span>（Next.js のコード作業と実測で判明＝🔔→✅AI即応）／<strong>R-R18・R-R19・8/15 障害の原因特定</strong>は管理画面での操作＝<u>どのサービスの管理画面かが未確定</u>のため <strong>Q-R13</strong> として1問だけ新規に起票（当方からはヘッダー取得・DNS照会がいずれも権限外で特定できず）。生死は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の Q-R13 で追跡します。</span></li>
     </ul>
   </div>
+
+  <!-- ===== Cycle 033 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 033 — 2026-08-29（<span class="text-emerald-700">切り分けを社長に聞かずに実測で決着</span>／<span class="text-red-700">8/15 障害の原因と次の発生日が見えた</span>／<span class="text-amber-700">自分の提案の誤りを1件訂正</span>）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：GSC＝取得成功（14日窓 8/15〜8/26＝36表示／4クリック／CTR 11.11%／順位9.3）。GA4＝取得成功（45日窓・最新日 8/27・events 1,290／users 118）。社長入力＝8/28 のご記載（Q-R13 の回答＝Xserver VPS ＋進め方のご指示）。本番実査＝実施（hp-audit 8本＋証明書実測2本＋競合SERP 1帯）。実測ログ＝<code>data/hp-loop/cycles/rally/cycle033-20260829.md</code>。在庫上限＝10/15＝起票可。</p>
+    <div class="border border-sky-300 bg-sky-50 rounded p-4 mb-4">
+      <p class="text-sm text-gray-800"><strong class="text-sky-900">🔑 本サイクルの発見＝証明書を1回測っただけで3つの謎が同時に解けた</strong></p>
+      <ul class="text-sm text-gray-700 list-disc list-inside space-y-1 mt-2">
+        <li><strong>①社長の切り分け質問を実測で決着</strong>＝証明書の有効期間がちょうど90日（2026-08-15〜11-13）＝Let's Encrypt の自動更新＝<strong>サーバの中に仕組みがある</strong>⇒「VPSパネルか・サーバ内か」は<strong>サーバ内</strong>と確定（＝社長にお聞きせずに済み、1問を別の論点に回せた）。</li>
+        <li><strong>②R-R18 の改善案の誤りを発見・訂正</strong>＝<code>www</code> と apex がまったく同じ証明書（有効期限一致）＝www 専用証明書は無く SAN に www が無いだけ。<strong>301 だけでは直らない</strong>（TLS が先に失敗し 301 が届かない）⇒ 正しい順序＝①証明書に www を追加（必須）→ ②301。</li>
+        <li><strong>③8/15 障害の原因仮説＋再発予測日</strong>＝証明書の発行日 2026-08-15＝ダウンタイムと同日。推測＝certbot の standalone 更新が Web サーバを止めた（80/443 同時拒否の観測と一致）。<strong>次回更新＝10/14 前後</strong>。対策＝更新方式を <code>--webroot</code>/<code>--nginx</code> へ（→R-R19 に反映）。</li>
+      </ul>
+    </div>
+    <p class="text-sm text-gray-700 mb-2"><strong>週次定石3本を実施</strong>：<strong>#7 競合対比（帯替え＝「名古屋市 スタンプラリー」）</strong>＝page1 の8件中7件が自治体・県観光・鉄道会社の「開催中イベント」公式＝<span class="text-red-800">検索意図が当方の「常設スポット一覧」とズレる</span>⇒ <strong>C030/C031 の「市区町村帯は競合が薄い」という見立てを実測で否定・期待値を下方修正</strong>（撤回はしない）。ただし同型 aggregator（<code>stamprally.org</code> 愛知県）が7位＝desc/canonical/OGP/JSON-LD すべて無しでも入っており<strong>要求水準は低い</strong>が、h3=14・a=128（当方 h1=h2=h3=0・a≒9）⇒ <strong>勝負を分けるのは「地名が名札にある」＋「件数分のリンク・見出しが並ぶ」の2点＝R-R34 と R-R33 はこの帯ではセット</strong>→ R-R33 を R-R24 より前へ繰り上げ。<strong>#6 全体棚卸し</strong>＝在庫28件の前提はすべて成立・撤回0・統合0／件数の数え直し（29→28件・✅19→18件）／差集合は照会待ちのみのため探索枠を母集団の再点検に充当＝GA4 上位60URLに新ルートなし。<strong>#8 win-patterns</strong>＝L-02 を正式採用・M-25 適用（queries 全語 clicks=0 でも pages では4クリック実在＝匿名化枠）。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>本サイクルの成果</strong>＝新規R ゼロ／新規Q 1件（Q-R14＝サーバの中に入れるか・3択）／✅Q-R13 解決／R-R18 の改善案を訂正／R-R19 に原因と再発予測日／R-R06 に「出なければサーバ側＝R-R18 と同じ作業」を追記／R-R33 を繰り上げ。<span class="text-amber-800">消化された在庫は31サイクル連続ゼロ・滞留13通・発信0・14日目（→Q-R12）</span>。トップ 57,978B で12日連続バイト同一。</p>
+    <p class="text-xs text-gray-500">対応記録：from-president.md＝2026-08-28 のご記載に対応＝Cycle 033。ご指示①（まず R-R18 だけ）②（先に1問で切り分け）は反映済み。③（R-R19 は R-R18 の後）＝据え置き。④（8/15 障害はログの在処が分かってから）＝<strong>ログを見る前に原因の仮説が立った</strong>。<span class="text-gray-600">※掲示板サイズ点検＝101.1KB→99.2KB（80KB 超が継続）。点検の結論＝消し忘れの堆積ではなく<strong>28件が1件も消化されないまま根拠だけが厚くなる構造</strong>が原因。次サイクル提案＝提案の詳細を spec へ移し index は1行要約＋リンクにする（社長のご意見待ち）。</span></p>
+  </section>
 
   <!-- ===== Cycle 032 スナップショット ===== -->
   <section class="mb-10">
