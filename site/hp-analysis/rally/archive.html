@@ -72,6 +72,34 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 034 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-2xl font-bold mb-1">Cycle 034 — 2026-08-29（<span class="text-emerald-700">🎉 開発担当が32サイクルぶりに応答・13通を読み6件を実装</span>／<span class="text-red-700">ただし全件マージ待ち＝詰まりが「読まれない」から「本番に出せない」へ移動</span>）</h2>
+    <p class="text-sm text-gray-500 mb-3">起動＝反応型（<code>rally-dev</code> からの新着2通が起点）。本番実査＝hp-audit 4本＋<code>/spots/areas</code> のリンク実査。GSC・GA4 は同日未明の Cycle 033 で取得済み。社長入力＝新規なし。在庫上限＝判断待ち 10/15＝起票可。</p>
+
+    <div class="bg-emerald-50 border border-emerald-300 rounded p-3 mb-3">
+      <p class="text-sm text-gray-800"><strong class="text-emerald-800">🎉 31サイクル続いた最大の詰まりが解けた日</strong>：<code>rally-dev</code> から2通（受領確認 <code>M-20260829T124925</code>／実装報告 <code>M-20260829T132010</code>）。<strong>Cycle 017〜032 の13通すべて受領・読了</strong>＋<strong>6件を実装</strong>（<code>R-R24・R-R30・R-R23③・R-R28一部・R-R32①・R-R27一部</code>）。沈黙の理由＝<strong>拠点PCの環境移行</strong>＝Cycle 024 以来の診断「受け取り側が起動していない」が正しかったと確認。</p>
+    </div>
+
+    <div class="bg-red-50 border border-red-300 rounded p-3 mb-3">
+      <p class="text-sm text-gray-800"><strong class="text-red-800">🔴 ただし全件が開発ブランチ止まり＝本番未反映</strong>。反映には<strong>社長の PR マージ＋フロント再ビルド</strong>が必要（本人申告）。<strong>当方の本番実測でも6件すべて未反映を確認</strong>（トップ13日連続バイト同一・<code>/spots</code> 404・<code>/people</code> 12,504B・壊れリンク1本）＝<u>「デプロイした」と誤申告しない相手だと確認できた</u>（今後の報告の信頼度に効く）。<strong>⇒ 最大のブロッカーは消えたのではなく「読まれない」→「本番に出せない」へ移動した</strong>（→Q-R15）。<strong>運用規律を確定</strong>＝実装報告を受けても ✅完了にせず <strong>🔧実装済み・マージ待ち</strong>とし、本番GET/描画で確認できてから ✅ にする。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>⭐ 本サイクルの本業＝報告の検証（鵜呑みにせず測る）</strong></p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-1 mb-3">
+      <li><strong>🔑 当方の実査手段の限界が実例で判明</strong>：<code>/spots</code> へのリンク元は当方実測の<strong>1本ではなく4本</strong>（残り3本＝スポット詳細の戻りリンク＝<u>描画後リンクは配信HTMLに写らない</u>）⇒ Cycle 023 で「実測確定」とした数が誤り。同時に<strong>数量ギャップ（19views の面から 47views の流入）の答え</strong>が出て種プールが1件クローズ。<strong>以後「リンク0本／1本」は「配信HTML上は」と限定して書く。</strong></li>
+      <li><strong>⚠️ 自分の誤りを1件訂正</strong>：トップの og タグは「コメントアウト」ではなく<strong>存在しない</strong>（Cycle 018 以来16サイクル引き継いだ誤認）→ R-R02 を訂正。</li>
+      <li><strong>✅ 相手の指摘も検証してから受け入れた</strong>：先方の「OGタグ皆無」は <code>/spots/496</code> の実測（og:title/description/type が実在）で<strong>差し戻し</strong>＝R-R02 の工数が下がった。</li>
+      <li><strong>原因が3件確定</strong>：<code>/people</code> の外枠欠落＝<u>実装漏れ</u>／ログイン3画面の不統一＝<u>実装の不揃い</u>／一覧カードの写真＝<strong>一覧APIが返していなかった</strong>（当方の推測「カード側の配線漏れ」は外れ）。</li>
+      <li><strong>新事実</strong>：市区町村マスタ＝<strong>1,918件</strong>（R-R34/R-R21 の射程が実数化）／テーマのアイキャッチ画像が<strong>未登録＝データ登録の作業</strong>（R-R25 の前提・📥へ）／<strong>バッジ図鑑がメニューに無いのは意図的</strong>（機能公開見送り中）＝<u>当方が7サイクル「入口を自分で閉じている」と批判してきた対象が、実は判断の結果だった</u>→ Q-R16。</li>
+      <li><strong>定石 #15 に手順追加</strong>：先方の指摘で <strong>Cycle 020 の本文が空</strong>（送信コマンドの文字列のみ）と判明＝<u>投函は成功しているのに中身が無い</u>4件目の不具合（従来の「実在確認」では検出できない）⇒ <strong>投函後にバイト数＋固有語で検算する</strong>を明記。再送は不要（内容は後続サイクルで伝達済み）。</li>
+    </ul>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>成果</strong>＝<strong>新規R ゼロ／新規Q 2件（Q-R15 マージ・Q-R16 バッジ図鑑）／✅Q-R12・Q-R11(1) 解決</strong>／区分の異動2件（R-R29 🔔→✅・R-R32 ✅→🔔＝差し引き 🔔10件のまま）／<span class="text-emerald-700"><strong>在庫6件が「実装済み・マージ待ち」へ前進＝31サイクルぶり</strong></span>／<span class="text-red-700">ただし ✅完了はゼロ</span>。着手推奨順は据え置き＝<strong>R-R34→（同時可）R-R25・R-R21→R-R06→R-R33（＋R-R27 残）</strong>。</p>
+
+    <p class="text-xs text-gray-500">対応記録：mailbox＝<code>rally-dev</code> からの2通に対応＝Cycle 034（処理後 <code>cur/</code> へ）。from-president.md＝新規の記載なし。<strong>deploy-log＝6行を追記</strong>（「未反映（開発ブランチ）」と明記）。定石＝#1・#2・#15 を実施（#3・#4・#4b は同日未明の Cycle 033 で実施済み）。台帳ローテ＝実施（108KB→99.7KB）。<span class="text-amber-800">⚠️ <strong>本サイクルのレポートは mailbox に投函されていなかった</strong>（Cycle 033 分とあわせて Cycle 035〔8/30〕で検出し、033＋034＋035 を統合して投函・原因は「反応型サイクルで <code>ack</code> を返したことを『配信した』と取り違えた」と推定）。</span></p>
+  </section>
+
   <!-- ===== Cycle 033 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 033 — 2026-08-29（<span class="text-emerald-700">切り分けを社長に聞かずに実測で決着</span>／<span class="text-red-700">8/15 障害の原因と次の発生日が見えた</span>／<span class="text-amber-700">自分の提案の誤りを1件訂正</span>）</h2>

@@ -27,78 +27,28 @@
     <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
   </div>
 
-  <!-- 🎉 Cycle 034 の最重要 -->
-  <div class="border-4 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-6">
-    <h2 class="text-xl font-bold text-emerald-900 mb-2">🎉 大きな進展 — <span class="underline decoration-2">開発担当（<code>rally-dev</code>）が動きました。<strong>13通すべてを読み、6件を実装済み</strong>です</span></h2>
-    <p class="text-sm text-gray-800 mb-3">本日（8/29）午後、14日間ゼロだった返信が<strong>2通</strong>届きました。<strong>Cycle 017〜032 の13通すべて受領・読了</strong>、さらに<strong>提案6件を実装</strong>したとの報告です。<span class="text-gray-600">（沈黙の理由＝拠点PCの環境移行。以後は作業の先頭で受信箱を確認する運用にする、とのことです。）</span><br><span class="text-emerald-800"><strong>＝31サイクル続いた「渡した先が読んでいない」という最大の詰まりが解消しました。</strong></span></p>
-
-    <div class="bg-white border-2 border-red-400 rounded p-3 mb-3">
-      <p class="text-sm text-gray-800"><strong class="text-red-800">🔔 ただし、まだ1つも本番に出ていません。<u>次に必要なのは社長の作業です。</u></strong><br>
-      実装は<strong>すべて開発ブランチ止まり</strong>で、本番（<code>check-rally.com</code>）への反映には <span class="text-red-800"><strong>社長による PR のマージ ＋ フロントの再ビルド</strong></span>が要る、と報告に明記されています。<br>
-      <span class="text-gray-700"><strong>当方でも本番を実測して確認しました</strong>＝トップは <strong>13日連続で1バイトも変わらず</strong>／<code>/spots</code> は404のまま／<code>/people</code> は 12,504B のまま／壊れたリンクも残ったまま。<u>＝報告の「未反映」は正確です（申告の裏取り済み）。</u></span><br>
-      <span class="text-red-800"><strong>⇒ いま6件の成果は「マージ待ち」の状態で止まっています。</strong></span><span class="text-emerald-800"><strong>マージしていただければ、そのまま本番に出ます。</strong></span> → 下の <strong>🔔 Q-R15</strong></p>
-    </div>
-
-    <div class="bg-white border border-emerald-300 rounded p-3 mb-3">
-      <p class="text-sm text-gray-800 mb-1"><strong class="text-emerald-800">✅ 実装された6件（すべてマージ待ち）</strong></p>
-      <ul class="text-sm text-gray-700 list-disc list-inside space-y-1">
-        <li><strong>R-R24</strong>＝出口のない404（<code>/spots</code>）の解消。<span class="text-sky-800"><strong>🔑 リンク元は私が実測した1本ではなく<u>4本</u>でした</strong></span>（残り3本＝スポット詳細の戻りリンク）＝<u>「45日で48回も来るのに、リンク元は1本しかない」という数量の食い違いの答え</u>です</li>
-        <li><strong>R-R30</strong>＝<code>/people</code> の外枠欠落。<strong>原因は実装漏れ</strong>（レイアウトの入れ忘れ）と判明</li>
-        <li><strong>R-R23③</strong>＝浮動ボタンが文字を覆う不具合（スマホ全ページ）</li>
-        <li><strong>R-R28（一部）</strong>＝一覧カードの写真。<strong>原因は「一覧APIが写真を返していなかった」</strong>（カード側は対応済み）＝<u>私の推測（カード側の配線漏れ）は外れ、APIが原因でした</u>。残＝<code>/map</code> のカルーセルとテーマ一覧（<span class="text-amber-800">テーマは画像そのものが未登録＝データ作業</span>）</li>
-        <li><strong>R-R32①</strong>＝ログインが要る3画面の行き先を <code>/login</code> に統一。<strong>「3画面が個別実装でバラバラ」という構造問題だったと確認</strong></li>
-        <li><strong>R-R27（一部）</strong>＝存在しないスポットIDで「読み込み中…」が止まらない不具合。<span class="text-gray-600">※HTTPステータスを404にする本対応は R-R33 とセットで設計、とのこと</span></li>
-      </ul>
-    </div>
-
-    <div class="bg-white border border-amber-400 rounded p-3">
-      <p class="text-sm text-gray-800"><strong class="text-amber-800">⚠️ 私の側の誤りを1件訂正し、先方の指摘を1件だけ差し戻します（認識合わせ）</strong><br>
-      <strong>訂正</strong>＝Cycle 018 で「トップの OGタグはコメントアウトされているので、解除すれば出せる」とお伝えしましたが、<span class="text-red-800"><strong>ソース上に OGタグは存在せず、私の誤認でした</strong></span>（見ていたのは別の内部的な印）。<u>トップの OGタグは「解除」ではなく新規実装になります</u>＝R-R02 を訂正しました。<br>
-      <strong>差し戻し</strong>＝先方は「実態は OGタグ皆無」とされましたが、<span class="text-emerald-800"><strong>スポット詳細ページには og:title・og:description・og:type が実際に出ています</strong></span>（本日 <code>/spots/496</code> で実測）。<u>＝スポット層は「ゼロから実装」ではなく「og:image の追加＋タイトルを実際のスポット名にする」だけ</u>で済みます（工数が変わるためお返ししました）。</p>
-    </div>
-  </div>
-
-  <!-- 🔑 前サイクルの発見（継続中） -->
-  <div class="border-2 border-sky-400 bg-sky-50 rounded-lg p-5 mb-6">
-    <h2 class="text-lg font-bold text-sky-900 mb-2">🔑 前サイクル（8/29 未明）の発見 — <span class="underline decoration-2">証明書を1回測っただけで、<strong>3つの謎が同時に解けました</strong>（8/15 の障害の原因を含む）</span>／<span class="text-rose-700">Q-R14 のご回答待ちで継続中</span></h2>
-    <p class="text-sm text-gray-800 mb-3">昨日（8/28）<strong>Q-R13＝「サーバは Xserver VPS」</strong>とご回答いただきました。ご指示は<strong>「VPSパネルの操作か・サーバ内の設定か、先に1問で切り分けてから手順を書く」</strong>。<u>そこでまず「その切り分けを、社長に聞かずに自分で測れないか」を試しました。</u>結果、<span class="text-emerald-800"><strong>切り分けは実測で決着し、おまけに 8/15 の障害の原因まで出ました。</strong></span></p>
-
-    <div class="bg-white border-2 border-emerald-400 rounded p-3 mb-3">
-      <p class="text-sm text-gray-800"><strong class="text-emerald-800">✅ 切り分けの答え＝「サーバ内の設定」です（社長にお聞きする必要がなくなりました）</strong><br>
-      証明書の有効期間を測ると <strong>ちょうど90日</strong>（2026-08-15 〜 2026-11-13）でした。<span class="text-emerald-800"><strong>90日固定は Let's Encrypt という「自動更新される無料証明書」の特徴</strong></span>です（有料の証明書は1年〜13か月）。<u>＝サーバの中に自動更新の仕組みが入っている</u>ということで、<strong>証明書まわりは VPS のパネルではなく<u>サーバの中</u>の作業</strong>と確定しました。<span class="text-gray-600">（Xserver VPS は「サーバをまるごとお貸しする」タイプで、パネルに証明書の発行機能はありません＝レンタルサーバの「無料独自SSL」とは別物です。）</span></p>
-    </div>
-
-    <div class="bg-white border-2 border-red-400 rounded p-3 mb-3">
-      <p class="text-sm text-gray-800"><strong class="text-red-800">🔑 8/15 の障害の原因が、ほぼ見えました（＋<u>次に起きる日</u>も分かります）</strong><br>
-      その証明書の<strong>発行日が 2026-08-15</strong>＝<span class="text-red-800"><strong>約20分のダウンタイムが起きたのと同じ日</strong></span>でした。<br>
-      <span class="text-gray-700"><strong>推測</strong>：証明書の自動更新が引き金です。この仕組みは更新のやり方によっては<u>更新の間だけ Web サーバを一旦止める</u>ことがあり、そうすると<strong>通常のアクセスも暗号化通信も同時に落ちます</strong>——8/15 に観測された「80番・443番が同時に即座に拒否された」という記録と、症状が正確に一致します。<span class="text-gray-600">（従来の仮説＝「私たちの巡回が多すぎて一時的に遮断された」より、はるかに説明が合います。）</span></span><br>
-      <span class="text-red-800"><strong>⚠️ 次の更新は 2026-10-14 前後の見込みです（＝同じことが起きる可能性のある日）。</strong></span><span class="text-gray-700">更新のやり方を「サーバを止めない方式」に変えるだけで再発を防げます＝<strong>R-R19 に反映しました</strong>。</span></p>
-    </div>
-
-    <div class="bg-white border-2 border-amber-400 rounded p-3 mb-3">
-      <p class="text-sm text-gray-800"><strong class="text-amber-800">⚠️ あわせて、これまでの私の提案の誤りを1つ訂正します（R-R18）</strong><br>
-      <code>www.</code> が開けない件について、これまで<strong>「(推奨) www → 通常アドレスへの301リダイレクト」</strong>とご提案してきましたが、<span class="text-red-800"><strong>301だけでは直りません</strong></span>。<u>暗号化通信の確立がリダイレクトより先に失敗するため、ブラウザは警告画面を出した時点で止まり、301 は永遠に届かないから</strong>です。<br>
-      <span class="text-emerald-800"><strong>正しい順序＝①証明書に <code>www</code> を追加する（必須）→ ②その上で www→通常アドレスへ301。</strong></span><span class="text-gray-600">①を抜かして②だけ実装しても、症状は1ミリも変わりません。</span><br>
-      <span class="text-gray-700">根拠＝<code>www</code> と通常アドレスで<strong>まったく同じ証明書（同じ有効期限）</strong>が返ってきました＝www 専用の証明書は無く、<u>証明書の対象ホスト名の一覧に www が入っていないだけ</u>です。</span></p>
-    </div>
-
-    <p class="text-sm text-gray-800"><strong class="text-rose-800">🔔 本日の「1歩」＝ご質問1つだけ（30秒）：<u>サーバの中に入って作業できますか？</u></strong><br>切り分けは済んだので、残る<u>私に測れない唯一のこと</u>だけをお聞きします。→ 下の <strong>🔔 Q-R14</strong>（3択）。<span class="text-emerald-800"><strong>お答えいただいた次のやり取りで、「どの画面を開いて、何を1行入れるか」を1操作ずつお出しします。</strong></span><span class="text-gray-600">※ この1問で <strong>R-R18（www）・R-R06 の残り・R-R19（監視）・8/15 障害のログ確認</strong>が<u>すべて同じ1回の作業</u>として片づきます。</span></p>
-  </div>
-
-  <!-- 🚨 いちばんのお願い -->
+  <!-- 🚨 いま社長にお願いしたいこと（常設・最上部） -->
   <div class="border-4 border-red-500 bg-red-50 rounded-lg p-5 mb-6">
-    <h2 class="text-xl font-bold text-red-800 mb-2">🚨 いちばんのお願い — <span class="underline decoration-2">実装済みの6件を本番に出すため、<strong>PR のマージ ＋ フロントの再ビルド</strong>をお願いします</span></h2>
-    <p class="text-sm text-gray-800 mb-3"><span class="text-emerald-800"><strong>✅ 詰まりの場所が変わりました。</strong></span>31サイクル続いた「渡した先が読んでいない」（<strong>Q-R12</strong>）は<strong>本日 解決</strong>しました（→アーカイブへ）。<u>いま止まっているのは、開発が終わった成果を本番に出す最後の1歩だけ</u>です。<br><strong>rally-dev の報告（要点）</strong>＝「本日の実装はすべて開発ブランチ止まりで、本番には未反映。<strong>反映は社長の PR マージ＋フロント再ビルドで行われます</strong>」。<span class="text-gray-600">当方の本番実測でも全件が未反映であることを確認済み（＝申告は正確）。</span></p>
-    <p class="text-sm text-gray-800 mb-3"><strong>マージで本番に出るもの＝6件</strong>：<code>R-R24</code>（出口のない404の解消）・<code>R-R30</code>（<code>/people</code> の外枠）・<code>R-R23③</code>（浮動ボタンの重なり）・<code>R-R28一部</code>（一覧カードの写真）・<code>R-R32①</code>（ログイン画面への統一）・<code>R-R27一部</code>（無限「読み込み中…」）。<span class="text-gray-600">いずれも <u>いま実際に来ている人が困っている箇所</u>です（45日で48回の行き止まり・スマホでの操作阻害 ほか）。</span> → <strong class="text-rose-700">🔔 Q-R15</strong></p>
-    <div class="bg-white border border-amber-400 rounded p-3 mb-3">
+    <h2 class="text-xl font-bold text-red-800 mb-2">🚨 いちばんのお願い — <span class="underline decoration-2">実装済みの6件を本番に出すため、<strong>PR のマージ ＋ フロントの再ビルド</strong>をお願いします</span><span class="text-base font-normal text-gray-600">（8/29 にお願い・本日で2日目）</span></h2>
+    <p class="text-sm text-gray-800 mb-3"><span class="text-emerald-800"><strong>✅ 8/29 に大きな進展がありました</strong></span>：31サイクル沈黙していた開発担当（<code>rally-dev</code>）が動き、<strong>13通すべてを読み、6件を実装</strong>しました。<span class="text-red-800"><strong>ただし本日 8/30 時点で、まだ1つも本番に出ていません。</strong></span><br>
+    <strong>本日あらためて機械的に確認しました</strong>（開発側が「マージされたらこう変わる」と教えてくれた4点を、そのまま本番で照合）：<br>
+    <span class="text-gray-700">① <code>/spots</code> は 404 のまま（変われば 308）／② <code>/people</code> は 12,504B のまま（変われば大きく増える）／③ 壊れたリンクが残ったまま／④ トップは <strong>14日連続で1バイトも変わらず</strong>　⇒ <strong class="text-red-800">4つとも未反映＝マージはまだ行われていません。</strong></span></p>
+    <p class="text-sm text-gray-800 mb-3"><strong>マージで本番に出るもの＝6件</strong>：<code>R-R24</code>（45日で48回・9人が落ちていた行き止まりの解消）・<code>R-R30</code>（<code>/people</code> の外枠）・<code>R-R23③</code>（スマホで文字を覆う浮動ボタン）・<code>R-R28一部</code>（一覧カードの写真）・<code>R-R32①</code>（ログイン画面への統一）・<code>R-R27一部</code>（無限「読み込み中…」）。<span class="text-gray-600">いずれも<u>いま実際に来ている人が困っている箇所</u>です。</span> → <strong class="text-rose-700">🔔 Q-R15</strong></p>
+    <div class="bg-white border border-amber-400 rounded p-3">
       <p class="text-sm text-gray-800"><strong class="text-amber-800">🔔 あわせて、開発側が社長のご判断を待っている件が2つあります</strong><br>
-      ① <strong>着手順の決め方</strong>＝rally-dev は「着手順は<u>社内（社長）確認のうえ決めます</u>」としています。<span class="text-emerald-800">私の推奨順＝<strong>R-R34 →（同時可）R-R25・R-R21 → R-R06 → R-R33</strong></span>。<u>「この順でOK」の一言をいただければ、次の開発分がそのまま決まります</u>（→ <strong>Q-R11(2)</strong>）。<br>
-      ② <strong>バッジ図鑑の公開判断</strong>＝メニューにバッジ図鑑が無いのは<span class="text-red-800"><strong>実装漏れではなく「機能公開見送り中」という意図的な判断</strong></span>だと回答がありました。<u>この判断が変わらない限り R-R32 の②③（登録動機として見せる／メニューに戻す）は進められません</u> → <strong>🔔 Q-R16</strong>。</p>
-    </div>
-    <div class="bg-white border border-emerald-300 rounded p-3">
-      <p class="text-sm text-gray-800"><span class="text-emerald-800"><strong>✅ 通信は双方向で回り始めました</strong></span>：こちらの配信不具合（Cycle 022・027・028 の3回）は修理済みで、本日で6サイクル連続 正常到達。<span class="text-amber-800">加えて本日、先方の指摘で <strong>Cycle 020 の1通が「本文が空で、送信コマンドの文字列だけが入っていた」</strong>ことを発見し、実物を確認しました（＝当方の送信不具合・4件目）。内容は後続サイクルで伝わっているため再送は不要ですが、<u>今後は投函後に本文の中身も点検する手順を追加</u>しました。</span></p>
+      ① <strong>次の着手順の「OK」の一言</strong>＝<code>rally-dev</code> は「着手順は<u>社内（社長）確認のうえ決めます</u>」としています。<span class="text-emerald-800">推奨順＝<strong>R-R34 →（同時可）R-R25・R-R21 → R-R06 → R-R33</strong></span>。<u>ご返事が無いと次の開発が始まりません</u>（→ <strong>Q-R11(2)</strong>）。<span class="text-emerald-700"><strong>※本日、この3件の「何と書くか」（文面）を当方で全部確定しました</strong>＝OK の一言が届けば、開発側は設計ゼロで着手できます（下記 Cycle 035）。</span><br>
+      ② <strong>バッジ図鑑の公開判断</strong>（→ <strong>Q-R16</strong>）／<strong>サーバの中に入れるか</strong>（→ <strong>Q-R14</strong>・R-R18 の🔴最優先が動きます）</p>
     </div>
   </div>
+
+  <!-- 参考：8/29 に判明したこと（折りたたみ） -->
+  <details class="border border-gray-300 bg-white rounded-lg p-4 mb-6">
+    <summary class="text-sm font-semibold text-gray-700 cursor-pointer">📎 参考：8/29 に判明したこと（開発担当の応答・証明書の実測）— クリックで開きます</summary>
+    <div class="mt-3 text-sm text-gray-700 space-y-2">
+      <p><strong class="text-emerald-800">① 開発担当が動きました（8/29 午後）</strong>：13通すべて受領・読了＋6件を実装。沈黙の理由＝拠点PCの環境移行。<span class="text-gray-600">あわせて当方の誤りを1件訂正（トップの OGタグは「コメントアウト」ではなく未実装）、先方の指摘を1件差し戻し（スポット詳細には OGタグが実在＝R-R02 の工数が下がる）、原因が3件確定（<code>/people</code>＝実装漏れ／ログイン3画面＝実装の不揃い／一覧カードの写真＝<u>一覧APIが写真を返していなかった</u>）。新事実＝市区町村マスタ 1,918件・テーマのアイキャッチ画像は未登録・バッジ図鑑の非公開は意図的。</span>詳細は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>の Cycle 034。</p>
+      <p><strong class="text-emerald-800">② 証明書を1回測って3つの謎が解けました（8/29 未明）</strong>：有効期間ちょうど90日（8/15〜11/13）＝<strong>Let's Encrypt の自動更新＝作業場所は「サーバの中」</strong>と確定（社長にお聞きする必要がなくなりました）。<span class="text-red-800">発行日 <strong>8/15</strong>＝約20分のダウンタイムと同日 ⇒ <strong>推測：証明書の自動更新が引き金</strong>（次の更新は <strong>10/14 前後</strong>＝再発しうる日）。</span><span class="text-amber-800">あわせて <strong>R-R18 の従来案の誤りを訂正</strong>＝301 だけでは直りません（暗号化通信の確立が先に失敗するため 301 が届かない）。<strong>正しい順序＝①証明書に <code>www</code> を追加 → ②301</strong>。</span>詳細は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>の Cycle 033。</p>
+    </div>
+  </details>
 
   <!-- 📊 現在地（常設） -->
   <div class="border border-gray-300 bg-white rounded-lg p-5 mb-6">
@@ -270,51 +220,7 @@
 
     <p class="text-sm text-gray-500 mb-4">データ状況：<strong>mailbox＝<code>hp-loop-rally</code> 宛に新着2通</strong>（<code>rally-dev</code> より・受領確認＋実装報告）＝<span class="text-emerald-700"><strong>本サイクルはこの受信を起点にした反応型サイクル</strong></span>。<strong>本番実査＝実施</strong>（hp-audit 4本＝トップ／<code>/spots</code>／<code>/people</code>／<code>/spots/496</code> ＋ <code>/spots/areas</code> のリンク実査）。<span class="text-gray-600">GSC・GA4 は本日未明の Cycle 033 で取得済み（同日中に数字は動かないため再取得せず＝14日窓 36表示/4クリック・45日窓 events 1,290/users 118）。</span>社長入力（from-president.md）＝<strong>新規の記載なし</strong>（8/28 分は Cycle 033 で対応済み）。在庫上限チェック＝<strong>判断待ち 10/15＝起票可</strong>。</p>
 
-    <div class="border-2 border-emerald-400 bg-emerald-50 rounded p-4 mb-5">
-      <h3 class="font-semibold text-emerald-900 mb-2">🎉 本サイクルの中身 — <u>31サイクル続いた最大の詰まりが解けました</u></h3>
-      <p class="text-sm text-gray-800"><code>rally-dev</code> から <strong>2通</strong>（受領確認・実装報告）。<strong>Cycle 017〜032 の13通すべてを受領・読了</strong>し、<strong>提案6件を実装</strong>。沈黙の理由＝<u>拠点PCの環境移行があり、8/15 開通以降の受信箱を本日初めて処理した</u>とのこと。以後は作業サイクルの先頭で受信箱を確認する運用にする、と明言がありました。<br><span class="text-red-800"><strong>ただし実装はすべて開発ブランチ止まり＝本番未反映。</strong></span><u>反映には社長の PR マージ＋フロント再ビルドが要る</u>と報告に明記されています（→🔔 Q-R15）。</p>
-    </div>
 
-    <h3 class="font-semibold mb-2">実装報告の検証（＝報告を鵜呑みにせず本番を測る）</h3>
-    <table class="w-full text-sm border-collapse mb-5 bg-white rounded">
-      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-40">検証項目</th><th class="py-1 px-2">観察（事実・2026-08-29 ライブ）</th><th class="py-1 px-2 w-40">判定</th></tr></thead>
-      <tbody class="align-top text-gray-700">
-        <tr class="border-b border-gray-100 bg-emerald-100"><td class="py-1 px-2"><strong>「本番未反映」という<br>自己申告の裏取り</strong></td><td class="py-1 px-2">トップ＝<strong>57,978B で13日連続バイト同一</strong>／<code>/spots</code>＝<strong>404 継続</strong>／<code>/people</code>＝<strong>12,504B のまま</strong>（＝外枠なしの状態）／<code>/spots/areas</code> のリンク実査＝<strong>「スポット一覧に戻る」→<code>/spots</code> が1本 継続</strong>。<span class="text-emerald-800"><strong>＝6件すべて未反映で、報告の内容と完全に一致</strong></span>。</td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ 報告は正確</strong></span><br><span class="text-xs text-gray-600">（「デプロイした」と誤って報告されていない＝信頼できる相手と判断）</span></td></tr>
-        <tr class="border-b border-gray-100 bg-sky-100"><td class="py-1 px-2"><strong>🔑 私の実測の限界が<br>1つ判明</strong></td><td class="py-1 px-2"><code>/spots</code>（404）へのリンク元を、私は<strong>1本</strong>と実測確定していました。実際は<strong>4本</strong>で、残り3本は<u>スポット詳細ページの戻りリンク</u>。<span class="text-gray-700">＝私が使える手段は<strong>サーバが返すHTMLしか読めない</strong>ため、画面を開いてから作られるリンクが写りません。</span></td><td class="py-1 px-2"><span class="text-sky-800"><strong>⭐ 数量の食い違いが解けた</strong></span><br><span class="text-xs text-gray-600">「リンク元は19回しか見られない1ページなのに、なぜ48回も来るのか」＝スポット詳細が多く見られているため</span></td></tr>
-        <tr class="border-b border-gray-100 bg-amber-100"><td class="py-1 px-2"><strong>⚠️ 私の観察の誤り<br>（R-R02・訂正）</strong></td><td class="py-1 px-2">Cycle 018 で「トップの OGタグは<u>コメントアウトされている</u>＝解除すれば出せる」としましたが、<span class="text-red-800"><strong>ソース上に OGタグは存在せず＝私の誤認</strong></span>（見ていたのは仕組みが挿入する別の印）。</td><td class="py-1 px-2"><span class="text-amber-800"><strong>🔧 R-R02 を訂正</strong></span><br><span class="text-xs text-gray-600">トップは「解除」ではなく新規実装</span></td></tr>
-        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2"><strong>逆に1件だけ<br>差し戻し（認識合わせ）</strong></td><td class="py-1 px-2">先方は「実態は OGタグ皆無」と総括しましたが、<strong>本日 <code>/spots/496</code> を実測すると <code>og:title</code>・<code>og:description</code>・<code>og:type</code> が配信されています</strong>。<span class="text-gray-700">＝スポット層は「ゼロから実装」ではなく「<code>og:image</code> の追加＋タイトルを実スポット名に」だけで済み、工数が変わるためお返ししました。</span></td><td class="py-1 px-2"><span class="text-emerald-800"><strong>✅ 返信済み</strong></span><br><span class="text-xs text-gray-600">（相手の指摘も検証してから受け入れる）</span></td></tr>
-        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><strong>当方の配信不具合が<br>1件追加で発覚</strong></td><td class="py-1 px-2">先方の指摘＝<strong>Cycle 020 の1通が「本文が空で、送信コマンドの文字列だけ」</strong>。受け渡し箱の実物を確認したところ<u>指摘のとおり</u>でした（本文＝<code>--body-file …</code> の文字列のみ）。</td><td class="py-1 px-2"><span class="text-amber-800"><strong>🔧 手順を修理</strong></span><br><span class="text-xs text-gray-600">投函後に本文の中身も点検する項目を定石に追加</span></td></tr>
-      </tbody>
-    </table>
-
-    <h3 class="font-semibold mb-2">開発側から得られた「中の事実」（当方からは測れなかったもの）</h3>
-    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
-      <ul class="list-disc list-inside space-y-1">
-        <li><strong>市区町村マスタ＝1,918件</strong>（政令市の区を含む・スポットは常に最詳コードを指す設計）。<span class="text-gray-600">⇒ R-R34／R-R21 の射程「数百〜1,500ページ超」は<u>実数で確定</u>。「スポットを1件以上持つ市区町村数」は次回デプロイ確認時に実測して回答するとのこと。</span></li>
-        <li><strong>一覧カードに写真が出ない原因＝一覧APIが写真を返していなかった</strong>（カード側は対応済み）。<span class="text-amber-800">残＝<code>/map</code> カルーセル（軽量API維持のため専用サムネが要る）と<strong>テーマ一覧＝アイキャッチ画像そのものが未登録＝データ登録の作業</strong>。</span></li>
-        <li><strong>実在IDでデータ取得に失敗した場合</strong>＝「エラー＋再読み込み」画面（<u>無限スピナーではない</u>）。<span class="text-gray-600">無限スピナーは非数値IDのみ＝修正済み。ただし都道府県・エリア・市区町村の「見つかりません」画面は<strong>今も HTTP 200</strong>＝R-R27 の残件。</span></li>
-        <li><strong><code>/people</code> の外枠欠落は実装漏れ</strong>（レイアウトの作り忘れ）／<strong>ログインが要る3画面の不統一も実装の不揃い</strong>＝いずれも<u>私の見立てどおり</u>でした。</li>
-        <li><span class="text-red-800"><strong>バッジ図鑑がメニューに無いのは「意図的」</strong></span>＝機能公開を見送り中という判断。<span class="text-gray-700">＝私が「入口を自分で閉じている」と指摘してきた件は、判断の結果でした ⇒ <strong>🔔 Q-R16</strong>（公開の是非・時期）。</span></li>
-        <li><strong>人物・タグの中身＝数週間以内に投入予定</strong> ⇒ R-R29 は「準備中表示」で確定（🔔→✅）。</li>
-      </ul>
-    </div>
-
-    <h3 class="font-semibold mb-2">北極星との接続（観察→意味づけ）</h3>
-    <div class="bg-white border border-gray-200 rounded p-4 mb-5 text-sm text-gray-700">
-      <ul class="list-disc list-inside space-y-1">
-        <li><strong>① 経路②（参加の障壁）が実際に薄くなる見込み</strong>：マージされれば、<u>45日で48回・9人が落ちていた行き止まり（<code>/spots</code>）</u>・<u>スマホで次の一手を覆っていた浮動ボタン</u>・<u>出口の無い <code>/people</code></u> が同時に解消します。<strong>＝今回の6件はすべて「来ている人を取りこぼさない」側の修正</strong>＝経路②に直結します。</li>
-        <li><strong>① 経路①（発見される）は<u>まだ1件も動いていない</u></strong>：名札（R-R34・R-R25・R-R21）・robots/sitemap（R-R06）・配信HTMLの本文とリンク（R-R33）は<strong>すべて未着手</strong>。<u>検索に出ているURLは依然2本のまま</u>＝北極星の最上流は変わっていません。<span class="text-emerald-800"><strong>だから次の開発分の指定（🔔 Q-R11(2)）が今いちばん効きます。</strong></span></li>
-        <li><strong>② 種プール</strong>：<strong>テーマのアイキャッチ画像が未登録</strong>という新事実は R-R25（テーマ層を発見の入口にする）の前提条件です。<u>開発ではなくデータ登録の担当・時期を決める必要があり</u>、📥 に追加しました（単独では起票せず R-R25 の実装条件として保持）。</li>
-        <li><strong>③ 追わない</strong>：Cycle 020 の配信不具合は<u>内容が後続サイクルで伝わっており実害なし</u>＝再送しません（手順の修理だけ）。</li>
-        <li><strong>手法の学び</strong>：私の実査は<u>サーバが返すHTMLしか見えない</u>という限界が、R-R24 のリンク元（1本 vs 実際は4本）で具体的に確認できました。<strong>⇒ 今後「リンクは0本／1本」と言い切るときは「配信HTML上は」と限定して書きます。</strong></li>
-        <li><strong>本サイクルの成果</strong>＝<strong>新規R ゼロ／新規Q 2件（Q-R15 マージ・Q-R16 バッジ図鑑）／✅Q-R12・Q-R11(1) 解決</strong>／<span class="text-emerald-700">在庫6件が「実装済み・マージ待ち」へ前進（31サイクルぶり）</span>／R-R29 が🔔→✅・R-R32 が✅→🔔／R-R02 の観察を訂正／R-R24・R-R28・R-R27 の原因が確定。</li>
-      </ul>
-    </div>
-
-    <h3 class="font-semibold mb-2">実装担当（rally-dev）への引き渡し</h3>
-    <p class="text-sm text-gray-700 mb-4">本サイクルのレポートを mailbox で配信（<code>hp-loop-rally → rally-dev</code>・1サイクル1通）＋<strong>認識合わせの返信1通</strong>（OGタグの差し戻し・照会5件への謝意・次の着手順）。<strong>着手推奨＝<span class="text-red-700">① R-R34</span> → <span class="text-red-700">② R-R25</span> → <span class="text-red-700">③ R-R21</span> → <span class="text-emerald-700">③' R-R06</span> → <span class="text-red-700">④ R-R33（＋R-R27 の残りをセットで）</span></strong>。<span class="text-sky-800"><strong>【本サイクルで伝えた変更点】</strong>①<u>R-R27 の残り（404ステータス）は R-R33 と同一作業として扱う</u>（先方の設計判断を採用）②<u>スポット層の OGタグは既にあるので og:image 追加＋実名化だけ</u>（R-R02 の工数が下がります）③R-R29 は「準備中表示」で確定＝回答不要で着手可。</span></p>
-
-    <p class="text-xs text-gray-500 mt-4">対応記録：<span class="text-emerald-700"><strong>mailbox＝<code>rally-dev</code> からの2通（<code>M-20260829T124925</code>＝受領確認・<code>M-20260829T132010</code>＝実装報告と照会回答）に対応＝Cycle 034</strong></span>（処理後 <code>cur/</code> へ移動）。from-president.md＝<strong>新規の記載なし</strong>（8/28 分は Cycle 033 で対応済み）。<strong>deploy-log＝6行を追記</strong>（<u>「未反映（開発ブランチ）」と明記</u>＝本番で確認できた時点であらためて反映日つきの行を追記します）。定石＝#1 変化検知・#2 在庫の進捗追跡・#15 配信の到達確認を実施（<span class="text-emerald-700">#15 は本サイクルで<strong>「本文の中身の点検」を手順に追加</strong>＝Cycle 020 の空配信を受けて</span>）。<span class="text-gray-600">#3・#4・#4b は本日未明の Cycle 033 で実施済み（同日中に数字は動かないため再実行せず）。週次（#5 08-31／#14 09-01）・月次（#9 09-02／#10・#13 09-14）・#12（9月最初）は未到来。</span>Cycle 033 の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へスナップショット移動。<strong>掲示板サイズ点検＝99.2KB → 約100KB（<span class="text-amber-800">目安の 80KB を超過中</span>）</strong>：<u>本サイクルは実装報告の反映で各提案に「開発の対応」欄が増えたため一時的に増加</u>しました。<span class="text-red-800"><strong>Cycle 033 でご提案した構造変更（提案の詳しい説明を「確定・仕様」へ移し、この表は1行要約＋リンクにする）を、次サイクルで実施してよいかご意見をいただきたいです</strong></span>＝<span class="text-gray-600">マージが進めば完了行を archive へ落とせるため、状況が変わる可能性もあります。</span></p>
   </section>
 
   <p class="text-xs text-gray-400 mb-2">過去サイクル（000 登録〜017 rally-dev開通・018 GA4開通・019 出口のない404の発見・020 Search Console 初着弾とテーマ層の発見・021 存在しないURLの200と市区町村層の発掘・022 空の新機能2本・023 404のリンク元を実測確定・024 配信先が読んでいない疑いの特定・025 バッジ図鑑の初実査・026 競合実測でR-R25の目標値を確定・<span class="text-amber-700">027 配信HTMLにリンクと本文が無いことの実測（※一部は 028 で訂正）</span>・028 検索エンジンへの登録状況を初実測しwwwの取りこぼしを発見・029 サービス名を含まない検索語で1ページ目に到達＋配信漏れの原因を特定し修理・<span class="text-amber-700">030 名札の使い回しを発見しR-R34を起票（※一部は 031 で訂正）</span>・<span class="text-amber-700">031 市区町村層まで射程が拡大／最大層は別の病と確定（※R-R06 の扱いは 032 で訂正）</span>・<span class="text-amber-700">032 Next.js を特定しR-R06を解錠（※R-R06 の実装口の見立ては 033 で補足）</span>・033 証明書の実測で切り分け・8/15障害の原因・R-R18 の誤りが同時に判明）は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>を参照。</p>
