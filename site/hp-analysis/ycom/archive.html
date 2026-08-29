@@ -123,6 +123,32 @@
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
 
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 107 — 2026-08-29（y-com.info・日次＋広告週次）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・最新 <strong>08-26</strong>・30日窓 07-30〜08-26）✅／広告（ads-fetch・最新 08-27）✅／GA4（ga4-fetch・ページ別／流入別）✅／オンページ実査（hp-audit・<strong>本日は13ページ＝配信タグの棚卸し</strong>）✅／受信箱の直接実査 ✅（<strong>本ループ宛の新着なし</strong>）／Clarity ❌（許可リスト未登録<strong>52日目</strong>＝📥参照）。<strong class="text-emerald-700">from-president に 8/28 の新規ご指示2件あり＝本日の主産物です（下記①②）。</strong><strong>広告週次（#11）は本日が期日＝実施しました。</strong>週次3本（ビジュアル・競合対比・総点検）は昨日実施済のため本日は対象外。</p>
+
+    <div class="border-2 border-emerald-400 bg-emerald-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-emerald-900 mb-1">✅ ① 本日の最重要＝<strong>8/28 の「開発側に出してもらえれば対応します」を受け、R-039(b)・R-018 を“作業指示”まで落としました</strong></p>
+      <p class="text-sm text-gray-700 mb-2">ご指摘のとおり、この2件は<strong class="text-rose-700">「社長のご判断待ち」ではなく「当方が具体的な作業指示を出していなかった」だけ</strong>でした。着手区分の付け方を誤っており、失礼しました。本日、<strong>どのページの何を消すのか／どこに何と書くのかまで特定</strong>し、実装担当へ配信しました（→ 🔔 最上部に全文）。<strong class="text-emerald-700">🔔 は外さず、待ち先だけを「社長」→「開発側」に書き換えています</strong>（＝まだ決着していない在庫であることは変えず、いま誰の手にあるかだけを更新する、という 8/28 のご指示どおりの扱いです）。</p>
+      <p class="text-sm text-gray-700"><strong class="text-rose-700">⚠️ ただし R-039(b) は、当初の「消すだけ」では実行できないことが本日の実査で分かりました</strong>＝旧タグが残っているのはトップページだけではなく、<strong><span class="font-mono">/service/web/</span> 配下（運用代行・SEO・CMS 等の13ページ前後）にも残っています。しかもそちらは旧タグが“唯一のGoogleタグ”で、GTM が入っていません</strong>。<strong class="text-emerald-700">＝そのまま消すと、それらのページの計測が完全に途切れます</strong>。そこで作業を「トップ＝消すだけ（安全）」と「<span class="font-mono">/service/web/</span> 配下＝先に GTM を入れてから消す（順序が重要）」の2つに分けて引き渡しました。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong class="text-rose-700">② 8/28 の R-018 のご指示への回答＝対応エリアの文面を、実測に基づいて作りました</strong>。現在トップページの本文は「<strong>大阪、京都、奈良、兵庫の大阪周辺で</strong>」となっており、<strong class="text-rose-700">6月に確定したエリア（大阪・京都・兵庫・東京）と食い違っています</strong>（奈良が入り、東京が抜けています）。どちらが正かを 🔔 でご確認いただいたうえで統一する形にしました。<strong>影響範囲＝この文面は共通テンプレートではなく本文側</strong>のため、全ページ一斉ではなく<strong>トップ＋運用代行ページから着手できます</strong>（＝当初「全ページ影響だから合意が要る」としていた前提自体が、実査の結果くつがえりました）。</p>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ③ 本日いちばん大きな数字の動き＝<strong>運用代行ページに「淡路」の検索が急増しました（1週間で59表示＝このページ最大の検索語）</strong></p>
+      <p class="text-sm text-gray-700 mb-2"><strong>観察（事実）</strong>＝「ホームページ 保守 代行 淡路」が<strong>直近7日で59表示・16.0位・クリック0</strong>。30日で見ると61表示なので、<strong class="text-rose-700">61件のうち59件がこの1週間に集中</strong>しています（8/27 時点の集計では4表示でした）。<strong>いまやこのページの単独最大の検索語</strong>で、7日間の全表示の約半分を占めます。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-emerald-700">あわせて兵庫圏の順位が急改善しています</strong>＝「ホームページ 保守 代行 芦屋」は30日平均 26.9位ですが、<strong>直近7日では 4.0位</strong>。「芦屋 ホームページ 保守 代行」も 22.6位 →（7日）<strong>9.0位</strong>。尼崎も 15.2位 →（7日）13.0位。<strong>30日窓の兵庫圏（淡路・芦屋・尼崎・西宮）は計103表示＝ページ全体239表示の43%</strong>です。</p>
+      <p class="text-sm text-gray-700"><strong>北極星との接続</strong>＝運用代行＝保守・運用の継続契約＝ストック収益（G0）の入口そのもの。<strong class="text-rose-700">→ 新規の提案は起票せず、既存 R-049 の改善案 (f)「兵庫の市名・淡路を本文に含める」の根拠を差し替えました</strong>（起票ではなく既存提案の解像度を上げる＝在庫を増やさない方針）。<strong class="text-emerald-700">(f) は 8/27 時点では「全体の約2割」を根拠にした“ついでの一項目”でしたが、本日の実測では「43%・かつ単独最大の検索語」＝R-049 の中心論点に格上げすべき</strong>だと考えます。<span class="text-gray-600">※ただし淡路の59表示は1週間だけの動きなので、<strong>一過性かどうかは次サイクル以降で確認</strong>します（薄い数字で断定しない規律）。</span></p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 広告週次（#11・本日が期日）＝<span class="text-rose-700">7日経っても構図は1ミリも変わっていません</span></strong>。30日で <strong>費用 ¥20,507・コンバージョン 1,020.9件</strong>ですが、その内訳は<strong class="text-rose-700">「トップページを70%スクロール」647.8件＋「LPを70%スクロール」366.1件＝計1,013.9件（99.3%）</strong>。<strong>実際のアクションは「料金へのクリック」5件と「問い合わせフォーム到達」2件の計7件だけ</strong>です。<strong class="text-rose-700">＝表面上のCPA ¥20 は実態と100倍以上ずれており、実アクションで割り直すと1件あたり約¥2,930、問い合わせフォーム到達だけで割ると約¥10,254</strong>。<strong>無駄な検索語の刈り取り（#11 の通常メニュー）は本アカウントでは対象外</strong>でした＝キャンペーンがディスプレイのみで検索語が存在しないためです（＝<strong>無駄はキーワードではなく“配信先”に出ている</strong>＝R-050 がまさにそこです）。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑤ 日次の効果追跡＝そのほかは構図不変</strong>。運用代行ページ全体は<strong>239表示・0クリック</strong>（30日窓）＝<strong class="text-rose-700">クリック0が6サイクル連続</strong>、表示は増加継続。相談ページ4枚（R-047）は方針確定済みで実装待ち。<strong>広告費用の異常検知（#4c）＝異常なし</strong>（7日 ¥4,152≒日¥693＝<strong>21サイクル連続で帯の内側</strong>）。日次定点＝トップ 73,677B・HTTP200・タイトル27字・canonical・OGP6件・構造化データ1件・h1=1＝<strong>基準値と完全一致・退行なし</strong>。</p>
+
+    <p class="text-sm text-gray-700"><strong>⑥ 新規の提案・質問はゼロ（7日連続）＝意図的です</strong>。判断待ちは<strong>13/15</strong>（8/28 に R-044・R-047 が解決して2件減）＝<strong class="text-emerald-700">上限には達しておらず起票は可能でしたが、本日見つけた2つの発見（配信タグの欠落・淡路の急増）はいずれも既存 R-039／R-049 の中身を厚くする形で処理しました</strong>＝「上がった問題を捌けるまで新しく積まない」という 8/27 のご方針に沿った判断です。</p>
+  </section>
+
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 106 — 2026-08-28（y-com.info・日次＋週次）</h3>
     <p class="text-sm text-gray-600 mb-3">データ状況：GSC（BigQuery・最新 <strong>08-25</strong>＝1日ぶんの新規データあり・28日窓 07-29〜08-25・全量取得）✅／広告（ads-fetch・最新 08-26）✅／オンページ実査（hp-audit・<strong>本日は6ページ＋新発見1ページ</strong>）✅／画面取得（hp-shot）✅／競合対比（hp-serp→hp-compete）✅／受信箱の直接実査 ✅（<strong>本ループ宛の新着なし</strong>）／Clarity ❌（許可リスト未登録<strong>51日目</strong>＝📥参照）。GA4 は週次の担当（次回 ~08-30）。<strong class="text-emerald-700">from-president に 8/27 の新規ご指示あり＝本日の主産物です（下記①）。</strong><strong>週次3本（ビジュアル・競合対比・総点検）はいずれも本日が期日＝すべて実施しました。</strong></p>
 
