@@ -71,6 +71,37 @@
   </table>
   <p class="text-xs text-gray-500 mb-8">💡 <strong>含意</strong>：新サイトに出している提案（R-J02 個別メタ・R-J03 画像alt）の多くは、<strong>旧サイトに既に実装済みの機能</strong>である。＝新規設計ではなく「旧サイトからの移植」として扱うと工数が下がる（<strong>ただし R-J01 の OGP は旧サイトも未完成＝移植では済まない・C020 訂正</strong>）。逆に言えば、現状の移行は<strong>機能を落としたまま進んでいる</strong>。</p>
 
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">🔑 新旧サイトのID対応（C033・2026-08-29 確定＝301リダイレクトの設計仕様）</h2>
+  <p class="text-sm text-gray-700 mb-3">出典＝<strong>実装担当 <span class="font-mono">konjaku-dev</span> の内部調査回答</strong>（<code>M-20260829T103238</code>）＋<strong>本ループによる外形検証</strong>。新サイトは旧サイトの SQL ダンプからインポートして構築されており、対応表を生成する管理機能（<code>generate-mapping</code> / <code>generate-city-mapping</code>）が実装済み。</p>
+  <table class="w-full text-sm border-collapse mb-3">
+    <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-3">階層</th><th class="py-1 pr-3">新旧の関係</th><th class="py-1">301 での扱い</th></tr></thead>
+    <tbody>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">個別写真<br><span class="font-mono text-xs">?p_photo={id}</span> → <span class="font-mono text-xs">/old-photos/{id}</span></td><td class="py-1 pr-3"><strong>✅ 完全一致（設計どおり）</strong>。インポートは旧IDをそのまま保持する実装で、重複チェックも旧IDで実施。<span class="text-gray-600">＝C026 の n=1 観測（ID 1000）が全件に一般化できることが内部確認で裏づけられた。</span></td><td class="py-1"><strong>番号をそのまま流用可</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">都道府県<br><span class="font-mono text-xs">?p_pref={id}</span> → <span class="font-mono text-xs">/prefectures/{id}/old-photos</span></td><td class="py-1 pr-3"><strong>❌ 別体系（対応表を下に確定掲載）</strong>。新ID＝<strong>JISコード＋5</strong>で全47件が機械的に成立（開発側がDB全行で検証済み）。旧IDは関西起点の独自順（旧37=大阪・38=兵庫・39=京都・40=滋賀）。</td><td class="py-1"><strong>下の47件の表から生成</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">市区町村<br><span class="font-mono text-xs">?p_city={id}</span> → <span class="font-mono text-xs">/cities/{id}/old-photos</span></td><td class="py-1 pr-3"><strong>❌ 別体系・対応表は生成済みだが本番サーバ内</strong>。インポート時に旧 <code>konjaku_area</code> と新 <code>cities</code> を<strong>名称の文字列突合</strong>で対応付けた <code>city_mapping.json</code>（旧ID→新コード・<code>matched</code> フラグ付き）が <strong><code>storage/app/mapping/</code> に保存されている設計</strong>（現物は未確認）。新URL の <code>{id}</code> は新DBの連番ID（1〜1,925）で、対応表の新コードから変換可能。</td><td class="py-1"><strong>ファイル取得が前提</strong>（→ 社長へ依頼中）。<code>matched=false</code>（旧「北陸」等の地方名）だけ個別に決める</td></tr>
+    </tbody>
+  </table>
+  <div class="bg-white border border-gray-300 rounded p-4 mb-3 text-xs">
+    <p class="font-semibold text-sm mb-2">都道府県の完全対応表（47件・確定）<span class="font-normal text-gray-500">　旧ID → 新ID（都道府県名）</span></p>
+    <p class="font-mono text-gray-800 leading-6">13→6 北海道／14→7 青森／15→8 岩手／16→9 宮城／17→10 秋田／18→11 山形／19→12 福島／20→13 茨城／21→14 栃木／22→15 群馬／23→16 埼玉／24→17 千葉／25→18 東京／26→19 神奈川／27→20 新潟／28→21 富山／29→22 石川／30→23 福井／31→24 山梨／32→25 長野／33→26 岐阜／34→27 静岡／35→28 愛知／36→29 三重／37→32 大阪／38→33 兵庫／39→31 京都／40→30 滋賀／41→34 奈良／42→35 和歌山／43→36 鳥取／44→37 島根／45→38 岡山／46→39 広島／47→40 山口／48→41 徳島／49→42 香川／50→43 愛媛／51→44 高知／52→45 福岡／53→46 佐賀／54→47 長崎／55→48 熊本／56→49 大分／57→50 宮崎／58→51 鹿児島／59→52 沖縄</p>
+  </div>
+  <p class="text-xs text-gray-600 mb-8">✅ <strong>本ループによる外形検証（内部申告を鵜呑みにしない）</strong>：旧側は SSR なので <code>hp-audit --json</code> の title で地名が読める。新側は配信HTMLが空のため <code>gsc-fetch.py page-queries</code> の着地クエリで地名を同定した。<strong>両端が一致した組＝島根（旧44 ✅実測「島根県で撮影された古い写真」／新37 ✅「浜田市 昔の写真」で着地）・京都（旧39 ✅実測「京都府で撮影された古い写真」／新31 ✅「京都 昔の写真」で着地）</strong>。あわせて C032 の実測（旧37=大阪・旧15=岩手／新37=島根・新15=群馬）とも矛盾しない。<strong>＝表は3組で両端検証済み・残り44件は「JISコード＋5」という機械的規則と開発側のDB全行検証に依拠</strong>（実装時は生成した規則を全件テストすること）。</p>
+
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">📊 データの実数（C033・2026-08-29 確定＝開発側の内部集計）</h2>
+  <p class="text-sm text-gray-700 mb-3">これまで外からは数えられなかった数字。出典＝<span class="font-mono">konjaku-dev</span>（<code>M-20260829T103238</code>）。<strong>本ループでは検算できない内部値</strong>のため、開発側申告として扱う。</p>
+  <table class="w-full text-sm border-collapse mb-3">
+    <tbody>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold w-1/3">古写真の総数</td><td class="py-1"><strong>13,542件</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">「今の写真」あり＝比較が成立</td><td class="py-1"><strong>3,685件（27.2%）</strong>／未登録 9,857件（72.8%）→ R-J17・R-J18 の分母</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">古写真が表示できない登録</td><td class="py-1"><strong>外部サイトへの直リンク（ホットリンク）341件（2.5%）</strong>＝<code>filename</code> が空で <code>url</code> が外部を指す旧サイト由来のレコード。内訳上位＝<span class="font-mono">blogs.c.yimg.jp</span> 109件（Yahoo!ブログ＝サービス終了で全滅）・<span class="font-mono">www.ndl.go.jp</span> 66件（国会図書館のURL再編）・<span class="font-mono">www.mars.dti.ne.jp</span> 19件。ID分布は1〜999に239件と低ID帯へ集中。<br>ローカル保存分（13,201件）にも欠落あり＝無作為30件の HEAD 確認で1件が404（ID 4588）。全量は未確定。→ R-J16</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">市区町村マスタ</td><td class="py-1"><strong>1,925件</strong>（全件で <span class="font-mono">/cities/{id}/old-photos</span> が生成され得る）</td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">sitemap.xml の市区町村収録数</td><td class="py-1"><strong>873件</strong>＝「古写真が1件以上ある市区町村だけを収録する」実装。<span class="text-rose-700">⚠️ 本ループが C024〜C032 で「109件」と記録していたのは<strong>計測ミス</strong>（<code>hp-audit --text</code> が約12KBで出力を打ち切るため、1.73MBのサイトマップの先頭しか数えていなかった）。→ R-J23 は撤回。</span></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold text-rose-700">🔴 <code>old_photos.city</code> の値の混在</td><td class="py-1"><strong>コード保存 10,494件／旧来の内部ID保存 1,176件／null 1,872件</strong>（計13,542）。<strong>ID保存の1,176件は「市区町村から探す」と sitemap の両方から到達できない</strong>（開発側の残存課題 PEND-14）。→ <strong>R-J29</strong></td></tr>
+      <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-semibold">名古屋市が「0件」と出る理由</td><td class="py-1"><strong>集計バグではなくデータ粒度</strong>。市区町村マスタは「名古屋市」（コード231002）と「名古屋市○○区」（16区）が<strong>別行</strong>で存在し、写真は<strong>区単位</strong>で登録されている。区の合計は121件（中区45・中村区22・西区16・熱田区10・東区8 ほか）で、「名古屋市」行に直接紐づく写真が0件。<br>愛知県の写真総数は384件だが、市区町村コード一致の合計は328件＝<strong>差56件は上記 city 列の混在で市区町村ページから到達できない</strong>。→ R-J26 の設計を差し替え</td></tr>
+    </tbody>
+  </table>
+  <p class="text-xs text-gray-500 mb-8">💡 <strong>含意</strong>：北極星の主軸である「市区町村ページ」は、検索でのクリック率が<strong>サイト平均の1.58倍</strong>（12.28% vs 7.77%）と最も高く、かつ露出が3サイクル連続で止まっている唯一の層。その層に供給されるはずの写真のうち <strong>3,048件（22.5%）がデータ側で紐付いていない</strong>——<strong>＝SSR化（R-J24）で器を直しても、中身が2割欠けたままになる</strong>。データ側の修復（R-J29）と器の修復（R-J24）は同時に必要。</p>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">🔑 検索資産の構造（C020・2026-08-17 確定＝北極星の実測窓）</h2>
   <p class="text-sm text-gray-700 mb-3"><strong>T-026（<code>ga4-fetch.py --raw-page</code>）で初めて実URL粒度の集計が取れた</strong>。7日窓（2026-08-10〜17・すべて <span class="font-mono">.com</span>）＝page_view 17,865／users 5,780。<strong>このサービスの検索資産はトップページではなく、地域一覧と個別写真のロングテールに載っている</strong>という事実が確定した（推測ではなく実測）。</p>
   <table class="w-full text-sm border-collapse mb-3">

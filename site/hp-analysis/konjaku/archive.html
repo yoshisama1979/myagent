@@ -45,10 +45,23 @@
     </ul>
   </div>
 
+  <!-- ===== 中止した提案 ===== -->
+  <div class="border border-gray-400 bg-gray-100 rounded-lg p-5 mb-10">
+    <h2 class="text-lg font-bold text-gray-800 mb-3">❌ 中止・撤回した提案</h2>
+    <ul class="space-y-2 text-sm text-gray-800">
+      <li><strong>R-J23</strong>（市区町村ページをサイトマップに全件載せる・🟡 Cycle 018 起票）→ ❌ <strong>撤回（C033・2026-08-29）＝前提が事実で崩れました</strong>。<br>
+      ・<strong>崩れた前提①＝「収録は109件しかない」</strong>。これは<strong>こちらの計測ミス</strong>でした。<code>hp-audit --text</code> は出力を約12KBで打ち切るため、1.73MB のサイトマップのうち先頭のごく一部しか数えていませんでした（＝109 は「サイトマップの中身」ではなく「打ち切られた先頭部分」の件数）。<strong>開発側の実測は 873件</strong>です。<br>
+      ・<strong>崩れた前提②＝「全件載せるべき」</strong>。市区町村マスタは <strong>1,925件</strong>ありますが、収録されている 873件は<strong>「古写真が1件以上ある市区町村だけを載せる」という設計</strong>の結果でした。＝<strong>残り1,052件は中身が0件のページ</strong>で、これを申告するのは薄いページの量産＝逆効果です。<strong>現状の設計のほうが正しい。</strong><br>
+      ・<strong>残った本当の課題は別のところにありました</strong>＝収録数が伸びない原因は「載せ方」ではなく<strong>データ側で写真と市区町村の紐付けが切れていること</strong>（<code>old_photos.city</code> の値の混在＝3,048件が地名から到達不能）。→ <strong>R-J29 として起票し直しました</strong>（最新レポート）。<br>
+      <span class="text-xs text-gray-600">※ 教訓＝「道具の出力が途中で切れていた」ことに9サイクル気づかず、その数字（109）を根拠に提案を1本立てていました。<strong>件数を数える道具は、まず全量を読めているかを確かめる</strong>（→ <code>sitemap-count.py</code> の許可リスト登録が必要な理由）。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 解決済みの質問 ===== -->
   <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-10">
     <h2 class="text-lg font-bold text-emerald-900 mb-3">✅ 解決済みの質問</h2>
     <ul class="space-y-2 text-sm text-gray-800">
+      <li><strong>Q-J07</strong>（実装担当 <span class="font-mono">konjaku-dev</span> は稼働しているか）／<strong>Q-J08</strong>（止まったままならどう進めるか）→ ✅ <strong>解決（C033・2026-08-29 10:24）＝原因は「開発機の引っ越しにともなう設定漏れ」でした</strong>。<span class="font-mono">konjaku-dev</span> から<strong>開通（8/15）以来はじめての返信</strong>が届き、次のとおり報告されました（先方の言葉のまま）：<strong>「開発環境は 8/20 に新しいマシン（Mac mini）へ移行しましたが、そのマシンの <code>.env</code> に <code>MAILBOX_URL</code> / <code>MAILBOX_TOKEN</code> が未設定で、受信箱の確認がエラーになっていました。本日 2026-08-29 に社長が設定し、疎通が回復しました」</strong>。<strong>滞留していた13通はすべて受領済み</strong>。<span class="text-gray-600">※ 選択肢でお聞きした「①稼働中／②止まっている／③工数を取っていない」は、いずれでもなく<strong>「稼働していたが、こちらからの連絡が届いていなかった」</strong>が答えでした。＝Q-J08（打ち手の選択）も不要になりました。<strong>ループ側の教訓</strong>＝「先方の沈黙」を先方の意思・稼働状況として解釈しかけていた（14日間）。実際は<strong>経路の故障</strong>で、こちらから確かめる手段がありませんでした。→ 経路の生死そのものを定点にする必要があります（skill-kaizen へ）。</span></li>
       <li><strong>Q-J06</strong>（GSC に登録されたのは <span class="font-mono">.jp</span> か <span class="font-mono">.com</span> か）→ ✅ <strong>データ着弾で解決（C022・2026-08-18）</strong>：登録されているのは <strong><span class="font-mono">konjaku-photo.jp</span>（新サイト）</strong>でした。着弾した 2026-08-15 分で表示のあった 76URL はすべて <span class="font-mono">.jp</span> で、<span class="font-mono">.com</span> のURLは1件も含まれていません。<span class="text-gray-600">※＝いま実際に稼いでいる <span class="font-mono">.com</span> の検索実績は数字で見えない状態です。この不足への対応は <strong>R-J25</strong>（.com も GSC に追加登録）として最新レポートで継続。</span></li>
       <li><strong>Q-J04</strong>（計測の土台＝GSC・GA4 の接続予定）→ ✅ <strong>解決（2026-08-16・社長対応）</strong>。<br>
       ・<strong>GA4＝新規プロパティの作成は不要でした</strong>：既存プロパティ <span class="font-mono">analytics_254454527</span>（測定ID <span class="font-mono">G-YBRQK0Q7JC</span>）が <strong>2021-07-03 から約5年分</strong>蓄積されており、BigQuery 経由で取得できることを Cycle 019 で確認・初取得。＝「どのアカウントで作るか」という論点自体が消滅しました。<br>
@@ -58,6 +71,71 @@
       <li><strong>Q-J05</strong>（ループの回し方：日次継続 vs 週1へ間引き）→ ✅ <strong>週次で確定</strong>（月曜 04:30）。<strong>社長決定 2026-07-08</strong>：入力凍結中のループ（konjaku / rally）は日次→週次に右サイズ化。新着 mailbox が来れば反応ティックで即起動＝取りこぼしなし。データ連携後は日次へ戻す。<br><span class="text-xs text-gray-500">※ 掲示板は Cycle 008〜012 の間これを「未回答」と表示し社長に督促し続けていたが、<strong>実際には社長は決定済み</strong>で、<code>bin/agent-tick.sh</code> の cron 定義とサイト設定の両方に記録されていた。<strong>掲示板側の追従漏れ</strong>（社長の不作為ではない）。Cycle 013 の自己監査で発見・訂正。</span></li>
     </ul>
   </div>
+
+  <!-- ===== Cycle 032 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-1">Cycle 032 — 2026-08-29（🔑 ドメイン移行のご決定を受けて設計を確認したところ、そのまま実装すると「別の土地のページ」へ飛ぶことが分かりました）</h2>
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>GSC＝14日分</strong>（<span class="font-mono">searchconsole_konjaku</span>・8/13〜8/26＝クリック184・表示2,368・クリック率7.77%・平均掲載順位7.9・表示URL 365件）。<strong>GA4（<span class="font-mono">.jp</span>）＝8/27 まで</strong>（正常なラグ）。サイト実査＝hp-audit（<span class="font-mono">.jp</span> 定点5URL＋<span class="font-mono">.com</span> 5URL）／hp-shot（トップ PC/SP）。起動＝<strong>社長による手動実行</strong>。<span class="text-xs">※ 前回まで「実行できない」と報告していた在庫上限の機械判定（<code>pending-scan.py</code>）は<strong>正常に実行できました</strong>（判断待ち 4/15）＝前回の報告は誤りでした。</span></p>
+
+    <div class="bg-white border border-gray-200 rounded-lg p-5 mb-5">
+      <h3 class="font-semibold mb-2">総評</h3>
+      <p class="text-sm text-gray-700 mb-3"><strong>【1】まず、ドメインのご判断をありがとうございました。</strong>「<strong>.com から .jp にリニューアルした。いまはリンクを貼っているだけなので、恒久リダイレクトで飛ばす必要がある</strong>」——このひと言で、<strong>12日間ここで止まっていた最優先の詰まりが解けました。</strong>ご指示のとおり「301（恒久）で・URL単位で対応先へ飛ばす」という要件で実装担当へ配信しています。</p>
+      <p class="text-sm text-gray-700 mb-3"><strong>【2】そのうえで、実装に入る前に必ず片づけておくべきことが1つ見つかりました。これが今日いちばんお伝えしたいことです。</strong>「URL単位で飛ばす」を実現するとき、いちばん自然な作り方は「<strong>旧サイトの <span class="font-mono">?p_city=334</span> は、新サイトの <span class="font-mono">/cities/334</span> へ</strong>」というふうに<strong>番号をそのまま使う</strong>やり方です。ところが実際に両方を開いて確かめたところ——<strong><span class="font-mono">?p_city=334</span> は「小田原市」、<span class="font-mono">/cities/334</span> は「山形市」でした。</strong>都道府県も同じで、<strong><span class="font-mono">?p_pref=37</span> は「大阪府」、<span class="font-mono">/prefectures/37</span> は「島根県」</strong>です。<strong>＝新旧で番号の体系がまったく別物になっています。</strong></p>
+      <p class="text-sm text-gray-700 mb-3"><strong>【3】しかも、これは「気づきにくい」形で仕掛けられています。</strong>個別の<strong>写真ページの番号だけは、新旧で一致している</strong>のです（旧 <span class="font-mono">?p_photo=1000</span> ＝ 新 <span class="font-mono">/old-photos/1000</span> ＝ どちらも「神戸海岸オリエンタルホテル」）。<strong>＝写真ページで1件だけ動作確認をすると「番号はそのまま使える」という結論になり、その規則を全体に広げてしまいます。</strong>そして<strong>旧サイトで実際に見られているページの上位40件のうち、市区町村ページが44%・都道府県ページが35%＝あわせて約8割</strong>がその規則の対象です。<strong>＝移行した瞬間に、検索から来たお客さんの8割が「まったく関係のない土地の写真ページ」に着地することになります。</strong>検索エンジンから見ても「関係のないページへの転送」と判断され、引き継ぎたい評価がそこで切れます。</p>
+      <p class="text-sm text-gray-700 mb-3"><strong>【4】対処は難しくありません。</strong>番号ではなく<strong>地名（市区町村名・都道府県名）をキーにして、新旧の対応表をデータベース側で1本作る</strong>だけです。あとはその表からリダイレクト規則を機械的に生成すれば済みます（写真の番号は一致しているのでそのまま使えます）。<strong>R-J28 として起票し、実装担当へ配信しました。</strong>——これは「良い提案を1つ足した」という話ではなく、<strong>ご決定いただいた移行を、失敗させないための前提</strong>です。</p>
+      <p class="text-sm text-gray-700 mb-3"><strong>【5】あわせて、いましかできないお願いが1つあります（R-J25）。</strong>Search Console に登録されているのは新サイトだけで、<strong>いま実際に検索で稼いでいる旧サイトは登録されていません</strong>。<strong>301を打った瞬間から旧サイトの検索実績は減り始めます</strong>ので、<strong>「移行前はこうだった」という基準値を取れるのは今だけ</strong>です。これが無いと、社長がおっしゃった「インデックス上も恒久リダイレクト」が<strong>ちゃんと効いたのかどうかを、あとから確かめる手段がなくなります</strong>。管理画面の操作だけ・5分・開発側の作業はありません。<strong>エクスポートの実データ着弾に〜48時間かかるので、リダイレクト実装より先にお願いできると確実です。</strong></p>
+      <p class="text-sm text-gray-700"><strong>【6】本番は14日連続でゼロ、そして実装担当からの返信もありません。</strong>8/28 に社長ご指示の2件（問い合わせページ・301リダイレクト）を配信した際、<strong>「受信した、の1行だけでよいので返信してください」と本文に明記しました</strong>が、24時間経っても返信はありません。受信箱の滞留は<strong>13通</strong>、先方からの発信は開通以来<strong>通算ゼロ</strong>のままです。<strong>＝社長のご指示は、いま「配信した」とは言えても「届いた」とは言えません。</strong>推測で「対応済み」にはしません。一方でお客さんは今日も動いていて、<strong>投稿写真は1日で26枚増えています</strong>。→ 🔔 Q-J07・Q-J08 のご回答をお待ちしています。</p>
+      <p class="text-xs text-emerald-800 mt-3 bg-emerald-50 border border-emerald-200 rounded p-2">📌 <strong>後日の続き（Cycle 033・同日 2026-08-29 午前）</strong>：この【6】の状態は<strong>同じ日のうちに解消しました</strong>＝10:24 に <span class="font-mono">konjaku-dev</span> から<strong>開通以来はじめての返信</strong>が届き、14日間の無応答の原因（8/20 の開発機移行で <code>.env</code> 未設定）が判明。10:32 には調査依頼6件への回答が届き、<strong>R-J28 の都道府県対応表47件が確定</strong>しました。詳細は Cycle 033（最新レポート）へ。</p>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-300 rounded-lg p-5 mb-5">
+      <h3 class="font-semibold text-blue-800 mb-2">🔍 新規事実（観察＝事実）</h3>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+        <li><strong>🔑 新旧サイトで市区町村・都道府県の内部IDが別体系（実測4件）</strong>：<br>
+        <span class="ml-4">・旧 <span class="font-mono">?p_city=334</span>＝<strong>小田原市</strong>／新 <span class="font-mono">/cities/334/old-photos</span>＝<strong>山形市</strong>（新側は GSC で「山形市 昔の写真」が 5.4位・表示12回で着地していることから確認）</span><br>
+        <span class="ml-4">・旧 <span class="font-mono">?p_city=7</span>＝<strong>北陸</strong>（＝そもそも市区町村ではなく地方名。旧の <span class="font-mono">p_city</span> には地方が混ざっています）／新 <span class="font-mono">/cities/7/old-photos</span>＝<strong>札幌市南区</strong></span><br>
+        <span class="ml-4">・旧 <span class="font-mono">?p_pref=37</span>＝<strong>大阪府</strong>／新 <span class="font-mono">/prefectures/37/old-photos</span>＝<strong>島根県</strong>（新側は「浜田市 昔の写真」で着地）</span><br>
+        <span class="ml-4">・旧 <span class="font-mono">?p_pref=15</span>＝<strong>岩手県</strong>／新 <span class="font-mono">/prefectures/15/old-photos</span>＝<strong>群馬県</strong>（新側は「桐生市 昔の写真」で着地）</span><br>
+        <span class="ml-4">・<strong>一方で写真IDは一致</strong>：旧 <span class="font-mono">?p_photo=1000</span>＝新 <span class="font-mono">/old-photos/1000</span>＝どちらも「神戸海岸オリエンタルホテル」（C026 実測）</span><br>
+        <span class="text-gray-500">＝<strong>R-J28 として起票</strong>。<span class="text-xs">※ 推測：旧サイトの <span class="font-mono">p_city</span> に地方名が混ざっていることから、新サイトは市区町村マスタを作り直したものと見られます（＝IDが一致しないのは自然なことで、不具合ではありません）。<strong>問題は「一致していると思い込んだまま移行すること」のほうです。</strong></span><span class="text-xs text-emerald-800">【C033 追記＝この推測は開発側の内部確認で裏づけられました。新サイトの都道府県IDは「JISコード+5」で機械的に成立し、市区町村は名称突合で作り直されています。】</span></span></li>
+        <li><strong>🆕 旧サイトの閲覧の内訳（＝301で守るべきものの大きさ）</strong>：<span class="text-gray-500">GA4（旧 <span class="font-mono">analytics_254454527</span>）8/21〜29 の閲覧上位40URL＝<strong>市区町村ページ 24URL・1,417ビュー（44%）／都道府県ページ 15URL・1,130ビュー（35%）／トップ 694ビュー（22%）</strong>。<strong>＝トップページ以外はほぼ全部が「地名のページ」で、そのすべてが上記のID不一致の対象</strong>です。</span></li>
+        <li><strong>🚨 8/28 の配信に対し、実装担当から1行の返信もありません（24時間経過）</strong>：<span class="text-gray-500">8/28 の2通（<span class="font-mono">M-20260828T151329</span>＝問い合わせページ／Cycle 031 レポート）は本文末尾に<strong>受領確認の依頼を明記</strong>していました。<strong>返信ゼロ</strong>・滞留 <strong>13通</strong>（最古 8/15＝<strong>14.0日</strong>）・<span class="font-mono">from: konjaku-dev</span> は受信箱／処理済みとも<strong>通算0件</strong>。<span class="text-xs">※「滞留」＝必ずしも「未読」ではありません（読んでも完了マークを打たない運用がありえます）。<strong>断定できるのは①本番の14日ゼロ ②先方からの発信ゼロ ③明示的に依頼した1行返信が24時間来ていないこと</strong>の3点です。</span><span class="text-xs text-emerald-800">【C033 追記＝同日 10:24 に返信が届き解消。原因は開発機移行に伴う <code>.env</code> 未設定でした。】</span></span></li>
+        <li><strong>階層別の検索実績（14日分・8/13〜8/26）と前サイクルからの増分</strong>：<span class="text-gray-500"><strong>市区町村 23ページ／14クリック／表示114＝12.28%</strong>（前回 23／13／104）＝<strong>ページ数は3サイクル連続で増分ゼロ</strong>。<strong>都道府県 40ページ／105／1,317＝7.97%</strong>（前回 40／101／1,199）＝<strong>47県中40県＝85.1% で2サイクル据え置き＝もう増える枠がありません</strong>。<strong>個別写真 292ページ／61／874＝6.98%</strong>（前回 277）＝<strong>+15ページ</strong>。全体 365ページ／184／2,368＝7.77%・平均7.9位。<strong>＝「いちばんクリックされやすい市区町村層だけが止まり、いちばんクリックされにくい個別写真層だけが増え続ける」という構図が、3サイクル続けて再現しました。</strong>これが R-J24 ① を最上位に置いている理由です。</span></li>
+        <li><strong>本番反映は14日連続ゼロ（定点すべて不変）</strong>：<span class="text-gray-500"><span class="font-mono">.jp</span> トップ 27,079B・0.073秒・h1×1/h2×7/h3×2・a[href] 22本・canonical/OGP/JSON-LD 無し・img 0件／<span class="font-mono">/old-photos/999999</span> は<strong>いまも200</strong>・title「古写真詳細」／<span class="font-mono">/cities/334/old-photos</span> 18,179B・title は<strong>トップと完全同一</strong>。<strong>旧 <span class="font-mono">.com</span> も 200 のまま＝リダイレクトはまだ入っていません</strong>（978,202B・4.39秒＝移行前の基準値として記録）。<strong>一方 sitemap.xml は 1,731,218B → 1,732,648B（+1,430B）＝投稿の再開に合わせて再生成されています</strong>（＝「投稿があれば自動再生成される」の再確認）。</span></li>
+        <li><strong>トップ実見＝投稿は再開、ただし顔は1地域に完全占拠（R-J27 が4日連続）</strong>：<span class="text-gray-500">統計＝<strong>投稿写真 17,669 → 17,695枚（+26）</strong>・登録ユーザー 6,833人（±0）。<strong>PICK UP 4枠＝NEW ARRIVALS 先頭4件と完全一致＝4日連続（n=4）</strong>。<strong>🆕 NEW ARRIVALS は今日 8枠すべてが大阪府東大阪市</strong>（前回は7/8）＝<strong>占拠が強まりました</strong>。人気ランキングは<strong>3件のみ（♡2・♡1・♡1）が4日連続</strong>。最新コメントは <strong>8/27 のまま</strong>（＝8/27 の利用許諾の問い合わせが、まだ最新であり続けています）。</span></li>
+        <li><strong>GA4（新サイト）8/25〜27＝流入は増えているが、CVはゼロのまま</strong>：<span class="text-gray-500">旧サイトからの遷移 <strong>79セッション</strong>（1日約26＝安定）・Google 50・直接 49・Bing 16・Yahoo 16・docomo 2・Facebook 1・ChatGPT 1。<strong>検索エンジン合計は3日で82セッション（前回65）＝約1.26倍に伸びています</strong>。<strong><span class="font-mono">t.co</span>（X）は2サイクル連続で0</strong>。<strong>CVセッションは全流入源でゼロ</strong>（＝R-J22 未実装のため、そもそも計測されていません）。</span></li>
+        <li><strong>🆕 自己訂正2件（道具まわり）</strong>：<span class="text-gray-500">①<strong>在庫上限の判定ツール <code>pending-scan.py</code> は許可リストに登録済みでした</strong>＝C031 の「未登録で実行できない」は誤りです（今日は正常に実行＝判断待ち 4/15）。残る未登録は <code>gsc-layer.py</code>・<code>sitemap-count.py</code> の2本だけです。②<strong>スクリーンショットの道具は「呼び方」で通ったり弾かれたりします</strong>＝<code>bash bin/hp-shot.sh …</code> は拒否され、<code>bin/hp-shot.sh …</code> なら通ります（許可リストが後者の形だけで登録されているため）。<strong>以前 Slack 配信が7日間無言で止まったのと同じ型</strong>なので、他の道具も同様に点検します。</span></li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded-lg p-5 mb-5">
+      <h3 class="font-semibold mb-3">💡 新規提案：<strong>1件</strong>（R-J28）／<strong>優先順の組み替え1件</strong>／<strong>待ち解除1件</strong></h3>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+        <li><strong>🆕 R-J28（🔴・工数：小）＝301リダイレクトの前に「新旧IDの対応表」を作る</strong>。<br>
+        <span class="ml-4"><strong>観察</strong>＝旧 <span class="font-mono">?p_city=334</span>＝小田原市／新 <span class="font-mono">/cities/334</span>＝山形市、旧 <span class="font-mono">?p_pref=37</span>＝大阪府／新 <span class="font-mono">/prefectures/37</span>＝島根県（ほか2件・計4件を実測）。一方で写真IDは新旧一致。</span><br>
+        <span class="ml-4"><strong>なぜ問題か</strong>＝「URL単位で飛ばす」を番号の流用で実装すると、旧サイトの閲覧の約8割（市区町村44%＋都道府県35%）が<strong>無関係な土地のページへ転送</strong>されます。検索エンジンからも「関連性のない転送」と扱われ、引き継ぎたい評価がそこで切れます。<strong>写真ページで動作確認すると正常に見えるため、気づかないまま本番に出る危険が高い</strong>です。</span><br>
+        <span class="ml-4"><strong>改善案</strong>＝<strong>地名（市区町村名・都道府県名）をキーに新旧を突合した対応表をDB側で1本作り、リダイレクト規則をその表から生成する</strong>。写真IDのみ番号流用可。突合できなかった地名（旧の「北陸」等の地方名）は<strong>都道府県ページか、その地方を含む一覧へ寄せる</strong>方針を別途決める。</span><br>
+        <span class="ml-4"><strong>効果（北極星＝閲覧）</strong>＝移行で失う閲覧をゼロに近づける。逆に言えば<strong>これをやらないと、移行がそのまま閲覧の急落になります</strong>。<strong>着手区分＝✅AI即応</strong>（開発側だけで完結・回答不要）。</span></li>
+        <li><strong>優先順の組み替え</strong>＝移行決定を受けて<strong>「R-J28（対応表）→ R-J24（受け止める器のSSR化）→ R-J19（301本体）」の順</strong>に変更しました。<span class="text-xs text-gray-600">理由＝301は「評価を渡す」操作なので、<strong>渡す先が空っぽ（配信HTMLが「読み込み中...」だけ）のまま打つと、渡した評価をそのまま落とします</strong>。</span></li>
+        <li><strong>待ち解除</strong>＝<strong>R-J05 の canonical</strong> は「R-J19 の方針待ち」でしたが、<strong>方針が決まったので 301 と同時に実装できます</strong>（待ち解除）。</li>
+        <li><strong>新規 Q＝0件</strong>（Q-J07・Q-J08・Q-J03・Q-J01 が未回答のため、同じことを別番号で二重に聞きません）。</li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-200 bg-gray-50 rounded-lg p-4 text-sm">
+      <p class="font-semibold mb-1">対応記録</p>
+      <p class="text-gray-700 mb-2"><code>data/hp-loop/konjaku/from-president.md</code> の <strong>2026-08-28 のご指示・ご回答を反映しました（対応：Cycle 032）</strong>：</p>
+      <ul class="list-disc list-inside text-gray-700 space-y-1">
+        <li><strong>R-J19＝「①.jp へ移行」で確定</strong> → 🔔から✅へ移し、🔧表の状態を「方針確定・実装待ち」に更新。<strong>実装の前提として R-J28 を起票</strong>し、着手順を組み替えました。</li>
+        <li><strong>R-J12＝問い合わせページを急遽作る（konjaku-dev へ指示）</strong> → 8/28 に配信済みであることを確認。<strong>ただし「✅着手済」にはしていません</strong>＝受領確認が取れていないためです（→ Q-J07）。区分は🔔（Q-J03＝許諾方針）のまま、注記に「窓口の器は先行着手可・配信済み」と明記しました。</li>
+        <li><strong>R-J25＝301の前に基準値を取るため社長へ再掲せよ</strong> → ご指示のとおり🔔の最上位（🚨）に再掲し、<strong>「エクスポート着弾に〜48時間かかるのでリダイレクト実装より先に」</strong>という期限の理由まで書きました。</li>
+        <li><strong>konjaku-dev の稼働確認＝返信の有無を必ず確認し、無ければ「届いたか不明」として日報に晒せ</strong> → <strong>確認しました。返信はありません。</strong>「配信した」とは書きましたが「届いた」とは書いていません（総評【6】・🔍新規事実に明記／日報にも掲出）。</li>
+      </ul>
+      <p class="text-gray-700 mt-2"><code>to: hp-loop-konjaku</code> のメールボックス新着はゼロでした。</p>
+    </div>
+
+    <p class="text-xs text-gray-500 mt-3">実装担当への配信：<strong>✅ 投函＋検算まで完了</strong>（<code>M-20260829T044523-hp-loop-konjaku-38d09a</code>・10,558B・宛先 <code>konjaku-dev</code>・件名「[HP分析] konjaku 最新レポート Cycle 032」・本文に R-J28 の実測4件と受領確認の依頼が含まれることを確認）。<strong>ただし「届いたか」は未確認です</strong>（→ 🔔 Q-J07）。<span class="text-emerald-800">【C033 追記＝この配信は届いていました。10:24 の受領確認で「滞留13通すべて受領」と報告されています。】</span></p>
+  </section>
 
   <!-- ===== Cycle 031 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
