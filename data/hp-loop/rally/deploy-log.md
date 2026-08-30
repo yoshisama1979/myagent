@@ -56,3 +56,18 @@
 - 2026-08-30｜R-R32（①）｜未ログイン時の行き先を `/login` に統一｜同上・🔧 **実装済み・当方は検証不能**（クライアント側リダイレクト）。先方は自動テストで行き先を固定・ローカル実機で確認済みと申告
 - 2026-08-30｜R-R17｜**計測イベント `sign_up`・`stamp_get` を dataLayer へ push＋`/admin` 配下で GTM を読み込まない**｜同上・🔧 **実装済み・当方は検証不能**。⚠️ **GA4 に届くのは GTM コンテナ側でトリガーとGA4タグを公開してから＝社長の作業待ち**（→ Q-R17・【社長へ】伝言）
 - 2026-08-30｜R外｜**トップ配信HTML 57,978B → 60,756B**（14日連続同一を脱出）＝上記の反映に伴う変化｜同上・実査確認（hp-audit）。⚠️ **トップだけは canonical も OGP も無いまま**（`/map`・`/people` も OGP 0件）＝R-R02・R-R01 の残件が実測で確定
+
+## 2026-08-30（2回目）— 🎉 同日2回目の本番反映＝「発見の配管」が開通
+
+> 報告ID **なし（未着）**。当方の日次変化検知（Cycle 037・2026-08-30 18:06 JST）で検出＝**実装側からの報告を待たずに機械的に発見**した反映。
+> 反映時刻は **8/30 12:00〜18:06 の間**（12:00 の Cycle 036 実査時点では未反映を確認済み）。報告が届いたら本節に報告IDを追記する（重複追記はしない）。
+> **当方の本番実査（hp-audit 9本＝robots/sitemap は --text 付き）で1件ずつ検証**。
+
+- 2026-08-30｜R-R06｜**`robots.txt` が 404 → 200（95B）**。中身＝`User-Agent: *` / `Disallow: /admin/` `/admin` / `Sitemap: https://check-rally.com/sitemap.xml`｜Cycle 037 実査（hp-audit --text）・✅**完了**。真因は nginx と reverse-proxy 双方の `location = /robots.txt` によるアプリ出力の横取り（Cycle 036 で開発側が特定）
+- 2026-08-30｜R-R06｜**`sitemap.xml` が 12URL → 976,642B（本文586,459字＝概算 約1.5万URL）**。収録＝ハブ7本＋`/map`・`/people`・`/ranking/*`・`/login`・`/register`＋エリア11＋都道府県47＋市区町村（`/spots/cities/01100`〜）＋スポット個別｜Cycle 037 実査（hp-audit --text）・✅**完了**。⚠️ 正確なURL件数は `bin/sitemap-count.py` が実行許可リスト未登録のため**概算**（→ブロッカー）
+- 2026-08-30｜R-R02｜**OGP 7件＋Twitterカード4件＋canonical を全ページに**（トップ／`/spots/496`／`/spots/prefectures/kyoto`／`/spots/cities/23106`／`/spots/themes`／`/spots/themes/zennihon-tower-renmei` の6ページで実測）｜Cycle 037 実査・✅**完了**。トップの description も 44字 → 69字に実体化
+- 2026-08-30｜R-R33（①の一部）｜**スポット詳細ページに本文・見出し・関連リンクを配信HTMLへ出力**＝`/spots/496` が 見出し0・リンク9（全部ナビ）→ **91,267B・h2=2/h3=12・a=23・img8（alt全入り）**。関連スポット13本＋「この市区町村をすべて見る」→`/spots/cities/23106`＋「このテーマをすべて見る」→`/spots/themes/zennihon-tower-renmei`｜Cycle 037 実査（hp-audit --links）・🔧**半分完了**（詳細層のみ）
+- 2026-08-30｜R外｜**トップ配信HTML 60,756B → 63,319B**＝上記の反映に伴う変化｜Cycle 037 実査（hp-audit）
+- 2026-08-30｜R外（データ更新）｜`/spots/prefectures/kyoto` の title 件数が **1039件 → 1053件**｜Cycle 037 実査。スポットデータの追加が続いている
+- 2026-08-30｜**未反映（実測）**｜一覧層（都道府県・市区町村・テーマ）は**中身が空のまま**＝`/spots/cities/23106` a=9・h=0・50,665B／`/spots/prefectures/kyoto` a=9・h=0／`/spots/themes/zennihon-tower-renmei` a=10・h=0。**h1 は全ページ 0本のまま**｜Cycle 037 実査・R-R33 の残件として継続
+- 2026-08-30｜**未反映（実測）**｜`www.check-rally.com` は**証明書エラー継続**（curl exit=60）｜Cycle 037 実査・R-R18（🔴P0・Q-R14 待ち）

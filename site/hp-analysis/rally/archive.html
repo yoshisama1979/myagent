@@ -30,6 +30,25 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== 完了した提案（Cycle 037 でクローズ） ===== -->
+  <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了した提案 — Cycle 037（2026-08-30 夕）でクローズ ＝ <span class="underline">同日2回目の本番反映で「発見の配管」が開通</span></h2>
+    <p class="text-xs text-gray-600 mb-3">2026-08-30 の 12:00〜18:06 の間に <strong>本日2回目の本番反映</strong>が実施された（報告は未着＝当方の日次変化検知で自動検出）。以下はすべて<strong>公開URLを1本ずつ取得して実測</strong>したもの。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-4">
+      <li><strong><code>R-R06</code> robots.txt と sitemap.xml を実体のあるものにする — ✅完了（実測検証済）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>robots.txt</code> が <strong>404 → 200（95B）</strong>。中身＝<code>User-Agent: *</code>／<code>Disallow: /admin/</code>・<code>/admin</code>／<code>Sitemap: https://check-rally.com/sitemap.xml</code> ＝<u>提案どおり（管理画面だけ拒否・サイトマップを申告）</u>。<br>
+        <span class="text-emerald-800">実測</span>＝<code>sitemap.xml</code> が <strong>12URL（約1KB）→ 976,642B</strong>。本文テキスト 586,459字から<strong>概算 約1.5万URL</strong>（正確な件数は <code>bin/sitemap-count.py</code> が実行許可待ちのため概算）。収録を先頭から実査＝ハブ7本＋<code>/map</code>・<code>/people</code>・<code>/ranking/*</code>・<code>/login</code>・<code>/register</code> ＋ <strong>エリア11・都道府県47・市区町村（<code>/spots/cities/01100</code>〜）・スポット個別</strong>＝<u>申告漏れの層なし</u>。<br>
+        <span class="text-gray-600">経緯＝Cycle 032 で「アプリは出しているのに手前の何かが横取りしている」と推理 → Cycle 036 で開発側が真因を特定（nginx と reverse-proxy 双方の <code>location = /robots.txt</code>）→ 本サイクルで解消を実測。<strong>起票 Cycle 006 から 31 サイクル</strong>。</span></li>
+      <li><strong><code>R-R02</code> OGP・Twitterカード・canonical を入れる — ✅完了（実測検証済）</strong><br>
+        <span class="text-emerald-800">実測</span>＝トップ・<code>/spots/496</code>・<code>/spots/prefectures/kyoto</code>・<code>/spots/cities/23106</code>・<code>/spots/themes</code>・<code>/spots/themes/zennihon-tower-renmei</code> の<strong>6ページすべてで OGP 7件（og:title/description/image/url/type/site_name/locale）＋ Twitter カード 4件 ＋ canonical</strong>を確認。<u>Cycle 034 で訂正した「トップの og は未実装」状態から、全ページ一括で入った</u>。<br>
+        <span class="text-emerald-800">副次</span>＝トップの description が <strong>44字 → 69字</strong>（「GPSでつながる、リアル冒険スタンプラリー。…」）に実体化。<br>
+        <span class="text-gray-600">意味＝SNS シェア時にタイトル・説明・画像が出る＝北極星の経路①「SNSシェアで広がる」の前提が整った。</span></li>
+      <li><strong><code>R-R21</code>（個別ページの名札）・<code>R-R25</code>（テーマ層の仕上げ） — ✅名札部分は完了済み／残件は <code>R-R33</code> へ統合してクローズ</strong><br>
+        <span class="text-gray-700">両提案の残件（<u>h1 の実体化・見出しの実体化・カード一覧の配信HTML出力</u>）は、Cycle 036 の実測時点ですでに「<strong>R-R33 とまったく同じ作業</strong>」に収束していた。番号を3つに分けたまま追うと同じ作業を3回督促することになるため、<strong>R-R33 に一本化</strong>（＝<u>重複・近縁は統合する</u>という在庫の鮮度管理の規律）。<br>
+        <span class="text-amber-800">⚠️ 作業が消えたのではない</span>＝残件はすべて R-R33 の本文に引き継ぎ済み。効果検証の基準線（GSC 表示URL 2本・<code>/spots/themes</code> 2クリック/12表示・順位10.8）も R-R33 側で維持する。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 完了した提案（Cycle 036 でクローズ） ===== -->
   <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了した提案 — Cycle 036（2026-08-30）でクローズ ＝ <span class="underline">36サイクル目で初の ✅完了</span></h2>
@@ -98,6 +117,53 @@
       <span class="text-gray-600">→ <strong>Cycle 032 で解錠4件を仕分けました</strong>：<span class="text-emerald-800"><strong>R-R06 は社長の作業ではなかった</strong></span>（Next.js のコード作業と実測で判明＝🔔→✅AI即応）／<strong>R-R18・R-R19・8/15 障害の原因特定</strong>は管理画面での操作＝<u>どのサービスの管理画面かが未確定</u>のため <strong>Q-R13</strong> として1問だけ新規に起票（当方からはヘッダー取得・DNS照会がいずれも権限外で特定できず）。生死は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の Q-R13 で追跡します。</span></li>
     </ul>
   </div>
+
+  <!-- ===== Cycle 036 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 036 — 2026-08-30（<span class="text-emerald-700">🎉 本番反映を実測で検証＝36サイクル目で初の ✅完了 4件</span>／<span class="text-red-700">ただし発見の配管（sitemap・robots）はまだ半分</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>mailbox＝<code>hp-loop-rally</code> 宛に新着1通</strong>（<code>rally-dev</code> の本番反映報告 <code>M-20260830T113954</code>）＝<span class="text-emerald-700"><strong>この受信を起点にした反応型サイクル</strong></span>。<strong>本番実査＝実施</strong>（hp-audit <strong>13本</strong>＝トップ／<code>/spots</code>／<code>/people</code>／<code>/spots/areas</code>（<code>--links</code>）／<code>/spots/themes</code>／<code>/spots/themes/kyoto-gozan</code>／<code>/spots/496</code>／<code>/spots/prefectures/kyoto</code>／<code>/spots/cities/26104</code>／<code>/spots/search</code>／<code>/map</code>／<code>/spots/999999</code>／<code>/spots/abc</code> ＋ robots・sitemap・www ＋ <strong>hp-shot 2画面</strong>）。<strong>GSC</strong>＝14日窓 8/16〜8/27（clicks 4／imp 40／CTR 10.00%／pos 9.6・last=<strong>8/27＝前進</strong>）。<strong>GA4</strong>＝45日窓（events 1,297／users 120・last=<strong>8/28＝正常</strong>）。社長入力（from-president.md）＝<strong>新規の記載なし</strong>（8/28 分は Cycle 033 で対応済み）。在庫上限チェック＝<strong>判断待ち 10/15＝起票可</strong>。</p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① 「報告どおりか」を1本ずつ確かめました（本サイクルの本業）</h3>
+      <p class="text-sm text-gray-800 mb-2">開発側から「本番へ反映した」と報告があっても、<strong>そのまま ✅ にはしません</strong>（このループの規律です）。公開URLを取得し、<u>変わるはずのものが実際に変わったか</u>を1件ずつ照合しました。結果、<strong class="text-emerald-800">✅完了＝4件</strong>／<strong class="text-emerald-700">主要部分の反映＝2件</strong>／<strong class="text-red-800">差し戻し＝1件</strong>／<strong class="text-amber-800">未達（自己申告どおり）＝2件</strong>。</p>
+      <table class="w-full text-sm border-collapse bg-white rounded">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-24">提案</th><th class="py-1 px-2 w-24">判定</th><th class="py-1 px-2">実測した内容</th></tr></thead>
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 font-mono">R-R34</td><td class="py-1 px-2 text-emerald-800 font-bold">✅完了</td><td class="py-1 px-2">一覧・階層ページの名札がすべて固有に＋canonical。<span class="text-gray-600">28サイクル追ってきた「名札が3種類しかない」構図が解消。</span></td></tr>
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 font-mono">R-R21</td><td class="py-1 px-2 text-emerald-800 font-bold">✅完了<span class="text-xs font-normal">（名札）</span></td><td class="py-1 px-2"><code>/spots/496</code>＝「中部電力 MIRAI TOWER（名古屋テレビ塔）｜名古屋市中区のスタンプスポット」。都道府県・市区町村も<strong>件数入り</strong>（「京都府…1039件」「京都市中京区…47件」）。<span class="text-red-800">※h1 は依然0本＝R-R33 へ合流</span></td></tr>
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 font-mono">R-R24</td><td class="py-1 px-2 text-emerald-800 font-bold">✅完了</td><td class="py-1 px-2"><code>/spots</code> が 404→正しく転送。<strong>リンク実査でも壊れリンクの消滅を確認</strong>（基準＝1本 → 0本）。45日で48回・9人が落ちていた穴が塞がりました</td></tr>
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 font-mono">R-R27</td><td class="py-1 px-2 text-emerald-800 font-bold">✅完了</td><td class="py-1 px-2"><code>/spots/999999</code>・<code>/spots/abc</code> とも 200→<strong>404</strong>。実在ページは 200 のまま＝正しい挙動</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 px-2 font-mono">R-R30</td><td class="py-1 px-2 text-emerald-700">🔧主要部分</td><td class="py-1 px-2">配信 <strong>12,504B → 54,983B</strong>＋固有 title＋canonical。<span class="text-gray-600">「素のシェル」から脱出</span></td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 px-2 font-mono">R-R25</td><td class="py-1 px-2 text-emerald-700">🔧主要部分</td><td class="py-1 px-2">テーマ詳細の名札・解説文・canonical が反映。<span class="text-amber-800">※見出しは h1 が1本のみ（目標4〜11本）・代表写真は画像未登録</span></td></tr>
+          <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2 font-mono">R-R23③</td><td class="py-1 px-2 text-red-800 font-bold">🔴差し戻し</td><td class="py-1 px-2"><strong>スマホで浮動ボタンが住所・最寄駅を覆ったまま</strong>（スクリーンショットで確認）。<span class="text-gray-700">推測＝ボタンは画面固定なので、<u>ページ下端の余白では途中の重なりは解消しない</u>。直し方を3案お出ししました（→表の R-R23）</span></td></tr>
+          <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 px-2 font-mono">R-R06</td><td class="py-1 px-2 text-amber-800">🔧半分</td><td class="py-1 px-2"><code>sitemap.xml</code> 404→<strong>200</strong>。<span class="text-red-800">ただし中身は12ページ分だけ（本来16,074）</span>／<code>robots.txt</code> は<strong>404のまま</strong>。<span class="text-emerald-700">どちらも修正済み・次の反映で解消（開発側の自己申告＝実測と一致）</span></td></tr>
+          <tr class="bg-amber-50"><td class="py-1 px-2 font-mono">R-R28</td><td class="py-1 px-2 text-amber-800">🔧配線のみ</td><td class="py-1 px-2">カードは<strong>全件ピンの絵のまま</strong>。<span class="text-red-800">理由＝<strong>写真が145枚／14,407件</strong>しかない</span>＝主因はデータ量でした</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-600 mt-2">※ 開発側は<strong>未達2点（robots・sitemap の件数）を自分から正直に報告</strong>しており、当方の実測とも一致しました。<u>「デプロイした」と言い切らない相手だと2回続けて確認できた</u>ことは、今後の報告の信頼度に効きます。</p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 p-4 mb-4">
+      <h3 class="font-bold text-sky-800 mb-2">② いま「きれいに測れる」状態になりました（＝本サイクル最大の収穫）</h3>
+      <p class="text-xs text-red-800 bg-red-50 border border-red-300 rounded p-2 mb-2">⚠️ <strong>【Cycle 037 で訂正】この「単独で測れる」設計は成立しませんでした</strong>＝同じ 8/30 の夕方までに <u>sitemap（約1.5万URL）・OGP/canonical・スポット詳細層の本文とリンク</u>が本番へ入ったため、名札だけを切り分けて測ることはできません。基準線（表示URL2本）は有効なまま、<strong>要因は「名札＋sitemap＋詳細層の本文」の合算</strong>として評価します。</p>
+      <p class="text-sm text-gray-800 mb-2">偶然ですが、<strong>名札（R-R34・R-R21・R-R25）だけが単独で本番に出て、sitemap も内部リンクもまだ入っていません</strong>。<span class="text-emerald-800"><strong>＝「名札を直すだけで、検索に出るページは増えるのか」を、他の要因抜きで確かめられる状態です。</strong></span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>出発点（8/30 時点の実測）</strong>＝検索結果に出ているURLは <code>/</code> と <code>/spots/themes</code> の<strong>2本だけ</strong>（30サイクル連続）／<code>/spots/prefectures</code> の表示 <strong>0</strong>／スポット個別14,477ページの表示 <strong>0</strong>。<strong class="text-sky-800">判定は 9/13 頃</strong>（検索データは2〜3日遅れて届くため）。</p>
+      <p class="text-sm text-gray-800"><strong>どちらに転んでも次が決まります</strong>：<span class="text-emerald-800"><strong>増えれば</strong></span>＝名札の効果が実証され、残りのページにも同じ効果が期待できます。<span class="text-amber-800"><strong>増えなければ</strong></span>＝「名札だけでは足りない」が当サイトで実証され、<strong>R-R33（本文とリンクを配信HTMLに出す）が決定打</strong>と確定します。<span class="text-gray-600">※他サイトでの検証記録（<u>名札だけ直して中身が伴わないと表示すら増えない</u>）と、8/29 のローカル帯の競合実測（同型サイトは見出し14本・リンク128本／当方は見出し0・リンク9）は、どちらも「足りない」側を示唆しています。</span></p>
+    </div>
+
+    <div class="border-l-4 border-red-500 bg-red-50 p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">③ 次のボトルネックは「配管」に移りました</h3>
+      <p class="text-sm text-gray-800">14,600ページが名前を持ちました。<strong class="text-red-800">しかし、検索エンジンがそれらのページの存在を知る手段が、いまだ実質ありません。</strong><span class="text-gray-700">配信HTMLに個別ページへのリンクが1本も無く（<code>/spots/cities/26104</code> のリンクは<u>9本すべて共通メニュー</u>）、sitemap も12ページ分しか無いためです。</span></p>
+      <p class="text-sm text-gray-800 mt-2"><span class="text-emerald-800"><strong>幸い、この2つはどちらも修正が完了しています</strong></span>＝<strong>次のマージ＋再ビルド1回で、robots.txt と 16,074ページ版 sitemap が同時に入ります</strong>。<u>いま最も費用対効果が高い1手です</u>（→ 上の「🔔 次にお願いしたいこと ①」）。<span class="text-emerald-800"><strong>【Cycle 037 追記】この1手は同日夕方までに実施され、実測で開通を確認しました。</strong></span></p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <h3 class="font-bold text-gray-700 mb-2">④ 本サイクルで新しく起票した提案＝ゼロ</h3>
+      <p class="text-sm text-gray-700">在庫（24件）は<strong>実測で決着させることに使いました</strong>＝✅完了4件のクローズ・差し戻し1件・原因の訂正1件（R-R28 の主因はデータ量）・効果検証の基準線の更新3件。<span class="text-gray-600">新しい指摘を積むより、<u>出したものが本当に効いたかを確定させる</u>ほうが、いまは前に進みます。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクルの宿題</strong>＝① 週次のビジュアル定点（8/31）で、反映後の見た目を全画面ぶん点検 ② R-R28 の「写真をどう集めるか」の選択肢を工数つきで整理 ③ 9/13 の効果判定に向けて GSC を毎日追う。</p>
+    </div>
+  </section>
 
   <!-- ===== Cycle 035 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
