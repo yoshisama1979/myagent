@@ -118,6 +118,51 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 037 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 037 — 2026-08-30 夕（<span class="text-emerald-700">🎉 同日2回目の本番反映＝「発見の配管」がついに開通</span>／<span class="text-red-700">残るは一覧ページの中身が空という1点</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>手動セッション</strong>（社長が <code>/hp-loop rally</code> を起動）。<strong>本番実査＝実施</strong>（hp-audit <strong>9本</strong>＝<code>robots.txt</code>（<code>--text</code>）／<code>sitemap.xml</code>（<code>--text</code>）／トップ／<code>/spots/496</code>（<code>--links</code>）／<code>/spots/cities/26104</code>（<code>--links</code>）／<code>/spots/cities/23106</code>／<code>/spots/prefectures/kyoto</code>／<code>/spots/themes</code>／<code>/spots/themes/zennihon-tower-renmei</code>（<code>--links</code>）＋ <code>www</code> 変種）。<strong>GSC</strong>＝14日窓 8/16〜8/30（clicks 4／imp 40／CTR 10.00%／pos 9.6・last=<strong>8/27＝Cycle 036 と同値・同日実行のため正常</strong>）。<strong>GA4</strong>＝45日窓（events <strong>1,397</strong>／users <strong>121</strong>・last=<strong>8/29 へ前進</strong>）。mailbox＝<code>hp-loop-rally</code> 宛の<strong>新着なし</strong>（<code>M-20260830T113954</code> は Cycle 036 で処理済み）。社長入力（from-president.md）＝<strong>新規の記載なし</strong>。在庫上限チェック＝<strong>判断待ち 11/15＝起票可</strong>。</p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① お願いしていた1手が、その日のうちに入りました（実測で確認）</h3>
+      <p class="text-sm text-gray-800 mb-2">Cycle 036（本日12時）で「<strong>いま最も効く1手</strong>」としてお願いした反映が、<strong>本日 12:00〜18:06 の間に実施</strong>されていました。<span class="text-gray-600">報告はまだ届いていませんが、<u>当方の日次の変化検知で自動的に見つけました</u>（＝報告を待たずに気づける形になっています）。</span></p>
+      <table class="w-full text-sm border-collapse bg-white rounded">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-24">提案</th><th class="py-1 px-2 w-24">判定</th><th class="py-1 px-2">実測した内容</th></tr></thead>
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 font-mono">R-R06</td><td class="py-1 px-2 text-emerald-800 font-bold">✅完了</td><td class="py-1 px-2"><code>robots.txt</code> が <strong>404 → 200</strong>（中身＝管理画面だけ拒否＋サイトマップを申告）。<code>sitemap.xml</code> が <strong>12ページ分 → 976,642バイト＝約1.5万ページ</strong>。<span class="text-gray-600">収録を先頭から実査し、ハブ・エリア11・都道府県47・市区町村・スポット個別まで<u>申告漏れの層なし</u>を確認。<strong>起票 Cycle 006 から 31 サイクル越しの決着です。</strong></span></td></tr>
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 font-mono">R-R02</td><td class="py-1 px-2 text-emerald-800 font-bold">✅完了</td><td class="py-1 px-2"><strong>OGP 7件＋Twitterカード4件＋canonical</strong> を6ページで確認（トップ／スポット詳細／都道府県／市区町村／テーマ一覧／テーマ詳細）。<span class="text-gray-600">＝<u>LINE・X などで共有したときに、タイトル・説明・画像が出るようになりました</u>（北極星の「SNSで広がる」の前提）。トップの説明文も 44字→69字に実体化。</span></td></tr>
+          <tr class="bg-emerald-50"><td class="py-1 px-2 font-mono">R-R33</td><td class="py-1 px-2 text-emerald-700 font-bold">🔧 半分</td><td class="py-1 px-2"><strong>スポット詳細ページは「中身のあるHTML」になりました</strong>＝<code>/spots/496</code> が <strong>91,267バイト・見出し14本・リンク23本・写真8枚</strong>（従来＝見出し0・リンク9で全部メニュー）。<span class="text-emerald-700">同じテーマ・同じ市区町村の他スポットへのリンクが<strong>13本</strong>＋「この市区町村をすべて見る」「このテーマをすべて見る」も入り、<u>回遊（経路③）の配線も同時に通りました</u>。</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="border-l-4 border-red-500 bg-red-50 p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">② 残ったのは1点だけ — 「一覧ページ」の中身が空のままです</h3>
+      <p class="text-sm text-gray-800 mb-2">詳細ページは中身が出るようになりましたが、<strong class="text-red-800">一覧ページ（都道府県・市区町村・テーマ）は、いまも空のままです</strong>。実測：</p>
+      <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-2 bg-white border border-red-200 rounded p-2">
+        <li><code>/spots/cities/23106</code>（名古屋市中区・18件）＝<strong>見出し0本・リンク9本（全部メニュー）</strong>・50,665バイト</li>
+        <li><code>/spots/prefectures/kyoto</code>（京都府・1,053件）＝<strong>見出し0本・リンク9本（全部メニュー）</strong></li>
+        <li><code>/spots/themes/zennihon-tower-renmei</code>＝<strong>見出し0本・リンク10本（全部メニュー）</strong></li>
+      </ul>
+      <p class="text-sm text-gray-800 mb-2"><span class="text-gray-700">画面には18件のカードがきれいに並んで見えますが、<u>サーバが返すHTMLには1件も入っていません</u>（ブラウザ上で後から組み立てているため）。</span></p>
+      <p class="text-sm text-gray-800 bg-white border border-red-300 rounded p-2"><strong class="text-red-800">⚠️ そして今日、この問題の性質が変わりました。</strong>sitemap で約1.5万ページを「見に来てください」と申告した以上、<strong>検索エンジンはその一覧ページ群も実際に見に来ます</strong>。<span class="text-red-800">いま来られると「<u>どれも中身が同じに見える空のページが大量にある</u>」と受け取られかねません</span>（＝価値の薄いページの量産と判定されるリスク）。<span class="text-emerald-800"><strong>＝R-R33 は「あとで効く改善」から「早めに手当てしたい1点」に変わりました。</strong></span><span class="text-gray-600">なお<u>スポット詳細14,477ページは今日の反映で中身が入った</u>ので、量としては大半が手当て済みです。</span><br><strong class="text-amber-800">【Cycle 038 で訂正】</strong><span class="text-gray-700">この「量としては大半が手当て済み」は<u>言い過ぎでした</u>＝Cycle 038 の抜き取り実査（12ページ）で、<strong>スポット詳細の約3分の1は本文が無く定型文だけ</strong>と判明（→ R-R37）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-amber-500 bg-amber-50 p-4 mb-4">
+      <h3 class="font-bold text-amber-800 mb-2">③ 昨日の「効果検証の設計」を訂正します（正直にお伝えします）</h3>
+      <p class="text-sm text-gray-800">Cycle 036（本日12時）で「<strong>名札だけが単独で入ったので、名札の効果をきれいに測れます</strong>」とご報告しました。<strong class="text-red-800">これは成立しなくなりました</strong>＝<u>同じ日の夕方までに sitemap・OGP・詳細ページの本文が一度に入った</u>ためです。</p>
+      <p class="text-sm text-gray-800 mt-2"><strong>測り方の変更</strong>＝出発点（8/16〜8/27＝検索結果に出ているURLが <code>/</code> と <code>/spots/themes</code> の<strong>2本だけ</strong>）はそのまま使えます。ただし<strong>効果は「名札＋sitemap＋詳細ページの中身」の合算</strong>として評価します。<span class="text-gray-600">個別の寄与を分けて測ることは、今回はできません。<u>実務上は「一気に入って一気に効く」ほうが望ましいので、測定の都合で反映を止める必要はありません</u>（測れないことだけを正直に記録します）。</span><strong class="text-sky-800">判定は 9/13 頃</strong>。</p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <h3 class="font-bold text-gray-700 mb-2">④ 本サイクルの起票＝新規1件（<code>R-R35</code>）／クローズ4件</h3>
+      <p class="text-sm text-gray-700"><strong>新規</strong>＝<code>R-R35</code>「Search Console に sitemap.xml を送信する」（→ 表の先頭）。<span class="text-gray-600">今日 sitemap が出たので、<u>それを Google に届けて初めて配管が最後まで通ります</u>。あわせて「送信したURLのうち何件が登録されたか」という<strong>これまで持っていなかった測定窓</strong>が手に入ります。所要5分・社長の操作です。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>クローズ</strong>＝<code>R-R06</code>・<code>R-R02</code> は✅完了。<code>R-R21</code>・<code>R-R25</code> は<u>残っている作業が R-R33 とまったく同じ</u>になったため <strong>R-R33 に統合</strong>してクローズしました（同じ作業を3つの番号で3回督促しないためです。作業が消えたわけではありません）。<span class="text-gray-600">在庫 24件 → <strong>21件</strong>。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクルの宿題</strong>＝① 週次のビジュアル定点（8/31）で反映後の見た目を点検 ② 週次のリンク構造の実査（9/1）で詳細ページの新しい配線を評価 ③ 9/13 の効果判定に向けて GSC を毎日追う ④ R-R28 の「写真をどう集めるか」を工数つきで整理。</p>
+    </div>
+  </section>
+
   <!-- ===== Cycle 036 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 036 — 2026-08-30（<span class="text-emerald-700">🎉 本番反映を実測で検証＝36サイクル目で初の ✅完了 4件</span>／<span class="text-red-700">ただし発見の配管（sitemap・robots）はまだ半分</span>）</h2>
