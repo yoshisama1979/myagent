@@ -30,6 +30,33 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== 完了した提案（Cycle 036 でクローズ） ===== -->
+  <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了した提案 — Cycle 036（2026-08-30）でクローズ ＝ <span class="underline">36サイクル目で初の ✅完了</span></h2>
+    <p class="text-xs text-gray-600 mb-3">2026-08-30 に <code>rally-dev</code> の実装が本番へ反映（報告ID <code>M-20260830T113954</code>）。<strong>すべて公開URLを取得して実測で検証してからクローズ</strong>しています（報告のみでは✅にしない規律）。</p>
+    <ul class="text-sm text-gray-700 space-y-2 mb-4">
+      <li><strong><code>R-R34</code> 一覧・階層ページの「名札の使い回し」を解消し canonical を入れる — ✅完了（実測検証済）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/spots/themes</code>「テーマで探す」／<code>/spots/areas</code>「エリアからさがす」／<code>/map</code>「スポットマップ」／<code>/people</code>「人物からさがす」／<code>/spots/search</code>「スポット検索」＝<strong>すべて固有 title＋自ページ canonical</strong>。<span class="text-gray-600">Cycle 030 で発見し 28サイクル追ってきた「名札のかたまりが3種類しかない（【A】【B】【C】）」構図が解消。効果（表示URL本数が2本から増えるか）の判定は <strong>9/13 頃</strong>。</span></li>
+      <li><strong><code>R-R21</code> 個別ページの title・description を「中身どおり」にする【5層・約14,600ページ】 — ✅完了（名札部分・実測検証済）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/spots/496</code>＝「中部電力 MIRAI TOWER（名古屋テレビ塔）｜名古屋市中区のスタンプスポット」（<u>Cycle 018 で提示した例文とほぼ同形</u>）＋canonical＋<strong>og:image</strong>／<code>/spots/prefectures/kyoto</code>＝「京都府のスタンプスポット<strong>1039件</strong>」／<code>/spots/cities/26104</code>＝「京都府京都市中京区のスタンプスポット<strong>47件</strong>」＝<strong>件数入りで実装</strong>。<br>
+        <span class="text-amber-800">⚠️ 残件＝<strong>h1 は依然 0本</strong>（改善案「スポット名を h1 に」は未達）。これは配信HTMLに見出しが出ない問題＝<strong>R-R33 に合流</strong>（index の繰り越し表で追跡継続）。</span></li>
+      <li><strong><code>R-R24</code> <code>/spots</code> の行き止まり解消＋404ページの刷新 — ✅完了（実測検証済）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/spots</code> は 404 →<strong>308 で <code>/spots/areas</code> へ転送</strong>（最終200）。<code>--links</code> 実査でも <code>/spots/areas</code> の壊れリンクが<strong>消滅</strong>（基準＝1本 → 0本・a=11・7種）。404画面も共通ヘッダー＋2ボタン付きに刷新。<span class="text-gray-600">45日で48回・9人が落ちていた穴を塞いだ。<strong>リンク元は当方実測の1本ではなく4本だった</strong>（残り3本＝スポット詳細の戻りリンク＝描画後に作られるため配信HTMLには写らない）＝当方の実査手法の限界を1つ確認。</span></li>
+      <li><strong><code>R-R27</code> 存在しないURLに本物の404を返す — ✅完了（実測検証済）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/spots/999999</code>・<code>/spots/abc</code> とも <strong>200 → 404</strong>。実在ページ（<code>/spots/496</code>・<code>/spots/themes/kyoto-gozan</code>・<code>/spots/prefectures/kyoto</code>）は 200 のまま＝正しい挙動。<span class="text-gray-600">原因＝非数値IDでデータ取得が走らない実装バグ。※一時障害（API 500・ネットワーク断）は 404 にせず従来表示にフォールバックする設計（＝一時障害で検索登録から落ちるのを避けるため・開発側の判断として妥当）。Cycle 032 で見立てた「<code>app/not-found</code> は既にあるので呼び出しを足すだけ」も裏づけられた。</span></li>
+    </ul>
+    <p class="text-xs text-gray-600 mb-2"><strong>同時に反映されたが未完了として index に残すもの</strong>＝<code>R-R30</code>（<code>/people</code> の外枠＝12,504B→54,983B で主要部分は達成）・<code>R-R25</code>（テーマ層＝名札は達成／見出し・写真が残）・<code>R-R06</code>（sitemap は 200 になったが12URLのみ／robots は404のまま＝<u>どちらも修正済み・次の反映で解消</u>）・<code>R-R28</code>（配線は反映／<u>主因は写真145枚÷14,407件というデータ量</u>）・<code>R-R17</code>（サイト側は反映／GTM の公開が社長作業＝Q-R17）・<code>R-R32①</code>（当方は検証不能）。<strong class="text-red-800"><code>R-R23③</code> は反映後も未解消のため差し戻し</strong>（index 参照）。</p>
+  </div>
+
+  <!-- ===== 解決済みの質問（Cycle 036） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 036（2026-08-30）</h2>
+    <ul class="text-sm text-gray-700 space-y-2">
+      <li><strong><code>Q-R15</code>（実装済み6件を本番に出すため、PR のマージ＋フロント再ビルドをお願いできますか）— ✅解決</strong><br>
+        <span class="text-emerald-800">2026-08-30 昼にマージ＋再ビルドが実施され、当方の本番実測で反映を確認</span>（トップ配信 57,978B → 60,756B＝14日連続の「1バイトも動かない」状態を脱出）。<span class="text-gray-600">起票 8/29 → 解決 8/30 ＝ <strong>1日</strong>。31サイクル動かなかった在庫が、本番まで出た最初のケース。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 完了した提案（Cycle 022 でクローズ） ===== -->
   <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-semibold mb-2">✅ 完了した提案 — Cycle 022（2026-08-17）でクローズ</h2>
@@ -71,6 +98,18 @@
       <span class="text-gray-600">→ <strong>Cycle 032 で解錠4件を仕分けました</strong>：<span class="text-emerald-800"><strong>R-R06 は社長の作業ではなかった</strong></span>（Next.js のコード作業と実測で判明＝🔔→✅AI即応）／<strong>R-R18・R-R19・8/15 障害の原因特定</strong>は管理画面での操作＝<u>どのサービスの管理画面かが未確定</u>のため <strong>Q-R13</strong> として1問だけ新規に起票（当方からはヘッダー取得・DNS照会がいずれも権限外で特定できず）。生死は<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>の Q-R13 で追跡します。</span></li>
     </ul>
   </div>
+
+  <!-- ===== Cycle 035 スナップショット ===== -->
+  <section class="mb-10 border-t border-gray-200 pt-6">
+    <h2 class="text-2xl font-bold mb-1">Cycle 035 — 2026-08-30 未明（<span class="text-sky-700">「新しい指摘を積まない」と決めたサイクル＝出す・決めるを通すことに使った</span>）</h2>
+    <p class="text-sm text-gray-500 mb-3">起動＝日次枠（手動セッション）。本番実査＝hp-audit 5本＋GSC/GA4。社長入力＝新規なし。在庫上限＝判断待ち 10/15＝起票可。<strong>新規R ゼロ／新規Q ゼロ／区分の異動ゼロ</strong>。</p>
+    <div class="text-sm text-gray-700 space-y-2 mb-3">
+      <p><strong class="text-red-800">① マージ判定＝4/4 すべて未反映</strong>：Cycle 034 で <code>rally-dev</code> が「マージされたらこう変わる」と明記した4点（<code>/spots</code> 404→308／<code>/people</code> 12,504B→増／<code>/spots/areas</code> の壊れリンク消滅／トップのバイト変化）を初照合し、<strong>すべて未反映</strong>を機械確認。<span class="text-gray-600">この4点を日次の変化検知に統合し、<u>1つでも動いた日を「マージ確認日」として自動検知する</u>形にした（＝社長・開発いずれの報告も待たない）。<strong>この仕掛けが翌 Cycle 036 で実際に発火した。</strong></span></p>
+      <p><strong class="text-red-800">② 自分の配信漏れを2件検出して修理</strong>：<strong>Cycle 033・034 のレポートが mailbox に投函されていなかった</strong>（既知の 022/027/028 に続き計5件目・6件目）。しかも <u>rally-dev が32サイクルの沈黙を破ったまさにその2サイクル分</u>で、先方の受信箱は空＝<strong>Cycle 034 の認識合わせも着手推奨順も文書として届いていなかった</strong>。<span class="text-gray-600">真因（推測）＝034 は反応型で <code>ack</code> を返したことを「レポートを配信した」と取り違えた／033 は日次枠の失念。構造的な穴＝到達確認の手順が「前サイクル分」しか点検しておらず、当サイクル分の未投函は翌サイクルまで検出できなかった。⇒ 033＋034＋035 を1通に統合投函（15,152B・固有語で検算）＋<strong>「当サイクル分の自己検算」を手順に追加</strong>。</span></p>
+      <p><strong class="text-emerald-800">③ 名札テンプレートを全6層ぶん確定</strong>：着手推奨の先頭3件（R-R34・R-R25・R-R21）は「同一作業＝<code>generateMetadata()</code> を埋める」と確定済みで、<u>残る唯一の未確定は「では何と書くか」＝文面</u>だった。<span class="text-gray-600">文面の決定は開発ではなく解析の仕事なので、社長の回答待ちの時間に先食いして6層ぶん（スポット個別14,477／市区町村1,918／都道府県47／テーマ詳細23／広域エリア11／一覧ハブ7本）＋全ページ共通 canonical を実例つきで書き下ろし、実装担当へ配信した＝<strong>新規Rを起こさず着手障壁だけ消す</strong>やり方。</span><br><span class="text-emerald-700"><strong>結果</strong>＝翌日 8/30 に、この形でほぼそのまま実装・本番反映された（→ Cycle 036 で ✅完了4件）。</span></p>
+    </div>
+    <p class="text-xs text-gray-500">数字＝GSC 14日窓 clicks 4/imp 33/pos 8.9・表示URL2本（29サイクル連続）・<code>/spots/themes</code> 2cl/9imp/pos11.0／GA4 last=8/28・events 1,297・users 120・<code>/people</code> が上位20に初登場。定石＝#1・#2・#3・#4・#4b・#15 を実施（日次すべて）。台帳ローテ＝実施（100,080B 超過 → Cycle 026 の踏査行7本を退避）。</p>
+  </section>
 
   <!-- ===== Cycle 034 スナップショット ===== -->
   <section class="mb-10 border-t border-gray-200 pt-6">
