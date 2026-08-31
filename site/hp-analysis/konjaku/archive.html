@@ -30,6 +30,24 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== Cycle 035 スナップショット（C036 で index から退避） ===== -->
+  <section class="mb-10 border border-gray-300 rounded-lg p-5 bg-white">
+    <h2 class="text-xl font-bold mb-1">Cycle 035 — 2026-08-31（🔑 「写真をたくさん持っている県ほど、検索では取れていない」— 集客の地図が反転）</h2>
+    <p class="text-xs text-gray-500 mb-3">※ Cycle 036（2026-09-01）で最新レポートから退避したスナップショット。<strong>この時点の記録であり、以後の訂正は反映していません</strong>（→ C036 で「表示ゼロ5県はサイトマップに載せ忘れではない」と切り分け済み・大分は表示1回で脱落し4県へ）。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+      <li><strong>🔑🔑 在庫の枚数 × 検索表示回数のクロス（47県・14日窓 8/15〜28）</strong>＝在庫大×露出無：東京 2,999枚→表示7（平均14.7位）／大阪 1,267→40／兵庫 1,118→5／京都 614→15／北海道 579→<strong>0</strong>／神奈川 498→11。在庫小×露出有：愛媛 587→106／鹿児島 50→<strong>96</strong>／群馬 83→82／徳島 138→79／広島 276→77／岡山 324→43。→ <strong>「在庫を足せば検索で取れる」は都市部では成り立たない</strong>。推測＝都市部は自治体アーカイブ・図書館・大手メディアと競合し1ページ目に届かない。</li>
+      <li><strong>🔑 14日間で検索表示ゼロの5県＝北海道・福島・秋田・岩手・大分</strong>。ページは生存（<span class="font-mono">/prefectures/6/old-photos</span>＝HTTP 200・23,028B）。原因未確定で2説＝(i) サイトマップ未収録／未インデックス (ii) 競合が強く圏外。<strong>M-15 に従い処方を書かず開発担当へ確認2件</strong>。</li>
+      <li><strong>✅ 剪定＝「県ページは40/47で頭打ち」の読みを撤回</strong>＝42/47（89.4%）へ（新規＝山口 新40・沖縄 新52）。</li>
+      <li><strong>GSC 14日窓（8/15〜28）</strong>＝クリック177・表示2,391・CTR 7.40%・平均7.9位・表示URL357件。階層別＝市区町村 18URL/11クリック・都道府県 42URL/108・個別写真 290URL/55＝<strong>「稼ぐ層と伸びる層の分離」4サイクル連続</strong>。同一窓の再取得は3サイクル連続一致（改訂ゼロ）。クリックの96.0%が匿名化。</li>
+      <li><strong>本番16日連続で不変</strong>。<span class="font-mono">.jp</span> トップ 27,079B・0.098秒／<span class="font-mono">.com</span> 200・978,202B＝301未実装／クリック最多の <span class="font-mono">/old-photos/15525</span>（6クリック/44表示）は title「古写真詳細」固定・h1=0・og:image なし／北海道県ページ title＝「都道府県ID: 6の古い写真」＝内部ID露出／sitemap 1,732,758B（+110）。</li>
+      <li><strong>🔴 投稿が完全停止</strong>＝投稿写真 17,696枚（±0）・登録ユーザー 6,834人（±0）＝3日で +26→+1→0。PICK UP は6日連続で新着の複製（R-J27・n=6）。人気ランキング3件（♡2・♡1・♡1）が6日連続。最新コメント 8/27 のまま（利用許諾の問い合わせが4日間未応答）。</li>
+      <li><strong>GA4（8/27〜29・3日）</strong>＝<span class="font-mono">.com</span> referral 73S/61users・direct 58・検索エンジン合計 89（Google45＋Yahoo29＋Bing15）・ChatGPT 1。CV 全流入源ゼロ。</li>
+      <li><strong>週次2本を期日どおり実施</strong>＝在庫21件の全件ライブ再検証（撤回0・更新2＝R-J18 の対象定義精緻化／R-J01 の根拠差し替え）＋勝ちパターン適用判定（M-15／M-28／M-11／M-14 を適用・M-27 は <span class="font-mono">.com</span> 未登録で適用不能＝R-J25 の4本目の根拠）。</li>
+      <li><strong>新規提案・新規質問ともゼロ（意図的）</strong>。判断待ち 6/15＝起票可の状態での意図的な見送り。理由＝①最大の発見は切り分け前で処方が書けない ②開発が動き出したばかりで番号より当てどころを鋭くするほうが前に進む。</li>
+      <li>配信＝<code>M-20260830T044847-hp-loop-konjaku-009ae5</code>（8,824B・宛先 <code>konjaku-dev</code>・件名「[HP分析] konjaku 最新レポート Cycle 034」）。<span class="text-gray-500">※ C035 本体の配信は Cycle 035 レポートとして別途投函。</span></li>
+    </ul>
+  </section>
+
   <!-- ===== 完了した提案 ===== -->
   <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
     <h2 class="text-lg font-bold text-emerald-900 mb-3">✅ 完了した提案（本番反映済み）</h2>

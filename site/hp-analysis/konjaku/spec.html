@@ -186,6 +186,17 @@
     <p class="text-xs text-gray-500">※ C021〜C030 の記録では定点URLを <span class="font-mono">/cities/334</span> のように略記していましたが、実際に観測していたのは <span class="font-mono">/old-photos</span> 付きのほうです（数値・結論に誤りはありません）。以後は完全URLで記録します。</p>
   </div>
 
+  <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">✅ サイトマップの収録状況（C036・2026-09-01 実測確定）</h2>
+  <div class="bg-white border border-gray-200 rounded-lg p-5 mb-8 text-sm text-gray-700">
+    <p class="mb-2"><strong>都道府県ページは 47県すべてがサイトマップに収録されています</strong>（<span class="font-mono">/prefectures/{6〜52}/old-photos</span>）。＝<strong>「検索に出ない県がある」のは、サイトマップへの載せ忘れが原因ではありません。</strong></p>
+    <ul class="list-disc list-inside space-y-1 mb-2">
+      <li>検索表示ゼロの4県も収録済み＝<strong>北海道(新6) 更新日 2026-02-25／岩手(新8) 2026-03-29／秋田(新10) 2026-07-09／福島(新12) 2026-08-07</strong></li>
+      <li><strong>更新日の古さは露出と対応しません</strong>＝青森(新7・2026-03-13) は露出あり／秋田(新10・2026-07-09) は露出ゼロ</li>
+      <li>サイトマップの実体＝<strong>約1.73MB・市区町村の収録は873件</strong>（マスタ1,925件のうち「写真1件以上」のみ収録＝設計どおり・C033 開発側実測）</li>
+    </ul>
+    <p class="text-xs text-gray-500">※ 取得方法＝<code>bin/hp-audit.sh https://konjaku-photo.jp/sitemap.xml --text</code>。<strong>⚠️ この道具の本文出力は約12,000字で打ち切られます</strong>ので、<strong>先頭に並ぶ都道府県の確認には使えますが、市区町村・個別写真の全件カウントには使えません</strong>（C033 でこの打ち切りが9サイクルぶんの誤報告を生みました）。全件を数えるには <code>bin/sitemap-count.py</code>（T-027）の許可リスト登録が必要です。</p>
+  </div>
+
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">⚠️ 計測データの読み違い防止（C023・2026-08-19 確定）</h2>
   <p class="text-sm text-gray-700 mb-2"><strong>BigQuery エクスポートを設定した初日のテーブルは、部分データの可能性がある</strong>。実例＝GA4（<span class="font-mono">analytics_549912350</span>・<span class="font-mono">.jp</span>）の初日 2026-08-16 は <strong>events 37／users 3</strong> だったが、翌 08-17 は <strong>events 745／users 49</strong>。<strong>同じ 08-16 に GSC は .jp への検索クリックを10回記録しており、GA4 の「3人」と整合しない</strong>＝初日は途中からの記録と判断。</p>
   <p class="text-xs text-gray-500 mb-8">→ <strong>C021/C022 が使っていた「.jp は1日3人」「.com の約290倍」という基準値は撤回</strong>。<strong>正しい基準値＝2026-08-17：users 49／events 745／page_view 559／流入は <span class="font-mono">.com</span> referral 23S・google organic 10S・direct 8S・bing 6S・yahoo 3S</strong>（同日の <span class="font-mono">.com</span> は users 820＝<strong>約17倍</strong>）。<strong>規律＝①計測開始直後は2日分そろうまで「暫定」と明示する ②別系統の数字（GSC のクリック数 ↔ GA4 の人数）と突き合わせてから断定する</strong>。あわせて「GA4(.jp) の日次が 08-16 で停止」も<strong>誤警報</strong>だった（単なる2日ラグ）＝<strong>日次エクスポートは2日遅れが正常</strong>と理解する。</p>
