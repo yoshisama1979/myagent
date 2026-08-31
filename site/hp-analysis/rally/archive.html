@@ -118,6 +118,59 @@
     </ul>
   </div>
 
+  <!-- ===== 対応実績（月次）2026-07 ＝ index から移動（Cycle 039・2026-09-01） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-1">🛠 対応実績（月次）— 対象月：2026-07</h2>
+    <p class="text-xs text-gray-600 mb-2">原簿＝<code>data/hp-loop/rally/deploy-log.md</code>。実装報告は届いていないため、すべて<strong>本番実査で確認済み</strong>の変更です。反映日は 2026-06-27〜07-20 の間。</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5">
+      <li><strong>サイト全面リニューアル</strong>（R外＝新デザイン・トップ刷新）</li>
+      <li><strong>R-R03 ✅完了</strong>：□（豆腐）文字化け解消</li>
+      <li><strong>R-R10 ✅完了</strong>：ヒーローコピーの実体化</li>
+      <li><strong>R-R08 🔧一部</strong>：ゲスト導線＋位置エラーの非ブロッキング化</li>
+      <li><strong>R-R14 🔧一部</strong>：遊び方4ステップ＋「近くのスポット」枠</li>
+      <li><strong>R-R01 🔧一部</strong>：配信HTMLにページ別 title/meta（<span class="text-gray-600">※実測＝本文は出ていないと判明→R-R33</span>）</li>
+    </ul>
+  </div>
+
+  <!-- ===== Cycle 038 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 038 — 2026-08-31（<span class="text-sky-800">配管の開通を「中身」の側から検品した日</span>／<span class="text-red-700">スポット詳細の約3分の1が空だった</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>本番実査＝実施</strong>（hp-audit <strong>16本</strong>＝トップ／<code>robots.txt</code>（<code>--text</code>）／<code>sitemap.xml</code>／<code>/spots/cities/23106</code>（<code>--links</code>）／スポット詳細12ページの抜き取り（うち2本 <code>--text</code>）／<code>www</code> 変種）。<strong>GSC</strong>＝14日窓 8/17〜8/31（clicks 4／imp 39／CTR 10.26%／pos 9.9・last=<strong>8/28＝前回8/27 から1日前進</strong>）。<strong>GA4</strong>＝45日窓（events <strong>1,390</strong>／users <strong>120</strong>・last=8/29）。mailbox＝<code>hp-loop-rally</code> 宛の<strong>新着なし</strong>。社長入力（from-president.md）＝<strong>新規の記載なし</strong>。在庫上限チェック＝着手時 <strong>判断待ち 12/15＝起票可</strong>／起票後 <strong>14/15</strong>（R-R37 の新規🔔＋R-R28 の区分訂正🔔）。<span class="text-gray-400">定石 last-run＝日次系（#1・#2・#3・#4・#4b・#15）を実施。週次系（#5 ビジュアル 9/6・#14 リンク構造 9/1・#6 棚卸し 9/5・#7 競合 9/5・#8 win-patterns 9/5）と月次系（#9 配管点検 9/2・#12 月次実績 9月最初）は<u>いずれも期日前のため今回は対象外</u>。</span></p>
+
+    <div class="border-l-4 border-gray-400 bg-gray-50 p-4 mb-4">
+      <h3 class="font-bold text-gray-700 mb-2">① 本日の本番＝変化なし（＝昨日入ったものが正常に維持されています）</h3>
+      <p class="text-sm text-gray-800">トップの配信HTMLは <strong>63,319バイトで 8/30 夕と完全に同一</strong>＝新しい反映はありません。昨日開通したものが正常に動いていることは個別に確認しました＝<code>robots.txt</code> 200（95バイト・サイトマップ申告つき）／<code>sitemap.xml</code> 200（976,642バイト）／スポット詳細に本文・写真・関連リンク。<span class="text-red-800"><code>www.</code> は<strong>本日も証明書エラーで開けません</strong>（R-R18）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-red-500 bg-red-50 p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">② 本日の主眼＝「入った中身」を抜き取りで検品した（＝昨日の自分の結論を訂正します）</h3>
+      <p class="text-sm text-gray-800 mb-2">昨日、私は「<u>スポット詳細14,477ページは中身が入ったので、量としては大半が手当て済み</u>」と書きました。<strong class="text-red-800">これは確認不足でした</strong>＝見たのは <code>/spots/496</code>（名古屋テレビ塔）1ページだけで、<u>そこに中身があったことを14,477ページ全部に一般化していました</u>。本日 12ページを抜き取って調べた結果：</p>
+      <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-28">結果</th><th class="py-1 px-2 w-16">件数</th><th class="py-1 px-2">中身</th></tr></thead>
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2 text-emerald-800 font-bold">✅ 本文あり</td><td class="py-1 px-2 font-bold">8件</td><td class="py-1 px-2">説明文85〜160字＋写真＋関連リンク（例＝熊本城・道の駅日本昭和村・大通り公園・善光寺仲見世通り・女郎子岩）。<span class="text-gray-600">＝<u>ここは狙いどおりの出来</u>です。</span></td></tr>
+          <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2 text-red-800 font-bold">🔴 定型文だけ</td><td class="py-1 px-2 font-bold">4件</td><td class="py-1 px-2"><code>/spots/7500</code>（七浦海岸）「佐渡市のスタンプスポット『七浦海岸』。現地でGPSチェックして…」＝<strong>43字</strong>／<code>/spots/12000</code>（智源寺）＝50字／<code>/spots/4500</code>（興禅寺）＝50字／<code>/spots/13500</code>（妙善院）＝<strong>38字・市区町村名すら入らず</strong>。<span class="text-red-800"><strong>本文にもそのスポット自身の紹介文が1文字もありません</strong></span>（本文に見えているのは「近隣スポット」の一覧だけ）。</td></tr>
+          <tr class="bg-gray-50"><td class="py-1 px-2 text-gray-700 font-bold">⚠️ 404</td><td class="py-1 px-2 font-bold">1件</td><td class="py-1 px-2"><code>/spots/1500</code>＝IDに欠番あり。<span class="text-gray-600">sitemap に404が混ざっていないかは要確認（→R-R38）。</span></td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 bg-white border border-red-300 rounded p-2"><strong>なぜこれが今すぐ効くのか</strong>＝昨日 sitemap で約1.5万ページを「見に来てください」と申告しました。<u>中身がほぼ同一の定型文ページが数千単位で巡回されると、せっかく通した配管の効きを自分で弱めてしまいます</u>。→ <strong>R-R37</strong>（方針を1つ選んでいただく形にしました）。<br><span class="text-gray-600"><strong>正直な限界</strong>＝「約3分の1」は<u>抜き取り12件からの推定</u>で、実数ではありません。正確な件数は開発側でデータベースを1回数えれば出るので、本日の配信レポートでお願いしています。<span class="text-amber-800">また、sitemap の全件内訳を自分で数える道具（<code>bin/sitemap-count.py</code>）は<u>このサイトでは実行許可が無く使えませんでした</u>（→📥）。</span></span></p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">③ 検品で見つけた、開発担当がすぐ着手できる2件</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>R-R36＝構造化データ（JSON-LD）が全ページ0件</strong>。<span class="text-gray-700">これは以前から R-R01 の中に埋もれていた項目ですが、<u>昨日ようやく「書くべき中身（本文・住所・最寄駅・写真）」が揃った</u>ので、独立させて優先度を上げました。観光地・施設のページで「これは場所の情報である」と機械に伝える標準の書き方で、<strong>すでに画面に出している情報をそのまま書き出すだけ</strong>です。</span></p>
+      <p class="text-sm text-gray-800"><strong>R-R38＝説明文にテンプレートの記号が残っています</strong>。<span class="text-gray-700"><code>/spots/12000</code> に出ている成相寺の説明に <code>{p_thema-2-日本三景}</code> という<u>本来は変換されるはずの記号がそのまま表示</u>されています。利用者にも検索エンジンにもそのまま見えます。<u>1件見つかった＝同じ書式のデータが他にもある</u>と考えるのが自然なので、全件の洗い出しをお願いしました。</span></p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <h3 class="font-bold text-gray-700 mb-2">④ 本サイクルの起票と、次にやること</h3>
+      <p class="text-sm text-gray-700"><strong>新規3件</strong>＝<code>R-R37</code>（🔔方針選択）・<code>R-R36</code>（✅AI即応）・<code>R-R38</code>（✅AI即応）。<span class="text-gray-600">在庫 21→24件。判断待ちは <strong>12→14/15</strong>（新規🔔1件＋<strong>R-R28 の区分を ✅→🔔 に訂正</strong>＝写真の集め方は方針判断が要るため。従来の✅表示が実態と食い違っていました）。<u class="text-rose-700">あと1件で新規起票が止まります</u>（＝そのときは効果検証と既存提案の深掘り・撤回に切り替えます。止まったことは掲示板の冒頭に必ず出します）。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>掲示板の整理</strong>＝進行中の提案の表を「現在の状態だけ」に圧縮し、<strong>89KB → 目安の80KB内</strong>へ戻しました。<span class="text-gray-600">観察の実測値・訂正の経緯・実装の具体案は<u>アーカイブの各サイクル記録に全文が残っています</u>（削除ではなく置き場の移動です）。台帳（当方の作業メモ）も同時にローテーションしました。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクル（9/1）の予定</strong>＝① <strong>週次のリンク構造の実査</strong>（9/1 期日）で、詳細ページに入った新しい配線（関連スポット13本・市区町村／テーマへの導線）がサイト全体の回遊をどれだけ変えたかを測る ② <strong>8月分の月次実績レポート</strong>（定石 #12）を作成 ③ 9/13 の効果判定に向けて GSC を毎日追う ④ R-R37 のご回答があれば即反映。</p>
+    </div>
+  </section>
+
   <!-- ===== Cycle 037 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 037 — 2026-08-30 夕（<span class="text-emerald-700">🎉 同日2回目の本番反映＝「発見の配管」がついに開通</span>／<span class="text-red-700">残るは一覧ページの中身が空という1点</span>）</h2>
