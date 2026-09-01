@@ -88,6 +88,11 @@
 
   <!-- ===== 解決済みの質問（Cycle 034 でクローズ） ===== -->
   <div class="border-2 border-emerald-400 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 040（2026-09-02）でクローズ</h2>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-6">
+      <li><strong>Q-R14</strong>（8/29 起票）「Xserver VPS の<u>サーバの中</u>に入って作業できますか？」＝<strong class="text-emerald-800">社長ご回答（2026-09-01）＝「サーバー内の作業は私本人がやります。」</strong><br><span class="text-gray-600">→ <strong>R-R18</strong>（<code>www</code> の証明書に <code>www</code> が入っていない）と <strong>R-R19</strong>（証明書の自動更新方式・8/15 障害の再発防止）のブロッカーが解除。実行者は社長ご本人のため、ループの仕事は「実装担当への依頼」ではなく<strong>「手順のご用意」</strong>に変わる。あわせて社長ご指示＝<u>1回のやり取りで1歩だけ・R-R18 を単独で先に・最初の1歩は変更ではなく現状確認・パネルの話とサーバ内の話を混ぜない・コマンドはコピペで済む形＋成功の合図を1行</u>。Cycle 040 で第1歩（<code>sudo certbot certificates</code>）を提示。</span></li>
+    </ul>
+
     <h2 class="text-lg font-semibold mb-2">✅ 解決済みの質問 — Cycle 034（2026-08-29）でクローズ</h2>
     <ul class="text-sm text-gray-700 space-y-2">
       <li><strong><code>Q-R12</code> 開発担当（<code>rally-dev</code>）は実際に起動していますか — ✅解決（2026-08-29・<u>本人からの返信で自然解決</u>）</strong><br>
@@ -132,6 +137,55 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 039 スナップショット ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 039 — 2026-09-01（<span class="text-sky-800">サイト内のリンクを全層で測った日</span>／<span class="text-red-700">巡回の向きが逆さまでした</span>）</h2>
+
+    <p class="text-sm text-gray-500 mb-4">データ状況：<strong>本番実査＝実施</strong>（hp-audit <strong>8本</strong>＝トップ／<code>robots.txt</code>／<code>www</code> 変種／<code>--links</code> 4本＝<code>/spots/496</code>・<code>/spots/cities/26104</code>・<code>/spots/themes</code>・<code>/spots/prefectures</code>）。<strong>GSC</strong>＝14日窓 8/18〜9/1（clicks <strong>7</strong>／imp <strong>46</strong>／CTR 15.22%／pos 9.4・last=<strong>8/29＝前回8/28 から1日前進</strong>）。<strong>GA4</strong>＝45日窓（events 1,390／users 120・last=<strong>8/29＝前回と同値・2日連続で前進せず</strong>）。mailbox＝<code>hp-loop-rally</code> 宛の<strong>新着なし</strong>。社長入力（from-president.md）＝<strong>新規の記載なし</strong>。在庫上限チェック＝<strong>判断待ち 14/15＝起票可（残り1件）</strong>。<span class="text-gray-400">定石 last-run＝日次系（#1・#2・#3・#4・#4b・#15）＋<strong>週次 #14 リンク構造（9/1 期日・実施）</strong>＋<strong>月替わり #12 月次実績レポート（対象月 2026-08・実施）</strong>。#9 配管点検は 9/2 期日のため次回。</span></p>
+
+    <div class="border-l-4 border-red-500 bg-red-50 p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">① 本日の主眼＝サイト内のリンクを全層で測った（週次の定石・9/1 期日）</h3>
+      <p class="text-sm text-gray-800 mb-2">「検索エンジンがこのサイトの中をどう歩けるか」を、4つの層で1本ずつ実測しました。結果は<strong class="text-red-800">はっきりした形</strong>で出ました。</p>
+      <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-52">ページ（層）</th><th class="py-1 px-2 w-24">リンク総数</th><th class="py-1 px-2">うち「その先へ進める」リンク</th></tr></thead>
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 px-2"><code>/spots/496</code><br><span class="text-xs text-gray-600">スポット詳細（14,477ページ）</span></td><td class="py-1 px-2 font-bold text-emerald-800">23本</td><td class="py-1 px-2"><strong class="text-emerald-800">16本</strong>＝他のスポットへ14本＋「この市区町村をすべて見る」（<code>/spots/cities/23106</code>）＋「このテーマをすべて見る」（<code>/spots/themes/zennihon-tower-renmei</code>）。<span class="text-gray-600">＝<u>8/30 に入った配線がきちんと効いています</u>。</span></td></tr>
+          <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><code>/spots/cities/26104</code><br><span class="text-xs text-gray-600">市区町村一覧（1,918ページ）</span></td><td class="py-1 px-2 font-bold">9本</td><td class="py-1 px-2"><strong class="text-red-800">0本</strong>（9本すべて共通メニュー）</td></tr>
+          <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 px-2"><code>/spots/themes</code><br><span class="text-xs text-gray-600">テーマ一覧</span></td><td class="py-1 px-2 font-bold">9本</td><td class="py-1 px-2"><strong class="text-red-800">0本</strong>（9本すべて共通メニュー）</td></tr>
+          <tr class="bg-red-50"><td class="py-1 px-2"><code>/spots/prefectures</code><br><span class="text-xs text-gray-600">都道府県一覧（47ページ）</span></td><td class="py-1 px-2 font-bold">10本</td><td class="py-1 px-2"><strong class="text-red-800">0本</strong>（10本すべて共通メニュー）</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 bg-white border-2 border-red-400 rounded p-3"><strong class="text-red-800">🔑 分かったこと＝巡回の向きが逆さまです。</strong><br>本来サイトは「一覧ページ → 個別ページ」と枝分かれして案内する形（＝デパートのフロア案内）になっているはずですが、いまは<strong>個別ページ同士だけが横につながっていて、一覧ページからは1歩も先へ進めません</strong>。<br><span class="text-red-800"><strong>さらに悪いことに</strong></span>＝Search Console でいま実際に検索結果に出ている2ページのうち<u>1つが <code>/spots/themes</code>（テーマ一覧）</u>です。<strong>＝せっかく見つけてもらえている数少ない入口が、その先どこへも行けない行き止まりになっています。</strong><br><span class="text-sky-800">＝これは新しい問題ではなく、<strong>すでに出している R-R33（着手推奨の第1位）の根拠が決定的になった</strong>ということです。新しい提案は増やしていません。</span></p>
+    </div>
+
+    <div class="border-l-4 border-amber-500 bg-amber-50 p-4 mb-4">
+      <h3 class="font-bold text-amber-800 mb-2">② ついでに見つかったこと＝テンプレートの記号は「1件」ではありませんでした（R-R38 を🟡→🔴へ）</h3>
+      <p class="text-sm text-gray-800 mb-2">昨日 <code>/spots/12000</code> に <code>{p_thema-2-日本三景}</code> という記号の残りを見つけて R-R38 を起票しましたが、本日 <code>/spots/496</code> のリンク一覧を見たところ、<strong class="text-red-800">同じページから見えているだけで、さらに2件</strong>ありました：</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1 mb-2">
+        <li><code>/spots/502</code>（通天閣）＝「現在の通天閣は<strong class="text-red-800">{Q5-二代目}</strong>で、…」</li>
+        <li><code>/spots/5993</code>（セントラルパーク）＝「<strong class="text-red-800">{歴史}</strong> セントラルパークは、名古屋の中区栄に位置し、…」</li>
+      </ul>
+      <p class="text-sm text-gray-800 bg-white border border-amber-300 rounded p-2"><strong>なぜ優先度を上げたか</strong>＝理由が2つあります。<br>① <strong>記号の形が1種類ではありません</strong>（<code>{p_thema-…}</code>・<code>{Q5-…}</code>・<code>{歴史}</code>＝少なくとも3形式）。<u>1つの書式を直す作業ではなく、全体の洗い出しが要る話</u>です。<br>② <strong class="text-red-800">記号が「リンクの文字列」の中にも出ています</strong>。関連スポットのリンク文字列は検索エンジンが「そのページは何か」を判断する材料なので、<u>本文に出るより影響が大きい場所</u>です。<br><span class="text-gray-600">頻度の実測＝1ページから見える12件のうち<strong>2件</strong>（昨日は3件中1件）。<u>ただしこれも抜き取りで、全体の正確な件数は開発側の全文検索が要ります</u>（配信レポートでお願い済み）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-gray-400 bg-gray-50 p-4 mb-4">
+      <h3 class="font-bold text-gray-700 mb-2">③ 日々の数字と本番の状態</h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>本番＝変化なし</strong>（トップ 63,319バイト＝8/30 夕から3日連続で同一）。8/30 に開通したもの（<code>robots.txt</code> 200・<code>sitemap.xml</code>）は本日も正常です。</li>
+        <li><strong class="text-emerald-800">検索＝わずかに上向き</strong>（14日窓で 4クリック/39表示 → <strong>7クリック/46表示</strong>・平均掲載順位 9.9 → 9.4）。<span class="text-gray-600">ただし<u>データの最新日は 8/29 で、8/30 の反映はまだ1日分も含まれていません</u>。窓が毎日ずれる数字でもあるので、<strong>これを成果とは呼びません</strong>。<strong class="text-sky-800">効果の判定は予定どおり 9/13 頃</strong>です。</span></li>
+        <li>表示されているURLは <code>/</code>（5クリック/32表示）と <code>/spots/themes</code>（2クリック/14表示）の<strong>2本のまま＝33サイクル連続</strong>。</li>
+        <li><span class="text-amber-800"><strong>⚠️ GA4 のデータが2日続けて止まっています</strong></span>＝最新日が 8/29 のまま（イベント数・利用者数とも前回と1件も違わない完全同値）。<span class="text-gray-600">通常の遅れの範囲内かもしれませんが、<u>2日同値は範囲の端</u>です。<strong>明日（9/2）も 8/29 のままなら、転送設定の確認事項として正式にお出しします</strong>（本日は監視項目として記録に留めます）。</span></li>
+        <li><span class="text-red-800"><code>www.</code> は本日も証明書エラーで開けません</span>（→ R-R18・🔔 Q-R14）。</li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <h3 class="font-bold text-gray-700 mb-2">④ 本サイクルの起票と、次にやること</h3>
+      <p class="text-sm text-gray-700"><strong class="text-emerald-800">新規の提案・質問はゼロです</strong>（在庫 24件のまま・判断待ち 14/15）。<span class="text-gray-600">本日は「新しい問題を増やす日」ではなく<strong>「すでに出している提案の根拠を固める日」</strong>に充てました＝R-R33 に決定的な実測（リンクの向きの逆転）を、R-R38 に頻度と深刻度の実測を追加しています。<u class="text-rose-700">残り1件で新規起票が自動的に止まります</u>ので、枠は温存しました。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>着手推奨の順（変更なし）</strong>＝① <strong>R-R33</strong>（一覧ページの中身とリンク＝本日の実測で根拠が最も強い）→ ② <strong>R-R38</strong>（🟡→🔴へ格上げ・小さい作業）→ ③ <strong>R-R23</strong>（差し戻し分）→ ④ <strong>R-R36</strong>（構造化データ）→ ⑤ <strong>R-R22</strong>。</p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクル（9/2）の予定</strong>＝① <strong>月次の配管一斉点検</strong>（9/2 期日・6項目の機械チェック） ② GA4 の転送が復帰したかの確認 ③ 9/13 の判定に向けて GSC を毎日追う ④ 🔔 のご回答があれば即反映。</p>
+    </div>
+  </section>
   <!-- ===== Cycle 038 スナップショット ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 038 — 2026-08-31（<span class="text-sky-800">配管の開通を「中身」の側から検品した日</span>／<span class="text-red-700">スポット詳細の約3分の1が空だった</span>）</h2>
