@@ -5,7 +5,7 @@
 
 | テンプレート | 対象 | 中身の骨子 |
 |---|---|---|
-| [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、スライド資料PDF（deck-format） |
+| [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 制作進行＝チェックリスト駆動（build-progress）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、スライド資料PDF（deck-format） |
 | [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、API実装規約（api-design）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、本番デプロイ（deploy）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
 
 ## 使い方（新規プロジェクトへの導入手順）
@@ -14,8 +14,9 @@
 2. **`project-config.md` を最初に記入する**（プロジェクト固有の値はすべてここに集約。ルール本文には書かない）
 3. website の場合：`Design.sample.md` を参考に、そのプロジェクトの `Design.md` を作る（`start.md` §1 の手順。Design.sample.md 自体は記入例なのでコピー先に持ち込まなくてよい）
 4. `documents/pending-issues.md`・`documents/rule-improvements.md` は **空の状態から**運用を始める
-5. websystem の場合：`documents/specs/_template.html` を起点に仕様書を作る（`document.md` は新規プロジェクトでは作らない）
-6. **配布先の Claude Code のバージョンを確認する**（2026-07-24 のルール3層化以降）：ルールは「常時＝`.claude/rules/`（フロントマター無し）／条件付き＝同（`paths:` フロントマター）／読み込み式＝`rules/modes/`」の3層。**`paths:` による条件付き適用は比較的新しい機能**なので、配布先の Claude Code が古いと条件付き層が常時ロードに縮退する（動作は壊れないがトークン節約が効かない）。`claude update` で最新化しておく
+5. website の場合：`documents/build-checklist.md` は **ひな形（標準工程の項目カタログ）**。そのまま使わず、案件に合わせて展開・追加・対象外化し、`B-NNN` を採番して台帳にする（`rules/modes/build-progress.md` §1）
+6. websystem の場合：`documents/specs/_template.html` を起点に仕様書を作る（`document.md` は新規プロジェクトでは作らない）
+7. **配布先の Claude Code のバージョンを確認する**（2026-07-24 のルール3層化以降）：ルールは「常時＝`.claude/rules/`（フロントマター無し）／条件付き＝同（`paths:` フロントマター）／読み込み式＝`rules/modes/`」の3層。**`paths:` による条件付き適用は比較的新しい機能**なので、配布先の Claude Code が古いと条件付き層が常時ロードに縮退する（動作は壊れないがトークン節約が効かない）。`claude update` で最新化しておく
 
 ## テンプレートの設計原則（編集時に守ること）
 
