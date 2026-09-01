@@ -168,14 +168,14 @@ ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 # ブログ解析ループ blog-loop-<client> も同様（実装担当への配信＋fact質問の送信者）。VPS常駐＝local-send。
 SENDERS    = {"overseer", "hanasaka-main",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
-              "hp-loop-rally", "hp-loop-konjaku",
+              "hp-loop-rally", "hp-loop-konjaku", "hp-loop-shigatoyota",
               "blog-loop-ycom",
               # 相談役（軽い会話・2026-08-19）。深掘りが要る話を partner へ渡す唯一の経路。
               "talk"}
 RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
-              "rally-dev", "konjaku-dev",
+              "rally-dev", "konjaku-dev", "shigatoyota-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
-              "hp-loop-rally", "hp-loop-konjaku",
+              "hp-loop-rally", "hp-loop-konjaku", "hp-loop-shigatoyota",
               "blog-loop-ycom",
               # 経営パートナー（レポート）。talk からの申し送りを受ける。
               "partner"}
