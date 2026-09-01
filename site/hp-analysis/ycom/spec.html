@@ -71,6 +71,35 @@
     <p class="text-xs text-gray-600"><strong>この原則の妥当性を裏づけた実測（Cycle 106・2026-08-28）</strong>＝「ホームページ制作 費用 相場」の検索1ページ目<strong>10枠すべてが解説記事</strong>＝自社の価格表（<span class="font-mono">/price/basic.html</span>）では原理的に取れない枠が存在し、それを取るには解説型のページ（<span class="font-mono">/price/</span>）を別に持つ必要がある。<strong class="text-rose-700">＝当ループの推奨（(A) 統合）は誤りで、社長のご判断 (B) が市場構造と一致していた。</strong>当ループは「統合すれば見出し数を早く稼げる」という作り手側の都合で推奨しており、読み手が何を読みに来ているかを見ていなかった＝<strong>この失敗の型を原則とセットで記録する</strong>。</p>
   </div>
 
+  <!-- ===== ページの役割分担（確定） ===== -->
+  <h2 id="page-roles" class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">📑 ページの役割分担（確定・上の原則の適用結果）</h2>
+  <div class="border-2 border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <p class="text-sm text-gray-700 mb-3">2026-08-27 の <a href="#split-principle" class="underline">分割の原則</a> と 08-28 の Q-016 ご回答により、<strong>料金3枚・相談4枚それぞれの役割が確定</strong>しました（R-044 ✅解決・R-055／R-047 として実装へ）。<strong>実装担当はこの表を仕様として参照してください。</strong><span class="text-gray-500">※共通テンプレート／共通メニューのリンク集約は全ページ影響のため本表の対象外＝R-018 と束ねる。</span></p>
+
+    <p class="text-sm font-bold text-emerald-900 mt-3 mb-1">料金＝3枚（親＝<span class="font-mono">/price/</span>）</p>
+    <table class="w-full text-sm border-collapse my-2">
+      <thead><tr class="text-left border-b-2 border-emerald-300 text-emerald-900"><th class="py-1 pr-3">ページ</th><th class="py-1 pr-3">役割（確定）</th><th class="py-1 pr-3">実測（28日・08-28 時点）</th><th class="py-1">やること</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-emerald-100"><td class="py-2 pr-3 font-mono text-xs">/price/</td><td class="py-2 pr-3"><strong class="text-emerald-700">親＝アウトライン「費用の全体像」</strong><br><span class="text-xs text-gray-600">制作費・維持費・運営費・広告費の4本立てで、何にいくらかかるのかを一望する入口。買う前の人が読む。</span></td><td class="py-2 pr-3 text-xs"><strong class="text-rose-700">8表示・0クリック・20.0位</strong><br>＝ほぼ露出ゼロ</td><td class="py-2 text-xs"><strong>ここを育てる（R-055）。</strong>①タイトル55字→30字前後に短縮 ②FAQ・パンくずの構造化データ追加（競合は保有・自社は無し）③親子の相互リンク</td></tr>
+        <tr class="border-b border-emerald-100"><td class="py-2 pr-3 font-mono text-xs">/price/basic.html</td><td class="py-2 pr-3"><strong class="text-emerald-700">子＝詳細①「自社の価格表」</strong><br><span class="text-xs text-gray-600">1ページ5万円〜等の具体的な金額。見積りの前に金額を確かめに来た人が読む。</span></td><td class="py-2 pr-3 text-xs"><strong>1,563表示・13クリック・12.6位</strong><br>＝料金流入の主力</td><td class="py-2 text-xs"><strong>いまの役割のまま維持。</strong>構造化データ3種（FAQ・パンくず含む）を既に保有し完成度が高い。<strong class="text-rose-700">本文の見出し増（旧 R-029 次弾）はここには積まない</strong>（R-029 は 08-31 に❌撤回）</td></tr>
+        <tr><td class="py-2 pr-3 font-mono text-xs">/beginner/cost.html</td><td class="py-2 pr-3"><strong class="text-emerald-700">子＝詳細②「維持費の詳細」</strong><br><span class="text-xs text-gray-600">ドメイン・サーバーに絞った深掘り。「作った後いくらかかるの？」に答える。</span></td><td class="py-2 pr-3 text-xs">2表示・0クリック・27.5位</td><td class="py-2 text-xs">役割は既に明確なので<strong>中身は触らない</strong>。<span class="font-mono">/price/</span> の「維持費」節から<strong>「詳しくはこちら」を1本通す</strong>だけ（工数極小）</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-700 mb-3"><strong>迷子にしない仕掛け（共通ルール）</strong>＝親の各節の末尾から子へ1本ずつ「詳しくはこちら」を出し、子の冒頭から親へ「費用の全体像に戻る」を1本返す（相互リンク）。パンくずも <span class="font-mono">費用 &gt; 料金表</span> の親子で揃える。<strong class="text-emerald-700">これで「1テーマ1ページが長くなりすぎない」を保ったまま、読み手はどこからでも全体に戻れる</strong>＝原則②③をそのまま形にしたもの。</p>
+
+    <p class="text-sm font-bold text-emerald-900 mt-4 mb-1">無料相談＝4枚</p>
+    <table class="w-full text-sm border-collapse my-2">
+      <thead><tr class="text-left border-b-2 border-emerald-300 text-emerald-900"><th class="py-1 pr-3">ページ</th><th class="py-1 pr-3">役割（確定）＝誰が読むか</th><th class="py-1 pr-3">実測（28日・08-31 時点）</th><th class="py-1">タイトルの書き分け</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-emerald-100"><td class="py-2 pr-3 font-mono text-xs">/beginner/consult.html</td><td class="py-2 pr-3"><strong class="text-emerald-700">これから初めて作る方</strong></td><td class="py-2 pr-3 text-xs">16表示・<strong class="text-emerald-700">6.2位</strong>＝4枚で最上位</td><td class="py-2 text-xs">「<strong>初めてホームページを作る方</strong>の無料相談｜大阪…」</td></tr>
+        <tr class="border-b border-emerald-100"><td class="py-2 pr-3 font-mono text-xs">/service/web/consult.html</td><td class="py-2 pr-3"><strong class="text-emerald-700">既にサイトがある方の運用相談</strong>（＝下記 free_advice の受け皿を一本化する先）</td><td class="py-2 pr-3 text-xs">50表示・21.6位＝表示は最多</td><td class="py-2 text-xs">「<strong>今あるホームページの運用・改善</strong>の無料相談｜大阪…」</td></tr>
+        <tr class="border-b border-emerald-100"><td class="py-2 pr-3 font-mono text-xs">/role/consult.html</td><td class="py-2 pr-3">「相談できる制作会社を探している」層への<strong>考え方の紹介</strong>（売り込みでない読み物）</td><td class="py-2 pr-3 text-xs">14表示・40.4位</td><td class="py-2 text-xs">役割が他と重ならないので<strong>現状維持</strong>。上2枚へのリンクを足すだけ</td></tr>
+        <tr class="bg-rose-50"><td class="py-2 pr-3 font-mono text-xs">/service/free_advice.html</td><td class="py-2 pr-3"><strong class="text-rose-700">独自役割なし＝運用相談は <span class="font-mono">/service/web/consult.html</span> へ一本化</strong><br><span class="text-xs text-gray-600">Q-016 社長ご回答（2026-08-28）＝「1日1社限定」の無料相談は<strong>実施していない（形骸化）</strong>＝実施していないものは書かない。</span></td><td class="py-2 pr-3 text-xs"><strong class="text-rose-700">検索露出ゼロ</strong><br>＝統合しても検索面で失うものなし</td><td class="py-2 text-xs">本文を2枚目へ寄せ、<strong>内部リンクを張り替える</strong>。トップページ本文の相談系リンク3本も対象</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-600">※この表は 2026-09-02（Cycle 111）に最新レポート（index）から移設。確定した仕様なので index には置かず、ここを正とする。</p>
+  </div>
+
   <!-- ===== 確定した質問の回答 ===== -->
   <h2 id="answered" class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">確定した質問の回答（Q-NNN ✅）</h2>
   <div class="border-2 border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
