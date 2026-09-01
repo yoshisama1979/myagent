@@ -80,11 +80,21 @@ def load_cadence(config_path):
     return rows
 
 
+def due_on(day, offset, days):
+    """その日にそのサイトが走るか。**判定式はここ1本だけ**。
+
+    以前は同じ式が is_due / next_dates / --schedule の2箇所の計4箇所に散っており、
+    片方だけ直すと **`--schedule` の予定表と実際に走る日が食い違う**（＝予告が嘘をつく）。
+    このリポジトリの事故は「2箇所に書いた同じ規則が静かにズレる」形が多いので1本に集約する。
+    """
+    return (day.toordinal() - offset) % days == 0
+
+
 def is_due(site, rows, on_date):
     """(due:bool, days:int, offset:int) を返す。未登録なら LookupError。"""
     for offset, (key, days) in enumerate(rows):
         if key == site:
-            return ((on_date.toordinal() - offset) % days == 0, days, offset)
+            return (due_on(on_date, offset, days), days, offset)
     raise LookupError(f"site-key `{site}` は解析ペース表にありません")
 
 
@@ -92,7 +102,7 @@ def next_dates(rows, site, on_date, count=7):
     _, days, offset = is_due(site, rows, on_date)
     out, d = [], on_date
     while len(out) < count:
-        if (d.toordinal() - offset) % days == 0:
+        if due_on(d, offset, days):
             out.append(d)
         d += datetime.timedelta(days=1)
     return out
@@ -126,13 +136,13 @@ def main():
         print(f"{'site':<12}{'ペース':>7}{'ずらし':>7}   今後14日で走る日")
         for offset, (key, days) in enumerate(rows):
             ds = [d for d in (on + datetime.timedelta(days=i) for i in range(14))
-                  if (d.toordinal() - offset) % days == 0]
+                  if due_on(d, offset, days)]
             print(f"{key:<12}{str(days) + '日':>7}{offset:>7}   " + " ".join(d.strftime("%m/%d") for d in ds))
         # 1日あたり何サイト走るかも出す（分散できているかの目視確認）
         print("\n日別の本数：", end="")
         for i in range(14):
             d = on + datetime.timedelta(days=i)
-            n = sum(1 for offset, (_, days) in enumerate(rows) if (d.toordinal() - offset) % days == 0)
+            n = sum(1 for offset, (_, days) in enumerate(rows) if due_on(d, offset, days))
             print(f" {d.strftime('%m/%d')}={n}", end="")
         print()
         return 0

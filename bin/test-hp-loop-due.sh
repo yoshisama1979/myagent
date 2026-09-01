@@ -245,7 +245,12 @@ CALLS=$(awk '/^  # --- 解析ペースのゲート/,/^  # -{20,}$/' bin/agent-ti
 if [ "${CALLS:-0}" -eq 1 ]; then ok "ゲートは判定ツールを1回だけ呼ぶ（exit 1 と 2 を区別できる形）"
 else ng "判定ツールを ${CALLS} 回呼んでいる＝2回目の `! cmd` が exit 2 を握り潰す形に戻っている"; fi
 
-# ④ 基準日を shell から渡している（python の date.today() との基準ズレを構造的に排除）
+# ④ 判定式が1箇所しかないこと（--schedule の予定表と実際に走る日が食い違わない）
+N=$(grep -c 'toordinal() - offset' "$TOOL")
+if [ "${N:-0}" -eq 1 ]; then ok "ペース判定の式はソース中1箇所だけ（due_on）"
+else ng "判定式が ${N} 箇所に散っている＝片方だけ直すと予定表が実際とズレる"; fi
+
+# ⑤ 基準日を shell から渡している（python の date.today() との基準ズレを構造的に排除）
 if awk '/^  # --- 解析ペースのゲート/,/^  # -{20,}$/' bin/agent-tick.sh | grep -q -- '--date "\$(date +%F)"'; then
   ok "基準日を --date で明示的に渡している"
 else ng "基準日を渡していない（shell と python で日付がずれる余地が残る）"; fi
