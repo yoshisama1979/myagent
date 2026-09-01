@@ -26,7 +26,8 @@
 #   */10 * * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh                # 10分ごと：受信+対応
 #   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer        # 1日1回：overseer 精密診断
 #   0 7   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily partner         # 毎朝7:00：経営パートナーの朝礼ブリーフィング（手動テスト＋合意後に有効化）
-#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別。入力凍結ループ=rally/konjaku は週次・月曜＝2026-07-08 社長決定）
+#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別。**頻度は案件ごと＝data/hp-loop/config.md の「解析ペース」表・既定3日に1回**。
+#                                                                                     #   cron は毎日呼び、走る日は bin/hp-loop-due.py が決める＝2026-09-01 社長決定）
 #   0 5   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom  # ブログ診断（B/T提案）
 #   30 5  * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom   # ブログ新規記事→WP下書き（週次・月曜＝在庫凍結中の右サイズ化 2026-07-08）
 #   0 6   * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom # ブログ既存記事の改善版（週次・月曜＝同上）
@@ -531,6 +532,7 @@ declare -a ACTIONS=()
 dispatch() {
   local label="$1" slash="$2" to="$3" urgent_only="${4:-0}"
   local pending defer force action rc
+  local cadence_bypass=0   # ペース外なのに未読があって起動した日＝完走後の検査を全未読に切り替える
   # daily（強制）モードでは強制対象だけ動かす。他エージェントの pending 処理は反応tickに任せ、
   # daily の保持時間を最短にして取りこぼし／横入りを防ぐ（Codex指摘：daily中に全dispatchが走る問題）。
   if [ "$MODE" = "daily" ] && [ "$FORCE_AGENT" != "$to" ]; then
@@ -548,6 +550,48 @@ dispatch() {
   [[ "${defer:-}"   =~ ^[0-9]+$ ]] || defer=0
   force=0; [ "$FORCE_AGENT" = "$to" ] && force=1
   action="idle"
+  # --- 解析ペースのゲート（2026-09-01 社長決定・同日 Codexレビュー反映）-------------
+  # 契機＝実装（開発）は「業務の合間に1案件おおむね週1回」で動いており、毎日6サイトを解析しても
+  # 消化されない＝在庫が増えるだけで前に進まず、費用だけかかる（週42回の起動・そのうち25回が時間切れ）。
+  # 頻度は案件ごとに data/hp-loop/config.md の「解析ペース」表で設定し、対象外の日は
+  # **claude を起動せずに終わる＝トークン消費ゼロ**（crontab は毎日のまま＝ペースの正を1箇所に保つ）。
+  #
+  # ★ここに置く理由：この下の due_file（冷却で見送った daily の肩代わり）より前に判定する。
+  #   肩代わりは「走ると既に決まった実行」の再試行なので、ペースに二重に掛けない。
+  # ★判定は **1回だけ呼んで $? を保存する**（Codex🔴 2026-09-01）。`! cmd` で真偽だけ見る書き方は
+  #   exit 1（ペース外）と exit 2（設定破損・未登録）を同じ「真」に潰してしまい、**未読がある間は
+  #   設定破損を fail() せず「ペース外」と誤記したまま fail-open する**＝黙って壊れる経路そのものだった。
+  # ★判定不能（exit 2 以上）は **起動する**（fail-open）＋ failures へ記録。
+  #   設定ミスで解析が黙って止まる方が、余分に1回走るより危険（この repo の事故はほぼ全部その形）。
+  # ★基準日は shell 側から --date で渡す＝python の date.today() との基準ズレを構造的に無くす。
+  if [ "$force" -eq 1 ] && [[ "$to" == hp-loop-* ]]; then
+    local due_rc
+    "$PY" "$PROJ/bin/hp-loop-due.py" "${to#hp-loop-}" --date "$(date +%F)" -q >/dev/null 2>&1
+    due_rc=$?
+    if [ "$due_rc" -ge 2 ]; then
+      fail "$label-cadence-unreadable"
+      echo "$(now) [warn] $label の解析ペースを判定できませんでした（exit=$due_rc）＝安全側に倒して起動します" >>"$LOG"
+    elif [ "$due_rc" -eq 1 ]; then
+      # 「新着」は pending（社長便）だけでなく defer（実装担当の報告等）も含める。
+      # これらのレーンは urgent_only=1＝社長便しか *反応起動* しない設計なので、実装報告は
+      # pending でなく defer に入る。ペースのゲートで defer を見落とすと、実装が本番に入った日に
+      # 効果検証が最大3日遅れる（＝このゲートを入れた目的そのものと矛盾する）。
+      if [ "$((pending + defer))" -eq 0 ]; then
+        force=0
+        action="skip(ペース外)"
+        echo "$(now) [cadence] $label は今日は解析日ではありません（data/hp-loop/config.md の解析ペース表）＝起動しません" >>"$LOG"
+        ACTIONS+=("$label:$pending:$action")
+        return 0
+      fi
+      # ペース外なのに未読があるので走る日。**理由を必ず残す**（下の action 上書きも抑止する）。
+      # 未読が処理されないまま溜まり続けると毎日走る状態へ戻るが、その場合は
+      # cadence_bypass=1 が完走後の無進捗検査を「全未読」に切り替えるので、警報が鳴る（Codex🔴1）。
+      cadence_bypass=1
+      action="daily(新着$((pending + defer)))"
+      echo "$(now) [cadence] $label は今日はペース外ですが未読 $((pending + defer)) 件のため起動します" >>"$LOG"
+    fi
+  fi
+  # ---------------------------------------------------------------------------
   # 冷却で見送った daily の後追い（上部の定義参照）。冷却が明けた最初の normal tick が一度だけ肩代わりする。
   # 印が今日のものでなければ捨てる＝その日の daily cron が自分で来るので、古い借金を溜め込まない。
   local due_file; due_file=$(daily_due_file "$label")
@@ -576,7 +620,10 @@ dispatch() {
       ACTIONS+=("$label:$pending:$action")
       return 0
     fi
-    [ "$force" -eq 1 ] && action="daily" || action="handle($pending)"
+    # ゲートが既に理由を書いていれば（daily(新着N)）上書きしない＝heartbeat に理由が残る（Codex🔴 2026-09-01）
+    if [ "$action" = "idle" ]; then
+      [ "$force" -eq 1 ] && action="daily" || action="handle($pending)"
+    fi
     # 前回の実行が「終了処理まで到達できずに消えた」痕跡（上部の定義参照）
     local inflight; inflight=$(inflight_file "$label")
     if [ -f "$inflight" ]; then
@@ -595,12 +642,28 @@ dispatch() {
     fi
     # 起動の引き金になった便を控えておく＝完走後に1件も減っていなければ「無進捗」として冷やす（Codex🔴5）。
     # これが無いと、exit 0 で返しつつ受信箱を処理しないループが毎分25分ジョブを起動し続ける。
-    local trig_before; trig_before=$(mailbox_triggers "$to" "$urgent_only")
+    # ★ペース外を未読で押し切って起動した日は、検査対象を **全未読** にする（Codex🔴 2026-09-01）。
+    #   これらのレーンは urgent_only=1＝triggers に社長便しか入らないため、defer だけで起動した回は
+    #   trig_before が空になり、下の無進捗検査が丸ごとスキップされる（progressed=1 のまま）。
+    #   その結果「報告を処理しないまま正常終了」が毎日続いても警報が鳴らない＝ゲートを入れた効果が
+    #   黙って消え、日次運転に戻る。起動の理由と検査の対象は同じ集合でなければならない。
+    local trig_before
+    if [ "$cadence_bypass" -eq 1 ]; then
+      trig_before=$(mailbox_all "$to")
+    else
+      trig_before=$(mailbox_triggers "$to" "$urgent_only")
+    fi
     # 制限時間は全エージェント25分（社長合意 2026-07-24・15分→25分に統一）。
     # 契機＝07-24 朝礼が15分タイムアウトで黙って落ちた件。台帳/掲示板を読む重いセッションは
     # どのエージェントでも起こり得るため、朝礼だけの延長でなく一律に。暴走時も --kill-after で
     # 25分で確実に止まる。反応tickは前回実行中スキップのため、重い実行中の新着処理は最大25分待ち。
     local tmo=1500
+    # hp-loop だけ40分（2026-09-01 社長承認）。契機＝7日で25回が25分の時間切れで殺されていた
+    # （hp-loop 42回中の約6割）。時間切れは「使い切ってから殺される」＝最も高い形の消費で、
+    # しかも仕事が途中。解析ペースを3日に1回へ落として1日6本→2本になり時間枠に余裕ができたため、
+    # 1本あたりを延ばす。他モード（partner/comms 等）は25分のまま＝上限を上げた分だけ費用も増えるので、
+    # 実際に時間切れが多いレーンだけに当てる。
+    [[ "$to" == hp-loop-* ]] && tmo=2400
     echo "$(now) [run] claude -p $slash 起動（label=$label pending=$pending force=$force timeout=${tmo}s）" >>"$LOG"
     # --kill-after：SIGTERM を無視されても30秒後に SIGKILL（子プロセス残留を始末＝Codex🔴4）
     # MYAGENT_UNATTENDED=1：無人実行の目印。PreToolUse フック（guard-unattended-edits.py）が
@@ -808,7 +871,10 @@ dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"     1
 dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"  1
 dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka" 1
 dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
-# rally / konjaku は daily が月曜だけ＝待機に回すと最大7日待つ。社長の判断待ちのため従来どおり全便で起動する
+dispatch "hp-loop:shigatoyota" "/hp-loop shigatoyota" "hp-loop-shigatoyota" 1
+# rally / konjaku は urgent_only を付けない＝全便で反応起動する。daily は解析ペース（既定3日に1回）で
+# 間引かれるため、待機(defer)に回すと最大3日待つことになる（旧コメントの「月曜だけ＝最大7日」は
+# 2026-08-15 の日次復帰で失効。2026-09-01 に解析ペース導入で書き替え）
 dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"
 dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"
 # hikita は手動運転（cron 登録なし＝費用の関係・2026-08-19 社長決定）。起動は
