@@ -45,10 +45,11 @@ LOCK_FILE = STATE_DIR / ".scan.lock"
 PENDING_MARK = "🔔"
 # ID の形。レーンごとに接頭辞が違う（R-014c / R-F17(B) / A-078 / Q-F10 / O-056）
 ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
-# 解決済みの表記。印と同じセルに「🔔→✅」と履歴を残す台帳があるため、印だけを見ると水増しになる。
-RESOLVED_RE = re.compile(r"🔔\s*→\s*[✅❌]|^\**\s*[✅❌]")
-# 「🔔→✅」の履歴表記だけを取る（RESOLVED_RE の行頭アンカーは状態セル用なので、行全体には使えない）。
+# 「🔔→✅」の履歴表記。印と同じセルに解決の履歴を残す台帳があるため、印だけを見ると水増しになる。
 RESOLVED_HIST_RE = re.compile(r"🔔\s*→\s*[✅❌]")
+# 解決済みの状態セル。上の履歴表記に「行頭が ✅/❌」を足したもの＝解決印を増やすときは
+# RESOLVED_HIST_RE だけを直せば両方に効く（2つに書き分けると数え方が食い違う）。
+RESOLVED_RE = re.compile(RESOLVED_HIST_RE.pattern + r"|^\**\s*[✅❌]")
 
 
 def live_mark_lines(text):
