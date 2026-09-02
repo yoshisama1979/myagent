@@ -47,6 +47,20 @@ PENDING_MARK = "🔔"
 ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
 # 解決済みの表記。印と同じセルに「🔔→✅」と履歴を残す台帳があるため、印だけを見ると水増しになる。
 RESOLVED_RE = re.compile(r"🔔\s*→\s*[✅❌]|^\**\s*[✅❌]")
+# 「🔔→✅」の履歴表記だけを取る（RESOLVED_RE の行頭アンカーは状態セル用なので、行全体には使えない）。
+RESOLVED_HIST_RE = re.compile(r"🔔\s*→\s*[✅❌]")
+
+
+def live_mark_lines(text):
+    """まだ生きている 🔔 を持つ行を返す。
+
+    ★数える単位を「印の出現回数」でなく「行」に揃える（2026-09-02・Codexレビュー指摘）。
+    項目は表の1行＝1件なので、出現回数で数えると (a) 1行に 🔔 が2個ある行を2件と数え
+    (b) 解決済みの「🔔→✅」まで在庫に数えてしまう。実測（ycom coverage.md）＝
+    🔔 総数70・複数印の行6・解決済み表記2 ＝ この分だけ「数の外」が水増しされていた。
+    """
+    return [ln for ln in text.splitlines()
+            if ln.count(PENDING_MARK) > len(RESOLVED_HIST_RE.findall(ln))]
 
 HP_SITES = ("ycom", "fujisaka", "yoshida", "yokohawaii", "konjaku", "hikita", "rally", "shigatoyota")
 
@@ -208,9 +222,22 @@ def cmd_scan(quiet=False):
 def narrative_counts():
     out = []
     for lane, path, rx in NARRATIVE:
+        # NARRATIVE は取り込み時の PROJ で解決済み。テスト等で PROJ を差し替えると
+        # この配下から外れる＝その走査対象ではないので黙って飛ばす（relative_to が例外を投げる）。
+        try:
+            rel = str(path.relative_to(PROJ))
+        except ValueError:
+            continue
         if path.is_file():
-            ids = set(rx.findall(path.read_text(encoding="utf-8", errors="replace")))
-            out.append((lane, str(path.relative_to(PROJ)), len(ids)))
+            # ★「判断待ち」だけを数える＝生きた 🔔 のある行にある ID に限る（2026-09-02・Codexレビュー指摘）。
+            #   以前はファイル内の全 ID を数えていたため、解決済み・過去の記録まで在庫の死角に混ざっていた
+            #   （実測＝site/overseer/index.html は全ID 56件に対し 🔔 行の ID は26件＝30件が過大）。
+            #   単位を 🔔 ベースに揃えたので、coverage_gap の「数の外」と合算してよい。
+            text = path.read_text(encoding="utf-8", errors="replace")
+            ids = set()
+            for ln in live_mark_lines(text):
+                ids.update(rx.findall(ln))
+            out.append((lane, rel, len(ids)))
     return out
 
 
@@ -224,7 +251,7 @@ def coverage_gap():
     out = []
     for lane, path, kind in sources():
         text = path.read_text(encoding="utf-8", errors="replace")
-        marks = text.count(PENDING_MARK)
+        marks = len(live_mark_lines(text))
         got = len(extract(path, kind))
         if marks - got > 0:
             out.append((lane, str(path.relative_to(PROJ)), marks, got))
@@ -356,16 +383,38 @@ def cmd_wip(lane=None):
     for r in st["items"].values():
         if r["status"] in ("open", "asked"):
             per[r["lane"]] = per.get(r["lane"], 0) + 1
-    lanes = [lane] if lane else sorted(set(per) | {f"hp-loop:{s}" for s in HP_SITES})
+    # ★門番が「何を見ていないか」を判定と同じ行に出す（O-057・2026-09-01 社長承認）。
+    #   数えられた件数だけを見せると、上限に達していないことが安全の証拠に見えてしまう。
+    #   実際にはこの道具は表の行しか取り出さないので、印の総数との差＝死角を必ず併記する。
+    blind = {}
+    for l, _p, m, g in coverage_gap():
+        if m > g:
+            blind[l] = blind.get(l, 0) + (m - g)
+    # 死角しか無いレーン（数えた件数が0）も必ず行に出す＝黙って一覧から消さない。
+    lanes = ([lane] if lane else
+             sorted(set(per) | set(blind) | {f"hp-loop:{s}" for s in HP_SITES}))
     blocked = []
     for l in lanes:
         n = per.get(l, 0)
+        b = blind.get(l, 0)
+        note = f"／⚠️ 数の外 {b}件（表の行として取り出せない印）" if b else ""
         if n >= WIP_LIMIT:
             blocked.append(l)
             print(f"🛑 {l}: 判断待ち {n}/{WIP_LIMIT} ＝ **新規の起票を止める**"
-                  f"（分析・効果検証・根拠の深掘り・台帳の整理は続ける）")
+                  f"（分析・効果検証・根拠の深掘り・台帳の整理は続ける）{note}")
         else:
-            print(f"✅ {l}: 判断待ち {n}/{WIP_LIMIT} ＝ 起票可（残り {WIP_LIMIT - n}件）")
+            print(f"✅ {l}: 判断待ち {n}/{WIP_LIMIT} ＝ 起票可（残り {WIP_LIMIT - n}件）{note}")
+    # 合計は「いま表に出したレーン」だけで取る（--lane 指定時に全レーンの合計を出すと数が食い違う）。
+    tot_b = sum(blind.get(l, 0) for l in lanes)
+    tot_n = sum(per.get(l, 0) for l in lanes)
+    nar = narrative_counts() if lane is None else []
+    if tot_b or nar:
+        print(f"\n  ⚠️ この門番の視野：数えた {tot_n}件／数の外 "
+              f"{tot_b + sum(n for _l, _p, n in nar)}件。"
+              f"\n     上限 {WIP_LIMIT} は**数えられた分だけ**に効きます＝"
+              f"「✅ 起票可」は在庫が少ない証拠にはなりません。")
+        for l, p2, n in nar:
+            print(f"     {l:16} {p2}  ID {n}件（地の文＝人が読む）")
     if blocked:
         print(f"\n止まっているレーン {len(blocked)}件。"
               f"減らすには `/triage` で仕分けて回答する（1回5件まで）。")

@@ -23,7 +23,7 @@ spec = importlib.util.spec_from_file_location("ps", proj / "bin/pending-scan.py"
 ps = importlib.util.module_from_spec(spec); spec.loader.exec_module(ps)
 
 P = N = 0
-def ok(m):
+def ok(m, d=""):        # d は無視（`(ok if c else ng)(m, 詳細)` の書き方を安全にするため）
     global P; P += 1; print(f"  ✅ {m}")
 def ng(m, d=""):
     global N; N += 1; print(f"  ❌ {m}")
@@ -192,6 +192,67 @@ src_txt2 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
 (ok if "分析" in src_txt2.split("WIP_LIMIT")[0][-600:] else ng)(
     "★止めるのは新規起票だけで分析は止めない、と根拠が実装に書いてある"
     "（2026-07 の社長ご指示と両立させるため）")
+
+print("\n=== 門番の視野（O-057・2026-09-01 社長承認）===")
+# 契機＝門番が「✅ 8/15 起票可」と言えてしまうが、実際には表の行しか数えていない。
+# 数えた分だけの安全は安全ではない＝「数の外」を判定と同じ画面に必ず出す。
+_scan_backup2, _src_backup2 = ps.cmd_scan, ps.sources
+blind_md = T / "coverage.md"
+blind_md.write_text(
+    "| ID | 状態 |\n|---|---|\n| R-B01 | 🔔 要回答 |\n\n"
+    "- 🔔 箇条書きに埋まった印（表の行ではない）\n"
+    "地の文にも 🔔 が1つ。\n", encoding="utf-8")
+ps.sources = lambda: [("L", blind_md, "md_table")]
+ps.cmd_scan = _scan_backup2
+import contextlib as _ctx
+_buf = _io2.StringIO()
+with _ctx.redirect_stdout(_buf):
+    _rc = ps.cmd_wip()
+_out = _buf.getvalue()
+(ok if "数の外 2件" in _out else ng)(
+    "★数えた1件の横に「数の外2件」を出す（表の行だけを数えている事実を判定と同じ行に出す）", _out)
+(ok if "起票可" in _out and "証拠にはなりません" in _out else ng)(
+    "★「✅ 起票可」に「在庫が少ない証拠にはならない」と明記する（見かけの安全を作らない）", _out)
+(ok if _rc == 0 else ng)("見える化を足しても止める/止めないの判定は変えない（挙動不変）", str(_rc))
+# 死角しかないレーンを一覧から黙って落とさない
+blind_only = T / "narr.md"
+blind_only.write_text("- 🔔 表の外だけにある印\n", encoding="utf-8")
+ps.sources = lambda: [("Z", blind_only, "md_table")]
+_buf = _io2.StringIO()
+with _ctx.redirect_stdout(_buf):
+    ps.cmd_wip()
+(ok if "Z:" in _buf.getvalue() else ng)(
+    "★数えた件数が0でも死角のあるレーンは行に出す（黙って一覧から消さない）", _buf.getvalue())
+
+# 死角の数え方＝行単位・解決済みは除く（2026-09-02 Codexレビュー 🔴2件の再発防止）
+dup_md = T / "dup.md"
+dup_md.write_text(
+    "| ID | 状態 |\n|---|---|\n| R-D01 | 🔔 要回答 |\n\n"
+    "- 🔔 ひとつの行に 🔔 が2個ある（項目としては1件）\n"
+    "- 🔔→✅ 解決済みの履歴表記（在庫ではない）\n", encoding="utf-8")
+ps.sources = lambda: [("D", dup_md, "md_table")]
+_buf = _io2.StringIO()
+with _ctx.redirect_stdout(_buf):
+    ps.cmd_wip()
+_o = _buf.getvalue()
+(ok if "数の外 1件" in _o else ng)(
+    "★死角は行単位で数える＝1行に🔔が2個でも1件（印の出現回数で数えると水増しになる）", _o)
+(ok if "数の外 2件" not in _o else ng)(
+    "★解決済みの「🔔→✅」を在庫に数えない（extract は除外するのに marks に残っていた）", _o)
+
+# 地の文（NARRATIVE）も判断待ちだけを数える＝全ID数を混ぜない
+narr_html = T / "board.html"
+narr_html.write_text(
+    "<p>O-001 は解決済みの過去記録。O-002 も昔の話。</p>\n"
+    "<p>🔔 O-003 だけが判断待ち。</p>\n", encoding="utf-8")
+_nar_backup = ps.NARRATIVE
+ps.NARRATIVE = [("brd", narr_html, __import__("re").compile(r"O-\d{3}"))]
+_got = ps.narrative_counts()
+(ok if _got and _got[0][2] == 1 else ng)(
+    "★地の文は🔔のある行のIDだけ数える（全ID数を『数の外』に足すと単位が混ざる）", str(_got))
+ps.NARRATIVE = _nar_backup
+
+ps.cmd_scan, ps.sources = _scan_backup2, _src_backup2
 
 print("\n=== 他モードの台帳を横から書き換えない（所有者が閉じる）===")
 src_txt = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
