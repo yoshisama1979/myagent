@@ -32,6 +32,14 @@
 
   <!-- ===== 完了した提案（✅実装済み・❌中止） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">完了した提案（✅ 実装済み・❌ 中止）</h2>
+
+  <div class="border-2 border-emerald-500 bg-emerald-50 rounded p-3 mb-4">
+    <h3 class="text-lg font-semibold mb-2">✅ R-046（2026-08-21 起票 → <strong>2026-09-02 本番反映 → 2026-09-03 当ループが独立検証してクローズ</strong>）＝実績詳細39ページの canonical 個別化</h3>
+    <p class="text-sm text-gray-700 mb-2"><strong>何が問題だったか</strong>＝実績詳細ページ39枚が、URLは別（<code>?p_id=8086</code> など）なのに <code>canonical</code>（＝検索エンジンに「このページの正式なURLはこれです」と申告するタグ）が<strong>39枚すべて同じ <code>works/detail.html</code></strong> を指していました。検索エンジンから見ると「39枚は同じ1ページ」に見え、個々の実績ページが検索結果に出る資格を自ら放棄している状態でした。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>真因（実装担当のご報告）</strong>＝共通テンプレートの自URL生成関数が <code>strtok(REQUEST_URI, '?')</code> で「?」以降を捨てていたため。パスとキーの組み合わせをホワイトリストにする方式で修正され、<code>utm_source</code> 等ではURLが分裂しないことも実測されています。</p>
+    <p class="text-sm text-gray-700 mb-2"><strong>同時に直ったもの（3点）</strong>＝①meta description が39枚とも案件別の文言に（旧＝39枚が同一の定型文／新＝ユニーク39/39・48〜111字）②実績一覧のカードリンクに <code>aria-label</code> を付与（0→39本＝それまで全リンクが「名前のないリンク」でした）③<code>sitemap.xml</code> に実績詳細39URLを追加（<code>&lt;loc&gt;</code> 52→91本）。canonical と sitemap の申告が食い違う期間を作らないよう同一デプロイで出されています。</p>
+    <p class="text-sm text-emerald-900 bg-white border border-emerald-300 rounded p-2"><strong>当ループの独立検証（2026-09-03・報告を鵜呑みにしない規律 K-014）</strong>＝<code>?p_id=8086</code> を本番GET＝HTTP200・canonical <code>https://y-com.info/works/detail.html?p_id=8086</code>（1本のみ）・description 105字の案件別文・35,648バイト＝<strong>ご申告値と一致</strong>。トップページも 73,677バイト・canonical 1本・h1=1＝当方の基準値と完全一致（<strong>退行なし</strong>）。<strong class="text-emerald-700">✅ 完了と判定。8/21 起票から数えて12日間続いた「本番未反映」は解消しました。</strong></p>
+  </div>
   <div class="border-2 border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
     <p class="text-sm text-emerald-900 mb-3">決着した提案の履歴（「過去に何をしたか」を辿る用）。<strong>進行中（未完了）の提案は <a href="index.html" class="underline font-semibold">最新レポート</a> の「進行中の提案」表</strong>に繰り越しています。</p>
     <table class="w-full text-sm border-collapse">
@@ -147,6 +155,34 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+
+  <section class="border border-gray-300 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 111 — 2026-09-02（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-sky-700">この掲示板の作り直し</strong>）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：<strong class="text-amber-700">GSC 🟡（取得はできましたが最新日が <strong>08-29</strong> で前回と同じ＝<u>新規データが来ていません</u>）</strong>／広告（ads-fetch・最新 <strong>08-31</strong>）✅／オンページ実査（hp-audit・トップ＋実績詳細）✅／受信箱の直接実査 ✅（<strong>本ループ宛の新着なし</strong>）／Clarity ❌（許可リスト未登録<strong>56日目</strong>）。<strong>from-president に新規のご指示なし</strong>。本日は解析ペース（3日に1回）の対象日ではありませんが、社長が手動で起動されたため実施しました。<strong class="text-emerald-700">検索データが動いていない日なので、新しい提案を足すのではなく「読める掲示板に作り直す」ことに時間を使いました。</strong></p>
+
+    <div class="border-2 border-sky-500 bg-sky-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-sky-900 mb-1">🧹 ① 本日の主産物＝<strong>この掲示板を 173KB → 133KB に作り直しました（−23%）</strong></p>
+      <p class="text-sm text-gray-700 mb-2"><strong>何が起きていたか</strong>＝前回（9/1）に初めて中身を実測したところ、肥大の主因は「古い記録の消し忘れ」ではなく、<strong class="text-rose-700">🔧 進行中の提案表の各行が、毎日の更新を継ぎ足し続けて「現在の状態」ではなく「更新ログ」になっていたこと</strong>でした（最も太い1マスで 11.5KB＝この画面の1〜2画面分が、1つの提案の経過報告で埋まっていました）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>やったこと</strong>＝🔧 表の全21行を<strong>「いまどうなっているか＋ご判断に要る根拠」だけ</strong>に書き直しました（<strong>86.8KB → 57.6KB</strong>）。経過・訂正の履歴は<a href="archive.html" class="underline">アーカイブ</a>と内部台帳に残してあり、<strong>失われていません</strong>。あわせて 8/27・8/28 にご判断いただいた<strong>料金3枚・相談4枚の役割分担（確定した仕様）を <a href="spec.html#page-roles" class="underline font-semibold">確定・仕様ページ</a>へ移設</strong>し、この画面からは9.9KBぶん外しました。</p>
+      <p class="text-sm text-amber-900 bg-amber-50 border border-amber-300 rounded p-2"><strong class="text-rose-700">🙋 それでも目標（80KB）には届きません＝ご判断をお願いしたいことが1つあります。</strong>133KB のうち <strong>🔧 進行中の提案 57.6KB ＋ 🔔 ご質問・ご連絡 44KB</strong> が本体で、これは<strong>生きている提案が21件あることそのもの</strong>です（＝消し忘れではありません）。10サイクル「閾値を超過しています」と書き続けてきましたが、<strong>削って数字を合わせると、ご判断に必要な根拠まで消えます</strong>。→ <strong class="text-emerald-700">ご提案＝(A) この画面は「🔔 ご判断が要るものだけ」に絞り、🔧 進行中の提案は別ページに分ける</strong>／(B) 閾値を実態（130KB前後）に合わせて上げる／(C) 現状維持。<strong>当方の推奨は (A)</strong> です（社長が普段見るのは 🔔 だけで足りるはずなので）。</p>
+    </div>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ② <strong>「在庫が何件か」の数え方に穴が見つかりました＝実際は 11件ではなく 13件です</strong></p>
+      <p class="text-sm text-gray-700 mb-2">8/28 に社長から<strong>「在庫は未決着のすべて＝社長待ちも開発側待ちも同じ1件として数える。渡しただけで上限が緩む作りにするな」</strong>とご指示をいただき、掲示板側では 🔔 の印を外さない運用にしました。<strong class="text-rose-700">ところが数える道具（<span class="font-mono">pending-scan.py</span>）の側に別の抜け道が残っていました</strong>＝<strong>/triage で社長がご回答なさった項目は「決裁済み」として記録され、以後は 🔔 が付いていても数に入りません</strong>。実際 <span class="font-mono">R-018</span>・<span class="font-mono">R-039</span> の2件が、まだ開発側で作業が終わっていないのに在庫から外れていました。</p>
+      <p class="text-sm text-gray-700"><strong>影響</strong>＝上限15件に対して「11件＝あと4件起票できます」と表示されていましたが、<strong class="text-rose-700">正しくは 13件＝残り2件</strong>でした。<strong>今回のように「ご判断は済んだが作業は終わっていない」項目が増えるほど、上限が静かに緩みます。</strong>本日は掲示板の件数表示を <strong>13件</strong>へ訂正しました。<strong class="text-emerald-700">道具そのものの修正（＝決裁済みでも作業が残っていれば数える）は、判定の仕組みを変える話なので、社長のご承認をいただいてから統括（overseer）側で行います。</strong><span class="text-gray-500">※あわせてこの道具は「表の行になっていない印」を66件見落としている旨も自己申告しています＝こちらは既知。</span></p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>③ 広告＝先週の「クリック率の急上昇」は2日で収まりました（正常）</strong>。前回 9/1 に「表示回数が1週間で半減し、クリック率が 4〜7% の通常帯を上抜けた（8/29 9.76%・8/30 10.27%）」とご報告し、<strong>2日分では判断しないと申し上げていました</strong>。本日 8/31 まで取れたので確認すると <strong>クリック率 6.43%・表示 1,929回＝通常帯に戻っています</strong>。<strong class="text-emerald-700">＝一過性でした（追加の対応は不要です）。</strong>費用も6日で ¥3,827＝1日あたり ¥638 で安定しています。<span class="text-gray-500">※ただし「表面のコンバージョン232件・CPA ¥16」がスクロール計測である構図は変わっていません＝<span class="font-mono">R-051</span> のとおりです。</span></p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ 日次の定点＝退行なし／<span class="text-rose-700">R-046 は本番未反映12日目</span></strong>。トップ 73,677バイト・HTTP200・タイトル27字・説明文127字・canonical・OGP6件・構造化データ1件・h1=1＝<strong>基準値と完全一致</strong>。実績詳細（<span class="font-mono">?p_id=8086</span>）は canonical が依然 <span class="font-mono">works/detail.html</span> のまま＝<strong>8/28 にお送りした照会への返信を5日お待ちしています</strong>（受信箱を直接確認しましたが新着はありません）。<strong>検索データは 08-29 から進んでいないため、効果追跡の数字は前回から更新していません</strong>（同じ数字を「今日の観測」として書き直さない規律）。</p>
+
+    <p class="text-sm text-gray-700"><strong>⑤ 新規の提案・質問はゼロ（11日連続・意図的）</strong>。検索データが動いていない日に新しい提案を足しても在庫が増えるだけなので、<strong class="text-emerald-700">本日は「積む」のではなく「読めるようにする・数え方の誤りを直す」に使いました</strong>。ご判断をお待ちしているのは<strong>広告の2件（<span class="font-mono">R-050</span>・<span class="font-mono">R-051</span>）と、一言でお答えいただける事実確認3件</strong>です（上の 🔔 をご覧ください）。</p>
+    <p class="text-xs text-gray-500 mt-2">※旧サイクル（Cycle 110 以前）の記録は <a href="archive.html" class="underline">アーカイブ</a>に保全しています。</p>
+  </section>
+
+  <p class="text-xs text-gray-500 mt-2">※ Cycle 112（09-03）で index から本アーカイブへ移送。</p>
+
 
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 110 — 2026-09-01（y-com.info・日次＋<strong class="text-sky-700">月次の対応実績レポート</strong>）</h3>
