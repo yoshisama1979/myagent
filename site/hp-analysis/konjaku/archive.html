@@ -30,6 +30,26 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== Cycle 036 スナップショット（C037 で index から退避） ===== -->
+  <section class="mb-10 border border-gray-300 rounded-lg p-5 bg-white">
+    <h2 class="text-xl font-bold mb-1">Cycle 036 — 2026-09-01（✅ 「北海道はなぜ検索に出ないのか」を、開発担当を待たずに半分決着）</h2>
+    <p class="text-xs text-gray-500 mb-3">※ Cycle 037（2026-09-03）で最新レポートから退避したスナップショット。<strong>この時点の記録であり、以後の訂正は反映していません</strong>（→ C037 で R-J27 の「PICK UP は止まっている」という見立てを再修正・R-J25 は社長の設定完了で ✅完了）。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+      <li><strong>🔑 表示ゼロ5県は、サイトマップに全部載っていた＝「載せ忘れ」説を棄却</strong>：出典＝<code>hp-audit --text</code> でサイトマップ本文を直読。47都道府県すべてが <span class="font-mono">/prefectures/{6〜52}/old-photos</span> で収録済み。表示ゼロ4県の更新日＝北海道 2/25／岩手 3/29／秋田 7/9／福島 8/7。<strong>開発担当への照会1件を自力で取り下げ</strong>（先方の作業を1件減らした）。</li>
+      <li><strong>✅ 「更新日が古いから出ない」説も棄却</strong>：青森（3/13＝北海道より古い部類）は出ており、秋田（7/9＝新しい）は出ていない＝鮮度と露出は対応しない。</li>
+      <li><strong>🔑 残る説明＝「配信HTMLに中身が無く Google の描画待ちに委ねられている」（推測・R-J24 の根拠を1本追加）</strong>：<span class="font-mono">/prefectures/6/old-photos</span> の配信HTMLに「北海道」の語が一切存在しない（title「都道府県ID: 6の古い写真」・h1=0・本文「読み込み中...」）。それでも43県が出ている＝露出が Google の描画に依存する構造。<span class="text-gray-500">※ インデックス実状は Search Console カバレッジ画面でしか確定できないため「推測」と明記。</span></li>
+      <li><strong>表示ゼロは5県 → 4県／県ページは 42 → 43県（91.5%）</strong>：大分（新49）が表示1回・平均1.0位・クリック0で初出。残る表示ゼロ＝北海道・岩手・秋田・福島。</li>
+      <li><strong>GSC 14日窓（8/16〜29）</strong>＝クリック186・表示2,391・CTR 7.78%・平均7.8位・表示URL358件。階層別＝市区町村 19URL/11クリック・都道府県 43URL/113・個別写真 288URL/59＝<strong>「稼ぐ層と伸びる層の分離」5サイクル連続</strong>。個別写真層のURL数が初めて減少（290→288）。同一窓（8/15〜28）の再取得は4サイクル連続で完全一致＝改訂ゼロ。</li>
+      <li><strong>本番17日連続で不変（8/16→9/1）</strong>：<span class="font-mono">.jp</span> トップ 27,079B・0.053秒／<span class="font-mono">.com</span> 200・978,202B・4.23秒＝301未実装／<span class="font-mono">/old-photos/999999</span> は 200（R-J15 未反映）／<span class="font-mono">/old-photos/15525</span> は title「古写真詳細」固定・og:image なし／サイトマップ 1,732,758B＝前日と1バイトも同一。</li>
+      <li><strong>🔧 R-J27＝「1テンポ遅れ」ではなく「止まっている」と見方を修正（n=7）</strong>：8/30 の新着（東京工業大学）を PICK UP が3日連続で取り込まず、NEW ARRIVALS の2〜5件目と一致。<span class="text-rose-700">※ この見立ては C037（9/3）で再修正＝PICK UP は動いた（愛知県が出現）＝「止まっている」ではなく「遅れが1日より長い」が正しい。</span></li>
+      <li><strong>投稿は2日連続で停止・ユーザーだけ +1</strong>：投稿写真 17,696枚（±0）・登録ユーザー 6,834→6,835人。最新コメント 8/27 のまま＝利用許諾の問い合わせが5日間未応答（R-J12）。</li>
+      <li><strong>GA4（8/30〜31）</strong>＝<span class="font-mono">.com</span> referral 45S/39users・direct 43・検索エンジン合計 49（Google24＋Yahoo19＋Bing6）。CV は全流入源ゼロ（R-J22 未実装のため当然）。</li>
+      <li><strong>🛠 8月の対応実績レポートを作成（定石#12・月替わり判定）</strong>＝本番GETで反映確認済みのものだけを掲載。8月に本番へ出たのは大きく2回（全面リニューアル／サイトマップ・都道府県ページ等の新設）で、8/16 以降は変更ゼロ。</li>
+      <li><strong>新規提案・新規質問ともゼロ（意図的・7回連続）</strong>。判断待ち 6/15＝起票可の状態での見送り。理由＝発見がすべて既存提案（R-J24・R-J27）の根拠強化で、新しい打ち手を生まなかったため。</li>
+      <li>配信＝<code>M-20260901T044646-hp-loop-konjaku-009e2d</code>（9,285B・宛先 <code>konjaku-dev</code>・件名「[HP分析] konjaku 最新レポート Cycle 036」）。</li>
+    </ul>
+  </section>
+
   <!-- ===== Cycle 035 スナップショット（C036 で index から退避） ===== -->
   <section class="mb-10 border border-gray-300 rounded-lg p-5 bg-white">
     <h2 class="text-xl font-bold mb-1">Cycle 035 — 2026-08-31（🔑 「写真をたくさん持っている県ほど、検索では取れていない」— 集客の地図が反転）</h2>
@@ -48,11 +68,77 @@
     </ul>
   </section>
 
+  <!-- ===== 進行中提案の詳細（C037 で index から退避） ===== -->
+  <section class="mb-10 border border-gray-300 rounded-lg p-5 bg-white">
+    <h2 class="text-xl font-bold mb-1">📚 進行中提案の調査記録（C037・2026-09-03 に最新レポートから退避）</h2>
+    <p class="text-xs text-gray-500 mb-3">※ <strong>下記の提案はいずれも未完了で、最新レポートの🔧表に残っています</strong>（archive へ落としていません）。ここに移したのは<strong>サイクルを重ねて積み上がった調査記録の部分だけ</strong>です＝最新レポートが 96KB まで肥大したため、規律（80KB 超で棚卸し）に従って detail を退避しました。<strong>提案の生死・優先度・着手区分は引き続き最新レポートの🔧表が正です。</strong></p>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J18 — 空枠を参加CTAに（対象5県の選定根拠・C034/C035 の調査）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>8/30＝トップの都道府県カード47件を全読み取りし、県ごとの「比較成立率」を初めて算出</strong>（各カードの 見つけた ÷ 合計）。最高＝大阪府 64.1%（812/1,267）・岡山県 55.2%・奈良県 50.9%／最低＝秋田県 2.5%（2/81）・鳥取県 5.4%・山形県 5.4%・青森県 6.3%・沖縄県 6.5%・岩手県 6.8%＝<strong>県によって最大25倍の開き</strong>（全国平均は開発側実測で27.2%）。</li>
+      <li><strong>検索需要（GSC 17日窓）とのクロスで対象5県を特定</strong>＝鹿児島県（表示92回・成立率12.0%）・広島県（81回・23.2%）・鳥取県（40回・5.4%）・富山県（39回・9.8%）・群馬県（80回・19.3%）＝「人は来ているのに見せる比較が無い県」。</li>
+      <li><strong>8/31＝選定の妥当性を別角度で検証し、対象定義を精緻化</strong>。全47県で「持っている枚数」×「検索表示回数」を突き合わせると<strong>枚数の多い県ほど検索で取れていない</strong>（東京 2,999枚→表示7／大阪 1,267→40／北海道 579→0）。逆に鹿児島は50枚で96回・群馬は83枚で82回。＝<strong>都市部は競合が強く勝てず、地方は少ない在庫でも勝てる</strong>。→ 選定5県はすべて地方＝妥当。<strong>北海道は579枚あるが検索表示ゼロのため対象外と決定</strong>（在庫の大きさで選ぶ罠を閉じた）。対象定義を「成立率が低い県」→「<strong>成立率が低く、かつ検索で人が来ている地方の県</strong>」へ改訂。</li>
+      <li><strong>before 基準値（据え置き）</strong>＝対象5県の「見つけた」枚数＝鹿児島6／広島64／群馬16／鳥取3／富山18。<strong>測れる窓</strong>＝①対象県の「見つけた」枚数（トップのカードで毎日測れる）②同県の <span class="font-mono">/prefectures/</span> ページのクリック率。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J26 — 都道府県ページの件数表示（C033・8/29 の設計変更）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>(a) タブ件数が「表示中の50件」になっている</strong>＝愛知県ページは見出し「376件」に対しタブが「すべて（50）」。<strong>当初の指摘どおり</strong>（対照ケース2件で「50件を超えるページだけで壊れる」を裏づけ済み）。</li>
+      <li><strong>(b) 「名古屋市 0件」は集計バグではなかった＝こちらの推測が外れ</strong>。市区町村マスタに「名古屋市」と「名古屋市○○区」（16区）が<strong>別行</strong>で存在し、写真は<strong>区単位</strong>で登録されているため（区の合計121件）、親の「名古屋市」行が 0件になるのが実態。ただし利用者から見れば「名古屋市 0件」の表示は変わらないため、<strong>親自治体の行に子（区）の合計を集約表示する</strong>という別の打ち手へ変更。</li>
+      <li><strong>(c) 愛知県は総数384件に対し市区町村コード一致の合計が328件＝差56件が市区町村ページから到達不能</strong>（原因は R-J29 と同じ）。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J16 — 古写真が表示されない登録の棚卸し（C033・8/29 に規模確定）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>主因＝外部サイトの画像を直接読み込む形（ホットリンク）で登録された 341件（全体の2.5%）</strong>＝<span class="font-mono">blogs.c.yimg.jp</span> 109件（Yahoo!ブログ＝サービス終了で全滅）・<span class="font-mono">www.ndl.go.jp</span> 66件（国会図書館のURL再編）・<span class="font-mono">www.mars.dti.ne.jp</span> 19件ほか。ID分布は1〜999に239件と低番号帯へ集中。</li>
+      <li><strong>⚠️ こちらの過大評価を訂正</strong>＝「実査9件中8件が欠落」と報告していたが、<strong>サンプルが低番号帯に偏っていたため</strong>で全体の欠落率ではなかった（正しくは 2.5%＋α）。欠落の存在自体は事実で、規模が確定。</li>
+      <li><strong>残り＝ローカル保存分（13,201件）にも欠落あり</strong>（無作為30件のHEAD確認で1件が404＝ID 4588）＝全量は未確定。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J29 — 写真と市区町村の紐付け 3,048件（22.5%）の回収（C033・8/29 起票）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>観察（開発側の実測）</strong>＝<code>old_photos.city</code> 列の値が混在＝<strong>市区町村コードで保存 10,494件／旧サイトの内部IDのまま 1,176件／空（null）1,872件</strong>（計13,542件）。<strong>ID保存の1,176件は「市区町村から探す」からもサイトマップからも到達できません</strong>（開発側も残存課題 PEND-14 として把握済み）。</li>
+      <li><strong>なぜ問題か（北極星＝閲覧に直結）</strong>＝市区町村ページは<strong>検索でのクリック率がサイト平均の1.58倍（12.28% vs 7.77%）＝最も効率のよい層</strong>でありながら、露出ページ数が3サイクル連続で増分ゼロだった。<strong>その層に載るはずの写真の2割強が、データ側で外れています。</strong>＝R-J24 でSSR化して器を直しても、中身が欠けたままになります。</li>
+      <li><strong>改善案</strong>＝<strong>第1段＝旧内部ID保存の1,176件を、R-J28 で作る対応表を使って市区町村コードへ機械変換する</strong>（対応表と同じ材料で解ける＝R-J28 の副産物として実質ゼロ工数）。<strong>第2段＝null の1,872件</strong>は、撮影位置・住所文字列などから復元できるかを先に調べる（復元不能なら対象外）。</li>
+      <li><strong>測れる窓</strong>＝①サイトマップの <code>/cities/</code> 収録数（before＝873件・開発側実測）②GSC の市区町村層の表示URL数 ③市区町村層のクリック率。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J17 — 比較が成立しているページを優先露出（C033・8/29 の設計変更）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>実数（開発側）＝古写真13,542件のうち「今の写真」ありは 3,685件（27.2%）</strong>。</li>
+      <li><strong>⚠️ 当初案「サイトマップを完全形のみに絞る」は取りません</strong>＝それだと申告するページが<strong>73%減る</strong>ことになり、いま実際にクリックを稼いでいる個別写真層を自ら削ることになります。<strong>安く見えて、閲覧を減らす手でした。</strong></li>
+      <li><strong>修正後の案＝①サイトマップからは「本当に壊れているもの」だけを外す</strong>（＝古写真が表示できない341件・→ Q-J09）<strong>②比較が成立している3,685件は <code>priority</code> を上げ、トップの PICK UP・一覧の並びでも優先する</strong>（＝減らすのではなく、良いものを前に出す）。<strong>③R-J27 と同じ実装で片づきます。</strong>※ sitemap は投稿があれば自動再生成されると確定（C030・C032）。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J01 — OGP整備（C030 の実装仕様・C035 の根拠差し替え）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>C030 で実装仕様が確定</strong>＝トップ・都道府県・市区町村は OGP が<strong>完全にゼロ</strong>／<strong>個別写真 <span class="font-mono">/old-photos/{id}</span> だけは <span class="font-mono">twitter:card=summary_large_image</span> を持つのに og:image と twitter:image だけが無い</strong>＝<strong>「大判画像カード」を宣言しながら画像を渡していない</strong>状態。og:title は全写真で同一＝<strong>どの写真を貼っても見た目が同じ</strong>。</li>
+      <li><strong>旧 <span class="font-mono">.com</span> は個別ページに実物の古写真を og:image として出しており、移植元が実在します</strong>（<span class="font-mono">og:image=/images/ogp_banner.jpg</span>・<span class="font-mono">@konjaku_photo</span>）。<strong>⚠️ 但し書き（C026）＝旧の <code>og:title</code>／<code>og:site_name</code> は入れ違っている</strong>（og:title＝「今昔写語」固定・og:site_name に本来のページタイトル）＝<strong>この入れ違いごと移さないこと</strong>。</li>
+      <li><strong>8/31＝根拠を差し替え（優先度🔴のまま）</strong>：全47県で「持っている枚数」と「検索での表示回数」を突き合わせたところ、<strong>写真をたくさん持っている県ほど検索で取れていない</strong>（東京都 2,999枚→表示7回／大阪府 1,267枚→40回／兵庫県 1,118枚→5回／北海道 579枚→0回）。＝<strong>在庫の44%（約6,000枚）は検索では活かしようがなく、この層を人に見てもらう出口はSNSシェア＝この R-J01 だけ</strong>。従来の根拠（Xからの流入実績43S）は消滅していたが、<strong>「サイトが持つ写真の4割強の唯一の出口」という構造的な根拠に置き換わった</strong>。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J27 — PICK UP が新着の複製（C032〜C037 の機序の変遷）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>C032 まで（〜8/29）</strong>＝PICK UP 4枠が NEW ARRIVALS の先頭4件と<strong>4日連続で完全一致（n=4）</strong>＝投稿状況に依存しない構造と確定。</li>
+      <li><strong>C034（8/30）＝機序が一段はっきりした</strong>：新着が1件だけ入った（東京工業大学）ところ、その1件は NEW ARRIVALS の先頭に入ったのに PICK UP には入らず、PICK UP は NEW ARRIVALS の<strong>2〜5件目</strong>と一致。＝<strong>PICK UP は「新着を1テンポ遅れて写しているだけ」</strong>（別の選び方をしているわけではない）。</li>
+      <li><strong>C036（9/1）＝「止まっている」へ改訂</strong>：8/30 の新着から3日たっても PICK UP が取り込まないため、「更新間隔のズレ」→「<strong>再生成が動いていない（または固定値）</strong>」へ推測を変更した。</li>
+      <li><strong class="text-rose-700">C037（9/3）＝上記 C036 の改訂を撤回</strong>：PICK UP の先頭が「愛知県」に交代しているのを実見＝<strong>再生成は動いていた</strong>。正しくは「入れ替わるが遅れが1日より長い」。<strong>C034 の理解に戻す。</strong>教訓＝<strong>3日間の観察だけで機序を「止まっている」と断定したのが早すぎた</strong>。</li>
+    </ul>
+
+    <h3 class="font-semibold mt-4 mb-2">R-J11 — 参加ハードルを下げる（C034・8/30 の在庫計測）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li><strong>この提案が埋めるべき「在庫」を初めて計測＝年代不明 2,402枚（古写真 13,596枚の17.7%）</strong>（出典＝トップの「年代から探す」の実見。内訳＝明治以前1,731／大正1,040／昭和前期1,709／昭和中期3,969／昭和後期2,245／平成以降500／年代不明2,402）。</li>
+      <li>年代は<strong>写真を持っていない人でも見れば答えられる情報</strong>で、しかも<strong>旧サイトには「撮影年代を教えてください」という参加導線が実装済みだった</strong>（C026 実測）＝<strong>作るのではなく戻す</strong>だけ。<strong>測れる窓＝トップの「年代不明」枚数（before 2,402・毎日測れる）</strong>。</li>
+      <li>※ 年代軸そのものの検索需要は現時点では小さく（年代ページ7面の GSC 露出は4URL・表示8回のみ）、需要は「地名×年代」の形で来ている（実測＝「佐世保 昭和 写真」「50年代 長崎市 昔の写真」・小標本のため断定しない）。そのため 🟡 据え置きとし、年代の同定は「参加のいちばん低い入口」として位置づける。</li>
+    </ul>
+  </section>
+
   <!-- ===== 完了した提案 ===== -->
   <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
     <h2 class="text-lg font-bold text-emerald-900 mb-3">✅ 完了した提案（本番反映済み）</h2>
     <p class="text-xs text-gray-600 mb-3">Cycle 016（2026-08-10）：全面リニューアルの実査検出により4本が反映確認。<strong>いずれも実装報告なし（konjaku-dev 未接続）＝本番GET・スクショによる実査検証</strong>。効果検証（閲覧・回遊の数字）は GSC/GA4 接続後に予約（台帳）。</p>
     <ul class="space-y-2 text-sm text-gray-800">
+      <li><strong>R-J25</strong>（<span class="font-mono">konjaku-photo.com</span> の Search Console データを BigQuery へ通す・🔴 Cycle 023 起票）→ ✅ <strong>完了（社長が 2026-09-01 に設定・2026-09-02 着弾・C037 で実データ確認）</strong>：dataset ＝<span class="font-mono">searchconsole_konjakucom</span>（location <span class="font-mono">asia-northeast2</span>＝<span class="font-mono">.jp</span> と同一ゆえ<strong>新旧を1クエリで結合できる</strong>）。<strong>これにより 301 移行の「before 基準値」が確保されました</strong>＝C037 で同一2日窓（8/30〜31）の階層別ベースラインを固定（生データ＝<code>c037-com-pages.txt</code>／<code>c037-com-queries.txt</code>）。<span class="text-gray-600">※ 経緯の訂正＝本 R は当初「<span class="font-mono">.com</span> は Search Console 未登録」という前提で書かれていましたが<strong>誤りでした</strong>（社長ご指摘 9/1＝登録はずっと前から済んでおり、足りなかったのは BigQuery エクスポートだけ）。原因＝<code>gsc-fetch.py</code> は BigQuery しか読まない造りのため、<span class="font-mono">.com</span> は「存在するがループの目に映らない」状態だった。あわせて「今しか取れない・永久に失われる」という当時の申し上げも誤りで、Search Console 画面側には約16か月保持されています（BigQuery に入る行だけが遡らない）。</span></li>
       <li><strong>R-J13</strong>（計測タグ＝GA4/GTM の実装・🔴 Cycle 015 起票）→ ✅ <strong>完了（C021 で確認・C022 で archive へ）</strong>：GTM <span class="font-mono">GTM-NGPVQTKQ</span> の設置に加え、<strong>GA4 プロパティ <span class="font-mono">analytics_549912350</span> への到達を実測で確認</strong>（2026-08-16＝37イベント・3人・page_view 19）。＝北極星を測る土台が完成。<span class="text-gray-600">※残る計測課題（写真投稿・コメント・会員登録などプロダクト側イベントの定義）は R-J22 が引き継ぐ。</span></li>
       <li><strong>R-J21</strong>（<span class="font-mono">.jp</span> の GTM から GA4 へ計測を通す・🔴 Cycle 019 起票）→ ✅ <strong>解決＝実装作業は不要だった（C021 判明・C022 で archive へ）</strong>：<span class="font-mono">.jp</span> は<strong>最初から正常に計測されていた</strong>。「未到達」と見えたのは、こちらが旧 <span class="font-mono">.com</span> 用のプロパティ（<span class="font-mono">analytics_254454527</span>）だけを見ていたため（社長訂正 <code>M-20260817T105240</code>）。<span class="text-gray-600">※新旧2プロパティは合算できないため、前後比較は分析側で個別集計して突き合わせる運用にする（開発側の作業なし）。将来ドメインを統合する際は1プロパティへの集約が望ましいが、R-J19 の方針決定後で十分。</span></li>
       <li><strong>R-J08</strong>（「人気の今昔」など一覧の独立ページ化・🟡 Cycle 003 起票）→ ✅ <strong>反映（C019・2026-08-16 実査検出）</strong>：年代別 <span class="font-mono">/eras/{meiji…heisei_reiwa}</span>・都道府県別 <span class="font-mono">/prefectures/{id}/old-photos</span> が独立URLとして誕生し sitemap にも収録（従来はトップ内アンカー <span class="font-mono">/#eras /#areas</span> のみ）。<span class="text-gray-600">※固有 title/description は未実装（<span class="font-mono">/prefectures/27/old-photos</span> の title が「都道府県ID: 27の古い写真」＝内部ID露出）＝<strong>残りは R-J20 として分離・継続</strong>。ランキングの独立URL化も未実施のため R-J20 に含めた。</span></li>
