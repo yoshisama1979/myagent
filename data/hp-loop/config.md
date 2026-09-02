@@ -17,7 +17,7 @@
 | `yokohawaii` | ヨーコハワイ | https://www.yoko-hawaii.com/ | `searchconsole_yokohawaii`（蓄積待ち） | `yokohawaii-dev`（トークン発行済・拠点`.env`設定は要確認） | `hp-analysis/yokohawaii/` | `hp-loop-yokohawaii` | [sites/yokohawaii.md](sites/yokohawaii.md) |
 | `rally` | 全国スタンプラリー（自社） | https://check-rally.com/ | 未連携（要設定） | `rally-dev`（トークン発行済・拠点`.env`設定は要確認） | `hp-analysis/rally/` | `hp-loop-rally` | [sites/rally.md](sites/rally.md) |
 | `konjaku` | 今昔写語（自社） | https://konjaku-photo.jp/ | 未連携（要設定） | `konjaku-dev`（✅疎通確認 2026-08-29＝HTTP認証通過） | `hp-analysis/konjaku/` | `hp-loop-konjaku` | [sites/konjaku.md](sites/konjaku.md) |
-| `shigatoyota` | 滋賀トヨタ（受託） | https://shigatoyota.co.jp/ | 未連携（後日設定） | `shigatoyota-dev`（トークン発行済 2026-09-01・拠点`.env`設定は社長の手元作業） | `hp-analysis/shigatoyota/` | `hp-loop-shigatoyota` | [sites/shigatoyota.md](sites/shigatoyota.md) |
+| `shigatoyota` | 滋賀トヨタ（受託） | https://shigatoyota.co.jp/ | `searchconsole_shigatoyota`（2026-09-02 連携・本テーブル生成待ち） | `shigatoyota-dev`（トークン発行済 2026-09-01・拠点`.env`設定は社長の手元作業） | `hp-analysis/shigatoyota/` | `hp-loop-shigatoyota` | [sites/shigatoyota.md](sites/shigatoyota.md) |
 | `osakatoyopet` | 大阪トヨペット（受託） | https://www.osaka-toyopet.jp/ | 未連携（後日設定） | `osakatoyopet-dev`（トークン登録待ち） | `hp-analysis/osakatoyopet/` | `hp-loop-osakatoyopet` | [sites/osakatoyopet.md](sites/osakatoyopet.md) |
 | `hikita` | ヒキタ工業 | https://www.hikita.co.jp/ | `searchconsole_hikita`（蓄積待ち・8/21頃〜） | 未定 | `hp-analysis/hikita/` | `hp-loop-hikita`（**手動運転・cron なし**） | [sites/hikita.md](sites/hikita.md) |
 

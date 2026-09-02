@@ -48,7 +48,7 @@ ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
 # 解決済みの表記。印と同じセルに「🔔→✅」と履歴を残す台帳があるため、印だけを見ると水増しになる。
 RESOLVED_RE = re.compile(r"🔔\s*→\s*[✅❌]|^\**\s*[✅❌]")
 
-HP_SITES = ("ycom", "fujisaka", "yoshida", "yokohawaii", "konjaku", "hikita", "rally")
+HP_SITES = ("ycom", "fujisaka", "yoshida", "yokohawaii", "konjaku", "hikita", "rally", "shigatoyota")
 
 # ★在庫上限（WIP limit・2026-08-27 社長決定）★
 #   社長のお言葉＝「一定数貯まれば止めるようにしましょうか。溜まっている状態で新たな課題を

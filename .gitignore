@@ -84,6 +84,7 @@ site/hp-analysis/osakatoyopet/
 # 見込み客の単発解析レポート（/hp-prospect）＝クライアント分析と同扱いで git 外
 site/hp-analysis/prospects/
 site/decks/shigatoyota-hp-analysis/
+site/decks/shigatoyota-hp-report-202609/
 site/decks/osakatoyopet-hp-analysis/
 data/hp-loop/sites/yoshida.md
 data/hp-loop/sites/fujisaka.md
