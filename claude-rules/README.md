@@ -11,7 +11,7 @@
 ## 使い方（新規プロジェクトへの導入手順）
 
 1. **フォルダごとコピー**する（`website/` または `websystem/` の中身をプロジェクトルートへ）
-2. **`project-config.md` を最初に記入する**（プロジェクト固有の値はすべてここに集約。ルール本文には書かない）
+2. **`project-config.md` を最初に記入する**（プロジェクト固有の値はすべてここに集約。ルール本文には書かない）。**「URL・確認環境」節**（ローカル／ステージング／本番の確認URL）は、AI が表示確認のたびにユーザーへ聞かずに済むよう**早い段階で埋める**（🚨 Basic認証等の実値は書かない）
 3. website の場合：`Design.sample.md` を参考に、そのプロジェクトの `Design.md` を作る（`start.md` §1 の手順。Design.sample.md 自体は記入例なのでコピー先に持ち込まなくてよい）
 4. `documents/pending-issues.md`・`documents/rule-improvements.md` は **空の状態から**運用を始める
 5. website の場合：`documents/build-checklist.md` は **ひな形（標準工程の項目カタログ）**。そのまま使わず、案件に合わせて展開・追加・対象外化し、`B-NNN` を採番して台帳にする（`rules/modes/build-progress.md` §1）
