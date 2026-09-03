@@ -155,6 +155,45 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 112 — 2026-09-03（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-emerald-700">R-046 の本番反映を独立検証してクローズ</strong>＋<strong class="text-sky-700">9/2 のご指示5件の反映</strong>）</h3>
+    <p class="text-sm text-gray-600 mb-3">データ状況：<strong class="text-emerald-700">GSC ✅</strong>（最新日 <strong>08-30</strong>＝前回 08-29 から1日前進）／<strong class="text-emerald-700">GA4 ✅</strong>（2026-08 のCVを実測）／<strong class="text-emerald-700">本番GET ✅</strong>（hp-audit 実行可）／<strong class="text-amber-700">広告 🟡</strong>（転送の最新日が 09-01＝<u>停止日 09-02 にまだ届いていない</u>）／<strong class="text-rose-700">Clarity ❌・CVコホート検証 ❌</strong>（いずれも許可リスト未登録で実行拒否＝Q-017）</p>
+
+    <div class="border-2 border-emerald-500 bg-emerald-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-emerald-900 mb-1">✅ ① 本日の主産物＝<strong>R-046 が本番に反映され、当方の実査で確認できました（12日間の停滞が解消）</strong></p>
+      <p class="text-sm text-gray-700 mb-2"><strong>何が直ったか</strong>＝実績詳細ページ39枚が、URLは別なのに「このページの正式なURLはこれです」という申告（canonical）が<strong>39枚とも同じ1本</strong>を指しており、検索エンジンから見ると「39枚は同じ1ページ」に見えていました。これが<strong>39枚それぞれの個別URL</strong>に直りました。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>同時に3つ直っています</strong>＝①説明文（meta description）が39枚とも案件別の文章に（旧＝全部同じ定型文）②実績一覧のカードリンクに名前が付いた（<code>aria-label</code> 0→39本＝それまで全リンクが「名前のないリンク」でした）③<code>sitemap.xml</code> に実績39URLを追加（52→91本）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>当方の独立検証</strong>（ご報告を鵜呑みにしない規律）＝<code>?p_id=8086</code> を本番から取得＝HTTP200・canonical が <code>…?p_id=8086</code> 1本・説明文105字の案件別文・35,648バイト＝<strong>ご申告値と一致</strong>。トップページも基準値と完全一致で<strong>退行なし</strong>。</p>
+      <p class="text-sm text-emerald-900 bg-white border border-emerald-300 rounded p-2"><strong>意味づけ（北極星＝買い手意図の検索→問い合わせ）</strong>＝実績ページは「この会社に頼めるか」を判断する材料であり、買い手が最後に見る面です。39枚が検索結果に出る資格を回復したことは、<strong>買い手意図の検索に対する受け皿が39枚ぶん増えた</strong>ということ。効果はGSCのラグ（2〜3日）＋インデックス再取得を待って、<strong>09-17 前後に「実績詳細ページの表示回数」で測ります</strong>（現在ほぼゼロ＝上がれば効いた、が読める形です）。</p>
+    </div>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-rose-900 mb-1">🔴 ② <strong>ご指示の主産物（CV設計の検証）は、道具まで作りましたが「許可1行」で止まりました</strong></p>
+      <p class="text-sm text-gray-700 mb-2">9/2 に「原則2＝マイクロCVを入札に昇格させる条件をデータで示せ」とご指示をいただき、それを1コマンドで出す道具 <code>bin/ga4-cohort.py</code> を作成しました。<strong>「TOPで70%スクロールした人／料金ページを見た人／実績を2ページ以上見た人」それぞれの主要CV到達率を、その行動を取らなかった人と比べる</strong>もので、<strong>行動→CVの順序も見ます</strong>（「CVする人はよく回遊する」という逆向きの相関を、予測力と取り違えないため）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">実行しようとしたところ、許可リストに無く拒否されました。</strong>設定ファイルは社長のご承認が要る領域として保護されており、AI が自分で書き足すことはできません（＝安全装置が正しく働いた形で、これ自体は良いことです）。→ <strong>上の 🔔 Q-017 の1行</strong>をご確認ください。通れば以降はご作業なしで検証まで進みます。</p>
+      <p class="text-sm text-gray-700">なお<strong>この道具が無くてもできる部分は先に済ませました</strong>＝ご指示の原則4「二重計上を先に潰す」に該当する <strong>R-023 を最優先へ繰り上げ</strong>、原則1〜5に沿った3層モデルを <strong>R-056</strong> として起票しています。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>③ ご指示の訂正を実測で確認しました＝「実アクション月7件」は誤りでした</strong>。GA4 で 2026-08 を実測＝<strong>問い合わせ52・見積13・その他15・メール11・電話2・見積り依頼1＝約94</strong>（ユーザー数・採用は除外）。ご指摘のとおり、7件は<u>広告経由だけ</u>の数字でした。<strong>R-052 の「母数が足りないので判断に120日かかる」という記述は取り下げました。</strong>問題は「何を測るか」ではなく<strong class="text-rose-700">「測れている94件が Google広告に1件も渡っていない」</strong>ことです。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>④ R-040＝仮説が1つ否定され、かわりに本当の変化が見つかりました</strong>。<code>/partners/alliance.html</code> に当たっているのは「コーディング 外注 大阪」「wordpress 外注 大阪」など<strong>制作会社が発注側として使う語</strong>＝<strong class="text-emerald-700">ページは正しい相手に当たっています</strong>（＝買い手向けに作り替える設計変更は不要）。かわりに<strong class="text-rose-700">「外注 ホームページ 大阪」が直近28日で露出ゼロに落ちていました</strong>（90日 74imp/4.9位 → 28日 0imp・09-03 実測）。<strong>page1 圏にいた語が1本だけ消えた</strong>＝これが本当の変化で、次サイクルで原因を切り分けます。社長ご回答（下請け受注は稼働中）を受け、実装担当へ<strong>着手可を連絡済み</strong>です。</p>
+
+    <div class="border-2 border-sky-500 bg-sky-50 rounded p-3 mb-3">
+      <p class="text-sm font-semibold text-sky-900 mb-1">🧹 ⑤ <strong>台帳 §8 の履歴を archive へ移送しました＝実測をご報告します（ご指示 9/2）</strong></p>
+      <p class="text-sm text-gray-700 mb-2"><strong>やったこと</strong>＝§8a の last-run 表16行（<strong>78,364バイト</strong>＝9サイクル分の実行履歴が積み上がっていた部分）を <code>coverage-archive.md</code> へ<strong>逐語で移送</strong>し、本体は「最終実施日＋一行要約＋archive へのポインタ」に置き換えました。<strong class="text-emerald-700">レシピ本体（何を・どの頻度で回すか・判定条件）は1文字も削っていません。</strong>「#1 の累積教訓①〜⑪」も履歴ではなく毎サイクル参照する常設知識なので、本体に逐語で残しています。</p>
+      <p class="text-sm text-gray-900 bg-white border border-sky-300 rounded p-2 mb-2"><strong>実測結果</strong>＝<code>coverage.md</code> <strong>300,967 バイト → 232,027 バイト</strong>（<strong class="text-emerald-700">−68,940 バイト・−22.9%</strong>）。<br>内訳＝§8a の移送分がほぼそのまま減った形です（移送先の <code>coverage-archive.md</code> は 626,940 → 706,671 バイト＝<strong>履歴は1バイトも失っていません</strong>）。</p>
+      <p class="text-sm text-gray-700"><strong class="text-rose-700">ご判断をお願いする点</strong>＝ご見込みどおり <strong>100KB には届きません</strong>（現在 232KB）。残りの内訳は §3 提案ライフサイクル 85KB（<strong>生きた提案13件とその根拠＝実体</strong>）・§5 種プール 36KB・§2 カバレッジ 36KB・§1 スコアリング 26KB で、<strong>いずれも削ると判断材料が消えます</strong>。<strong>閾値はループ側で変更していません</strong>（ご指示どおり、数字が出てから社長がご判断される前提です）。次に効くのは §3 の判断済みR（R-049・R-040 ほか計約42KB）の移送で、これは<strong>本サイクルの書き直しが確定してから</strong>＝次サイクルで行います。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑥ 広告＝停止を掲示板・台帳に反映しました</strong>。R-050〜R-054 の状態をすべて「⏸ 広告停止中」に更新（「いまも配信されています」という誤報を防ぐため）。<strong>R-050 と R-051 は1件に統合</strong>しました（9/2 に「1つの原因の裏表」と確定したため）。<strong class="text-rose-700">⚠️ 入札戦略が「コンバージョン値の最大化」のまま未復旧です＝再開前に必ず直す必要があります</strong>（このまま再開すると配信先の偏りが加速します）。なお広告データの転送は最新日が <strong>09-01</strong> で、停止日 09-02 にまだ届いていません＝<strong>停止が数字に現れるのは次サイクル以降</strong>です。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑦ R-049 の効果窓の主判定を差し替えました（ご指摘 9/2）</strong>。旧主判定「大阪帯のクリック 0→発生」は 38imp・7.0位＝<strong>この位置での期待クリックが1〜2件</strong>であり、0件は異常ではなく誤差の範囲でした。<strong>弱い指標を主判定に据えたまま「0が6読点連続」と数え続けていたのは整合していません</strong>（ご指摘のとおりです）。新主判定＝<strong>「兵庫8語のうち page1（≤10位）に入る語数」＋「<code>operate/</code> 全体のクリック数」</strong>。本Rの主題も、価値のある発見のほう＝<strong>兵庫圏＋淡路8語で38imp・地域語全体で124impが page2〜3 に滞留し、大阪修飾語は page1 にいるのに兵庫の語は1語も page1 に無い</strong>＝<strong>対応エリアなのに受け皿の語彙が無い</strong>、へ書き直します。</p>
+
+    <p class="text-sm text-gray-700 mb-3"><strong>⑧ 新規＝提案1件（R-056）・質問1件（Q-017）</strong>。11日続いた新規ゼロを解除しました（社長ご指示によりCV設計が主題化したため）。在庫は <strong>12件／上限15件</strong>＝起票可の範囲内です（起票前 11件・R-046 のクローズで −1／R-050+R-051 の統合で −1／R-056 の起票で +1、差し引き +1）。<strong class="text-amber-700">ただし門番の視野の外に26件あります</strong>（表の行として取り出せない印）＝「起票可」は在庫が少ない証拠ではない点、申し添えます。</p>
+
+    <p class="text-sm text-gray-700"><strong>⑨ できなかったこと（正直に記録）</strong>＝①<strong>Clarity（ヒートマップ実測・定石#4b）は57日止まったまま</strong>＝原因が判明しました＝<code>clarity-fetch.py</code> も許可リストに無く実行拒否されます（Q-017 と同じ詰まり）。②<strong>受信箱の既読処理ができませんでした</strong>＝実装担当からの報告は処理済みですが、<code>mailbox.sh done</code> がサイト別の名義（<code>hp-loop-ycom</code>）で通らず、メッセージが受信箱に残っています（二重処理は受信簿の報告ID照合で防いでいます）。③週次の定石（#5 再監査・#6 競合対比・#7 完全性批評）は<strong>期日未到来</strong>＝次回 09-04 に実施します。</p>
+    <p class="text-xs text-gray-500 mt-2">※旧サイクル（Cycle 111 以前）の記録は <a href="archive.html" class="underline">アーカイブ</a>に保全しています。</p>
+  </section>
 
   <section class="border border-gray-300 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 111 — 2026-09-02（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-sky-700">この掲示板の作り直し</strong>）</h3>
