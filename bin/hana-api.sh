@@ -53,19 +53,34 @@ require_int() {
   fi
 }
 
+# 日付検証：YYYY-MM-DD 以外は弾く（URL クエリへの注入防止＋422 を叩く前に手元で落とす）
+require_date() {
+  local val="$1" name="$2"
+  if ! [[ "$val" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+    echo "{\"success\": false, \"message\": \"$name は YYYY-MM-DD 形式で指定してください\"}" >&2
+    exit 1
+  fi
+}
+
 # API 呼び出しの唯一の出口。★ここに集約する理由が今回まさに実害になった★＝
 #   証明書の検証を切る `-k` が12箇所に散っていたので、直すのも12箇所・
 #   テストも「1本だけ直して残り11本が残る」形になりかけた（2026-08-17）。
 #   TLS の設定・タイムアウト・CA の指定・認証ヘッダの隠し方を今後変えるときは、必ずここだけを触る。
 #   ⚠️ トークンを -H（argv）で渡す既知の課題も、直すならここ1箇所で済む（mailbox.sh の --config 方式）。
+# ⚠️ Accept: application/json は必須。無いと Laravel は検証エラー時に 422 JSON ではなく
+#    **トップページへの 302 リダイレクト（HTML）** を返す。呼び出し側は JSON パースに失敗して
+#    「API が落ちている」と誤読する（2026-09-03 に実際に発生＝ToDo 登録で user_id 欠落の 422 が
+#    302 の HTML になり、サーバ障害と誤診して開発側へ問い合わせる寸前まで行った）。
 api_get() {   # $1=/api/external/ 以降のパス（クエリ込み可）
   curl -s -X GET "$BASE_URL/api/external/$1" \
-    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN"
+    -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
+    -H "Accept: application/json"
 }
 api_send() {  # $1=メソッド $2=パス $3=本文の渡し方（標準入力から読む）／本文は呼び出し側がパイプで渡す
   curl -s -X "$1" "$BASE_URL/api/external/$2" \
     -H "X-API-TOKEN: $HANA_TOOLS_API_TOKEN" \
     -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
     "$3" @-
 }
 # ⚠️ $3 は今のところ `-d`（create-todo・chatwork）と `--data-binary`（update-todo・update-note）が
@@ -105,6 +120,33 @@ get_outsources() {
 # 全社員の「いま作業中か」「何の作業か」を返す。書き込み系は提供されない（タイマー操作不可）。
 get_office_status() {
   api_get "office-status"
+}
+
+# 作業タイマー記録取得（読み取り専用・2026-08-27 社長がエンドポイントを新設）
+# 引数: --from=YYYY-MM-DD（必須） --to=YYYY-MM-DD（必須） --user_id=N（任意・省略時は全ユーザー）
+# office-status が「今この瞬間＋今日の合計」なのに対し、こちらは過去期間の明細を返す。
+# ⚠️ 仕様上の注意（読み違えると集計が狂う）:
+#   ・期間の帰属は「開始日時の暦日」＝23:30開始→翌1:00停止は<開始日>に丸ごと入る（日別分割はされない）
+#   ・minutes は停止済み=開始→終了／実行中=開始→generated_at ＝実行中の値は取得時刻に依存する
+#   ・ToDo ID は返らない（タイマーは案件 works 単位の記録＝ToDo との紐づけがデータに無い）
+#   ・期間は最大200日・件数上限10,000件。超過は 422（期間を狭めるか user_id で絞る）
+get_work_logs() {
+  local from="" to="" uid="" params=""
+  for arg in "$@"; do
+    case "$arg" in
+      --from=*)    from="${arg#*=}" ;;
+      --to=*)      to="${arg#*=}" ;;
+      --user_id=*) uid="${arg#*=}" ;;
+    esac
+  done
+  require_date "$from" "--from"
+  require_date "$to"   "--to"
+  params="from=$from&to=$to"
+  if [ -n "$uid" ]; then
+    require_int "$uid" "--user_id"
+    params="${params}&user_id=$uid"
+  fi
+  api_get "work-logs?$params"
 }
 
 # ToDo一覧取得
@@ -308,6 +350,7 @@ case "$command" in
   search)       search_clients "$@" ;;
   outsources)   get_outsources ;;
   office-status) get_office_status ;;
+  work-logs)    get_work_logs "$@" ;;
   todos)        get_todos "$@" ;;
   create-todo)  create_todo "$@" ;;
   create-project) create_project "$@" ;;
@@ -327,6 +370,8 @@ hana-tools APIラッパー
 
 コマンド（取得＝読み取り）:
   clients                          クライアント一覧取得
+  work-logs --from=YYYY-MM-DD --to=YYYY-MM-DD [--user_id=N]
+                                   作業タイマー明細（過去期間・読み取り専用）
   search "キーワード"              クライアント検索（部分一致、カンマ区切りでOR検索）
   outsources                       外注先一覧取得
   office-status                    オフィス状況取得（全社員の稼働中/作業内容。3Dオフィス連携）
