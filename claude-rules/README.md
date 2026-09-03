@@ -5,7 +5,7 @@
 
 | テンプレート | 対象 | 中身の骨子 |
 |---|---|---|
-| [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 制作進行＝チェックリスト駆動（build-progress）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、スライド資料PDF（deck-format） |
+| [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | Design.md=SSOT、開始ゲート（start）→ 制作進行＝チェックリスト駆動（build-progress）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、見積もり（estimate-format＝CSV積算・検算・過去見積との比較）、スライド資料PDF（deck-format） |
 | [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、API実装規約（api-design）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、本番デプロイ（deploy）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
 
 ## 使い方（新規プロジェクトへの導入手順）
@@ -21,7 +21,7 @@
 ## テンプレートの設計原則（編集時に守ること）
 
 1. **固有値はルール本文に書かない** — クライアント名・実パス・ブランド色・スタックのバージョン等は各プロジェクトの `project-config.md`（デザイン値は `Design.md`）に置き、ルール本文は参照する。例として残す場合は「例:」と明示する
-2. **重複定義しない** — 同じルールは1ファイルを本家にし、他は参照で繋ぐ（片方を直して他方が古くなる「版ズレ」を防ぐ）
+2. **重複定義しない** — 同じルールは1ファイルを本家にし、他は参照で繋ぐ（片方を直して他方が古くなる「版ズレ」を防ぐ）。**この原則が及ぶ範囲は「1つの配布テンプレートの中」**：`website/` と `websystem/` は別々にコピー配布され、配布先は片方しか持たない＝**テンプレート間で同じ規律が両方に書かれているのは重複ではなく必要な冗長**（一方を消すと、そのテンプレを受け取った現場では「規定なし」になる）。ただし**両テンプレに書くと決めた規律は、片方だけ直さない**（更新時は必ずもう一方も見る）
 3. **安全ゲートを崩さない** — 外部送信・本番改変・push・破壊的操作は合意ゲートを通す。捏造しない（要確認情報は確定しない）
 4. **ルールを削除・統合するときは「行き先」を残す** — ルールファイルの削除・再編は、**消えた事実に誰も気づけない**という特有の危険がある（以後の AI は現存ファイルを検索して無ければ「規定なし」と判断するのが自然で、これは責められない＝**仕組みの側で防ぐ**）。したがって：
    - 削除・統合するファイルは、**1本ずつ「統合先」または「意図的な廃止（理由つき）」をコミットメッセージに明記する**
