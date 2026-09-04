@@ -328,26 +328,17 @@ def cmd_hold_sync(a):
                       "hold_total": len(read_hold())}, ensure_ascii=False, indent=1))
 
 
-def plan_skipped():
-    """起票されない行を（重複判定まで含めて）確定させる。post と同じ経路を通す。"""
-    todo, hold = plan_rows()
-    skipped = list(hold)
-    dup = check_duplicates(todo)
-    for it in todo:
-        if not dup[it["tag"]].get("safe_to_create"):
-            skipped.append((it["tag"], "duplicate-suspect"))
-    return skipped
+def split_by_duplicate(todo, hold):
+    """起票してよい行と、見送る行（理由つき）に分ける。
 
-
-def cmd_plan(a, do_post=False):
-    todo, hold = plan_rows()
-    made, skipped = [], list(hold)
-    # ★重複判定は「1件も作る前に」全件済ませる。
-    #   作りながら調べると **同じ実行で自分が作った ToDo が、次の行の重複判定に当たる**。
-    #   2026-09-04 実害＝24件を一度に作った回で、C-131・C-132 が直前に自分で作った
-    #   同じ客先の兄弟（語の重なり）に当たって落ちた＝「起票しない」側の誤判定。
-    #   この順序にすると **plan と post の結果が一致する** という性質も同時に手に入る。
-    ready = []
+    ★重複判定は「1件も作る前に」全件済ませる。作りながら調べると
+      **同じ実行で自分が作った ToDo が、次の行の重複判定に当たる**
+      （2026-09-04 実害＝24件を一度に作った回で C-131・C-132 が落ちた）。
+      この順序にすると **plan と post の結果が一致する** という性質も同時に手に入る。
+    確認列に積むときは `hold_code()` が `(既存 …)` を落とすので、
+    **理由に id を添えたまま1つの実装を plan・post・hold-sync で共有できる**。
+    """
+    ready, skipped = [], list(hold)
     dup = check_duplicates(todo)
     for it in todo:
         d = dup[it["tag"]]
@@ -356,6 +347,17 @@ def cmd_plan(a, do_post=False):
             skipped.append((it["tag"], f"duplicate-suspect(既存 {ids[:3]})"))
             continue
         ready.append(it)
+    return ready, skipped
+
+
+def plan_skipped():
+    """起票されない行を（重複判定まで含めて）確定させる。post と同じ経路を通す。"""
+    return split_by_duplicate(*plan_rows())[1]
+
+
+def cmd_plan(a, do_post=False):
+    ready, skipped = split_by_duplicate(*plan_rows())
+    made = []
     for it in ready:
         if not do_post:
             made.append({**it, "would_create": True})
