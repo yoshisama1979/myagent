@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>AIウェブ解析｜4つの料金プランのご案内 — 株式会社はなさか</title>
+<style>
+/* ===== 印刷設定（deck-format.md：@page はトップレベル・実寸指定） ===== */
+@page { size: 297mm 210mm; margin: 0; }
+
+html, body { margin: 0; padding: 0; background: #e5e9ef; }
+
+.slide {
+  width: 297mm; height: 210mm;
+  box-sizing: border-box;
+  padding: 16mm 20mm 14mm;
+  margin: 0 auto 8px;              /* 画面閲覧時の区切り（印刷には影響しない） */
+  break-after: page;
+  page-break-after: always;
+  overflow: hidden;
+  position: relative;
+  background: #ffffff;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  font-family: "Noto Sans CJK JP", "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", sans-serif;
+  color: #24303e;
+  display: flex; flex-direction: column;
+}
+.slide:last-child { break-after: auto; page-break-after: auto; }
+@media print { .slide { margin: 0; } }
+
+/* ===== 共通部品 ===== */
+.kicker {
+  display: inline-block;
+  font-size: 11pt; font-weight: 700; letter-spacing: .12em;
+  color: #0e8a6d;
+  border-left: 4mm solid #0e8a6d;
+  padding-left: 4mm;
+  margin-bottom: 4mm;
+}
+.slide h2 { font-size: 24pt; margin: 0 0 6mm; line-height: 1.35; color: #16324f; }
+.slide h3 { font-size: 14pt; margin: 0 0 3mm; color: #16324f; }
+.lead { font-size: 13pt; line-height: 1.9; margin: 0 0 6mm; }
+.note { font-size: 9.5pt; color: #8a94a0; line-height: 1.7; }
+.foot {
+  position: absolute; left: 20mm; right: 20mm; bottom: 8mm;
+  display: flex; justify-content: space-between;
+  font-size: 8.5pt; color: #9aa4b0;
+  border-top: 1px solid #e2e7ec; padding-top: 2.5mm;
+}
+table.spec { table-layout: fixed; width: 100%; border-collapse: collapse; font-size: 11.5pt; }
+table.spec th, table.spec td { border: 1px solid #d6dde4; padding: 3.5mm 4mm; text-align: left; vertical-align: top; line-height: 1.6; }
+table.spec th { background: #16324f; color: #fff; font-weight: 700; }
+table.spec td.head { background: #f0f4f8; font-weight: 700; color: #16324f; }
+table.spec.tight { font-size: 10pt; }
+table.spec.tight th, table.spec.tight td { padding: 1.6mm 3mm; line-height: 1.45; }
+.em { color: #0b6e57; font-weight: 700; }
+.sink { margin-top: auto; }
+/* ✓/− セル（大きめ・上下左右センター） */
+table.spec td.ok, table.spec td.no { text-align: center; vertical-align: middle; }
+table.spec td.ok { color: #0b6e57; font-weight: 800; font-size: 15pt; }
+table.spec td.no { color: #b9c2cc; font-size: 11pt; }
+/* 連携サービス名の強調チップ（比較表） */
+.svc { display: inline-block; background: #eef3f9; border: 1px solid #c2d4e8; color: #1f4e79;
+       font-size: 9pt; font-weight: 800; border-radius: 1mm; padding: 0.4mm 1.8mm; margin: 0.8mm 0.8mm 0.3mm 0; }
+/* 階段図内のサービスチップ */
+.schip { display: inline-block; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.5);
+         border-radius: 1mm; padding: 0.4mm 2mm; font-size: 8.5pt; font-weight: 700; margin: 1.5mm 1mm 0 0; }
+/* 金額プレースホルダ（社長記入待ち＝提出前に必ず差し替える） */
+.tbd { background: #fff3b0; color: #8a6a00; font-weight: 800; padding: 0 1.5mm; border-radius: 1mm; }
+/* プランカード */
+.plancard { border: 1px solid #e2e7ec; border-radius: 2.5mm; padding: 5mm 6mm; display: flex; flex-direction: column; }
+.plancard .pname { font-size: 13pt; font-weight: 800; color: #16324f; margin-bottom: 1.5mm; }
+.plancard .ptag { font-size: 9pt; font-weight: 700; letter-spacing: .06em; margin-bottom: 2.5mm; }
+.plancard p { font-size: 10pt; line-height: 1.7; margin: 0; color: #4a5764; }
+/* 階段図の段 */
+.step { border-radius: 2mm; padding: 4mm 5mm; color: #fff; }
+.step .sname { font-size: 12pt; font-weight: 800; margin-bottom: 1mm; }
+.step .scan { font-size: 9.5pt; line-height: 1.6; }
+.hitokoto {
+  background: #eef8f4; border: 1px solid #bfe5d8; border-radius: 3mm;
+  padding: 4mm 6mm; font-size: 14pt; font-weight: 700; color: #0b6e57;
+}
+.hitokoto .label { font-size: 9.5pt; font-weight: 700; color: #4a8f7d; display: block; margin-bottom: 1mm; letter-spacing: .08em; }
+/* 頻度チップ（毎日＝AI／定期＝人の修正／月1＝レポート／反映後＝測定） */
+.cad { display: inline-block; font-size: 8pt; font-weight: 700; line-height: 1.4;
+       padding: 0.5mm 1.8mm; border-radius: 1mm; margin-left: 1.5mm; color: #fff; letter-spacing: .04em; }
+.cad.d { background: #0e8a6d; }
+.cad.w { background: #d98324; }
+.cad.m { background: #8a99a8; }
+/* 対応の目印（🟢すぐ直せる＝月額内／🔔要ご確認／🏗️まとまった改修＝別途見積り） */
+.mark { display: inline-block; font-size: 8.5pt; font-weight: 700; line-height: 1.4;
+        padding: 0.6mm 2mm; border-radius: 1mm; margin-right: 1.5mm; letter-spacing: .02em; }
+.mark.g { background: #dcefe7; color: #0b6e57; }
+.mark.k { background: #f7e8cf; color: #a06520; }
+.mark.b { background: #e2e7ec; color: #4a5764; }
+</style>
+</head>
+<body>
+
+<!-- ============ 1. 表紙 ============ -->
+<!-- ============ 1. 表紙 ============ -->
+<section class="slide" style="padding:0; background:#16324f; color:#fff; justify-content:center;">
+  <div style="position:absolute; top:0; left:0; right:0; height:12mm; background:#0e8a6d;"></div>
+  <div style="padding:0 24mm;">
+    <div style="color:#6fd3b4; font-weight:700; letter-spacing:.14em; font-size:12pt;">AIウェブ解析</div>
+    <div style="font-size:30pt; font-weight:800; line-height:1.4; margin:6mm 0 6mm;">
+      AIがホームページを毎日解析し、<br>改善のご提案から修正まで行います。
+    </div>
+    <div style="font-size:14pt; color:#b9c6d6; line-height:1.9;">
+      4つの料金プランのご案内<br>
+      <span style="font-size:11.5pt;">御社の状況に合わせて「どこまでデータをつなぐか」で選べる、AIウェブ解析の料金プランです。</span>
+    </div>
+  </div>
+  <div style="position:absolute; bottom:14mm; left:24mm; font-size:11pt; color:#8ea3ba;">株式会社はなさか</div>
+</section>
+
+<!-- ============ 2. 課題 ============ -->
+<section class="slide">
+  <span class="kicker">ISSUE ／ よくあるお困りごと</span>
+  <h2>ホームページが公開した時のまま<br>放ったらかしになっていませんか</h2>
+  <p class="lead">
+    費用をかけて制作しても、公開後は「何をすればいいのか分からない」まま時間が過ぎてしまう——
+    これは多くの会社で起きています。これは<span class="em">見続けるコストが高い</span>ことにあります。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6mm; margin-bottom:7mm;">
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #c9d3dd; border-radius:2mm; padding:5mm;">
+      <h3>「何をすべきか」が分からない</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        検索データを見るには専門知識が要ります。数字は見られても、そこから打ち手に変えるのが難しい。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #c9d3dd; border-radius:2mm; padding:5mm;">
+      <h3>レポートを「読んで終わり」</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        月1回の報告書は届くが、結局どれから手をつけるのか、やった結果どうだったのかが残らない。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #c9d3dd; border-radius:2mm; padding:5mm;">
+      <h3>気づいたときには手遅れ</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        表示崩れ・順位の低下・重いページ。誰も見ていなければ、半年気づかないこともあります。
+      </p>
+    </div>
+  </div>
+
+  <div class="hitokoto">
+    <span class="label">つまり</span>
+    人間が「毎日見て、次の一手を考え続ける」のは難しい
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>2 / 22</span></div>
+</section>
+
+<!-- ============ 3. なぜAIか ============ -->
+<section class="slide">
+  <span class="kicker">WHY AI ／ なぜ、いまAIなのか</span>
+  <h2>これからのホームページ運用に、<br>AIは欠かせません。</h2>
+  <p class="lead">
+    AIは、<span class="em">一人の専門家が一生かけても読みきれない量</span>の——検索・マーケティング・技術の知識を学習しています。
+    しかも休まず、忘れず、毎日同じ品質でそれを御社サイトに当て続けます。<span class="em">もう、人間だけで担うには量が多すぎます。</span>
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6mm; margin-bottom:6mm;">
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:4mm;">
+      <h3>桁違いの知識量</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        世界中の膨大なSEO・Web・マーケティングの知見を学習しています。
+        一人の担当者の経験則を超える引き出しから、<strong>御社に合う手を探します</strong>。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:4mm;">
+      <h3>休まない・ブレない</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        疲れ・体調・気の緩みに左右されません。毎日同じ精度で見続けるので、
+        人間なら起きがちな<strong>「見落とし」が構造的に減ります</strong>。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:4mm;">
+      <h3>待つほど差が開く</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        検索結果にもAIの回答が表示される時代になりました。Web活用の巧拙が集客を左右し、
+        <strong>取り入れた会社との差は、これから広がっていきます</strong>。
+      </p>
+    </div>
+  </div>
+
+  <div class="hitokoto">
+    <span class="label">つまり</span>
+    「AIを使うかどうか」ではなく、「いつ使い始めるか」の時代になりました。
+  </div>
+  <p class="note sink" style="margin-bottom:2mm;">
+    ※ ただしAIも万能ではありません。御社にしか分からない事実（実績・価格・お客様の声）はAIが作り話で埋めず、必ず御社に確認します。<strong>人の判断を置き換えるのではなく、人の目が届かない量を毎日カバーする</strong>——それがAIの役割です。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>3 / 22</span></div>
+</section>
+
+<!-- ============ 4. ご提案 ============ -->
+<section class="slide">
+  <span class="kicker">SOLUTION ／ ご提案</span>
+  <h2>AIが毎日あなたのサイトを解析して<br>改善案を提案します</h2>
+  <p class="lead">
+    御社専用のAI解析担当が、<span class="em">毎晩あなたのサイトと検索データを見て</span>、気づいたことを改善提案にまとめます。
+    提案は弊社の担当者が確認して実装し、<span class="em">効果が出たかどうかまで数字で追いかけます</span>。
+  </p>
+
+  <div style="display:flex; align-items:stretch; gap:3mm; margin-bottom:4mm;">
+    <div style="flex:1; background:#f0f4f8; border-radius:2mm; padding:4.5mm 3mm; text-align:center;">
+      <div style="font-size:9pt; color:#7c8b9a; font-weight:700; margin-bottom:1.5mm;">STEP 1<span class="cad d">毎日</span></div>
+      <div style="font-size:12pt; font-weight:700; color:#16324f;">見る</div>
+      <div style="font-size:9.5pt; color:#4a5764; line-height:1.6; margin-top:2mm;">サイトの中身と<br>検索の実データ</div>
+    </div>
+    <div style="align-self:center; color:#0e8a6d; font-size:16pt; font-weight:700;">›</div>
+    <div style="flex:1; background:#f0f4f8; border-radius:2mm; padding:4.5mm 3mm; text-align:center;">
+      <div style="font-size:9pt; color:#7c8b9a; font-weight:700; margin-bottom:1.5mm;">STEP 2<span class="cad d">毎日</span></div>
+      <div style="font-size:12pt; font-weight:700; color:#16324f;">気づく</div>
+      <div style="font-size:9.5pt; color:#4a5764; line-height:1.6; margin-top:2mm;">前回からの変化<br>取りこぼし</div>
+    </div>
+    <div style="align-self:center; color:#0e8a6d; font-size:16pt; font-weight:700;">›</div>
+    <div style="flex:1; background:#eef8f4; border:1px solid #bfe5d8; border-radius:2mm; padding:4.5mm 3mm; text-align:center;">
+      <div style="font-size:9pt; color:#4a8f7d; font-weight:700; margin-bottom:1.5mm;">STEP 3<span class="cad d">毎日</span></div>
+      <div style="font-size:12pt; font-weight:700; color:#0b6e57;">提案する</div>
+      <div style="font-size:9.5pt; color:#3f6f60; line-height:1.6; margin-top:2mm;">効果と手間の順に<br>並べてご報告</div>
+    </div>
+    <div style="align-self:center; color:#0e8a6d; font-size:16pt; font-weight:700;">›</div>
+    <div style="flex:1; background:#f0f4f8; border-radius:2mm; padding:4.5mm 3mm; text-align:center;">
+      <div style="font-size:9pt; color:#7c8b9a; font-weight:700; margin-bottom:1.5mm;">STEP 4<span class="cad w">定期的に</span></div>
+      <div style="font-size:12pt; font-weight:700; color:#16324f;">直す</div>
+      <div style="font-size:9.5pt; color:#4a5764; line-height:1.6; margin-top:2mm;">担当者が確認して<br>実装（月額に込み）</div>
+    </div>
+    <div style="align-self:center; color:#0e8a6d; font-size:16pt; font-weight:700;">›</div>
+    <div style="flex:1; background:#f0f4f8; border-radius:2mm; padding:4.5mm 3mm; text-align:center;">
+      <div style="font-size:9pt; color:#7c8b9a; font-weight:700; margin-bottom:1.5mm;">STEP 5<span class="cad m">反映後</span></div>
+      <div style="font-size:12pt; font-weight:700; color:#16324f;">効果を測る</div>
+      <div style="font-size:9.5pt; color:#4a5764; line-height:1.6; margin-top:2mm;">効けば伸ばす<br>効かなければ変える</div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5mm; margin-bottom:4mm;">
+    <div style="border:1px solid #bfe5d8; background:#f6fbf9; border-radius:2mm; padding:3.5mm 4.5mm;">
+      <div style="font-size:11pt; font-weight:700; color:#0b6e57; margin-bottom:1.5mm;">解析・改善提案<span class="cad d">毎日</span></div>
+      <div style="font-size:9.5pt; color:#3f6f60; line-height:1.65;">AIが自動で。土日も休みません。</div>
+    </div>
+    <div style="border:1px solid #efd9bb; background:#fdfaf3; border-radius:2mm; padding:3.5mm 4.5mm;">
+      <div style="font-size:11pt; font-weight:700; color:#a06520; margin-bottom:1.5mm;">修正の実施<span class="cad w">定期的に</span></div>
+      <div style="font-size:9.5pt; color:#6b5836; line-height:1.65;">軽微な修正（🟢印）は月額内でそのまま実装。ペースはご相談。</div>
+    </div>
+    <div style="border:1px solid #d6dde4; background:#f7f9fb; border-radius:2mm; padding:3.5mm 4.5mm;">
+      <div style="font-size:11pt; font-weight:700; color:#16324f; margin-bottom:1.5mm;">レポート発行<span class="cad m">月1回</span></div>
+      <div style="font-size:9.5pt; color:#4a5764; line-height:1.65;">その月の動きと成果をまとめて。</div>
+    </div>
+  </div>
+
+  <div style="border:1px solid #e6dcc8; background:#fdfaf3; border-radius:2mm; padding:3.2mm 5mm; margin-bottom:3mm;">
+    <p style="font-size:10pt; line-height:1.75; margin:0; color:#6b5836;">
+      <strong>解析は毎日ですが、修正は毎日ではありません。</strong>本番の変更は必ず御社にご確認いただくため、毎日直せば<strong>御社にも毎日の確認をお願いする</strong>ことになります。
+      また毎日あちこち変えると<strong>どの変更が効いたのか分からなくなります</strong>。見るのは毎日、直すのは無理のないペースで。
+    </p>
+  </div>
+
+  <div class="hitokoto sink" style="margin-bottom:3mm;">
+    <span class="label">一言で言うと</span>
+    24時間365日、毎日あなたのサイトを解析し、次の一手を提案
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>4 / 22</span></div>
+</section>
+
+<!-- ============ 5. 何を見ているか ============ -->
+<section class="slide">
+  <span class="kicker">SCOPE ／ 何を見ているか</span>
+  <h2>「検索データ」と「サイトの中身」を突き合わせます。</h2>
+  <p class="lead">
+    どちらか片方では的を外します。数字だけ見ても打ち手は出ませんし、サイトだけ見ても<span class="em">どこで取りこぼしているか</span>が分かりません。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:8mm; margin-bottom:7mm;">
+    <div>
+      <h3 style="border-bottom:2px solid #0e8a6d; padding-bottom:2mm;">① 検索の実データ</h3>
+      <table class="spec" style="font-size:10.5pt;">
+        <colgroup><col style="width:38%"><col style="width:62%"></colgroup>
+        <tbody>
+          <tr><td class="head">検索キーワード</td><td>どんな言葉で御社が見つかっているか</td></tr>
+          <tr><td class="head">表示とクリック</td><td>何回表示され、何回クリックされたか</td></tr>
+          <tr><td class="head">検索順位</td><td>そのキーワードで今何位か</td></tr>
+          <tr><td class="head">サイト内の動き</td><td>どこから来て、どこで離脱したか</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:3mm;">※ Google の Search Console・アナリティクスの実データを使います（推測値ではありません）。</p>
+    </div>
+    <div>
+      <h3 style="border-bottom:2px solid #0e8a6d; padding-bottom:2mm;">② サイトの中身（3つの柱）</h3>
+      <table class="spec" style="font-size:10.5pt;">
+        <colgroup><col style="width:30%"><col style="width:70%"></colgroup>
+        <tbody>
+          <tr><td class="head">技術</td><td>検索結果での見え方、SNS共有時の表示、表示速度、スマホ対応、壊れている箇所</td></tr>
+          <tr><td class="head">コンテンツ</td><td>知りたいことに答えているか、足りないページ、情報の古さ</td></tr>
+          <tr><td class="head">見た目・導線</td><td>最初の画面で伝わるか、問い合わせボタンは目立つか、スマホで崩れていないか</td></tr>
+        </tbody>
+      </table>
+      <p class="note" style="margin-top:3mm;">※ 実際の画面も撮影して確認します（タグだけ見ても分からない部分があるため）。</p>
+    </div>
+  </div>
+
+  <div class="hitokoto">
+    <span class="label">見ている先</span>
+    アクセス数そのものではなく、「お問い合わせ・お見積りにつながるか」を基準に優先順位を決めます。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>5 / 22</span></div>
+</section>
+
+<!-- ============ 6. ツール連携 ============ -->
+<section class="slide">
+  <span class="kicker">DATA ／ 3つのツールを連携します</span>
+  <h2 style="margin-bottom:3mm;">「検索」「流入」「行動」——3つを突き合わせます。</h2>
+  <p class="lead" style="margin-bottom:4mm;">
+    御社サイトに3つの解析ツールを連携します。どれか1つでは分かりません。
+    <span class="em">3つを突き合わせて初めて、どこで取りこぼしているかが見えます</span>。連携作業は弊社が行います（どこまで連携するかは、後半の料金プランでお選びいただけます）。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6mm; margin-bottom:4mm;">
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #4285f4; border-radius:2mm; padding:4mm;">
+      <div style="font-size:9pt; color:#7c8b9a; font-weight:700; letter-spacing:.06em; margin-bottom:1.5mm;">来る「前」を見る</div>
+      <h3 style="font-size:13pt; margin-bottom:2mm;">Google<br>Search Console</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0; color:#4a5764;">
+        <strong>検索でどう見つかっているか。</strong><br>
+        どんな言葉で検索され、今何位で、何回表示され、何回クリックされたか。
+        <span class="em">クリックされずに取りこぼしている言葉</span>が分かります。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #e8a33d; border-radius:2mm; padding:4mm;">
+      <div style="font-size:9pt; color:#7c8b9a; font-weight:700; letter-spacing:.06em; margin-bottom:1.5mm;">来た「後」の結果を見る</div>
+      <h3 style="font-size:13pt; margin-bottom:2mm;">Google<br>アナリティクス（GA4）</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0; color:#4a5764;">
+        <strong>何人来て、どうなったか。</strong><br>
+        どこから何人来て、どのページを見て、
+        <span class="em">お問い合わせ・お見積りに至ったか</span>。施策が成果につながったかを判定します。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:4mm;">
+      <div style="font-size:9pt; color:#4a8f7d; font-weight:700; letter-spacing:.06em; margin-bottom:1.5mm;">ページの「中」を見る</div>
+      <h3 style="font-size:13pt; margin-bottom:2mm; color:#0b6e57;">Microsoft<br>Clarity</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0; color:#4a5764;">
+        <strong>訪問者が実際にどう動いたか。</strong><br>
+        どこまで読まれたか、<span class="em">押しても反応しない場所を触っていないか</span>、
+        開いてすぐ戻っていないか、エラーが出ていないか。
+      </p>
+    </div>
+  </div>
+
+  <div style="border:1px dashed #b9c7d4; border-radius:2mm; padding:3mm 6mm; margin-bottom:3.5mm; display:flex; gap:5mm; align-items:baseline;">
+    <div style="font-size:11pt; font-weight:700; color:#16324f; white-space:nowrap;">＋ Google 広告</div>
+    <p style="font-size:10pt; line-height:1.7; margin:0; color:#4a5764;">
+      広告を出稿されている場合は、<strong>広告アカウントも連携できます</strong>。成果ゼロの検索語に流れている広告費、
+      <span class="em">「成果」の数え方が正しいか</span>、自然検索で既に上位の言葉への二重払い——広告費の使われ方まで毎日チェックします。
+    </p>
+  </div>
+
+  <div style="border:1px solid #bfe5d8; background:#f6fbf9; border-radius:2mm; padding:3.5mm 6mm; margin-bottom:3.5mm;">
+    <div style="font-size:9.5pt; font-weight:700; color:#4a8f7d; letter-spacing:.06em; margin-bottom:1.5mm;">実際にこれで分かったこと（弊社サイトでの実測・2026年7月）</div>
+    <p style="font-size:10.5pt; line-height:1.7; margin:0; color:#3f6f60;">
+      ページは平均して<strong>4割ほどしか読まれていない</strong>（平均スクロール到達 40.5%）。さらに
+      <strong>約6回に1回の訪問で、押しても何も起きない場所がクリックされていた</strong>（デッドクリック発生 16.8%）——
+      アクセス数だけを見ていても、決して分からない事実です。
+    </p>
+  </div>
+
+  <div class="hitokoto sink" style="margin-bottom:4mm;">
+    <span class="label">正直に申し上げると</span>
+    3つとも無料のツールです。費用をいただくのは、これを毎日読んで「次の一手」に変える部分です。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>6 / 22</span></div>
+</section>
+
+<!-- ============ 7. 見るリズム ============ -->
+<section class="slide">
+  <span class="kicker">RHYTHM ／ 見るリズム</span>
+  <h2>毎日・毎週・毎月。<br>見る深さを変えて、見落としをなくします。</h2>
+  <p class="lead">
+    毎日おなじ見方をくり返すだけでは、かえって<span class="em">静かに進む問題</span>を見落とします。
+    人間の健康管理と同じで、<span class="em">日々の体調チェック・定期的な見直し・年に一度の人間ドック</span>を、役割を分けて回します。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6mm; margin-bottom:6mm;">
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:5mm; display:flex; flex-direction:column;">
+      <div style="font-size:9pt; font-weight:700; color:#0e8a6d; letter-spacing:.08em; margin-bottom:1.5mm;">毎日</div>
+      <h3 style="font-size:13pt; margin-bottom:3mm;">変化に気づく</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0 0 3mm; color:#4a5764;">
+        前日との差、検索順位やアクセスの動き、<strong>直した施策が効いているか</strong>。速く動く問題を、翌日には拾います。
+      </p>
+      <div style="margin-top:auto; font-size:9pt; color:#4a8f7d; background:#f6fbf9; border-radius:1.5mm; padding:2.5mm 3mm; line-height:1.6;">
+        たとえるなら<br><strong>体温・血圧のチェック</strong>
+      </div>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #d98324; border-radius:2mm; padding:5mm; display:flex; flex-direction:column;">
+      <div style="font-size:9pt; font-weight:700; color:#a06520; letter-spacing:.08em; margin-bottom:1.5mm;">毎週</div>
+      <h3 style="font-size:13pt; margin-bottom:3mm;">全体を見直す</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0 0 3mm; color:#4a5764;">
+        サイト全体の構図、<strong>競合サイトとの比較</strong>、実際の画面の見た目。日々の差分では拾えない「全体像」を点検します。
+      </p>
+      <div style="margin-top:auto; font-size:9pt; color:#a06520; background:#fdfaf3; border-radius:1.5mm; padding:2.5mm 3mm; line-height:1.6;">
+        たとえるなら<br><strong>体組成・運動の見直し</strong>
+      </div>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-top:3mm solid #8a99a8; border-radius:2mm; padding:5mm; display:flex; flex-direction:column;">
+      <div style="font-size:9pt; font-weight:700; color:#5f6f7e; letter-spacing:.08em; margin-bottom:1.5mm;">毎月</div>
+      <h3 style="font-size:13pt; margin-bottom:3mm;">すみずみ点検</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0 0 3mm; color:#4a5764;">
+        設定・タグ・リンクなど、<strong>普段は動かないが壊れても気づきにくい土台</strong>を総ざらい。半年放置されがちな不具合を拾います。
+      </p>
+      <div style="margin-top:auto; font-size:9pt; color:#5f6f7e; background:#f7f9fb; border-radius:1.5mm; padding:2.5mm 3mm; line-height:1.6;">
+        たとえるなら<br><strong>年に一度の人間ドック</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="hitokoto">
+    <span class="label">見るリズムを分ける理由</span>
+    毎日は「変化」、毎週は「全体」、毎月は「土台」。頻度を変えることで、<strong>速い問題も、静かな問題も、どちらも取りこぼしません</strong>。
+  </div>
+  <p class="note sink" style="margin-bottom:2mm;">
+    ※ 実際に弊社サイトでは、料金ページに「表示を最大4秒遅らせてしまう古い設定」が残っていたのを、この月次のすみずみ点検で発見しました。毎日の変化チェックだけでは見つからない種類の問題です。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>7 / 22</span></div>
+</section>
+
+<!-- ============ 8. 3つの特徴 ============ -->
+<section class="slide">
+  <span class="kicker">STRENGTH ／ このプランの特徴</span>
+  <h2>ふつうの解析レポートと、ここが違います。</h2>
+
+  <div style="display:grid; grid-template-columns:1fr; gap:5mm; margin-bottom:6mm;">
+    <div style="border:1px solid #e2e7ec; border-left:4mm solid #0e8a6d; border-radius:2mm; padding:5mm 6mm;">
+      <h3 style="margin-bottom:2mm;">① 毎晩見ます（月1回まとめて見るのとは違います）</h3>
+      <p style="font-size:11pt; line-height:1.8; margin:0; color:#4a5764;">
+        人が毎日サイトと検索データを見るのは、現実的にコストが合いません。AIは毎晩見ます。だから
+        <span class="em">表示崩れや順位の変化に、翌日には気づけます</span>。
+        ご報告は月1回にまとめますが、<span class="em">見ているのは毎日</span>です。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-left:4mm solid #0e8a6d; border-radius:2mm; padding:5mm 6mm;">
+      <h3 style="margin-bottom:2mm;">② 前に進みます（毎回ゼロからやり直しません）</h3>
+      <p style="font-size:11pt; line-height:1.8; margin:0; color:#4a5764;">
+        前回からの変化と、出した提案がどこまで進んだかを持ち越して見ます。だから
+        <span class="em">同じ指摘をくり返さず、着実に先へ進みます</span>（使うほど賢くなる仕組みは次ページで）。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-left:4mm solid #0e8a6d; border-radius:2mm; padding:5mm 6mm;">
+      <h3 style="margin-bottom:2mm;">③ 正直です（分からないことは、分からないと言います）</h3>
+      <p style="font-size:11pt; line-height:1.8; margin:0; color:#4a5764;">
+        実績の数値やお客様の声など、御社にしか分からない事実をAIが作り話で埋めることはありません。
+        <span class="em">必要な事実は御社に確認します</span>。データが取れていない項目は「未取得」とお伝えします。
+      </p>
+    </div>
+  </div>
+
+  <div class="hitokoto">
+    <span class="label">結果として</span>
+    「レポートが届く」サービスではなく、「毎日サイトが良くなっていく」サービスになります。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>8 / 22</span></div>
+</section>
+
+<!-- ============ 9. 実例 ============ -->
+<section class="slide">
+  <span class="kicker">PROOF ／ 弊社自身のサイトでの実例</span>
+  <h2>この仕組みは、まず弊社が自分のサイトで毎晩使っています。</h2>
+  <p class="lead">
+    お客様にお出しする前に、自社サイト（y-com.info）で毎日回しています。実際に出てきた指摘を、そのままご紹介します。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5mm; margin-bottom:6mm;">
+    <div style="border:1px solid #e2e7ec; border-radius:2mm; padding:5mm; background:#fbfcfd;">
+      <div style="font-size:9pt; font-weight:700; color:#0e8a6d; letter-spacing:.08em; margin-bottom:2mm;">実例 ①　見つける</div>
+      <h3 style="font-size:12.5pt; margin-bottom:3mm;">1ページ目に出ているのに、<br>クリックが0だった</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0; color:#4a5764;">
+        料金ページが「ホームページ制作 大阪 価格」などで<span class="em">検索1ページ目の上位（2位前後）</span>に出ていたのに、
+        約120回表示されて<span class="em">クリックは0件</span>。＝順位ではなく<strong>検索結果での見え方</strong>の問題と特定。
+        タイトルと説明文に地名と実際の価格を出すよう改善し、本番反映を確認しました。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-radius:2mm; padding:5mm; background:#fbfcfd;">
+      <div style="font-size:9pt; font-weight:700; color:#0e8a6d; letter-spacing:.08em; margin-bottom:2mm;">実例 ②　やめる</div>
+      <h3 style="font-size:12.5pt; margin-bottom:3mm;">28日測って「効果なし」と<br>分かったので、方針を変えた</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0; color:#4a5764;">
+        料金ページのタイトル・説明文を直して<span class="em">28日間の前後比較</span>を実施。結果は
+        <span class="em">順位・クリックとも変化なし</span>。＝小手先の調整では届かないと判断し、
+        ページの中身そのもの（相場の解説・よくある質問・事例）を厚くする方向へ切り替えました。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-radius:2mm; padding:5mm; background:#fbfcfd;">
+      <div style="font-size:9pt; font-weight:700; color:#0e8a6d; letter-spacing:.08em; margin-bottom:2mm;">実例 ③　直す</div>
+      <h3 style="font-size:12.5pt; margin-bottom:3mm;">重すぎる画像と、<br>壊れた表示を拾った</h3>
+      <p style="font-size:10pt; line-height:1.75; margin:0; color:#4a5764;">
+        重い画像群を検出し、<span class="em">合計約20MB → 約2.8MB</span>まで軽量化（最も重い画像は1.8MB→158KB）。
+        また記事の末尾に<strong>本来表示されないはずの文字列</strong>がそのまま出ていたのを発見し、原因の不要コードを除去しました。
+      </p>
+    </div>
+  </div>
+
+  <div class="hitokoto sink">
+    <span class="label">ご注目いただきたいのは実例②です</span>
+    「やりました」で終わらせず、効かなかったと正直に確定させて、打ち手を捨てられること。これが毎日続く仕組みの信頼性です。
+  </div>
+  <p class="note" style="margin-top:4mm; margin-bottom:2mm;">※ 実例①・②の「その後」は次の3枚で——<strong>効いた手も、効かなかった手も、実測で確定</strong>させています（2026年7月）。</p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>9 / 22</span></div>
+</section>
+
+<!-- ============ 10. 実例続A ============ -->
+<section class="slide">
+  <span class="kicker">PROOF＋ ／ その後どうなったか ①</span>
+  <h2>切り替えた先は、効きました。<br>2ページ目の料金クエリが、1ページ目の入口へ。</h2>
+  <p class="lead" style="margin-bottom:4mm;">
+    前ページ実例②の続きです。対象は<span class="em">弊社サイト（y-com.info）の料金ページ</span>。
+    「相場が分かる決定版ガイド」へ3回に分けて拡充しました——<span class="em">新しい事実は一切足していません</span>。既に公開している値を、検索の質問に答える形へ組み立て直しただけです。
+  </p>
+  <div style="display:grid; grid-template-columns:1.15fr 1fr; gap:6mm; margin-bottom:4mm;">
+    <div style="border:1px solid #bfe5d8; background:#f6fbf9; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#4a8f7d; letter-spacing:.06em; margin-bottom:2mm;">結果（2026年7月28日 確定・28日間の実測）</div>
+      <div style="font-size:21pt; font-weight:800; color:#0b6e57; line-height:1.25;">14.1位 → 10.3位</div>
+      <p style="font-size:10.5pt; line-height:1.7; margin:2mm 0 0; color:#3f6f60;">
+        「ホームページ制作 料金表」＝<strong>8回の測定すべてで改善方向（単調）</strong>。<br>
+        「web制作会社 料金表」は <strong>9.7位＝1ページ目に到達</strong>。
+      </p>
+    </div>
+    <div style="border:1px solid #e6dcc8; background:#fdfaf3; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#a06520; letter-spacing:.06em; margin-bottom:2mm;">正直に添えます</div>
+      <p style="font-size:10.5pt; line-height:1.75; margin:0; color:#6b5836;">
+        順位は動きましたが、<strong>クリックの回収はこれから</strong>です（確定時点で1クリック）。
+        結果が出ていない部分を「出た」とは申しません。
+      </p>
+    </div>
+  </div>
+  <div class="hitokoto sink" style="margin-bottom:4mm;">
+    <span class="label">この1枚の意味</span>
+    実例②で下した「中身の深さへ切り替える」という投資判断が、数字で正しかったと確定しました。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>10 / 22</span></div>
+</section>
+
+<!-- ============ 11. 実例続B ============ -->
+<section class="slide">
+  <span class="kicker">PROOF＋ ／ その後どうなったか ②</span>
+  <h2>効かなかった手は、「効かなかった」と<br>数字で確定させて、止めました。</h2>
+  <p class="lead" style="margin-bottom:4mm;">
+    同じ料金ページで、実例①の「検索結果での見え方」（タイトル・説明文を大阪×具体価格で刷新）はどうなったか——<span class="em">4週間の実測（2026年7月）</span>の答えです。
+  </p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:6mm; margin-bottom:4mm;">
+    <div style="border:1px solid #e2c9c9; background:#fdf6f5; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#a04545; letter-spacing:.06em; margin-bottom:2mm;">見え方の刷新 → 効きませんでした</div>
+      <p style="font-size:11pt; line-height:1.8; margin:0; color:#5d3a3a;">
+        約<strong>140回</strong>表示・順位<strong>2〜4位</strong>のまま——<strong>クリックは0件で不変</strong>。
+      </p>
+    </div>
+    <div style="border:1px solid #bfe5d8; background:#f6fbf9; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#4a8f7d; letter-spacing:.06em; margin-bottom:2mm;">同時期・同じページのもう一手</div>
+      <p style="font-size:11pt; line-height:1.8; margin:0; color:#3f6f60;">
+        本文に足した「具体的な価格帯の記述」は<strong>5クリック</strong>を生んだ＝「見え方が悪いから押されない」という説を<strong>対比で棄却</strong>。
+      </p>
+    </div>
+  </div>
+  <p style="font-size:11pt; line-height:1.8; margin:0 0 4mm; color:#4a5764;">
+    結論：この語群は<strong>クリック需要そのものが薄い</strong>と判定 → ここへの追加投資をやめ、<span class="em">効いた側（中身の深さ＝前ページ）へ予算と手を寄せました</span>。
+  </p>
+  <div class="hitokoto sink" style="margin-bottom:4mm;">
+    <span class="label">ここが差別化の核です</span>
+    ふつうのレポートは「やりましょう」しか言いません。「効かないので止めます」を数字で言える＝<strong>御社のお金を無駄にしない仕組み</strong>です。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>11 / 22</span></div>
+</section>
+
+<!-- ============ 12. 実例続C ============ -->
+<section class="slide">
+  <span class="kicker">PROOF＋ ／ その後どうなったか ③（クライアント様の例・社名は伏せています）</span>
+  <h2>22週間「最優先」だった課題が、<br>前提ごと消えていたのに気づけました。</h2>
+  <p class="lead" style="margin-bottom:4mm;">
+    関西の工事・設備会社様のサイトでの実例です（2026年7月29日の実測）。最優先として追いかけていたページの検索表示を、<span class="em">月まるごとの固定期間で測り直した</span>ところ——
+  </p>
+  <div style="display:grid; grid-template-columns:1fr 1.3fr; gap:6mm; margin-bottom:4mm;">
+    <div style="border:1px solid #d9c9e2; background:#faf6fd; border-radius:2mm; padding:5mm; text-align:center;">
+      <div style="font-size:9pt; font-weight:700; color:#7a5595; letter-spacing:.06em; margin-bottom:2mm;">表示回数（月間・固定期間の実測）</div>
+      <div style="font-size:22pt; font-weight:800; color:#5d3a7a; line-height:1.3;">6月 89回 → 7月 6回</div>
+      <div style="font-size:12pt; font-weight:700; color:#a04545; margin-top:1mm;">−93%（需要ごと崩落）</div>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#7c8b9a; letter-spacing:.06em; margin-bottom:2mm;">なぜ気づきにくかったか</div>
+      <p style="font-size:10.5pt; line-height:1.75; margin:0; color:#4a5764;">
+        <strong>順位は1ページ目のまま</strong>だったため、順位の監視では検知できません。日々の集計でも「9→4→1」の微減に薄まって見えていました。
+        気づいた時点で提案の対象を<strong>伸びている面へ移し替え</strong>、「週1回は固定期間で測り直す」を標準手順に加えました。
+      </p>
+    </div>
+  </div>
+  <div class="hitokoto sink" style="margin-bottom:4mm;">
+    <span class="label">「なぜ毎日なのか」への答え</span>
+    四半期に1回レポートを見る運用では、絶対に気づけない種類の失効です。毎日見ているから、<strong>自分の過去の提案を自分で撤回できます</strong>。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>12 / 22</span></div>
+</section>
+
+<!-- ============ 13. 診断レポート現物 ============ -->
+<section class="slide">
+  <span class="kicker">PROOF＋ ／ 診断レポートの現物（一部・社名を伏せています）</span>
+  <h2>初回診断は、この粒度でお出しします。</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:8mm; flex:1; min-height:0;">
+    <div>
+      <p class="lead" style="margin-bottom:4mm;">
+        実在の会社様へお出しした初回診断レポートの現物です（2026年7月発行・掲載許諾の関係で社名・数値をぼかしています）。
+        <span class="em">どなたでも見られる公開情報だけ</span>で、ここまで出ます——
+      </p>
+      <ul style="font-size:11pt; line-height:2.0; margin:0 0 4mm; padding-left:5mm; color:#4a5764;">
+        <li>総評＋<strong>特に重要な指摘 TOP7</strong>（スクリーンショット・現物根拠つき）</li>
+        <li>TOP以外も<strong>全件</strong>を観点別に記載（出し惜しみしません）</li>
+        <li>検索での見え方の<strong>実測</strong>（順位・競合の顔ぶれ）</li>
+        <li>全指摘に「対応の目印」つき＝<span class="mark g">🟢 すぐ直せる</span><span class="mark k">🔔 要ご確認</span><span class="mark b">🏗️ まとまった改修</span>で、<strong>どこまでが月額内で進むかが最初から見えます</strong></li>
+      </ul>
+      <div class="hitokoto" style="font-size:13pt;">
+        <span class="label">そして</span>
+        次は、御社のサイトをこの場で見てみましょう。
+      </div>
+    </div>
+    <div style="display:flex; gap:4mm; align-items:flex-start; justify-content:center; min-height:0;">
+      <img src="deck-images/case-report-blur-top.png" alt="診断レポート現物（社名を伏せた表紙部分）" style="width:58%; border:1px solid #d6dde4; border-radius:1.5mm;">
+      <img src="deck-images/case-report-blur-tall.png" alt="診断レポート現物（全体の分量・ぼかし）" style="width:24%; border:1px solid #d6dde4; border-radius:1.5mm;">
+    </div>
+  </div>
+  <p class="note" style="margin:2mm 0 0;">※ レポートは実在の企業様のものです。掲載許諾の関係で、社名・URL・固有の数値はぼかし処理しています（中身を読ませる用途ではなく、分量と粒度をご覧いただくためのものです）。</p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>13 / 22</span></div>
+</section>
+
+<!-- ============ 14. 成長 ============ -->
+<section class="slide">
+  <span class="kicker">GROWTH ／ 使うほど、賢くなる</span>
+  <h2>続けるほど、強くなります。<br>ここが、ただの解析ツールとの決定的な違いです。</h2>
+  <p class="lead">
+    一般的な解析ツールは、毎回<span class="em">決められた同じ手順</span>をなぞるだけです。本プランは違います。
+    やったこと・その結果を一つずつ記録し、<span class="em">効いた打ち手を学習して、次の一手そのものが変わっていきます</span>。
+  </p>
+
+  <div style="display:flex; align-items:stretch; gap:3mm; margin-bottom:4mm;">
+    <div style="flex:1; border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; color:#4a8f7d; font-weight:700; letter-spacing:.08em; margin-bottom:2mm;">① 記録する</div>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        いつ・何を提案し、どう直して、<strong>結果どうだったか</strong>。すべてを残していきます。
+      </p>
+    </div>
+    <div style="align-self:center; color:#0e8a6d; font-size:16pt; font-weight:700;">›</div>
+    <div style="flex:1; border:1px solid #e2e7ec; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; color:#4a8f7d; font-weight:700; letter-spacing:.08em; margin-bottom:2mm;">② 学習する</div>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        効果が出た打ち手は<strong>「勝ちパターン」として蓄積</strong>。効かなかったものは、二度とくり返しません。
+      </p>
+    </div>
+    <div style="align-self:center; color:#0e8a6d; font-size:16pt; font-weight:700;">›</div>
+    <div style="flex:1; border:1px solid #bfe5d8; background:#f6fbf9; border-top:3mm solid #0e8a6d; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; color:#4a8f7d; font-weight:700; letter-spacing:.08em; margin-bottom:2mm;">③ 次が変わる</div>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#3f6f60;">
+        過去の成果に応じて<strong>次の提案の優先順位が変わります</strong>。決まった手順を回すだけの機械とは、ここが違います。
+      </p>
+    </div>
+  </div>
+  <p style="font-size:10pt; color:#4a5764; text-align:center; margin:0 0 5mm;">
+    この「記録 → 学習 → 反映」の輪が、<span class="em">毎日ひとりでに回り続けます</span>。
+  </p>
+
+  <div class="hitokoto">
+    <span class="label">ここが一番の強みです</span>
+    人間には骨の折れる「記録し、ふり返り、次に活かす」作業。それが毎日、自動で積み上がっていきます。
+  </div>
+  <p class="note sink" style="margin-bottom:2mm;">
+    ※ だから使い始めが一番"素の状態"で、日が経つほど御社サイトに詳しくなり、提案の精度は上がっていきます。<strong>＝早く始めた会社ほど、差がつきます。</strong>
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>14 / 22</span></div>
+</section>
+
+<!-- ============ 15. 比較 ============ -->
+<section class="slide">
+  <span class="kicker">COMPARISON ／ 一般的な保守との違い</span>
+  <h2>「守り」だけでなく、「攻め」が毎日続きます。</h2>
+  <p class="lead">
+    一般的な保守も大切です。本プランはそれを含みつつ、<span class="em">こちらから改善を出し続ける</span>点が異なります。
+  </p>
+
+  <table class="spec tight">
+    <colgroup><col style="width:18%"><col style="width:41%"><col style="width:41%"></colgroup>
+    <thead>
+      <tr><th style="background:#f0f4f8; color:#16324f;"></th><th style="background:#8a99a8;">一般的な保守・レポート</th><th>本プラン（AIウェブ解析）</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="head">きっかけ</td>
+        <td>壊れたとき・ご依頼をいただいたとき（受け身）</td>
+        <td><span class="em">毎晩こちらから見て、気づいたら提案します</span>（能動）</td>
+      </tr>
+      <tr>
+        <td class="head">頻度</td>
+        <td>月1回の報告、または不定期</td>
+        <td><span class="em">解析は毎日</span>。ご報告は月1回にまとめて（＝レポートの裏で毎日動いています）</td>
+      </tr>
+      <tr>
+        <td class="head">中身</td>
+        <td>現状はこうでした、という報告</td>
+        <td>次にどれから手をつけるべきか、という<span class="em">提案</span>（効果と手間の順）</td>
+      </tr>
+      <tr>
+        <td class="head">その後</td>
+        <td>報告書は読んで終わりになりがち</td>
+        <td>実装 → <span class="em">効果を数字で測る</span> → 効かなければ方針を変える</td>
+      </tr>
+      <tr>
+        <td class="head">積み上がり</td>
+        <td>毎回ゼロから見直すため、指摘が似通う</td>
+        <td>前回からの変化を持ち越すため、<span class="em">同じ指摘をくり返しません</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="hitokoto sink" style="margin-bottom:4mm;">
+    <span class="label">ご安心ください</span>
+    本番サイトへの変更は、必ず内容をご確認いただいてから反映します。AIが勝手に御社サイトを書き換えることはありません。
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>15 / 22</span></div>
+</section>
+
+<!-- ============ 16. プランの考え方 ============ -->
+<section class="slide">
+  <span class="kicker">CONCEPT ／ プランの考え方</span>
+  <h2>「どこまでデータをつなぐか」で、<br>言えることが変わります</h2>
+  <p class="lead" style="margin-bottom:5mm;">
+    AIによる解析そのものは、どのプランでも同じ品質で行います。違いは<span class="em">つなぐデータの範囲</span>です。
+    データをつなぐほど、「改善案を出す」から「<span class="em">その改善が成果につながったと数字で証明する</span>」へと、お伝えできる内容が深くなります。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:4mm; align-items:end; margin-bottom:5mm;">
+    <div class="step" style="background:#8a99a8; min-height:34mm;">
+      <div class="sname">① シンプル</div>
+      <div class="scan">サイトを外から診断。<br><strong>「直すべき箇所」</strong>が具体的に分かる</div>
+    </div>
+    <div class="step" style="background:#4a7fa5; min-height:44mm;">
+      <div class="sname">② SEO</div>
+      <div class="scan">＋検索データ。<br><strong>「検索で伸びたか」</strong>を順位とクリック数で言える<br><span class="schip">Google Search Console</span></div>
+    </div>
+    <div class="step" style="background:#2f6a8f; min-height:54mm;">
+      <div class="sname">③ コンバージョン</div>
+      <div class="scan">＋訪問者の行動データ。<br><strong>「問い合わせ・電話につながったか」</strong>まで言える<br><span class="schip">Google アナリティクス</span><span class="schip">Microsoft Clarity</span></div>
+    </div>
+    <div class="step" style="background:#0e8a6d; min-height:64mm;">
+      <div class="sname">④ フルパック</div>
+      <div class="scan">＋広告データ。<br><strong>「広告費の無駄はないか」</strong>まで含めて、集客全体を最適化できる<br><span class="schip">Google 広告</span></div>
+    </div>
+  </div>
+
+  <p class="note sink" style="margin-bottom:6mm;">
+    ※ 上位プランは下位プランの内容をすべて含みます。まず小さく始めて、あとから上位プランへ変更いただくことも可能です（その際は追加分の連携設定のみ行います）。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>16 / 22</span></div>
+</section>
+
+<!-- ============ 17. 4プラン比較表 ============ -->
+<section class="slide">
+  <span class="kicker">PLANS ／ 料金プラン一覧</span>
+  <h2 style="font-size:22pt; margin-bottom:3mm;">4つのプラン</h2>
+
+  <table class="spec tight" style="margin-bottom:3mm;">
+    <colgroup>
+      <col style="width:21%"><col style="width:19.75%"><col style="width:19.75%"><col style="width:19.75%"><col style="width:19.75%">
+    </colgroup>
+    <thead>
+      <tr>
+        <th></th>
+        <th>① シンプル</th>
+        <th>② SEO</th>
+        <th>③ コンバージョン</th>
+        <th style="background:#0e8a6d;">④ フルパック</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="head">外部からのサイト診断<br><span style="font-weight:400; font-size:8.5pt; color:#6a7684;">表示速度・スマホ対応・SEO内部対策・導線・競合比較</span></td>
+        <td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td>
+      </tr>
+      <tr>
+        <td class="head">検索データ分析<br><span class="svc">Google Search Console</span><br><span style="font-weight:400; font-size:8.5pt; color:#6a7684;">検索語・順位・クリック数</span></td>
+        <td class="no">—</td><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td>
+      </tr>
+      <tr>
+        <td class="head">行動・成果データ分析<br><span class="svc">Google アナリティクス</span><span class="svc">Microsoft Clarity</span><br><span style="font-weight:400; font-size:8.5pt; color:#6a7684;">流入・離脱・ヒートマップ</span></td>
+        <td class="no">—</td><td class="no">—</td><td class="ok">✓</td><td class="ok">✓</td>
+      </tr>
+      <tr>
+        <td class="head">広告データ分析<br><span class="svc">Google 広告</span><br><span style="font-weight:400; font-size:8.5pt; color:#6a7684;">無駄な広告費の検出</span></td>
+        <td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="ok">✓</td>
+      </tr>
+      <tr>
+        <td class="head">定期レポート・改善提案</td>
+        <td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td><td class="ok">✓</td>
+      </tr>
+      <tr>
+        <td class="head">初期設置費（税別）</td>
+        <td style="text-align:center;"><span class="em">無料</span></td>
+        <td style="text-align:center;">10,000円</td>
+        <td style="text-align:center;">20,000円</td>
+        <td style="text-align:center;">30,000円</td>
+      </tr>
+      <tr>
+        <td class="head">月額（修正込み・税別）</td>
+        <td style="font-weight:800; color:#16324f; text-align:center; font-size:12pt; vertical-align:middle;">40,000円</td>
+        <td style="font-weight:800; color:#16324f; text-align:center; font-size:12pt; vertical-align:middle;">55,000円</td>
+        <td style="font-weight:800; color:#16324f; text-align:center; font-size:12pt; vertical-align:middle;">70,000円</td>
+        <td style="font-weight:800; color:#0e8a6d; text-align:center; font-size:12pt; vertical-align:middle;">80,000円</td>
+      </tr>
+      <tr>
+        <td class="head" style="font-weight:400;">レポートのみの月額（税別）</td>
+        <td style="text-align:center; color:#4a5764; vertical-align:middle;">20,000円</td>
+        <td style="text-align:center; color:#4a5764; vertical-align:middle;">35,000円</td>
+        <td style="text-align:center; color:#4a5764; vertical-align:middle;">50,000円</td>
+        <td style="text-align:center; color:#4a5764; vertical-align:middle;">60,000円</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note sink" style="margin-bottom:10mm;">
+    ※ 月額には、ご提案の修正作業（既存ページ内で完結する改善）まで含まれます。「レポートのみ」は修正を御社側で行われる場合のご料金です（次ページ）。／※ 連携の個別追加はご相談ください。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>17 / 22</span></div>
+</section>
+
+<!-- ============ 18. 各プランの詳細 ============ -->
+<section class="slide">
+  <span class="kicker">DETAIL ／ 各プランでできること</span>
+  <h2>プラン別のご提供内容</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:5mm; flex:1; margin-bottom:8mm;">
+    <div class="plancard" style="border-top:3mm solid #8a99a8;">
+      <div class="pname">① シンプルプラン</div>
+      <div class="ptag" style="color:#8a99a8;">外部診断 — 連携作業なし・すぐ始められる</div>
+      <p>
+        AIが御社サイトを定期的に外から巡回し、表示速度・スマホ対応・SEOの内部対策（タイトル・見出しの付け方など）・
+        問い合わせまでの導線・リンク切れ・競合サイトとの比較を診断します。
+        <strong>「どこを直せばよいか」を具体的な箇所つきでご提案</strong>します。御社側の準備は不要で、即日開始できます。
+      </p>
+    </div>
+    <div class="plancard" style="border-top:3mm solid #4a7fa5;">
+      <div class="pname">② SEOプラン</div>
+      <div class="ptag" style="color:#4a7fa5;">＋Google Search Console 連携</div>
+      <p>
+        シンプルプランの内容に加え、<strong>実際の検索データ</strong>（どんなキーワードで表示され、何位で、何回クリックされたか）を毎回分析します。
+        「見られているのにクリックされないページ」「あと一歩で1ページ目に届くキーワード」を発見し、
+        <strong>改善の効果を順位とクリック数の変化で検証</strong>できるようになります。
+      </p>
+    </div>
+    <div class="plancard" style="border-top:3mm solid #2f6a8f;">
+      <div class="pname">③ コンバージョンプラン</div>
+      <div class="ptag" style="color:#2f6a8f;">＋Google アナリティクス・Clarity 連携</div>
+      <p>
+        SEOプランの内容に加え、<strong>訪問者がサイトの中でどう動いたか</strong>を分析します。
+        どこから来て、どのページで離脱したか。問い合わせ・電話タップなどの成果は何件あったか。
+        ヒートマップ（ページのどこが見られ、どこで止まったかの可視化）で「なぜ離脱するのか」の理由まで踏み込み、
+        <strong>改善が問い合わせにつながったかを数字で確認</strong>できます。
+      </p>
+    </div>
+    <div class="plancard" style="border-top:3mm solid #0e8a6d;">
+      <div class="pname">④ フルパックプラン</div>
+      <div class="ptag" style="color:#0e8a6d;">＋Google 広告連携</div>
+      <p>
+        コンバージョンプランの内容に加え、<strong>広告費の使われ方</strong>を分析します。
+        成果につながっていない検索語への出費、自然検索で上位なのに広告費も払っている「二重払い」、
+        成果の数え方（計測設定）の不備を定期的にチェックし、
+        <strong>広告と検索対策をまたいだ集客全体の最適化</strong>をご提案します。
+        ※ 分析・ご提案までが範囲です。広告キャンペーンの作成・入札などの運用作業は別途承ります。
+      </p>
+    </div>
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>18 / 22</span></div>
+</section>
+
+<!-- ============ 19. 月額に含まれる作業 ============ -->
+<section class="slide">
+  <span class="kicker">INCLUDED ／ 月額に含まれる作業と別途のご対応</span>
+  <h2>「直す作業」まで、月額に含まれています</h2>
+  <p class="lead">
+    各プランの月額には、解析・ご提案に加えて、<span class="em">ご提案の実装（修正作業）まで</span>含まれています。
+    「レポートを読んで終わり」にならず、気づいた改善がそのままサイトに反映されていきます。
+  </p>
+
+  <table class="spec" style="margin-bottom:5mm;">
+    <colgroup><col style="width:26%"><col style="width:52%"><col style="width:22%"></colgroup>
+    <thead>
+      <tr><th>内容</th><th>範囲</th><th>費用（税別）</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="head">修正対応<br><span style="font-weight:400; font-size:8.5pt; color:#6a7684;">月額に込み</span></td>
+        <td>ご提案のうち、既存ページ内で完結する改善（文言・タイトル・リンク・表示の調整など）を弊社が実装まで行います。都度のご依頼・追加費用は不要です。</td>
+        <td style="font-weight:800; color:#0b6e57;">月額に込み</td>
+      </tr>
+      <tr>
+        <td class="head">レポートのみをご希望の場合</td>
+        <td>修正作業を御社側や他の制作会社様で行われる場合は、解析・ご提案・レポートに絞ったご料金もご用意しています（前ページ「レポートのみの月額」）。</td>
+        <td>月額−20,000円</td>
+      </tr>
+      <tr>
+        <td class="head">まとまった改修・制作</td>
+        <td>新規ページの制作、デザインを伴う改修、システム開発などは、内容に応じて個別にお見積りします。</td>
+        <td>別途お見積り</td>
+      </tr>
+      <tr>
+        <td class="head">広告の運用作業</td>
+        <td>キャンペーンの作成・入札調整・広告文の入稿などの運用作業は、内容に応じて個別にお見積りします（フルパックプランの分析結果を踏まえてご提案します）。</td>
+        <td>別途お見積り</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note sink" style="margin-bottom:6mm;">
+    ※ 「月額に込みの修正」と「別途お見積りの改修」の線引きは、ご提案の際に毎回明示しますのでご安心ください。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>19 / 22</span></div>
+</section>
+
+<!-- ============ 20. 対応の目印 ============ -->
+<section class="slide">
+  <span class="kicker">MARKS ／ 対応の目印</span>
+  <h2>すべての指摘に「対応の目印」を付けてお出しします。</h2>
+  <p class="lead">
+    毎日の提案・レポートの指摘には、すべて3種類の目印を付けます。
+    <span class="em">御社に動いていただくのは 🔔 の項目だけ</span>——どこまでが月額内で進むかが、最初から見えます。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5mm; margin-bottom:6mm;">
+    <div style="border:1px solid #bfe5d8; background:#eef8f4; border-radius:2mm; padding:5mm;">
+      <div style="margin-bottom:2mm;"><span class="mark g">🟢 すぐ直せる</span><strong style="font-size:11pt; color:#0b6e57;">月額費用内で対応</strong></div>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#3f6f60;">
+        タイトル・説明文・文言・導線・タグや設定の調整など、<strong>既存ページ内の軽微な修正</strong>。ご確認いただくことなくそのまま進めます（都度のお見積りなし）。
+      </p>
+    </div>
+    <div style="border:1px solid #efd9bb; background:#fdfaf3; border-radius:2mm; padding:5mm;">
+      <div style="margin-bottom:2mm;"><span class="mark k">🔔 要ご確認</span><strong style="font-size:11pt; color:#a06520;">ご確認後、月額内で対応</strong></div>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#6b5836;">
+        掲載の可否・実績の数値・写真などの素材、各種アカウントの権限など、<strong>御社にしか出せないもの</strong>が必要な項目。揃い次第、軽微な作業は月額内で進めます。
+      </p>
+    </div>
+    <div style="border:1px solid #d6dde4; background:#f7f9fb; border-radius:2mm; padding:5mm;">
+      <div style="margin-bottom:2mm;"><span class="mark b">🏗️ まとまった改修</span><strong style="font-size:11pt; color:#16324f;">別途お見積り</strong></div>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        新しいページの追加・<strong>デザイン制作を伴う変更</strong>・素材制作・大規模な機能追加など。範囲を決めてお見積りしてから着手します。
+      </p>
+    </div>
+  </div>
+
+  <div class="hitokoto">
+    <span class="label">レポートのみのプランでも</span>
+    目印はそのまま付きます。🟢 の修正を御社側で進める際の、作業指示としてもお使いいただけます。
+  </div>
+  <p class="note sink" style="margin-bottom:2mm;">
+    ※ 「レポートのみ」でも解析は毎日行います。修正作業が必要になった場合は、修正込みへの切り替えか都度のお見積りで対応します。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>20 / 22</span></div>
+</section>
+
+<!-- ============ 21. ご利用開始までの流れ ============ -->
+<section class="slide">
+  <span class="kicker">START ／ ご利用開始までの流れ</span>
+  <h2>開始までの流れと、計測についてのご留意点</h2>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:4mm; margin-bottom:6mm;">
+    <div class="plancard" style="border-top:3mm solid #0e8a6d;">
+      <div class="pname" style="font-size:11.5pt;">1. プラン選定</div>
+      <p>ご状況を伺い、プランをご一緒に選びます。迷われる場合はシンプルプランから始めて、様子を見て上位へ変更いただけます。</p>
+    </div>
+    <div class="plancard" style="border-top:3mm solid #0e8a6d;">
+      <div class="pname" style="font-size:11.5pt;">2. データ連携の設定</div>
+      <p>プランに応じた連携設定を行います。御社にお願いする作業は最小限で、手順は弊社がご案内します（管理画面での承認など）。</p>
+    </div>
+    <div class="plancard" style="border-top:3mm solid #0e8a6d;">
+      <div class="pname" style="font-size:11.5pt;">3. 初回診断</div>
+      <p>外部診断はすぐに開始し、初回レポートをお出しします。連携データが貯まり次第、順次分析に組み込みます。</p>
+    </div>
+    <div class="plancard" style="border-top:3mm solid #0e8a6d;">
+      <div class="pname" style="font-size:11.5pt;">4. 定期解析の開始</div>
+      <p>以後、AIが定期的に解析し、改善のご提案・修正対応・効果の検証を続けます。レポートは定期的にお届けします。</p>
+    </div>
+  </div>
+
+  <div style="background:#f6f8fa; border:1px solid #e2e7ec; border-radius:2.5mm; padding:5mm 6mm; margin-bottom:5mm;">
+    <h3 style="font-size:12pt;">📌 計測は「連携した日」から始まります</h3>
+    <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+      検索データ・行動データは、連携を設定した日から蓄積が始まる仕組みのため、過去にさかのぼって見ることはできません。
+      連携直後の数日はデータが少なく、<strong>傾向が読めるようになるまで少しお時間をいただきます</strong>
+      （検索データは反映まで1〜2日、行動データは1〜2週間の蓄積が目安）。
+      その間も外部診断は通常どおり行いますので、解析が止まることはありません。
+    </p>
+  </div>
+
+  <p class="note sink" style="margin-bottom:6mm;">
+    ※ 上記金額はすべて税別です。／※ 広告データの連携には、御社の広告アカウントとの接続について承認のお手続きをお願いする場合があります。
+  </p>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>21 / 22</span></div>
+</section>
+
+<!-- ============ 22. 次のステップ ============ -->
+<section class="slide">
+  <span class="kicker">NEXT ／ 次のステップ</span>
+  <h2>まずは、御社サイトを一度見せてください。</h2>
+  <p class="lead">
+    いきなりご契約いただく必要はありません。<span class="em">まず1回、実際に解析してレポートをお出しします</span>。
+    その中身を見て、毎日これが積み上がっていく価値があるかをご判断ください。
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6mm; margin-bottom:7mm;">
+    <div style="border:1px solid #e2e7ec; border-radius:2mm; padding:5mm; position:relative;">
+      <div style="font-size:9pt; font-weight:700; color:#0e8a6d; letter-spacing:.1em; margin-bottom:2mm;">STEP 1</div>
+      <h3>初回診断レポート</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        御社サイトを解析し、現状と改善候補をレポートにしてお出しします。各指摘には目印（🟢🔔🏗️）つき＝<strong>どこまでが月額内で進むかも最初から見えます</strong>。
+      </p>
+    </div>
+    <div style="border:1px solid #e2e7ec; border-radius:2mm; padding:5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#0e8a6d; letter-spacing:.1em; margin-bottom:2mm;">STEP 2</div>
+      <h3>設置・つなぎ込み</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#4a5764;">
+        プランに応じて Search Console・アナリティクス等を連携し、御社の目標（お問い合わせを増やしたい等）を設定します。
+      </p>
+    </div>
+    <div style="border:1px solid #bfe5d8; background:#eef8f4; border-radius:2mm; padding:4mm 5mm;">
+      <div style="font-size:9pt; font-weight:700; color:#4a8f7d; letter-spacing:.1em; margin-bottom:2mm;">STEP 3</div>
+      <h3 style="color:#0b6e57;">毎晩の運用開始</h3>
+      <p style="font-size:10.5pt; line-height:1.8; margin:0; color:#3f6f60;">
+        毎日の解析・提案が始まり、修正は無理のないペースで、レポートは月1回お届けします。続けるほど御社サイトに詳しくなります。
+      </p>
+    </div>
+  </div>
+
+  <div class="hitokoto" style="font-size:15pt;">
+    <span class="label">お願い</span>
+    まずは御社サイトの初回診断のお時間をいただけませんか。
+  </div>
+
+  <div style="margin-top:auto; margin-bottom:6mm; font-size:11pt; color:#4a5764;">
+    株式会社はなさか ｜ お問い合わせ：本資料ご担当まで
+  </div>
+  <div class="foot"><span>AIウェブ解析｜4つの料金プランのご案内</span><span>22 / 22</span></div>
+</section>
+
+</body>
+</html>

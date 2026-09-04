@@ -69,6 +69,8 @@ site/decks/ai-hisho/*.pdf
 site/decks/ai-hisho/deck-images/
 site/decks/ai-web-analysis/*.pdf
 site/decks/ai-web-analysis/deck-images/
+site/decks/ai-web-analysis-plans/*.pdf
+site/decks/ai-web-analysis-plans/deck-images/
 # decks: 質問事項レポートの PDF は /questions-deck で毎回再生成する生成物＝追跡しない
 site/decks/analysis-questions/*.pdf
 site/decks/analysis-questions/*/*.pdf
