@@ -303,3 +303,12 @@
   3. **順序を見る**＝コホート行動の初回時刻より**後**に起きたCVだけを別集計する。「CVした人はたくさんページを見る」という**逆向きの相関**を予測力と取り違えないため。昇格判定に使うのは `cv_after_rate` のほう。
 - **限界（読み違えないための注記）**: ①これは**相関であって因果ではない**＝リフトが高くても「その行動をさせればCVが増える」とは限らない（意欲の高い人が両方やるだけの可能性）。入札シグナルとしては相関で十分だが、施策の効果予測には使わない ②`user_pseudo_id` はブラウザ単位＝端末をまたぐと別人扱い ③期間内に行動とCVが分かれて起きた場合（90日窓の外でCV）は取りこぼす ④広告LPの結果をサイト全体に一般化しない（社長ご指示）
 - **実行時は読み取り専用**（BigQuery SELECT のみ。書き込み・外部送信・破壊的操作なし。`--max-gb` で課金上限、`--dry-run` でスキャン量の事前確認）
+
+## T-030 — `bin/clarity-top.py`（Clarity の URL 別出力をページ単位に畳んで摩擦を見る）
+
+- **作成**: 2026-09-04（hp-loop shigatoyota Cycle 005）／**⚠️ 未実行＝許可リスト未登録のため本サイクルでは動かせていない**（滋賀トヨタ B-04 と同じ穴。依頼する行＝`"Bash(bin/.venv/bin/python3 bin/clarity-top.py:*)"` と `"Bash(python3 bin/clarity-top.py:*)"` の両形。[[reference_allowlist-bash-prefix-gap]]）
+- **契機**: 滋賀トヨタで Clarity の初回データが出た日に `--dim1 URL` を叩いたところ、**同じページが広告パラメータ（gclid / yclid / utm / _ly_*）で数百行に散り、544行のうち大半が1セッションの生URL**だった。ターミナル出力では「どのページが重いか」が読めず、結局 `grep` で t-dms のURLだけ拾う手作業になった。同じ加工を次サイクル以降も必ず繰り返すため、2回目を待たずにツール化した。
+- **目的**: Clarity の URL 次元を **クエリを落とした path 単位に畳んで**、セッション数の多い順に摩擦指標（QuickbackClick / DeadClick / RageClick / ErrorClick / ScriptError）を並べる。「どのページで人が引き返しているか」を1画面で見る。
+- **使い方**: `bin/.venv/bin/python3 bin/clarity-fetch.py --site <site> --dim1 URL --json > /tmp/c.json` → `python3 bin/clarity-top.py /tmp/c.json --top 25`。`--host api.t-dms.jp`（外部フォームだけ）／`--contains /shop/`（部分一致）／`--keep-query`（畳まず生URL）。
+- **出力**: `sess` と各摩擦指標の `率(発生回数)`。率は `subTotal/sessionsCount` ではなく Clarity 側の `sessionsWithMetricPercentage` をセッション数で重み平均する（Clarity の定義に合わせるため）。標準出力のみ＝**ファイル書き込み・外部送信・本番改変なし**。
+- **限界**: ①Clarity API は**直近3日まで**（`clarity-fetch --days` の上限）＝日別内訳は持てない ②Clarity は高トラフィック時にサンプリングするため、少数のページの実数は方向性として読む ③畳むと広告パラメータ別の比較はできない（必要なら `--keep-query`）④`sessionsCount` は入力JSONの先頭指標ブロックからのみ加算する（Clarity は同じURL行を指標ブロックごとに繰り返すため）
