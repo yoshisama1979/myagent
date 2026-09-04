@@ -56,6 +56,14 @@ HOLD_REASONS = {
     "assignee-unclear": "担当が不明・複数",
     "duplicate-suspect": "既存ToDoと重複の疑い",
     "not-in-room":  "本人がそのルームに参加していない",
+    # 以下2つは todo-post.py が実際に出す区分（2026-09-03 追加）。
+    # 区分が無いと --add が弾かれ、見送りが確認列に載らない＝社長に上がらない。
+    "no-fields":    "台帳の行に案件・期日の欄が無い（v1.1 以前の書式）",
+    "due-needs-human": "期限が逆算・強度＝日付は人が決める",
+    # 2026-09-04 社長ご指示「案件については、私の方に追加を依頼してほしい」。
+    # 案件が無い用件は work 199 へ入れて起票はするが、**案件を作るお願い自体が
+    # ToDo 本文に埋もれて社長に届かない**ので、確認列に立てて上がるようにする。
+    "work-missing": "この用件の案件が HANAツールに無い＝案件の作成をお願いします",
     "other":        "その他（社長に口頭で確認）",
 }
 
@@ -378,6 +386,9 @@ def cmd_stale(a):
                       "count": len(out), "items": out}, ensure_ascii=False, indent=1))
 
 
+OTHER_TAG = re.compile(r"\[C-\d{3,}\]")
+
+
 def cmd_check(a):
     """起票してよいかを調べる。**同じ用件が既にあれば起票しない**（迷ったら起票せず確認列へ）。
 
@@ -385,8 +396,12 @@ def cmd_check(a):
       [C-007] の照合をすり抜け、同じ用件を二重に起票した。人が作ったToDoにタグは付いていない。
       そこで語の重なりも材料として出し、**最終判断は呼び出し側（モード）に委ねる**。
     """
-    todos = fetch_all_todos()
-    tag = (a.tag or "").strip()
+    print(json.dumps(judge(fetch_all_todos(), (a.tag or "").strip(), a.title or ""),
+                     ensure_ascii=False, indent=1))
+
+
+def judge(todos, tag, title):
+    """重複判定の本体。`check`（1件）と `check-batch`（複数件）が共有する唯一の実装。"""
     # ★角括弧つきで照合する：`C-01` が既存の `[C-010]` に部分一致すると、
     #   無関係な用件の起票を止めてしまう（業務が止まる側の誤検知・2026-08-25 Codexレビュー）。
     tagpat = re.compile(r"\[" + re.escape(tag) + r"\]") if tag else None
@@ -394,11 +409,18 @@ def cmd_check(a):
               "completed": bool(t.get("completed_at")),
               "assignee": t.get("assignee_user_id")}
              for t in todos if tagpat and tagpat.search(t.get("content") or "")]
-    words = [w for w in re.split(r"[\s\[\]（）()・、。／/]+", a.title or "") if len(w) >= 4]
+    words = [w for w in re.split(r"[\s\[\]（）()・、。／/]+", title) if len(w) >= 4]
     similar = []
     for t in todos:
         c = t.get("content") or ""
         if tagpat and tagpat.search(c):
+            continue
+        # ★別の台帳タグ [C-XXX] が付いた ToDo は、**定義上べつの台帳行**なので似ていても重複ではない。
+        #   語の重なりは「人が作った（タグの無い）ToDo」を拾うための手段であって、
+        #   機械が作ったもの同士を突き合わせるためではない。
+        #   これを外さないと、**同じ客先の兄弟を作った直後に、次の行が永久に起票できなくなる**
+        #   （2026-09-04 実害＝24件を一度に作った回で2件が落ち、部分失敗のあとは次回以降も落ち続ける）。
+        if OTHER_TAG.search(c):
             continue
         # 説明欄にだけ詳細があるToDoも拾う（人が作ったものは件名が短いことが多い）
         body = c + " " + (t.get("description") or "")
@@ -406,13 +428,31 @@ def cmd_check(a):
         if hit:
             similar.append({"id": t["id"], "content": c, "completed": bool(t.get("completed_at")),
                             "assignee": t.get("assignee_user_id"), "matched": hit})
-    print(json.dumps({"tag": tag, "scanned": len(todos),
-                      "scanned_assignees": known_user_ids(),
-                      "caveat": ("照合したのは config に登録された担当のぶんだけです。"
-                                 "登録漏れの担当が持つToDoは見えていません"),
-                      "exact": exact, "similar": similar,
-                      "safe_to_create": not exact and not similar},
-                     ensure_ascii=False, indent=1))
+    return {"tag": tag, "scanned": len(todos),
+            "scanned_assignees": known_user_ids(),
+            "caveat": ("照合したのは config に登録された担当のぶんだけです。"
+                       "登録漏れの担当が持つToDoは見えていません"),
+            "exact": exact, "similar": similar,
+            "safe_to_create": not exact and not similar}
+
+
+def cmd_check_batch(a):
+    """複数行ぶんの重複判定を **ToDo 全件取得1回** で済ませる。
+
+    ★`check` を行ごとに呼ぶと、1行につき1回ずつ全件を取り直す（対象54行なら54回）。
+      遅いだけでなく、**行ごとに違うスナップショットで判定する**ことになり、
+      同じ実行の中で判定基準がずれる（2026-09-04 Codexレビュー指摘）。
+      判定そのものは `cmd_check` と同じ関数（`judge`）を通す＝**重複の定義を2箇所に持たない**。
+
+    入力＝stdin に `[{"tag": "C-001", "title": "..."}, ...]`／出力＝tag をキーにした判定の辞書。
+    """
+    try:
+        items = json.loads(sys.stdin.read() or "[]")
+    except Exception:
+        sys.exit("ERROR: check-batch の入力（JSON）を読めません")
+    todos = fetch_all_todos()
+    print(json.dumps({t.get("tag", ""): judge(todos, t.get("tag", ""), t.get("title", ""))
+                      for t in items}, ensure_ascii=False, indent=1))
 
 
 def cmd_hold(a):
@@ -429,7 +469,10 @@ def cmd_hold(a):
         if a.reason not in HOLD_REASONS:
             sys.exit("ERROR: --reason は次から選んでください（固有名詞を状態ファイルに残さないため）:\n  "
                      + "\n  ".join(f"{k} … {v}" for k, v in HOLD_REASONS.items()))
-        h[a.add] = {"reason": a.reason, "since": str(today())}
+        # ★ since は既存を保つ。ここを毎回 today() で上書きすると、2時間おきの自動同期で
+        #   滞留日数が永久に 0 日になり、「10日放置」が見えなくなる（積む意味が消える）。
+        prev = h.get(a.add) or {}
+        h[a.add] = {"reason": a.reason, "since": prev.get("since") or str(today())}
         save_state(s)
         print(f"確認列に積みました: {a.add}")
     elif a.resolve:
@@ -447,7 +490,7 @@ def cmd_hold(a):
 def main():
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
-    for name in ("candidates", "record", "review", "stale", "check", "hold"):
+    for name in ("candidates", "record", "review", "stale", "check", "check-batch", "hold"):
         q = sub.add_parser(name)
         q.add_argument("--assignee", type=int, default=None)
         if name == "candidates":
@@ -461,7 +504,8 @@ def main():
             q.add_argument("--add"); q.add_argument("--reason"); q.add_argument("--resolve")
     a = p.parse_args()
     {"candidates": cmd_candidates, "record": cmd_record, "review": cmd_review,
-     "stale": cmd_stale, "check": cmd_check, "hold": cmd_hold}[a.cmd](a)
+     "stale": cmd_stale, "check": cmd_check, "check-batch": cmd_check_batch,
+     "hold": cmd_hold}[a.cmd](a)
 
 
 if __name__ == "__main__":

@@ -269,6 +269,38 @@ assert [x['id'] for x in d['exact']]==[1], d['exact']
 " && ok "正しいタグはきちんと一致する" || ng "本来の一致まで落ちる" "$r"
 
 # ★人が作ったToDoは件名が短く、詳細が説明欄にあることが多い。件名だけ見ると重複を見逃す。
+echo "=== ★別の台帳タグが付いた既存は「似ている」に数えない（兄弟で潰し合わない）==="
+# 機械が付けた [C-XXX] は定義上べつの台帳行。似ていても重複ではない。
+# これを数えると、同じ客先の兄弟を作った直後に次の行が永久に起票できなくなる
+# （2026-09-04 実害＝24件を一度に作った回で2件が落ちた。部分失敗のあとは次回以降も落ち続ける）。
+SIB='[{"id":1,"assignee_user_id":37,"content":"ゼータ社サイトのリニューアル対応 [C-100]","due_date":"2026-08-01","updated_at":"2026-08-01"},
+      {"id":2,"assignee_user_id":37,"content":"ゼータ社サイトのリニューアル対応","due_date":"2026-08-01","updated_at":"2026-08-01"}]'
+setj "$SIB" "$SIB"
+r=$(tb 2026-08-24 check --tag C-101 --title "ゼータ社サイト リニューアル")
+echo "$r" | python3 -c "
+import json,sys; d=json.load(sys.stdin)
+assert [x['id'] for x in d['similar']]==[2], d['similar']
+" && ok "★別タグ [C-100] は除外し、タグの無い人作成ToDo(2)だけを似ていると出す" || ng "兄弟を重複扱いしている" "$r"
+
+echo "=== ★タグの無い既存は今までどおり語の重なりで拾う（非回帰・二重起票の防波堤）==="
+SIB2='[{"id":1,"assignee_user_id":37,"content":"ゼータ社サイトのリニューアル対応 [C-100]","due_date":"2026-08-01","updated_at":"2026-08-01"}]'
+setj "$SIB2" "$SIB2"
+r=$(tb 2026-08-24 check --tag C-101 --title "ゼータ社サイト リニューアル")
+echo "$r" | python3 -c "
+import json,sys; d=json.load(sys.stdin)
+assert d['safe_to_create'] is True, d
+" && ok "別タグしか無ければ起票してよいと判定する" || ng "別タグで起票を止めている" "$r"
+
+echo "=== ★check-batch は1回の取得で全行ぶんを返す（判定は check と同じ実装）==="
+setj "$MIX2" "$MIX2"
+r=$(printf '%s' '[{"tag":"C-999","title":"別件の作業"},{"tag":"C-500","title":"まったく新しい用件"}]' | tb 2026-08-24 check-batch)
+echo "$r" | python3 -c "
+import json,sys; d=json.load(sys.stdin)
+assert sorted(d)==['C-500','C-999'], sorted(d)
+assert d['C-999']['safe_to_create'] is False, d['C-999']
+assert d['C-500']['safe_to_create'] is True, d['C-500']
+" && ok "★全行ぶんを返し、判定は check と一致する" || ng "check-batch の結果が違う" "$r"
+
 DESC='[{"id":1,"assignee_user_id":37,"content":"対応する","description":"ゼータ社サイトのリニューアル対応の件","due_date":"2026-08-01","updated_at":"2026-08-01"}]'
 setj "$DESC" "$DESC"
 r=$(tb 2026-08-24 check --tag C-007 --title "ゼータ社サイト リニューアル")
@@ -420,6 +452,32 @@ import json,sys; d=json.load(sys.stdin)
 m={c['id']:c for c in d['candidates']}
 assert m[1]['overdue_days']==1, ('翌日になって初めて1日超過のはず', m[1])
 " && ok "★期限の翌日に初めて「1日超過」になる（境界がずれない）" || ng "境界がずれている" "$r"
+
+echo
+echo "=== ★確認列：積み直しても滞留日数が0に戻らない（2026-09-03 追加）==="
+jq_() { python3 -c "import json,sys;d=json.load(sys.stdin);print($1)"; }
+python3 "$T/tb.py" hold --add C-777 --reason no-fields >/dev/null 2>&1
+python3 - "$T/state.json" <<'PY3'
+import json, sys
+p = sys.argv[1]
+s = json.load(open(p, encoding="utf-8"))
+s["_hold"]["C-777"]["since"] = "2026-08-24"   # 10日前に積まれたことにする
+json.dump(s, open(p, "w", encoding="utf-8"), ensure_ascii=False)
+PY3
+python3 "$T/tb.py" hold --add C-777 --reason no-fields >/dev/null 2>&1
+h=$(python3 "$T/tb.py" hold)
+echo "$h" | jq_ "[x['since'] for x in d['items'] if x['tag']=='C-777']==['2026-08-24']" | grep -q True \
+  && ok "★2回目の --add で since を上書きしない（10日放置が見え続ける）" || ng "since が今日に戻っている" "$h"
+echo "$h" | jq_ "[x['days'] for x in d['items'] if x['tag']=='C-777']!=[0]" | grep -q True \
+  && ok "★滞留日数が 0 に戻らない" || ng "滞留日数が 0 に戻った" "$h"
+
+echo "=== ★todo-post.py が出す区分をすべて受け付ける ==="
+miss=""
+for rr in assignee-unclear no-fields work-ambiguous duplicate-suspect due-needs-human other; do
+  python3 "$T/tb.py" hold --add "C-88" --reason "$rr" >/dev/null 2>&1 || miss="$miss $rr"
+done
+[ -z "$miss" ] \
+  && ok "★6区分すべてが HOLD_REASONS にある（弾かれると確認列に載らない）" || ng "受け付けない区分がある:$miss"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"

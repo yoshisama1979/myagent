@@ -26,6 +26,25 @@ MARK="$PROJ/data/comms/chatwork/.last-distill"
 BOARD="$PROJ/site/comms/index.html"
 now() { date '+%Y-%m-%d %H:%M:%S'; }
 
+# 起票の宿題マーカー。**蒸留の成功マーカー（.last-distill）とは別に持つ**。
+# 同じマーカーにすると「蒸留は成功したが起票に失敗した」を表現できず、
+# 新着が来るまで再試行が走らない＝取りこぼしが残る（2026-09-04 Codexレビュー指摘）。
+POST_MARK="$PROJ/data/comms/chatwork/.post-pending"
+
+# 台帳 → hana-tools の起票。LLM は呼ばない（todo-post.py は純 Python + curl）＝トークンは増えない。
+# 失敗しても comms-tick は止めない（ループを殺さない）が、**宿題マーカーを残して必ず再試行させる**。
+do_post() {
+  local out
+  if out=$(python3 "$PROJ/bin/todo-post.py" post 2>&1); then
+    rm -f "$POST_MARK"
+    echo "$(now) [post] $(printf '%s' "$out" | tr -d '\n' | cut -c1-400)"
+  else
+    : > "$POST_MARK"
+    echo "$(now) [warn] 起票に失敗しました（宿題として残し、次のティックで新着ゼロでも再試行します）:" \
+         "$(printf '%s' "$out" | tr -d '\n' | cut -c1-300)"
+  fi
+}
+
 # raw ディレクトリ自体が無い＝poll が一度も動いていない異常。蒸留しても無意味なので非0で申告
 if [ ! -d "$RAW" ]; then
   echo "$(now) [warn] raw ディレクトリがありません（poll 未稼働？）: $RAW"
@@ -52,6 +71,12 @@ if [ -f "$MARK" ]; then
     echo "$(now) [warn] find が失敗（$probe_failed）＝判定不能のため安全側で蒸留を実行します"
   elif [ -z "$fresh" ]; then
     echo "$(now) [skip] 前回蒸留以降の新着なし（Chatwork・メールとも）＝claude 不起動"
+    # ★前回の起票が失敗していたら、新着ゼロでも起票だけは再試行する。
+    #   ここを通さないと「次の2hティックが拾い直す」が成立しない＝新着が来るまで宿題が残る。
+    if [ -f "$POST_MARK" ]; then
+      echo "$(now) [post-retry] 前回の起票が未完了＝蒸留はせず起票だけ再試行します"
+      do_post
+    fi
     exit 0
   fi
 fi
@@ -102,4 +127,22 @@ if [ -f "$MARK" ] && [ "$MARK" -nt "$STAMP" ]; then
   fi
 fi
 rm -f "$STAMP"
+
+# --- 起票（台帳 → hana-tools）------------------------------------------------
+# ★2026-09-04 社長ご承認で接続。それまで todo-post.py は**どこからも呼ばれておらず**、
+#   8/24 に手作業で1回動かしたきり10日間止まっていた（C-122 が漏れた直接の原因）。
+# ★位置＝**事後検査をすべて通ったあと**。宛先記法の欠落や「マーカーだけ進んで掲示板が
+#   未再生成」は台帳が不完全な証拠で、そのまま外部へ書くと不完全な内容で起票してしまう
+#   （2026-09-04 Codexレビュー指摘）。検査は $MARK を消して次回の再蒸留を促すので、
+#   **$MARK が消えている＝不整合**を起票しない条件に使う。
+if [ "$rc" -ne 0 ]; then
+  echo "$(now) [skip] 蒸留が失敗（rc=$rc）＝台帳が中途半端な可能性があるため起票しません"
+  : > "$POST_MARK"
+elif [ ! -f "$MARK" ]; then
+  echo "$(now) [skip] 事後検査で不整合を検出＝台帳が確定していないため起票しません（次回再蒸留後に起票します）"
+  : > "$POST_MARK"
+else
+  do_post
+fi
+
 exit "$rc"
