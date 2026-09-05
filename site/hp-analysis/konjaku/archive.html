@@ -30,6 +30,24 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== Cycle 037 スナップショット（C038 で index から退避） ===== -->
+  <section class="mb-10 border border-gray-300 rounded-lg p-5 bg-white">
+    <h2 class="text-xl font-bold mb-1">Cycle 037 — 2026-09-03（🔑 旧サイトの検索データが届き、301リダイレクトの勝敗を分ける場所が特定できました）</h2>
+    <p class="text-xs text-gray-500 mb-3">※ Cycle 038（2026-09-06）で最新レポートから退避したスナップショット。<strong>この時点の記録であり、以後の訂正は反映していません</strong>（→ C038 で層別の構成比を n=2 から n=5 へ更新し、「旧の稼ぎ頭は市区町村（44%）」という順位づけを「市区町村と個別写真がほぼ同率（40%／43%）」に訂正しています）。</p>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+      <li><strong>🔑🔑 新旧を同一2日窓（8/30〜31）で並べた層別ベースライン</strong>（出典＝<code>gsc-fetch.py pages/queries</code>・生データ <code>c037-{com,jp}-{pages,queries}.txt</code>）＝<strong>市区町村 155クリック（44%・121URL）→ 新 2／10URL ｜ 個別写真 142（40%・142URL）→ 新 7／72URL ｜ 都道府県 24（7%・17URL）→ 新 14／35URL ｜ タグ 16（5%・16URL）→ 新 0／1URL ｜ トップ 11（3%）→ 新 0 ｜ その他 3</strong>。計＝旧 351／300URL・新 23／119URL。<strong>読み方＝①旧の稼ぎ頭は市区町村で、そこがちょうど対応表の無い層 ②タグ層は誰も確認していなかった ③新で機能しているのは都道府県層だけ</strong>。</li>
+      <li><strong>🔑 サイト全体（同一2日窓）＝順位は同じ・機会だけが17倍違う</strong>：旧 <span class="font-mono">.com</span> クリック351／表示6,314／CTR 5.56%／平均7.1位。新 <span class="font-mono">.jp</span> クリック23／表示369／CTR 6.18%／平均7.2位。<strong>平均順位がほぼ同一なのに表示が桁違い＝「下位に沈んでいる」のではなく「検索結果に出る機会自体が無い」</strong>＝社長の 9/2 のご指摘を n=2 で再現。</li>
+      <li><strong>🔑 実装の抜けを検出＝市区町村ページだけ固有タイトルがゼロ</strong>（都道府県には有り）：<span class="font-mono">/cities/838/old-photos</span> の title はトップと完全に同一（h1=0・canonical 空・18,179B）／<span class="font-mono">/prefectures/39/old-photos</span> は「都道府県ID: 39の古い写真 | …」＝固有（23,035B）。<strong>＝<span class="font-mono">generateMetadata</span> 相当が層ごとに抜けています。</strong>※ 因果は断定せず。</li>
+      <li><strong>🆕 タグ層の新旧ID対応は未検証（301の盲点）</strong>：旧 <span class="font-mono">?p_tag=1196</span>＝「戸坂に関する日本の古い写真」／新 <span class="font-mono">/tags/1196/old-photos</span> は 200 だが title 共通文＝判別不能。→ 開発担当へ照会。<strong>「写真IDが一致したから他も」という推定はしない</strong>（C032 の罠）。</li>
+      <li><strong>🔧 R-J27 の 9/1 の見立て（「PICK UP は止まっている」）を撤回</strong>：PICK UP の先頭が「愛知県」に交代＝再生成は動いている。正しくは「入れ替わるが遅れが1日より長い」。<span class="text-gray-500">※ 3日間の観察だけで機序を断定したのが早すぎた。</span></li>
+      <li><strong>本番は19日連続で不変（8/16 → 9/3）</strong>：<span class="font-mono">.jp</span> トップ 27,079B・0.049秒（C036 とバイト単位で同一）／<span class="font-mono">.com</span> トップ 200・978,202B＝301 未実装。投稿写真 17,696→17,697（+1）・登録ユーザー 6,835→6,839（+4）。</li>
+      <li><strong>🔴 8/27 の利用許諾のお問い合わせが 7日間そのまま</strong>（匿名のため返信手段なし・問い合わせページ未実装＝R-J12）。コメント総数 1,496件。</li>
+      <li><strong>GA4（8/29〜9/1・4日）</strong>：<span class="font-mono">.com</span> referral 114S／95users＝1日約28・直接104・検索合計91（Google 56＋Yahoo 29＋Bing 6）・ChatGPT 2・docomo 2。CV は全流入源ゼロ（R-J22 未実装）。</li>
+      <li><strong>処理＝新規提案ゼロ・新規質問ゼロ（意図的・8回連続）／R-J25 を✅完了（在庫21→20・社長へのお願い3→2）／移行前ベースラインを固定／R-J28 の対象をタグ層まで拡張／R-J24 の階層内着手順を「①市区町村を最優先」に確定／自分の誤りを1件撤回（R-J27）</strong>。<code>sites/konjaku.md</code> の GSC 設定行を <span class="font-mono">.jp</span>／<span class="font-mono">.com</span> の2行に書き直し。</li>
+      <li><strong>配信</strong>＝<code>M-20260903T044434-hp-loop-konjaku-9b3f99</code>（8,802B・宛先 <code>konjaku-dev</code>・件名「[HP分析] konjaku 最新レポート Cycle 037」・冪等確認済）。</li>
+    </ul>
+  </section>
+
   <!-- ===== Cycle 036 スナップショット（C037 で index から退避） ===== -->
   <section class="mb-10 border border-gray-300 rounded-lg p-5 bg-white">
     <h2 class="text-xl font-bold mb-1">Cycle 036 — 2026-09-01（✅ 「北海道はなぜ検索に出ないのか」を、開発担当を待たずに半分決着）</h2>
