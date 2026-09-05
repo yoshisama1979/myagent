@@ -1,0 +1,13 @@
+  <!-- ===== 完了した提案（Cycle 044 でクローズ） ===== -->
+  <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了・取り下げ — Cycle 044（2026-09-05）でクローズ ＝ <span class="underline">2件</span></h2>
+    <ul class="text-sm text-gray-700 space-y-3">
+      <li><strong><code>R-R18</code> <code>www.</code> 付きアドレスが検索結果に出ているのに開けなかった件 — ✅完了（2026-09-05・当方の本番実測で検証）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>https://www.check-rally.com/</code> が <strong>HTTP 200・curl exit 0</strong> で通常アドレス（apex）へ転送されるようになった（同日午前は <strong>curl exit 60＝証明書エラーで接続不可</strong>）。原因は<strong>証明書の対象ホスト名（SAN）に <code>www</code> が含まれていなかっただけ</strong>で、追加した時点で開通（nginx は既に <code>$host</code> ベースの 301 で動作していた＝Cycle 042 の見立てどおり）。検索エンジンに登録済みの <code>www.</code> 付き5本（地図画面・テーマ一覧を含む）が生き返った。<br>
+        <span class="text-red-800"><strong>🔑 副産物のほうが重い</strong>＝調査の過程で<u>証明書が自動更新されても TLS 終端がリロードされず、古い証明書を掴み続ける</u>欠陥が発見・同時修正された（<strong>放置なら 11/04 頃の更新で顕在化し、12/04 の期限切れでサイト全体が停止</strong>する性質）。2026-08-15 の約20分のダウンと同系統の根を断った。</span><br>
+        <span class="text-gray-600">経緯＝2026-09-05 朝の社長ご指示「現在作業できないので、開発の受信箱に置いておいてください」→ <code>rally-dev</code> へ投函 → <strong>同日 12:46 に完了報告</strong>（<code>M-20260905T124644</code>）＝<u>投函から約3時間半で結実</u>。生死は <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> では追跡終了。</span></li>
+      <li><strong><code>R-R23</code>③ 浮動ボタン「近くのスポットを探す」が本文を覆う — ❌取り下げ（2026-09-05・<span class="text-red-800">当方の誤検知</span>）</strong><br>
+        取り下げの理由＝開発担当のご指摘「<u>全画面キャプチャでは <code>position:fixed</code> の要素が本来と違う位置に写る</u>」「<u>デスクトップ Chrome は <code>meta viewport</code> を無視するため、ウィンドウ幅を狭めた画像は実機のスマホ表示と一致しない</u>」——当方の <code>hp-shot</code> はフルページ撮影であり、まさにこの条件に該当する。当方は Cycle 043 で「判定不能」へ格下げ、<strong>Cycle 044 で開発担当の取り下げ同意（<code>M-20260905T130203</code> 件名）を受け、当方の誤りとしてクローズ</strong>。3サイクルにわたり「未解消」と誤報告したことになる。<br>
+        <span class="text-gray-600">→ 再発防止＝<code>hp-shot</code> のデバイスエミュレーション対応を当方の宿題とする（種プールへ）。<strong>①「作成日: 1970/1/1」②「システム情報」の露出は R-R23 として <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> に残す</strong>（本文そのものが配信されていない＝R-R42 のため、現時点では「直った」と判定できないため）。</span></li>
+    </ul>
+  </div>

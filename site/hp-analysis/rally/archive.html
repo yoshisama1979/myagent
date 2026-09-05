@@ -30,6 +30,79 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== 完了した提案（Cycle 044 でクローズ） ===== -->
+  <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了・取り下げ — Cycle 044（2026-09-05）でクローズ ＝ <span class="underline">2件</span></h2>
+    <ul class="text-sm text-gray-700 space-y-3">
+      <li><strong><code>R-R18</code> <code>www.</code> 付きアドレスが検索結果に出ているのに開けなかった件 — ✅完了（2026-09-05・当方の本番実測で検証）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>https://www.check-rally.com/</code> が <strong>HTTP 200・curl exit 0</strong> で通常アドレス（apex）へ転送されるようになった（同日午前は <strong>curl exit 60＝証明書エラーで接続不可</strong>）。原因は<strong>証明書の対象ホスト名（SAN）に <code>www</code> が含まれていなかっただけ</strong>で、追加した時点で開通（nginx は既に <code>$host</code> ベースの 301 で動作していた＝Cycle 042 の見立てどおり）。検索エンジンに登録済みの <code>www.</code> 付き5本（地図画面・テーマ一覧を含む）が生き返った。<br>
+        <span class="text-red-800"><strong>🔑 副産物のほうが重い</strong>＝調査の過程で<u>証明書が自動更新されても TLS 終端がリロードされず、古い証明書を掴み続ける</u>欠陥が発見・同時修正された（<strong>放置なら 11/04 頃の更新で顕在化し、12/04 の期限切れでサイト全体が停止</strong>する性質）。2026-08-15 の約20分のダウンと同系統の根を断った。</span><br>
+        <span class="text-gray-600">経緯＝2026-09-05 朝の社長ご指示「現在作業できないので、開発の受信箱に置いておいてください」→ <code>rally-dev</code> へ投函 → <strong>同日 12:46 に完了報告</strong>（<code>M-20260905T124644</code>）＝<u>投函から約3時間半で結実</u>。</span></li>
+      <li><strong><code>R-R23</code>③ 浮動ボタン「近くのスポットを探す」が本文を覆う — ❌取り下げ（2026-09-05・<span class="text-red-800">当方の誤検知</span>）</strong><br>
+        取り下げの理由＝開発担当のご指摘「<u>全画面キャプチャでは <code>position:fixed</code> の要素が本来と違う位置に写る</u>」「<u>デスクトップ Chrome は <code>meta viewport</code> を無視するため、ウィンドウ幅を狭めた画像は実機のスマホ表示と一致しない</u>」——当方の <code>hp-shot</code> はフルページ撮影であり、まさにこの条件に該当する。当方は Cycle 043 で「判定不能」へ格下げ、<strong>Cycle 044 で開発担当の取り下げ同意（<code>M-20260905T130203</code> 件名）を受け、当方の誤りとしてクローズ</strong>。3サイクルにわたり「未解消」と誤報告したことになる。<br>
+        <span class="text-gray-600">→ 再発防止＝<code>hp-shot</code> のデバイスエミュレーション対応を当方の宿題とする（種プールへ）。<strong>①「作成日: 1970/1/1」②「システム情報」の露出は R-R23 として <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> に残す</strong>（本文そのものが配信されていない＝R-R42 のため、現時点では「直った」と判定できないため）。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== Cycle 043（index から移設・2026-09-05） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 043 — 2026-09-05（<span class="text-emerald-700">www が開通・35サイクル止まっていた一覧の入口も開通</span>／<span class="text-red-700">ただし その1つ下は まだ全部 行き止まり</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動（同日3回目のサイクル）。<strong>きっかけ＝開発担当から 12:46・12:47 に完了報告2通</strong>（前サイクル Cycle 042 の終了後に到着）。データ＝本番GET 12本（<u>すべて当方が実際に取得して検証</u>）。</p>
+
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① 🎉 <code>www.</code> が開通しました（R-R18 ✅完了）</h3>
+      <p class="text-sm text-gray-800 mb-2">当方の本番実測＝<code>https://www.check-rally.com/</code> が <strong>HTTP 200</strong> で <code>check-rally.com</code> へ転送されるようになった（同日午前は証明書エラーで接続不可）。原因は<strong>証明書の対象ホスト名の一覧に <code>www</code> が入っていなかっただけ</strong>。検索エンジンに登録されている <code>www.</code> 付きの5本（閲覧2位の地図画面・数少ない流入元のテーマ一覧を含む）が、クリックしても開けない状態から開ける状態になった。</p>
+      <p class="text-sm text-gray-800"><strong class="text-red-800">🔑 再発防止のほうが価値が大きい</strong>＝証明書を手で足すだけでは元に戻る状態だったことが判明し、開発担当が3点を修正。<strong>そのうち1つは「2026-11-04 頃の自動更新で表面化し、12-04 の期限切れでサイト全体が停止する」性質</strong>だった＝8/15 の約20分の停止と同系統の根が断たれた。→ R-R19 も実質解消の見込み。</p>
+    </div>
+
+    <div class="bg-sky-50 border-2 border-sky-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 🎉 35サイクル「0本」だった一覧ページの入口が、初めて開きました（R-R33 の前半）</h3>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <thead><tr class="bg-sky-100 text-sky-900"><th class="text-left py-1 px-2">ページ</th><th class="text-left py-1 px-2">これまで</th><th class="text-left py-1 px-2">Cycle 043 時点</th></tr></thead>
+        <tbody class="text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/people</code></td><td class="py-1 px-2 text-red-700">ナビ9本のみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">115本（人物 106人分）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/prefectures</code></td><td class="py-1 px-2 text-red-700">ナビのみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">57本（47都道府県・件数つき）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/themes</code></td><td class="py-1 px-2 text-red-700">ナビ9本のみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">32本（23テーマ・説明文つき）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/areas</code></td><td class="py-1 px-2 text-red-700">ナビ11本のみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">22本（11エリア・件数つき）</td></tr>
+          <tr><td class="py-1 px-2"><code>/spots/tags</code></td><td class="py-1 px-2">ナビ9本</td><td class="py-1 px-2 text-gray-600">9本（変化なし＝タグが1件も登録されていないため＝データの話）</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800"><strong>原因</strong>＝画面の作り方ではなく<strong>データを取りに行く場所</strong>の問題で、「ブラウザで開いたときだけ取りに行く」形になっていたため、検索エンジンが受け取るHTMLは常に空だった（開発担当のご説明）。当方（サーバが返すHTMLしか見られない立場）からは特定できない種類の原因だった。</p>
+    </div>
+
+    <div class="bg-red-50 border-4 border-red-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">③ ★最重要★ その1つ下の階層が、まだ全部 行き止まり — 1.5万件のスポットには到達できない</h3>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <thead><tr class="bg-red-100 text-red-900"><th class="text-left py-1 px-2">1つ下の階層</th><th class="text-left py-1 px-2">リンク総数</th><th class="text-left py-1 px-2">うち スポットへ進むリンク</th></tr></thead>
+        <tbody class="text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/prefectures/kyoto</code>（京都府 <strong>1,053件</strong>）</td><td class="py-1 px-2">9本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/areas/kansai</code>（関西 <strong>3,580件</strong>）</td><td class="py-1 px-2">9本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/cities/26104</code></td><td class="py-1 px-2">9本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+          <tr><td class="py-1 px-2"><code>/spots/themes/nihon-sankei</code></td><td class="py-1 px-2">10本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm bg-white border-2 border-red-300 rounded p-3 mb-2 text-gray-800">トップ → <span class="text-emerald-700 font-bold">/spots/prefectures（47本 ✅開通）</span> → <span class="text-emerald-700 font-bold">/spots/prefectures/kyoto</span> → <span class="text-red-700 font-bold">★ 行き止まり ★</span></p>
+      <p class="text-sm text-gray-800"><strong>⇒</strong> 「入口の看板」は立ったが、<strong class="text-red-800">1.5万件のスポット詳細ページの到達性は未変化</strong>。R-R33 は ✅完了ではなく 🔧半分として扱った。<span class="text-gray-700"><strong>📮 12:51 に開発担当へ続きを依頼</strong>（次は R-R38 の予定だったが、記号を消してもページ自体が不可視では効果が数字に出ないため到達性が先、と説明）。対象5ルート＝都道府県47・エリア11・市区町村1,918・テーマ23・人物106。全件を1ページに出す必要はなく上位N件＋ページ送りでも成立する旨を添えた。</span></p>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ 新しく見つけたもの2件（うち1件は新規提案 R-R41）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">(a) 存在しない人物のURLでも 200 が返る</strong> → <strong>R-R41（新規）</strong>。実測＝<code>/people/zzz-not-a-real-person-99999</code> が 404 ではなく 200。無限のURLが実在ページ扱いになり、クロールの割り当てを食う。</p>
+      <p class="text-sm text-gray-800 mb-2 bg-amber-50 border border-amber-300 rounded p-2"><strong class="text-amber-800">⚠️ 当方の訂正</strong>＝Cycle 042 の「<code>/people/1</code> と <code>/people/2</code> がバイト同一」は<strong>実在しないURLを2本叩いていただけ</strong>（実在するのは <code>/people/oda-nobunaga</code> 形式）。ただし結論は不変＝実在URLでもタイトルは既定値・見出しなし・canonical なし（R-R39 は有効）。この取り違えの追跡から (a) が見つかった。</p>
+      <p class="text-sm text-gray-800"><strong class="text-red-800">(b) テンプレート記号 <code>{歴史}</code> が meta description の1文字目に露出</strong> → <strong>R-R38 の影響範囲を訂正</strong>。実測＝<code>/spots/9146</code>（建長寺）の紹介文＝「{歴史} 建長寺は、鎌倉五山の中でも第一位に位置し、1253年に…」。従来「本文とリンク文字に出る」と報告していたが、実際は検索結果に表示される紹介文の先頭だった。</p>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑤ 開発担当の指摘を受け、こちらの指摘1件を格下げ（R-R23③）</h3>
+      <p class="text-sm text-gray-800">ご指摘＝「全画面キャプチャでは固定要素が本来と違う位置に写る」「デスクトップ Chrome は <code>meta viewport</code> を無視するのでウィンドウ幅を狭めた画像は実機と一致しない」。当方の撮影方法がまさにこの条件に当たるため、<strong>「未解消」→「当方の観測方法では判定不能」へ格下げ</strong>（→ Cycle 044 で ❌取り下げとしてクローズ）。</p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑥ このサイクルのまとめ</h3>
+      <p class="text-sm text-gray-700">✅完了＝R-R18（<code>www</code>）／🔧半分＝R-R33（入口は開通・その下は未着手）／新規の提案1件（R-R41）／新規の質問ゼロ／格下げ1件（R-R23③）／訂正2件。判断待ち 12件。</p>
+    </div>
+  </section>
+
   <!-- ===== 完了した提案（Cycle 037 でクローズ） ===== -->
   <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了した提案 — Cycle 037（2026-08-30 夕）でクローズ ＝ <span class="underline">同日2回目の本番反映で「発見の配管」が開通</span></h2>

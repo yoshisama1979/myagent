@@ -1,0 +1,49 @@
+  <!-- ===== Cycle 044 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 044 — 2026-09-05（<span class="text-red-700">★1.5万件のスポットページに「そのスポット自身の中身」が入っていないことが判明</span>／<span class="text-gray-700">開発担当の返信が本文欠落で到着</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動（同日<strong>4回目</strong>のサイクル）。<strong>きっかけ＝開発担当から 13:02 に返信1通</strong>（Cycle 043 の投函への回答）。データ＝<strong>本番GET 14本</strong>（<u>すべて当方が実際に取得して検証</u>）。<span class="text-gray-600">GA4／Search Console は Cycle 041 から数時間しか経っていないため再取得していません（数字は動きません）。</span></p>
+
+    <div class="bg-red-50 border-4 border-red-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">① ★最重要★ スポットのページに、<span class="underline decoration-2">そのスポット自身の中身が1文字も入っていません</span>（新規 R-R42）</h3>
+      <p class="text-sm text-gray-800 mb-2">本日「一覧の入口が開いた」ことを受けて、<u>その先にある“着地先”＝スポット個別ページの中身を実際に取り直した</u>ところ、<strong class="text-red-800">検索エンジンが受け取るHTMLには、そのスポット自身の写真も本文も入っていませんでした</strong>。入っているのは<strong>「近くの・同じテーマの 他のスポット」だけ</strong>です。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>実測（3ページとも同じ・9/5 13:2x）</strong></p>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">ページ</th><th class="py-1 pr-2">写真</th><th class="py-1 pr-2">リンク</th><th class="py-1 pr-2">見出し</th><th class="py-1">そのスポット自身の本文</th></tr></thead>
+        <tbody class="align-top">
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2"><code>/spots/9146</code><br><span class="text-xs text-gray-600">建長寺</span></td><td class="py-1 pr-2">6枚＝<span class="text-red-800">ロゴ2＋<strong>他スポット4</strong></span><br><span class="text-xs text-gray-600">円覚寺・浄智寺・浄妙寺・寿福寺</span></td><td class="py-1 pr-2">21本＝<span class="text-red-800">ナビ＋<strong>他スポット</strong></span></td><td class="py-1 pr-2"><strong class="text-red-800">h1＝0</strong><br><span class="text-xs text-gray-600">h2/h3 は「他のスポット」の見出し</span></td><td class="py-1"><strong class="text-red-800">0文字（「読み込み中...」）</strong></td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2"><code>/spots/496</code><br><span class="text-xs text-gray-600">名古屋テレビ塔</span></td><td class="py-1 pr-2">8枚＝<span class="text-red-800">すべて他スポット・ロゴ</span></td><td class="py-1 pr-2">23本＝同上</td><td class="py-1 pr-2"><strong class="text-red-800">h1＝0</strong></td><td class="py-1"><strong class="text-red-800">0文字（「読み込み中...」）</strong></td></tr>
+          <tr><td class="py-1 pr-2"><code>/spots/12418</code><br><span class="text-xs text-gray-600">岩之上堂（秩父）</span></td><td class="py-1 pr-2">9枚＝<span class="text-red-800">今宮坊・金昌寺・四萬部寺…＝<strong>すべて他寺</strong></span></td><td class="py-1 pr-2">23本＝同上</td><td class="py-1 pr-2"><strong class="text-red-800">h1＝0</strong></td><td class="py-1"><strong class="text-red-800">0文字（「読み込み中...」）</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-sky-800">🔑 決め手＝「中身はあるのに、本文に出ていない」ことが同じページ内で証明できました。</strong>建長寺のページの<u>検索結果に出る紹介文（meta description）には、建長寺の説明文がちゃんと入っています</u>（「{歴史} 建長寺は、鎌倉五山の中でも第一位に位置し…」）。<strong class="text-red-800">ところが、同じ文章を本文の中から探すと 0件</strong>です。⇒ <u>データは存在していて、名札（タイトル・紹介文）にだけ使われ、本文としては配信されていない</u>状態です。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>なぜ重大か</strong>＝いま総力を挙げているのは「1.5万件を<u>見つけてもらう</u>」こと（R-R33）ですが、<strong class="text-red-800">見つけて来てもらっても、着いた先のページには そのスポットの中身が無い</strong>状態です。検索エンジンから見ると、1.5万ページはどれも<u>「近隣スポットの寄せ集め」で互いによく似たページ</u>に見えます。<span class="text-gray-700">スポット個別が「登録はされているのに順位が付かない」（9/5 午前の実測＝インデックス10URL・表示は実質2URL）ことの、有力な説明になります（推測）。</span></p>
+      <p class="text-sm text-gray-800 mb-2 bg-amber-50 border-2 border-amber-400 rounded p-2"><strong class="text-amber-800">⚠️ あわせて、当方の過去の記録を1件 訂正します（当方の誤りです）</strong>＝8/30 に「<u>スポット詳細 14,477ページは達成（<code>/spots/496</code>＝見出し14本・リンク23本・写真8枚）</u>」と記録しましたが、本日その<strong>14本・23本・8枚の中身を1つずつ見たところ、すべて「他のスポット」のもの</strong>でした。<strong class="text-red-800">数だけ数えて中身を見なかった当方の誤り</strong>で、以後6日間「スポット詳細は完了」という前提で回していました。⇒ <u>件数の増減だけで「達成」と判定しない</u>ことを、当方の手順に加えます。</p>
+      <p class="text-sm text-gray-800"><strong>改善案</strong>＝スポット自身の「名前（h1）・写真・説明文・住所・最寄駅」を、<u>他のスポットと同じように</u>サーバが返すHTMLに出す（＝本日 一覧ページで通用したのと同じ直し方）。<strong>効果</strong>＝1.5万ページが初めて「そのスポットのページ」として読まれる／<strong>工数</strong>＝小〜中（R-R33 と同型）。<span class="text-emerald-700"><strong>社長のご対応は不要です</strong>（✅AI即応・開発担当へ本サイクルで引き渡します）。</span></p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">② 「存在しないURLが200を返す」問題の範囲を、当方の実測で確定しました（R-R41 の更新）</h3>
+      <p class="text-sm text-gray-800 mb-2">開発担当から「<u>この問題は人物ページだけです</u>」との返信があったため、<strong>当方でも7種類のでたらめなURLを実際に叩いて確かめました</strong>（9/5 13:2x）。</p>
+      <p class="text-sm text-gray-800 mb-2 bg-white border border-gray-300 rounded p-2"><code>/people/zzz-not-real-99999</code> → <strong class="text-red-800">200</strong>（50,556バイトのページが表示される）<br><code>/spots/99999999</code>・<code>/spots/prefectures/zzz…</code>・<code>/spots/cities/99999999</code>・<code>/spots/themes/zzz…</code>・<code>/spots/areas/zzz…</code>・<code>/zzz-not-real-page</code> → <strong class="text-emerald-800">すべて 404（正常）</strong></p>
+      <p class="text-sm text-gray-800">⇒ <strong>開発担当のご説明どおり、影響は <code>/people/&lt;名前&gt;</code> だけ</strong>と裏が取れました。直す範囲が1か所に絞れたので、<u>R-R41 は「小さい作業」のまま進められます</u>。<span class="text-gray-600">（＝ご報告を信じるのではなく、当方でも測って一致を確認する、という手順どおりの結果です）</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">③ 開発担当からの返信が「本文なし」で届きました（＝再送を依頼・社長のご対応は不要）</h3>
+      <p class="text-sm text-gray-800 mb-2">13:02 に届いた返信は、<strong>件名だけがあり本文が空でした</strong>（本文欄に、送信側のパソコンの中のファイルの置き場所を指す文字列がそのまま入っていました＝送信時の指定ミスと思われます）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>件名から分かること（3点）</strong>＝「<u>二階層目は2系統</u>」「<u>soft-404 は /people 限定</u>」「<u>R-R23③ 取り下げ同意</u>」。<span class="text-emerald-800">このうち後ろの2つは、上の②と下の④で<strong>当方の実測・判断で決着させました</strong>。</span><span class="text-red-800"><strong>残る「二階層目は2系統」だけが、本文が無いため内容不明です</strong></span>（＝1.5万件へ降りる階段の作り方に関わる、いちばん大事な部分）。⇒ <strong>本文の再送を依頼しました</strong>（本サイクルの投函に同梱）。</p>
+      <p class="text-sm text-gray-800"><span class="text-gray-700">なお <strong>13:20 時点の実測でも、二階層目の前進リンクは 0本のまま</strong>です（<code>/spots/prefectures/kyoto</code>＝9本すべて共通メニュー／<code>/people/oda-nobunaga</code>＝10本すべて共通メニュー）＝<u>この返信は「回答」であって、まだ反映ではありません</u>。</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ こちらの指摘1件を取り下げました（R-R23③ ＝クローズ）</h3>
+      <p class="text-sm text-gray-800">「スマホで浮動ボタンが本文に重なる」という当方の指摘について、開発担当から<strong>取り下げに同意</strong>との返信がありました（件名）。当方も Cycle 043 で<u>撮影方法が原因の誤検知</u>と認めています。⇒ <strong>R-R23③ は ❌取り下げとしてアーカイブへ移します</strong>（当方の誤りです）。<span class="text-gray-700">①「作成日: 1970/1/1」②「システム情報」の露出は、本日 <code>/spots/496</code>・<code>/spots/9146</code> の本文を実際に検索して<strong>いずれも見当たりませんでした</strong>＝ただし<u>本文そのものが配信されていない（上の①）ため、この結果では「直った」と断定できません</u>。R-R42 の対応後に判定し直します。</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑤ このサイクルのまとめ</h3>
+      <p class="text-sm text-gray-700"><strong class="text-red-800">新規の提案1件＝R-R42（スポット自身の中身が配信HTMLに無い）</strong>／<strong>新規の質問ゼロ</strong>／<strong class="text-emerald-800">クローズ2件＝R-R18（<code>www</code> ✅完了）・R-R23③（❌当方の誤りとして取り下げ）</strong>／<strong>根拠の確定1件＝R-R41（影響は <code>/people</code> だけと実測で確定）</strong>／<strong>訂正1件＝8/30「スポット詳細 達成」は当方の誤判定</strong>。<br>判断待ち <strong>13件</strong>（自動停止ライン15件まで<strong>余裕2件</strong>）。</p>
+      <p class="text-sm text-gray-700 mt-2"><strong>社長にお願いしたいことは、今朝から変わっていません＝2つだけ</strong>＝<strong class="text-rose-700">① R-R35（Search Console に sitemap を送信・5分）</strong>／<strong class="text-rose-700">② Q-R17（GTM の公開）</strong>。<span class="text-emerald-700"><u>本サイクルで見つかった分は、すべて開発担当がそのまま着手できるものです。</u></span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクル（9/8 予定）</strong>＝① <strong>R-R42</strong>（スポット自身の中身）と <strong>R-R33 の残り</strong>（二階層目）の反映確認＝<u>この2つが揃って初めて「見つけてもらえて、読まれる」状態になります</u>／② 「二階層目は2系統」の再送内容の反映／③ <code>www.</code> 付き5本が検索結果で生き返ったかの確認／④ R-R19 を実質解消として閉じてよいかの確認／⑤ 週次の競合対比（9/12 期日）。</p>
+    </div>
+  </section>
