@@ -1,0 +1,74 @@
+  <!-- ===== Cycle 043 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 043 — 2026-09-05（<span class="text-emerald-700">www が開通・35サイクル止まっていた一覧の入口も開通</span>／<span class="text-red-700">ただし その1つ下は まだ全部 行き止まり</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動（同日3回目のサイクル）。<strong>きっかけ＝開発担当から 12:46・12:47 に完了報告2通</strong>（前サイクル Cycle 042 の終了後に到着）。データ＝本番GET 12本（当方の実測検証）。<span class="text-gray-600">GA4／Search Console は Cycle 041・042 から数時間しか経っていないため再取得していません（数字は動きません）。</span></p>
+
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① 🎉 <code>www.</code> が開通しました — <span class="underline">10日間つながらなかった検索結果5本が、生き返りました（R-R18 ✅完了）</span></h3>
+      <p class="text-sm text-gray-800 mb-2">社長が今朝「開発の受信箱を通して対応する」とご判断された件が、<strong>同じ日のうちに片づきました</strong>。<span class="text-gray-700">当方の本番実測でも確認済みです＝<code>https://www.check-rally.com/</code> が <strong>HTTP 200</strong> で <code>check-rally.com</code> へ転送されるようになりました（今朝の実測では<u>証明書エラーで接続すらできない</u>状態でした）。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>意味</strong>＝検索エンジンに登録されている <code>www.</code> 付きの5本（<u>閲覧2位の地図画面・数少ない流入元のテーマ一覧を含む</u>）が、<strong>クリックしても開けない状態から、開ける状態になりました</strong>。</p>
+      <div class="bg-white border border-emerald-300 rounded p-3">
+        <p class="text-sm text-gray-800"><strong class="text-emerald-800">🔑 それ以上に価値があったのは「再発防止」のほうです（開発担当の自主的な調査）</strong>＝証明書を手で足すだけでは元に戻る状態だったことが判明し、3点を直したとのご報告がありました。<span class="text-red-800"><strong>そのうち1つは「2026-11-04 頃の自動更新で表面化し、12-04 の期限切れでサイト全体が停止する」性質のもの</strong></span>でした。<br><span class="text-gray-700">＝<u>今回の www の件を調べに行かなければ、11月〜12月に予告なくサイトが落ちていた</u>ということです。8/15 に起きた約20分の停止と同じ系統の問題で、これで根が断たれました。</span></p>
+      </div>
+    </div>
+
+    <div class="bg-sky-50 border-2 border-sky-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 🎉 35サイクル「0本」だった一覧ページの入口が、初めて開きました（R-R33 の前半）</h3>
+      <p class="text-sm text-gray-800 mb-2">こちらが着手推奨1位としてお願いしていた <strong>R-R33</strong> に着手いただき、<strong>一覧ページが検索エンジンから見える形になりました</strong>。当方の本番実測（リンク本数の実数）：</p>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <thead><tr class="bg-sky-100 text-sky-900"><th class="text-left py-1 px-2">ページ</th><th class="text-left py-1 px-2">これまで</th><th class="text-left py-1 px-2">いま</th></tr></thead>
+        <tbody class="text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/people</code>（人物からさがす）</td><td class="py-1 px-2 text-red-700">ナビ9本のみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">115本（人物 106人分）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/prefectures</code>（都道府県）</td><td class="py-1 px-2 text-red-700">ナビのみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">57本（47都道府県・件数つき）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/themes</code>（テーマ）</td><td class="py-1 px-2 text-red-700">ナビ9本のみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">32本（23テーマ・説明文つき）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/areas</code>（エリア）</td><td class="py-1 px-2 text-red-700">ナビ11本のみ</td><td class="py-1 px-2 text-emerald-800 font-semibold">22本（11エリア・件数つき）</td></tr>
+          <tr><td class="py-1 px-2"><code>/spots/tags</code>（タグ）</td><td class="py-1 px-2">ナビ9本</td><td class="py-1 px-2 text-gray-600">9本（変化なし＝<u>タグが1件も登録されていないため</u>。実装ではなくデータの話）</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800"><strong>原因のご説明が明快でした</strong>＝画面の作り方ではなく<strong>データを取りに行く場所</strong>の問題で、「ブラウザで開いたときだけ取りに行く」形になっていたため、<u>検索エンジンが受け取るHTMLは常に空</u>だった、とのことです。<span class="text-gray-600">これは当方（サーバが返すHTMLしか見られない立場）からは特定できない種類の原因でした。</span></p>
+    </div>
+
+    <div class="bg-red-50 border-4 border-red-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">③ ★最重要★ ただし <span class="underline decoration-2">その1つ下の階層が、まだ全部 行き止まり</span>です — 1.5万件のスポットには まだ到達できません</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>これは「まだ終わっていない」という報告であって、開発担当の作業への文句ではありません。</strong><span class="text-gray-700">ご報告いただいた5ページはすべて実測で裏が取れています。ただし<u>ご報告の対象が「一覧の入口」5ページに限られていた</u>ため、当方でその下も測りました。</span></p>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <thead><tr class="bg-red-100 text-red-900"><th class="text-left py-1 px-2">1つ下の階層</th><th class="text-left py-1 px-2">リンク総数</th><th class="text-left py-1 px-2">うち スポットへ進むリンク</th></tr></thead>
+        <tbody class="text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/prefectures/kyoto</code>（京都府 <strong>1,053件</strong>）</td><td class="py-1 px-2">9本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/areas/kansai</code>（関西 <strong>3,580件</strong>）</td><td class="py-1 px-2">9本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>/spots/cities/26104</code>（市区町村）</td><td class="py-1 px-2">9本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+          <tr><td class="py-1 px-2"><code>/spots/themes/nihon-sankei</code>（日本三景）</td><td class="py-1 px-2">10本</td><td class="py-1 px-2 text-red-800 font-bold">0本</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong>いまの検索エンジンの通り道を絵にすると、こうなっています：</strong></p>
+      <p class="text-sm bg-white border-2 border-red-300 rounded p-3 mb-2 font-mono text-gray-800">トップ → <span class="text-emerald-700 font-bold">/spots/prefectures（47本 ✅ 今日 開通）</span> → <span class="text-emerald-700 font-bold">/spots/prefectures/kyoto</span> → <span class="text-red-700 font-bold">★ 行き止まり ★</span><br><span class="text-gray-500">（京都の1,053件のスポットへ降りる階段が、まだ1本もありません）</span></p>
+      <p class="text-sm text-gray-800"><strong>⇒ つまり</strong>：今日の反映で<u>「入口の看板」は立ちました</u>が、<strong class="text-red-800">1.5万件のスポット詳細ページの到達性は、まだ1ミリも変わっていません</strong>。<span class="text-gray-700">R-R33 は <strong>✅完了ではなく 🔧半分</strong>として扱います（＝当方は本番を実測してから完了と判定する規律です）。</span></p>
+      <div class="bg-white border-2 border-amber-400 rounded p-3 mt-2">
+        <p class="text-sm text-gray-800"><strong class="text-amber-800">📮 開発担当へ、続きをお願いしました（12:51 投函済み・社長のご回答は不要です）</strong><br>
+        <span class="text-gray-700">次は R-R38（テンプレート記号）の予定とのことでしたが、<strong>その前にこの「1つ下」を先にお願いしたい</strong>とお伝えしました。理由＝<u>記号を消しても、そのページ自体がまだ誰にも見えていないので効果が数字に出ない</u>ためです（順序として到達性が先）。<strong>今日と同じ直し方がそのまま使える見込み</strong>で、対象は5種類のページ（都道府県47・エリア11・市区町村1,918・テーマ23・人物106）です。</span></p>
+      </div>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ 新しく見つけたもの2件（うち1件は新規提案 R-R41）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">(a) 存在しない人物のURLでも「ページがあります」と返ってしまいます</strong> → <strong>R-R41（新規）</strong><br>
+      <span class="text-gray-700">実測＝<code>/people/zzz-not-a-real-person-99999</code> という<u>でたらめな住所</u>を開いても <strong>「404（ありません）」ではなく 200（あります）</strong>が返ります。⇒ 無限の数のURLが「実在するページ」として扱われ、<strong>検索エンジンが本物のページを見に来る手間を食います</strong>。いま発見性を上げようとしている最中なので、早めに直しておきたい種類の問題です。</span></p>
+      <p class="text-sm text-gray-800 mb-2 bg-amber-50 border border-amber-300 rounded p-2"><strong class="text-amber-800">⚠️ あわせて、こちらの前回報告を1件 訂正します</strong>＝今朝（Cycle 042）に「人物ページ <code>/people/1</code> と <code>/people/2</code> の中身が1バイトも違わない」とご報告しましたが、<strong>実在するURLは <code>/people/oda-nobunaga</code> のような名前形式</strong>で、<u>こちらは実在しない住所を2本たたいていただけ</u>でした。<span class="text-gray-700">ただし<strong>結論は変わりません</strong>＝実在する <code>/people/oda-nobunaga</code> を測り直しても、<u>タイトルは既定値のまま・見出しなし・canonical なし</u>でした（→ R-R39 は有効なままです）。</span></p>
+      <p class="text-sm text-gray-800"><strong class="text-red-800">(b) テンプレート記号 <code>{歴史}</code> が、検索結果に出る紹介文の<u>先頭</u>に入っていました</strong> → <strong>R-R38 の影響範囲を訂正</strong><br>
+      <span class="text-gray-700">実測＝<code>/spots/9146</code>（建長寺）の紹介文＝<strong>「{歴史} 建長寺は、鎌倉五山の中でも第一位に位置し、1253年に…」</strong>。<u>当方はこれまで「本文とリンク文字に出る」とご報告していましたが、実際には<strong>検索結果に表示される紹介文の1文字目</strong>に出ていました</u>＝影響は想定より大きいです。<span class="text-gray-600">開発担当の調査（見出し系 <code>{歴史}{見どころ}</code> 710件がすべて本文の先頭・単独行）とも符合します。</span></span></p>
+    </div>
+
+    <div class="bg-white border-2 border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑤ 開発担当からのご指摘を受け入れ、こちらの指摘1件を格下げしました（R-R23③）</h3>
+      <p class="text-sm text-gray-800"><strong>ご指摘</strong>＝「全画面キャプチャでは画面に固定された要素が本来と違う位置に写る」「パソコンのChromeはスマホ用の設定を無視するので、窓を細くした画像は実機のスマホ表示と一致しない」。<br>
+      <strong class="text-amber-800">⇒ そのとおりです。当方の撮影方法がまさにその条件に当たります。</strong><span class="text-gray-700">＝<strong>「浮動ボタンが本文に重なる」（R-R23③）は、当方の観測方法が生んだ誤検知の可能性があります</strong>。3回「未解消」とご報告しましたが、<u>「当方の観測方法では判定不能」に格下げ</u>し、実機相当の条件で確認いただいたうえで問題が無ければ<strong>こちらの誤りとして取り下げます</strong>。当方の撮影ツールも見直します。</span><br>
+      <span class="text-gray-600">※ 開発担当も「同種の計測ミスで実在しない崩れを課題に登録していた」と自ら明かされており、<u>お互いの測り方を突き合わせたことで1件減りました</u>。</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑥ このサイクルのまとめ</h3>
+      <p class="text-sm text-gray-700"><strong class="text-emerald-800">✅完了になったもの＝R-R18（<code>www</code>）</strong>／<strong class="text-sky-800">🔧半分＝R-R33（入口は開通・その下は未着手）</strong>／<strong>新規の提案1件（R-R41）</strong>／<strong>新規の質問ゼロ</strong>／<strong>格下げ1件（R-R23③＝判定不能へ）</strong>／<strong>訂正2件</strong>（人物ページのURL形式＝当方の誤り／R-R38 の影響範囲＝想定より大きい）。<br>判断待ち <strong>12件</strong>（自動停止ライン15件まで余裕3件）。</p>
+      <p class="text-sm text-gray-700 mt-2"><strong>社長にお願いしたいことは、今朝から変わっていません＝2つだけ</strong>＝<strong class="text-rose-700">① R-R35（Search Console に sitemap を送信・5分）</strong>／<strong class="text-rose-700">② Q-R17（GTM の公開）</strong>。<span class="text-emerald-700"><u>本日 動いた分（www・一覧の入口）は、すべて開発担当の手で完了しており、社長のご対応は不要でした。</u></span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクル（9/8 予定）</strong>＝① <strong>1つ下の階層</strong>にリンクが出たかの実測（＝1.5万件への到達性が初めて動く瞬間）／② <code>www.</code> 付き5本が検索結果で生き返ったかの確認／③ 露出率（現在 0.012%）の再測定／④ 週次の競合対比。</p>
+    </div>
+  </section>

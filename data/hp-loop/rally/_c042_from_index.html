@@ -1,0 +1,69 @@
+  <!-- ===== Cycle 042 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 042 — 2026-09-05（<span class="text-emerald-700">開発担当から6日ぶりに3通・沈黙は解消</span>／<span class="text-red-700">「1.5万ページは登録すらされていない」は誤りでした</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動（同日2回目のサイクル）。データ＝GA4（<code>analytics_543430115</code>・通期60日）／Search Console（<code>searchconsole_rally</code>・90日）／本番GET 12本／検索結果の実見3本／スクリーンショット4枚。<span class="text-emerald-700">未取得のデータはありません。</span></p>
+
+    <div class="bg-emerald-50 border-2 border-emerald-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① 開発担当の沈黙が解けました — <span class="underline">こちらのレポート5通はすべて読まれていました</span></h3>
+      <p class="text-sm text-gray-800 mb-2">本日 10:12〜10:19 に <code>rally-dev</code> から<strong>3通</strong>届き、<strong>たまっていた5通はすべて読了・未処理は0通</strong>になりました。<span class="text-gray-700">6日間ご連絡が無かった理由は、<strong>本番へのデータ登録作業（人物106人・ゆかりの地498件）に専念していて受信箱を開いていなかった</strong>ためとのことです＝故障ではありません。</span></p>
+      <p class="text-sm text-gray-700"><span class="text-emerald-800"><strong>⇒ 前回「9/8 に様子を見て、それでも音沙汰が無ければ社長にお伺いする」と線を引いていましたが、その線に達する前に解決しました＝社長にお手間をかけずに済んだのは、これで6回目です。</strong></span></p>
+    </div>
+
+    <div class="bg-sky-50 border-2 border-sky-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 本サイクル最大の成果 — <span class="underline decoration-2">検索エンジンに「載っていない」のではなく「載っているのに順位が付かない」でした</span></h3>
+      <p class="text-sm text-gray-800 mb-2">前回ご報告した「発見されている割合 0.012%」について、<u>その 0% の正体</u>を確かめました。検索エンジンに<strong>実際に何が登録されているか</strong>を直接調べた結果です。</p>
+      <div class="bg-white border border-sky-300 rounded p-3 mb-2 text-sm text-gray-800">
+        <p class="mb-1"><strong>登録が確認できたページ＝10本以上</strong>（<span class="text-gray-600">これまで「検索結果に出ているのは2本」とご報告していた数字とは別物です</span>）</p>
+        <ul class="list-disc list-inside space-y-0.5 text-gray-700">
+          <li>トップ／<strong class="text-emerald-800"><code>/register</code>（アカウント登録ページ）</strong>／テーマ一覧／<strong>スポット個別3本</strong>（<code>/spots/12418</code>・<code>12426</code>・<code>12425</code>）</li>
+          <li><strong class="text-red-800">さらに <code>www.</code> 付きが5本</strong>（<code>www…/map</code>・<code>/spots/9886</code>・<code>/spots/12936</code>・<code>/spots/14071</code>・<code>/spots/themes</code>）</li>
+        </ul>
+      </div>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-sky-900">⇒ わかったこと（1）打ち手の重心が変わります。</strong><span class="text-gray-700">スポット個別ページは「検索エンジンに存在を知られていない」のではなく、<strong>知られているのに順位が付かず表示に至っていない</strong>状態でした。つまり <u>R-R33（一覧ページからのリンク）だけでは足りず、<strong>順位が付くだけの中身</strong>（R-R37 の説明文・R-R36 の構造化データ）が同じだけ必要</u>だということが、推測ではなく実測で言えるようになりました。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">⇒ わかったこと（2）<code>www</code> の件は「万一の話」ではなく、<u>いま現に開けない検索結果が5本ある</u>ということでした。</strong><span class="text-gray-700">登録されている10本のうち5本が <code>www.</code> 付きで、<strong>そのすべてが証明書エラーで開けません</strong>（10日目）。しかも <code>/map</code>（閲覧数2位の画面）と、テーマ一覧（＝いま数少ない流入元）が含まれています。</span></p>
+      <p class="text-sm text-gray-800"><strong class="text-amber-800">⇒ わかったこと（3）9/13 の判定は「まだ早い」かもしれません。</strong><span class="text-gray-700">検索結果に表示されているタイトルは、いまも<strong>「スポット詳細 #12418」＝8/30 に名札を直す<u>前</u>の状態</strong>のままでした（本番は「岩之上堂｜秩父市のスタンプスポット」に直っています）。<u>＝検索エンジンがまだ拾い直していない</u>ということです。<strong class="text-sky-800">9/13 に効果が出ていなくても「効かなかった」ではなく「まだ見に来ていない」の可能性が高く、そこを取り違えないよう判定手順に書き加えました。</strong>そして<u>拾い直しを早める唯一の手が、🔔② の sitemap 送信</u>です。</span></p>
+    </div>
+
+    <div class="bg-white border-2 border-red-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">③ 新しい提案（2件） — <span class="underline">どちらも「せっかく作ったものが、検索から見えていない」という話です</span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">R-R39｜人物ページ106人分が、作ったその日から検索エンジンに1文字も見えていません。</strong><br>
+      <span class="text-gray-700">開発担当が本日、<strong>人物106人・ゆかりの地498件</strong>を本番に登録されました。画面で確認したところ<u>とても良い出来</u>です（聖徳太子・天智天皇・藤原鎌足…<strong>肖像画つき</strong>・時代・肩書・生没年・「ゆかりの地 5」といった件数まで表示）。<span class="text-red-800"><strong>ところが、サーバが返すHTMLには人物名が1文字もありません</strong></span>（「よみこみちゅう...」で終わっており、中身は利用者の端末側で描かれています）。人物ごとのページ <code>/people/1</code>・<code>/people/2</code> も<strong>中身が1バイトも違わず・タイトルは既定の「日本全国スタンプラリー」のまま・見出しもありません</strong>。<br>
+      <strong class="text-sky-800">なぜ惜しいか</strong>＝「聖徳太子 ゆかりの地」のような<u>人物名の検索は、狙いが明確で競合も薄い</u>切り口です。いま最も検索で戦えるはずの資産が、まるごと不可視になっています。<u>作った直後のいま直せば手戻りが最小</u>なので、着手推奨を2位に置きました。</span></p>
+      <p class="text-sm text-gray-800"><strong class="text-red-800">R-R40｜旧サイト <code>mission-p.com</code> が停止しており、そこに「新サイトに足りないもの」が全部あります。</strong><br>
+      <span class="text-gray-700">開発担当から旧システムの存在を共有いただき、こちらでも実際に調べました。<strong>3つ、見過ごせないことが分かりました。</strong><br>
+      　<strong>(1) 全部が止まっているわけではありません</strong>＝<code>mission-p.com</code>（PC版）は HTTP 500 ですが、<strong class="text-emerald-800"><code>sp.mission-p.com</code>（スマホ版）は生きていて、同じスポット番号で中身が完全に表示されます</strong>。<br>
+      　<strong>(2) 旧サイトには説明文があります</strong>＝例：浜松市楽器博物館のページには「音楽愛好家必見！日本唯一の公立楽器博物館」というキャッチと、「歴史」「見どころ」の見出しつき本文が入っています。<span class="text-sky-800"><strong>新サイトで説明文が無い 6,467件は、ゼロから書くのではなく「移行し忘れの回収」で済むかもしれません</strong></span>（旧の総スポット数 14,406 ≒ 新 14,407＝同じデータです）。開発担当に、番号で突き合わせられるか確認をお願いしました。<br>
+      　<strong>(3) 旧サイトは検索エンジンに10本登録されたまま、全部エラーになっています</strong>＝しかも旧サイトのタイトルは説明文つきで、<u>いまの新サイトより検索結果での見え方が良い</u>状態です。<span class="text-red-800">このまま止め続けると、この蓄積（被リンク・登録）は失われます。</span></span></p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-700 mb-2">④ 開発担当の「事業設計モード」へ、数字をお渡ししました</h3>
+      <p class="text-sm text-gray-800 mb-2"><span class="text-gray-700">開発担当が本日「事業設計モード」を始められ（ゲーム性・地図コスト・自治体向けマネタイズの検討）、GA4／Search Console の集計をご依頼いただいたので、実測でお返ししました。</span></p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>月別</strong>＝6月(4日) 106件/3人 → 7月 435件/37人 → 8月 1,396件/104人 → 9月(4日) 28件/9人。<strong>通期60日＝1,965件/146人・新規訪問115人＝1日あたり約1.9人</strong>。</li>
+        <li><strong>地図</strong>＝<code>/map</code> 到達は全体の約15%（22人/146人）・1人あたり8.8回。<strong>端末</strong>＝スマホ約58%／PC約42%。<strong>流入元</strong>＝直接104・Google検索58・Yahoo検索11。</li>
+        <li><strong class="text-red-800">Search Console 90日の検索語は全部で10語、その全部が「スタンプラリー」の言い換えでした</strong>＝<u>地名・テーマ名・スポット名で検索されて表示された回数は、90日間で1件もありません</u>。</li>
+        <li><span class="text-amber-800"><strong>⚠️ 正直にお伝えした注意</strong>＝この146人には<u>GTMの動作確認・管理画面の操作・当方の自動巡回が混ざっています</u>。事業計画の分母に使うと危険で、実数はもっと少ないはずです。</span></li>
+        <li><span class="text-sky-800"><strong>お勧めしたKPI</strong>＝①<code>sign_up</code>（登録完了）の週次件数 → ②スタンプ取得数/人 → ③層別の登録カバー率。<strong class="text-red-800">①②はいずれも「GTM の公開」（🔔③）が済むまで一切測れません＝自治体向けのご提案も、この数字が無いと裏づけが作れません。</strong></span></li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-700 mb-2">⑤ 訂正（3件）— <span class="text-gray-600 font-normal">こちらの誤りです</span></h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>説明文が無いスポットは「約5千」ではなく <span class="text-red-800">6,467件（全体の44.9%）</span></strong>でした（開発担当がデータベースで実数を数えてくださいました）。<u>こちらの推定が少なすぎました</u>。あわせて「追加情報」が空なのは <strong>14,147件＝ほぼ全件</strong>、テンプレート記号が残るのは <strong>770件</strong>と確定。<span class="text-gray-600">※ noindex（B案）を選ぶ場合、対象は5千ではなく6,467ページになります。</span></li>
+        <li><strong><code>http://www</code> は「通じない」のではなく、<u>ちゃんと転送を返していました</u></strong>（開発担当のご指摘）。原因は<u>こちらの調査ツールが転送を自動で追ってしまい、「すぐ失敗」と「転送先で失敗」を区別できない</u>ことでした。<span class="text-emerald-800">むしろ良い知らせで、<strong>証明書に <code>www</code> を足すだけで開通する見込みが強まりました</strong>。</span></li>
+        <li><strong>前回「道具の仕様上できない」と書いた調査（②の登録確認）は、<u>実は最初からできました</u></strong>＝必要な機能は8/24から入っていたのに、こちらがツールの説明を読まずに「無い」と決めつけていました。<span class="text-gray-600">前回も似た取り違えをしており、<u>2回続けて同じ形の誤り</u>です。再発防止の手順を台帳に残しました。</span></li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded p-4">
+      <h3 class="font-bold text-gray-700 mb-2">⑥ 本サイクルの結果と、次にやること</h3>
+      <p class="text-sm text-gray-700"><strong>新規の提案2件</strong>（R-R39・R-R40）／<strong>新規の質問ゼロ</strong>／判断待ち <strong>12件</strong>（自動停止ライン15件まで余裕3件）。<strong>状態が動いたもの3件</strong>＝R-R18・R-R37 は社長のご指示により<strong>📌 開発の受信箱へ引き渡し済み</strong>（以後こちらから社長へ督促しません）／<strong>R-R29（中身が空の新機能）は人物側が✅完了</strong>（ただし「検索から見えない」問題は R-R39 が引き継ぎます）。</p>
+      <p class="text-sm text-gray-700 mt-2"><strong>着手推奨の順（改訂）</strong>＝① <strong>R-R33</strong>（一覧ページの中身とリンク）→ ② <strong class="text-red-700">R-R39</strong>（人物ページ・新規）→ ③ <strong>R-R38</strong>（テンプレート記号）→ ④ <strong>R-R23</strong>（スマホの浮動ボタン・差し戻し中）→ ⑤ <strong>R-R36</strong>（構造化データ）。<span class="text-gray-600">すべて開発担当の手にあり、社長のご回答は不要です。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>スクリーンショット点検（週1）も実施</strong>＝🔴 <strong>スマホの浮動ボタン「近くのスポットを探す」が、トップでは<u>「すでにアカウントをお持ちの方」（ログイン導線）に重なっています</u></strong>＝登録の次に必要な入口を隠しています（R-R23③・差し戻し中の3回目の確認）。<span class="text-gray-600">これはHTMLの調査では見えず、画面を撮らないと分からない種類の問題です。</span></p>
+      <p class="text-sm text-gray-700 mt-2 bg-amber-50 border border-amber-300 rounded p-2"><strong class="text-amber-800">📄 このページの分量について（社長へのご相談・前回からの宿題）</strong>＝このレポートは目安の分量を超え続けています（現在 約85KB）。<u>古い記録の消し忘れではなく</u>、常設部分（在庫26件の一覧＋未回答6件の質問シート）が正当に大きいためです。<strong>削り方を2案ご用意しました</strong>＝<strong>(A)</strong> 優先度の低い「P3（7件）」を別ページへ移し、ここには1行の索引だけ残す／<strong>(B)</strong> 質問シートの「答えると動く提案」の欄をやめて番号だけにする。<span class="text-gray-600">どちらも社長の見え方が変わるので、<strong>ご指示をいただいてから</strong>行います（黙って削りません）。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクル（9/8 予定）</strong>＝① R-R18 の進み具合（開発の受信箱経由・<code>www</code> が開くようになったか）／② 露出率と登録本数の再測定／③ 週次の競合対比（帯を替える）／④ 旧サイト <code>mission-p.com</code> の状態変化。</p>
+    </div>
+  </section>
+
