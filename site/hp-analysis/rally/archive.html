@@ -65,6 +65,72 @@
     </ul>
   </div>
 
+  <!-- ===== Cycle 045（index から移設・2026-09-06 C046 のローテ） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 045 — 2026-09-06（<span class="text-emerald-700">★一夜で5件が完了し「発見の配管」が端から端まで開通</span>／<span class="text-red-700">その副作用で社内向け情報が公開</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動。<strong>きっかけ＝開発担当から 08:47 に1通</strong>（お礼と、当方の R-R39 への訂正）。データ＝<strong>本番GET 14本＋ GA4／Search Console 実測</strong>（<u>すべて当方が実際に取得して検証</u>）。</p>
+
+    <div class="bg-emerald-50 border-4 border-emerald-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① ★最重要★ 昨夕お伝えした課題が、<span class="underline decoration-2">一夜で4件とも解消していました</span>（R-R33・R-R42・R-R39・R-R41 ✅完了）</h3>
+      <p class="text-sm text-gray-800 mb-2">朝のメッセージをきっかけに本番を測り直したところ、<strong class="text-emerald-800">昨夕「いま最大の穴」とお伝えした箇所が、すべて直っていました</strong>。<span class="text-amber-800"><u>開発担当のメッセージにはこの反映の記載がなかったため、当方の実測で見つけたものです。</u></span></p>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">確認した箇所</th><th class="py-1 pr-2">昨夕（9/5）</th><th class="py-1 pr-2">本日（9/6）</th><th class="py-1">意味</th></tr></thead>
+        <tbody class="align-top">
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2"><code>/spots/prefectures/kyoto</code><br><span class="text-xs text-gray-600">京都府（1,053件）</span></td><td class="py-1 pr-2"><span class="text-red-800">スポットへのリンク <strong>0本</strong></span><br><span class="text-xs text-gray-600">50,841バイト</span></td><td class="py-1 pr-2"><strong class="text-emerald-800">48本</strong><br><span class="text-xs text-gray-600">145,740バイト・見出しも1本</span></td><td class="py-1"><strong>R-R33 ✅完了</strong><br><span class="text-xs text-gray-600">関西 0→29本／市区町村 0→25本／テーマ 0→7本</span></td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2"><code>/spots/9146</code><br><span class="text-xs text-gray-600">建長寺</span></td><td class="py-1 pr-2"><span class="text-red-800">自身の本文 <strong>0文字</strong>（「読み込み中...」）・見出し0・写真は他寺のみ</span></td><td class="py-1 pr-2"><strong class="text-emerald-800">本文あり</strong>（「鎌倉五山」が3件）<br><span class="text-xs text-gray-600">見出し1・写真11枚（説明文つき）</span></td><td class="py-1"><strong>R-R42 ✅完了</strong><br><span class="text-xs text-gray-600">名古屋テレビ塔・岩之上堂も同じ</span></td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 pr-2"><code>/people/oda-nobunaga</code><br><span class="text-xs text-gray-600">織田信長</span></td><td class="py-1 pr-2"><span class="text-red-800">タイトルは既定のまま・見出し0</span></td><td class="py-1 pr-2"><strong class="text-emerald-800">「織田信長ゆかりの地」</strong><br><span class="text-xs text-gray-600">見出し1・ゆかりの地へのリンクあり</span></td><td class="py-1"><strong>R-R39 ✅完了</strong><br><span class="text-xs text-gray-600">検索の新しい入口が106本</span></td></tr>
+          <tr><td class="py-1 pr-2">でたらめな人物URL</td><td class="py-1 pr-2"><span class="text-red-800"><strong>200</strong>（ページがある扱い）</span></td><td class="py-1 pr-2"><strong class="text-emerald-800">404</strong>（正しく「無い」）</td><td class="py-1"><strong>R-R41 ✅完了</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-800">🔑 いちばん大きな意味＝「トップ → 一覧 → 都道府県 → 個々のスポット」が初めて端から端までつながりました。</strong><span class="text-gray-700">35サイクル追い続けてきた<u>「1.5万件のスポットが検索エンジンから見えない」という、このプロジェクト最大の課題が解消</u>したことになります。<strong>あわせて構造化データ（＝機械が「これは観光地の情報だ」と読める記述）も入りました</strong>（R-R36 の大半）。</span></p>
+      <p class="text-sm text-gray-800 bg-amber-50 border-2 border-amber-400 rounded p-2"><strong class="text-amber-800">⚠️ ただし、効果が数字に出るのはこれからです。</strong>Search Console のデータは <strong>9/3 まで</strong>しか届いておらず、<u>今回の工事は1日分も反映されていません</u>。<span class="text-gray-700">検索エンジンがこの1.5万ページを巡回し直すのに数日〜数週間かかります。⇒ <strong>判定日を 9/20 へずらすご相談（🔔 Q-R18）</strong>と、<strong>拾い直しを早める R-R35（sitemap 送信・5分）</strong>が、いま効く2つです。</span></p>
+    </div>
+
+    <div class="bg-red-50 border-4 border-red-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">② ★要対応★ その成功の副作用で、<span class="underline decoration-2">社内向けの情報が1.4万ページに公開されています</span>（新規 R-R43）</h3>
+      <p class="text-sm text-gray-800 mb-2">本文が出るようになったのは良いことですが、<strong class="text-red-800">本来お客様に見せる想定ではなかったであろう項目まで、一緒に出てしまっています</strong>。実際のページ末尾は次のようになっています（測った3ページすべて同じ）。</p>
+      <pre class="text-xs bg-white border border-gray-300 rounded p-2 mb-2 whitespace-pre-wrap">メモ
+ChatGPTにて作成
+システム情報
+スポットID: 9146
+優先度: 高
+作成日: 1970/1/1
+更新日: 2026/7/13</pre>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">とくに「メモ／ChatGPTにて作成」がそのまま表示されている点</strong>は、<u>掲載内容の信頼性に関わります</u>。<span class="text-gray-700">スポット事業者・自治体にご覧いただく場面を考えると、早めに外しておきたい項目です。<strong>メモ欄は自由記述のため、他のスポットに何が書かれているかは当方からは確認できません</strong>（データベースを見る必要があるので、開発担当に件数と中身の確認を依頼しました）。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><span class="text-gray-700">「作成日: 1970/1/1」「優先度: 高」「スポットID」も同様で、<u>お客様には意味が無く、不備に見えます</u>。<span class="text-emerald-800">なお、これは Cycle 044 で「本文が配信されていないので判定できない」としていた R-R23 ①② と同じもので、本日ようやく確認できたため <strong>R-R43 に統合</strong>しました。</span></span></p>
+      <p class="text-sm text-gray-800"><strong>改善案</strong>＝「システム情報」と「メモ」のブロックを、お客様向けの表示から外す（管理画面にだけ残す）。<strong>工数</strong>＝小。<span class="text-emerald-700"><strong>社長のご対応は不要です</strong>（✅AI即応・開発担当へ本サイクルで引き渡します）。</span><span class="text-gray-600">※ いま検索エンジンが1.4万ページを巡回し始めたところなので、<u>早く直すほど拾われる量が少なくて済みます</u>。</span></p>
+    </div>
+
+    <div class="bg-sky-50 border border-sky-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-sky-800 mb-2">③ 開発担当からの「R-R39 は測定URLの誤り」というご指摘に、実測でお返事しました（社長のご対応は不要）</h3>
+      <p class="text-sm text-gray-800 mb-2">朝のメッセージで「<u>人物ページが検索から不可視というのは、測ったURLが間違っている</u>」とのご指摘をいただきました。<strong>確認したところ、半分はそのとおりで、半分は違いました</strong>ので、事実だけお返ししています。</p>
+      <p class="text-sm text-gray-800 mb-2 bg-white border border-gray-300 rounded p-2"><strong class="text-amber-800">✅ ご指摘のとおりだった部分</strong>＝9/5 <u>午前</u>に <code>/people/1</code>・<code>/people/2</code> を測ったのは、確かに当方の誤りです（実在しないURLでした）。<u>これは同日夕方に当方から自己訂正済み</u>です。<br>
+      <strong class="text-sky-800">🔑 事実が異なる部分</strong>＝9/5 <u>夕方</u>には、実在する <code>/people/oda-nobunaga</code> を測っており、その時点では <strong>50,526バイト・タイトルは既定値・見出し0本</strong>でした。<strong>同じURLが本日は 69,979バイト・「織田信長ゆかりの地」・見出し1本</strong>です。⇒ <u>差はURLの取り違えではなく、<strong>その間に実装が入った</strong>ことによるものです。</u></p>
+      <p class="text-sm text-gray-800"><span class="text-gray-700"><strong>なぜこれを申し上げるか</strong>＝これを「測定ミス」として処理すると、<u>この立派な改修が実績の記録に残らず</u>、さらに<strong>効果を判定するときの「前の状態」を誤って持つことになる</strong>ためです（＝人物ページは元から良かった、と誤解したまま数字を読むことになります）。<span class="text-emerald-800">開発担当を責める意図はまったくなく、記録の正確さのためにお伝えしています。</span></span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ 開発担当からのご依頼2件に対応しました（社長のご対応は不要）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>依頼1＝「都道府県別の利用状況を出してほしい（自治体向け提案に使う）」</strong> → <strong class="text-emerald-800">対応済み</strong>。分析ツールに地域別の集計機能を追加し、実測しました（60日）。</p>
+      <p class="text-sm text-gray-800 mb-2 bg-white border border-gray-300 rounded p-2">日本＝<strong>20都道府県から のべ108人</strong>（東京24・神奈川21・大阪16・兵庫6・愛知5・埼玉/北海道/福岡 各4…）<br><span class="text-amber-800">海外・地域不明＝<strong>約38人</strong>（米バージニア州8・独チューリンゲン8・中国4・米カリフォルニア州3…）＝<u>いずれもデータセンターの所在地で、機械的なアクセスとみられます</u></span></p>
+      <p class="text-sm text-gray-800 mb-2"><span class="text-red-800"><strong>⚠️ 正直にお伝えした注意点</strong></span>＝<u>「のべ146人」をそのまま実績として自治体向け資料に載せるのは危険です</u>。上記の海外分に加え、<strong>大阪の16人は1人あたりの操作量が極端に多く、運営・開発側のアクセスが混じっている可能性が高い</strong>ためです。<span class="text-emerald-800">正確な人数は、<strong>🔔③ GTM の公開（内部アクセスの除外）</strong>が入ってから出せます。</span></p>
+      <p class="text-sm text-gray-800"><strong>依頼2＝「内部アクセスを除いた人数を測り直してほしい」</strong> → <strong class="text-red-800">まだできません</strong>。<u>除外の仕組みが GTM の公開待ち（Q-R17）のため</u>で、公開後すぐに測り直すとお返事しました。<span class="text-gray-600">＝できないことを「できる」と言わずにお返ししています。</span></p>
+    </div>
+
+    <div class="bg-amber-50 border-2 border-amber-400 rounded p-4">
+      <h3 class="font-bold text-amber-800 mb-2">⑥ 昨日「開発担当のミス」と書いた件は、<span class="underline">当方の道具の問題でした</span>（訂正・社長のご対応は不要）</h3>
+      <p class="text-sm text-gray-800 mb-2">昨夕、開発担当からの返信が「本文なし」で届いた件を<strong>「送信時の指定ミスと思われます」</strong>とご報告しました。<strong class="text-red-800">これは当方の誤った決めつけでした。</strong></p>
+      <p class="text-sm text-gray-800 mb-2">本日、当方が同じ方法でレポートを送ったところ、<u>まったく同じ症状が再現しました</u>（本文9,869バイトのはずが、432バイトの「ファイル名らしき1行」だけになりました）。調べたところ、<strong>連絡用ツールが「本文をファイルで渡す」書き方に対応しておらず、その指定文字列をそのまま本文として保存してしまう</strong>のが原因でした。<span class="text-emerald-800">＝開発担当は正しく本文を書いており、ツール側が落としていたということです。</span></p>
+      <p class="text-sm text-gray-800">当方は<strong>正しい送り方で送り直し済み</strong>（送信後にバイト数と中身を確認する手順が働きました）。<span class="text-gray-700">この訂正は開発担当にもお伝えしています。<u>相手の道具の失敗を見たときは「相手のミス」で片づけず、自分でも再現するか確かめる</u>ことを手順に加えました。</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑤ このサイクルのまとめ</h3>
+      <p class="text-sm text-gray-700"><strong class="text-emerald-800">✅完了4件＝R-R33・R-R42・R-R39・R-R41</strong>（＋<strong>R-R23 → R-R43 へ統合</strong>）＝<u>1日あたりの完了件数としては、このプロジェクトで最多</u>／<strong class="text-red-800">新規の提案1件＝R-R43（社内向け情報の公開）</strong>／<strong class="text-rose-700">新規の質問1件＝Q-R18（判定日をずらすか）</strong>／<strong>🔧一部前進2件＝R-R36・R-R01</strong>。<br>在庫 <strong>27→23件</strong>・判断待ち <strong>13件</strong>（自動停止ライン15件まで<strong>余裕2件</strong>）。<span class="text-gray-600">※ 新しい Q-R18 を足すと実質14件ですが、件数を数える仕組みが質問シートの行を拾えていないため、機械の数字は13件です（<u>過少に出る側なので、余裕は1件と見ておきます</u>）。</span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>社長にお願いしたいこと＝3つ</strong>＝<strong class="text-rose-700">① R-R35（Search Console に sitemap を送信・5分）</strong>／<strong class="text-rose-700">② Q-R17（GTM の公開）</strong>／<strong class="text-rose-700">③ Q-R18（判定日を 9/20 へずらすか・ご判断1つ）</strong>。<span class="text-emerald-700"><u>それ以外は、すべて開発担当がそのまま着手できるものです。</u></span></p>
+      <p class="text-sm text-gray-700 mt-2"><strong>次サイクル</strong>＝① <strong>R-R43</strong>（社内向け情報の除去）の反映確認／② 検索エンジンが今回の工事を拾い直し始めたか（<code>site:</code> のタイトルが更新されたか）／③ <strong>R-R19</strong> を実質解消として閉じてよいかの確認／④ 週次の全体棚卸し・競合対比（9/12 期日）／⑤ 当方の撮影ツールの見直し（スマホ表示の誤検知対策）。</p>
+    </div>
+  </section>
   <!-- ===== Cycle 044（index から移設・2026-09-06） ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 044 — 2026-09-05（<span class="text-red-700">★1.5万件のスポットページに「そのスポット自身の中身」が入っていないことが判明</span>／<span class="text-gray-700">開発担当の返信が本文欠落で到着</span>）</h2>
