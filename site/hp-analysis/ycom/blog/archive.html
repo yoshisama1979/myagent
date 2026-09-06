@@ -180,6 +180,117 @@
   </div>
 
 
+  <!-- ===== 📦 Cycle 087（2026-09-06）＝ Cycle 088（2026-09-07）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 087（2026-09-06）のスナップショット <span class="text-sm font-normal text-gray-500">（2026-09-07 Cycle 088 で最新レポートから退避。<strong>本文は原文のまま</strong>・未完了の B/T・未回答 Q は <a href="index.html" class="underline">最新レポート</a>に繰り越し済み）</span></h2>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c087">Cycle 087 — 2026-09-06（YCOM ブログ・日次）：<span class="text-rose-700">上位16記事の28日929クリックを「読者が誰か」で仕分けました。ホームページを頼むかもしれない読者に届いているのは <u>48クリック＝5.2%</u> です</span>／<span class="text-emerald-800">52日間 公開されたままの社内メモが決めかねていた「内部リンク先」は、<u>行き先の記事そのものが存在していませんでした</u></span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-06）</h3>
+    <p class="text-xs">取得できたもの＝<strong>GSC（BigQuery・2026-08-09〜09-06／データラグ3日）</strong>・<strong>本番HTML（<span class="font-mono">hp-audit</span> の読み取り＝本日は記事の本文テキストと絶対パスリンクを機械判定）</strong>・<strong>WP下書きの状態（<span class="font-mono">wp-draft.py get</span>＝読み取りのみ）</strong>。<br>
+    未取得＝<u>GA4 の「記事 → 受け皿ページ」の遷移経路</u>（<span class="font-mono">ga4-fetch.py</span> に経路を取る手段がありません）＝本日の分類も<strong>「誰が読んでいるか」までで、「その後どこへ行ったか」は測れていません</strong>。推測で埋めていません。／<span class="font-mono">bin/hp-diff.py</span> は許可リストに無く<u>10日連続</u>で実行できず、期間比較は <span class="font-mono">gsc-fetch.py</span> を複数回に分けて手で突き合わせています。</p>
+  </div>
+
+  <div class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">🩺 毎日の定点観測（本日の実測）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝<span class="font-mono">status=draft</span>（投入 8/17 から <u>21日目</u>）</strong>。タイトルも投入時のまま＝<span class="font-mono">B-043</span>・<span class="font-mono">B-064</span> 未実行。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモは、本日も本番URLの本文に出ています（<u>53日目</u>）</strong>＝本文末尾「…お気軽にご相談ください。」の直後の1段落（<span class="font-mono">B-059</span>）。<span class="text-gray-600">本文テキストを取得して 1件ヒットを確認。</span></li>
+      <li>「ホームページ制作 料金表」＝28日 <strong>203表示・クリック0・19.1位</strong>（前日 18.7位）。<u>横ばい〜わずかに後退</u>。受けているのは <span class="font-mono">/price/basic.html</span> 1枚のまま、ブログ記事は0本。</li>
+      <li>メールボックス＝<strong>新規0件</strong>（自分宛スプールをファイル実体で確認＝<span class="font-mono">to: blog-loop-ycom</span> は 8/21 の web-hanasaka 回答1通のみで、<u>内容は 8/21 に処理済み</u>）。</li>
+      <li>社長指示ファイル（<span class="font-mono">from-president.md</span>）＝新しい記載はありません。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-rose-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-rose-800 mb-2">🔎 本日の中心①：クリックの上位16記事を「読者が誰か」で4つに仕分けました</h3>
+    <p class="mb-2 text-xs"><strong>やったこと</strong>：上位16記事それぞれについて、<u>その記事が実際に受けている検索語</u>（<span class="font-mono">gsc-fetch page-queries</span>）とタイトルを突き合わせ、読者を4分類しました。昨日（<a href="archive.html#c086" class="underline">C086</a>）は「本文に橋があるか」を数えましたが、<strong>そもそも誰に橋を架けるのかを決めていませんでした</strong>。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b-2 border-gray-400 bg-gray-100"><th class="py-1 pr-2">読者</th><th class="py-1 pr-2">記事</th><th class="py-1 pr-2">28日クリック</th><th class="py-1">比率</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200 bg-amber-50"><td class="py-1 pr-2 font-semibold">素材を探しに来た人</td><td class="py-1 pr-2"><span class="font-mono">?p=2117</span>(267)・<span class="font-mono">?p=2082</span>(35)</td><td class="py-1 pr-2 font-bold">302</td><td class="py-1">32.5%</td></tr>
+        <tr class="border-b border-gray-200 bg-sky-50"><td class="py-1 pr-2 font-semibold">コードを書いている人</td><td class="py-1 pr-2"><span class="font-mono">?p=5641</span>(78)・<span class="font-mono">?p=7548</span>(44)・<span class="font-mono">?p=8192</span>(37)・<span class="font-mono">?p=7306</span>(34)・<span class="font-mono">?p=7596</span>(28)・<span class="font-mono">?p=6568</span>(27)・<span class="font-mono">?p=8285</span>(18)・<span class="font-mono">?p=7323</span>(18)・<span class="font-mono">?p=7764</span>(18)</td><td class="py-1 pr-2 font-bold">302</td><td class="py-1">32.5%</td></tr>
+        <tr class="border-b border-gray-200 bg-gray-100"><td class="py-1 pr-2 font-semibold">事業と関係のない用事</td><td class="py-1 pr-2"><span class="font-mono">?p=7528</span>(130・SSD交換)・<span class="font-mono">?p=6141</span>(115・Amazonコンビニ受取)・<strong class="text-rose-700"><span class="font-mono">?p=7030</span>(32・Adobe Premiereのスライドショー)</strong></td><td class="py-1 pr-2 font-bold">277</td><td class="py-1">29.8%</td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-2 font-semibold text-emerald-800">ホームページを頼むかもしれない人</td><td class="py-1 pr-2"><span class="font-mono">?p=6624</span>(33・WordPressの固定ページが編集できない)・<span class="font-mono">?p=8126</span>(15・404リダイレクト)</td><td class="py-1 pr-2 font-bold text-rose-700">48</td><td class="py-1 font-bold text-rose-700">5.2%</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs bg-rose-50 border-2 border-rose-400 rounded p-3 mb-2"><strong class="text-rose-800">＝ブログが28日に集めた929クリックのうち、94.8%は「ホームページを発注する立場にない読者」です。</strong><br>
+    <span class="text-gray-700">昨日は「橋が無い記事に84%が着地している」と申し上げました。本日その先を見たところ、<strong>橋を架ける意味がある記事は、そもそも 2本しかありません</strong>（<span class="font-mono">?p=6624</span> には既に専用の案内が入っているので、実質 <span class="font-mono">?p=8126</span> の1本）。<u>つまり詰まっているのは「橋」ではなく「買い手が読む記事が無いこと」のほうです。</u></span><br>
+    <strong class="text-emerald-800">これは 8365 の公開（<span class="font-mono">T-001</span>）が唯一の一手であることの、別角度からの裏づけになります</strong>＝公開されれば「頼むかもしれない人」向けの記事が2本から3本になり、しかも<u>初めて「料金」の帯に出る1本</u>になります。</p>
+    <div class="bg-white border border-gray-300 rounded p-3 text-xs">
+      <p class="font-bold mb-1">この分類から出てきた、細かい確認3点（<u>いずれもご回答不要</u>）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong class="text-rose-700"><span class="font-mono">?p=7030</span>（AdobePremiereで簡単にスライドショーを作る方法）は、事業外の3本目でした</strong>＝28日32クリック・「プレミアプロ スライドショー」6.9位。<u>動画編集の記事です。</u>→ <span class="font-mono">B-061</span>（触らない集客資産）の対象に加えます。</li>
+        <li><strong>「コードを書いている人」302クリックは、買い手ではありません</strong>（CSS・PHPの実装で困っている制作者）。<u>ただしこの層に、すでに汎用の4本ブロックが入っている記事が2本あります</u>（<span class="font-mono">?p=5641</span>・<span class="font-mono">?p=7306</span>）＝<strong>いま入っている橋は、いちばん買い手から遠い層に架かっていた</strong>ことになります。<span class="text-gray-600">害はないので外しません（下記 <span class="font-mono">B-067</span>）。</span></li>
+        <li><strong class="text-emerald-800">良い知らせ：その4本ブロックの料金リンクは <span class="font-mono">/price/basic.html</span>（＝検索を実際に受けている正しい方）でした。</strong><u><span class="font-mono">B-054</span> で指摘した「<span class="font-mono">/price/</span> への誤リンク」は、このブロックには入っていません</u>＝<span class="font-mono">B-066</span> で流用しても誤りは伝播しません。<span class="text-gray-600">（本文由来＝絶対パス <span class="font-mono">/price/basic.html</span> 1本／テンプレ由来＝相対パス <span class="font-mono">../price/</span> 3本、と機械で分けて確認＝K-721 の手順を適用）</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bg-white border-2 border-amber-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-amber-900 mb-2">🔎 本日の中心②：社内メモが53日 決めかねていた「内部リンク先」は、<u>記事そのものが存在していませんでした</u></h3>
+    <p class="text-xs mb-2"><span class="font-mono">?p=2117</span> に残っている社内メモの中身は、こう書かれています——<span class="font-mono">【要・社長確認：内部リンク先の最終決定——① 地図の実装解説記事（想定 p=5807）② 制作サービス /service/ ③ 問い合わせ /contact/ …】</span></p>
+    <p class="text-xs mb-2 bg-amber-50 border border-amber-300 rounded p-2"><strong>そこで <span class="font-mono">?p=5807</span> を本日 取得しました。</strong>タイトルは<u>「地図や位置情報のGoogleAPIがGoogle Maps Platformにアップデート。今すぐAPIキーと支払い情報を確認しましょう。」</u>＝<strong class="text-rose-700">2018年の、Google の料金体系変更を知らせるニュース記事です。「地図の実装解説記事」ではありません。</strong><span class="text-gray-600">（<span class="font-mono">?p=2117</span> から <span class="font-mono">?p=5807</span> へのリンクも張られていません＝<span class="font-mono">hp-links --filter</span> で0本を確認）</span></p>
+    <p class="text-xs"><strong class="text-emerald-800">＝リンク先が53日 決まらなかったのは、判断が止まっていたからではなく、行き先の記事が用意されていなかったからです。</strong>これで <span class="font-mono">B-059</span>（メモの1行削除）に加えて、<u>「そのあと何を貼るか」の答え</u>が出ます → 下記 <span class="font-mono">T-044</span>。<span class="text-gray-600">なお <span class="font-mono">?p=2117</span> は<strong>ブログ最大の入口（28日267クリック）</strong>で、本文の最後は「地図・エリア表現を載せたいけれど…お気軽にご相談ください」というお誘いで終わっています＝<u>お誘いの文はあるのに、行き先が1本も無い</u>状態が続いています。</span></p>
+  </div>
+
+  <div class="border-2 border-indigo-400 bg-indigo-50 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-indigo-900 mb-2">① 既存記事の改善</h3>
+    <div class="bg-white border-2 border-emerald-400 rounded p-3">
+      <p class="font-bold text-emerald-900 mb-1"><span class="font-mono">B-067</span>（🔴・<u>ご回答は <span class="font-mono">B-049</span> にまとめて1行で結構です</u>）：昨日の <span class="font-mono">B-066</span>（実装済みブロックの流用）について、<strong>どの記事に架け、どの記事には架けないかを確定します</strong></p>
+      <p class="text-xs mb-1"><strong>観点</strong>：内部リンク・回遊→CV／<strong>観察</strong>：上の4分類（929クリックの実測）。<span class="font-mono">B-066</span> は「買い手になりうる記事だけに絞る」と書きましたが、<u>その記事がどれなのかを列挙していませんでした</u>＝執筆担当が着手できません。</p>
+      <p class="text-xs mb-1"><strong>改善案（そのまま作業指示になる形）</strong>：<br>
+      <span class="bg-emerald-50 border border-emerald-300 rounded px-1"><strong>🟢 架ける（＝既存 B の対象。新しい作業は増えません）</strong></span>：<span class="font-mono">?p=2117</span>・<span class="font-mono">?p=2082</span>（素材2本 → <span class="font-mono">/free_photo/</span>＝<span class="font-mono">B-056</span> で既定）／<span class="font-mono">?p=8126</span>（<span class="font-mono">B-053</span> と同時）／<span class="font-mono">?p=77</span>（<span class="font-mono">B-055</span>）／<span class="font-mono">?p=8137</span>（<span class="font-mono">B-065</span>）／<span class="font-mono">?p=6624</span>（<u>実装済み・触りません</u>）。<br>
+      <span class="bg-gray-100 border border-gray-400 rounded px-1"><strong>⬜ 架けない（触らない集客資産）</strong></span>：<span class="font-mono">?p=7528</span>・<span class="font-mono">?p=6141</span>・<strong class="text-rose-700">🆕 <span class="font-mono">?p=7030</span>（<span class="font-mono">B-061</span> に3本目として追加）</strong>。<br>
+      <span class="bg-sky-50 border border-sky-300 rounded px-1"><strong>🟦 現状維持（横展開しない）</strong></span>：コードを書いている人向けの9本。<u>既に入っている <span class="font-mono">?p=5641</span>・<span class="font-mono">?p=7306</span> の2本は外しません</u>（害がなく、外す作業のほうが高くつきます）。<strong class="text-rose-700">残る7本への横展開はしません</strong>＝<u>そこに使う工数があるなら、買い手が読む記事を1本 出すほうが効きます</u>（上の 5.2% がその理由です）。</p>
+      <p class="text-xs"><strong>効果</strong>：<span class="font-mono">B-066</span> が「判断ルール」から「そのまま渡せる作業指示」になる／執筆担当が7本ぶんの無駄打ちをしなくて済む／<strong>工数</strong>：ゼロ（実装作業は既存 B に吸収済み）／<strong>優先</strong>🔴／<strong>栓</strong>：可否1行（<span class="font-mono">B-049</span>・<span class="font-mono">B-051</span>・<span class="font-mono">B-058</span>・<span class="font-mono">B-061</span>・<span class="font-mono">B-063</span>・<span class="font-mono">B-066</span> とまとめて可）</p>
+    </div>
+  </div>
+
+  <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-amber-900 mb-2">② 新規記事のテーマ＋構成案</h3>
+    <div class="bg-white border-2 border-amber-400 rounded p-3">
+      <p class="font-bold text-amber-900 mb-1"><span class="font-mono">T-044</span>（🔴・<u>ご回答不要・栓なし</u>）：「<strong>会社のホームページに地図・アクセス案内を載せる——Googleマップの埋め込みと地図素材の使い分け、スマホでの見え方</strong>」</p>
+      <p class="text-xs mb-1"><strong>想定読者</strong>：<u>自社サイトのアクセスページを用意しよう（直そう）としている</u>経営者・担当者、および<strong>ブログ最大の入口 <span class="font-mono">?p=2117</span> に地図素材を探しに来た人</strong>。＝①出会う（すでに来ている）→ ②信頼 → ③依頼 の橋。</p>
+      <p class="text-xs mb-1"><strong>なぜこのテーマか（本日の実測がそのまま根拠です）</strong>：<span class="font-mono">?p=2117</span> は28日267クリック（ブログ最大）で、本文の最後が<u>「地図・エリア表現を載せたいけれど、ライセンスの判断や実装まで含めて任せたい という場合は、お気軽にご相談ください。」</u>というお誘いで終わっているのに<strong class="text-rose-700">リンクが1本もありません</strong>。そして53日 公開されたままの社内メモが想定していた行き先 <span class="font-mono">?p=5807</span> は、実際には<u>2018年のGoogle Maps Platform 料金改定ニュース</u>でした＝<strong class="text-emerald-800">行き先の記事が存在しないので、作ります。</strong></p>
+      <p class="text-xs mb-1 bg-gray-50 border border-gray-300 rounded p-2"><strong>実需について、正直に書きます（<span class="font-mono">B-058</span> の自己適用）</strong>：新記事が狙う「地図 埋め込み」「google マップ 埋め込み 方法」等の帯は、<u>自社GSCに表示が立っていません＝検索実需は未確認です</u>。<strong>この記事の価値は新規流入ではなく、すでに来ている267クリックに行き先を作ることです。</strong><span class="text-gray-600">＝優先度🔴の理由は「流入が見込めるから」ではなく「ブログ最大の入口の出口が塞がっているから」です。</span></p>
+      <p class="text-xs mb-1"><strong>タイトル案</strong>：①「会社のホームページに地図を載せる3つの方法——Googleマップ埋め込み・地図素材・イラストマップの使い分け」／②「アクセスページの地図、どれを選べばいい？ 無料の範囲・商用利用・スマホでの見え方まで」</p>
+      <div class="bg-amber-50 border border-amber-300 rounded p-2 mb-1">
+        <p class="font-bold text-xs mb-1">アウトライン（h2/h3・各見出しで触れる要素）</p>
+        <p class="text-xs"><strong>h2-1. 会社のサイトに地図を載せる方法は、大きく3つ</strong>（先に結論の比較表＝<u>手間・費用・向いている場面</u>）<br>
+        　<span class="font-mono">h3</span> ① <strong>Googleマップを埋め込む</strong>（いちばん多い。<u>「共有 → 地図を埋め込む」で貼れる範囲</u>と、APIキー・支払い情報が要る作りとの違い）<br>
+        　<span class="font-mono">h3</span> ② <strong>地図の画像・ベクター素材を置く</strong>（広域図・エリア図に向く → <span class="font-mono">?p=2117</span>「無料の地図素材サイト11選」へ内部リンク）<br>
+        　<span class="font-mono">h3</span> ③ <strong>イラストマップを作る</strong>（最寄駅からの道順が伝わる。作る手間と、更新のときに困ること）<br>
+        <strong>h2-2. 「無料で使えるはず」でつまずくところ</strong><br>
+        　<span class="font-mono">h3</span> Googleマップは2018年から従量課金の仕組みがあります（→ <span class="font-mono">?p=5807</span> へ内部リンク。<u>記事が2018年のものである旨を明記して古さを隠さない</u>）<br>
+        　<span class="font-mono">h3</span> 素材の商用利用・クレジット表記・再配布（→ <span class="font-mono">T-033</span>「フリー素材を会社のサイトに載せる前に確かめる3つのこと」へ内部リンク＝<u>相互</u>）<br>
+        <strong>h2-3. スマホでの見え方——地図は「指で拡大できない」「ページのスクロールを奪う」で嫌われます</strong>（<u>読者が自分のスマホで今すぐ確かめられる形</u>で3点）<br>
+        <strong>h2-4. 地図だけでは足りません：アクセスページに載せる5項目</strong>（最寄駅からの徒歩分数／目印になる建物／駐車場の有無／営業時間／電話番号。<u>チェックリスト形式＝この記事の持ち帰り価値</u>）<br>
+        <strong>h2-5. 自分で入れるか、頼むか</strong>　<span class="font-mono">h3</span> 自分で入れられるケース（Googleマップの共有コードを貼るだけ）／<span class="font-mono">h3</span> 頼んだほうが早いケース（<u>スマホでの挙動・複数拠点・ページ全体の作り直しが絡むとき</u>）<br>
+        <strong>h2-6. まとめ</strong>（3つの方法の比較表を再掲）</p>
+      </div>
+      <p class="text-xs mb-1"><strong>内部リンク先</strong>：<span class="font-mono">?p=2117</span>（地図素材11選・<u>相互</u>＝これが <span class="font-mono">B-059</span> のメモが求めていた行き先です）／<span class="font-mono">?p=5807</span>（Maps Platform 料金改定・年次を明記）／<span class="font-mono">T-033</span>（フリー素材の権利・<u>相互</u>）／<span class="font-mono">/free_photo/</span>／<span class="font-mono">/service/web/</span>／<span class="font-mono">/price/basic.html</span>。<br>
+      <strong>CTA</strong>：<span class="font-mono">B-066</span> のとおり<u>新しい文案は作らず</u>、<span class="font-mono">?p=6624</span> の「主題に合わせた専用文」の形を流用（例：「地図やアクセス案内の実装だけでも承ります」＋<span class="font-mono">/service/web/</span>・<span class="font-mono">/price/basic.html</span> の2本）。</p>
+      <p class="text-xs mb-1"><strong>カニバリ回避</strong>：<span class="font-mono">?p=2117</span>＝<u>素材を配っているサイトの紹介</u>（どこで手に入るか）／本記事＝<u>自社サイトにどう載せるか</u>（判断と実装）。<span class="font-mono">T-033</span>＝<u>権利・形式・容量の確認</u>。三者で役割が分かれるようタイトルと冒頭で明示し、相互リンクで送り合います。</p>
+      <p class="text-xs"><strong>あれば厚くなる事実（無くても書けます）</strong>：「地図を入れたいがうまく出ない」というご相談を実際に受けた例が1つ（<u>捏造しません</u>＝📥「経験の事実」へ追加）。<br><strong>効果</strong>：ブログ最大の入口（28日267クリック）に、初めて<u>行き先</u>ができる。<span class="font-mono">B-059</span> の社内メモが53日 決めかねていた問いへの答えでもあります／<strong>工数</strong>：中／<strong>優先</strong>🔴／<strong>着手</strong>：publish が1本動いてから（在庫を積まない既定方針）</p>
+    </div>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-700">
+    <h3 class="font-bold text-gray-900 mb-2">🧾 対応記録・自己点検（2026-09-06）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>from-president.md</strong>：新規の指示・回答はありません（最後の記載は 2026-06-23）。編集していません。</li>
+      <li><strong>メールボックス</strong>：受信 新規0件。<strong>送信＝執筆担当（<span class="font-mono">web-hanasaka</span>）へ1通 投函しました</strong>（スレッド <span class="font-mono">ycom-blog-report</span>・<span class="font-mono">needs_approval</span> なし）。<u>理由＝明日 9/07（月）05:30／06:00 の起動を前に、<span class="font-mono">B-067</span> で「架けない7本」が確定したためです</u>（＝無駄打ちの防止。1サイクル1通）。</li>
+      <li><strong class="text-emerald-800">✅ <span class="font-mono">archive.html</span> の <span class="font-mono">&lt;/div&gt;</span> 過剰（Overseer へ申し送っていた⑥）は、本日 私の側で直しました</strong>＝<u>位置を二分探索で特定</u>（<span class="font-mono">head</span> と <span class="font-mono">grep -c</span> だけで、行番号を挟み込む形）。原因は <strong>Cycle 075 を退避したときに、最新レポート側の本文コンテナの閉じタグを1つ一緒に貼っていた</strong>ことでした＝<u>私の過去の作業由来です</u>。開き347・閉じ347 で balanced を確認。<span class="text-gray-600">※Overseer への⑤（ローテ用ツールの許可）は、この種の混入が手作業に由来する以上 継続してお願いします。</span></li>
+      <li><strong>掲示板の整理（ローテ）</strong>：<u>Cycle 086 の本文をアーカイブへ退避</u>（原文無改変・<a href="archive.html#c086" class="underline">C086</a>。共通規律 §4 の順序＝①archive へ追記 →②存在を確認 →③本体から削除）。<strong>本日のレポート本体は意識的に短くしました</strong>（表と箇条書き中心・昨日比で約1割減の21.0KB）。<strong class="text-rose-700">それでも全体は 129.1KB → 138.1KB と増えました</strong>＝退避 −24.6／レポート +21.0／<u>繰り越しの更新 +12.6</u>。増分の主因は繰り越し側（🔧に2行・✍️に作業範囲の確定）です。<u>80KB は割れません</u>＝「🔧進行中」の繰り越しだけで 47KB あるためで、4層化（<span class="font-mono">backlog.html</span> 分離）のお願いは<u>12日目</u>・継続します。</li>
+      <li><strong>新規の <span class="font-mono">Q-NNN</span>：ありません（20日連続）。</strong>本日の新規（<span class="font-mono">B-067</span>・<span class="font-mono">T-044</span>）は、どちらもご回答なしで進みます（<span class="font-mono">B-067</span> の可否は <span class="font-mono">B-049</span> の1行に同梱できます）。</li>
+      <li><strong>自己改善（Step 7）</strong>：<span class="font-mono">K-730</span> として記録＝<u>「橋が無い」と数える前に、「そもそも誰に架けるのか」を先に決める</u>。C086 は橋の有無を機械で数えたが、対象読者を決めていなかったため<strong>13本すべてが候補に見えてしまい、実際に意味があるのは1〜2本でした</strong>。<strong class="text-emerald-800">比率を出す前に「分母は誰か」を1行で言えるか確かめる。</strong>／<span class="font-mono">K-731</span>＝<u>他ループへ申し送った不具合も、手持ちの道具の範囲で切り分けを1回は試みてから積む</u>（<span class="font-mono">awk</span>・<span class="font-mono">python3</span> が無くても <span class="font-mono">head</span>＋<span class="font-mono">grep -c</span> の二分探索で5回のコマンドで特定できました＝<strong class="text-rose-700">3日 積んでいたのは私の手落ちです</strong>）。</li>
+    </ul>
+    <p class="text-xs mt-3 bg-white border border-emerald-300 rounded p-2"><strong class="text-emerald-800">お返事をいただけると進むもの（本日時点・優先順）</strong>：<span class="font-mono">B-049／B-051／B-057／B-058／B-061／B-063／B-066／B-067</span>（判断ルールと取り下げ＝<u>まとめて1行で宿題が11件 減ります</u>）＞ <span class="font-mono">B-060</span>（8311 の掃除の仕方）＞ <span class="font-mono">T-040</span>（自社の侵害を記事にしてよいか）＞ <span class="font-mono">Q-006</span> ＞ <span class="font-mono">Q-009</span> ＞ <span class="font-mono">Q-010</span> ＞ <span class="font-mono">Q-007</span> ＞ <span class="font-mono">Q-003</span> ＞ <span class="font-mono">Q-002</span>（残り2点）／<span class="font-mono">Q-005</span>。<span class="text-gray-600">＝質問（Q）は昨日から1件も増えていません。</span></p>
+  </div>
+
+  <p class="text-xs text-gray-400 mt-8">ブログ分析ループ（blog-loop）Cycle 087 ／ AIが作成・社長が読む ／ 回答は from-president.md・/hp-reply・Slack返信へ</p>
+
   <!-- ===== 📦 Cycle 086（2026-09-05）＝ Cycle 087（2026-09-06）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 086（2026-09-05）のスナップショット <span class="text-sm font-normal text-gray-500">（2026-09-06 Cycle 087 で最新レポートから退避。<strong>本文は原文のまま</strong>・未完了の B/T・未回答 Q は <a href="index.html" class="underline">最新レポート</a>に繰り越し済み）</span></h2>
 
