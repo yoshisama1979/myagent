@@ -30,6 +30,27 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== 完了した提案（Cycle 045 でクローズ） ===== -->
+  <div class="border-4 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉🎉 完了・統合 — Cycle 045（2026-09-06）でクローズ ＝ <span class="underline">5件（rally で1日あたり最多）</span></h2>
+    <p class="text-sm text-gray-700 mb-3 bg-white border border-emerald-300 rounded p-2"><strong>この5件は 9/5 夜〜9/6 の本番反映によるもので、いずれも<u>実装報告を受け取る前に、当方の本番実測で検出</u>しました</strong>（開発担当の 9/6 08:47 のメッセージにこの反映の記載はありません）。<span class="text-gray-600">トップページはほぼ無変化だったため、トップの差分だけを見ていたら見逃していました。</span></p>
+    <ul class="text-sm text-gray-700 space-y-3">
+      <li><strong><code>R-R33</code> 一覧ページの中身とリンクをサーバが返すHTMLに出す — ✅完了（2026-09-06・当方の本番実測で検証）</strong><br>
+        <span class="text-emerald-800">実測（<code>hp-audit --links --match=/spots/</code>）</span>＝<code>/spots/prefectures/kyoto</code> <strong>前進リンク 0本→48本</strong>（50,841B→<strong>145,740B</strong>・title「京都府のスタンプスポット1053件」・<strong>h1=1</strong>）／<code>/spots/areas/kansai</code> <strong>0→29本</strong>／<code>/spots/cities/26104</code> <strong>0→25本</strong>／<code>/spots/themes/nihon-sankei</code> <strong>0→7本</strong>。<br>
+        <span class="text-emerald-800"><strong>🔑 意義＝トップ→一覧→都道府県→スポット詳細14,477件の経路が、初めて端から端までつながった</strong></span>＝<u>35サイクル追い続けた「1.5万件が検索エンジンから到達できない」が解消</u>。<span class="text-gray-600">経緯＝8/30 に詳細層、9/5 夕に一覧の入口、9/6 に二階層目。9/5 に「記号の修正（R-R38）より到達性が先」と順序の入れ替えを依頼したことが奏功。</span></li>
+      <li><strong><code>R-R42</code> スポット個別ページに「そのスポット自身の中身」を出す — ✅完了（2026-09-06・起票の翌日）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/spots/9146</code>（建長寺）<strong>80,978B→98,844B</strong>・<strong>h1 0→1</strong>・<strong>構造化データ 0→2件</strong>・写真 6→<strong>11枚（すべて説明文つき）</strong>・<u>本文から「鎌倉五山」が3件ヒット（前日は0件）</u>・<strong>「読み込み中...」は消滅</strong>。<code>/spots/496</code>（102,110B）・<code>/spots/12418</code>（90,113B）も同型。<br>
+        <span class="text-gray-600">＝9/5 夕に「1.4万ページの着地先が空」と起票した、当時の最大のボトルネックが翌日に解消。</span></li>
+      <li><strong><code>R-R39</code> 人物ページ106人分をサーバが返すHTMLに出す — ✅完了（2026-09-06・起票の翌日）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/people/oda-nobunaga</code> <strong>50,526B→69,979B</strong>・title 既定値→<strong>「織田信長ゆかりの地 | 日本全国スタンプラリー」</strong>・<strong>h1 0→1</strong>・<strong>canonical なし→あり</strong>・<strong>構造化データ <code>Person</code>＋<code>BreadcrumbList</code></strong>・ゆかりの地からスポット詳細への前進リンクあり。<code>/people/shotoku-taishi</code> も同型。<br>
+        <span class="text-gray-600">＝人物名での検索という<strong>新しい入口が106本</strong>できた。90日間の検索語10語がすべて総称語だった状態への、最初の打ち手。</span></li>
+      <li><strong><code>R-R41</code> 存在しない人物URLが200を返す（soft-404） — ✅完了（2026-09-06・起票の翌日）</strong><br>
+        <span class="text-emerald-800">実測</span>＝<code>/people/zzz-not-a-real-person-99999</code> <strong>200→404</strong>／<code>/people/1</code>（数値ID）<strong>200→404</strong>。<span class="text-gray-600">＝検索エンジンの巡回量を、存在しないページが食う穴が塞がった。</span></li>
+      <li><strong><code>R-R23</code>①②（「作成日: 1970/1/1」「システム情報」の露出） — <span class="text-sky-800">R-R43 へ統合</span>（2026-09-06）</strong><br>
+        本文が配信されるようになったことで<strong>①②とも実在が確認できた</strong>（測った3ページすべて）。<u>同じ1か所（本文の出し分け）を直せば片づくため</u>、新たに見つかった「メモ／ChatGPTにて作成」の露出とあわせて <strong>R-R43</strong> に統合し、<a href="index.html" class="text-blue-600 hover:underline">最新レポート</a>で追跡する。<span class="text-gray-600">＝Cycle 044 時点では「本文自体が無いため判定不能」だった項目が、判定可能になって確定した形。</span></li>
+    </ul>
+  </div>
+
   <!-- ===== 完了した提案（Cycle 044 でクローズ） ===== -->
   <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 完了・取り下げ — Cycle 044（2026-09-05）でクローズ ＝ <span class="underline">2件</span></h2>
@@ -43,6 +64,46 @@
         <span class="text-gray-600">→ 再発防止＝<code>hp-shot</code> のデバイスエミュレーション対応を当方の宿題とする（種プールへ）。<strong>①「作成日: 1970/1/1」②「システム情報」の露出は R-R23 として <a href="index.html" class="text-blue-600 hover:underline">最新レポート</a> に残す</strong>（本文そのものが配信されていない＝R-R42 のため、現時点では「直った」と判定できないため）。</span></li>
     </ul>
   </div>
+
+  <!-- ===== Cycle 044（index から移設・2026-09-06） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 044 — 2026-09-05（<span class="text-red-700">★1.5万件のスポットページに「そのスポット自身の中身」が入っていないことが判明</span>／<span class="text-gray-700">開発担当の返信が本文欠落で到着</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動（同日<strong>4回目</strong>のサイクル）。<strong>きっかけ＝開発担当から 13:02 に返信1通</strong>（Cycle 043 の投函への回答）。データ＝<strong>本番GET 14本</strong>（<u>すべて当方が実際に取得して検証</u>）。<span class="text-emerald-700">※ここで挙げた課題（R-R42・R-R33 残件・R-R41）は、<strong>翌 9/6 にすべて解消されました</strong>（→ 上の「Cycle 045 でクローズ」）。</span></p>
+
+    <div class="bg-red-50 border-4 border-red-500 rounded p-4 mb-4">
+      <h3 class="font-bold text-red-800 mb-2">① ★最重要★ スポットのページに、<span class="underline decoration-2">そのスポット自身の中身が1文字も入っていません</span>（新規 R-R42）</h3>
+      <p class="text-sm text-gray-800 mb-2">本日「一覧の入口が開いた」ことを受けて、<u>その先にある“着地先”＝スポット個別ページの中身を実際に取り直した</u>ところ、<strong class="text-red-800">検索エンジンが受け取るHTMLには、そのスポット自身の写真も本文も入っていませんでした</strong>。入っているのは<strong>「近くの・同じテーマの 他のスポット」だけ</strong>です。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>実測（3ページとも同じ・9/5 13:2x）</strong>＝<code>/spots/9146</code>（建長寺）写真6枚＝ロゴ2＋<strong>他スポット4</strong>（円覚寺・浄智寺・浄妙寺・寿福寺）／リンク21本＝ナビ＋他スポット／<strong>h1＝0</strong>／自身の本文<strong>0文字（「読み込み中...」）</strong>。<code>/spots/496</code>（名古屋テレビ塔・写真8枚）・<code>/spots/12418</code>（岩之上堂・写真9枚）も同じ構造。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-sky-800">🔑 決め手＝「中身はあるのに、本文に出ていない」ことが同じページ内で証明できました。</strong>建長寺のページの<u>検索結果に出る紹介文（meta description）には、建長寺の説明文がちゃんと入っています</u>（「{歴史} 建長寺は、鎌倉五山の中でも第一位に位置し…」）。<strong class="text-red-800">ところが、同じ文章を本文の中から探すと 0件</strong>です。⇒ <u>データは存在していて、名札にだけ使われ、本文としては配信されていない</u>状態です。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>なぜ重大か</strong>＝いま総力を挙げているのは「1.5万件を<u>見つけてもらう</u>」こと（R-R33）ですが、<strong class="text-red-800">見つけて来てもらっても、着いた先のページには そのスポットの中身が無い</strong>状態です。検索エンジンから見ると、1.5万ページはどれも<u>「近隣スポットの寄せ集め」で互いによく似たページ</u>に見えます。<span class="text-gray-700">スポット個別が「登録はされているのに順位が付かない」（9/5 午前の実測＝インデックス10URL・表示は実質2URL）ことの、有力な説明になります（推測）。</span></p>
+      <p class="text-sm text-gray-800 mb-2 bg-amber-50 border-2 border-amber-400 rounded p-2"><strong class="text-amber-800">⚠️ あわせて、当方の過去の記録を1件 訂正します（当方の誤りです）</strong>＝8/30 に「<u>スポット詳細 14,477ページは達成（<code>/spots/496</code>＝見出し14本・リンク23本・写真8枚）</u>」と記録しましたが、本日その<strong>14本・23本・8枚の中身を1つずつ見たところ、すべて「他のスポット」のもの</strong>でした。<strong class="text-red-800">数だけ数えて中身を見なかった当方の誤り</strong>で、以後6日間「スポット詳細は完了」という前提で回していました。⇒ <u>件数の増減だけで「達成」と判定しない</u>ことを、当方の手順に加えます。</p>
+      <p class="text-sm text-gray-800"><strong>改善案</strong>＝スポット自身の「名前（h1）・写真・説明文・住所・最寄駅」を、<u>他のスポットと同じように</u>サーバが返すHTMLに出す。<strong>効果</strong>＝1.5万ページが初めて「そのスポットのページ」として読まれる／<strong>工数</strong>＝小〜中。</p>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-400 rounded p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">② 「存在しないURLが200を返す」問題の範囲を、当方の実測で確定しました（R-R41 の更新）</h3>
+      <p class="text-sm text-gray-800 mb-2">開発担当から「<u>この問題は人物ページだけです</u>」との返信があったため、<strong>当方でも7種類のでたらめなURLを実際に叩いて確かめました</strong>（9/5 13:2x）。</p>
+      <p class="text-sm text-gray-800 mb-2 bg-white border border-gray-300 rounded p-2"><code>/people/zzz-not-real-99999</code> → <strong class="text-red-800">200</strong>（50,556バイトのページが表示される）<br><code>/spots/99999999</code>・<code>/spots/prefectures/zzz…</code>・<code>/spots/cities/99999999</code>・<code>/spots/themes/zzz…</code>・<code>/spots/areas/zzz…</code>・<code>/zzz-not-real-page</code> → <strong class="text-emerald-800">すべて 404（正常）</strong></p>
+      <p class="text-sm text-gray-800">⇒ <strong>開発担当のご説明どおり、影響は <code>/people/&lt;名前&gt;</code> だけ</strong>と裏が取れました。<span class="text-gray-600">（＝ご報告を信じるのではなく、当方でも測って一致を確認する、という手順どおりの結果です）</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">③ 開発担当からの返信が「本文なし」で届きました（＝再送を依頼・社長のご対応は不要）</h3>
+      <p class="text-sm text-gray-800 mb-2">13:02 に届いた返信は、<strong>件名だけがあり本文が空でした</strong>（本文欄に、送信側のパソコンの中のファイルの置き場所を指す文字列がそのまま入っていました＝送信時の指定ミスと思われます）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>件名から分かること（3点）</strong>＝「<u>二階層目は2系統</u>」「<u>soft-404 は /people 限定</u>」「<u>R-R23③ 取り下げ同意</u>」。<span class="text-emerald-800">このうち後ろの2つは、上の②と下の④で<strong>当方の実測・判断で決着させました</strong>。</span><span class="text-red-800"><strong>残る「二階層目は2系統」だけが、本文が無いため内容不明です</strong></span>。⇒ <strong>本文の再送を依頼しました</strong>。</p>
+      <p class="text-sm text-gray-800"><span class="text-gray-700">なお <strong>13:20 時点の実測でも、二階層目の前進リンクは 0本のまま</strong>でした＝<u>この返信は「回答」であって、まだ反映ではありません</u>。</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ こちらの指摘1件を取り下げました（R-R23③ ＝クローズ）</h3>
+      <p class="text-sm text-gray-800">「スマホで浮動ボタンが本文に重なる」という当方の指摘について、開発担当から<strong>取り下げに同意</strong>との返信がありました（件名）。当方も Cycle 043 で<u>撮影方法が原因の誤検知</u>と認めています。⇒ <strong>R-R23③ は ❌取り下げとしてアーカイブへ移します</strong>（当方の誤りです）。<span class="text-gray-700">①「作成日: 1970/1/1」②「システム情報」の露出は、本日 <code>/spots/496</code>・<code>/spots/9146</code> の本文を実際に検索して<strong>いずれも見当たりませんでした</strong>＝ただし<u>本文そのものが配信されていない（上の①）ため、この結果では「直った」と断定できません</u>。R-R42 の対応後に判定し直します。</span></p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-300 rounded p-4">
+      <h3 class="font-bold text-gray-800 mb-2">⑤ このサイクルのまとめ</h3>
+      <p class="text-sm text-gray-700"><strong class="text-red-800">新規の提案1件＝R-R42</strong>／<strong>新規の質問ゼロ</strong>／<strong class="text-emerald-800">クローズ2件＝R-R18（<code>www</code> ✅完了）・R-R23③（❌当方の誤りとして取り下げ）</strong>／<strong>根拠の確定1件＝R-R41</strong>／<strong>訂正1件＝8/30「スポット詳細 達成」は当方の誤判定</strong>。判断待ち <strong>13件</strong>。</p>
+    </div>
+  </section>
 
   <!-- ===== Cycle 043（index から移設・2026-09-05） ===== -->
   <section class="mb-10">

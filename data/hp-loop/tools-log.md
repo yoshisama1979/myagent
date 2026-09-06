@@ -312,3 +312,13 @@
 - **使い方**: `bin/.venv/bin/python3 bin/clarity-fetch.py --site <site> --dim1 URL --json > /tmp/c.json` → `python3 bin/clarity-top.py /tmp/c.json --top 25`。`--host api.t-dms.jp`（外部フォームだけ）／`--contains /shop/`（部分一致）／`--keep-query`（畳まず生URL）。
 - **出力**: `sess` と各摩擦指標の `率(発生回数)`。率は `subTotal/sessionsCount` ではなく Clarity 側の `sessionsWithMetricPercentage` をセッション数で重み平均する（Clarity の定義に合わせるため）。標準出力のみ＝**ファイル書き込み・外部送信・本番改変なし**。
 - **限界**: ①Clarity API は**直近3日まで**（`clarity-fetch --days` の上限）＝日別内訳は持てない ②Clarity は高トラフィック時にサンプリングするため、少数のページの実数は方向性として読む ③畳むと広告パラメータ別の比較はできない（必要なら `--keep-query`）④`sessionsCount` は入力JSONの先頭指標ブロックからのみ加算する（Clarity は同じURL行を指標ブロックごとに繰り返すため）
+
+## T-031 — `bin/ga4-fetch.py geo`（GA4 の地域別＝国×都道府県の分布を出す）
+
+- **作成**: 2026-09-06（hp-loop rally Cycle 045）／**実行確認済み**（既存 `ga4-fetch.py` へのモード追加＝許可リストは `Bash(bin/.venv/bin/python3 bin/ga4-fetch.py:*)` を流用でき、新規登録は不要）
+- **契機**: `rally-dev`（事業設計セッション）からの依頼＝「**都道府県別の分布は、自治体向け提案の設計に直接使える**」（mailbox `M-20260906T084705`）。あわせて当方側にも用途があった＝C042 で「users 146 には内部（GTMデバッグ・/admin・当方のヘッドレス描画）が混じるので事業設計の分母に使うと危険」と注意書きを添えたが、**混入の量を数字で示す手段が無かった**。地域別に割ると、データセンター所在地（Virginia・Iowa・California・Thuringia 等）に固まる分がそのまま非実利用の目安になる。
+- **目的**: GA4 の `geo.country` / `geo.region` / `geo.city` で users・sessions・events を集計する。日本では `region` が都道府県に対応する（例 `Kyoto`）。
+- **使い方**: `bin/.venv/bin/python3 bin/ga4-fetch.py geo --dataset <dataset> --days 60`（既定＝国×都道府県）／`--by-city` で市区町村まで開く／`--limit`・`--json` は既存モードと共通。
+- **出力**: `country / region [/ city] / users / sessions / events` を users 降順。標準出力のみ＝**読み取り専用**（BigQuery の SELECT のみ・ファイル書き込み・外部送信・本番改変なし）。
+- **初回実測（rally・60日 2026-07-08〜09-06）**: 日本20都道府県で users 計108（東京24／神奈川21／**大阪16＝51セッション・539イベント**／地域不明8／兵庫6／愛知5／埼玉・北海道・福岡 各4…）、**海外・不明が約38**（Germany Thuringia 8／US Virginia 8／China 4／US California 3 ほか）。
+- **限界**: ①GA4 の geo は **IP 由来の推定値**＝VPN・キャリア回線で実際の所在地とずれる ②`region` が空の行がある（8 users・22セッション）＝推定できなかった分で、捨てずに「不明」として持つ ③**行ごとの users を足し上げると、複数地域に現れた同一利用者を二重に数える**（＝合計は上限値。厳密な distinct は全体の `summary` を見る）④**内部トラフィックの除外はしていない**＝大阪の「16 users / 51 セッション / 539 イベント」のような1人あたりの密度が高い行は運営・開発の可能性が高いが、**geo だけでは断定できない**（切り分けは R-R17 の内部除外の実装待ち）⑤データセンター所在地への集中は bot の目安であって証明ではない
