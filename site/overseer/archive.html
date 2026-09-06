@@ -219,6 +219,263 @@
   <!-- ===== 過去サイクルログ ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6 mt-12">過去サイクルログ</h2>
 
+  <!-- ===== Cycle 068〜073（2026-09-07 Cycle 075 で index から収容・index は「最新1本だけ」に保つ規約／本文改変なし） ===== -->
+  <!-- ===== Cycle 073 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 073 — 2026-09-01 夕方（<strong>軽い巡回</strong>・有人起動／<strong>🆕🟡O-067＝地図に載っていない解析レーンが2つ動いています</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード判定</strong>：<span class="font-mono">overseer.md</span> v1.2 の規定どおり、掲示板から直近の精密診断日を実読＝<strong>Cycle 071（08-31 月曜）＝今週（08-31 起算）に実施済み</strong>。7日以内なので<u>軽い巡回で終えます</u>。次の精密診断は <strong>09-07 月曜</strong>、全体最適の棚卸し（ルール＋コード）は 08-31 に同乗済みで次は <strong>09-14 前後</strong>です。</p>
+
+    <h4 class="font-bold mb-2">チェック範囲（実際に見たもの）</h4>
+    <ul class="list-disc list-inside text-sm text-gray-700 mb-4 space-y-1">
+      <li>Slack <span class="font-mono">fetch</span>（<strong>新着なし</strong>／輪番走査で古いスレッド91件スキップ・呼び出し上限超過0件）</li>
+      <li><span class="font-mono">data/mailbox/</span>＝<span class="font-mono">new/</span> 69通・<span class="font-mono">cur/</span> 445通・<span class="font-mono">hold/</span> <strong>2通</strong>。<span class="font-mono">to: overseer</span> は<strong>1通</strong>（<span class="font-mono">hanasaka-main</span> 便・起票依頼2件）</li>
+      <li><span class="font-mono">site/overseer/last-tick.txt</span>（09-01 15:58・<strong>status=ok</strong>・全17レーン）／<span class="font-mono">data/overseer/failures.jsonl</span> 直近7日</li>
+      <li><span class="font-mono">SYSTEM.md</span> L56/L58 ⇄ <span class="font-mono">data/hp-loop/config.md</span> の登録表・解析ペース表（地図ドリフトの照合）</li>
+      <li><span class="font-mono">bin/agent-tick.sh</span> L660/L666（タイムアウト設定・実読）／<span class="font-mono">bin/hp-loop-due.py</span> L115（<span class="font-mono">--config</span> の有無・実読）／<span class="font-mono">data/blog-loop/config.md</span>（解析ペース節の有無）</li>
+      <li>肥大の実測＝<span class="font-mono">skill-kaizen.md</span>・<span class="font-mono">ycom/coverage.md</span>・<span class="font-mono">hp-analysis/ycom/index.html</span>／<span class="font-mono">pending-scan.py stats</span></li>
+    </ul>
+
+    <h4 class="font-bold mb-2">健康サマリ</h4>
+    <p class="text-sm text-gray-700 mb-2"><strong>故障系は落ち着いています</strong>＝<span class="font-mono">last-tick</span> は 1分前・<strong>status=ok</strong>・全レーン正常。08-31 に3回鳴っていた comms 系の失敗は本日ゼロで、🟡O-064（comms 蒸留の停止）は<u>予告どおり自己回復しました</u>。<strong>ただし時間切れは続いています</strong>＝本日は <span class="font-mono">hp-loop:yokohawaii-timeout</span>（03:55）と <span class="font-mono">partner-timeout</span>（07:25）の2件。<u>どちらも本日午後の commit 3555c81（hp-loop のみ40分へ延長）より前の時刻</u>なので、延長の効果はまだ測れていません（判定は明日以降）。</p>
+    <p class="text-sm text-gray-700 mb-4"><strong>本日の主題は「地図の遅れ」です。</strong>＝滋賀トヨタ（<span class="font-mono">shigatoyota</span>）のレーンが<strong>本日 09-01 に登録・cron 化・トークン発行</strong>まで進んでいるのに、<span class="font-mono">SYSTEM.md</span> にも<u>この統括掲示板にも1文字も載っていません</u>（grep 0件）。統括は毎巡回で SYSTEM.md を入口にして点検しているので、<strong>載っていないレーンは点検されません</strong>。これは 08-21 に partner で起きた漏れと同じ形の再発です（🆕🟡O-067）。</p>
+
+    <h4 class="font-bold mb-2">起票・処理（詳細は最上部の「🔔 社長の判断・対応待ち」に集約）</h4>
+    <ul class="list-disc list-inside text-sm text-gray-700 mb-4 space-y-1">
+      <li>🆕 <strong>🟡O-067</strong>＝地図ドリフト。稼働8レーンに対し SYSTEM.md は「6サイト」のまま。<strong>SYSTEM.md 更新案3点を提示（反映は社長承認後・有人セッションで）</strong></li>
+      <li>🆕 <strong>🟡O-066</strong>＝タイムアウト延長が hp-loop 系だけ。partner は 25分のまま7日で4回切れ（本日 07:25 含む）・comms も3回。<strong>ご判断＝延ばすか／読む台帳を減らすか</strong></li>
+      <li>🆕 <strong>🟡O-065</strong>＝blog 系の解析ペースの正が「ルールの地の文」と「crontab」の2箇所。<span class="font-mono">hp-loop-due.py --config</span> で流用可（実読確認）</li>
+      <li>📥 <strong><span class="font-mono">hanasaka-main</span> 便の起票依頼2件（M-20260901T155820）を実読で裏取りし、いずれも受理</strong>＝O-065／O-066。<span class="font-mono">/commit-pipeline</span> STRICT スコープ外を自分で直さず渡す運用（<span class="font-mono">refactoring.md</span> §7）が<strong>5回目</strong>も機能しています。O-066 は統括側で範囲を広げました（partner だけでなく comms・blog-loop も未対策）</li>
+      <li>✅ <strong>🟡O-064 は自己回復を確認</strong>＝本日 comms の失敗記録はゼロ。ただし「掲示板の鮮度表示を台帳から引くか」のご判断は<u>残したまま</u>です（次に止まったときも同じ顔をするため）</li>
+    </ul>
+
+    <h4 class="font-bold mb-2">参考：既起票の実測更新（対応は求めません）</h4>
+    <ul class="list-disc list-inside text-sm text-gray-700 mb-4 space-y-1">
+      <li><strong>🔴O-042</strong>＝<span class="font-mono">data/hp-improve/skill-kaizen.md</span> <strong>447KB</strong>（規律線100KBの<strong>447%</strong>／08-29 392KB → 3日で <strong>+55KB</strong>・自動退避は<strong>21日間不発</strong>）</li>
+      <li><strong>🟡O-021</strong>＝<span class="font-mono">data/hp-loop/ycom/coverage.md</span> <strong>283KB</strong>（規律線100KBの283%）／掲示板 <span class="font-mono">hp-analysis/ycom/index.html</span> <strong>170KB</strong>（規律線80KBの212%）。解析ペースが3日に1回になったぶん<u>増加速度は落ちる見込み</u>ですが、1サイクルあたりの重さは他サイトの約1.9倍のままです</li>
+      <li><strong>🟡O-046</strong>＝<span class="font-mono">pending-scan.py stats</span> ＝未提示 <strong>65</strong>／提示済 3／決定済 3。表の行として取り出せない印が <strong>235件</strong>（総数335／取得100）＝<u>O-057 が指摘した「28%しか見ていない」状態は変わっていません</u></li>
+      <li><strong>🟡O-060</strong>＝<span class="font-mono">hold/</span> が <strong>1通 → 2通</strong>に増えました（新着＝<span class="font-mono">shigatoyota-dev</span> の疎通テスト便・09-01 15:59・自分宛）。<u>出口が無いので今後も一方的に増えます</u></li>
+    </ul>
+
+    <p class="text-sm text-gray-600"><strong>自己改善（Step 6）</strong>：<u>統括は「新しいレーンが増えたこと」を自分から検知する手段を持っていませんでした</u>。今回 shigatoyota に気づけたのは、たまたま <span class="font-mono">last-tick.txt</span> のレーン一覧を目視したからです。SYSTEM.md の版表と <span class="font-mono">config.md</span> の登録表・<span class="font-mono">last-tick</span> のレーン名を<strong>機械で突き合わせる1行</strong>を <span class="font-mono">system-health.py</span> に足せば、地図ドリフトは毎日自動で見つかります（＝O-067 の再発防止）。カイゼン台帳へ <span class="font-mono">K-NNN</span> で1行残します。</p>
+  </section>
+
+  <!-- ===== Cycle 072 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 072 — 2026-09-01 未明（<strong>軽い巡回</strong>・火曜 1:00 fallback cron／<strong>🆕🟡O-064＝Chatwork蒸留が 08-31 10:30 で止まり、掲示板だけが「追いついている顔」をしていました</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード判定</strong>：本日は火曜 01:00 の fallback 便です。<span class="font-mono">overseer.md</span> v1.2 の規定どおり掲示板から直近の精密診断日を実読＝<strong>Cycle 071（08-31 月曜）＝今週（08-31 起算）に実施済み</strong>のため、月曜便は成功したと判断し<u>軽い巡回で終えます</u>（二重のフル診断をしない）。全体最適の棚卸し（ルール＋コード）も 08-31 に同乗済み＝次は 09-14 前後。次の精密診断は <strong>09-07 月曜 1:00</strong>。</p>
+
+    <div class="border border-amber-200 bg-amber-50 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🩺 健康サマリ（結論ファースト）</h4>
+      <p class="text-sm text-gray-700 mb-2"><strong>新しい綻びは1件です</strong>＝🆕🟡<strong>O-064</strong>。Chatwork蒸留（comms）が <strong>08-31 10:30 を最後に完了しておらず</strong>、社長がご覧になる <span class="font-mono">site/comms/index.html</span> は 10:29 で凍結したまま「未処理raw: なし」と表示しています。台帳は 20:58 まで進み <strong>08/31 19:27 の会話まで蒸留済み</strong>＝<u>止まったのは画面の側</u>です。失敗は3件記録され <strong>21:00 に Slack 警報が鳴っており</strong>（黙って壊れてはいません）、クールダウンは 03:00 解除・次便 06:10＝<u>自己回復の見込み</u>。<strong>社長に本日のお手数はありません</strong>。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>Cycle 071 の指摘は据え置きです</strong>＝🔴O-042（カイゼン台帳 400KB・自動退避のご判断）・🟡O-009（push が75コミット先行）・🔴O-062（タイムアウト再発）は本日いずれも新しい事実が無いため<u>再掲しません</u>（軽い巡回の規定＝既存 O-NNN を膨らませない）。<strong>今週いちばん先にお願いしたい1件は、引き続き 🔴O-042 です。</strong></p>
+      <p class="text-sm text-gray-700"><strong>社長からの新着はありません</strong>＝<span class="font-mono">slack-poll.py fetch</span> 実行＝新着なし／<span class="font-mono">data/mailbox/new/</span> に <span class="font-mono">to: overseer</span> は 0通（全65通を走査）。<span class="font-mono">agent-tick</span> は 00:59 時点で <span class="font-mono">status=ok</span>・全14レーン生存。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🔍 チェック範囲（軽い巡回＝安価に気づける範囲だけ）</h4>
+      <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
+        <li>Slack 新着（<span class="font-mono">slack-poll.py fetch</span>）＋自分宛 mailbox（<span class="font-mono">to: overseer</span>）＝いずれも0件</li>
+        <li>ハートビート <span class="font-mono">site/overseer/last-tick.txt</span>・<span class="font-mono">data/overseer/tick.log</span> 末尾</li>
+        <li>故障記録 <span class="font-mono">data/overseer/failures.jsonl</span>（直近40件・08-31 は8件）</li>
+        <li>comms レーンの実体＝<span class="font-mono">.last-distill</span>／<span class="font-mono">ledger.md</span>／<span class="font-mono">archive.md</span>／<span class="font-mono">site/comms/index.html</span>／<span class="font-mono">distill.log</span>／<span class="font-mono">.cooldown-comms</span>／<span class="font-mono">bin/comms-tick.sh</span> 実読</li>
+        <li><span class="underline">見ていないもの</span>＝版ズレ・リンク切れ・二重台帳・全モードの滞り点検（＝精密診断の範囲。09-07 に実施します）</li>
+      </ul>
+    </div>
+
+    <div class="border-l-4 border-amber-400 bg-white rounded-r-lg p-4 mb-4">
+      <h4 class="font-bold mb-2">🟡 O-064 — 止まっている9時間、Chatwork の掲示板は「未処理raw: なし」と表示していました</h4>
+      <p class="text-sm text-gray-700 mb-2"><strong>観察（すべて 09-01 01:00 の実測）</strong>：①成功マーカー <span class="font-mono">data/comms/chatwork/.last-distill</span> ＝ 08-31 10:30／掲示板 <span class="font-mono">site/comms/index.html</span> ＝ 10:29 で凍結（表示は「最終更新: 2026-08-31 10:20（蒸留済み raw: 💬〜08/31 10:10）／未処理raw: なし」）②台帳 <span class="font-mono">ledger.md</span> は 20:58・<span class="font-mono">archive.md</span> は 14:17 に更新され、本文には <strong>08/31 19:27</strong> までの会話が入っている ③<span class="font-mono">distill.log</span> は 12:10・14:10・16:10・18:10・20:10・22:10 の<strong>6回すべてが [run]</strong>（前日までは [skip] が交互に入る）④<span class="font-mono">failures.jsonl</span> に <span class="font-mono">comms-fail(1)</span> 12:10・<span class="font-mono">comms-timeout</span> 14:35・21:00 の3件／<span class="font-mono">.cooldown-comms</span> ＝「連続3回・解除 09-01 03:00」⑤<span class="font-mono">.last-alert</span> ＝ 21:00（警報は発報済み）⑥現在の台帳に重複 <span class="font-mono">C-NNN</span> ID は<u>検出されず</u>。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>なぜ問題か</strong>：復旧そのものは仕組みが担います（03:00 クールダウン解除→06:10 の次便で再試行）。問題は<u>止まっている間の見え方</u>です＝<span class="font-mono">/comms/</span> を開くと「未処理raw: なし」＝追いついている顔をしますが、実際には9時間分が画面に出ていません。<strong>「止まっているのに、止まって見えない」ことが判断を誤らせます</strong>（🔴O-038 の掲示板肥大・🔴O-036 の滞留誤読と同じ系統＝台帳とビューのズレ）。なお <span class="font-mono">comms-tick.sh</span> は「マーカーだけ進んで掲示板が未再生成」の逆パターンには L98-103 で事後検査を持っていますが、<u>今回のように「台帳だけ進んでマーカーも掲示板も進まない」経路は検査対象外</u>です（コード実読）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>推測（断定しません）</strong>：マーカーが 10:30 のままなので、次の成功便は 10:30 以降の raw を再蒸留します。台帳には既にその一部が入っているため、重複起票・二重集計のリスクが残ります（現時点で重複 ID は未検出＝実害は確認できていません）。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>推奨（誰が・何を）</strong>：①<strong>社長＝本日は何もなさらないでください</strong>。統括が次サイクルで 06:10 便の結果を実測し報告します ②回復しなかった場合のみ、有人セッションで <span class="font-mono">/comms</span> を1回手動起動（社長のご指示があれば）③<strong>恒久策のご判断</strong>＝掲示板の「最終更新／未処理raw」を<u>実行時刻ではなく台帳の到達点から引く</u>ようにするか（止まれば画面が自分で「遅れ」を申告する）。実装は開発側・統括は直しません。</p>
+      <p class="text-sm text-gray-600"><strong>効果</strong>＝中（誤った安心を消す）／<strong>工数</strong>＝小（生成側1箇所）／<strong>優先度</strong>＝🟡／<strong>関連</strong>＝O-062・O-030・O-038／<strong>ステータス</strong>＝⏳ Pending</p>
+    </div>
+
+    <p class="text-sm text-gray-500"><strong>自己改善（K-NNN 相当）</strong>：軽い巡回は「新しい綻びだけ拾う」規定だが、<u>どこを見れば安価に新しい綻びが見つかるか</u>の順番が明文化されていない。今回は「前回サイクル以降に更新された状態ファイルと、その状態ファイルを写しているビューの mtime を突き合わせる」だけで発見できた＝この1手を軽い巡回の定石として書き残す価値がある（<span class="font-mono">data/hp-improve/skill-kaizen.md</span> へ1行）。</p>
+  </section>
+
+  <!-- ===== Cycle 071 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 071 — 2026-08-31 未明（<strong>精密診断＋全体最適棚卸し（ルール＋コード）</strong>・月曜 1:00 cron／<strong>🆕🔴O-062＝25日間ゼロだったタイムアウトが7日で25回に戻り、朝礼が3回落ちています</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード判定</strong>：本日は月曜 01:00 の daily overseer 便です。<span class="font-mono">overseer.md</span> v1.2 の規定どおり掲示板から直近の精密診断日を実読＝<strong>Cycle 068（08-24 月曜）</strong>＝今週分は未実施なので<strong>精密診断</strong>を実施しました。あわせて<strong>最新の全体最適棚卸しは 2026-08-17（Cycle 063）＝本日で14日</strong>＝隔週の周期に到達したため<strong>(A) ルールの層／(B) コードの層 の両方</strong>を実施しています。<strong>チェック範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・輪番98件スキップ・<span class="font-mono">thread_not_found</span> 1件＝致命でない）／<span class="font-mono">data/mailbox/new/</span> 62通の宛先を全件実測（<span class="font-mono">to: overseer</span> <strong>0通</strong>）・<span class="font-mono">hold/</span> 1通・<span class="font-mono">to: rule-kaizen</span> 0通／<span class="font-mono">python3 bin/system-health.py</span>（全文）／<span class="font-mono">failures.jsonl</span> 84行の全件・08-24 以降41件の内訳／<span class="font-mono">tick.log</span> の <span class="font-mono">TIMEOUT</span> 行／<span class="font-mono">system-health.jsonl</span> の <span class="font-mono">loop_tools</span>／<span class="font-mono">untested</span> の推移14件／<span class="font-mono">cron.log</span> の警報履歴／<span class="font-mono">bin/system-health.py</span> L294-319・L556-600・L660-700／<span class="font-mono">bin/agent-tick.sh</span> の <span class="font-mono">timeout</span> 系／<span class="font-mono">rules/modes/</span> 19本・<span class="font-mono">rules/</span> 直下10本・<span class="font-mono">.claude/commands/</span> 34本のサイズと版／<span class="font-mono">data/hp-loop/sites/</span>／<span class="font-mono">git log・status・rev-list</span>／<span class="font-mono">site/notes.html</span>・<span class="font-mono">memo-stock/</span>／partner 台帳と掲示板の日付。</p>
+
+    <div class="border border-red-200 bg-red-50 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🩺 健康サマリ（結論ファースト）</h4>
+      <p class="text-sm text-gray-700 mb-2"><strong>基盤は「静か」ではなくなりました。</strong>先週まで16〜25日連続ゼロだった <span class="font-mono">timeout</span> が <strong>08-26 に再発し、7日で25回</strong>（異常終了16・警報4）。<strong>8レーン横断</strong>で、<span class="font-mono">tick.log</span> に残る2件は<strong>24ファイル／10ファイルを書いた末の強制終了</strong>＝<u>オーバーランです</u>。<strong>社長のお手元に出た実害＝朝礼の3回欠落</strong>（08-26・08-27・08-29）。<strong>同じ7日間に共有台帳が 244→400KB（+156KB）</strong>＝🆕🔴<strong>O-062</strong> として、<strong>O-042 の自動退避を今週の最優先</strong>にしていただくようお願いします。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>もう1件は、統括自身の目の話です</strong>＝🆕🟡<strong>O-063</strong>。無人ループの<strong>無担保ツールが 0→4本</strong>に増え、警報は 08-29 に<u>実際に鳴っていました</u>が、比較相手が「昨日」なので<strong>週1で読む本日には消えていました</strong>。統括は <span class="font-mono">jsonl</span> を自力で掘って初めて気づきました＝<u>ツール出力を正とする規定に忠実であるほど見落とす</u>形です。</p>
+      <p class="text-sm text-gray-700"><strong>自己修復したもの（起票しません）</strong>＝<span class="font-mono">comms-silent</span> が 08-25〜08-27 に12件出ていましたが 08-27 18:16 を最後に停止し、本日は最終 poll 3.0h 前・蒸留の未処理遅れなしで正常です。<strong>メモリは余裕あり</strong>（空き 3,042MB／5,915MB・OOM kill 累計16回で <strong>+0</strong>）＝<u>今回のタイムアウトは OOM とは別の現象</u>です（07-31 の事故とは様相が違います）。<strong>heartbeat 1分前・全15レーン status=ok。</strong></p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">📊 床と待ちの推移（数字のみ・判定なし）</h4>
+      <p class="text-xs text-gray-700"><strong>データなし（5サイクル連続）</strong>。<span class="font-mono">overseer.md</span> v1.0 がデータ源として予定した <span class="font-mono">data/overseer/runtime.jsonl</span> は本日も未新設（<span class="font-mono">ls data/overseer/</span> で実測）。ゼロで埋めず「データなし」と正直に記録します。<strong>🆕 本日、無いことの実害が2件目として出ました</strong>＝O-062 の切り分け（読む量が増えたせいか否か）が<u>相関どまりで止まりました</u>＝🟡<strong>O-044</strong> の二択に判断材料が1つ増えています。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🧱 コードの層（数字のみ・判定なし／全体最適棚卸し (B)・2026-08-31）</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>⑤ <span class="font-mono">bin/</span> の増減（直近14日）</strong>：<strong>+7,136行 / −258行 / 純 +6,878行 / 触れた 40本</strong>（前回 08-17＝+8,290 / −226 / 純 +8,064 / 46本）</li>
+        <li><strong>⑥ 無人ループが実行するツール</strong>：<strong>27本 / うちテスト無し 4本</strong>（<span class="font-mono">analyze-mf.py, check-writeback.py, hp-links.py, talk-tick.sh</span>）。前回＝<strong>21本 / 0本</strong>。<u>この増加は起票対象です</u>＝🆕🟡<strong>O-063</strong>（数字そのものではなく、<strong>警報が統括に届かなかったこと</strong>を起票しています）</li>
+        <li><strong>⑦ 同じ処理の再実装（候補）</strong>：<span class="font-mono">.env</span> 自作読み込み <strong>5本</strong>（前回4本）＋shell 3本（不変）／atomic write 自作 <strong>12本</strong>（前回9本）／flock 自作 <strong>5本</strong>（前回3本）＋shell <strong>2本</strong>（前回1本）〔<span class="font-mono">_env.py</span> と <span class="font-mono">system-health.py</span> 自身は対象外＝ツール出力の但し書きをそのまま転記〕</li>
+        <li><strong>⑧ <span class="font-mono">_tmp_</span> 残骸</strong>：<strong>2本（最古 12日）</strong>＝<span class="font-mono">_tmp_partner_rotate_c143.py</span>・<span class="font-mono">_tmp_fujisaka_board_c067.py</span>（前回＝0本＝<u>走査範囲が <span class="font-mono">bin/</span> 限定のため誤った0でした</u>＝🟡O-043 は未解決のまま＝<span class="font-mono">bin/</span> 外の残骸は今も数えられていません）</li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-2">⚑ ⑤⑦に閾値は置きません（行数に閾値を付けると「書かないこと」が目標に化けるため）。見るのは<strong>傾き</strong>で、⑦は<strong>4項目すべてが増加</strong>＝🟢O-045 で追跡中の「初めて上向いた」傾向が<u>2周期続けて上向き</u>になりました（atomic write は 9→12本＝<span class="font-mono">refactoring.md</span> §7 の「同じ処理が3箇所以上＝不整合の芽」の条件を満たしますが、<strong>既起票（O-045・O-054）の範囲内なので新規番号は起こしません</strong>）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">📚 全体最適棚卸し (A) ルールの層（2026-08-31 実施・前回 08-17）</h4>
+      <ul class="text-xs text-gray-700 space-y-1 list-disc pl-5">
+        <li><strong>① 本数と総量</strong>：<span class="font-mono">rules/modes/</span> <strong>19本 448KB</strong>（08-17＝17本 444KB＝<strong>+2本 +4KB / 14日</strong>＝<u>本数は増えたが総量はほぼ横ばい</u>）・<span class="font-mono">rules/</span> 直下 <strong>10本 125KB</strong>（9本 97KB＝<strong>+1本 +28KB</strong>）・<span class="font-mono">.claude/commands/</span> <strong>34本 102KB / 1,374行</strong>。<strong>起動時自動ロードは 2ファイル 11KB を維持</strong>（07-24 の移設効果が継続＝330KB 事故の再演なし）。<em>※ 08-17 に記録した commands「160KB」はディスク使用量（4KB ブロック）で単位が違いました＝本日から<strong>実バイト</strong>に統一します（前回値とは比較できません。O-058 の 08-28 実測 1,358行 とは比較可＝<strong>+16行</strong>）。</em></li>
+        <li><strong>② 重複・流用切れ</strong>：<strong>流用整合は健全</strong>＝<span class="font-mono">hp-loop.md</span> は評価観点・進め方の原則・カイゼン台帳をいずれも <span class="font-mono">hp-improve.md</span> への<u>参照</u>で繋いでおり（L13・L99-101）、再記述への逆戻りはありません。共通ベース <span class="font-mono">ledger-discipline.md</span> の参照も<strong>8モード</strong>に広がりました（08-17 時点より拡大）。<strong>未解消が1件</strong>＝<span class="font-mono">comms.md</span> の版注記は 08-17 に「3つ並んで現行版が機械で読めない」と記録しましたが、<strong>08-25 に触られてなお同じ形（L5=1.1／L34=1.0／L51=0.9）</strong>です。<u>起票はしません</u>（実害は統括の判読の手間のみ）が、次に <span class="font-mono">comms.md</span> を触る有人セッションでヘッダ1行に整えていただけると助かります。</li>
+        <li><strong>③ 見直し日が古い領域</strong>：<span class="font-mono">reviewer.md</span>（7.7KB）と <span class="font-mono">task-partner.md</span>（23.3KB・0.4・コマンド未作成＝O-004）が最長期で、<strong>いずれも 08-10 の一斉コミット以降 実質改訂なし</strong>＝<u>前回と同じ2本のまま</u>です。mtime では測れないので git 履歴で判定しています。</li>
+        <li><strong>④ 簡素化・統合の候補</strong>：<span class="font-mono">hp-loop.md</span> <strong>81KB</strong>（08-17＝78.6KB）＋<span class="font-mono">partner.md</span> <strong>57KB</strong>（56.7KB）＝2本で <span class="font-mono">rules/modes/</span> の <strong>31%</strong>（前回30%）＝<u>比率は動いていません</u>。<strong>🆕 今回の新顔は <span class="font-mono">rules/</span> 直下です</strong>＝<span class="font-mono">testing.md</span> が <strong>23.6KB → 45KB（14日でほぼ倍）</strong>で、<u>rules/ 直下 125KB の 36% を1本が占めています</u>。<strong>行数に閾値は置きません</strong>が、傾きとしては <span class="font-mono">rules/modes/</span> より速く、いま最も伸びているルールです（内容が悪いという指摘ではありません＝<u>次に分割・参照化を検討する候補として名前を挙げるだけ</u>にとどめます）。</li>
+        <li><strong>⑤ 定点（O-034・rally／konjaku の月次アナウンス）</strong>：<strong>本便で実施</strong>＝両サイトの反応起動の除外は <span class="font-mono">agent-tick.sh</span> 側で<u>依然として解除されていません</u>。<strong>🆕 判断材料が1つ増えました</strong>＝今週のタイムアウト25件のうち <span class="font-mono">rally</span> が<strong>5件</strong>・<span class="font-mono">konjaku</span> が<strong>4件</strong>＝<u>2サイトだけで36%</u>を占めます。両サイトは「差出人を問わず全便で25分の解析が起動する」設定のままなので、<strong>O-034 の①（他4サイトと揃える）を採ると、この負荷の一部は自動的に減ります</strong>（O-062 との相乗りで最小コスト）。</li>
+        <li><strong>⑥ 結論</strong>：<strong>新規の「全体最適セッション」提案は立てません</strong>（既起票の棚卸し一括＝O-019／O-021／O-042／O-046 で足りるため＝重複回避）。<u>本日いちばん申し上げたいのは、棚卸しで見つけた新項目ではなく、<strong>既に起票済みの O-042 が実害に転化した</strong>という事実のほうです。</u></li>
+      </ul>
+    </div>
+
+    <div class="border border-amber-200 bg-amber-50 rounded-lg p-4 mb-4">
+      <h4 class="font-bold mb-2 text-sm">🧹 器の規律（自分の分・正直にご報告します）</h4>
+      <p class="text-xs text-gray-700 mb-2">本掲示板 <span class="font-mono">site/overseer/index.html</span> は診断時点で <strong>189KB＝閾値80KBの236%</strong>、<strong>本サイクルの追記後は 224KB（＝閾値の280%・+35KB）</strong>です（内訳＝O-062／O-063 の起票が約13KB・本サイクルログと棚卸し2節が約17KB・既存5カードの更新が約5KB）。<u>数字を隠さずに書きます＝本日、私は縮める側ではなく広げる側に回りました</u>。前回（Cycle 066）に「08-24 の精密診断で必ず縮めます」とお約束し、Cycle 068 で Cycle 063〜067 を収容しましたが、その後も 🔔 キューの更新で戻っています。</p>
+      <p class="text-xs text-gray-700 mb-2"><strong>本日、Cycle 068〜070 のアーカイブ収容を実行しようとして、できませんでした</strong>。理由は能力ではなく<strong>権限です</strong>＝①実証済みの4段手順（<span class="font-mono">sed</span> 抽出→archive 追記→grep 確認→本体除去）に必要な <span class="font-mono">sed</span>／使い捨てスクリプトの実行は、<strong>無人セッションの許可リストにありません</strong>（本日、退避用スクリプトを作って実行を試み、ゲートで拒否されたため<u>スクリプトは削除済み</u>です＝<span class="font-mono">bin/_tmp_</span> に残骸を残していません）②Edit ツールで手作業移設するには対象範囲を読む必要がありますが、<strong>該当箇所は1行が数万トークンあり読み込み上限を超えます</strong>。</p>
+      <p class="text-xs text-gray-700"><strong>＝統括が他モードに要求している「80KB で自走ローテ」（O-038）は、統括自身の掲示板については<u>無人では物理的に実行できません</u></strong>。これは規律の怠りではなく<strong>配線の欠落</strong>としてご報告します。<strong>解き方は2つ</strong>＝<u>A案</u>：許可リストに退避用の1行（例 <span class="font-mono">Bash(python3 bin/rotate-board.py:*)</span>）を足し、ローテを<strong>専用ツール化</strong>して他モードにも共用させる（＝O-038・O-021・O-042 が全部同じ道具で解けます）／<u>B案</u>：統括の掲示板は有人セッションでのみ縮める、と決める。<strong>統括の推薦＝A案</strong>（O-042 の自動退避と<u>同じ道具</u>になるので、O-062 の最優先対応に同乗できます）。<strong>これは新規番号を起こさず、O-046 と O-042 の材料として記録します</strong>（🔔キューを増やさないため）。</p>
+    </div>
+
+    <div class="border border-gray-200 rounded-lg p-4">
+      <h4 class="font-bold mb-2 text-sm">🔁 自己改善（Step 6）</h4>
+      <p class="text-xs text-gray-700"><strong>今回このモードに足りなかったもの</strong>＝「<u>先週まで✅だった項目が、今週⚠️に戻ったこと</u>」を機械で気づく手立てがありませんでした。統括は毎回「今の⚠️」だけを見るので、<strong>再発（ゼロ→25回）は、過去の掲示板を人手で読み比べて初めて分かります</strong>。O-063 と根が同じ（＝週1の読み手に対して、日次比較の警報は届かない）ため、<span class="font-mono">data/hp-improve/skill-kaizen.md</span> へ <strong>1行だけ</strong>追記します（台帳が400KBのため、本日は意図的に最小限＝<u>自分が指摘している肥大に、自分で加担しないため</u>）。</p>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 070 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 070 — 2026-08-29 昼（<strong>軽い巡回</strong>・有人起動／<strong>🆕🟡O-060＝<span class="font-mono">hold/</span> は入ったものが出られない片道です</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード判定</strong>：掲示板の最新の精密診断は <strong>08-24（Cycle 068）＝今週の月曜</strong>で、本日は<strong>5日目</strong>＝7日以内のため <span class="font-mono">overseer.md</span> v1.2 の規定どおり<strong>軽い巡回</strong>としました（次の精密診断＝<strong>08-31 月曜 1:00 cron</strong>）。<strong>全体最適の棚卸しも実施しません</strong>＝直近の実施は <strong>08-17（Cycle 063）</strong>で本日は12日目＝14日未満。<strong>08-31 の精密診断に同乗</strong>します。</p>
+
+    <div class="mb-5">
+      <h4 class="font-bold mb-2">チェック範囲（実際に見たもの）</h4>
+      <p class="text-sm text-gray-700">Slack 新着（<span class="font-mono">slack-poll.py fetch</span>＝新着なし）／自分宛 mailbox（<span class="font-mono">to: overseer</span> <strong>1通</strong>）／<span class="font-mono">data/mailbox/{new,hold}/</span> の実体（81通・1通）／<span class="font-mono">site/overseer/last-tick.txt</span>／<span class="font-mono">data/overseer/failures.jsonl</span>／<span class="font-mono">data/hp-improve/</span> のサイズ／<span class="font-mono">bin/mailbox.sh</span>・<span class="font-mono">site/tools/mailbox/index.php</span> の approve 経路／<span class="font-mono">bin/office-beacon-hook.py</span>・<span class="font-mono">.claude/settings.local.json</span> のフック登録／<span class="font-mono">.claude/commands/</span> のビーコン手順／<span class="font-mono">data/hp-loop/konjaku/</span> の配信記録。<strong>すべて読み取りのみ</strong>（<span class="font-mono">hold/</span> の便は読んだだけで、移動も削除もしていません）。</p>
+    </div>
+
+    <div class="mb-5">
+      <h4 class="font-bold mb-2">健康サマリ</h4>
+      <p class="text-sm text-gray-700"><strong>基盤は動いています。</strong>heartbeat は1分前（<span class="font-mono">2026-08-29 10:16:16 JST</span>）・<strong>全15レーン ok</strong>・<span class="font-mono">status=ok</span>。<strong>ただし故障ログは静かではありません</strong>＝<span class="font-mono">failures.jsonl</span> に 08-29 だけで<strong>タイムアウト5件</strong>（<span class="font-mono">hp-loop:yoshida</span> 02:55／<span class="font-mono">hp-loop:yokohawaii</span> 03:55／<span class="font-mono">hp-loop:rally</span> 04:25／<span class="font-mono">hp-loop:konjaku</span> 04:55／<span class="font-mono">partner</span> 07:25）。<u>これは新規の障害ではなく <strong>🔴O-042 の症状</strong></u>＝Cycle 069 で同じ形（12件）を数えており、原因はカイゼン台帳の肥大です（本日 <strong>392KB</strong>）。<strong>新しい番号は起こしません</strong>（既存カードの範囲）。<strong>本日の主題は <span class="font-mono">hold/</span> です</strong>＝Cycle 069 まで「hold/ 0通」と報告してきた欄に<strong>初めて1通</strong>が入り、<u>それを出す手段が実装されていないこと</u>が分かりました（🟡O-060）。</p>
+    </div>
+
+    <div class="mb-5">
+      <h4 class="font-bold mb-2">Step 0：社長からのご指示・受信箱の処理</h4>
+      <p class="text-sm text-gray-700"><strong>Slack の新着はありません</strong>（<span class="font-mono">fetch</span>＝「新着なし」。輪番走査で古いスレッド77件をスキップ／呼び出し上限超過2件は次tick以降）。<strong>自分宛の mailbox は1通</strong>＝<span class="font-mono">M-20260829T101640-hanasaka-main-68c12e</span>（<span class="font-mono">type: fyi</span>・起票依頼）。<u>社長からの直接のご指示ではないため Slack への <span class="font-mono">reply</span> は行いません</u>（スレッド <span class="font-mono">thread_ts</span> も空です）。内容を実読で裏取りし、<strong>🟢O-061 として受理・起票</strong>のうえ <span class="font-mono">done</span> で <span class="font-mono">cur/</span> へ移しました。</p>
+    </div>
+
+    <div class="mb-5">
+      <h4 class="font-bold mb-2">起票（詳細は最上部の「🔔 社長の判断・対応待ち」に集約）</h4>
+      <ul class="list-disc pl-6 text-sm text-gray-700 space-y-2">
+        <li><strong>🆕🟡 O-060</strong>：<span class="font-mono">hold/</span>（社長承認ゲート）に<strong>出口が実装されていません</strong>。<span class="font-mono">bin/mailbox.sh approve</span>・API <span class="font-mono">?action=approve</span> ともに <strong>501</strong>。08-28 15:13 投函の<u>社長ご決定（問い合わせページ新設＝急ぎ・301恒久）</u>が19時間停止。<strong>実害は出ていませんが偶然です</strong>＝konjaku 日次ループが 08-29 04:45 に <span class="font-mono">local-send</span> で同内容を別途配信済み。推奨＝<u>A案：Slack で <span class="font-mono">approve &lt;id&gt;</span> と返すと通る最小の出口を作る</u>／<u>B案：<span class="font-mono">needs_approval=true</span> の送信を拒否してゲートを閉じる</u>。統括の推薦は<strong>A案の最小形</strong>。即日の暫定＝<span class="font-mono">hold/</span> に1通でもあれば partner の朝礼で必ず見せる。</li>
+        <li><strong>🆕🟢 O-061</strong>：スキル実行の在席ビーコンをフック化（<span class="font-mono">hanasaka-main</span> の起票依頼を受理）。<strong>⚠️ 裏取りで範囲を縮めています</strong>＝<span class="font-mono">Skill</span> ツールは即時返却のため <span class="font-mono">PostToolUse(Skill)</span> は<u>開始直後に発火</u>し、消灯は載せられません。<strong>機械化できるのは点灯だけ</strong>（5コマンドの <span class="font-mono">start</span> 行は消え、<span class="font-mono">stop</span> 行は残る）。それでも<u>点け忘れは誰も救わないが消し忘れは TTL が救う</u>ので、効果の大きい側は取れます。社長のご判断は不要＝開発の順番待ち。</li>
+        <li><strong>🔴 O-042 更新（悪化継続）</strong>：<span class="font-mono">data/hp-improve/skill-kaizen.md</span> = <strong>392,356B（392KB）＝閾値100KBの392%</strong>。08-24 244KB → 08-28 364KB → 08-29 <strong>392KB</strong>（<u>1日 +28KB</u>）。<span class="font-mono">skill-kaizen-archive.md</span> は <strong>08-11 09:16 から18日間 未更新</strong>＝自動退避は不発のままです。<strong>新規番号は起こしません。</strong></li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-2">※ 起票を2件に留めました（<span class="font-mono">overseer.md</span> 目安3〜7件・<u>軽い巡回は「安価に気づく新しい綻びだけ」</u>）。<strong>再掲しなかったもの</strong>＝地図ズレ（🟡O-016＝<span class="font-mono">SYSTEM.md</span> は今も「4サイト」・実体は7レーン。v0.4 規定により1行圧縮・再督促停止中）／<span class="font-mono">new/</span> 81通の滞留（🔴O-056 の範囲＝<span class="font-mono">done</span> が構造的に成功しないため、この件数は<u>未処理の証拠になりません</u>）。</p>
+    </div>
+
+    <div class="mb-5">
+      <h4 class="font-bold mb-2">器の規律（統括自身）</h4>
+      <p class="text-sm text-gray-700">掲示板は本サイクルの追記で <strong>173,735B（169KB）→ 193,869B（189KB）＝+20.1KB</strong>（閾値 80KB の <strong>236%</strong>）。<strong>サイクルログの収容は本日も行いません</strong>＝index に残るのは <strong>Cycle 068・069・070 の3本</strong>で、068（今週の精密診断＝ベースライン）は <strong>08-31 の次回精密診断で 068・069 ごと収容</strong>します。超過の主因は変わらず「🔔 判断待ち」欄です（本日さらに2件増）。<u>統括が起票を続けるかぎりこの欄は増え、決着させられるのは社長のご判断だけ</u>という構図も変わりません（🟡O-046＝30分の棚卸しセッション）。</p>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 069 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 069 — 2026-08-28 昼（<strong>軽い巡回</strong>・有人起動／<strong>🆕🔴O-057＝在庫上限の門番が、在庫の28%しか見ていません</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード判定</strong>：掲示板の最新の精密診断は <strong>08-24（Cycle 068）＝今週の月曜</strong>で、本日は<strong>4日目</strong>＝7日以内のため <span class="font-mono">overseer.md</span> v1.2 の規定どおり<strong>軽い巡回</strong>としました（次の精密診断＝<strong>08-31 月曜 1:00 cron</strong>）。<strong>全体最適の棚卸しも実施しません</strong>＝直近の実施は <strong>08-17（Cycle 063・ルール＋コードの2層）</strong>で本日は11日目＝14日未満。<strong>08-31 の精密診断に同乗</strong>します。</p>
+
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">チェック範囲（実際に見たもの）</h4>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+        <li><strong>社長の新着</strong>＝<span class="font-mono">slack-poll.py fetch</span>（新着なし。<span class="font-mono">thread_not_found</span> 1件は削除済みスレッドへの追従で自己復旧・起票せず）</li>
+        <li><strong>自分宛 mailbox</strong>＝<span class="font-mono">to: overseer</span> <strong>1通</strong>（<span class="font-mono">M-20260828T122837-hanasaka-main</span>）を全文実読</li>
+        <li><strong>裏取り（実読）</strong>＝<span class="font-mono">bin/pending-scan.py</span>（409行・L45/L62-75/L88-115/L218-240/L348-372）・<span class="font-mono">.claude/commands/triage.md</span>（65行・全文）・<span class="font-mono">rules/modes/triage.md</span>（93行・全文）・<span class="font-mono">rules/modes/blog-loop.md</span>（<span class="font-mono">grep</span>）・<span class="font-mono">rules/modes/hp-loop.md</span> L180-190・v0.20/v0.21 changelog・<span class="font-mono">bin/mailbox.sh</span> L119-205・<span class="font-mono">bin/agent-tick.sh</span> L295-315</li>
+        <li><strong>実測コマンド</strong>＝<span class="font-mono">python3 bin/pending-scan.py stats</span>（読み取りのみ。<span class="font-mono">wip</span> は <span class="font-mono">scan</span> を伴い <span class="font-mono">data/triage/state.json</span> を書き換えるため<strong>統括からは実行しませんでした</strong>＝他モードの責務領域）・<span class="font-mono">wc</span>／<span class="font-mono">grep</span>（<span class="font-mono">.claude/commands/</span> 34本の行数）</li>
+        <li><strong>健康</strong>＝<span class="font-mono">site/overseer/last-tick.txt</span>・<span class="font-mono">data/overseer/failures.jsonl</span>（全68行／08-24 以降25件の内訳）・<span class="font-mono">data/comms/chatwork/</span>（台帳・掲示板・<span class="font-mono">distill.log</span> の mtime と最終行）・<span class="font-mono">git log</span>／<span class="font-mono">git status</span></li>
+      </ul>
+    </div>
+
+    <div class="bg-emerald-50 border border-emerald-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">健康サマリ（結論ファースト）</h4>
+      <p class="text-sm text-gray-700"><strong>基盤は動いています。</strong>heartbeat は1分前（<span class="font-mono">2026-08-28 12:33:13 JST</span>）・<strong>全15レーン ok</strong>・<span class="font-mono">hold/</span> 0通。<strong>ただし前回（Cycle 068）の「4日間ゼロ」から一転して、08-24 以降 25件の故障記録が付いています</strong>。内訳を数えたところ<strong>13件（過半数）が <span class="font-mono">comms-silent</span> で、これは誤報でした</strong>＝08-25 20:38 に始まり 08-27 18:16 で止まっており、その<strong>24分後の <span class="font-mono">80ca78a</span>（08-27 18:40「警報の誤報を止める：出力量でなく<u>完了の署名</u>と<u>成果物の更新</u>で見る」）で解消</strong>しています。comms 側は同期間もずっと正常に働いていました（<span class="font-mono">distill.log</span> は 08-25〜08-28 の各便で <span class="font-mono">[run]</span>／<span class="font-mono">[skip]</span> を正しく記録・台帳 <span class="font-mono">ledger.md</span> は本日 12:24・掲示板 <span class="font-mono">site/comms/index.html</span> は 12:32 更新）。<strong>したがって新規の起票はしません</strong>（既に直っているものを🔔へ積まない）。残る12件はタイムアウト系（fujisaka 3・yokohawaii 2・konjaku 2・yoshida 1・blog-loop:ycom 1・partner 2・comms 1）と <span class="font-mono">partner-noprogress</span> 1件で、いずれも<strong>既報の🔴O-042／🟡O-021（台帳の肥大で25分に収まらない）の症状</strong>です＝新しい番号は起こしません。</p>
+      <p class="text-sm text-gray-700 mt-2"><strong>本日の主題は、他エージェントからの起票の裏取り（4回目）です。</strong><span class="font-mono">hanasaka-main</span> が <span class="font-mono">/commit-pipeline</span> ステップ3（STRICT＝差分の中だけ）で見つけた差分外の事象2件を、<span class="font-mono">refactoring.md</span> §7 のとおり<strong>自分では直さず</strong>渡してきました。<strong>2件とも実体で確認し、受理します</strong>。ただし<strong>1件目は、裏取りの過程で範囲が大きく広がりました</strong>＝先方は「🔔 を1つ外すと上限が1件ぶん緩む」という<u>これから起きうる穴</u>として報告してきましたが、実測すると<strong>門番はすでに在庫の28%しか見ていません</strong>（印338／取得96）。<u>先方の懸念は正しく、しかも既に現実になっています</u>（🔴O-057）。</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">本サイクルの起票（3件）</h4>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-2">
+        <li><strong>🆕🔴 O-057</strong>＝在庫上限の門番が在庫の28%しか見ていない（＋統括レーン44件は対象外・blog-loop はゲート自体が無い）。<strong>推薦は①の単独実施</strong>＝<span class="font-mono">wip</span> の出力に「印 N 個のうち M 件を数えた」を併記する。詳細は上の🔔欄。</li>
+        <li><strong>🆕🟡 O-058</strong>＝スラッシュコマンドとモードルールの二重管理（<span class="font-mono">/triage</span> で6ブロック重複・前例 <span class="font-mono">8b8ff29</span> の再発）。<strong>推薦は A案</strong>＝作法を決めて <span class="font-mono">.claude/commands/</span> 34本を一括点検（有人＋Codex の領分）。</li>
+        <li><strong>🆕🟢 O-059</strong>＝mailbox の名簿に <span class="font-mono">triage</span> が無い。<strong>ご判断不要</strong>・次の <span class="font-mono">mailbox.sh</span> 改修に同乗。</li>
+      </ul>
+      <p class="text-xs text-gray-500 mt-2">※ 起票を3件に留めました（<span class="font-mono">overseer.md</span> 目安3〜7件）。<span class="font-mono">comms-silent</span>（解決済み）・タイムアウト12件（O-042/O-021 の症状）・地図ズレ（O-016＝08-21 に実測更新済み）は<strong>新規番号を起こさず</strong>、既存カードの範囲としています。</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">既存カードの更新（2件）</h4>
+      <p class="text-sm text-gray-700 mb-2"><strong>🔴 O-042（カイゼン台帳の再肥大）＝さらに悪化しました。増速が2倍になっています。</strong><span class="font-mono">data/hp-improve/skill-kaizen.md</span> は <strong>372,530B＝364KB</strong>（08-28 07:21 時点の実測）＝<u>トリップワイヤ 100KB の <strong>364%</strong></u>。前回（Cycle 068・08-24）の <strong>244KB</strong> から<strong>4日で +120KB</strong>＝<strong>1日あたり +30KB</strong>で、前回報告時の増速（7日で +116KB＝1日 +17KB）の<strong>約2倍</strong>です。<strong>自動退避は17日間ずっと不発</strong>のままです。<strong>この肥大は既に他の症状を出しています</strong>＝本サイクルで数えたタイムアウト12件（fujisaka 3・yokohawaii 2・konjaku 2・yoshida 1・blog-loop:ycom 1 ほか）は、この台帳を毎運用で読む構造と <strong>25分の実行上限</strong>のぶつかりです。<strong>統括からの新しい提案はありません</strong>（v0.4 規定＝再督促せず数字だけ更新）。<u>すでに出してあるご判断（自動退避を入れるか）を1行いただければ、それで解けます</u>。<em>参考＝この台帳には <span class="font-mono">K-637</span>（partner・08-28）として「K番号の採番が42番号ぶん衝突している」も上がっており、退避と採番の両方が同じ1本のファイルに集中しています。</em></p>
+      <p class="text-sm text-gray-700"><strong>🟢 O-009（コミットのご検討・継続）</strong>＝未コミットが <strong>92件</strong>（<span class="font-mono">git status --porcelain</span>）まで増えています。うち追跡済みファイルの差分は <strong>40ファイル・+4,890／−882行</strong>。<strong>統括からの再督促はしません</strong>（v0.4 規定＝10サイクル超は繰り越し1行）。数字の更新のみです。</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded p-4">
+      <h4 class="font-bold mb-2">統括自身の器（🟡O-046 の実測更新）</h4>
+      <p class="text-sm text-gray-700">掲示板は本サイクルの追記で <strong>147,324B（144KB）→ 173,235B（169KB）＝+25.9KB</strong>（閾値 80KB の <strong>211%</strong>）。<u>本日の追記は🔴O-057 の実測（印338／取得96 の内訳）と、それを社長がご判断できるだけの根拠で大半を占めます</u>＝圧縮すると「28%しか見ていない」の裏取りが消えるため、そのまま載せました。<strong>サイクルログの収容は本日は行いません</strong>＝Cycle 063〜067 は 08-24 に収容済みで、index に残るのは <strong>Cycle 068・069 の2本のみ</strong>（規約は「最新1本」ですが、068 は今週の精密診断＝ベースラインのため 08-31 の次回精密診断で 068 ごと収容します）。<strong>超過の主因は変わらず「🔔 判断待ち」欄です</strong>＝本日さらに3件増えて <strong>48行</strong>（実測＝<span class="font-mono">&lt;li&gt;</span> の数。うち数行は ✅ クローズ済みの報告行と 🔵 お願い行なので、<u>ご判断が要るのはおおよそ44件</u>）。<u>統括が起票を続けるかぎりこの欄は必ず増え、決着させられるのは社長のご判断だけ</u>という構図も変わりません（🟡O-046＝30分の棚卸しセッション）。<strong>なお本日の🔴O-057 は、この構図そのものを機械の問題として捉え直したものです</strong>＝統括レーンだけが在庫上限の対象外である以上、この欄には「止まる」仕組みが1つも働いていません。</p>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 068 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 068 — 2026-08-24 未明（<strong>精密診断</strong>・月曜 1:00 cron／<strong>🆕🔴O-056＝VPS の全エージェントが mailbox 上では「1人」として振る舞っています＝O-036／O-039 を18サイクル切り分けられなかった<u>根本原因</u>を特定しました</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4"><strong>モード判定</strong>：本日は<strong>月曜</strong>で、掲示板の最新の精密診断は <strong>08-17（Cycle 063）＝先週</strong>のため、overseer.md v1.2 の規定どおり<strong>今週ぶんの精密診断</strong>として実施しました。<strong>全体最適の棚卸しは実施しません</strong>＝直近の実施が <strong>08-17（ルール＋コードの2層）</strong>で<strong>7日</strong>＝14日周期に未到達（次回は 08-31 の精密診断が対象）。<strong>社長からの新しいご指示はありません</strong>（Slack <span class="font-mono">fetch</span>＝新着なし／<span class="font-mono">to: overseer</span> 0通）。</p>
+
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">チェック範囲（実際に見たもの）</h4>
+      <ul class="list-disc pl-5 text-sm space-y-1">
+        <li><span class="font-mono">bin/system-health.py</span> 実行（固定費・故障・コードの層）＋ <span class="font-mono">data/overseer/system-health.jsonl</span> の7日トレンド（08-17〜08-24・欠測なし）</li>
+        <li><span class="font-mono">data/overseer/failures.jsonl</span> 全件／<span class="font-mono">site/overseer/last-tick.txt</span>（heartbeat・全15レーンの action）</li>
+        <li>mailbox：<span class="font-mono">new/</span> 55件の <span class="font-mono">to</span>／<span class="font-mono">from</span>／<span class="font-mono">type</span> 内訳・<span class="font-mono">hold/</span> 0件・宛先別の最古滞留</li>
+        <li><strong>配送経路の実体</strong>：<span class="font-mono">bin/mailbox.sh</span>（トークン解決）・<span class="font-mono">site/tools/mailbox/index.php</span>（<span class="font-mono">done</span> の所有者判定）・<span class="font-mono">data/secrets/mailbox-tokens.json</span> の <u>agent_id 一覧のみ</u>（トークン実値は読んでいません）・<span class="font-mono">bash bin/mailbox.sh inbox</span> の実応答</li>
+        <li><span class="font-mono">bin/agent-tick.sh</span> の <span class="font-mono">dispatch</span>／<span class="font-mono">count_pending</span>（defer の定義と urgent_only の指定）</li>
+        <li>版ズレ：<span class="font-mono">rules/modes/*.md</span> 18本の version 行 ⇄ <span class="font-mono">SYSTEM.md</span> 版表／<span class="font-mono">data/hp-loop/config.md</span> の登録サイト ⇄ cron レーン</li>
+        <li>器：<span class="font-mono">data/hp-improve/skill-kaizen.md</span>・各 <span class="font-mono">coverage.md</span> とその <span class="font-mono">coverage-archive.md</span> の更新時刻／<span class="font-mono">_tmp_</span> 残骸の全リポジトリ走査／<span class="font-mono">git status</span></li>
+      </ul>
+    </div>
+
+    <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+      <h4 class="font-bold mb-2">健康サマリ（結論ファースト）</h4>
+      <p class="text-sm text-gray-700 mb-2"><strong>故障系は静かです</strong>＝<span class="font-mono">failures.jsonl</span> は <strong>08-20 23:00 を最後に4日間ゼロ</strong>（7日窓の「異常終了10回」は 08-17〜08-18 の <span class="font-mono">fetch-fail</span> 9件＝既報の認証切れと、<span class="font-mono">memo-tooquick</span> 1件＝Cycle 066 で誤報と確認済みのもので、<strong>新規はありません</strong>）。タイムアウト0・警報0・OOM +0・heartbeat 1分前・全15レーン <span class="font-mono">ok</span>・日次スナップショットは 08-18〜08-23 まで欠測なし。</p>
+      <p class="text-sm text-gray-700 mb-2"><strong>本日の主題は「配送」です。</strong>これまで <strong>O-036／O-039</strong> で18サイクルにわたり「届いていないのか・届いたが消化されていないのか」を切り分けられずにいましたが、<strong>今回そのどちらでもない第三の答え＝仕組みの穴を特定しました</strong>＝<strong>🆕🔴O-056</strong>。VPS 側の全エージェントは mailbox API 上で<strong>旧称 <span class="font-mono">hp-loop</span>（無印）という1人の人格</strong>として振る舞っており、その結果 <span class="font-mono">inbox</span> は<strong>常に空</strong>・<span class="font-mono">done</span> は<strong>常に 404</strong>で、<strong>しかも 404 は「もう無い」と区別がつきません</strong>（仕様として存在を伏せる 404）。<u>誤診が18サイクル続いたのは、監視の目が悪かったからではなく、失敗が成功とまったく同じ見た目で返っていたためです。</u></p>
+      <p class="text-sm text-gray-700"><strong>器は3件が超過を続けています</strong>＝<span class="font-mono">skill-kaizen.md</span> <strong>244KB</strong>（🔴O-042・7日で +116KB）／<span class="font-mono">ycom/coverage.md</span> <strong>194KB</strong>（🟡O-021・<u>ローテは動いているのに追いつかない</u>ことが判明＝見立てを訂正）／統括自身の掲示板（🟡O-046）。<strong>新規番号は O-056 の1件だけに絞り</strong>、ほかは既存カードの実測更新にとどめました（🔔キューを増やさないため）。</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">起票・更新（詳細は最上部の「🔔 社長の判断・対応待ち」に集約）</h4>
+      <ul class="list-disc pl-5 text-sm space-y-2">
+        <li><strong>🆕🔴 O-056（新規・1件のみ）</strong>：VPS 側エージェントの mailbox 人格が全員 <span class="font-mono">hp-loop</span>（無印）に潰れている。<strong>実測</strong>＝①<span class="font-mono">bash bin/mailbox.sh inbox</span> の応答が <span class="font-mono">"agent": "hp-loop", "inbox_of": "hp-loop", "count": 0</span>（＝誰が呼んでも旧称の受信箱が返る）②<span class="font-mono">bin/mailbox.sh</span> は <span class="font-mono">.env</span> の <span class="font-mono">MAILBOX_TOKEN</span> を<u>ファイルから直接1つだけ</u>読む実装で、呼び出し側が名乗りを差し替える手段が無い（環境変数でも上書きできない）③API 側 <span class="font-mono">index.php</span> の <span class="font-mono">done</span> は <span class="font-mono">($msg['to'] !== $agent && $role !== 'admin')</span> で <strong>404 <span class="font-mono">message_not_found</span></strong> を返す＝<span class="font-mono">to: hp-loop-ycom</span> の便を <span class="font-mono">hp-loop</span> 名義で <span class="font-mono">done</span> しても必ず失敗する。<strong>症状との一致</strong>＝<span class="font-mono">to: hp-loop-ycom</span> の6通のうち<strong>5通は本当に読まれて処理済み</strong>（<span class="font-mono">deploy-log.md</span>／<span class="font-mono">coverage.md</span> に <span class="font-mono">M-20260805T170425</span>・<span class="font-mono">M-20260811T0923</span>・<span class="font-mono">M-20260811T0929</span>・<span class="font-mono">M-20260821T1631</span> の ID が実在）なのに、<strong>1通も <span class="font-mono">cur/</span> へ移っていません</strong>（最古 19日）。<strong>詳細は🔔欄へ。</strong></li>
+        <li><strong>🔴 O-042 更新（悪化）</strong>：<span class="font-mono">skill-kaizen.md</span> = <strong>249,851B（244KB）＝閾値100KBの244%</strong>。08-17 128KB → 08-18 166KB → <strong>08-24 244KB</strong>＝<u>7日で +116KB</u>。<span class="font-mono">skill-kaizen-archive.md</span> は <strong>08-11 から13日間 未更新</strong>＝退避は依然として不発。</li>
+        <li><strong>🟡 O-021 更新（<u>見立てを訂正</u>）</strong>：<span class="font-mono">data/hp-loop/ycom/coverage.md</span> = <strong>194KB＝閾値100KBの194%</strong>（08-17 128KB → 08-24 194KB＝+66KB/7日）。<strong>これまで「ローテ不発」と書いてきましたが誤りです</strong>＝<span class="font-mono">coverage-archive.md</span> は <strong>08-23 02:20 に更新されており（537KB）、その4分後に書かれた <span class="font-mono">coverage.md</span> が既に 194KB</strong>＝<u>ローテは実行されているが、1サイクルの書き込み量が退避量を上回っている</u>のが実体です。ほか <span class="font-mono">yokohawaii</span> 100KB（閾値ちょうど）・<span class="font-mono">konjaku</span> +53KB/7日・<span class="font-mono">rally</span> +32KB/7日・<span class="font-mono">konjaku</span> 掲示板 +33KB/7日。</li>
+        <li><strong>🟡 O-043 更新（実測で裏取り）</strong>：<span class="font-mono">_tmp_</span> 残骸をリポジトリ全体で走査＝<strong>実体4本</strong>（<span class="font-mono">bin/_tmp_partner_rotate_c143.py</span>・<span class="font-mono">bin/_tmp_fujisaka_board_c067.py</span>・<span class="font-mono">data/hp-loop/_tmp_crop079.py</span>・<span class="font-mono">data/blog-loop/cycles/ycom/_tmp_table049.html</span>＝最古は約4週間前）。一方 <span class="font-mono">system-health.py</span> の報告は「<strong>2本・最古5日</strong>」＝<span class="font-mono">bin/</span> 限定走査のため<strong>実体の半分</strong>しか見えていないことを、当サイクルで数字として確認しました。</li>
+        <li><strong>🟡 O-044 更新（4サイクル連続）</strong>：「床と待ちの推移」は本日も出力されません＝<span class="font-mono">data/overseer/runtime.jsonl</span> は<strong>存在せず</strong>、<span class="font-mono">system-health.py</span> に当該節の実装もありません（<span class="font-mono">grep</span> で確認）。<strong>4サイクル連続でデータなし</strong>＝二択（作る／ルールから外す）のご判断を1行でお願いします。</li>
+        <li><strong>🟡 O-016 更新（地図ズレの実測を更新）</strong>：<span class="font-mono">SYSTEM.md</span> は 08-21 に v0.4 で <span class="font-mono">talk</span>／<span class="font-mono">partner</span> が追加され<strong>その分は解消</strong>しました（<span class="font-mono">talk</span> 出現7件）。残る実測ズレ＝①<strong>サイト数</strong>：地図「4サイト」／<span class="font-mono">config.md</span> 登録<strong>9サイト</strong>・cron <strong>7レーン</strong>（<span class="font-mono">rally</span>・<span class="font-mono">konjaku</span>・<span class="font-mono">hikita</span> は <span class="font-mono">SYSTEM.md</span> に<strong>0件</strong>）②<strong>版ズレ4件</strong>：overseer 地図1.0/実体<strong>1.2</strong>・hp-loop 0.18/<strong>0.19</strong>・comms 0.3/<strong>0.9</strong>・hp-prospect 0.2/<strong>0.1</strong>（逆向き）③<strong>トークン登録表が実態と違う</strong>＝地図は <span class="font-mono">overseer</span>・<span class="font-mono">hanasaka-main</span> を「登録済」と書きますが、<span class="font-mono">mailbox-tokens.json</span> の agent_id 13件に<strong>どちらも入っていません</strong>（両者はファイルシステム直＝<span class="font-mono">local-send</span>／<span class="font-mono">slack-poll.py</span> 経由で動いているため実害は出ていません）。</li>
+        <li><strong>🟢 O-009 更新</strong>：HEAD <span class="font-mono">a0724ce</span>（08-23・finance）＝<strong>コミットは流れています</strong>（O-040 の効果）。未コミットは <strong>58件</strong>（08-10 実測 169件から改善）。ただし<strong>1点だけご注意</strong>＝<span class="font-mono">bin/</span> の<strong>未追跡ツール3本が最古6日</strong>（<span class="font-mono">bq-tables.py</span>・<span class="font-mono">gsc-layer.py</span>・<span class="font-mono">sitemap-count.py</span>）＝<u>git に無い＝消えたら復元できません</u>（2026-08-11 に「1ヶ月放置の本番ツール5本」の実績あり）。</li>
+      </ul>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-4">
+      <h4 class="font-bold mb-2">床と待ちの推移（数字のみ・判定なし）</h4>
+      <p class="text-sm text-gray-700"><strong>データなし</strong>（4サイクル連続）。<span class="font-mono">data/overseer/runtime.jsonl</span> が存在せず、<span class="font-mono">system-health.py</span> にも当該節がありません。ゼロで埋めず、正直に「データなし」と記録します（扱いは🟡O-044 のご判断待ち）。</p>
+    </div>
+
+    <div class="bg-gray-50 border border-gray-200 rounded p-4">
+      <h4 class="font-bold mb-2">器の規律（自分の分・正直に）</h4>
+      <p class="text-sm text-gray-700"><strong>Cycle 064 でお約束したとおり、ご判断が入らないままでも縮めました。</strong>本日 <strong>Cycle 063〜067 の5本をアーカイブへ収容</strong>（<span class="font-mono">index</span> 規約＝最新1本だけ・削除ではなく移設・移設先での実在を <span class="font-mono">grep</span> で確認済み＝<span class="font-mono">archive.html</span> 283,883B → 336,876B・差分は本文改変なしの5本ぶん）。<strong>index は 170,876B（167KB）→ 147,324B（144KB）＝−23.5KB</strong>（内訳＝収容で <strong>−53KB</strong>／本サイクルの追記で <strong>+29.5KB</strong>。追記の大半は🔴O-056 の起票＝根本原因の証拠を省くと社長が判断できないため、圧縮せずそのまま載せました）。<strong>それでも 80KB 閾値は超えたままです</strong>＝本日の実測で内訳がはっきりしました＝<u>サイクルログは removal 前でも 53KB（31%）にすぎず、「🔔 判断待ち」欄が 113KB＝全体の <strong>66%</strong></u>。<strong>つまり統括の器の超過は、書きすぎではなく<u>未決の案件が39件たまっていること</u>そのものです</strong>（🟡O-046）。統括の側でできることは v0.4 規定の1行圧縮まで済んでおり、<strong>決着させられるのは社長のご判断だけ</strong>です。</p>
+    </div>
+  </section>
+
   <!-- ===== Cycle 063〜067（2026-08-24 Cycle 068 で index から収容・index は「最新1本だけ」に保つ規約／本文改変なし） ===== -->
   <!-- ===== Cycle 067 ===== -->
   <section class="mb-10">
