@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-2">📈 HP分析ループ — YCOM（はなさか自社・y-com.info）</h1>
   <p class="text-gray-600 mb-2">対象ホームページを定期的に分析し、<strong>改善提案</strong>と<strong>社長への質問</strong>を積む掲示板。AI が書き、社長がどこでも読む（Tailscale）。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。</p>
-  <p class="text-sm text-gray-500 mb-6">最終更新：2026-09-07（<strong class="text-emerald-700">Cycle 116・社長の手動起動。<span class="text-emerald-700">9/6 のご決定を反映＝Q-018 は解決（実行者＝開発側・引き渡し済み）／R-056 は3層モデルで確定</span>／<span class="text-rose-700">ご指示の「次の3歩」の1歩目＝二重計上を実測で確定＝<u>重複4組・件数も人数も完全一致</u>。ご判断は「推奨どおりで○か×か」の1問だけです</u></span>／<span class="text-sky-700">3回先送りしていた台帳の整理を消化（−3.9KB）＋効かないと分かった追跡を1本、自分から打ち切り</span>／<strong>新規提案・新しいご質問とも0件</strong>（在庫10件・残枠5）。<span class="text-rose-700">ご確認が必要なのは R-023 の1点だけです</span></strong>）</p>
+  <p class="text-sm text-gray-500 mb-6">最終更新：2026-09-08（<strong class="text-emerald-700">Cycle 117・社長の手動起動。<span class="text-rose-700">🔴 昨日ご報告した「R-046 に良い兆し」を<u>撤回します</u></span>＝改修日で前後に割り直すと、その表示は<strong>改修の前から出ていたもの</strong>（改修後4日は0回）。<strong>改修そのものの評価は変えず、判定は予定どおり 9/17 前後</strong>／<span class="text-sky-700">日々の定点観測7項目すべて実施＝サイト・広告とも変化なし・退行なし</span>／<span class="text-sky-700">index の肥大を1段階圧縮（Q-013 の逐語をアーカイブへ）</span>／<strong>新規提案・新しいご質問とも0件</strong>（在庫10件・残枠5）。<span class="text-rose-700">ご確認が必要なのは R-023 の1点だけです（昨日と同じ・増えていません）</span></strong>）</p>
 
   <!-- 3ページの案内 -->
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
@@ -65,15 +65,13 @@
     </div>
 
     <div class="bg-white border-2 border-rose-400 rounded p-3 mb-3">
-      <p class="text-sm font-semibold text-rose-900 mb-1">❓ Q-013（2026-08-09・<strong>1分のご確認</strong>）＝<strong>8月第1週、問い合わせフォームの完了が「7倍」に急増しています。実際に問い合わせメールは届いていますか？</strong></p>
-      <p class="text-sm text-gray-700 mb-2"><strong>事実（GA4 実測）</strong>＝問い合わせフォーム完了イベントが <strong>08-01〜07 の7日間で28件（18人）</strong>＝直前の同じ長さの窓（07-25〜31＝4件/4人）の<strong>7倍</strong>。日別では<strong>08-05 に 15件（8人）が集中</strong>しており、この日は実装担当がサイト修正4件を本番反映した日（17時頃）と同じ日です。一方、<strong>見積フォームは 5→0件・メールリンクは 6→2件と他のチャネルは減っており</strong>、増えたのは問い合わせフォーム完了だけです。また完了者の多くは<strong>フォームページに直接着地したセッション</strong>（48セッション中35件完了＝72.9%）でした。</p>
-      <p class="text-sm text-gray-700 mb-2"><strong class="text-emerald-700">【08-13 更新＝3つの可能性が2つに絞れました】</strong>実装担当から回答があり、<strong>(C) テスト送信は除外されました</strong>＝「08-05 の本番確認は表示の確認のみで、フォームからの送信は1件も行っていない」と明言（＝当方側が混入させた件数は0件と断定できます）。<strong>残る2説</strong>＝<strong>(A) 実際に問い合わせが増えている</strong>（なら大ニュースです＝何が効いたかの特定を最優先で探索します）／<strong>(B) スパム（bot）送信</strong>。<strong class="text-rose-700">(B) の材料が1つ増えました</strong>＝実装担当によると<strong>問い合わせフォームは自作PHPで、CAPTCHA 等のロボット対策が入っていません</strong>。フォームページに直接着地したセッションの完了率が 72.9% と異常に高いことも整合します。</p>
-      <p class="text-sm text-gray-700 mb-2 bg-rose-50 border border-rose-200 rounded p-2"><strong class="text-rose-700">【08-16 更新＝急増は「1週間で収束」していました。これが最大の手がかりです】</strong>本日の週次CV実測で、同じ長さの窓を3本並べて測り直しました：<strong>07-25〜31（急増前）＝4件/4人 → 08-01〜07（急増）＝28件/18人〔7倍〕→ <span class="text-rose-700">08-08〜14 ＝3件/3人</span></strong>。＝<strong>第2週は急増前と同じ水準に戻っています</strong>。→ <strong>推測：これは「実際に問い合わせが増え続けている」形ではありません</strong>（本当に増えているなら第2週も高いままのはずです）。<strong>(B) スパムまたは一過性のできごと</strong>と整合します。<span class="text-gray-600">※ただし機械的な投稿かどうかは数字だけでは決められません＝<strong>最後の切り分けは社長の受信メールの確認だけ</strong>です。</span></p>
-      <p class="text-xs text-rose-800"><strong>お願い＝受信メールボックスで「08-01〜07 に問い合わせが実際に何通届いたか」だけご確認ください</strong>（正確な数でなく「体感で増えた／変わらない／スパムっぽいのが来ている」の一言で十分です）。<strong>これで2説が確定します</strong>（本文を見ればロボットかどうかはすぐ分かる、というのが実装担当の見立てです）。判明するまで、この増加は成果として扱いません。<strong>もしスパムだった場合は、フォームにロボット対策（現在ゼロ）を入れる提案をすぐ起票します</strong>（実問い合わせが埋もれるリスクがあるため）。</p>
+      <p class="text-sm font-semibold text-rose-900 mb-1">❓ Q-013（2026-08-09・<strong>1分のご確認</strong>・急ぎません）＝<strong>8月第1週、問い合わせフォームの完了が「7倍」に急増しました。実際に問い合わせメールは届いていましたか？</strong></p>
+      <p class="text-sm text-gray-700 mb-2"><strong>ここまでに分かっていること（3行）</strong>＝① GA4 で <strong>08-01〜07 に28件（18人）＝直前週の7倍</strong>、うち 08-05 に15件が集中。② <strong>第2週（08-08〜14）は3件で急増前の水準に戻っています</strong>＝「本当に増え続けている」形ではありません。③ 実装担当の回答で<strong>テスト送信は除外</strong>され、<strong>フォームにロボット対策が入っていない</strong>ことも判明＝残る2説は <strong>(A) 実際の問い合わせ</strong>／<strong>(B) スパム</strong>です。</p>
+      <p class="text-xs text-rose-800"><strong>お願い＝受信メールボックスで「08-01〜07 に問い合わせが実際に何通届いたか」だけご確認ください</strong>（正確な数でなく「体感で増えた／変わらない／スパムっぽいのが来ている」の一言で十分です）。<strong>これで2説が確定します。</strong>判明するまで、この増加は成果として扱いません。<strong>もしスパムだった場合は、フォームにロボット対策（現在ゼロ）を入れる提案をすぐ起票します</strong>（実問い合わせが埋もれるリスクがあるため）。<span class="text-gray-500">※3回にわたる経過の逐語は <a href="archive.html" class="underline">アーカイブ「Cycle 117 移送」</a>に保全しています（質問は未解決のままここに残します）。</span></p>
     </div>
 
     <div class="bg-white border border-gray-300 rounded p-3 mb-3">
-      <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">未決着の在庫は 10件（09-07 実測）で、そのうち社長のご判断が要るのは 1件だけです。</strong><span class="text-xs text-gray-500">（残りは開発側の作業待ち・効果検証中＝ご確認不要）</span></p>
+      <p class="text-sm text-gray-700 mb-2"><strong class="text-rose-700">未決着の在庫は 10件（09-08 実測・前日から増減なし）で、そのうち社長のご判断が要るのは 1件だけです。</strong><span class="text-xs text-gray-500">（残りは開発側の作業待ち・効果検証中＝ご確認不要）</span></p>
       <table class="w-full text-sm border-collapse mb-2">
         <thead><tr class="text-left border-b border-gray-300 text-gray-700"><th class="py-1 pr-3">束</th><th class="py-1 pr-3">決めていただくこと</th><th class="py-1">動き出すもの</th></tr></thead>
         <tbody class="align-top">
@@ -165,7 +163,7 @@
   <!-- ===== 🔧 進行中の提案（未完了 R-NNN・最新レポートに繰り越し） ===== -->
   <div class="border-2 border-amber-300 bg-amber-50 rounded-lg p-5 mb-8">
     <h2 class="text-xl font-bold text-amber-800 mb-2">🔧 進行中の提案（未完了）</h2>
-    <p class="text-sm text-amber-900 mb-1">いま動いている提案だけをここに残します（完了・中止は <a href="archive.html" class="underline font-semibold">アーカイブ</a> へ移動）。実装は web-hanasaka、効果検証は本ループ。<span class="text-xs text-gray-500">（台帳と同期：Cycle 116・2026-09-07）</span></p>
+    <p class="text-sm text-amber-900 mb-1">いま動いている提案だけをここに残します（完了・中止は <a href="archive.html" class="underline font-semibold">アーカイブ</a> へ移動）。実装は web-hanasaka、効果検証は本ループ。<span class="text-xs text-gray-500">（台帳と同期：Cycle 117・2026-09-08＝本サイクルは状態変化なし＝14行そのまま）</span></p>
     <p class="text-sm text-amber-900 mb-3 border border-amber-300 bg-white rounded p-2"><strong>着手区分の見方（2026-07-29 新設）</strong>＝<strong class="text-emerald-700">✅ AI即応</strong>：実装担当がそのまま進められます（定額内・ご回答不要）／<strong class="text-rose-700">🔔 要回答</strong>：社長・クライアントのご回答・素材・手作業が必要（何が要るかを括弧に明記）／<strong>💰 大型・要相談</strong>：定額の範囲を超える別途お見積り（現在該当なし）／<strong class="text-gray-500">⏳ 検証中</strong>：作業なし・数字の結果を待つだけ。区分は1件につき1つ（即応部分と回答待ちが混在する場合は🔔側に倒し、注記に先行できる範囲を書きます）。<strong class="text-rose-700">ご確認いただきたいのは 🔔 の行（と、💰 が出た場合）です。</strong></p>
     <table class="w-full text-sm border-collapse">
       <thead><tr class="text-left border-b border-amber-300 text-amber-900"><th class="py-1 pr-3">提案</th><th class="py-1 pr-3">着手区分</th><th class="py-1 pr-3">内容</th><th class="py-1">状態</th></tr></thead>
@@ -240,51 +238,45 @@
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
-    <h3 class="text-xl font-semibold mb-1">Cycle 116 — 2026-09-07（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①9/6 のご決定を反映（Q-018 解決・R-056 確定）②ご指示の「次の3歩」の1歩目を実測で確定し、ご判断を○×1問まで畳んだ ③3回先送りしていた台帳の整理を消化 ④効かないと分かった追跡を1本打ち切り</strong>）</h3>
-    <p class="text-sm text-gray-600 mb-4"><strong>データ状況</strong>＝GSC ✅（BigQuery・28日窓・データは <strong>09-04</strong> まで＝前回から1日前進）／GA4 ✅（09-07 まで）／Google広告 ✅（停止中を再確認）／Clarity ✅（<strong>4日連続で取得成功</strong>）／本番サイトの実査 ✅／メールボックスの実査 ✅。<strong>推測で埋めた数字はありません。</strong>推測を書いた箇所は「推測」と明記しています。</p>
+    <h3 class="text-xl font-semibold mb-1">Cycle 117 — 2026-09-08（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①昨日ご報告した「良い兆し」を、自分で調べ直して撤回しました ②その撤回は当方の台帳に8月から書いてあった事実と照合して確定 ③日々の定点観測7項目を実施 ④index の肥大を1段階圧縮</strong>）</h3>
+    <p class="text-sm text-gray-600 mb-4"><strong>データ状況</strong>＝GSC ✅（BigQuery・28日窓・データは <strong>09-05</strong> まで＝前回から1日前進）／Google広告 ✅（停止中を再確認）／Clarity ✅（<strong>5日連続で取得成功</strong>）／本番サイトの実査 ✅（トップ＋実績詳細ページ）／メールボックスの実査 ✅（新着なし）。<strong>推測で埋めた数字はありません。</strong>推測を書いた箇所は「推測」と明記しています。</p>
 
-    <p class="text-sm bg-gray-50 border border-gray-300 rounded p-3 mb-4"><strong>総評</strong>＝<strong class="text-emerald-700">本日は「新しい提案をゼロ件にして、決まったことを前に進める日」にしました。</strong>9/6 にいただいた2つのご決定（広告の実行者＝開発側／CV設計＝3層モデルで確定）をそのまま反映し、そこでご指示のあった<strong>「次の3歩」の1歩目＝二重計上を潰す</strong>を GA4 の実データで確定させました。<strong class="text-rose-700">結果、重複は4組・件数も人数も1つ残らず一致</strong>＝同じ動作が2回（1組は3回）数えられていることが確定です。→ 上の 🔔 に、<strong>○か×だけでお答えいただける形</strong>にしてあります。<br>あわせて、<strong>3サイクル続けて「次回やります」と書きながら着手できていなかった台帳の整理</strong>を消化し、<strong>もう効かないと分かっている追跡を1本、自分から打ち切りました</strong>（下④）。</p>
+    <p class="text-sm bg-gray-50 border border-gray-300 rounded p-3 mb-4"><strong>総評</strong>＝<strong class="text-rose-700">本日いちばん大事なご報告は、昨日お伝えした「良い兆し」の取り消しです。</strong>昨日（9/7）「実績の個別ページが検索に出はじめました」とお伝えしましたが、<strong>調べ直したところ、それは 9/2 の改修とは関係のない数字でした</strong>。詳しくは下の①に書きます。<strong class="text-emerald-700">改修そのものが失敗したという話ではありません</strong>（正式な判定は予定どおり 9/17 前後です）。当方の<u>読み方</u>が誤っていた、というご報告です。<br>それ以外は、サイト・広告とも変化なし。<strong>新しい提案・新しいご質問はどちらも0件</strong>で、<strong class="text-rose-700">ご確認をお願いしたいのは昨日と同じ 🔔 R-023（○か×だけ）の1点のみ</strong>です（新しいお願いは増やしていません）。</p>
 
-    <div class="bg-rose-50 border-2 border-rose-400 rounded p-3 mb-4">
-      <p class="text-sm font-bold text-rose-900 mb-2">① 9/6 のご決定を反映しました（＝Q-018 は解決・R-056 は確定）</p>
-      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
-        <li><strong>Q-018（広告の除外設定を誰がやるか）＝「②開発の受信箱」で解決。</strong>同日そのまま <span class="font-mono">web-hanasaka</span> へ引き渡し済み。<strong class="text-emerald-700">以後この件で社長へ督促はしません</strong>（→ 🔔 の下段）。</li>
-        <li><strong>R-056（CV設計）＝3層モデルで確定。GA4標準スクロール(90%) は当方推奨どおり③（観測専用）に留める</strong>とご決定いただきました。コンバージョン値は作らない（当面すべて ¥0＋「コンバージョン数の最大化」）、採用のCVは営業と別棚、も確定です。</li>
-        <li><span class="text-xs text-gray-600">※ この3サイクル、<strong>ご決定がサイクル実行の後に書かれる</strong>ため、翌サイクルの冒頭で必ず拾う形になっています（取りこぼしはありません）。</span></li>
-      </ul>
-    </div>
-
-    <div class="bg-white border-2 border-rose-500 rounded p-3 mb-4">
-      <p class="text-sm font-bold text-rose-900 mb-2">② 【本日の最大の産物】「次の3歩」の1歩目＝二重計上の実体を確定しました</p>
-      <p class="text-sm text-gray-800 mb-2">GA4・直近30日（8/8〜9/7）で全イベントを数えたところ、<strong class="text-rose-700">重複は4組。すべて件数もユーザー数も完全に一致</strong>していました（＝同じ動作に2つ、1組は3つの名前が付いている状態）。詳しい表と当方の推奨は<strong>このページ上部の 🔔</strong> にあります。<strong>ご判断は「推奨どおりで○か、別案で×か」の1問だけ</strong>です。</p>
-      <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-700">新しいご質問（Q-019 等）は作っていません。</strong>この決定はもともと R-023 として「社長のご判断待ち」に数えられており、<strong>同じ1つの決定に番号を2つ与えると、止まっている件数が水増しに見えてしまう</strong>ためです。</p>
-      <p class="text-sm text-gray-800 bg-amber-50 border border-amber-300 rounded p-2"><strong>副次の発見（ご回答不要）</strong>＝<span class="font-mono">見積もりのリクエスト</span> 22件/15人が、本当の見積り依頼完了（2件）の<strong>11倍</strong>ありました。<strong>名前は「完了」に読めるのに、実体は手前の動作（クリック等）ではないか</strong>と疑っています＝もし①主要CVに入れると<u>また水増しになります</u>。GTMの設定を見れば1分で確定するので、コンソール作業の確認事項に入れました。<span class="text-gray-600">※当方から GTM は見えないため推測です。</span></p>
-    </div>
-
-    <div class="bg-sky-50 border-2 border-sky-400 rounded p-3 mb-4">
-      <p class="text-sm font-bold text-sky-900 mb-2">③ 3回先送りしていた「台帳の整理」を消化しました（社長のお手は要りません）</p>
-      <p class="text-sm text-gray-800 mb-2">当方が判断に使っている台帳の中で、<strong>R-049 と R-040 の2件が、8月からの日々の記録を1行の中に積み上げたまま約19.7KBに膨らんで</strong>いました（毎回全部読む必要のあるファイルなので、そのまま太ると解析そのものが遅くなります）。<strong>過去の逐一の記録はアーカイブへ移し、本体には「いまの状態・何で効果を測るか・次に誰が何をするか」だけを残しました。</strong><span class="text-xs text-gray-600">※未完了の提案は1件もアーカイブへ落としていません（＝見失う形にはしていません）。</span></p>
-      <p class="text-sm text-gray-700"><strong>実測＝台帳 234,175 → 230,250 バイト（−3.9KB）。</strong><span class="text-xs text-gray-600">移送した分は −14.0KB ですが、本日書いた分が +10.1KB あるため、差引はこの数字です＝<strong>「移した量」ではなく「実際に減った量」でご報告します</strong>。</span></p>
-    </div>
-
-    <div class="bg-emerald-50 border-2 border-emerald-400 rounded p-3 mb-4">
-      <p class="text-sm font-bold text-emerald-900 mb-2">④ 効かないと分かった追跡を1本、自分から打ち切りました（R-040）</p>
-      <p class="text-sm text-gray-800 mb-2">「外注 ホームページ 大阪」という検索語について、<strong>なぜ表示がゼロになったのか原因を切り分ける</strong>という宿題を当方が持っていました。<strong class="text-rose-700">本日で打ち切ります。</strong>理由＝(1) 28日で数えて<strong>5回続けて表示ゼロ</strong>＝需要そのものが消えたと見るのが妥当 (2) そもそも<strong>9/2 に「この語は取りに行かない」と決めています</strong>＝原因が分かっても打つ手が変わりません。</p>
-      <p class="text-sm text-gray-700">→ R-040 に残るのは <strong><span class="font-mono">/partners/alliance.html</span> のタイトル修正1本</strong>だけです（下請け・外注を実際に受けているのに、タイトルからそれが読めない＝<strong>検索数と関係なく残る誤解のリスク</strong>なので残します）。<strong class="text-emerald-700">これは開発側の作業待ちで、社長のご判断は不要です。</strong></p>
+    <div class="bg-white border-4 border-rose-500 rounded p-3 mb-4">
+      <p class="text-base font-bold text-rose-900 mb-2">① 【訂正】昨日の「R-046 に良い兆し」を撤回します</p>
+      <p class="text-sm text-gray-800 mb-2">昨日、<strong>「実績の個別ページ（<span class="font-mono">?p_id=7883</span>）が9表示・5.4位で、これまで出ていなかったものが出はじめた＝9/2 の改修の兆し」</strong>とご報告しました。本日、<strong>改修日（9/2）でデータを前後に割って測り直した</strong>ところ、次のとおりでした：</p>
+      <table class="w-full text-sm border-collapse mb-2">
+        <thead><tr class="text-left border-b-2 border-rose-300 text-rose-900"><th class="py-1 pr-3">期間</th><th class="py-1 pr-3"><span class="font-mono">?p_id=7883</span> の表示回数</th><th class="py-1">読み方</th></tr></thead>
+        <tbody class="align-top">
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3"><strong>改修の前</strong>（8/29〜9/1・4日間）</td><td class="py-1 pr-3"><strong>3回</strong>（平均7.3位）</td><td class="py-1">改修の前から<strong>すでに出ていました</strong></td></tr>
+          <tr><td class="py-1 pr-3"><strong>改修の後</strong>（9/2〜9/5・4日間）</td><td class="py-1 pr-3"><strong class="text-rose-700">0回</strong></td><td class="py-1">改修後はまだ<strong>1回も出ていません</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2">＝<strong class="text-rose-700">「出はじめた」のではなく「もともと出ていた」</strong>のが正しい読みです。28日間の合計（8回）を見て「新しく出はじめた」と読んでしまったのが誤りでした。</p>
+      <p class="text-sm text-gray-800 bg-amber-50 border border-amber-300 rounded p-2 mb-2"><strong class="text-rose-700">さらに悪いことに、これは当方が8月に自分で書いていた事実と矛盾していました。</strong>台帳には <strong>8/14 の時点で「<span class="font-mono">?p_id=7883</span> は11表示・6.3位で実在する」</strong>と、しかも<strong>「これを『露出ゼロ』と書いたのは誤りだった」という訂正つき</strong>で残っていました。＝<strong>同じ間違いを、自分の訂正記録を読み落として繰り返した</strong>ということです。再発防止として、当方のカイゼン台帳に<strong>「『0→出はじめた』と書く前に、その数字が改修前にいくつだったかを必ず1行で示す」</strong>を追加しました。</p>
+      <p class="text-sm text-gray-700"><strong class="text-emerald-700">→ R-046 そのものの評価は変えません。</strong>改修（実績39ページを1本のURLに集約していた設定の解除）は 9/2 に本番反映済みで、<strong>本日も現物を取得して生きていることを確認しています</strong>（canonical が個別URL・説明文も案件ごと＝退行なし）。検索エンジンが39ページを取り直すには時間がかかるため、<strong>反映後4日で結論は出ません</strong>。判定は予定どおり <strong>9/17 前後</strong>です。</p>
     </div>
 
     <div class="bg-white border border-gray-300 rounded p-3 mb-4">
-      <p class="text-sm font-bold text-gray-800 mb-2">⑤ 日々の定点観測（変わったこと・変わらないこと）</p>
+      <p class="text-sm font-bold text-gray-800 mb-2">② 日々の定点観測（本日の7項目・すべて実施）</p>
       <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
-        <li><strong>サイト全体＝変化なし</strong>（28日で 1,470クリック・55,550表示・平均11.4位＝前回とほぼ同値）。<strong>本番サイトも退行なし</strong>（トップページは前回と1バイトも違いません）。</li>
-        <li><strong class="text-emerald-700">🟢 R-046（実績ページの個別化・9/2 反映）に良い兆しが出ました</strong>＝これまで検索結果に出てこなかった<strong>実績の個別ページが表示され始めています</strong>（<span class="font-mono">?p_id=7883</span> が 9表示・5.4位）。<span class="text-xs text-gray-600">※まだ9表示と少ないので<strong>断定はしません</strong>。正式な判定は予定どおり 9/17 前後です。</span></li>
-        <li><strong>R-049（運用代行ページ）＝表示は伸び続け、クリックは11回続けてゼロ。</strong>423表示・15.4位（前回416）。兵庫圏＋淡路が 171表示＝全体の40%まで増えましたが、<strong>8語すべてが1ページ目に入っていません</strong>（大阪の語だけが1ページ目）。<strong class="text-rose-700">→ 9/6 に判明したとおり、原因は「載っている言葉が違う」</strong>＝改修の先頭は「更新代行」への言い換えです。<strong>開発側の作業待ちです。</strong></li>
-        <li><strong>Google広告＝停止が続いています</strong>（同じ管理下の他3社は9/5分までデータが来ているのに、YCOM広告だけデータ皆無＝「遅れ」ではなく本当にゼロ、を5回続けて確認）。<strong>費用は止まったままです。</strong></li>
-        <li><strong>実際の行動データ（Clarity）＝4日連続で取得成功。</strong>気になる点＝<u>買い手向けのページ（トップ16秒・サービス10秒・料金14秒）の滞在が極端に短く、ブログは24〜336秒</u>。<span class="text-xs text-gray-600">※1日分・各ページ1〜2人分なので<strong>判断材料にはしません</strong>。次の週次で GA4 側と突き合わせます。</span></li>
+        <li><strong>サイト全体＝変化なし</strong>（28日で 1,448クリック・55,281表示・平均11.4位＝前回 1,470/55,550/11.4位とほぼ同値）。<strong>本番サイトも退行なし</strong>（トップページは前回と1バイトも違いません＝73,529B）。</li>
+        <li><strong>R-049（運用代行ページ）＝表示は伸び続け、クリックは12回続けてゼロ。</strong>425表示・15.2位（前回423）。兵庫圏＋淡路が 172表示＝<strong>8語すべてがまだ1ページ目に入っていません</strong>（14.3〜27.8位）。一方、大阪を付けた語は1ページ目のまま（「ホームページ修正更新代行 大阪」<strong>6.6位</strong>・48表示・クリック0）。<strong class="text-rose-700">原因は 9/6 に確定したとおり「載っている言葉が違う」</strong>＝改修の先頭は「更新代行」への言い換えです。<strong>開発側の作業待ちです。</strong></li>
+        <li><strong>R-057（サービスページのツリー）＝不変。</strong>16URL合計で約996表示・<strong>クリック1回</strong>（前回977表示・1回）。<strong>CVにいちばん効く面が、いちばん検索から入られていない構図は変わっていません。</strong></li>
+        <li><strong>R-047（無料相談の受け皿4ページ）＝13回続けてクリック0。</strong>4URL合計71表示（前回84表示）。<strong>統合してはじめて動く</strong>という見立ては変わりません＝<strong>開発側の作業待ちです。</strong></li>
+        <li><strong>Google広告＝停止が続いています</strong>（同じ管理下の他3社は9/6分までデータが来ているのに、YCOM広告だけデータ皆無＝「遅れ」ではなく本当にゼロ、を<strong>6回続けて</strong>確認）。<strong>費用は止まったままです。</strong></li>
+        <li><strong>実際の行動データ（Clarity）＝5日連続で取得成功</strong>（9/3 に開通いただいた許可が定着しています）。<span class="text-xs text-gray-600">※本日分は1ページあたり1〜6人分なので<strong>判断材料にはしません</strong>。</span></li>
+        <li><strong>メールボックス＝新着なし。</strong>9/6 に開発側へお渡しした広告の除外設定（R-050）は<strong>2日目</strong>＝広告は停止中で急ぎではないため、督促せず静かに待ちます。</li>
       </ul>
     </div>
 
-    <p class="text-sm bg-gray-100 border border-gray-300 rounded p-3"><strong>本日の新規提案＝0件／新しいご質問＝0件。</strong>判断待ちは10件で、あと5件まで新規を出せる状態でしたが<strong>あえて使いませんでした</strong>＝新しい打ち手を足すより、①ご決定を実行に移す ②ご指示の1歩目を「○×だけ」に畳む ③台帳の整理 ④効かない追跡の打ち切り、のほうが前に進むと判断したためです。<strong class="text-rose-700">ご確認いただきたいのは、上の 🔔 R-023（○か×だけ）の1点だけです。</strong></p>
+    <div class="bg-sky-50 border-2 border-sky-400 rounded p-3 mb-4">
+      <p class="text-sm font-bold text-sky-900 mb-2">③ このページの肥大を1段階圧縮しました（社長のお手は要りません）</p>
+      <p class="text-sm text-gray-800">このページ（最新レポート）は、当方の運用基準の 80KB に対して <strong>131KB</strong> と超過が続いていました。本日は <strong>Q-013（8月の問い合わせ急増の件）に3回書き足した経過の逐語</strong>をアーカイブへ移し、本文には<strong>「分かっていること3行＋お願い1行」</strong>だけを残しました。<strong class="text-rose-700">質問そのものは未回答なので、上の 🔔 にそのまま残しています</strong>（未解決のものをアーカイブへ落とすことはしません）。</p>
+    </div>
+
+    <p class="text-sm bg-gray-100 border border-gray-300 rounded p-3"><strong>本日の新規提案＝0件／新しいご質問＝0件。</strong>判断待ちは10件で、あと5件まで新規を出せる状態でしたが<strong>本日も使いませんでした</strong>＝開発側にお渡し済みの作業（R-018＋R-049 の本文改修・R-047 の統合・R-040 のタイトル・R-050 の広告除外）が待ち行列にあり、<strong>そこへ新しい打ち手を足すより、出した数字の正しさを担保するほうが前に進む</strong>と判断したためです。<strong class="text-rose-700">ご確認いただきたいのは、上の 🔔 R-023（○か×だけ）の1点だけです（昨日と同じ・増えていません）。</strong></p>
 
   </section>
   <!-- Cycle 098 以前の旧サイクル記録は archive.html に保全済み（Cycle 101 で index から除去） -->
