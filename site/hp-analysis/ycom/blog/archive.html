@@ -180,6 +180,161 @@
   </div>
 
 
+  <!-- ===== 📦 Cycle 088（2026-09-07）＝ Cycle 089（2026-09-08）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 088（2026-09-07）のスナップショット <span class="text-sm font-normal text-gray-500">（2026-09-08 に index から退避・原文無改変）</span></h2>
+
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c088">Cycle 088 — 2026-09-07（YCOM ブログ・日次）：<span class="text-emerald-800">昨日の仕分けを「裾」まで広げました＝上位16本の外（14記事・150クリック）にも買い手はゼロ＝<u><span class="font-mono">B-067</span> の名指しリストは追加不要です</u></span>／<span class="text-rose-700">それより重い事実＝<u>ホームページを作りたい人に向けて書かれた既存記事4本は、28日で合計5表示・0クリック</u>でした。買い手向けの記事は「無い」のではなく「見えていません」</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-07）</h3>
+    <p class="text-xs">取得できたもの＝<strong>GSC（BigQuery・2026-08-10〜09-07／実データは 09-04 まで＝ラグ3日）</strong>・<strong>本番HTML（<span class="font-mono">hp-audit</span> の読み取り＝記事の本文テキスト・タイトル）</strong>・<strong>WP下書きの状態（<span class="font-mono">wp-draft.py get</span>＝読み取りのみ）</strong>。<br>
+    未取得＝<u>GA4 の「記事 → 受け皿ページ」の遷移経路</u>（<span class="font-mono">ga4-fetch.py</span> に経路を取る手段がありません）／<span class="font-mono">bin/hp-diff.py</span> は許可リストに無く<strong class="text-rose-700">11日連続</strong>で実行できず、期間比較は <span class="font-mono">gsc-fetch.py</span> を分けて手で突き合わせています。<u>推測で埋めた数字はありません。</u></p>
+  </div>
+
+  <div class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">🩺 毎日の定点観測（本日の実測）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝<span class="font-mono">status=draft</span>（投入 8/17 から <u>22日目</u>）</strong>。タイトルも投入時のまま＝<span class="font-mono">B-043</span>・<span class="font-mono">B-064</span> 未実行。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモは、本日も本番URLの本文に出ています（<u>54日目</u>）</strong>＝本文末尾「…お気軽にご相談ください。」の直後の1段落（<span class="font-mono">B-059</span>）。<span class="text-gray-600">本文テキストを取得して1件ヒットを確認。</span></li>
+      <li>「ホームページ制作 料金表」＝28日 <strong>200表示・クリック0・19.2位</strong>（前日 19.1位）。<u>横ばい</u>。受けているのは <span class="font-mono">/price/basic.html</span> 1枚のまま、ブログ記事は0本。<span class="text-gray-600">同帯の「web制作会社 料金表」は52表示・9.3位・クリック0。</span></li>
+      <li><strong class="text-emerald-800">🆕 良い変化：<span class="font-mono">?p=8137</span>（MEO・構造化データ）が初めてクリックを取りました</strong>＝28日 219表示・<strong>4クリック</strong>・9.2位（<u>これまで＝90日484表示・クリック0</u>）。→ 下記 <span class="font-mono">B-068</span>。<span class="text-gray-600">小さな数字です。断定はしません。</span></li>
+      <li><strong class="text-emerald-800">🆕 <span class="font-mono">/free_photo/</span>（<span class="font-mono">B-056</span> で架ける橋の行き先）は 28日 570表示・<u>19クリック</u>・4.9位</strong>＝自力で検索を受けている、生きた受け皿でした。<span class="text-gray-600">橋の行き先として妥当であることの裏づけ。</span></li>
+      <li>メールボックス＝<strong>新規0件</strong>（<u>スプールをファイル実体で確認</u>＝<span class="font-mono">to: blog-loop-ycom</span> は 8/21 の web-hanasaka 回答1通のみ・処理済み）。昨日の <span class="font-mono">C087</span> 配信（→ web-hanasaka・作業範囲の確定）は <span class="font-mono">new/</span> に投函済みで<u>まだ受領されていません</u>。</li>
+      <li>社長指示ファイル（<span class="font-mono">from-president.md</span>）＝新しい記載はありません。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-emerald-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-emerald-800 mb-2">🔎 本日の中心①：昨日の仕分けを「裾」まで広げて検証しました＝結論は変わりません</h3>
+    <p class="text-xs mb-2"><strong>なぜやったか</strong>：昨日（<a href="archive.html#c087" class="underline">C087</a>）の4分類は<u>クリック上位16記事だけ</u>を見たものでした。ブログには346本あります。<strong>「上だけ見て決めた」まま執筆担当に作業指示を出すのは危険</strong>なので、その外側を実測しました。</p>
+    <p class="text-xs mb-2"><strong>やったこと</strong>：上位16本の外側で28日クリックが8件以上ある<strong>14記事（計150クリック）</strong>について、実際に受けている検索語を1本ずつ取得（<span class="font-mono">gsc-fetch page-queries</span>）。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b-2 border-gray-400 bg-gray-100"><th class="py-1 pr-2">読者</th><th class="py-1 pr-2">記事（受けている代表的な検索語）</th><th class="py-1 pr-2">クリック</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200 bg-sky-50"><td class="py-1 pr-2 font-semibold">コードを書いている人</td><td class="py-1 pr-2"><span class="font-mono">?p=7024</span>(ページ内リンク)・<span class="font-mono">?p=8295</span>(css ボタン)・<span class="font-mono">?p=4450</span>(右クリック禁止)・<span class="font-mono">?p=7284</span>(css ボタン アニメーション)・<span class="font-mono">?p=8061</span>(cssアイコン付きボタン)・<span class="font-mono">?p=8078</span>(jQueryプログレスバー)・<span class="font-mono">?p=7434</span>(ページ内リンク スクロール)・<span class="font-mono">?p=2330</span>(検索結果サムネイル※<span class="font-mono">B-035</span> の記録より)</td><td class="py-1 pr-2 font-bold">84</td></tr>
+        <tr class="border-b border-gray-200 bg-gray-100"><td class="py-1 pr-2 font-semibold">事業と関係のない用事</td><td class="py-1 pr-2"><span class="font-mono">?p=5960</span>(「品質重視」「スピード重視」＝語の意味を調べている・1.9位)・<span class="font-mono">?p=6763</span>(住所辞書)・<span class="font-mono">?p=5755</span>(gmail 見にくい)・<span class="font-mono">?p=6115</span>(ファイリングとは)・<span class="font-mono">?p=5872</span>(右クリック禁止 なぜ)・<span class="font-mono">?p=6181</span>(webサーバー 日本語対応)</td><td class="py-1 pr-2 font-bold">66</td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-2 font-semibold text-emerald-800">ホームページを頼むかもしれない人</td><td class="py-1 pr-2 text-gray-600">この14本には<strong class="text-rose-700">1本もありません</strong>（裾の買い手記事は <span class="font-mono">?p=8126</span>・<span class="font-mono">?p=77</span> の2本だけで、<u>どちらも既に <span class="font-mono">B-067</span> の名指しリストに入っています</u>）</td><td class="py-1 pr-2 font-bold text-rose-700">0</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs bg-emerald-50 border-2 border-emerald-400 rounded p-3"><strong class="text-emerald-800">＝<span class="font-mono">B-067</span>（架ける6本／架けない3本／コード記事7本へは横展開しない）に、追加も削除も要りません。</strong><u>本日 05:30・06:00 の <span class="font-mono">blog-write</span>／<span class="font-mono">blog-improve</span> の起動は、昨日お渡しした指示のままで結構です</u>（本サイクルは 05:02 に走っており、起動前に検証が間に合っています）。<span class="text-gray-600">※「上位16本の外にも買い手がいるのでは」という当然の疑いを、実測で1つ潰したという内容です。<u>新しい作業は増えません。</u></span></p>
+  </div>
+
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-rose-800 mb-2">🔎 本日の中心②：買い手向けの記事は「無い」のではありません。<u>書いてあるのに、検索に出ていません</u></h3>
+    <p class="text-xs mb-2">裾を見ているとき、逆側が気になりました——<strong>ブログには「ホームページの作り方」「維持費」「WordPressでの作り方」といった、本業ど真ん中の記事が実は書かれています。</strong>それらが4分類に一度も出てこないのは、なぜか。そこで名指しで数字を取りました。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b-2 border-gray-400 bg-gray-100"><th class="py-1 pr-2">記事</th><th class="py-1 pr-2">テーマ</th><th class="py-1 pr-2">28日 表示</th><th class="py-1 pr-2">クリック</th><th class="py-1">最上位語の順位</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2 font-mono">?p=17</td><td class="py-1 pr-2">ホームページの維持費はいくら？</td><td class="py-1 pr-2 font-bold text-rose-700">0</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">―（28日で一度も検索結果に出ていません）</td></tr>
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2 font-mono">?p=7619</td><td class="py-1 pr-2">WordPressを使ったホームページの作り方</td><td class="py-1 pr-2 font-bold text-rose-700">0</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">―</td></tr>
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2 font-mono">?p=8025</td><td class="py-1 pr-2">SEOの全体を理解しよう</td><td class="py-1 pr-2 font-bold text-rose-700">0</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">―</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-2 font-mono">?p=5050</td><td class="py-1 pr-2">初めてのホームページの作り方<span class="text-gray-500">（<span class="font-mono">B-014</span>／改善版 下書き 8363 の元記事）</span></td><td class="py-1 pr-2">2</td><td class="py-1 pr-2">0</td><td class="py-1">13.0位</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-2 font-mono">?p=8101</td><td class="py-1 pr-2">ホームページを公開するときにやっておきたいこと</td><td class="py-1 pr-2">3</td><td class="py-1 pr-2">0</td><td class="py-1">63.0位</td></tr>
+        <tr class="border-b-2 border-gray-400 bg-rose-100"><td class="py-1 pr-2 font-bold" colspan="2">買い手向け5本 合計</td><td class="py-1 pr-2 font-bold text-rose-700">5</td><td class="py-1 pr-2 font-bold text-rose-700">0</td><td class="py-1"></td></tr>
+        <tr class="border-b border-gray-200 bg-gray-50"><td class="py-1 pr-2 font-mono">?p=3143</td><td class="py-1 pr-2 text-gray-600">レスポンシブデザインとは<span class="text-gray-500">（<span class="font-mono">B-040</span> の対象）</span></td><td class="py-1 pr-2">42</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">87.5位</td></tr>
+        <tr class="border-b border-gray-200 bg-gray-50"><td class="py-1 pr-2 font-mono">?p=296</td><td class="py-1 pr-2 text-gray-600">作成ソフトとSEO<span class="text-gray-500">（<span class="font-mono">T-039</span> の入口）</span></td><td class="py-1 pr-2">27</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">33.3位</td></tr>
+        <tr class="border-b border-gray-200 bg-gray-50"><td class="py-1 pr-2 font-mono">?p=8183</td><td class="py-1 pr-2 text-gray-600">.htaccess を使ったURLの正規化でSEO対策</td><td class="py-1 pr-2">151</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">3.7位（「url 正規化 htaccess」40表示）</td></tr>
+        <tr class="border-b-2 border-gray-400 bg-gray-100"><td class="py-1 pr-2 font-mono">?p=7190</td><td class="py-1 pr-2 text-gray-600">Google検索結果でのサムネイル<span class="text-gray-500">（<span class="font-mono">B-035</span> の対象）</span></td><td class="py-1 pr-2">174</td><td class="py-1 pr-2">0</td><td class="py-1 text-gray-600">34.2位</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs bg-rose-50 border-2 border-rose-400 rounded p-3 mb-2"><strong class="text-rose-800">実測した9本の合計＝399表示・クリック0。</strong>うち<u>ホームページを作りたい人に向けて書かれた5本だけを取ると、28日で <strong>5表示</strong>・0クリック</u>です。<br>
+    <span class="text-gray-700">同じ28日に、事業と関係のない3本（<span class="font-mono">?p=7528</span> SSD交換・<span class="font-mono">?p=6141</span> Amazonコンビニ受取・<span class="font-mono">?p=7030</span> Premiereのスライドショー）は <strong>12,446表示・276クリック</strong>を集めています。</span><br>
+    <strong class="text-rose-800">＝ブログの問題は「買い手向けの記事を書いていないこと」ではありません。書いてある記事が、検索の世界に存在していないことです。</strong></p>
+    <div class="bg-white border border-gray-300 rounded p-3 text-xs">
+      <p class="font-bold mb-1">なぜ出ていないのか（<u>ここから先は推測です。断定しません</u>）</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li><strong>推測①：記事が古く、内容が薄い。</strong>「ホームページの作り方」「維持費」は競合が最も厚く書いている帯です。2016〜2022年の短い記事では候補にすら入りません。<u>＝これが本命だと考えています。</u></li>
+        <li><strong>推測②：サイト内で誰からもリンクされていない。</strong>C086・C087 の実測で、記事本文からの文脈リンクはほぼ存在しないことが分かっています＝サイト内での重要度が立ちません。<span class="text-gray-600">※<span class="font-mono">B-045</span>（記事346本がサイトマップに0本）も同じ方向に効きますが、<u>サイトマップは索引の必須条件ではないので、これ単独が原因とは申しません</u>（現に上位記事は載っていなくても上位です）。</span></li>
+        <li><strong>推測③：同じ帯を固定ページが受けている。</strong>「料金・費用」は <span class="font-mono">/price/basic.html</span> が1枚で受けています（📥 の申し送り⑦⑨⑬と同じ話）。</li>
+      </ul>
+      <p class="mt-2 bg-amber-50 border border-amber-300 rounded p-2"><strong class="text-amber-900">この観察が実務に効くところ</strong>：<u>「出ていない記事は、文言を直しても出るようになりません」</u>。これは <span class="font-mono">B-051</span>（表示は保たれCTRだけ落ちた面は修理対象から外す）の裏返しで、<strong>表示そのものが立っていない面は、リライトではなく"新しく書き直す"か"別の記事に束ねる"しかない</strong>ということです。→ 下記 <span class="font-mono">B-069</span>。<br>
+      <strong class="text-emerald-800">そして 8365（<span class="font-mono">T-001</span>）の位置づけが1段はっきりします</strong>＝これは「6本目の買い手記事」ではなく、<u>買い手帯に出ることを狙って一から書かれた最初の1本</u>です。既存の5本は、その帯に出ていないのですから。</p>
+    </div>
+  </div>
+
+  <div class="bg-white border-4 border-amber-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-amber-900 mb-2">🔎 本日の中心③：<u>28行が「WordPress にログインできる人」1人に依存しています</u>。21日 動いていないので、宛先の問題としてお伺いします</h3>
+    <p class="text-xs mb-2"><strong>数えました（繰り越し表を機械集計）</strong>：<span class="bg-white border border-gray-400 rounded px-1"><strong>🟦 社長がWP画面で直接＝7行</strong></span>（<span class="font-mono">T-001</span> 8365の公開／<span class="font-mono">B-059</span> 1行削除／<span class="font-mono">B-043</span>・<span class="font-mono">B-064</span> タイトル／<span class="font-mono">B-044</span> 抜粋・カテゴリ／<span class="font-mono">B-041</span> カテゴリ新設／完成在庫の行）＋<span class="bg-white border border-gray-400 rounded px-1"><strong>🔒 認証情報のローテーション待ち＝21行</strong></span>。<strong class="text-rose-700">＝合計28行が、同じ1回のログインを待っています。</strong></p>
+    <p class="text-xs mb-2 bg-amber-50 border border-amber-300 rounded p-2"><strong>これは催促ではありません。</strong>21日間まったく動いていないものを「もう一度お願いします」と申し上げても、22日目になるだけだと考えました。<u>3日以上動かない一手は、意欲ではなく<strong>宛先</strong>を疑うべきだ</u>というのが、私が持っている判断のルールです。<strong class="text-rose-700">そして、この3件はどれも「社長にしかできない」とは限りません。</strong></p>
+    <div class="bg-white border-2 border-amber-500 rounded p-3 text-sm">
+      <p class="font-bold text-amber-900 mb-1"><span class="font-mono">Q-011</span>【2026-09-07・新規・<u>1行でOK</u>】：WordPress の作業の<strong>宛先</strong>を変えてよいですか？</p>
+      <p class="text-xs mb-1"><strong>選択肢</strong>：<br>
+      <strong>(a)</strong> このまま社長ご自身で（私は待ちます。<u>お声がけの頻度だけご指示ください</u>）／
+      <strong class="text-emerald-800">(b) 開発（<span class="font-mono">web-hanasaka</span>）に委ねる＝<u>私のおすすめ</u></strong>：認証情報のローテーションを開発が実施し、その後の「8365 の公開」「<span class="font-mono">?p=2117</span> の1行削除」も開発が実施。社長は掲示板か Slack で可否を1行いただくだけ／
+      <strong>(c)</strong> 曜日を決める（例：毎週月曜の朝10分）＝その日だけお声がけします／
+      <strong>(d)</strong> 8365 の公開は取り下げ、別の一手に切り替える</p>
+      <p class="text-xs text-gray-600">※ (b) は<u>本番WordPress への書き込みを開発に促すもの</u>なので、社長の合意なしに私の側から手配することはできません（automation.md §3）。だからご質問しています。<u>(a) でも構いません</u>——そのときは「待つ」と決めたうえで、私は分析を続けます。<br>
+      ※ <strong class="text-emerald-800">20日続いた「新規質問ゼロ」を、本日は自分から破りました。</strong>宿題を増やすのは本意ではありませんが、<u>28行の停滞を、質問しないまま29日目に持ち越すほうが害が大きい</u>と判断しました。</p>
+    </div>
+  </div>
+
+  <div class="border-2 border-indigo-400 bg-indigo-50 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-indigo-900 mb-2">① 既存記事の改善</h3>
+
+    <div class="bg-white border-2 border-emerald-400 rounded p-3 mb-3">
+      <p class="font-bold text-emerald-900 mb-1"><span class="font-mono">B-068</span>（🔴・<u>ご回答不要</u>）：<span class="font-mono">?p=8137</span>（MEO・会社情報の構造化データ）が<strong>初めてクリックを取りました</strong>。<span class="font-mono">B-065</span>（説明文）と <span class="font-mono">B-067</span>（架ける）の<u>先頭に繰り上げます</u></p>
+      <p class="text-xs mb-1"><strong>観点</strong>：タイトル・説明文／内部リンク・回遊→CV<br>
+      <strong>観察（実測）</strong>：28日 219表示・<strong>4クリック</strong>・9.2位。<u>これまでの記録は「90日484表示・クリック0」</u>（<a href="archive.html#c085" class="underline">C085</a>）＝<strong>クリックが出たのは初めて</strong>です。</p>
+      <p class="text-xs mb-1"><strong>なぜ問題か（＝なぜ今か）</strong>：9.2位は<u>1ページ目のいちばん下</u>で、説明文の効きがもっとも大きい位置です。しかもこの記事は「ホームページを頼むかもしれない人」の<strong>3本目</strong>＝母数が2本しかない層で、唯一クリックが動き出した面です。</p>
+      <p class="text-xs mb-1"><strong>改善案</strong>：作業内容は <span class="font-mono">B-065</span> のまま（説明文の文案は <a href="archive.html#c085" class="underline">C085</a> に貼れる形で用意済み・「MEO」の語を含む1文）。<u>変えるのは順番だけ</u>＝保留が解けたら <span class="font-mono">B-046</span> の次にこれを。<span class="font-mono">B-067</span> の「架ける6本」でも先頭に置きます。</p>
+      <p class="text-xs"><strong>効果</strong>：中（買い手層の唯一の伸び）／<strong>工数</strong>：1分（保留解除後・<span class="font-mono">B-036</span> と同じ画面）／<strong>優先</strong>：🔴　<span class="text-gray-600">※4クリックは小さい数字です。<u>トレンドと断定はしません</u>＝次サイクル以降も定点で見ます。</span></p>
+    </div>
+
+    <div class="bg-white border-2 border-emerald-400 rounded p-3">
+      <p class="font-bold text-emerald-900 mb-1"><span class="font-mono">B-069</span>（🔴・<u>可否を1行で／<span class="font-mono">B-049</span> にまとめて結構です</u>）：<strong>本業の休眠記事4本を「リライトの待機列」から外します</strong>＝やることが1件 減ります</p>
+      <p class="text-xs mb-1"><strong>観点</strong>：鮮度／カニバリ（重複）／効果 × 工数<br>
+      <strong>観察（実測・上表）</strong>：<span class="font-mono">?p=17</span>（維持費）・<span class="font-mono">?p=7619</span>（WPでの作り方）・<span class="font-mono">?p=8025</span>（SEOの全体）は<strong>28日の表示が 0</strong>。<span class="font-mono">?p=5050</span>（初めての作り方）は2表示、<span class="font-mono">?p=8101</span>（公開するとき）は3表示・63位。</p>
+      <p class="text-xs mb-1"><strong>なぜ問題か</strong>：待機列にある <span class="font-mono">B-031</span>（<span class="font-mono">?p=17</span> の全面リライト）は「維持費」帯を取りに行く前提でしたが、<u>その帯で自社は28日 一度も表示されていません</u>＝<strong>Google が候補にすら入れていない面です。文言を直しても、出ていない面は出るようになりません。</strong>いま直せば、工数を使って何も動かないことが分かっている作業をすることになります。</p>
+      <p class="text-xs mb-1"><strong>改善案</strong>：<br>
+      <span class="bg-emerald-50 border border-emerald-300 rounded px-1"><strong>(a) <span class="font-mono">B-031</span> を待機列から外して「パーク」に移す</strong></span>＝完成在庫の <span class="font-mono">T-011</span>（ドメイン・サーバー・SSLの費用）を新規で公開してから、<span class="font-mono">?p=17</span> はその記事へ内部リンクで束ねる（＝古い薄い記事を直すのではなく、新しい正本に集約する）。<br>
+      <span class="bg-gray-100 border border-gray-400 rounded px-1"><strong>(b) 4本（<span class="font-mono">?p=17・?p=7619・?p=8025・?p=8101</span>）を「休眠」として B/T の検討対象から外す</strong></span>＝<span class="font-mono">B-061</span> と同じ扱いですが、あちらは「触らない<u>集客資産</u>」、こちらは<strong>「新記事ができるまで保留」</strong>です（捨てません）。<span class="text-gray-600">※ <span class="font-mono">B-014</span>（<span class="font-mono">?p=5050</span> の改善版＝下書き 8363）は<u>すでに作ってある</u>ので取り下げません＝社長が見比べて反映されるだけの状態です。</span></p>
+      <p class="text-xs"><strong>効果</strong>：待機列が1件 減り、今後の空振りが止まる／<strong>工数</strong>：ゼロ（判断のみ）／<strong>優先</strong>：🔴／<strong>栓</strong>：🟥 可否1行</p>
+    </div>
+  </div>
+
+  <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-amber-900 mb-2">② 新規記事のテーマ＋構成案</h3>
+    <div class="bg-white border-2 border-amber-400 rounded p-3">
+      <p class="font-bold text-amber-900 mb-1"><span class="font-mono">T-045</span>（🟡・<u>栓なし・ご回答不要／着手は publish が1本 動いてから</u>）：<strong>「記事は増えたのに問い合わせが増えない——溜まったブログを棚卸しする『消す・直す・そのまま』の分け方」</strong></p>
+      <p class="text-xs mb-1"><strong>なぜこのテーマか</strong>：本日の中心②がそのまま一次資料になります＝<u>「本業の記事を書いたのに、検索に出ていない」というのは、ブログを数年続けた会社に高い確率で起きていること</u>です。自社が実際に測って気づいた話なので、他社の一般論より具体的に書けます。<br>
+      <strong class="text-emerald-800">狙いは新規流入ではありません</strong>＝<u><span class="font-mono">/service/web/operate/</span>（保守・運用）への、ブログからの初めての橋</u>を作ることです（この受け皿ページは、本日の上位60ページにも現れていません＝28日クリック4件未満）。保守・運用は月額のストック収益に直結します。</p>
+      <p class="text-xs mb-1"><strong>想定読者</strong>：ブログを数年続けて記事が数十〜数百本たまり、更新の手が止まっている中小企業の経営者・Web担当者（＝発注しうる立場の人）。<br>
+      <strong>狙う検索意図</strong>：「古い記事 削除 seo」「ブログ 記事 整理」「リライト 効果」など＝<strong class="text-rose-700">自社GSCでは表示0＝実需は未確認</strong>と明記します（<span class="font-mono">B-058</span> の自己適用）。<u>この記事の価値は、流入ではなく「保守・運用への出口を作ること」に置きます。</u><br>
+      <strong>タイトル案</strong>：「ブログ記事が増えたのに問い合わせが増えない会社へ——記事の棚卸し『消す・直す・そのまま』の分け方」</p>
+      <p class="text-xs mb-1"><strong>アウトライン（h2/h3・各見出しで触れる要素）</strong>：</p>
+      <ul class="list-disc list-inside text-xs space-y-1 mb-1">
+        <li><strong>h2 まず「誰が読んでいるか」を数える</strong><br>
+        <span class="ml-4">h3 検索語から読者を推測する手順（Search Console のページ別クエリ）／h3 <u>アクセスが多い記事＝事業に効いている記事、とは限らない</u>（自社では、クリックの多くが本業と関係ない記事だった）<span class="text-gray-600">※自社の実数を出すかは📥で社長に確認中＝出さない書き方でも成立します</span></span></li>
+        <li><strong>h2 「消す・直す・そのまま」の分け方</strong><br>
+        <span class="ml-4">h3 <u>消す</u>＝役目を終えた告知・重複した記事／h3 <u>直す</u>＝検索に出ているのにクリックされない記事／h3 <u>そのまま</u>＝本業と関係ないが人を連れてくる記事（無理に売り込まない）</span></li>
+        <li><strong>h2 直す前に必ず確かめること＝「そもそも検索に出ていますか」</strong><br>
+        <span class="ml-4">h3 表示回数がゼロの記事は、文言を直しても戻らない／h3 出ているのにクリックが無い記事＝タイトルと説明文が効く／h3 判断の早見表（表示あり×クリック無し／表示無し／の2×2）</span></li>
+        <li><strong>h2 消すときの注意——URLを消した先で何が起きるか</strong><br>
+        <span class="ml-4">h3 301・404・410 の使い分け（<u>内部リンク先＝<span class="font-mono">?p=8126</span></u>）／h3 まとめて消す前にアクセスを確認する</span></li>
+        <li><strong>h2 自分でやる／頼むの分かれ目</strong><br>
+        <span class="ml-4">h3 棚卸しに実際どれくらい手が要るか（記事数別のめやす）／h3 運用代行に頼めること・頼めないこと<span class="text-gray-600">※📥「更新代行・保守の月額メニューが実在するか」が来れば1段 厚くなります＝<u>無くても一般論で書けます</u></span></span></li>
+      </ul>
+      <p class="text-xs mb-1"><strong>内部リンク先</strong>：<span class="font-mono">?p=8126</span>（404リダイレクト）・<span class="font-mono">?p=8137</span>（構造化データ）・<span class="font-mono">T-011</span>／<span class="font-mono">T-022</span>（公開後）<br>
+      <strong>CTA</strong>：<span class="font-mono">/service/web/operate/</span>（保守・運用）＋ <span class="font-mono">/price/basic.html</span><span class="text-gray-600">（＝検索を実際に受けているほうの料金ページ・<span class="font-mono">B-054</span> と揃えます）</span></p>
+      <p class="text-xs"><strong>効果</strong>：②信頼づくり＋⑤継続（月額ストック直結）／<strong>工数</strong>：中（一般論＋自社の観察で全部 書けます）／<strong>優先</strong>：🟡<br>
+      <span class="text-gray-600">※ <span class="font-mono">T-027</span>（順位は落ちていないのにアクセスだけ減っていませんか）とは棲み分けます＝あちらは<u>急な変化の原因究明</u>、こちらは<u>溜まった資産の整理</u>です。</span></p>
+    </div>
+    <p class="text-xs text-amber-900 mt-2">※ 本日の新規は <strong>B2件＋T1件</strong>に絞りました（目安は B2-3＋T2-3）。<u>繰り越しが72件あり、うち28行が1回のログイン待ちで止まっているため、私の側から積む量を意図的に減らしています</u>（<span class="font-mono">B-069</span> はむしろ1件 減らす提案です）。</p>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">🧾 対応記録・自己点検（2026-09-07）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長指示（<span class="font-mono">from-president.md</span>）</strong>：新規の記載なし＝2026-06-23 のまま。<u>編集していません</u>（社長の領域）。</li>
+      <li><strong>メールボックス</strong>：<span class="font-mono">to: blog-loop-ycom</span> の新着0件（スプールをファイル実体で確認＝<span class="font-mono">inbox</span> API が <span class="font-mono">hp-loop</span> を名乗る不具合は継続中・📥 Overseer へ既出）。<strong>本日の mailbox 配信は行いません</strong>＝<u>執筆担当への作業指示が昨日から1文字も変わっていない</u>ためです（1サイクル1通・着手内容が変わらない日は送らない）。昨日の <span class="font-mono">C087</span> 配信は <span class="font-mono">new/</span> で未受領のまま届いています。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 087 の本文を<a href="archive.html#c087" class="underline">アーカイブへ退避</a>（原文無改変・共通規律 §4 の順序＝①archive へ追記 →②存在を確認〈<span class="font-mono">id="c087"</span> 1件・<span class="font-mono">&lt;div&gt;</span> 開き358／閉じ358 で balanced〉→③本体から削除）。<strong class="text-rose-700">4層化（<span class="font-mono">backlog.html</span> 分離）のお願いは13日目・継続します</strong>＝「🔧進行中」の繰り越しだけで約47KB あり、当日レポートをゼロにしても 100KB を割れません。</li>
+      <li><strong>今日できなかったこと（正直に）</strong>：<u>本業記事が「なぜ検索に出ていないのか」の原因は特定できていません</u>＝上に書いた3つは推測です。前後比較のツール（<span class="font-mono">bin/hp-diff.py</span>）が11日連続で使えず、「いつから出なくなったのか」を機械で追えていません。<u>次サイクルで <span class="font-mono">?p=17</span> と <span class="font-mono">?p=7619</span> の本文を実際に読み、①の推測（古く薄い）を自分の目で検証します。</u></li>
+      <li><strong>自己改善（Step 7）</strong>：<span class="font-mono">data/hp-improve/skill-kaizen.md</span> に追記＝<u>「上位N件だけを見て全体の結論にしない（裾も実測して否定する）」</u>と<u>「同じ一手が3日以上動かないときは、督促ではなく宛先を疑って選択肢で聞く」</u>の2点。</li>
+    </ul>
+  </div>
+
+  <p class="text-xs text-gray-400 mt-8">ブログ分析ループ（blog-loop）Cycle 088 ／ AIが作成・社長が読む ／ 回答は from-president.md・/hp-reply・Slack返信へ</p>
+
   <!-- ===== 📦 Cycle 087（2026-09-06）＝ Cycle 088（2026-09-07）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 087（2026-09-06）のスナップショット <span class="text-sm font-normal text-gray-500">（2026-09-07 Cycle 088 で最新レポートから退避。<strong>本文は原文のまま</strong>・未完了の B/T・未回答 Q は <a href="index.html" class="underline">最新レポート</a>に繰り越し済み）</span></h2>
 
