@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全国スタンプラリー HP分析｜最新レポート｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <span>全国スタンプラリー</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-1">📋 全国スタンプラリー — 最新レポート</h1>
+  <p class="text-gray-600 mb-2"><span class="font-mono">check-rally.com</span>（自社プロダクト）／北極星：<strong>参加者の新規獲得と実利用（発見→登録→スタンプ収集）</strong></p>
+  <p class="text-sm text-gray-500 mb-6">最新サイクル＋未完了の繰り越しだけを表示。背景は確定・仕様、完了の履歴はアーカイブへ。<span class="text-gray-400">最終更新＝Cycle 048（2026-09-08）＝北極星が初めて数字になりました（<code>stamp_get</code> 7件・ただし件数の定義を照会中）</span></p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-semibold">📋 最新レポート（このページ）</span>
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 確定・仕様</a>
+    <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
+  </div>
+
+  <!-- 🎉 北極星の初計測（Cycle 048） -->
+  <div class="border-4 border-emerald-600 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-emerald-800 mb-2">🎉 48サイクル目にして、<span class="underline decoration-2">北極星が初めて「数字」になりました</span> — 9/6 に <code>stamp_get</code>（スタンプのGPSチェック成功）が <strong>7件</strong>記録されました</h2>
+    <p class="text-sm text-gray-800 mb-2">8/30 のサイト側実装 → 9/6 の GTM 公開、と積み上げてきた計測の配線が、<strong class="text-emerald-800">実際にデータとして届くところまで通りました</strong>。<span class="text-gray-700">rally の解析を始めて以来、「スタンプが集められた」という<u>成果そのもの</u>が数字で見えたのは初めてです。</span></p>
+    <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 px-2 w-40"><code>stamp_get</code>（スタンプ取得）</td><td class="py-1 px-2"><strong class="text-emerald-800">7件／1人</strong>（すべて 9/6）</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>sign_up</code>（登録の完了）</td><td class="py-1 px-2"><strong>0件</strong>（同期間。<span class="text-gray-600">メール入力の開始は 9/6 に2件ありましたが、完了までは至っていません</span>）</td></tr>
+        <tr><td class="py-1 px-2">9/6 の全体</td><td class="py-1 px-2">利用者6人・セッション6・ページ閲覧24回（流入＝直接5人／Google検索1人）</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-amber-500 rounded p-2"><strong class="text-amber-900">⚠️ ただし、この「7件」を<u>スタンプ7個</u>として外に出すのはお待ちください（重要）</strong><br>
+    <span class="text-gray-800"><strong>観察（事実）</strong>＝9/6 にサイト全体で閲覧された<u>個別スポットのページは5面だけ</u>でした（安養寺〔枚方市〕が5回、ほか4面が各1回）。<strong>1人が7件のスタンプ取得を記録している一方、その日に見られたスポットは最大でも5か所</strong>です。<br>
+    <strong>推測</strong>＝<u>同じスポットで GPS チェックを繰り返し押しても、そのたびに1件として記録されている</u>と考えられます（安養寺のページが5回開かれていることと整合します）。⇒ <strong class="text-amber-900">現時点の件数は「獲得したスタンプの数」ではなく「GPSチェックが成功した回数」です。</strong><br>
+    <span class="text-gray-700">また、直接流入の1人という形からは<strong>運営・開発側の動作確認の可能性</strong>もあります（断定はできません）。</span></span></p>
+    <p class="text-sm text-gray-800 mb-2"><strong>⇒ 当方の対応</strong>＝<span class="text-gray-700">開発担当に「同じスポットで再チェックしても発火するのか／1スタンプ1回なのか」を照会しました。<u>定義がはっきりするまで、この数字を自治体向けのご提案などの実績値には使いません</u>。<strong class="text-emerald-800">配線が通ったこと自体は確かな前進で、それが本サイクルの成果です。</strong></span></p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>📌 社長にお願いすることはありません。</strong>なお <strong>9/7 分のデータはまだ届いていません</strong>（GA4 の最新日は 9/6）。<u>次のサイクルで 9/7・9/8 分を確認し、「7件」が続くのか一度きりだったのかを見ます。</u></p>
+  </div>
+
+  <!-- 🗄️ 稼働状況（Cycle 047 で検出→解決・アーカイブ移動待ち） -->
+  <div class="border border-gray-300 bg-gray-50 rounded-lg p-5 mb-6">
+    <h2 class="text-base font-semibold text-gray-700 mb-2">🗄️ 前サイクル（9/6 夜）の記録 — 23:14〜23:20 の約6分の停止は <span class="underline">R-R43 の反映作業によるもので、正常でした</span>（R-R43 は完了）</h2>
+    <p class="text-sm text-gray-800 mb-2"><strong>経緯（すべて当方が本番を取得して確かめた事実です。当方からサイトには一切触れていません＝読み取りのみ）</strong></p>
+    <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-200"><td class="py-1 px-2 w-28">23:0x</td><td class="py-1 px-2"><strong class="text-emerald-800">正常</strong>（HTTP 200）</td></tr>
+        <tr class="border-b border-gray-200 bg-red-50"><td class="py-1 px-2">23:14〜23:16</td><td class="py-1 px-2"><strong class="text-red-800">つながらない</strong>（<code>www</code> 有無・<code>http</code>/<code>https</code> の4通りすべて。4回試して4回とも）</td></tr>
+        <tr><td class="py-1 px-2">23:20:45</td><td class="py-1 px-2"><strong class="text-emerald-800">復旧（HTTP 200・0.063秒）</strong>＝<u>止まっていたのは約6分</u></td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">🎉 原因が分かりました＝この6分の間に R-R43（内部管理情報を公開側に出さない修正）が反映されていました。</strong><br><span class="text-gray-700">復旧後に <code>/spots/9146</code> を取り直したところ、<strong>「システム情報／スポットID／優先度: 高／作成日: 1970/1/1」「メモ／ChatGPTにて作成」がすべて消えていました</strong>（98,844B → <strong>98,097B</strong>）。<u>止まっていた時刻と、消えた内容が一致します</u>。⇒ <strong>計画外の障害ではなく、反映作業に伴う正常な一時停止です。</strong><span class="text-gray-600">（因果は<strong>推測</strong>ですが、時刻と内容の一致からほぼ確実と見ています。開発担当にもその旨お伝えしました。）</span></span></p>
+    <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-800">⇒ R-R43 は ✅完了です。</strong><span class="text-gray-700">タイトル・見出し・写真11枚・構造化データはいずれも正常で、本文も最後まで読めています（＝「見えなくなっただけ」ではありません）。<u>開発担当の「公開側で消すのではなく、管理側で明示的に出す」という設計が、期待どおり効きました。</u></span></p>
+    <p class="text-sm text-gray-800 bg-white border-2 border-amber-400 rounded p-2"><strong class="text-amber-900">📌 社長にお願いすることはありません。ただ1点だけ、仕組みの話をお伝えします。</strong><br><span class="text-gray-700">今回これに気づけたのは、<strong><u>たまたま同じ時刻にサイトを見ていたから</u></strong>です。<strong>8/15 の約20分の停止も同じでした。</strong><strong class="text-rose-800">外部からの死活監視（R-R19）はまだ入っていません</strong>＝いま止まっても気づける仕組みが無く、<u>「反映作業の正常な数分」と「異常な20分」を区別する目が無い</u>状態です。<strong>反映のたびに数分止まること自体は正常</strong>ですので慌てる話ではありませんが、<strong>R-R19 の順番が来た</strong>ことをお知らせしておきます。</span></p>
+  </div>
+
+  <!-- 今日の要点（常設・最上部） -->
+  <div class="border-4 border-sky-500 bg-sky-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-sky-900 mb-2">🎉 今日わかったこと（9/6）— <span class="underline decoration-2">一夜で5件が片づき、35サイクル追ってきた「1.5万件が検索エンジンから見えない」が解消しました</span></h2>
+
+    <p class="text-sm font-bold text-emerald-900 mb-3 bg-white border-4 border-emerald-600 rounded p-3">🌙 <strong>夜の追記（23:1x・Cycle 047）＝北極星が、ついに測れるようになりました。</strong><span class="text-gray-800 font-normal">GTM の公開が完了しました。<u>ご報告を鵜呑みにせず、当方が公開中のコンテナを直接取得して <code>sign_up</code>・<code>stamp_get</code>・GA4 の測定IDが実在することを確認しています</u>。<strong class="text-emerald-800">8/30 から7日間、最大の栓だった 🔔 Q-R17 は解決です</strong>（最初の実数は <strong>9/7</strong> に出ます）。あわせて、<strong class="text-emerald-800">説明文6,467件を「どの順で書くか」の答え</strong>が見つかりました＝<u>旧システムが14,406件すべてに「人気度ランク」を持っています</u>。→ 詳細は <strong>Cycle 047 ①③</strong></span></p>
+
+    <p class="text-sm font-bold text-emerald-900 mb-3 bg-white border-4 border-emerald-500 rounded p-3">🆕 <strong>昼の追記（12:2x・Cycle 046）＝説明文の書き直しに着手される前に、1つだけご確認ください。</strong><span class="text-gray-800 font-normal">記号 <code>{歴史}</code> の710件は「書き直さなくても表示のしかたを1回直すだけで消せる」ことが、旧サイトの実測で分かりました。書く対象も <u>770件より6,467件のほうが約8.4倍効きます</u>。→ 下の <strong class="text-rose-800">🔔⑤ Q-R19</strong>（詳細は <strong>Cycle 046 ①②</strong>）</span></p>
+
+    <p class="text-sm text-gray-700 mb-2 bg-white border border-sky-300 rounded p-2">以下は<strong>午前（Cycle 045）</strong>の内容です。きっかけ＝<strong>朝 8:47 に開発担当から1通</strong>。それを機に本番を測り直したところ、<strong class="text-emerald-800">昨夕お伝えした課題が、報告なしで すでに直っていました</strong>。<span class="text-gray-700">以下はすべて、当方が本番を実際に取得して確かめた結果です（<u>開発担当のメッセージにはこの反映のことは1行も書かれていません</u>＝当方の実測で見つけました）。</span></p>
+    <ul class="text-sm text-gray-800 list-disc list-inside space-y-1.5">
+      <li><strong class="text-emerald-800">✅ ①「1.5万件のスポットへ降りる階段」が全部つながりました（R-R33 完了）。</strong><span class="text-gray-700">昨夕は<u>4つとも行き止まり（スポットへ進むリンク0本）</u>でしたが、本日＝京都府のページ <strong>0本→48本</strong>／関西エリア <strong>0本→29本</strong>／市区町村 <strong>0本→25本</strong>／テーマ <strong>0本→7本</strong>。<u>トップ →一覧 →都道府県 →個々のスポット</u>が初めて端から端までつながりました。</span></li>
+      <li><strong class="text-emerald-800">✅ ② 着地先のスポットページに、そのスポット自身の中身が入りました（R-R42 完了）。</strong><span class="text-gray-700">昨夕「建長寺のページに建長寺のことが1文字も無い」とお伝えした件です。本日は<strong>建長寺の説明文が本文に出ており</strong>（「鎌倉五山の中でも第一位」が検索でヒット）、<u>「読み込み中...」は消滅</u>、見出しも写真11枚も自身のものになりました。名古屋テレビ塔・岩之上堂も同じです。</span></li>
+      <li><strong class="text-emerald-800">✅ ③ 人物ページ106人分も同時に直りました（R-R39 完了）。</strong><span class="text-gray-700">「織田信長ゆかりの地」「聖徳太子ゆかりの地」といった<u>固有のタイトル・見出し・ゆかりの地へのリンク</u>が入りました。<strong>人物名での検索という新しい入口が106本できたことになります。</strong></span></li>
+      <li><strong class="text-emerald-800">✅ ④ 存在しないURLが200を返す問題も解消（R-R41 完了）／⑤ 構造化データも入りました（R-R36 の大半）。</strong><span class="text-gray-700">でたらめな人物URLは正しく404に。スポットページには「観光地」としての機械可読な記述が入りました。</span></li>
+      <li class="bg-emerald-50 border-2 border-emerald-500 rounded p-2 list-none"><strong class="text-emerald-800">✅ 【9/6 23:2x 追記】この副作用（R-R43）は同じ日のうちに解消しました。</strong><span class="text-gray-700">以下は起票時（9/6 朝）の記録です。</span><br><strong class="text-red-800">🔴 その成功の副作用で、社内向けの情報が1.4万ページに公開されていました（R-R43）。</strong><span class="text-gray-700">本文が出るようになった結果、<u>ページの末尾に</u>「<strong>システム情報／スポットID／優先度: 高／作成日: 1970/1/1</strong>」がそのまま出ています（測った3ページすべて）。さらに建長寺のページには <strong class="text-red-800">「メモ／ChatGPTにて作成」</strong>と表示されています＝<u>説明文をAIで作ったという社内メモが、検索エンジンとお客様の両方から見える状態</u>です。<span class="bg-emerald-50 border border-emerald-400 rounded px-2 py-1 inline-block my-1"><strong class="text-emerald-800">🆕 12:2x 追記＝この件は解決に向かっています。</strong>①<strong>メモ欄の中身が判明</strong>＝707件すべてが「ChatGPTにて作成」の1種類でした（開発担当のデータベース実測）＝<u>「他に何が書かれているか分からない」という懸念は解消</u>。②<strong>開発担当が本日すでに修正済み</strong>（<u>反映は社長のお戻り後</u>＝当方の実測でも本番はまだ未反映であることを確認）。<span class="text-gray-700">＝社長のご対応は不要です。</span></span></span></li>
+      <li><span class="text-rose-800"><strong>社長にお願いしたいこと＝<u>4つ</u>（🔔① sitemap 送信・🔔② GTM 公開・🔔③ 効果の判定日をずらすか・<span class="bg-rose-100 px-1 rounded">🆕 🔔④ 説明文をどの順で埋めるか＝Q-R19</span>）。</strong></span><span class="text-gray-700">③は「<u>9/13 に判定すると早すぎて、せっかくの成果を『効かなかった』と誤読しかねない</u>」というご相談です（開発担当も同意見）。<strong>④は書き直しに着手される前にお読みいただけると、お手間が減る可能性があります。</strong></span><span class="text-emerald-700"><strong>本日（午前＋昼の2サイクル）＝完了5件・新規の提案1件・新規の質問2件／在庫 27→23件・判断待ち 14件</strong>（自動停止まで余裕1件）。</span></li>
+    </ul>
+  </div>
+
+  <!-- 🔔 いま社長にお願いしたいこと -->
+  <div class="border-4 border-rose-400 bg-rose-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-rose-800 mb-2">🔔 次にお願いしたいこと — <span class="underline decoration-2">3つ（②は5分・④⑤はご判断1つずつ）</span><span class="text-sm font-normal text-emerald-700">／<strong>③ GTM は 9/6 夜に完了しました</strong>・①は開発の受信箱へ</span></h2>
+    <div class="bg-white border-2 border-rose-600 rounded p-3 mb-3">
+      <p class="text-sm font-bold text-rose-800 mb-1">🆕 ⑤ 説明文をどの順番で埋めるか、お決めいただけますか（→ <strong>🔔 Q-R19</strong>・<span class="text-emerald-800">書き直しに着手される前に</span>）</p>
+      <p class="text-sm text-gray-800"><strong>本日「説明文を1から書き直す」とご決定されたと伺いました。</strong>ご判断に異論はありませんが、着手前に2点お伝えします。<br>
+      <strong class="text-emerald-800">(1) 記号 <code>{歴史}</code> を消すために書き直す必要はありません</strong>＝旧サイトを実測したところ、これは<u>旧システムの「見出し」の書き方</u>で、<strong>表示のしかたを1回直すだけで710件が一斉に消えます</strong>（開発担当が回答不要で進められます）。<br>
+      <strong class="text-red-800">(2) 書く対象は 770件より 6,467件のほうが約8.4倍効きます</strong>＝770件は「文章はあるが古い」＝<u>検索の土俵には既に乗っています</u>。6,467件（全体の44.9%）は「文章が無い」＝<u>そもそも順位が付きようがありません</u>。<span class="text-emerald-800">ただし6,467件は<strong>旧サイトから「戻す」だけで済む可能性</strong>があります（開発担当も独自に確認済み）。</span><br>
+      <strong>選択肢</strong>＝<strong class="text-emerald-800">(A) 旧システムのデータを取り出せるかを先に確かめてから決める（推奨）</strong>／<strong>(B) 予定どおり770件から</strong>／<strong>(C) 6,467件から</strong>／<strong>(D) おまかせ</strong>。<span class="text-gray-700">※ (A) に必要なのは<u>旧サーバに入れる方がどなたか</u>だけで、これは <strong>R-R40</strong> のお伺いと同じ内容です＝<strong>あわせて1回でお答えいただけます</strong>。</span></p>
+    </div>
+    <div class="bg-white border-2 border-emerald-500 rounded p-3 mb-3">
+      <p class="text-sm font-bold text-emerald-800 mb-1">🎉 「開発の受信箱へ回す」というご判断が、2日続けて効きました — <span class="underline">9/5 は R-R18、9/6 は R-R33・R-R42・R-R39・R-R41 が完了</span></p>
+      <p class="text-sm text-gray-800">9/5 朝のご指示（「開発の受信箱に置いておいてください」）から <strong>3時間半で <code>www</code> の証明書が開通</strong>し、続けて<strong>翌朝までに「発見の配管」4件が片づきました</strong>。<u>社長のお手を煩わせず、当方 → 開発担当の往復だけで前に進んだ2日間です。</u><br>
+      <span class="text-gray-700">📌 <strong>R-R37</strong>（説明文の無いスポット 6,467件）は引き続き <strong>開発の受信箱で (C) の方針</strong>＝いまは何もせず判定を待ちます。<u>こちらから社長へ督促しません</u>。<span class="text-sky-800">なお開発担当から「<strong>旧システムのデータベースのダンプ取得を最優先で社長に上げます</strong>」と連絡がありました＝<u>説明文6,467件を「ゼロから書く」のではなく旧サイトから回収するための材料</u>です（→ R-R37・R-R40）。</span></span></p>
+    </div>
+    <div class="bg-white border-2 border-rose-500 rounded p-3 mb-3">
+      <p class="text-sm font-bold text-rose-800 mb-1">④ 効果の判定日を 9/13 → 9/20 へずらしてよいでしょうか（→ <strong>🔔 Q-R18</strong>・ご判断1つ）</p>
+      <p class="text-sm text-gray-800"><strong>理由</strong>＝今回の大きな反映は <strong>9/5 夜〜9/6</strong> でした。Search Console のデータは<u>実際より2〜3日遅れて届く</u>ため、<strong class="text-red-800">9/13 に見えるのは「反映後 実質2〜4日分」だけ</strong>です。<span class="text-gray-700">加えて、検索エンジンはまだ 8/30 の修正すら拾い直せていません（9/5 に確認済み）。この状態で判定すると、<u>効いているのに「効かなかった」と読んでしまう危険</u>があります。<strong>開発担当も「判定日を後ろへずらす判断があれば同意する」とのことです。</strong></span><br>
+      <strong>選択肢</strong>＝<strong class="text-emerald-800">(A) 9/20 へずらす（当方の推奨）</strong>＝9/13 は「拾い直しが始まったか」の中間確認だけ行う／<strong>(B) 9/13 のまま</strong>＝早めに傾向だけ見る／<strong>(C) おまかせ</strong>。<span class="text-gray-600">※ どちらでも観測は毎サイクル続けます。変わるのは「いつ結論を出すか」だけです。</span></p>
+    </div>
+    <p class="text-sm text-gray-800 mb-2"><strong>② Search Console に sitemap を送信</strong>（→ <strong class="text-rose-700">🔔 R-R35</strong>・<strong>所要5分</strong>）＝<span class="text-red-800"><strong>いま最も効く1手です（8/30 からの持ち越し・9/5 に理由がもう1つ増えました）</strong></span><span class="text-sky-800"><strong>＝検索エンジンが 8/30 の修正をまだ拾い直しておらず（本日確認）、その拾い直しを早める唯一の手がこれです。9/13 の判定を意味のあるものにするために、それまでに送信していただけると効果が出ます。</strong></span>。<span class="text-gray-700"><strong>手順＝Search Console を開く →左メニュー「サイトマップ」→入力欄に <code>sitemap.xml</code> と入れて「送信」</strong>（これだけです）。<span class="text-emerald-800">おまけに<strong>「申告した1.5万ページのうち何件が登録されたか」がその画面で見えるようになります</strong>＝これまで持っていなかった成果の測り方が手に入ります。</span></span></p>
+    <p class="text-sm text-gray-800 mb-2 bg-emerald-50 border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">✅ ③ GTM の設定は完了しました（→ Q-R17 解決・9/6 23:1x）＝もうお手を煩わせることはありません</strong><br><span class="text-gray-700">開発担当から「設定がすべて完了」とご報告があり、<strong>当方はそれを鵜呑みにせず、公開中の GTM コンテナを直接取得して中身を確かめました</strong>＝<code>sign_up</code>・<code>stamp_get</code>・GA4 測定ID <code>G-JRW203QB7S</code> がいずれも<u>実在</u>。<strong class="text-sky-800">これで北極星（登録・スタンプ収集）が測れる状態になりました。</strong><strong class="text-emerald-800">🎉 9/8 追記＝初の実数が出ました＝<code>stamp_get</code> 7件／1人（すべて 9/6）・<code>sign_up</code> 0件。</strong><span class="text-amber-900">ただし件数の定義（同じスポットの再チェックでも数えているとみられます）を開発担当に照会中のため、<u>まだ実績値としては使いません</u>。詳細はページ最上部をご覧ください。</span></span></p>
+    <p class="text-sm text-gray-800 mb-2 bg-emerald-50 border-2 border-emerald-300 rounded p-2"><strong>📌 ④（説明文が無いスポット・R-R37）は 9/5 のご指示で開発の受信箱へ移しました</strong>＝方針は <strong>(C) いまは何もせず 9/13 の判定を見る</strong>で、開発担当も異存なしとのことです。<span class="text-gray-700">本日わかった<strong>大きな進展2つ</strong>＝<strong class="text-red-800">(1) 正確な件数は 6,467件（44.9%）</strong>でした（こちらの推定「約5千」は少なすぎました。noindex を選ぶ場合の対象は6,467ページになります）／<strong class="text-emerald-800">(2) 旧サイトに同じスポットの説明文が実在します</strong>（→ 下の Cycle 042 ③ R-R40）＝<u>ゼロから書くのではなく「移行し忘れの回収」で済む可能性</u>が出てきたので、開発担当に番号での突き合わせを依頼しました。</span></p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">その他（お手すきで結構です）＝<strong>Q-R16</strong>（バッジ図鑑の公開判断）／<strong>Q-R11(2)</strong>（着手順のOK。<span class="text-emerald-700">※推奨順のとおり実装が進んでいるので、<u>実質お答えいただけたものと受け止めています</u></span>）／<strong>Q-R05・Q-R06・Q-R10</strong>。<br><span class="text-gray-600"><strong>R-R28（スポット写真）</strong>は 9/1 のご指示により <strong>📌 社長が別線で進行中</strong>／<strong>R-R18・R-R37</strong>は 9/5 のご指示により <strong>📌 開発の受信箱へ引き渡し済み</strong>＝いずれも<u>こちらからは督促せず、観測だけ続けます</u>。</span><br><span class="text-amber-800">📄 <strong>このページの分量について（前回からの宿題・まだご指示待ちです）</strong>＝現在 <strong>約105KB</strong>（9/6 午前は95KB・昼は106KB）で、目安（80KB）を超え続けています。<strong>本日は3サイクル回しましたが、完了した提案（R-R43）と解決した質問（Q-R17）をアーカイブへ移したぶん、昼より少し減りました</strong>。<u>ご指示をいただけると次のサイクルでさらに縮められます</u>。<u>古い記録の消し忘れではありません</u>（本日も前サイクルの記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移し、載せているサイクルは1つだけです）。大きいのは<strong>常設部分＝在庫27件の一覧＋未回答6件の質問シート</strong>で、これは正当な中身です。<br><strong>削り方2案</strong>＝<strong>(A)</strong> 優先度の低い「P3（7件）」を別ページへ移し、ここには1行の索引だけ残す／<strong>(B)</strong> 質問シートの「答えると動く提案」の欄をやめて番号だけにする。<span class="text-gray-600">どちらも社長の見え方が変わるので、<strong>ご指示をいただいてから</strong>行います（黙って削りません）。「どちらでもよい」であれば (A) で進めます。</span></span></p>
+  </div>
+
+  <!-- 📊 現在地（常設） -->
+  <div class="border border-gray-300 bg-white rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-semibold mb-2">📊 いまの現在地（北極星＝発見→登録→スタンプ収集）</h2>
+    <table class="w-full text-sm border-collapse mb-3">
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-100 bg-sky-50"><td class="py-1 pr-3 w-64">① <strong>発見される</strong>（検索）</td><td class="py-1"><strong>直近14日（8/23〜9/6）＝54表示・7クリック・CTR 12.96%・平均掲載順位 9.1</strong>。表示されているページは <code>/</code>（4クリック/35表示）と <code>/spots/themes</code>（3クリック/19表示）の<strong>2本だけ＝36サイクル連続</strong>。<br><span class="bg-amber-50 border-2 border-amber-400 rounded px-2 py-1 inline-block my-1"><strong class="text-amber-900">⚠️ この数字は「工事前」のものです（重要）</strong>＝本日の大きな反映は <strong>9/5 夜〜9/6</strong> ですが、Search Console の最新データは <strong>9/3</strong> までしか届いていません。<u>つまり上の 54表示・2本には、今回の成果は1日分も入っていません</u>。<span class="text-emerald-800"><strong>結果として、混じりけのない「工事前の基準値」が取れた</strong>ことになります＝ここからの変化は、今回の工事の効果としてきれいに読めます。</span></span><br><span class="text-sky-900"><strong>📐 発見されている割合（工事前の基準）＝2 ÷ 16,573 ＝ <span class="text-rose-800">0.012%</span></strong>。層別＝<span class="text-emerald-700">トップ 1/1・テーマ一覧 1/1＝100%</span>／<span class="text-rose-700">テーマ 0/23・都道府県 0/47・市区町村 0/1,918・スポット個別 0/14,477・人物 0/106＝すべて 0%</span>。<u>判定は「どの層が 0% を脱したか」で、どの手が当たったかを切り分けます。</u></span><br><span class="text-sky-900"><strong>🔑 0% の正体は 9/5 に確認済み＝「登録されていない」のではなく「登録済みだが順位が付かない」</strong>（検索エンジンには10本以上が登録済み）。⇒ <u>必要なのは<strong>到達（配線）と、順位が付く中身</strong>の両方</u>でした。<span class="text-emerald-800"><strong>本日、その両方が入りました。</strong></span></span><br>
+        <span class="bg-emerald-50 border-2 border-emerald-500 rounded px-2 py-1 inline-block my-1"><strong class="text-emerald-900">🎉 9/6＝詰まりが全部抜けました</strong>＝<strong>(1) 到達性</strong>＝京都府 0→<strong>48本</strong>／関西 0→<strong>29本</strong>／市区町村 0→<strong>25本</strong>／テーマ 0→<strong>7本</strong>＝<u>トップ→一覧→都道府県→スポットが端から端までつながった</u>（R-R33 ✅）／<strong>(2) 着地先の中身</strong>＝スポット自身の本文・見出し・写真が配信されるように（R-R42 ✅）／<strong>(3) 人物106人</strong>＝固有のタイトル・見出し・リンク（R-R39 ✅）／<strong>(4) <code>www</code></strong>＝9/5 に開通（R-R18 ✅）。</span><br><span class="text-red-800"><strong>🔴 残る詰まり＝(a) 説明文が無いスポット 6,467件（44.9%）</strong>→ <strong>R-R37</strong>（開発の受信箱・旧サイトからの回収を検討中）／<strong class="text-red-800">(b) 本日の副作用＝内部管理情報が1.4万ページに公開</strong>→ <strong>R-R43</strong>（最優先）</span><span class="text-rose-800"><br><strong>社長の残る1手＝Search Console への sitemap 送信（R-R35・5分）</strong>＝<u>今回の工事を検索エンジンに早く拾い直してもらう唯一の手段</u>で、重要度が本日さらに上がりました。</span></td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 pr-3">② <strong>参加の障壁</strong>（登録）</td><td class="py-1">トップ着地87セッション → <strong>メール入力開始が約10%</strong>（悪くない数字）。一方<strong>スポット詳細の着地（11セッション）からは0件</strong>＝着地面に扉が無い → <strong>R-R22</strong>。<span class="text-gray-600">残る入口の問題＝中身が空（R-R29）・スマホで操作不能（R-R31）</span></td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-3">↓ <strong>登録の完了・スタンプ収集</strong></td><td class="py-1"><span class="text-emerald-800"><strong>🔧 サイト側の実装は 8/30 に入りました</strong></span>（<code>sign_up</code>＝メール認証成功／<code>stamp_get</code>＝GPSチェック成功）。<span class="text-emerald-800"><strong>🎉 9/6 23:1x＝GTM の公開も完了しました</strong>（当方がコンテナを直接取得し <code>sign_up</code>・<code>stamp_get</code>・GA4 測定IDの実在を確認）。<strong>Q-R17 は解決です。</strong></span><span class="text-sky-800"></span><br><span class="bg-emerald-50 border-2 border-emerald-500 rounded px-2 py-1 inline-block my-1"><strong class="text-emerald-900">🎉 9/8 実測＝初めて実数が出ました</strong>＝<strong><code>stamp_get</code> 7件／1人</strong>（すべて 9/6）・<strong><code>sign_up</code> 0件</strong>。<span class="text-amber-900"><strong>⚠️ ただし「スタンプ7個」ではありません</strong>＝同日に閲覧された個別スポットは<u>5面だけ</u>で、<strong>同じスポットの再チェックでも発火している</strong>とみられます（推測）。<u>定義を開発担当に照会中＝実績値としては使いません</u>。</span></span> → <strong>R-R17</strong>（⏳検証中）</td></tr>
+        <tr><td class="py-1 pr-3">③ <strong>続ける理由</strong>（再訪）</td><td class="py-1">閲覧2位の <code>/map</code>（<strong>158回</strong>）にスマホでは登録・ログイン導線が出ない → <strong>R-R26</strong>。<span class="text-gray-600">（<code>/map</code> は本日 タイトルが入りましたが<u>見出しはまだ0本</u>＝R-R01 の残件）</span><span class="text-gray-700">バッジ図鑑の公開判断は🔔 Q-R16 → <strong>R-R32</strong></span></td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-600">※ 数字は GA4 の45日実測（events <strong>1,511</strong>／users <strong>125</strong>・最新日<strong>9/4</strong>＝<span class="text-emerald-700"><u>正常に前進</u></span>）＋ Search Console（8/23〜9/6 の14日窓・最新日 <strong>9/3</strong>）。<strong>登録の入口は <code>/register</code> ではなくトップのヒーロー内メールフォーム</strong>です。<span class="text-amber-800">⚠️ GA4・GSC とも直近数日はローリング窓のため、前回との増減は傾向として読みません。</span></p>
+    <p class="text-xs text-gray-700 mt-2 bg-sky-50 border border-sky-300 rounded p-2">🆕 <strong>どの地域から使われているか（9/6 に初測定・60日）</strong>＝日本は <strong>20都道府県から のべ108人</strong>（東京24・神奈川21・<u>大阪16</u>・兵庫6・愛知5・埼玉/北海道/福岡 各4…）。<span class="text-amber-800"><strong>⚠️ ただし「のべ146人」をそのまま実績として使うのは危険です</strong>＝<u>海外・地域不明が約38人</u>あり、その多くは米バージニア州・アイオワ州・独チューリンゲンなど<strong>データセンターの所在地＝機械的なアクセスとみられます</strong>。また大阪の16人は1人あたりの操作量が極端に多く、<u>運営・開発側のアクセスが混じっている可能性が高い</u>です。</span><span class="text-gray-700"><strong>正確な人数は、🔔③ GTM の公開（内部アクセスの除外）が入ってから出せます。</strong>自治体向けのご提案に数字を使う場合は、それを待ってからの方が安全です。</span></p>
+  </div>
+
+  <!-- 🔔 社長への質問 -->
+  <div class="border-2 border-rose-300 bg-rose-50 rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-bold text-rose-800 mb-2">🔔 社長への質問 — <span class="text-base font-semibold">1枚の回答シート（このまま返信でOK）</span></h2>
+    <p class="text-xs text-gray-600 mb-3">回答先＝<code>data/hp-loop/rally/from-president.md</code>／Slack の rally 日報スレッド。<strong>1行でも構いません</strong>。<span class="text-rose-700 font-semibold">本サイクル（Cycle 047）の新規質問は <strong>0件</strong>／<span class="text-emerald-700"><strong>Q-R17（GTM 公開）は 9/6 夜に解決＝この表から外しました</strong></span>＝計 <strong>7件</strong></span>。<strong><span class="text-rose-700">優先順位＝① R-R35（sitemap 送信＝5分。<u>9/5〜9/6 の工事を早く拾い直してもらう唯一の手段</u>）／② Q-R19（説明文をどの順で埋めるか）／③ Q-R18（判定日をずらすか＝ご判断1つ）</span>。これ以外は、お手すきのときで構いません。</strong><span class="text-gray-600">（R-R18・R-R37 は 9/5 のご指示で開発の受信箱へ移しました）</span></p>
+    <table class="w-full text-sm border-collapse bg-white rounded">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-2 px-2 w-20">Q</th><th class="py-2 px-2">質問（一言で答えられる形）</th><th class="py-2 px-2 w-36">答えると動く提案</th></tr></thead>
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-100 bg-rose-300">
+          <td class="py-2 px-2 font-mono font-bold">Q-R19<br><span class="text-xs text-rose-700">9/6<br>新規</span></td>
+          <td class="py-2 px-2"><strong>スポットの説明文を、<u>どの順番で埋めますか？</u></strong>（＝本日ご決定の「書き直し」に着手される前に）<br>　→ <strong class="text-emerald-800">(A) 旧システムのデータを取り出せるか先に確かめてから決める（推奨）</strong>／<strong>(B) 予定どおり770件の書き直しから</strong>／<strong>(C) 説明文が無い6,467件から</strong>／<strong>(D) おまかせ</strong><br>
+          　<span class="text-emerald-800"><strong>(1) 記号 <code>{歴史}</code> を消すために書き直す必要はありません</strong></span><span class="text-gray-700">＝旧サイトの実測で、これは<u>旧システムの「見出し」の書き方</u>と判明。<strong>表示のしかたを1回直すだけで710件が消えます</strong>（開発担当が回答不要で進行可）。</span><br>
+          　<span class="text-red-800"><strong>(2) 書く対象は 770件より 6,467件のほうが約8.4倍効きます</strong></span><span class="text-gray-700">＝770件は文章があり<u>すでに検索の土俵に乗っています</u>／6,467件（44.9%）は文章が無く<u>順位が付きようがありません</u>。ただし<strong>旧サイトから「戻す」だけで済む可能性</strong>があります。</span><br>
+          　<span class="text-gray-600">※ (A) に必要なのは「旧サーバに入れる方はどなたか」だけ＝<strong>R-R40 と同じお伺い</strong>なので1回でお答えいただけます。</span></td>
+          <td class="py-2 px-2"><strong>R-R38</strong>（記号710件）・<strong>R-R37</strong>（説明文6,467件）・<strong>R-R40</strong>（旧サイト）</td>
+        </tr>
+        <tr class="border-b border-gray-100 bg-rose-300">
+          <td class="py-2 px-2 font-mono font-bold">Q-R18<br><span class="text-xs text-rose-700">9/6</span></td>
+          <td class="py-2 px-2"><strong>今回の工事（9/5夜〜9/6）の効果を判定する日を、<u>9/13 → 9/20 へずらしてよいでしょうか？</u></strong><br>　→ <strong class="text-emerald-800">①ずらす（推奨）</strong>／<strong>②9/13 のままでよい</strong>／<strong>③おまかせ</strong><br>　<span class="text-gray-700">Search Console のデータは実際より<u>2〜3日遅れて届く</u>ため、<strong class="text-red-800">9/13 に見えるのは反映後 実質2〜4日分だけ</strong>です。<u>効いているのに「効かなかった」と誤読する危険</u>があります。<strong>開発担当も同意見</strong>です。</span><span class="text-emerald-800">どちらでも観測は毎サイクル続けます。変わるのは「いつ結論を出すか」だけです。</span></td>
+          <td class="py-2 px-2">R-R33・R-R42・R-R39 の効果判定（＝今後の力の配分）</td>
+        </tr>
+        <tr class="border-b border-gray-100 bg-rose-200">
+          <td class="py-2 px-2 font-mono font-bold">Q-R16<br><span class="text-xs text-gray-600">8/29</span></td>
+          <td class="py-2 px-2"><strong>バッジ図鑑（<code>/badges</code>）は、いつ公開する想定ですか？</strong><br>　→ <strong>①近く公開する</strong>／<strong>②当面は非公開のまま</strong>／<strong>③公開の是非をまだ決めていない</strong><br>　<span class="text-gray-700">開発側から「メニューに無いのは<u>実装漏れではなく、機能公開を見送っているという判断</u>」と回答がありました。</span><span class="text-sky-800">同型サービス（攻城団）のバッジページは<u>未ログイン公開のまま検索1ページ目（6位）</u>＝<strong>登録動機にも検索にも効く面</strong>です。</span></td>
+          <td class="py-2 px-2">R-R32 の②③・R-R13</td>
+        </tr>
+        <tr class="border-b border-gray-100 bg-rose-100">
+          <td class="py-2 px-2 font-mono font-bold">Q-R11</td>
+          <td class="py-2 px-2"><span class="text-xs bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded">✅ (1) 解決済み。残るのは <strong>(2) だけ</strong></span><br>　<strong class="text-rose-700">(2) 開発の作業順は、どなたがどう決めていますか？</strong> → ①社長が都度指示／②開発側の判断／③特に決めていない<br>　<span class="text-emerald-800"><strong>ご提案＝解析レポートの「着手推奨の順序」上位3件を次の開発分の指定として扱う</strong>——よろしければ<strong>「OK」の一言</strong>で結構です。</span><span class="text-emerald-700">※ 8/30 の反映は推奨順どおりに進んだため<u>実質ご承認いただけたものと受け止めています</u>。</span></td>
+          <td class="py-2 px-2"><strong class="text-rose-700">次の開発が始まるかどうか</strong></td>
+        </tr>
+        <tr class="border-b border-gray-100 bg-rose-50">
+          <td class="py-2 px-2 font-mono font-bold">Q-R05</td>
+          <td class="py-2 px-2">プライバシーポリシー・利用規約・運営者情報・問い合わせは <strong>①ある（場所：___）／②無い</strong>　※本日も <code>/privacy</code>・<code>/terms</code> は<strong>404 のまま</strong>。<strong>メールアドレスを取得して会員登録させるサービスとして早く埋めたい部分です</strong></td>
+          <td class="py-2 px-2">R-R09・R-R12</td>
+        </tr>
+        <tr class="border-b border-gray-100">
+          <td class="py-2 px-2 font-mono font-bold">Q-R06</td>
+          <td class="py-2 px-2"><strong>主な対象は誰ですか？</strong>（観光する大人／家族連れ／子ども／インバウンド）。<span class="text-sky-700">競合実測で「何を書けばよいか」の型は固まったので、<u>残る変数は「誰に向けた言葉で書くか」だけ</u>です。</span></td>
+          <td class="py-2 px-2">R-R14・R-R07・R-R37</td>
+        </tr>
+        <tr>
+          <td class="py-2 px-2 font-mono font-bold">Q-R10</td>
+          <td class="py-2 px-2"><strong>「直接流入」60セッションに心当たりはありますか？</strong>　→ ①現地のQR・掲示／②SNSやLINEでの共有／③関係者・テスト／④不明。<br>検索42に対して<strong>最多の流入元</strong>＝正体が分かれば伸ばせます</td>
+          <td class="py-2 px-2">R-R12・R-R11</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 📥 欲しい情報 -->
+  <div class="border border-gray-300 bg-white rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-semibold mb-2">📥 分析に欲しい情報</h2>
+    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+      <li><span class="text-rose-700"><strong>社長の手元作業は <u>sitemap 送信（R-R35・5分）の1件だけ</u>になりました</strong>。<span class="text-emerald-700">（GTM の公開＝Q-R17 は 9/6 に完了／証明書＝R-R18 は 9/5 に完了）</span><span class="text-gray-600">詳細は上の🔔で再掲しません。</span></span></li>
+      <li><span class="text-red-800"><strong>【8/31 新】スポットの説明文をどう埋めるか</strong>＝抜き取り12件中4件が定型文だけ（→🔔 R-R37）。<u>写真（下項）と同じく「データをどう集めるか」の話</u>で、開発では解けません</span></li>
+      <li><span class="text-slate-700"><strong>📌 スポット写真をどう集めるか</strong>＝<strong>14,407件に対し写真は145枚</strong>（→R-R28）。<span class="text-gray-600">9/1 ご指示により<u>社長が開発担当と別線で進行中</u>＝当方は枚数の定点観測のみ・督促しません</span></span></li>
+      <li><span class="text-amber-800"><strong>テーマのアイキャッチ画像の登録</strong>（＝開発ではなく<u>データ登録の作業</u>。<strong>どなたがいつ登録するか</strong>を決める必要があります）</span></li>
+      <li><span class="text-amber-800"><strong>【8/31 更新・社内の設定】読み取り専用ツール2本を実行許可リストに追加</strong>＝<code>bin/hp-head.py</code>（Webサーバ・404の中身・証明書の調査）と <code>bin/sitemap-count.py</code>（<u>sitemap が実際に何を何件申告しているかの全件集計</u>）。<span class="text-gray-600">本日、約1.5万URLの sitemap の内訳（層別の件数・404混入の有無）を自分で確かめられず、抜き取り12件の推定に留まりました</span></span></li>
+      <li><strong>配信HTMLの作り（プリレンダ／SSR）の設計意図</strong>：<u>一覧ページ</u>で本文をサーバ側で出さないのは意図的か未実装か（→R-R33。<code>rally-dev</code> へ照会中）</li>
+      <li><span class="text-sky-700"><strong>Search Console の登録範囲</strong>：登録は <code>https://check-rally.com/</code> だけですか、<code>www.</code> も含む「ドメイン全体」ですか（→R-R18・R-R35）</span></li>
+      <li><strong>スポットの由来</strong>（運営登録／提携／UGC か。R-R07・R-R12・R-R37 の内容確定に必要）</li>
+      <li><strong>既存機能の有無</strong>：共有・招待（→R-R11）／再訪施策（→R-R13）／スポット掲載窓口（→R-R12）　<span class="text-gray-500">※ <code>rally-dev</code> にも照会中</span></li>
+      <li><strong>直接流入60セッションの正体</strong>（→🔔 Q-R10）／<strong>バッジ図鑑の公開時期</strong>（→🔔 Q-R16）</li>
+    </ul>
+    <p class="text-xs text-emerald-700 mt-2">✅ 解決済み（GSC/GA4 の接続・スポット総件数14,477件・ナビ先の実URL一覧・サーバの所在＝Xserver VPS・<strong>8/30 の本番反映</strong>）は <a href="spec.html" class="text-blue-600 hover:underline">確定・仕様</a>／<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a> に移しました。</p>
+  </div>
+
+  <!-- 🔧 進行中の提案 -->
+  <div class="border border-gray-300 bg-white rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-1">🔧 進行中の提案（<span class="text-emerald-700">27件 → 22件</span>）<span class="text-sm font-normal text-emerald-700">／✅完了・統合は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ（<strong>9/6 に R-R33・R-R42・R-R39・R-R41・<u>R-R43</u> ✅完了／R-R23 は R-R43 へ統合</strong>＝<u>1日で5件完了は rally で最多</u>）</span></h2>
+    <p class="text-xs text-gray-500 mb-1">着手区分＝<strong>✅AI即応</strong>（実装担当がそのまま着手可・回答不要）／<strong>🔔要回答</strong>（社長・実装者の回答や作業が先＝何が要るかを括弧で明記）／<strong>💰大型・要相談</strong>／<strong>⏳検証中（作業なし）</strong>。<strong>ご確認が必要なのは🔔の行だけ</strong>（✅は回答不要でそのまま進みます）。</p>
+    <p class="text-xs text-emerald-700 mb-2">✅ <strong>rally-dev が回答を待たずに着手できる仕事は<span class="text-red-700">9件</span></strong>（残り<span class="text-rose-700"><strong>13件が社長・クライアントの回答／操作待ち、または別線で進行中</strong></span>＝<span class="text-emerald-700"><strong>9/6 夜に Q-R17 が解決して1件減りました</strong></span>）。<span class="text-red-700"><strong>着手推奨の順（9/6 12:2x Cycle 046・改訂）</strong>＝① <strong>R-R43 の反映</strong>（<u>修正は完了済み・社長のお戻り後に反映</u>＝作業待ちではありません）→ ② <strong>R-R38 の表示側の変換</strong>（<u>710件が一斉に消えます。ただし <strong>🔔 Q-R19</strong> のご回答が出てから</u>）→ ③ <strong>R-R36 の残り</strong>（一覧の <code>ItemList</code>・<u>回答不要でそのまま進みます</u>）→ ④ <strong>R-R01 の残り</strong>（<code>/map</code> の見出し。R-R26 と同時が効率的）。<span class="text-gray-600">※ <strong>順番が変わった理由</strong>＝<u>「発見の配管」系（R-R33・R-R42・R-R39・R-R41）は本日すべて完了しました</u>。主戦場は「見つけてもらう」から<strong>「見つけた人に見せてよい中身になっているか」</strong>へ移ります。</span></span></p>
+    <p class="text-xs text-gray-500 mb-3">📖 この表は<strong>「現在の状態だけ」</strong>です。各提案の観察の詳細・実測値・訂正の経緯・実装の具体案は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>の各サイクル記録に全文が残っています（消していません）。</p>
+
+    <h3 class="text-sm font-bold text-red-800 mt-4 mb-1">P0 ｜ 北極星に直結・今すぐ着手できる — 10件</h3>
+    <table class="w-full text-sm border-collapse mb-4">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2 w-20">ID</th><th class="py-1 pr-2">提案（現在の状態）</th><th class="py-1 pr-2 w-10">優先</th><th class="py-1 pr-2 w-24">着手区分</th><th class="py-1 w-28">測れる窓</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100 bg-rose-100"><td class="py-1 pr-2 font-mono">R-R35<br><span class="text-xs text-gray-500">8/30</span></td><td class="py-1 pr-2"><strong>Search Console に <code>sitemap.xml</code> を送信する【社長の操作・5分】</strong><br><span class="text-gray-700">手順＝Search Console →左メニュー「サイトマップ」→<code>sitemap.xml</code> と入力→「送信」。<u>クロール開始が早まる＋「申告1.5万件のうち何件登録されたか」という測定窓が増えます</u>。</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（社長＝SC の操作5分）</span></td><td class="py-1">GSC「サイトマップ」の検出URL数（基準＝未送信）／インデックス登録数（基準＝表示URL2本）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 pr-2 font-mono">R-R37<br><span class="text-xs text-rose-800">8/31<br>新規</span></td><td class="py-1 pr-2"><span class="inline-block bg-slate-600 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">📌 9/5 ご指示により開発の受信箱へ引き渡し済み／方針は (C)</span><br><span class="text-slate-800 bg-slate-100 border border-slate-300 rounded px-2 py-1 inline-block mb-1"><strong>9/5 社長ご決定＝「開発の受信ボックスに入れておいて」／方針 (C)＝いまは何もせず 9/13 の判定を見る</strong>（開発担当も異存なし）。判断待ちには数えず、督促先は開発側へ。</span><br><span class="text-red-800 bg-red-50 border border-red-300 rounded px-2 py-1 inline-block mb-1"><strong>⚠️ 9/5 訂正＝件数は「約5千」ではなく 6,467件（全体の44.9%）</strong>でした（開発DBの実測）。<u>こちらの推定が少なすぎました</u>。内訳＝説明文が空 6,467／40字未満 145／<strong>「追加情報」が空 14,147＝ほぼ全件</strong>／テンプレート記号が残る 770（＝R-R38 の母数）。<strong>(B) noindex を選ぶ場合、消える対象は5千ではなく6,467ページです。</strong></span><br><span class="text-emerald-800 bg-emerald-50 border border-emerald-300 rounded px-2 py-1 inline-block mb-1"><strong>🔑 9/5 の新しい材料＝旧サイトに同じスポットの説明文が実在します</strong>（→ <strong>R-R40</strong>）。番号で突き合わせられれば、<u>(A) は「人手でゼロから書く」ではなく「移行し忘れの回収」</u>になり、難易度が大きく下がります。開発担当へ確認依頼済み。</span><br><strong>観察</strong>＝説明文が定型文だけのページでは、<strong>本文にもそのスポット自身の紹介文が1文字もありません</strong>（見えているのは「近隣スポット」の一覧だけ）。<strong>なぜ問題か</strong>＝<u>中身がほぼ同一のページが数千単位で巡回されると、サイト全体の評価を下げかねません</u>。<span class="text-gray-500">（8/31 の抜き取り12件の実例は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a> Cycle 038 に全文）</span><br><strong>選択肢</strong>＝(A) 順に埋める／(B) 説明文が無いページは当面 <code>noindex</code>（＝6,467ページが検索から一時的に消えます）／<strong class="text-emerald-800">(C) いまは何もせず 9/13 の判定を見る ← 9/5 に社長ご決定</strong>。</td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">📌開発側へ引き渡し済み<br><span class="text-xs text-gray-500">（<u>社長への督促なし</u>・9/13 に判定）</span></td><td class="py-1">GSC のインデックス登録数と「クロール済み—未登録」の推移（基準＝送信前）／スポット個別の表示回数（基準0）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 pr-2 font-mono">R-R36<br><span class="text-xs text-rose-800">8/31<br>新規</span></td><td class="py-1 pr-2"><span class="inline-block bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">✅ 大半が完了（9/6）／残るのは一覧の1種類だけ</span><br><strong>構造化データ（JSON-LD）を入れる</strong><span class="text-xs text-gray-600">（R-R01③ から分割・格上げ）</span><br><span class="text-emerald-800 bg-emerald-50 border border-emerald-300 rounded px-2 py-1 inline-block mb-1"><strong>✅ 9/6 実測＝入りました</strong>＝スポット詳細に <strong><code>TouristAttraction</code>＋<code>BreadcrumbList</code></strong>（0件→2件）／人物詳細に <strong><code>Person</code>＋<code>BreadcrumbList</code></strong>／トップに <strong><code>WebSite</code></strong>／都道府県ページに <code>BreadcrumbList</code>。</span><br><span class="text-red-800"><strong>🔴 残件＝一覧ページの <code>ItemList</code></strong>＝<code>/spots/themes</code> は <u>JSON-LD 0件のまま</u>。<span class="text-gray-700">「23件のテーマが並んだ一覧である」ことを機械に伝える記述で、<u>一覧が検索結果でまとまって見えやすくなります</u>。</span></span><br><strong>効果</strong>＝地図・観光系の検索で<u>場所として認識されやすくなる</u>＋リッチリザルトの対象になる。<strong>工数</strong>＝小（残りはテンプレート1本）</td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">本番GET＝JSON-LD 件数（<strong>詳細・人物・トップは✅達成／一覧は基準 0件</strong>）／GSC「拡張」レポート</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 pr-2 font-mono">R-R38<br><span class="text-xs text-rose-800">8/31<br><span class="text-red-700">9/1 🟡→🔴</span></span></td><td class="py-1 pr-2"><strong>説明文に残っているテンプレートの記号を消す（＋欠番URLの点検）</strong><br><strong>観察</strong>＝説明文に <code>{p_thema-2-日本三景}</code>・<code>{Q5-二代目}</code>・<code>{歴史}</code> といった記号が<u>そのまま出ています</u>。<span class="text-red-800">① <strong>形は少なくとも3種類</strong>＝1書式の置換では済まず全件の洗い出しが要る ② <strong>リンクの文字列にも出ている</strong>＝検索エンジンの判断材料なので本文より影響が大きい。</span><br><span class="text-red-800 bg-red-50 border border-red-300 rounded px-2 py-1 inline-block mb-1"><strong>🔴 9/6＝露出する場所が増えました（優先度が上がりました）</strong>＝本文が配信されるようになった結果、<code>/spots/9146</code> の<u>本文中に <code>{歴史}</code>・<code>{見どころ}</code> が5か所</u>出ています（自身の2か所＋近隣スポットの分）。<span class="text-gray-700">これまでは検索結果の紹介文だけでしたが、<strong>いまはページを開いたお客様の目にも入ります</strong>。件数（770件）は変わりません。</span></span><br><span class="text-emerald-800 bg-emerald-50 border-2 border-emerald-500 rounded px-2 py-1 inline-block mb-1"><strong>🔑🔑 9/6 12:2x＝正体が確定しました＝<u>旧システムの「見出し」の書き方</u>でした（当方の旧サイト実測）</strong><br>
+        開発担当のDB実測で内訳が判明＝<strong><code>{歴史}{見どころ}</code>＝710件</strong>／<strong><code>{p_spot-502-通天閣}</code> など＝60件</strong>（旧システムの内部リンクの書き方）。<u>開発担当からは「710件は ChatGPT の見出しなので旧システムからは回収できない」とのご結論</u>をいただきましたが、<strong class="text-emerald-900">当方が旧サイトを実際に開いたところ、そうではありませんでした</strong>＝<code>sp.mission-p.com/?p_spot=9146</code>（建長寺・正常表示）は<u>同じ本文を持ち、しかも「歴史」「見どころ」を<strong>見出しとして正しく表示</strong>しています</u>（記号は1つも出ません）。<br>
+        <strong class="text-emerald-900">⇒ <code>{歴史}</code> は「ChatGPT のゴミ」ではなく、旧システムが理解できる合図でした＝説明文を書き直さなくても、<u>表示のしかたを1回直すだけで710件が一斉に消えます</u></strong>（＝この行の当初の改善案そのものです。正解の変換のしかたは旧サイトの実装で確認できます）。<br>
+        <span class="text-gray-700">※ 開発担当のDB実測（707件・内訳・相関）は<u>すべて正確</u>で、当方の「770件すべてが移行し忘れ」という見立てのほうを正しく壊してくださいました。食い違ったのは「だから旧システムには無い」という<u>開発担当の観測範囲の外側</u>の部分だけです。<strong>この内容は実測つきで開発担当にもお伝えしています。</strong></span></span><br>
+        <span class="text-rose-800 bg-rose-50 border border-rose-300 rounded px-2 py-1 inline-block mb-1"><strong>📌 9/6＝社長が「説明文を1から書き直す」とご決定（開発担当より）。</strong>ただし<u>上記のとおり記号の問題は書き直しと独立</u>です＝<strong>記号の変換は書き直しを待たずに進められます</strong>。<u>着手順のご確認は</u> <strong>🔔 Q-R19</strong> <u>へ</u>。<strong>60件の内部リンクの書き方は別扱い</strong>（<code>/spots/&lt;id&gt;</code> へのリンクに変換すると内部リンクが増えるため、開発担当が別途検討・未着手）。</span><br><strong>あわせて</strong>＝<code>/spots/1500</code> は <strong>404</strong>（＝IDに欠番あり）。<span class="text-gray-700">sitemap は約1.5万URLを申告しているので、<u>その中に404が混ざっていないかを1度だけ確認したい</u>。</span><br><strong>改善案</strong>＝①<code>{…}</code> 形式の残存を<u>3形式まとめて</u>全件検索し、変換またはプレーン文へ ②sitemap 生成時に「公開中のスポットだけ」を出しているか確認。<strong>工数</strong>＝小</td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">本番GET＝<code>{</code> 記号の残存件数（<strong>基準＝抜き取り12件中2件・3形式</strong>）／GSC「サイトマップ」の エラー・除外件数</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 pr-2 font-mono">R-R22</td><td class="py-1 pr-2"><strong>スマホの着地ページに「参加する」導線が無い</strong>。<br><strong>改善案</strong>＝スポット詳細の本文中に「このスポットのスタンプを集める → アカウント登録（無料・30秒）」を1つ（写真の直下か「基本情報」の直後）。<span class="text-gray-600">トップと同じ<strong>メールアドレス直接入力の形</strong>が最短</span>。<br><strong>観察</strong>＝PC ではサイドバーに「無料で始める」があるが<strong>スマホでは ☰ に収納され、画面のどこにも登録導線が出ません</strong>。<span class="text-red-800"><strong>スポット詳細に着地した12セッションのうちメール入力を始めた人は0件</strong></span>（トップ着地では約10%）。</td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">GA4 <code>/spots/*</code> 着地セッションの <code>form_start</code>（<strong>基準＝0件/12セッション</strong>）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 pr-2 font-mono">R-R32</td><td class="py-1 pr-2"><span class="inline-block bg-amber-500 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">🔧 ①は実装済み／②③は社長のご判断待ち</span><br><strong>ログインが要る画面の「入口の閉じ方」を揃える＋バッジ図鑑を「続ける理由」として機能させる</strong>。<br>①<u>実装済み</u>＝<code>/badges</code>・<code>/account</code> の未ログイン時の行き先を <code>/login</code> に統一（従来はトップへ無言リダイレクト）。<br>②<code>/badges</code> を未ログインでも「集められるバッジの見本」として見せる ③メニューに戻す ④固有 title・h1 ＝<span class="text-rose-700"><strong>公開判断（→🔔 Q-R16）が先</strong></span>。<span class="text-gray-600">GA4 45日で <code>/badges</code> の閲覧は実質ゼロ。</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R16＝公開判断）</span></td><td class="py-1">未ログインGET＝<code>/login</code> へ案内されるか／GA4 <code>/badges</code> の閲覧（基準＝実質0）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-100"><td class="py-1 pr-2 font-mono">R-R29</td><td class="py-1 pr-2"><span class="inline-block bg-emerald-600 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">✅ 人物側は完了（9/5 実測）／残るはタグのみ</span><br><strong>中身が空の新機能を、全ページ共通メニューの一等地に常設しない</strong>。<br><span class="text-emerald-800"><strong>✅ 9/5＝<code>/people</code> に人物106人・ゆかりの地498件が登録され、画面で表示されることを確認しました</strong>（肖像画つき・時代・肩書・生没年・ゆかりの地件数）。<u>「空の棚」問題は人物については解消</u>です。</span><br><span class="text-emerald-800"><strong>✅ 9/5夕＝人物一覧は配信HTMLにも出るようになりました</strong>（106本のリンク）。人物ごとのページの名札は <strong>R-R39</strong> が引き継ぎます。</span><br><span class="text-amber-800"><strong>🆕 9/5夕＝残件 <code>/spots/tags</code> の正体が判明しました＝<u>タグが1件も登録されていません</u></strong>（開発担当の実測＝タグAPIが空を返す）。<u>実装の問題ではなくデータの問題</u>＝人物と同じく「誰がいつ登録するか」の話です（→📥）。<span class="text-gray-600">＝共通メニューの一等地に、中身ゼロの入口が1つ残っている状態が続きます。</span></span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（タグを登録するか・やめるかの方針）</span></td><td class="py-1">本番GET/描画＝空でなくなるか（<span class="text-emerald-700">人物＝✅9/5 達成</span>／<span class="text-red-700">タグ＝0件のまま</span>）</td></tr>
+        <tr class="border-b border-gray-100 bg-red-50"><td class="py-1 pr-2 font-mono">R-R26</td><td class="py-1 pr-2"><strong>地図ページ（<code>/map</code>）＝いちばん見られている画面なのに、参加の扉と名札がありません</strong>。<br><strong>改善案</strong>＝①スマホでも常時見える登録ボタン（位置は R-R23 と合わせて設計）②固有の title（例「地図からスタンプスポットを探す｜日本全国スタンプラリー」）と h1 ③カードに実際の写真。<br><strong>観察</strong>＝GA4 閲覧数2位（45日で158回）。<u>大半はサイト内を回遊した＝すでに関心のある人</u>（推測）なのに、そこに登録の扉がありません。</td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">GA4 <code>/map</code> 経由セッションの <code>form_start</code>（基準0）・本番GET（title/h1）</td></tr>
+        <tr class="bg-amber-50"><td class="py-1 pr-2 font-mono">R-R31</td><td class="py-1 pr-2"><strong>「スポットを探す」（<code>/spots/search</code>）をスマホで使えるようにする＋導線に戻す</strong>。<br><strong>改善案</strong>＝①ページ本文の上部に検索窓（PC・SP共通）②未入力時の文言を端末に依存しない案内へ ③空状態でも人気スポット・テーマへの導線 ④固有の title・h1 ⑤メニュー整理（「スポットを探す」が地図と検索のどちらを指すか。⑤は R-R29・R-R32③ と同時が効率的）。<br><strong>観察</strong>＝「サイドバーの検索フォームから入力してください」と案内するが<span class="text-red-800"><u>スマホにサイドバーは無く（☰内）、ページにも検索窓がありません</u></span>。被リンク0本の孤立ページ。</td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">SP描画にページ内検索窓が出るか（基準ゼロ）／GA4 <code>/spots/search</code> の閲覧（基準7回・2人/45日）</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="text-sm font-bold text-amber-800 mt-4 mb-1">P1 ｜ 計測と可用性（土台） — 3件</h3>
+    <table class="w-full text-sm border-collapse mb-4">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2 w-20">ID</th><th class="py-1 pr-2">提案（現在の状態）</th><th class="py-1 pr-2 w-10">優先</th><th class="py-1 pr-2 w-24">着手区分</th><th class="py-1 w-28">測れる窓</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-R17</td><td class="py-1 pr-2"><span class="inline-block bg-sky-600 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">⏳ 実数は出た／件数の定義を照会中</span><br><strong>北極星の「ゴール地点」を測るGA4イベントを入れる</strong>。<br><span class="text-emerald-800">✅ 8/30＝<code>sign_up</code>（メール認証成功＝登録の本当の完了地点）と <code>stamp_get</code>（GPSチェック成功・スポットID／ポイント／訪問回数つき）を送出。<code>/admin</code> 配下では計測タグを読み込まない形に。</span><br><span class="text-emerald-800"><strong>✅ 9/6 23:1x＝GTM の公開も完了</strong>（当方が公開中のコンテナを直接取得し <code>sign_up</code>・<code>stamp_get</code>・<code>G-JRW203QB7S</code> の実在を実測確認）。<strong>Q-R17 解決。</strong></span><span class="text-sky-800"><strong>🎉 9/8＝初の実数を確認しました</strong>＝<code>stamp_get</code> <strong>7件／1人</strong>（すべて 9/6）・<code>sign_up</code> <strong>0件</strong>・<code>/admin/*</code> の混入も<strong>0件</strong>（内部除外が効いています）。<strong class="text-amber-900">⚠️ 残る宿題＝件数の定義</strong>＝同日に閲覧された個別スポットは5面だけなのに 7件発火しており、<u>同じスポットの再チェックでも1件として数えている</u>とみられます（推測）。<strong>開発担当へ照会中＝それまでこの数字を実績値として使いません。</strong></span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2"><span class="text-sky-700"><strong>⏳検証中</strong></span><br><span class="text-xs text-gray-500">（開発担当＝件数の定義）</span></td><td class="py-1">GA4 に <code>sign_up</code>／<code>stamp_get</code> が出るか（基準0件）／<code>/admin/*</code> の混入が消えるか（基準＝45日で約10%）</td></tr>
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-R19</td><td class="py-1 pr-2"><strong>死活監視の導入 ＋ 証明書の自動更新でサイトが落ちない形にする</strong><br><span class="text-red-800"><strong>🔑 8/29＝8/15 のダウンタイム（約20分）の原因がほぼ特定</strong></span>＝証明書の発行日が 8/15＝障害と同日、有効期間ちょうど90日＝Let's Encrypt の自動更新。<span class="text-gray-700"><strong>推測</strong>＝更新方式が「更新の間だけ Web サーバを止める」形（standalone）だと、8/15 に記録された「80番・443番が同時に即時拒否」と症状が一致します。</span><br><span class="text-red-800"><strong>⚠️ 次の更新は 2026-10-14 前後＝同じことが起きうる日です。</strong></span><br><strong>対策</strong>＝更新方式を <code>--webroot</code> か <code>--nginx</code> へ（<u>R-R18 とまったく同じ1回の作業で片づきます</u>）。監視は①外部（UptimeRobot 等）②自前の日次死活チェック。<span class="text-sky-800">推奨＝①ですが、<u>原因が分かっているものは監視より先に直すのが順序</u>。</span><br><span class="text-emerald-800"><strong>✅ 9/1＝Q-R14 解決＝ブロッカー解除。</strong></span><span class="text-gray-700">ただし社長ご指示（1回のやり取りで1歩）により、<strong>この項目は R-R18 が片づいてから出します</strong>＝いまは社長の作業をお願いしていません。</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（社長＝R-R18 完了後に着手。<u>いまは順番待ち</u>）</span></td><td class="py-1">10/14 前後に再発しないか（基準＝8/15 に約20分）／検知までの時間（現在＝最大5日）</td></tr>
+        <tr class="bg-amber-50"><td class="py-1 pr-2 font-mono">R-R28</td><td class="py-1 pr-2"><span class="inline-block bg-slate-600 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">📌 社長が別線で進行中（9/1 ご指示）</span><br><strong>一覧カードに実際のスポット写真を出す（現在は全画面が「ピンの絵」）</strong>。<br><span class="text-slate-800 bg-slate-100 border border-slate-300 rounded px-2 py-1 inline-block mb-1"><strong>9/1 社長ご決定＝「私の方で開発エージェントと進めていくので大丈夫です。課題としてだけ挙げておいてください。」</strong>＝<u>判断待ちには数えません・こちらから督促もしません</u>。課題としては消さず、<strong>写真の枚数だけを定点で数え続けます</strong>（9/2＝<strong>145枚</strong>／14,407件・変化なし。競合の1ページ目＝27〜128枚）。</span><br><span class="text-emerald-800">✅ 切り分け済＝原因は「一覧APIが写真を返していなかった」（＝当方の推測「カード側の配線漏れ」は外れ）。修正は 8/30 反映済み。</span><br><span class="text-red-800"><strong>🔴 それでも見た目が変わらない理由＝スポット14,407件に対し写真は145枚しかありません</strong>（開発側申告・スクショで裏取り）。</span><span class="text-gray-700">＝開発ではなく「<u>写真をどう集めるか</u>」の課題。選択肢＝(a)運営で優先登録／(b)UGC／(c)外部ソース／(d)当面は色・アイコンで代替。<span class="text-sky-700">競合の1ページ目は写真27〜128枚＝写真の量そのものが土俵です。</span></span><br><span class="text-amber-800">技術的な残り＝①<code>/map</code> 下部カルーセルのサムネイル取得（<span class="text-emerald-800"><strong>✅ 回答不要でそのまま進められます</strong></span>） ②テーマのアイキャッチ画像が未登録（→📥）。</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">📌別線で進行中<br><span class="text-xs text-gray-500">（社長が開発担当と直接。<u>判断待ちに数えず・督促なし</u>）</span></td><td class="py-1">スクショ定点（6画面のカード）・GA4 一覧面→スポット詳細の閲覧</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="text-sm font-bold text-emerald-800 mb-1">P2 ｜ 発見・拡散（サーバ層が要るもの含む） — 3件</h3>
+    <table class="w-full text-sm border-collapse mb-4">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2 w-20">ID</th><th class="py-1 pr-2">提案（現在の状態）</th><th class="py-1 pr-2 w-10">優先</th><th class="py-1 pr-2 w-24">着手区分</th><th class="py-1 w-28">前提</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100 bg-amber-100"><td class="py-1 pr-2 font-mono">R-R40<br><span class="text-xs text-rose-800">9/5<br>新規</span></td><td class="py-1 pr-2"><strong>旧サイト <code>mission-p.com</code> の停止をどうするか決める（説明文の供給源でもあります）</strong><br>
+        <strong>観察（9/5・当方の実測）</strong>＝①<code>https://mission-p.com/</code> は <strong class="text-red-800">HTTP 500</strong>（http も同じ・スポット個別も500）／②<span class="text-emerald-800"><strong><code>sp.mission-p.com</code>（スマホ版）は生きています</strong></span>（200・同じスポット番号で中身が完全表示。ただし canonical が 500 のページを指しています）／③旧サイトは<strong>検索エンジンに10本登録されたまま、全部エラー</strong>（<code>sp.</code> トップ＋<code>?p_spot=</code> 9本）／④旧のタイトルは<u>説明文つきで、いまの新サイトより検索結果での見え方が良い</u>（例「浜松市楽器博物館(静岡県浜松市中区) - 音楽愛好家必見！日本…」）。<br>
+        <span class="text-sky-800"><strong>🔑 いちばん大きい発見＝旧サイトに「新サイトに無い説明文」が実在します。</strong></span>浜松市楽器博物館のページには<strong>キャッチ＋「歴史」＋「見どころ」の本文</strong>が入っています。<u>旧のスポット総数 14,406 ≒ 新 14,407＝同じデータ</u>なので、<strong class="text-emerald-800">説明文が無い6,467件（R-R37）は「ゼロから書く」ではなく「移行し忘れの回収」で済む可能性</strong>があります。<span class="text-gray-600">（番号で突き合わせられるかを開発担当に確認依頼済み）</span>また <strong>R-R38 のテンプレート記号 <code>{歴史}</code> 等の出どころも判明</strong>＝旧の見出しラベルが置換されずに残ったもの（推測）＝<u>3形式まとめて規則で処理できるはず</u>です。<br>
+        <strong>なぜ問題か</strong>＝旧登録者（約4,700人）の受け皿が消えており、<u>旧サイトから新サイトへ辿り着けません</u>。加えて検索エンジンの蓄積（登録・被リンク）が失われ続けます。<br>
+        <strong>選択肢</strong>＝<strong>(A) 旧サイトを復旧してから、新サイトへの案内（301 or 告知ページ）を置く</strong>（<span class="text-gray-600">蓄積を引き継げる・当方の推奨</span>）／<strong>(B) 復旧せずこのまま畳む</strong>（<span class="text-gray-600">蓄積は失われます</span>）／<strong>(C) 当面は <code>sp.</code> だけ残して様子を見る</strong>。<span class="text-gray-600">※ 原因はサーバの中でしか分からないため、まず「復旧するのか」の方針だけ決まれば当方は次の材料を出せます。</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（社長＝(A)(B)(C) の方針を1つ。<u>旧サーバの管理者・復旧可否</u>）</span></td><td class="py-1"><code>mission-p.com</code> の HTTPステータス（<strong>基準＝500</strong>）／<code>site:mission-p.com</code> の登録件数（<strong>基準＝10本</strong>）／GA4 の参照元に mission-p が現れるか（<strong>基準＝0</strong>）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R11</td><td class="py-1 pr-2">🟦 <strong>成長ループ（口コミ・共有・招待）＋社会的証明</strong>＝参加者数／スポット数の証明ブロック／バッジのSNS・LINE共有／友達招待リンク。<span class="text-emerald-700">※ OGP は 8/30 に入ったので<u>共有時の見え方の前提は整いました</u>。</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（既存機能の有無・公表可能な実数値）</span></td><td class="py-1">📥 既存機能</td></tr>
+        <tr><td class="py-1 pr-2 font-mono">R-R12</td><td class="py-1 pr-2">🟦 <strong>スポット側を獲得チャネルに（供給ループ・現地QR）</strong>＝掲載希望ページ＋窓口／店頭ポップ→スポットページ直着地。<span class="text-emerald-700">※「直接流入」が最多（60セッション）＝<strong>現地QR等が既に効いている可能性</strong>（→Q-R10）</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R10＋掲載の仕組み）</span></td><td class="py-1">Q-R10</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="text-sm font-bold text-gray-700 mb-1">P3 ｜ 参加・継続・基盤 — 7件</h3>
+    <table class="w-full text-sm border-collapse">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2 w-20">ID</th><th class="py-1 pr-2">提案（現在の状態）</th><th class="py-1 pr-2 w-10">優先</th><th class="py-1 pr-2 w-24">着手区分</th><th class="py-1 w-28">前提</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R09</td><td class="py-1 pr-2">🟦 <strong>信頼・コンプライアンス整備</strong>＝運営者情報・プライバシーポリシー・利用規約・お問い合わせ＋フッターナビ。<code>/privacy</code>・<code>/terms</code> は<strong>404 継続</strong>。メールアドレスを取得するB2Cサービスとして最優先の未着手項目</td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R05＝既存文書の有無）</span></td><td class="py-1">Q-R05</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R01</td><td class="py-1 pr-2"><strong>SPAのSEO土台【残件のみ】</strong>。<span class="text-emerald-800"><strong>✅ 9/6 で大半が解消</strong>＝スポット詳細・人物詳細・二階層目の一覧はすべて <u>固有 title＋h1=1</u> になりました（<code>/map</code> も title が「スポットマップ」に）。</span><br><span class="text-red-800"><strong>🔴 残件は1つだけになりました</strong>＝<code>/map</code> が <u>見出し（h1）0本</u>（→ R-R26 と同時が効率的）。<span class="text-gray-700">※ 本日 12:2x の本番確認でも未解消。</span></span><br><span class="text-emerald-800 bg-emerald-50 border border-emerald-300 rounded px-2 py-1 inline-block my-1"><strong>✅ 9/6＝ランキングページは残件から外しました</strong>＝<code>/ranking/points</code> は <strong>9/5 に「検索エンジンに載せない」設定（noindex）が入り、sitemap からも外されて</strong>いました（ログイン必須で未ログインでは中身が空＝載せてもかえって評価を下げるため、という社長のご決定）。<u>当方の本番確認でも設定を確認済み</u>＝<strong>タイトルの改善は不要です</strong>。</span><span class="text-gray-500">※ canonical・JSON-LD は解消（R-R02・R-R36）</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">本番GET＝ルート別 title／h1 の有無</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R08</td><td class="py-1 pr-2">🟦 <strong>初回訪問のCV根治【🔧一部反映】</strong>＝残作業：位置情報を拒否したときに「近くのスポット」枠が空になる（代替の入口が無い）＋登録フォーム周りの価値提示。※軽微：登録フォームが <code>action=""・method="get"</code>＝JS失敗時にメールアドレスがURLに載る形（POST化を推奨）</td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">—</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R14</td><td class="py-1 pr-2">🟦 <strong>トップの「空の店先」解消【🔧一部反映】</strong>＝残作業：位置情報なしでも見えるサンプルスポットのカード陳列＋エリア／テーマのタイル入口（何が集められるかを位置許可の前に見せる）</td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R06＝対象者）</span></td><td class="py-1">Q-R06</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R07</td><td class="py-1 pr-2">場所詳細／エリア／テーマページの<strong>コンテンツ設計</strong>（Cycle 003 で具体化済）。<strong>R-R33・R-R37 の直後に効く続き</strong>。<span class="text-sky-700">※テーマ層の目標値は競合実測で確定済み</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R06）</span></td><td class="py-1">Q-R06・R-R33</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R13</td><td class="py-1 pr-2">🟦 <strong>継続（リテンション・再訪）</strong>＝バッジ図鑑の「進捗＋あと少し」訴求／再訪メール／PWA。<span class="text-gray-500">※R-R32 が先</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（既存機能の有無）</span></td><td class="py-1">📥 既存機能</td></tr>
+        <tr><td class="py-1 pr-2 font-mono">R-R15</td><td class="py-1 pr-2"><strong>現地・弱電波での実利用の信頼性</strong>＝初期描画の実測／PWAオフライン耐性／電波弱時の graceful degradation。<span class="text-gray-500">※本番の応答は 0.09〜0.26秒と良好＝優先度は据え置き</span></td><td class="py-1 pr-2">🟢</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（実施可否の方針判断）</span></td><td class="py-1">方針</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-3"><strong class="text-sky-800">【Cycle 047 の変更・2026-09-06 23:1x】</strong><strong class="text-emerald-800">新規R 0件・新規Q 0件・<u>解決Q 1件（Q-R17＝GTM の公開）</u>・<u>✅完了1件（R-R43）</u></strong>＝<strong>在庫 23 → 22件</strong>・<span class="text-emerald-700"><strong>判断待ち 14 → 13件</strong></span>（自動停止ライン15件まで余裕2件）。<strong>区分の異動1件</strong>＝<strong>R-R17</strong>（🔔要回答 → <strong>⏳検証中</strong>＝GTM 公開済み・9/7 の GA4 で実数を確認）。<strong>根拠の更新2件</strong>＝<strong>R-R37</strong>（<u>着手順の根拠が見つかった＝旧DBの人気度ランク</u>）／<strong>R-R40</strong>（<u>ダンプ1回で「説明文の回収」「着手順」「<code>{歴史}</code> の変換規則」の3つが同時に手に入る＝価値が上昇</u>）。<span class="text-amber-800"><strong>⚠️ 開発担当のご依頼「検索で人が来ているスポットページ上位50件」は 0件でした</strong>＝<u>スポット詳細14,477ページの30日間の表示回数はゼロ</u>。<strong>「出せません」で終えず、代わりの材料（旧DBの人気度ランク）を探して見つけたのが本サイクルの中身です。</strong></span><strong class="text-emerald-800">🎉 さらにサイクル終盤（23:14〜23:20）に <u>R-R43 が反映され ✅完了</u></strong>＝<span class="text-gray-700">約6分の停止を実測で検知 → 復旧後に <code>/spots/9146</code> が 98,844B → <strong>98,097B</strong> となり内部管理情報が消滅＝<u>停止は障害ではなく反映作業</u>と判明（詳細はページ最上部）。<strong>これで 9/6 の完了は5件＝rally 最多</strong>。</span><br><strong class="text-sky-800">【Cycle 046 の変更・2026-09-06 12:2x】</strong><strong class="text-emerald-800">新規R 0件・完了0件・新規Q 1件（Q-R19＝説明文をどの順で埋めるか）</strong>＝<strong>在庫 23件のまま</strong>・<span class="text-rose-700"><strong>判断待ち 14件（自動停止ライン15件まで余裕1件）</strong></span>。<strong>区分の異動1件</strong>＝<strong>R-R43</strong>（✅AI即応 → <strong>⏳検証中</strong>＝開発担当が修正済み・本番への反映待ち）。<strong>根拠の更新2件</strong>＝<strong>R-R38</strong>（<u>記号は「ChatGPT のゴミ」ではなく旧システムの見出しの書き方と判明＝当初の改善案がそのまま有効</u>）／<strong>R-R01</strong>（<code>/ranking/points</code> は 9/5 に noindex＋sitemap 除外＝<u>残件から外し、残るは <code>/map</code> の h1 だけ</u>）。<span class="text-amber-800"><strong>⚠️ 開発担当の「回収できません」というご結論を、そのまま受け入れていたら R-R38 を「社長が別線で書き直し中」に移し、710ページに記号が数週間出続けていました</strong>＝<u>報告の結論も、当方で測れる範囲は測り直す</u>。</span><br><strong class="text-sky-800">【Cycle 045 の変更・2026-09-06 午前】</strong><strong class="text-emerald-800">✅完了 4件（R-R33・R-R42・R-R39・R-R41）＋統合1件（R-R23 → R-R43）＝rally で1日あたり最多</strong>。<strong class="text-rose-700">新規R 1件（R-R43＝社内向け情報の公開）・新規Q 1件（Q-R18＝判定日をずらすか）</strong>＝<strong>在庫 27→23件</strong>・<span class="text-rose-700"><strong>判断待ち 13件＋Q-R18＝実質14件（自動停止ライン15件まで余裕1件）</strong></span>（<span class="text-gray-700">15件に達すると<u>新しい提案の起票を自動で止めます</u>。<strong>止まっていることは必ずこの欄に明記します</strong>）。<br><strong>🔧 一部前進 2件</strong>＝<strong>R-R36</strong>（構造化データ＝詳細・人物・トップは入り、残るは一覧の <code>ItemList</code> だけ）／<strong>R-R01</strong>（名札と見出し＝残るは <code>/map</code> の h1 と ranking の title だけ）。<strong>根拠の更新 1件</strong>＝<strong>R-R38</strong>（本文にも記号が出るようになり露出面が拡大＝件数770は不変）。<br><span class="text-amber-800"><strong>⚠️ 本日の完了4件は、開発担当からの実装報告なしに当方の実測で見つけました</strong>（朝のメッセージにも記載なし）。<u>トップページはほぼ無変化だったので、トップの差分だけを見ていたら「変化なし」と書いていました</u>。⇒ 手順に追加＝<strong>「前回こちらから依頼した面は、報告が無くても毎回測る」</strong>。</span><br>在庫前進トリップワイヤ：7日超の在庫のブロッカーは <strong>①R-R35（Search Console への送信＝社長5分・<u>本日の工事を早く拾い直してもらう唯一の手段</u>）／②Q-R17（GTM 公開＝北極星の計測。<u>9/6 実測でも 0件＝7日目</u>）／③Q-R05・Q-R06・Q-R16・Q-R10（社長の回答）</strong>。<span class="text-emerald-800">開発側は 9/5〜9/6 の2日で5件を反映＝最も速く動いています。</span></p>
+  </div>
+
+  <!-- 🛠 対応実績（月次） -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-1">🛠 対応実績（月次）— 対象月：<span class="text-emerald-800">2026-08</span></h2>
+    <p class="text-xs text-gray-600 mb-2">原簿＝<code>data/hp-loop/rally/deploy-log.md</code>。<strong>すべて当方の本番実査（hp-audit・スクショ）で反映を確認済み</strong>のものだけを載せています。<span class="text-gray-500">（2026-07分は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました）</span></p>
+
+    <p class="text-sm font-bold text-emerald-900 mb-1">■ 8月のいちばん大きな出来事＝<span class="underline">32サイクル続いた「本番に何も出ない」状態が終わりました</span></p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-3">
+      <li><strong>8/15</strong>：<code>rally-dev</code>（開発担当）との通信が開通・GA4 と Search Console のデータ連携が開通（<span class="text-gray-600">それまで17〜20サイクル「データ未取得」でした</span>）</li>
+      <li><strong>8/29</strong>：<strong class="text-emerald-800">31サイクルぶりに <code>rally-dev</code> から初の返信</strong>＝過去13通すべて受領・<strong>6件を実装</strong>（原因＝拠点PCの環境移行で受信箱が未処理のままでした）</li>
+      <li><strong>8/30</strong>：<strong class="text-emerald-800">本番反映が同日2回</strong>＝<u>✅完了 9件</u>（下記）。<span class="text-gray-600">起票から解決まで1日。</span></li>
+    </ul>
+
+    <p class="text-sm font-bold text-gray-800 mb-1">■ 8/30 に本番へ出たもの（✅＝実査で確認済み）</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-3">
+      <li><strong>R-R21・R-R34・R-R25 ✅完了</strong>：<strong>約14,600ページに固有の「名札」（title・説明文）とcanonical</strong>＝それまで全ページが同じ名前でした</li>
+      <li><strong>R-R33 🔧半分完了</strong>：<strong>スポット詳細14,477ページに本文・見出し・写真・関連リンクをサーバ側HTMLへ出力</strong>（<span class="text-gray-600">＝検索エンジンが中身を読めるように。<u>一覧ページは未着手＝残りの半分</u></span>）</li>
+      <li><strong>R-R06 ✅完了</strong>：<strong><code>robots.txt</code> が 404 → 200</strong>／<strong><code>sitemap.xml</code> が 12URL → 約1.5万URL</strong>（<span class="text-gray-600">真因＝サーバ手前のプロキシ設定がアプリの出力を横取りしていました</span>）</li>
+      <li><strong>R-R02 ✅完了</strong>：全ページに OGP 7件＋Twitterカード4件（<span class="text-gray-600">＝SNS共有時の見え方が整いました</span>）</li>
+      <li><strong>R-R24 ✅完了</strong>：<code>/spots</code> の行き止まり（404）を解消＝<code>/spots/areas</code> へ転送</li>
+      <li><strong>R-R27 ✅完了</strong>：存在しないURLが本物の404を返すように（<span class="text-gray-600">従来は「読み込み中…」のまま</span>）</li>
+      <li><strong>R-R30 ✅完了</strong>：<code>/people</code> が素のシェル（12,504B）→ 共通レイアウト内（54,983B）へ</li>
+      <li><strong>R-R17 ✅サイト側＋GTM</strong>：登録完了・スタンプ取得の計測イベントを実装（<span class="text-emerald-700">→ GTM の公開も 9/6 に完了＝Q-R17 解決。実数は 9/7 から</span>）</li>
+      <li><strong>R-R28 🔧一部</strong>：一覧APIが写真を返すよう修正（<span class="text-gray-600">見た目は未変化＝主因は写真が145枚しかないというデータ量でした</span>）</li>
+      <li><strong>R-R32 ①🔧・R-R23 ③🔴差し戻し</strong>：未ログイン時の行き先を統一／浮動ボタンの重なりは<u>実測で未解消</u></li>
+    </ul>
+
+    <p class="text-sm font-bold text-gray-800 mb-1">■ 8月に見つかった障害・R外の変更</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5">
+      <li><strong class="text-red-800">8/15：本番が約20分ダウン</strong>（当方の実査で検出・報告なし）。<span class="text-gray-600">8/29 に原因の仮説を特定＝証明書の自動更新が引き金（推測）。<u>次の更新は 10/14 前後＝同じことが起きうる日</u>→ R-R19</span></li>
+      <li><strong>8/16〜8/17</strong>：メニューに発見軸2本を追加（「人物からさがす」「タグからさがす」・報告なし・実査検出）</li>
+      <li><strong>8/30</strong>：スポットデータの追加が継続中（京都府 1,039件 → 1,053件）</li>
+    </ul>
+    <p class="text-xs text-gray-600 mt-2">※ 次回の月次（対象月 2026-09）は 10月最初のサイクルで作成します（定石 #12）。</p>
+  </div>
+
+  <!-- ===== Cycle 048 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 048 — 2026-09-08（<span class="text-emerald-700">★北極星が初めて数字になりました</span>／<span class="text-sky-700">週次のリンク点検で、説明文の欠落がもう1か所に効いていることが分かりました</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動。<strong>新規の提案＝0件／新規の質問＝0件</strong>。<span class="text-gray-500">※ 本サイクルは「新しい課題を増やす」のではなく、<u>ついに届いた北極星の実数を正しく読み、既存の提案の根拠を厚くする</u>ことに使いました（判断待ち13件・自動停止まで余裕2件）。</span></p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① ★最重要★ <code>stamp_get</code> が 7件記録されました — <span class="underline decoration-2">ただし「スタンプ7個」ではありません</span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝GA4 の 9/6 分に <code>stamp_get</code> が <strong>7件／1人</strong>。<code>sign_up</code> は <strong>0件</strong>。同日の全体は利用者6人・セッション6・ページ閲覧24回（流入＝直接5人／Google検索1人）。<span class="text-gray-600">9/7 分はまだ届いていません（GA4 の最新日＝9/6）。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝同日にサイト全体で閲覧された<u>個別スポットのページは5面だけ</u>でした＝<code>/spots/11624</code>（安養寺・枚方市）が<strong>5回</strong>、<code>/spots/12049</code>・<code>/spots/12047</code>・<code>/spots/1</code>・<code>/spots/14676</code> が各1回。<strong class="text-amber-900">1人が7件を記録している一方、その日に見られたスポットは最大でも5か所です。</strong></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>推測</strong>＝<u>同じスポットで GPS チェックを繰り返し押しても、そのたびに1件として記録されている</u>と考えられます（安養寺のページが5回開かれていることと整合）。⇒ <strong>現時点の件数は「獲得したスタンプの数」ではなく「GPSチェックが成功した回数」</strong>です。<span class="text-gray-700">直接流入の1人という形からは運営・開発側の動作確認の可能性もありますが、断定はできません。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>⇒ 対応</strong>＝開発担当へ「同じスポットで再チェックしても発火するのか／1スタンプ1回なのか」を照会しました。<strong class="text-amber-900">定義が確定するまで、この数字を自治体向けのご提案などの実績値には使いません。</strong><span class="text-emerald-800">配線が通ったこと自体は確かな前進です。</span></p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">📌 <strong>当方の道具の限界も1つ分かりました</strong>＝GA4 のイベントには「どのスポットか」（<code>spot_name</code>）が付いているはずですが、<u>当方の取得ツールはイベントの付随情報を読めません</u>。⇒ <strong>北極星を正しく数えるには、この機能が要ります</strong>（次の課題として記録しました）。<span class="text-gray-600">※ 良い副産物＝<code>/admin/*</code> の混入は 0件で、内部アクセスの除外は効いていました。</span></p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 週次のリンク点検（9/1 以来・R-R33 完了後は初めて）— <span class="underline decoration-2">配線は健全。ただし説明文の欠落が「リンクの文字」にも効いていました</span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-800">✅ 良い確認</strong>＝<code>/spots/themes</code> から<strong>テーマ23本すべて</strong>へリンクが張られ、しかもリンクの文字に説明文の冒頭が付いています（例「鎌倉五山を巡る ─ 建長寺・円覚寺…」）。スポットページ（安養寺）からは<strong>近隣スポット6本＋市区町村＋都道府県＋テーマ＋エリア＝計20本</strong>。<u>行き止まりは1つもありません</u>＝9/6 に開通した配線は健全なままです。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">🆕 新しい観察</strong>＝近隣スポット6本のうち<strong>2本（牧野車塚古墳・百済寺跡公園）は、リンクの文字が「名前だけ」</strong>でした。残り4本には説明文の冒頭が付いています。<span class="text-gray-700">⇒ <strong>説明文が無い 6,467件は、リンクの文字からも情報が失われています。</strong>検索エンジンは「リンクの文字」をリンク先の中身を推し量る手がかりに使うため、<u>説明文の欠落は、そのページ自身だけでなく<strong>そのページを指す1.4万本のリンク</strong>にも効いている</u>ことになります。</span></p>
+      <p class="text-sm text-gray-700">⇒ <strong>R-R37（説明文6,467件）の根拠がもう1つ増えました</strong>（新しい番号は起こさず、既存の提案の解像度を上げています）。</p>
+    </div>
+
+    <div class="border-l-4 border-amber-500 bg-amber-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-amber-900 mb-2">③ 検索（Search Console）— <span class="underline decoration-2">9/8 の今日になっても、工事後のデータは<strong>まだ1日も届いていません</strong></span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>実測</strong>＝30日窓（実体 8/13〜<strong>9/5</strong>）＝<strong>18クリック／100表示／CTR 18.0%／平均掲載順位 7.4</strong>。表示されているページは <code>/</code>（15クリック/76表示）と <code>/spots/themes</code>（3クリック/24表示）の<strong>2本だけ＝38サイクル連続</strong>。検索語は全11語で、<u>10語が「全国スタンプラリー」の言い換え</u>、非総称は「観光タワー」1語のみ（前回と同じ）。</p>
+      <p class="text-sm text-gray-800 bg-white border-2 border-amber-500 rounded p-2"><strong class="text-amber-900">🔑 これが 🔔 Q-R18（判定日を 9/13 → 9/20 へ）の根拠を、もう一段強くします。</strong><br><span class="text-gray-800">工事は <strong>9/5 夜〜9/6</strong>。ところが<u>本日 9/8 の時点でも Search Console の最新日は 9/5</u>＝<strong>工事後のデータは1日も入っていません</strong>（遅れは3日）。この調子だと <strong>9/13 に見えるのは実質4〜5日分</strong>にとどまります。<u>効いているのに「効かなかった」と読んでしまう危険</u>は、前回お伝えしたときより現実的になりました。<strong class="text-emerald-800">ご判断は「①ずらす／②9/13 のまま／③おまかせ」の一言で結構です。</strong></span></p>
+    </div>
+
+    <div class="border-l-4 border-gray-400 bg-gray-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ 残っている2件の生存確認と、サイトの変化検知 — <span class="text-gray-600">いずれも未解消・サイトに変化なし</span></h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>R-R36 の残り</strong>＝<code>/spots/themes</code> の構造化データは<strong>0件のまま</strong>（97,832バイト＝前回と1バイトも変わらず）</li>
+        <li><strong>R-R01 の残り</strong>＝<code>/map</code> の見出しは<strong>0本のまま</strong>（55,694バイト＝同上）。<span class="text-gray-600">タイトルは改善済みです。</span></li>
+        <li><strong>トップ</strong>＝64,821バイト＝9/6 の3サイクルすべてと完全一致＝<strong>変化なし</strong>／<strong>到達性</strong>＝<code>www</code> 有無とも 200 で正常（0.05秒）＝9/6 夜のような停止は起きていません</li>
+      </ul>
+      <p class="text-sm text-gray-600 mt-2">※ この2件は<strong>回答不要でそのまま着手できる</strong>もの（✅AI即応）です。着手推奨の順は前回から変えていません。</p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>データ状況</strong>＝GA4 ✅取得（<code>analytics_543430115</code>・最新日 9/6）／GSC ✅取得（<code>searchconsole_rally</code>・最新日 9/5）／本番GET ✅（5ページ・リンク実査2ページ）。<span class="text-gray-500">未取得なし。</span></li>
+        <li><strong>新規＝0件／クローズ＝0件</strong>。<strong>根拠を厚くしたもの2件</strong>＝<strong>R-R17</strong>（初の実数＋件数の定義という新しい宿題）・<strong>R-R37</strong>（説明文の欠落はリンクの文字にも効く）。<span class="text-gray-600">在庫22件・判断待ち13件のまま。</span></li>
+        <li><strong>開発担当へ配信</strong>＝本レポートと <code>stamp_get</code> の定義照会を mailbox で送付。</li>
+        <li><span class="text-amber-800"><strong>⚠️ 正直な申し送り＝本サイクルは掲示板のアーカイブ移動ができませんでした</strong>＝手動起動のセッションでは補助スクリプトの実行が承認されないためです。<u>前サイクル（Cycle 047）の記録を下に残したままにしてあります</u>（消していません）。次の自動サイクルでアーカイブへ移します。</span></li>
+        <li><strong>次サイクル</strong>＝① <strong>9/7・9/8 分の <code>stamp_get</code></strong>（7件が続くのか一度きりか）→ ② 開発担当からの定義の回答 → ③ R-R36・R-R01 の残件の反映確認。</li>
+      </ul>
+    </div>
+  </section>
+
