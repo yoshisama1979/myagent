@@ -17,6 +17,16 @@
 > 反映状況を答える前に、**実状態を読む**（`git log -1 --oneline` / `git branch --show-current` / `git status --short`／公開URLを実際に GET する）。
 > 「アップした」と「公開URLで確認できた」は別物として報告する（[rules/modes/hp-loop-dialogue.md](rules/modes/hp-loop-dialogue.md) §5-2 と同じ規律）。
 
+## エージェント構成（`rules/modes/director.md` / `rules/modes/developer.md` が参照）
+
+> **このプロジェクトを何枚のウィンドウで回すか。** 統括セッション（`/director`）が起動時の環境点検でここを読み、
+> 開発セッションが開かれていなければ、**下の手順をそのまま貼って**ユーザーに開くよう伝える。
+
+- **2セッション構成を使うか**：（記入。**`使う` または `使わない` のどちらかを書く**。既定は `使う`＝統括 `/director` と開発 `/dev` を別ウィンドウで開く。`使わない`＝1セッションで全部やる場合は、`director.md`／`developer.md` と各コマンドの役割分担・コミット制限がすべて無効になり、従来どおり `CLAUDE.md` のルール表に従う）
+- **開発セッションの開き方**：（記入。**ユーザーがそのままなぞれる手順**で。例: ①新しいターミナルで `c:/xampp/htdocs/example` を開く ②`claude` を起動 ③`/dev` と打つ）
+- **統括セッションの開き方**：（記入。例: 同上で `/director` と打つ。ふだん最初に開くのはこちら）
+- **委任の閾値の調整**：（記入。無ければ「既定どおり」。既定＝制作ファイルの変更はすべて開発へ渡し、統括が自分で触るのは `documents/` と、判断を伴わない数行の修正だけ〔`rules/modes/director.md` §4〕）
+
 ## URL・確認環境（`rules/modes/check.md` / `rules/modes/build-progress.md` / `rules/modes/page-update.md` / `rules/modes/refactor.md` が参照）
 
 > **作ったものをどこで見られるかの記録。** 表示確認・スクリーンショットが要るとき、AI は毎回ユーザーに聞かず**まずここを見る**。

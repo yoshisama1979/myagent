@@ -150,6 +150,8 @@ start.md（開始ゲート）→ ★ build-progress.md（制作中の進行管�
 
 **合計3件まで**に絞り、「AI がやること」「ユーザーにお願いすること」「決めてほしいこと」に分けて出す。
 
+> 🚨 **2セッション構成（`rules/modes/director.md`）で運用している場合**、この「AI がやること」は **統括が自分で実装することではない**。制作ファイルの変更は委任カード `H-NNN` にして `documents/handoff.md` へ渡す（閾値は `director.md` §4）。提示のしかたは変わらないが、**実行者が開発セッションになる**点だけ読み替える。
+
 ### Step 4. 実施する（合意後）
 
 - 実装は `page-build.md` / `page-update.md` / `design-replication.md` に従う
