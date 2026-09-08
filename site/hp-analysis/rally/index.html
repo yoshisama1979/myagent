@@ -19,7 +19,7 @@
 
   <h1 class="text-3xl font-bold mb-1">📋 全国スタンプラリー — 最新レポート</h1>
   <p class="text-gray-600 mb-2"><span class="font-mono">check-rally.com</span>（自社プロダクト）／北極星：<strong>参加者の新規獲得と実利用（発見→登録→スタンプ収集）</strong></p>
-  <p class="text-sm text-gray-500 mb-6">最新サイクル＋未完了の繰り越しだけを表示。背景は確定・仕様、完了の履歴はアーカイブへ。<span class="text-gray-400">最終更新＝Cycle 048（2026-09-08）＝北極星が初めて数字になりました（<code>stamp_get</code> 7件・ただし件数の定義を照会中）</span></p>
+  <p class="text-sm text-gray-500 mb-6">最新サイクル＋未完了の繰り越しだけを表示。背景は確定・仕様、完了の履歴はアーカイブへ。<span class="text-gray-400">最終更新＝Cycle 049（2026-09-08 09:3x）＝スポットページ1.4万件は<strong>まだ検索エンジンに登録されていない</strong>ことを実測で確定（説明文を書く前の前提が変わります）</span></p>
 
   <div class="flex flex-wrap gap-3 mb-8 text-sm">
     <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-semibold">📋 最新レポート（このページ）</span>
@@ -27,39 +27,45 @@
     <a href="archive.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">🗄️ アーカイブ</a>
   </div>
 
-  <!-- 🎉 北極星の初計測（Cycle 048） -->
-  <div class="border-4 border-emerald-600 bg-emerald-50 rounded-lg p-5 mb-6">
-    <h2 class="text-xl font-bold text-emerald-800 mb-2">🎉 48サイクル目にして、<span class="underline decoration-2">北極星が初めて「数字」になりました</span> — 9/6 に <code>stamp_get</code>（スタンプのGPSチェック成功）が <strong>7件</strong>記録されました</h2>
-    <p class="text-sm text-gray-800 mb-2">8/30 のサイト側実装 → 9/6 の GTM 公開、と積み上げてきた計測の配線が、<strong class="text-emerald-800">実際にデータとして届くところまで通りました</strong>。<span class="text-gray-700">rally の解析を始めて以来、「スタンプが集められた」という<u>成果そのもの</u>が数字で見えたのは初めてです。</span></p>
+  <!-- 🔑 Cycle 049：索引の実測 -->
+  <div class="border-4 border-rose-600 bg-rose-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-rose-800 mb-2">🔑 <span class="underline decoration-2">スポットページ 1.4万件は、まだ検索エンジンに「登録」されていません</span> — 実測で確定しました（開発担当のご質問への回答）</h2>
+    <p class="text-sm text-gray-800 mb-2">本日 9:27 に開発担当から「<strong>説明文を書き始める前に、スポットページが索引されているか確かめたい</strong>」というご質問が届きました。<span class="text-gray-700">＝(a) 登録されていない〔技術の課題〕なのか、(b) 登録はされているが順位が付かない〔中身の課題〕なのかで、打つ手がまったく違うためです。<strong>当方で測りました。</strong></span></p>
     <table class="w-full text-sm border-collapse bg-white rounded mb-2">
       <tbody class="align-top text-gray-800">
-        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 px-2 w-40"><code>stamp_get</code>（スタンプ取得）</td><td class="py-1 px-2"><strong class="text-emerald-800">7件／1人</strong>（すべて 9/6）</td></tr>
-        <tr class="border-b border-gray-200"><td class="py-1 px-2"><code>sign_up</code>（登録の完了）</td><td class="py-1 px-2"><strong>0件</strong>（同期間。<span class="text-gray-600">メール入力の開始は 9/6 に2件ありましたが、完了までは至っていません</span>）</td></tr>
-        <tr><td class="py-1 px-2">9/6 の全体</td><td class="py-1 px-2">利用者6人・セッション6・ページ閲覧24回（流入＝直接5人／Google検索1人）</td></tr>
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 px-2 w-52">スポット詳細（14,477面）</td><td class="py-1 px-2"><strong class="text-rose-800">無作為8件すべて 未登録（0/8）</strong>。<span class="text-gray-600">ID空間全体に散らして抽出（300／2500／4200／5800／7300／9900／11500／13800）。8件とも本番では正常に表示されます。</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2">市区町村（1,918面）</td><td class="py-1 px-2"><strong class="text-rose-800">0件</strong></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2">都道府県（47面）・エリア・人物（106面）</td><td class="py-1 px-2"><strong class="text-rose-800">いずれも 0件</strong></td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 px-2"><strong>テーマ詳細（23面）</strong></td><td class="py-1 px-2"><strong class="text-emerald-800">5本以上が登録済み</strong>＝<u>下の階層で唯一、検索エンジンに入っている層</u></td></tr>
       </tbody>
     </table>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-rose-500 rounded p-2"><strong class="text-rose-800">⇒ 答えは (a) です。説明文を 6,467件お書きになっても、いまのままでは1件も検索結果に出ません。</strong><span class="text-gray-700">開発担当が「着手する前に確かめたい」とおっしゃったのは正しい判断でした。<u>当方も、この確認をせずに「説明文を書けば効く」と前提していました</u>（ご指摘に感謝します）。</span></p>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">ただし「効かなかった」ではありません＝クロール（巡回）は確実に動いています。</strong><br><span class="text-gray-700">9/5 の時点では、検索結果に出るタイトルは「<u>スポット詳細 #12418</u>」という<strong>名札を直す前の既定値</strong>でした。<strong class="text-emerald-800">本日は、すべて実際のスポット名＋市区町村に変わっています</strong>（「白川郷｜スタンプスポット」「熊野本宮大社 - 田辺市 -」「三室戸寺 - 宇治市 -」）。⇒ <strong>9/5夜〜9/6 の工事は Google に届き、拾い直しが始まっています。</strong>登録が薄いのは拒否されているからではなく、<u>まだ2日しか経っていない</u>からです。</span></p>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-4 border-rose-600 rounded p-3"><strong class="text-rose-800">🔔 そのうえで、社長にお願いしたいことが1つだけあります＝<span class="underline decoration-2">Search Console に sitemap を送信（R-R35・5分）</span></strong><br><span class="text-gray-800">当方の測り方（<code>site:</code> 検索）は<strong>上位30件までしか読めないため、下限値しか言えません</strong>。「1.4万ページのうち<u>何ページが登録されたか</u>」を正確に答えられる手段は、<strong>Search Console のサイトマップ画面だけ</strong>です。<span class="text-gray-700">サイトマップ自体は健全です（本日実測＝986,546バイト・正常応答・全階層を列挙）。<strong>送信されていないだけ</strong>です。</span><br><strong>手順＝Search Console →左メニュー「サイトマップ」→入力欄に <code>sitemap.xml</code> →「送信」。これだけです。</strong><br><span class="text-rose-800"><strong>この1手が、いま「6,467件の説明文を書くかどうか」という大きな作業判断の前に立ちはだかっています。</strong></span></span></p>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-sky-500 rounded p-2"><strong class="text-sky-900">🆕 同じ実測から、着手順に関わる発見が出ました＝<u>rally が検索から見つかる入口は、いまのところ「テーマ名」です</u></strong><br><span class="text-gray-800">登録済みのテーマ詳細＝日本三名園／浪花三大橋／日本三景／日本の世界遺産 ほか。<strong>そして Search Console で唯一の「一般名詞でない検索語」＝「観光タワー」も、<code>/spots/themes</code> が受けています。</strong>2つの独立した観測が同じ方向を指しました。<br><strong class="text-sky-900">⇒ ご判断の材料＝テーマ詳細は 23面しかありません。</strong><span class="text-gray-700">6,467件の説明文に対して <strong>281分の1</strong> の作業量で、<u>いま実際に検索エンジンに入っている層</u>を厚くできます。<strong>順番を決めるのは社長です</strong>ので、当方からは材料としてお出しするに留めます（→ 🔔 Q-R19 のご判断に直結します）。</span></span></p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>🆕 もう1つ＝登録済みのテーマ詳細5本のうち<u>3本は <code>www.</code> 側のURL</u>でした。</strong>ただでさえ十数本しかない登録が、2つのホスト名に割れていました。<span class="text-emerald-800"><strong>これは 9/6 に直していただいた R-R18（<code>www</code> の証明書）の効果がこれから出る場所です</strong>＝本日の実測で <code>www</code> は正常に本体へ集約されており、今後の拾い直しで統合されるはずです。<u>R-R18 の効果を測る観測点として記録しました</u>（基準＝www 側 3本以上）。</span><span class="text-gray-600">お手を煩わせることはありません。</span></p>
+  </div>
+
+  <!-- 🎉 北極星（Cycle 048 の初計測・9/7 追記） -->
+  <div class="border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-bold text-emerald-800 mb-2">🎉 北極星の計測（つづき）— 9/7 分が届きました。<span class="underline">スタンプ 0件・登録 0件</span>で、<code>sign_up</code> は<strong>2日連続 0件</strong>です</h2>
+    <p class="text-sm text-gray-800 mb-2">本日（9/8 朝）に <strong>9/7 分のデータが届きました</strong>。前サイクル（今朝 4:2x）の時点ではまだ届いておらず、「7件が続くのか一度きりか」を宿題にしていた件の答えです。</p>
+    <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-200 bg-gray-50"><td class="py-1 px-2 w-40"></td><td class="py-1 px-2 w-40"><strong>9/6</strong>（計測初日）</td><td class="py-1 px-2"><strong>9/7</strong>（🆕 本日届いた分）</td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 px-2"><code>stamp_get</code>（スタンプ）</td><td class="py-1 px-2"><strong class="text-emerald-800">7件／1人</strong></td><td class="py-1 px-2"><strong>0件</strong></td></tr>
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 px-2"><code>sign_up</code>（登録の完了）</td><td class="py-1 px-2"><strong class="text-rose-800">0件</strong></td><td class="py-1 px-2"><strong class="text-rose-800">0件</strong>（2日連続）</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2">メール入力の開始</td><td class="py-1 px-2">2件／2人</td><td class="py-1 px-2">2件／1人</td></tr>
+        <tr><td class="py-1 px-2">全体</td><td class="py-1 px-2">利用者6人・閲覧24回</td><td class="py-1 px-2">利用者5人・閲覧22回・初回訪問4人</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-rose-400 rounded p-2"><strong class="text-rose-800">👀 気になる形が見えていますが、まだ結論は出しません＝<u>「登録」で止まっています</u></strong><br><span class="text-gray-800">2日間で <strong>初回訪問9人 → メール入力開始4件 → 登録完了 0件</strong>。<u>スタンプは取れているのに、アカウント登録だけが1件も完了していません</u>。<span class="text-gray-700">⚠️ <strong>2日・のべ十数人のデータで結論は出しません</strong>（当方の規律です）。3〜5サイクル観察して同じ形が続くようなら、<strong>「登録の歩留まり」として正式な提案に起こします</strong>。<u>いまは既存の3件（R-R22 着地面に扉が無い／R-R31 スマホで操作しづらい／R-R29 中身が空）の根拠になる可能性のほうが高い</u>と見ています。<strong>社長にお願いすることはありません。</strong></span></span></p>
     <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-amber-500 rounded p-2"><strong class="text-amber-900">⚠️ ただし、この「7件」を<u>スタンプ7個</u>として外に出すのはお待ちください（重要）</strong><br>
     <span class="text-gray-800"><strong>観察（事実）</strong>＝9/6 にサイト全体で閲覧された<u>個別スポットのページは5面だけ</u>でした（安養寺〔枚方市〕が5回、ほか4面が各1回）。<strong>1人が7件のスタンプ取得を記録している一方、その日に見られたスポットは最大でも5か所</strong>です。<br>
     <strong>推測</strong>＝<u>同じスポットで GPS チェックを繰り返し押しても、そのたびに1件として記録されている</u>と考えられます（安養寺のページが5回開かれていることと整合します）。⇒ <strong class="text-amber-900">現時点の件数は「獲得したスタンプの数」ではなく「GPSチェックが成功した回数」です。</strong><br>
     <span class="text-gray-700">また、直接流入の1人という形からは<strong>運営・開発側の動作確認の可能性</strong>もあります（断定はできません）。</span></span></p>
-    <p class="text-sm text-gray-800 mb-2"><strong>⇒ 当方の対応</strong>＝<span class="text-gray-700">開発担当に「同じスポットで再チェックしても発火するのか／1スタンプ1回なのか」を照会しました。<u>定義がはっきりするまで、この数字を自治体向けのご提案などの実績値には使いません</u>。<strong class="text-emerald-800">配線が通ったこと自体は確かな前進で、それが本サイクルの成果です。</strong></span></p>
-    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>📌 社長にお願いすることはありません。</strong>なお <strong>9/7 分のデータはまだ届いていません</strong>（GA4 の最新日は 9/6）。<u>次のサイクルで 9/7・9/8 分を確認し、「7件」が続くのか一度きりだったのかを見ます。</u></p>
-  </div>
-
-  <!-- 🗄️ 稼働状況（Cycle 047 で検出→解決・アーカイブ移動待ち） -->
-  <div class="border border-gray-300 bg-gray-50 rounded-lg p-5 mb-6">
-    <h2 class="text-base font-semibold text-gray-700 mb-2">🗄️ 前サイクル（9/6 夜）の記録 — 23:14〜23:20 の約6分の停止は <span class="underline">R-R43 の反映作業によるもので、正常でした</span>（R-R43 は完了）</h2>
-    <p class="text-sm text-gray-800 mb-2"><strong>経緯（すべて当方が本番を取得して確かめた事実です。当方からサイトには一切触れていません＝読み取りのみ）</strong></p>
-    <table class="w-full text-sm border-collapse bg-white rounded mb-2">
-      <tbody class="align-top text-gray-800">
-        <tr class="border-b border-gray-200"><td class="py-1 px-2 w-28">23:0x</td><td class="py-1 px-2"><strong class="text-emerald-800">正常</strong>（HTTP 200）</td></tr>
-        <tr class="border-b border-gray-200 bg-red-50"><td class="py-1 px-2">23:14〜23:16</td><td class="py-1 px-2"><strong class="text-red-800">つながらない</strong>（<code>www</code> 有無・<code>http</code>/<code>https</code> の4通りすべて。4回試して4回とも）</td></tr>
-        <tr><td class="py-1 px-2">23:20:45</td><td class="py-1 px-2"><strong class="text-emerald-800">復旧（HTTP 200・0.063秒）</strong>＝<u>止まっていたのは約6分</u></td></tr>
-      </tbody>
-    </table>
-    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">🎉 原因が分かりました＝この6分の間に R-R43（内部管理情報を公開側に出さない修正）が反映されていました。</strong><br><span class="text-gray-700">復旧後に <code>/spots/9146</code> を取り直したところ、<strong>「システム情報／スポットID／優先度: 高／作成日: 1970/1/1」「メモ／ChatGPTにて作成」がすべて消えていました</strong>（98,844B → <strong>98,097B</strong>）。<u>止まっていた時刻と、消えた内容が一致します</u>。⇒ <strong>計画外の障害ではなく、反映作業に伴う正常な一時停止です。</strong><span class="text-gray-600">（因果は<strong>推測</strong>ですが、時刻と内容の一致からほぼ確実と見ています。開発担当にもその旨お伝えしました。）</span></span></p>
-    <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-800">⇒ R-R43 は ✅完了です。</strong><span class="text-gray-700">タイトル・見出し・写真11枚・構造化データはいずれも正常で、本文も最後まで読めています（＝「見えなくなっただけ」ではありません）。<u>開発担当の「公開側で消すのではなく、管理側で明示的に出す」という設計が、期待どおり効きました。</u></span></p>
-    <p class="text-sm text-gray-800 bg-white border-2 border-amber-400 rounded p-2"><strong class="text-amber-900">📌 社長にお願いすることはありません。ただ1点だけ、仕組みの話をお伝えします。</strong><br><span class="text-gray-700">今回これに気づけたのは、<strong><u>たまたま同じ時刻にサイトを見ていたから</u></strong>です。<strong>8/15 の約20分の停止も同じでした。</strong><strong class="text-rose-800">外部からの死活監視（R-R19）はまだ入っていません</strong>＝いま止まっても気づける仕組みが無く、<u>「反映作業の正常な数分」と「異常な20分」を区別する目が無い</u>状態です。<strong>反映のたびに数分止まること自体は正常</strong>ですので慌てる話ではありませんが、<strong>R-R19 の順番が来た</strong>ことをお知らせしておきます。</span></p>
+    <p class="text-sm text-gray-800 mb-2"><strong>⇒ 当方の対応</strong>＝<span class="text-gray-700">開発担当に「同じスポットで再チェックしても発火するのか／1スタンプ1回なのか」を照会しています（<u>回答待ち</u>）。<u>定義がはっきりするまで、この数字を自治体向けのご提案などの実績値には使いません</u>。<strong class="text-emerald-800">配線が通ったこと自体は確かな前進です。</strong></span></p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>📌 社長にお願いすることはありません。</strong>次サイクルでは <strong>9/8 分</strong>を確認し、<u>登録完了 0件が3日続くか</u>を見ます。</p>
   </div>
 
   <!-- 今日の要点（常設・最上部） -->
@@ -101,10 +107,10 @@
       <p class="text-sm text-gray-800"><strong>理由</strong>＝今回の大きな反映は <strong>9/5 夜〜9/6</strong> でした。Search Console のデータは<u>実際より2〜3日遅れて届く</u>ため、<strong class="text-red-800">9/13 に見えるのは「反映後 実質2〜4日分」だけ</strong>です。<span class="text-gray-700">加えて、検索エンジンはまだ 8/30 の修正すら拾い直せていません（9/5 に確認済み）。この状態で判定すると、<u>効いているのに「効かなかった」と読んでしまう危険</u>があります。<strong>開発担当も「判定日を後ろへずらす判断があれば同意する」とのことです。</strong></span><br>
       <strong>選択肢</strong>＝<strong class="text-emerald-800">(A) 9/20 へずらす（当方の推奨）</strong>＝9/13 は「拾い直しが始まったか」の中間確認だけ行う／<strong>(B) 9/13 のまま</strong>＝早めに傾向だけ見る／<strong>(C) おまかせ</strong>。<span class="text-gray-600">※ どちらでも観測は毎サイクル続けます。変わるのは「いつ結論を出すか」だけです。</span></p>
     </div>
-    <p class="text-sm text-gray-800 mb-2"><strong>② Search Console に sitemap を送信</strong>（→ <strong class="text-rose-700">🔔 R-R35</strong>・<strong>所要5分</strong>）＝<span class="text-red-800"><strong>いま最も効く1手です（8/30 からの持ち越し・9/5 に理由がもう1つ増えました）</strong></span><span class="text-sky-800"><strong>＝検索エンジンが 8/30 の修正をまだ拾い直しておらず（本日確認）、その拾い直しを早める唯一の手がこれです。9/13 の判定を意味のあるものにするために、それまでに送信していただけると効果が出ます。</strong></span>。<span class="text-gray-700"><strong>手順＝Search Console を開く →左メニュー「サイトマップ」→入力欄に <code>sitemap.xml</code> と入れて「送信」</strong>（これだけです）。<span class="text-emerald-800">おまけに<strong>「申告した1.5万ページのうち何件が登録されたか」がその画面で見えるようになります</strong>＝これまで持っていなかった成果の測り方が手に入ります。</span></span></p>
+    <p class="text-sm text-gray-800 mb-2"><strong>② Search Console に sitemap を送信</strong>（→ <strong class="text-rose-700">🔔 R-R35</strong>・<strong>所要5分</strong>）＝<span class="text-red-800"><strong>いま最も効く1手です（8/30 からの持ち越し）。9/8 に、この1手の位置づけが変わりました。</strong></span><span class="text-sky-800"><strong>＝本日の実測で「スポットページ1.4万件はまだ検索エンジンに登録されていない」ことが分かり、開発担当から「何ページ登録されているか」を問われています。当方の <code>site:</code> 検索は上位30件までしか読めず、正確に答えられる手段は Search Console のサイトマップ画面だけです。</strong></span>。<span class="text-gray-700"><strong>手順＝Search Console を開く →左メニュー「サイトマップ」→入力欄に <code>sitemap.xml</code> と入れて「送信」</strong>（これだけです）。<span class="text-rose-800"><strong>この1手が、いま「説明文6,467件を書くかどうか」という大きな作業判断の前に立ちはだかっています。</strong></span><span class="text-emerald-800">送信すると「申告した1.5万ページのうち何件が登録されたか／未登録の理由は何か」がその画面で見えます。</span></span></p>
     <p class="text-sm text-gray-800 mb-2 bg-emerald-50 border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">✅ ③ GTM の設定は完了しました（→ Q-R17 解決・9/6 23:1x）＝もうお手を煩わせることはありません</strong><br><span class="text-gray-700">開発担当から「設定がすべて完了」とご報告があり、<strong>当方はそれを鵜呑みにせず、公開中の GTM コンテナを直接取得して中身を確かめました</strong>＝<code>sign_up</code>・<code>stamp_get</code>・GA4 測定ID <code>G-JRW203QB7S</code> がいずれも<u>実在</u>。<strong class="text-sky-800">これで北極星（登録・スタンプ収集）が測れる状態になりました。</strong><strong class="text-emerald-800">🎉 9/8 追記＝初の実数が出ました＝<code>stamp_get</code> 7件／1人（すべて 9/6）・<code>sign_up</code> 0件。</strong><span class="text-amber-900">ただし件数の定義（同じスポットの再チェックでも数えているとみられます）を開発担当に照会中のため、<u>まだ実績値としては使いません</u>。詳細はページ最上部をご覧ください。</span></span></p>
     <p class="text-sm text-gray-800 mb-2 bg-emerald-50 border-2 border-emerald-300 rounded p-2"><strong>📌 ④（説明文が無いスポット・R-R37）は 9/5 のご指示で開発の受信箱へ移しました</strong>＝方針は <strong>(C) いまは何もせず 9/13 の判定を見る</strong>で、開発担当も異存なしとのことです。<span class="text-gray-700">本日わかった<strong>大きな進展2つ</strong>＝<strong class="text-red-800">(1) 正確な件数は 6,467件（44.9%）</strong>でした（こちらの推定「約5千」は少なすぎました。noindex を選ぶ場合の対象は6,467ページになります）／<strong class="text-emerald-800">(2) 旧サイトに同じスポットの説明文が実在します</strong>（→ 下の Cycle 042 ③ R-R40）＝<u>ゼロから書くのではなく「移行し忘れの回収」で済む可能性</u>が出てきたので、開発担当に番号での突き合わせを依頼しました。</span></p>
-    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">その他（お手すきで結構です）＝<strong>Q-R16</strong>（バッジ図鑑の公開判断）／<strong>Q-R11(2)</strong>（着手順のOK。<span class="text-emerald-700">※推奨順のとおり実装が進んでいるので、<u>実質お答えいただけたものと受け止めています</u></span>）／<strong>Q-R05・Q-R06・Q-R10</strong>。<br><span class="text-gray-600"><strong>R-R28（スポット写真）</strong>は 9/1 のご指示により <strong>📌 社長が別線で進行中</strong>／<strong>R-R18・R-R37</strong>は 9/5 のご指示により <strong>📌 開発の受信箱へ引き渡し済み</strong>＝いずれも<u>こちらからは督促せず、観測だけ続けます</u>。</span><br><span class="text-amber-800">📄 <strong>このページの分量について（前回からの宿題・まだご指示待ちです）</strong>＝現在 <strong>約105KB</strong>（9/6 午前は95KB・昼は106KB）で、目安（80KB）を超え続けています。<strong>本日は3サイクル回しましたが、完了した提案（R-R43）と解決した質問（Q-R17）をアーカイブへ移したぶん、昼より少し減りました</strong>。<u>ご指示をいただけると次のサイクルでさらに縮められます</u>。<u>古い記録の消し忘れではありません</u>（本日も前サイクルの記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移し、載せているサイクルは1つだけです）。大きいのは<strong>常設部分＝在庫27件の一覧＋未回答6件の質問シート</strong>で、これは正当な中身です。<br><strong>削り方2案</strong>＝<strong>(A)</strong> 優先度の低い「P3（7件）」を別ページへ移し、ここには1行の索引だけ残す／<strong>(B)</strong> 質問シートの「答えると動く提案」の欄をやめて番号だけにする。<span class="text-gray-600">どちらも社長の見え方が変わるので、<strong>ご指示をいただいてから</strong>行います（黙って削りません）。「どちらでもよい」であれば (A) で進めます。</span></span></p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">その他（お手すきで結構です）＝<strong>Q-R16</strong>（バッジ図鑑の公開判断）／<strong>Q-R11(2)</strong>（着手順のOK。<span class="text-emerald-700">※推奨順のとおり実装が進んでいるので、<u>実質お答えいただけたものと受け止めています</u></span>）／<strong>Q-R05・Q-R06・Q-R10</strong>。<br><span class="text-gray-600"><strong>R-R28（スポット写真）</strong>は 9/1 のご指示により <strong>📌 社長が別線で進行中</strong>／<strong>R-R18・R-R37</strong>は 9/5 のご指示により <strong>📌 開発の受信箱へ引き渡し済み</strong>＝いずれも<u>こちらからは督促せず、観測だけ続けます</u>。</span><br><span class="text-amber-800">📄 <strong>このページの分量について（ご指示待ちの宿題）</strong>＝目安（80KB）を超え続けています。<strong>本サイクル（049）で、9/6 夜の記録と前サイクル（048）の記録を<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました</strong>（消していません）。<u>古い記録の消し忘れではありません</u>＝載せているサイクルは常に1つだけです。大きいのは<strong>常設部分＝在庫22件の一覧＋未回答6件の質問シート</strong>で、これは正当な中身です。<br><strong>削り方2案</strong>＝<strong>(A)</strong> 優先度の低い「P3（7件）」を別ページへ移し、ここには1行の索引だけ残す／<strong>(B)</strong> 質問シートの「答えると動く提案」の欄をやめて番号だけにする。<span class="text-gray-600">どちらも社長の見え方が変わるので、<strong>ご指示をいただいてから</strong>行います（黙って削りません）。「どちらでもよい」であれば (A) で進めます。</span></span></p>
   </div>
 
   <!-- 📊 現在地（常設） -->
@@ -194,7 +200,7 @@
   <div class="border border-gray-300 bg-white rounded-lg p-5 mb-8">
     <h2 class="text-lg font-semibold mb-1">🔧 進行中の提案（<span class="text-emerald-700">27件 → 22件</span>）<span class="text-sm font-normal text-emerald-700">／✅完了・統合は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ（<strong>9/6 に R-R33・R-R42・R-R39・R-R41・<u>R-R43</u> ✅完了／R-R23 は R-R43 へ統合</strong>＝<u>1日で5件完了は rally で最多</u>）</span></h2>
     <p class="text-xs text-gray-500 mb-1">着手区分＝<strong>✅AI即応</strong>（実装担当がそのまま着手可・回答不要）／<strong>🔔要回答</strong>（社長・実装者の回答や作業が先＝何が要るかを括弧で明記）／<strong>💰大型・要相談</strong>／<strong>⏳検証中（作業なし）</strong>。<strong>ご確認が必要なのは🔔の行だけ</strong>（✅は回答不要でそのまま進みます）。</p>
-    <p class="text-xs text-emerald-700 mb-2">✅ <strong>rally-dev が回答を待たずに着手できる仕事は<span class="text-red-700">9件</span></strong>（残り<span class="text-rose-700"><strong>13件が社長・クライアントの回答／操作待ち、または別線で進行中</strong></span>＝<span class="text-emerald-700"><strong>9/6 夜に Q-R17 が解決して1件減りました</strong></span>）。<span class="text-red-700"><strong>着手推奨の順（9/6 12:2x Cycle 046・改訂）</strong>＝① <strong>R-R43 の反映</strong>（<u>修正は完了済み・社長のお戻り後に反映</u>＝作業待ちではありません）→ ② <strong>R-R38 の表示側の変換</strong>（<u>710件が一斉に消えます。ただし <strong>🔔 Q-R19</strong> のご回答が出てから</u>）→ ③ <strong>R-R36 の残り</strong>（一覧の <code>ItemList</code>・<u>回答不要でそのまま進みます</u>）→ ④ <strong>R-R01 の残り</strong>（<code>/map</code> の見出し。R-R26 と同時が効率的）。<span class="text-gray-600">※ <strong>順番が変わった理由</strong>＝<u>「発見の配管」系（R-R33・R-R42・R-R39・R-R41）は本日すべて完了しました</u>。主戦場は「見つけてもらう」から<strong>「見つけた人に見せてよい中身になっているか」</strong>へ移ります。</span></span></p>
+    <p class="text-xs text-emerald-700 mb-2">✅ <strong>rally-dev が回答を待たずに着手できる仕事は<span class="text-red-700">9件</span></strong>（残り<span class="text-rose-700"><strong>13件が社長・クライアントの回答／操作待ち、または別線で進行中</strong></span>＝<span class="text-emerald-700"><strong>9/6 夜に Q-R17 が解決して1件減りました</strong></span>）。<span class="text-red-700"><strong>着手推奨の順（9/8 Cycle 049・改訂）</strong>＝① <strong>R-R36 の残り</strong>（<code>/spots/themes</code> の <code>ItemList</code>・<u>回答不要でそのまま進みます</u>）→ ② <strong>R-R38 の表示側の変換</strong>（<u>710件が一斉に消えます。ただし <strong>🔔 Q-R19</strong> のご回答が出てから</u>）→ ③ <strong>R-R01 の残り</strong>（<code>/map</code> の見出し。R-R26 と同時が効率的）。<span class="text-gray-600">※ <strong>順番が変わった理由（9/8）</strong>＝本日の索引実測で <u><strong>テーマ層が「いま実際に検索エンジンに入っている唯一の下層」</strong>と分かった</u>ため、そこに構造化データが無いことの重みが上がりました。<span class="text-emerald-700">※ R-R43 は 9/6 に ✅完了しています。</span></span></span></p>
     <p class="text-xs text-gray-500 mb-3">📖 この表は<strong>「現在の状態だけ」</strong>です。各提案の観察の詳細・実測値・訂正の経緯・実装の具体案は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>の各サイクル記録に全文が残っています（消していません）。</p>
 
     <h3 class="text-sm font-bold text-red-800 mt-4 mb-1">P0 ｜ 北極星に直結・今すぐ着手できる — 10件</h3>
@@ -292,55 +298,56 @@
     <p class="text-xs text-gray-600 mt-2">※ 次回の月次（対象月 2026-09）は 10月最初のサイクルで作成します（定石 #12）。</p>
   </div>
 
-  <!-- ===== Cycle 048 ===== -->
+  <!-- ===== Cycle 049 ===== -->
   <section class="mb-10">
-    <h2 class="text-2xl font-bold mb-1">Cycle 048 — 2026-09-08（<span class="text-emerald-700">★北極星が初めて数字になりました</span>／<span class="text-sky-700">週次のリンク点検で、説明文の欠落がもう1か所に効いていることが分かりました</span>）</h2>
-    <p class="text-sm text-gray-600 mb-4">社長による手動起動。<strong>新規の提案＝0件／新規の質問＝0件</strong>。<span class="text-gray-500">※ 本サイクルは「新しい課題を増やす」のではなく、<u>ついに届いた北極星の実数を正しく読み、既存の提案の根拠を厚くする</u>ことに使いました（判断待ち13件・自動停止まで余裕2件）。</span></p>
+    <h2 class="text-2xl font-bold mb-1">Cycle 049 — 2026-09-08 09:3x（<span class="text-rose-700">★スポットページは検索エンジンに登録されていない、と実測で確定</span>／<span class="text-sky-700">テーマ層だけが例外でした</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">社長による手動起動＋開発担当からの質問への反応。<strong>新規の提案＝0件／新規の質問＝0件／クローズ＝0件</strong>。<span class="text-gray-500">※ 本サイクルは「新しい課題を増やす」のではなく、<u>開発担当のご質問に実測で答え、その答えから既存の提案の順番を組み替える</u>ことに使いました（在庫22件・判断待ち13件・自動停止まで余裕2件）。</span></p>
 
-    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
-      <h3 class="font-bold text-emerald-800 mb-2">① ★最重要★ <code>stamp_get</code> が 7件記録されました — <span class="underline decoration-2">ただし「スタンプ7個」ではありません</span></h3>
-      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝GA4 の 9/6 分に <code>stamp_get</code> が <strong>7件／1人</strong>。<code>sign_up</code> は <strong>0件</strong>。同日の全体は利用者6人・セッション6・ページ閲覧24回（流入＝直接5人／Google検索1人）。<span class="text-gray-600">9/7 分はまだ届いていません（GA4 の最新日＝9/6）。</span></p>
-      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝同日にサイト全体で閲覧された<u>個別スポットのページは5面だけ</u>でした＝<code>/spots/11624</code>（安養寺・枚方市）が<strong>5回</strong>、<code>/spots/12049</code>・<code>/spots/12047</code>・<code>/spots/1</code>・<code>/spots/14676</code> が各1回。<strong class="text-amber-900">1人が7件を記録している一方、その日に見られたスポットは最大でも5か所です。</strong></p>
-      <p class="text-sm text-gray-800 mb-2"><strong>推測</strong>＝<u>同じスポットで GPS チェックを繰り返し押しても、そのたびに1件として記録されている</u>と考えられます（安養寺のページが5回開かれていることと整合）。⇒ <strong>現時点の件数は「獲得したスタンプの数」ではなく「GPSチェックが成功した回数」</strong>です。<span class="text-gray-700">直接流入の1人という形からは運営・開発側の動作確認の可能性もありますが、断定はできません。</span></p>
-      <p class="text-sm text-gray-800 mb-2"><strong>⇒ 対応</strong>＝開発担当へ「同じスポットで再チェックしても発火するのか／1スタンプ1回なのか」を照会しました。<strong class="text-amber-900">定義が確定するまで、この数字を自治体向けのご提案などの実績値には使いません。</strong><span class="text-emerald-800">配線が通ったこと自体は確かな前進です。</span></p>
-      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">📌 <strong>当方の道具の限界も1つ分かりました</strong>＝GA4 のイベントには「どのスポットか」（<code>spot_name</code>）が付いているはずですが、<u>当方の取得ツールはイベントの付随情報を読めません</u>。⇒ <strong>北極星を正しく数えるには、この機能が要ります</strong>（次の課題として記録しました）。<span class="text-gray-600">※ 良い副産物＝<code>/admin/*</code> の混入は 0件で、内部アクセスの除外は効いていました。</span></p>
+    <div class="border-l-4 border-rose-500 bg-rose-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-rose-800 mb-2">① ★最重要★ 開発担当のご質問「スポットページは索引されているか」に、実測で答えました — <span class="underline decoration-2">答えは (a) 索引されていない</span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>ご質問の趣旨</strong>＝「(a) 索引されていない〔技術の課題〕なら、説明文を6,467件書いても1件も表示されない。着手する前に確かめたい」。<span class="text-gray-700">＝作業に入る前に前提を確かめる、非常に良いご指摘でした。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>測り方（再現できる形）</strong>＝① スポットIDをID空間全体に散らして8件抽出（300／2500／4200／5800／7300／9900／11500／13800）→ ② 本番GETで実在を確認（8件とも200・固有title）→ ③ 各URLを <code>site:</code> で実見 → ④ <strong>対照実験</strong>＝索引済みと分かっている <code>/spots/1588</code> で同じ手順を回し、1件返ることを確認（＝「0件」が測定ミスでない証拠）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝スポット詳細 <strong class="text-rose-800">0/8</strong>／市区町村 <strong>0</strong>／都道府県 <strong>0</strong>／エリア <strong>0</strong>／人物 <strong>0</strong>／<strong class="text-emerald-800">テーマ詳細のみ 5本以上が登録済み</strong>。ドメイン全体の <code>site:</code> でも、上位に出るスポット詳細は<strong>7本</strong>だけ。</p>
+      <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">🔑 ただし「効かなかった」ではありません＝拾い直しは動いています。</strong><span class="text-gray-700">9/5 の基準線では索引上のタイトルが「スポット詳細 #12418」（名札を直す<u>前</u>の既定値）でしたが、<strong>本日はすべて実際のスポット名＋市区町村に更新</strong>されています。⇒ <strong>9/5夜〜9/6 の工事は Google に届いています。</strong>薄いのは拒否ではなく<u>2日しか経っていない</u>ためです。</span></p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">⚠️ <strong>当方の限界を正直に書きます</strong>＝<code>site:</code> は上位30件までしか読めないため、<strong>言えるのは下限値だけ</strong>です。「1.4万のうち何ページ登録されたか」を正確に出せるのは <strong>Search Console のサイトマップ画面だけ</strong>＝<strong class="text-rose-800">🔔 R-R35（社長・5分）</strong>。<span class="text-gray-600">サイトマップ自体は健全でした（本日実測＝986,546バイト・正常応答・全階層を列挙。<u>送信されていないだけ</u>）。</span></p>
     </div>
 
     <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
-      <h3 class="font-bold text-sky-900 mb-2">② 週次のリンク点検（9/1 以来・R-R33 完了後は初めて）— <span class="underline decoration-2">配線は健全。ただし説明文の欠落が「リンクの文字」にも効いていました</span></h3>
-      <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-800">✅ 良い確認</strong>＝<code>/spots/themes</code> から<strong>テーマ23本すべて</strong>へリンクが張られ、しかもリンクの文字に説明文の冒頭が付いています（例「鎌倉五山を巡る ─ 建長寺・円覚寺…」）。スポットページ（安養寺）からは<strong>近隣スポット6本＋市区町村＋都道府県＋テーマ＋エリア＝計20本</strong>。<u>行き止まりは1つもありません</u>＝9/6 に開通した配線は健全なままです。</p>
-      <p class="text-sm text-gray-800 mb-2"><strong class="text-red-800">🆕 新しい観察</strong>＝近隣スポット6本のうち<strong>2本（牧野車塚古墳・百済寺跡公園）は、リンクの文字が「名前だけ」</strong>でした。残り4本には説明文の冒頭が付いています。<span class="text-gray-700">⇒ <strong>説明文が無い 6,467件は、リンクの文字からも情報が失われています。</strong>検索エンジンは「リンクの文字」をリンク先の中身を推し量る手がかりに使うため、<u>説明文の欠落は、そのページ自身だけでなく<strong>そのページを指す1.4万本のリンク</strong>にも効いている</u>ことになります。</span></p>
-      <p class="text-sm text-gray-700">⇒ <strong>R-R37（説明文6,467件）の根拠がもう1つ増えました</strong>（新しい番号は起こさず、既存の提案の解像度を上げています）。</p>
+      <h3 class="font-bold text-sky-900 mb-2">② 同じ実測から、着手順に関わる発見が2つ — <span class="underline decoration-2">新しい番号は起こしていません（既存の提案の解像度を上げました）</span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-sky-900">発見1＝検索の入口は「スポット名」ではなく「テーマ名」かもしれません。</strong><span class="text-gray-700">登録済みのテーマ詳細＝日本三名園／浪花三大橋／日本三景／日本の世界遺産 ほか。<strong>そして Search Console で唯一の一般名詞でない検索語「観光タワー」も <code>/spots/themes</code> が受けています</strong>＝<u>独立した2つの観測が同じ方向を指しました</u>（前者は本日、後者は 9/6 の観測）。⇒ <strong>テーマ詳細は23面しかなく、6,467件の説明文に対して281分の1の作業量です。</strong><span class="text-gray-600">これは 🔔 Q-R19（説明文をどの順で埋めるか）のご判断の材料としてお出しします。順番を決めるのは社長です。</span></span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-sky-900">⇒ これにより <code>/spots/themes</code> の構造化データ（R-R36 の残件）の優先度が上がりました。</strong><span class="text-gray-700">「いま実際に索引に入っている唯一の下層」に構造化データが無い、という位置づけになるためです。<strong>着手推奨の順で1位に上げました</strong>（回答不要でそのまま着手できます）。</span></p>
+      <p class="text-sm text-gray-800"><strong>発見2＝登録済みのテーマ詳細5本のうち3本は <code>www.</code> 側のURLでした。</strong><span class="text-gray-700">十数本しかない登録が2つのホスト名に割れていました。<strong class="text-emerald-800">9/6 に直していただいた R-R18（<code>www</code> の証明書）の効果がこれから出る場所です</strong>＝本日の実測で <code>www</code> は正常に本体へ集約（200・0.111秒）。<u>R-R18 の効果を測る観測点として記録しました</u>（基準＝www 側 3本以上）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">③ 北極星＝9/7 分が届きました — <span class="underline decoration-2">スタンプ 0件・登録完了は2日連続 0件</span></h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝9/7＝<code>stamp_get</code> <strong>0件</strong>・<code>sign_up</code> <strong>0件</strong>・メール入力の開始 2件/1人・初回訪問4人・閲覧22回/5人。<span class="text-gray-600">7日窓の累計 <code>stamp_get</code> 7件は、すべて 9/6 分のままです。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>2日間の合計</strong>＝初回訪問9人 → メール入力開始4件 → <strong class="text-rose-800">登録完了 0件</strong>。⚠️ <strong>2日・のべ十数人では結論を出しません</strong>。3〜5サイクル観察して同じ形が続けば「登録の歩留まり」として起票します。<span class="text-gray-700">現時点では既存の R-R22・R-R31・R-R29 の根拠になる可能性のほうが高いと見ています。</span></p>
+      <p class="text-sm text-gray-700">※ 前サイクルで開発担当へお願いした <code>stamp_get</code> の<strong>数え方のご確認は、引き続き回答待ち</strong>です（急ぎではないとお伝えしています）。</p>
     </div>
 
     <div class="border-l-4 border-amber-500 bg-amber-50 rounded-r p-4 mb-4">
-      <h3 class="font-bold text-amber-900 mb-2">③ 検索（Search Console）— <span class="underline decoration-2">9/8 の今日になっても、工事後のデータは<strong>まだ1日も届いていません</strong></span></h3>
-      <p class="text-sm text-gray-800 mb-2"><strong>実測</strong>＝30日窓（実体 8/13〜<strong>9/5</strong>）＝<strong>18クリック／100表示／CTR 18.0%／平均掲載順位 7.4</strong>。表示されているページは <code>/</code>（15クリック/76表示）と <code>/spots/themes</code>（3クリック/24表示）の<strong>2本だけ＝38サイクル連続</strong>。検索語は全11語で、<u>10語が「全国スタンプラリー」の言い換え</u>、非総称は「観光タワー」1語のみ（前回と同じ）。</p>
-      <p class="text-sm text-gray-800 bg-white border-2 border-amber-500 rounded p-2"><strong class="text-amber-900">🔑 これが 🔔 Q-R18（判定日を 9/13 → 9/20 へ）の根拠を、もう一段強くします。</strong><br><span class="text-gray-800">工事は <strong>9/5 夜〜9/6</strong>。ところが<u>本日 9/8 の時点でも Search Console の最新日は 9/5</u>＝<strong>工事後のデータは1日も入っていません</strong>（遅れは3日）。この調子だと <strong>9/13 に見えるのは実質4〜5日分</strong>にとどまります。<u>効いているのに「効かなかった」と読んでしまう危険</u>は、前回お伝えしたときより現実的になりました。<strong class="text-emerald-800">ご判断は「①ずらす／②9/13 のまま／③おまかせ」の一言で結構です。</strong></span></p>
-    </div>
-
-    <div class="border-l-4 border-gray-400 bg-gray-50 rounded-r p-4 mb-4">
-      <h3 class="font-bold text-gray-800 mb-2">④ 残っている2件の生存確認と、サイトの変化検知 — <span class="text-gray-600">いずれも未解消・サイトに変化なし</span></h3>
+      <h3 class="font-bold text-amber-900 mb-2">④ 検索（Search Console）＝<span class="underline decoration-2">9/8 になっても最新日は 9/5 のまま</span>／変化検知・到達性</h3>
       <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
-        <li><strong>R-R36 の残り</strong>＝<code>/spots/themes</code> の構造化データは<strong>0件のまま</strong>（97,832バイト＝前回と1バイトも変わらず）</li>
-        <li><strong>R-R01 の残り</strong>＝<code>/map</code> の見出しは<strong>0本のまま</strong>（55,694バイト＝同上）。<span class="text-gray-600">タイトルは改善済みです。</span></li>
-        <li><strong>トップ</strong>＝64,821バイト＝9/6 の3サイクルすべてと完全一致＝<strong>変化なし</strong>／<strong>到達性</strong>＝<code>www</code> 有無とも 200 で正常（0.05秒）＝9/6 夜のような停止は起きていません</li>
+        <li><strong>30日窓（実体 8/13〜9/5）＝18クリック／100表示／CTR 18.0%／平均掲載順位 7.4</strong>＝今朝の Cycle 048 と完全に同値。表示URLは <code>/</code> と <code>/spots/themes</code> の<strong>2本だけ＝39サイクル連続</strong>。<span class="text-amber-900"><strong>工事後のデータは1日分も入っていません（遅れ3日）</strong>⇒ <strong>🔔 Q-R18（判定日を 9/13 → 9/20 へ）の根拠がもう一段強まりました。</strong>ご判断は「①ずらす／②9/13 のまま／③おまかせ」の一言で結構です。</span></li>
+        <li><strong>トップ 64,821バイト</strong>＝9/6 以降 <strong>5サイクル連続で1バイトも変化なし</strong>／<strong>到達性</strong>＝本体 200（0.099秒）・<code>www</code> 200で本体へ集約（0.111秒）＝停止なし</li>
+        <li><strong>残件2件は生存</strong>＝<code>/spots/themes</code> の構造化データ 0件（97,832バイト）／<code>/map</code> の見出し 0本（55,694バイト）。<span class="text-gray-600">いずれも回答不要で着手できます（✅AI即応）。</span></li>
+        <li><strong>受信箱</strong>＝復路＝本日 09:27 に開発担当から1通（<span class="text-emerald-700">2日ぶりの往復再開</span>）／往路＝<code>rally-dev</code> 宛の未読が<strong>4通</strong>（9/6 分）＝記録のみ・<u>督促はしません</u></li>
       </ul>
-      <p class="text-sm text-gray-600 mt-2">※ この2件は<strong>回答不要でそのまま着手できる</strong>もの（✅AI即応）です。着手推奨の順は前回から変えていません。</p>
     </div>
 
     <div class="border border-gray-300 bg-white rounded p-4">
       <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
-        <li><strong>データ状況</strong>＝GA4 ✅取得（<code>analytics_543430115</code>・最新日 9/6）／GSC ✅取得（<code>searchconsole_rally</code>・最新日 9/5）／本番GET ✅（5ページ・リンク実査2ページ）。<span class="text-gray-500">未取得なし。</span></li>
-        <li><strong>新規＝0件／クローズ＝0件</strong>。<strong>根拠を厚くしたもの2件</strong>＝<strong>R-R17</strong>（初の実数＋件数の定義という新しい宿題）・<strong>R-R37</strong>（説明文の欠落はリンクの文字にも効く）。<span class="text-gray-600">在庫22件・判断待ち13件のまま。</span></li>
-        <li><strong>開発担当へ配信</strong>＝本レポートと <code>stamp_get</code> の定義照会を mailbox で送付。</li>
-        <li><strong>掲示板の整理</strong>＝前サイクル（Cycle 047）の記録は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました（消していません）。<span class="text-amber-800"><strong>このページは現在 約108KB</strong>で、目安（80KB）を超えたままです＝<u>古い記録の残しすぎではなく、在庫22件の一覧と未回答6件の質問シートという常設部分が大きい</u>ためです。<strong>削り方2案（下記🔔の末尾）へのご指示をいただければ、次のサイクルで縮めます。</strong></span></li>
-        <li><strong>次サイクル</strong>＝① <strong>9/7・9/8 分の <code>stamp_get</code></strong>（7件が続くのか一度きりか）→ ② 開発担当からの定義の回答 → ③ R-R36・R-R01 の残件の反映確認。</li>
+        <li><strong>データ状況</strong>＝GA4 ✅取得（<code>analytics_543430115</code>・最新日 <strong>9/7</strong>）／GSC ✅取得（<code>searchconsole_rally</code>・最新日 9/5）／本番GET ✅（14ページ）／<code>site:</code> 実見 ✅（14クエリ・対照実験つき）。<span class="text-gray-500">未取得なし。</span></li>
+        <li><strong>新規＝0件／クローズ＝0件</strong>。<strong>根拠を厚くしたもの3件</strong>＝<strong>R-R35</strong>（<u>「効果を早める手」から「開発担当の問いに答える唯一の手段」へ格上げ</u>）・<strong>R-R36</strong>（<u>索引に入っている唯一の層＝テーマなので優先度上昇・着手順1位へ</u>）・<strong>R-R18</strong>（<u>www 側に3本の登録があり、統合される効果の観測点を設定</u>）。<span class="text-gray-600">在庫22件・判断待ち13件のまま。</span></li>
+        <li><strong>開発担当へ配信</strong>＝本レポートを mailbox で送付（ご質問への回答を含む・1通）。<span class="text-gray-500">※ 送信本文の日付表記を「夕」と書きましたが実際は朝（09:35）です。内容の数値に誤りはありません。</span></li>
+        <li><strong>掲示板の整理</strong>＝<strong>前サイクル（Cycle 048）の記録と、9/6 夜の一時停止の記録を<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました</strong>（消していません）＝Cycle 048 でお伝えした宿題を消化しました。</li>
+        <li><strong>次サイクル</strong>＝① <strong>R-R35 の送信有無</strong>（送信されていれば登録数が初めて数字で出ます）→ ② 開発担当からの <code>stamp_get</code> 定義の回答 → ③ 9/8 分の登録完了 → ④ 週次の全体棚卸し・競合対比・ビジュアル定点（いずれも 9/12 期日）。</li>
       </ul>
     </div>
   </section>
 
-  <p class="text-xs text-gray-500 mb-8">📖 <strong>Cycle 047 以前の記録</strong>は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>にあります（消していません）。</p>
+  <p class="text-xs text-gray-500 mb-8">📖 <strong>Cycle 048 以前の記録</strong>は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>にあります（消していません）。</p>
 
   <hr class="my-8 border-gray-300">
   <p class="text-xs text-gray-400">HP分析ループ（<code>/hp-loop rally</code>）が自動生成。回答は <code>data/hp-loop/rally/from-president.md</code> または Slack の rally 日報スレッドへ。</p>

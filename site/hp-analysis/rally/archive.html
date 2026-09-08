@@ -30,6 +30,27 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== Cycle 048 の記録（Cycle 049 のローテで移動・2026-09-08） ===== -->
+  <section class="mb-10 border-l-4 border-gray-300 pl-4">
+    <h2 class="text-xl font-bold mb-1">Cycle 048 — 2026-09-08 04:2x（★北極星が初めて数字になった日／週次リンク点検）</h2>
+    <p class="text-sm text-gray-600 mb-3">社長による手動起動。<strong>新規の提案＝0件／新規の質問＝0件／クローズ＝0件</strong>。在庫22件・判断待ち13件。</p>
+    <ul class="text-sm text-gray-800 list-disc list-inside space-y-1 mb-3">
+      <li><strong>① <code>stamp_get</code> が 7件／1人（すべて 9/6）・<code>sign_up</code> 0件</strong>＝48サイクル目で北極星の初計測。<strong>ただし同日に閲覧された個別スポットは5面だけ（7 &gt; 5）</strong>＝<u>同一スポットの再チェックでも発火している疑い</u>⇒「獲得スタンプ数」ではなく「GPSチェック成功回数」と判断し、実績値には使わず開発担当へ定義を照会。<span class="text-gray-600">✅ <code>/admin/*</code> の混入 0件＝内部除外は効いている。道具の穴＝<code>ga4-fetch.py</code> はイベントの付随情報（<code>spot_name</code>）を読めない。</span></li>
+      <li><strong>② 週次のリンク点検（#14・R-R33 完了後は初回）＝配線は健全</strong>。<code>/spots/themes</code>→テーマ23本すべて／安養寺→計20本・行き止まり0。<strong class="text-red-800">🆕 近隣スポット6本のうち2本（牧野車塚古墳・百済寺跡公園）はリンクの文字が「名前だけ」</strong>＝<u>説明文の欠落は、そのページを指す約1.4万本のリンクの文字からも情報を奪っている</u>⇒ R-R37 の根拠が1つ増加（新規番号は起こさず解像度を上げた）。</li>
+      <li><strong>③ Search Console＝30日窓（実体 8/13〜9/5）18クリック／100表示／CTR 18.0%／順位 7.4</strong>。表示URLは <code>/</code> と <code>/spots/themes</code> の2本だけ＝38サイクル連続。<strong>工事（9/5夜〜9/6）後のデータは 9/8 でも1日も入っていない＝遅れ3日</strong>⇒ Q-R18（判定日を 9/20 へ）の根拠が強化。</li>
+      <li><strong>④ 残件2件の生存確認</strong>＝<code>/spots/themes</code> の構造化データ 0件（97,832B）／<code>/map</code> の見出し 0本（55,694B）／トップ 64,821B＝変化なし／到達性 apex・<code>www</code> とも 200。</li>
+    </ul>
+    <p class="text-xs text-gray-500">※ Cycle 048 時点の上部ブロック（🎉 北極星の初計測／🗄️ 9/6 夜の約6分の停止＝R-R43 の反映作業と判明）も、本ローテで下記に移しています。</p>
+  </section>
+
+  <!-- ===== Cycle 047 の記録：9/6 夜の一時停止は R-R43 の反映作業だった（Cycle 049 のローテで移動） ===== -->
+  <section class="mb-10 border-l-4 border-gray-300 pl-4">
+    <h2 class="text-xl font-bold mb-1">🗄️ 9/6 夜（23:14〜23:20）の約6分の停止 — R-R43 の反映作業によるもので正常でした</h2>
+    <p class="text-sm text-gray-800 mb-2">当方が本番を取得して確認した事実のみ（読み取りのみ・サイトには触れていません）。23:0x＝正常（200）／23:14〜23:16＝4変種すべてつながらない（4回試して4回とも）／23:20:45＝復旧（200・0.063秒）＝止まっていたのは約6分。</p>
+    <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-800">原因＝この6分の間に R-R43（内部管理情報を公開側に出さない修正）が反映されていました。</strong>復旧後に <code>/spots/9146</code> を取り直すと「システム情報／スポットID／優先度: 高／作成日: 1970/1/1」「メモ／ChatGPTにて作成」がすべて消滅（98,844B → 98,097B）＝<u>止まっていた時刻と消えた内容が一致</u>。⇒ 計画外の障害ではなく反映作業に伴う正常な一時停止（因果は推測だが時刻と内容の一致からほぼ確実）。<strong>R-R43 は ✅完了。</strong></p>
+    <p class="text-sm text-gray-700">📌 仕組みの申し送り＝これに気づけたのは<u>たまたま同じ時刻に見ていたから</u>で、8/15 の約20分の停止も同じでした。<strong>外部からの死活監視（R-R19）はまだ入っておらず</strong>、「反映作業の正常な数分」と「異常な20分」を区別する目が無い状態です。</p>
+  </section>
+
   <!-- ===== ✅完了した提案 R-R43（Cycle 047 でクローズ） ===== -->
   <div class="border-4 border-emerald-500 bg-emerald-50 rounded-lg p-5 mb-8">
     <h2 class="text-lg font-bold text-emerald-800 mb-2">✅ 完了 — R-R43（スポットページから社内向けの情報を出さない）<span class="text-sm font-normal text-gray-600">／起票 2026-09-06 朝（Cycle 045）・完了 2026-09-06 23:2x（Cycle 047）＝<strong>同日中</strong></span></h2>
