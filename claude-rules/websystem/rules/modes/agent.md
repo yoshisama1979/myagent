@@ -13,7 +13,7 @@
 >   `rules/modes/director.md` ／ `rules/modes/developer.md` が優先し、**担当外の仕事はしない**：
 >   - **統括** … 仕様策定（Dialogue）・委任・検品・昇格の進言。**実装しない・git を書き換えない**
 >   - **開発** … 委任カード（`documents/handoff.md` の `H-NNN`）を受けて実装・テスト・コミット。**仕様を決めない・push しない**
->   - `/inbox`（Inbox モード）はこの構成では起動しない（統括の窓が役目を兼ねる）
+>   - `/inbox`（Inbox モード）はこの構成では起動しない（統括のウィンドウが役目を兼ねる）
 >   - 下表の Dialogue / Autopilot / 都度承認の判定は、**それぞれの担当の中でだけ**適用する
 >     （例: 開発が受けたゴール型カードは `mode: autopilot` の goals.md を正として自走する）
 

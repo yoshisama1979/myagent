@@ -83,7 +83,7 @@
 | `/commit-pipeline` | staging → Codex クロスレビュー → コミット → リファクタリング を一括で実行するパイプライン |
 | `/refactor` | ステージ済み差分に対し `rules/modes/refactoring.md` に従ってリファクタリングを実施する |
 | `/consistency-check` | 仕様書・テスト仕様書（test.csv）・実装コードの三者整合性チェックを行う |
-| `/inbox` | Inbox モード（`rules/modes/inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する（🚨 **2セッション構成を `使う` プロジェクトでは起動しない**＝統括の窓が常時開いているため役目が重なる） |
+| `/inbox` | Inbox モード（`rules/modes/inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する（🚨 **2セッション構成を `使う` プロジェクトでは起動しない**＝統括のウィンドウが常時開いているため役目が重なる） |
 | `/hana-memo` | hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新する（`rules/modes/hana-memo.md` 準拠。**POST は全置換**のため GET→統合→POST を厳守・送信前にユーザー承認） |
 | `/cleanup-permissions` | `.claude/settings.local.json` の permissions.allow リストを汎用パターンに整理する |
 
