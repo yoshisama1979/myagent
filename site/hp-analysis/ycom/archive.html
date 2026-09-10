@@ -310,6 +310,48 @@
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
+    <h3 class="text-xl font-semibold mb-1">Cycle 119 — 2026-09-10（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①新しい検索データが1件も届いていないことの明示 ②当方の記録の誤り2件の是正（うち1件は 9/9 の「直しました」報告自体が誤りでした） ③内部台帳の圧縮 ④定点観測7項目</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（<strong class="text-amber-700">ただし集計最終日は 9/6 ＝ 9/9 と同じで前進なし</strong>）／GA4 ✅／Google広告 ✅（配信停止の継続を確認）／Clarity ✅（7日連続）／本番HTML ✅</p>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-amber-900 mb-1">⚠️ 本日いちばん大事な前置き＝「数字が動かなかった」のではなく「数字が来ていない」</p>
+      <p class="text-sm text-gray-800">Google Search Console のデータは通常3日遅れで届きますが、本日取得したところ<strong>最終日が 9/6 のままで、9/9 のときから1日も進んでいませんでした</strong>（＝遅れが4日に伸びた）。<br>
+      直近28日という窓は毎日1日ずつ進むため、<strong>新しい日が足されないまま古い日（8/12）だけが窓から外れ、すべてのページの表示回数が一律に3〜5%減ったように見えます</strong>。これを「露出が減った」と報告すると誤りになるので、<strong class="text-emerald-700">前回とまったく同じ窓（8/12〜9/9）で取り直して照合しました＝運用代行 428回・提携パートナー 176回・料金 1,210回＝9/9 と完全一致＝変化ゼロ</strong>が正しい読み方です。<br>
+      <span class="text-sm text-gray-600">まだ異常とは決めつけません（1日飛ぶことはあります）。<strong>次回も 9/6 のままなら転送停止として扱います</strong>。切り分けの材料として、Google広告側のデータは 9/7 → 9/8 と1日進んでおり、<strong>止まっているのは検索データだけ</strong>です。</span></p>
+    </div>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-rose-900 mb-1">🔴 当方の記録の誤りを2件見つけて直しました（提案の中身は動いていません）</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>① 社内台帳の R-046 の行が「本番未反映12日目」のまま6サイクル放置されていました。</strong><br>
+      R-046（実績ページ39枚が検索の受け皿として機能していなかった件）は <strong>9/2 に本番反映され、9/3 に当方が独立検証してクローズ済み</strong>です。ところが判断の正本である社内台帳の当該行は、冒頭が「未反映12日目・返信待ち5日目」という反映前の記述のまま残っていました。<br>
+      <strong class="text-rose-700">さらに問題なのは、9/9 にこの誤記を掲示板側で撤去したとき、当方が「台帳本体は正しい」と報告していたことです。それ自体が誤りでした</strong>＝<u>見える側だけを直して、正本を直していなかった</u>ことになります。原因は 9/3 に「行本体の書き直しは次のサイクルで」と予約したまま、6サイクル先送りしたことです。<br>
+      → 本日、台帳の当該行を<strong>クローズ済みの記録に書き換え、元の文章は保管庫へ移送</strong>しました（消していません）。</p>
+      <p class="text-sm text-gray-800"><strong>② 9/9 のサイクル記録そのものが台帳に書かれていませんでした。</strong><br>
+      9/9 は掲示板・定石の実施記録・勝ちパターン集は更新した一方、台帳の「今サイクルの選定」欄に自分の記録を残していませんでした。<strong>同じ抜けが 9/5 にも起きており、そのときの再発防止が効いていなかった</strong>ことになります（前回は「次のサイクルで補完する」で終え、<u>再発を止める仕組みを作らなかった</u>ため）。<br>
+      → 本日、9/9 の記録を再構成して補完し、あわせて<strong class="text-emerald-700">毎サイクルの点検表に「台帳に当サイクルの記録を書いたか」という項目そのものを追加</strong>しました（心がけではなく、点検の行として機械的に確認する形にしました）。</p>
+    </div>
+
+    <div class="border border-gray-300 rounded-lg p-4 mb-4 bg-white">
+      <p class="font-bold text-gray-800 mb-1">📊 定点観測7項目＝すべて実施・退行なし</p>
+      <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+        <li><strong>トップページ</strong>＝73,529バイト・タイトル/説明文/正規URL/構造化データ すべて前回と<strong>1バイトも違わず</strong>＝退行なし。</li>
+        <li><strong>R-046 の改修は生きています</strong>＝実績ページ（ヨーコ・ハワイ）を再取得＝正規URLが自分自身を指す状態・説明文は案件ごとの92字＝<strong>9/2 の改修は本番で維持</strong>。効果の判定は予定どおり 9/17 頃（39ページが検索に拾い直されるには時間が要ります）。</li>
+        <li><strong>Google広告</strong>＝停止の継続を確認（8日目）。他社3アカウントは 9/8 までデータがあるのに YCOM だけ空＝<strong>転送の遅れではなく配信ゼロ</strong>。費用は止まったままです。<span class="text-rose-700">⚠️ 入札戦略は「コンバージョン値の最大化」のまま未復旧＝この状態で再開しないでください。</span></li>
+        <li><strong>Microsoft Clarity</strong>＝7日連続で取得成功。押しても何も起きない「死んだクリック」は<strong>買い手向けページ（トップ・サービス・料金）で0%</strong>＝8サイクル連続で同じ結果＝運用代行のクリックが出ない原因は<u>ページが壊れているからではない</u>ことの裏づけです。</li>
+        <li><strong>実装担当からの新しい報告なし</strong>。9/6 にお渡しした広告の除外設定（R-050）への返信は4日目ですが、<strong>広告は停止中で急ぎではないため督促しません</strong>。</li>
+      </ul>
+    </div>
+
+    <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-emerald-900 mb-1">🗂 内部台帳を圧縮しました＝249,339 → 234,192バイト（−15,147）</p>
+      <p class="text-sm text-gray-800">9/3 に社長がご判断された上限（250,000バイト）まで<strong>残り661バイト</strong>に達していたため、①クローズ済みの R-046 の長い経緯 ②9/6・9/7 のサイクル記録 ③定石の実施履歴のうち古い分 を保管庫へ移しました。<strong>未完了の提案は1件も本体から外していません</strong>＝履歴は消さず、置き場を変えただけです。上限まで約16,000バイトの余裕ができました。</p>
+    </div>
+
+    <p class="text-sm bg-gray-100 border border-gray-300 rounded p-3"><strong>本日の新規提案＝0件／新しいご質問＝0件。</strong>提案の枠は5件空いていましたが、<strong>新しい数字が1つも届いていない日に新規を足しても在庫が増えるだけ</strong>で、それより<u>自分の記録の正しさを取り戻すほうが前に進む</u>と判断しました（＝新規が無い日の本業）。<br>
+    <strong class="text-rose-700">ご確認をお願いしたいのは R-023（同じ動作に2つの名前が付いている件・○×でお答えいただける形）の1点だけです。</strong>Q-019（この掲示板が大きくなりすぎているので表を別ページに分けてよいか）は一言でお答えいただければ足ります。<strong>どちらも増えていません。</strong></p>
+
+    <hr class="my-6 border-gray-300">
+
     <h3 class="text-xl font-semibold mb-1">Cycle 118 — 2026-09-09（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①R-045（内部リンク施策）の効果を確定＝「見られる回数は27倍・クリックはゼロ」 ②8月から11回続いた「断定できない」の原因が自分の測り方の誤りだったと判明 ③掲示板の誤記1件を訂正（R-046 を「未反映」と書き続けていました） ④定点観測7項目を実施</strong>）</h3>
     <p class="text-sm text-gray-600 mb-4"><strong>データ状況</strong>＝GSC ✅（BigQuery・データは <strong>09-06</strong> まで＝前回から1日前進。<strong>前後窓の比較のため4本の期間を独立に取得</strong>）／Google広告 ✅（停止中を再確認）／Clarity ✅（<strong>6日連続で取得成功</strong>）／本番サイトの実査 ✅（トップ＋実績詳細ページ）／メールボックスの実査 ✅（新着なし）。<strong>推測で埋めた数字はありません。</strong>推測を書いた箇所は「推測」と明記しています。</p>
 
