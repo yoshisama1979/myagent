@@ -43,6 +43,8 @@
 | ファイル | いつ参照するか |
 |---------|--------------|
 | `rules/modes/agent.md` | 常に（実装フロー・共通原則・モード判定の入口） |
+| `rules/modes/director.md` | **統括（ディレクター）モード**。`/director` で起動。`project-config.md`「エージェント構成」で **2セッション構成を `使う`** と記入したプロジェクトのみ。仕様を決め・委任し・**自分の手で検品し**・昇格を進言する（実装しない・git を書き換えない） |
+| `rules/modes/developer.md` | **開発（デベロッパー）モード**。`/dev` で起動。上と同じ条件のプロジェクトのみ。委任カードを受けて実装・テスト・**コミット**する（仕様を決めない・push しない） |
 | `rules/modes/dialogue-mode.md` | **仕様策定モード**。ゴール記録ファイル無し / `status: dialogue` / ユーザーが仕様検討意図を示したとき |
 | `rules/modes/autopilot.md` | **自走モード**。`mode: autopilot` かつ `status: active`/`paused` の goals.md があるとき。`status: completed` の goals.md は原則作業対象外（追加要望なら Dialogue で再定義） |
 | `rules/modes/inbox-mode.md` | **Inbox モード（並走型）**。`/inbox` スラッシュコマンドで起動。開発エージェント稼働中の裏で別セッションを立て、ユーザーの「次やってほしいこと」を `documents/inbox.md` に追記。実装・仕様策定には踏み込まない |
@@ -74,16 +76,20 @@
 
 | コマンド | 用途 |
 |---------|------|
+| `/director` | **統括セッション**として起動する（2セッション構成を `使う` プロジェクトのみ。`rules/modes/director.md` 準拠） |
+| `/dev` | **開発セッション**として起動する（同上。`rules/modes/developer.md` 準拠） |
 | `/staging` | 変更ファイルを個別に `git add` する（`git add .` は使わない。領域が混ざる場合は分けてステージ） |
 | `/commit` | ステージ済み差分を確認し、`rules/modes/commit.md` の規約に沿ったコミットメッセージを提案する |
 | `/commit-pipeline` | staging → Codex クロスレビュー → コミット → リファクタリング を一括で実行するパイプライン |
 | `/refactor` | ステージ済み差分に対し `rules/modes/refactoring.md` に従ってリファクタリングを実施する |
 | `/consistency-check` | 仕様書・テスト仕様書（test.csv）・実装コードの三者整合性チェックを行う |
-| `/inbox` | Inbox モード（`rules/modes/inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する |
+| `/inbox` | Inbox モード（`rules/modes/inbox-mode.md`）を起動し、「次やってほしいこと」を `documents/inbox.md` に追記する（🚨 **2セッション構成を `使う` プロジェクトでは起動しない**＝統括の窓が常時開いているため役目が重なる） |
 | `/hana-memo` | hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新する（`rules/modes/hana-memo.md` 準拠。**POST は全置換**のため GET→統合→POST を厳守・送信前にユーザー承認） |
 | `/cleanup-permissions` | `.claude/settings.local.json` の permissions.allow リストを汎用パターンに整理する |
 
 > 注記: Autopilot 自走中のコミットは `rules/modes/autopilot.md` の規律で自動的に行われるためコマンド不要。これらは主に都度承認モードで使う。
+
+> 🚨 **2セッション構成を `使う` プロジェクトでは、git 系コマンド（`/staging` `/commit` `/commit-pipeline` `/refactor`）は開発セッションで実行する。** 統括は `git log` / `git diff` で**読む**だけで、`git add` / `commit` / `push` をしない（website テンプレートとは**逆**）。理由は `rules/modes/director.md` §7。
 
 ## デザインルールの単一の真実の源 (Design.md)
 

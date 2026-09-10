@@ -6,7 +6,7 @@
 | テンプレート | 対象 | 中身の骨子 |
 |---|---|---|
 | [`website/`](website/) | **WEBサイト制作**（コーポレートサイト・LP・小規模サイト。静的HTML or PHP + Sass） | **統括＋開発の2セッション構成（director/developer＝別ウィンドウ・受け渡しは `documents/handoff.md`）**、Design.md=SSOT、開始ゲート（start）→ 制作進行＝チェックリスト駆動（build-progress）→ 実装（page-build/page-update/design-replication）→ 公開前チェック（check）→ 運用・SEO（seo-operation）、hp-loop 連携（mailbox/hp-loop-dialogue）、見積もり（estimate-format＝CSV積算・検算・過去見積との比較）、スライド資料PDF（deck-format） |
-| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、TDD（tdd/testcode/frontend-test）、API実装規約（api-design）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、本番デプロイ（deploy）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
+| [`websystem/`](websystem/) | **WEBシステム開発**（業務システム・管理画面。Laravel + Next.js 等） | 3モード体制（dialogue-mode ↔ autopilot ↔ inbox-mode）、**統括＋開発の2セッション構成（director/developer＝任意・既定オフ。`project-config.md`「エージェント構成」で `使う` と記入したときだけ有効。website とは逆で、コミットは開発側）**、TDD（tdd/testcode/frontend-test）、API実装規約（api-design）、仕様書HTML（spec-format）、コミット規約・領域分割（commit）、本番デプロイ（deploy）、見積もり（estimation=内部のタスク抽出・難易度評価／quotation=顧客向け見積書／estimate-log=採用見積もり台帳）、hp-loop 連携（mailbox/hp-loop-dialogue。対の分析ループがあるプロジェクトのみ）、スライド資料PDF（deck-format） |
 
 ## 使い方（新規プロジェクトへの導入手順）
 
@@ -17,7 +17,8 @@
 5. website の場合：`documents/build-checklist.md` は **ひな形（標準工程の項目カタログ）**。そのまま使わず、案件に合わせて展開・追加・対象外化し、`B-NNN` を採番して台帳にする（`rules/modes/build-progress.md` §1）
 6. website の場合：**2セッション構成の起動手順**（統括 `/director` と開発 `/dev` をどう開くか）を `project-config.md`「エージェント構成」節に記入する。統括が起動時の環境点検でここを読み、開発セッションが開かれていなければユーザーに開き方を提示する（1セッションで回す運用も同節で選べる）
 7. websystem の場合：`documents/specs/_template.html` を起点に仕様書を作る（`document.md` は新規プロジェクトでは作らない）
-8. **配布先の Claude Code のバージョンを確認する**（2026-07-24 のルール3層化以降）：ルールは「常時＝`.claude/rules/`（フロントマター無し）／条件付き＝同（`paths:` フロントマター）／読み込み式＝`rules/modes/`」の3層。**`paths:` による条件付き適用は比較的新しい機能**なので、配布先の Claude Code が古いと条件付き層が常時ロードに縮退する（動作は壊れないがトークン節約が効かない）。`claude update` で最新化しておく
+8. websystem の場合：**2セッション構成を使うかを決める**。`project-config.md`「エージェント構成」節の既定は `使わない`（従来どおり1セッションで Dialogue → Autopilot まで回す）。`使う` と記入すると統括 `/director` と開発 `/dev` に分かれ、**仕様を決める役と作る役が別のウィンドウ**になる（同節に起動手順も記入する）。🚨 **website とは git の持ち場が逆**で、**コミットを打つのは開発セッション**・統括は `git log`/`git diff` で読むだけ（Autopilot の安全装置がコミットを開発側に前提しているため）
+9. **配布先の Claude Code のバージョンを確認する**（2026-07-24 のルール3層化以降）：ルールは「常時＝`.claude/rules/`（フロントマター無し）／条件付き＝同（`paths:` フロントマター）／読み込み式＝`rules/modes/`」の3層。**`paths:` による条件付き適用は比較的新しい機能**なので、配布先の Claude Code が古いと条件付き層が常時ロードに縮退する（動作は壊れないがトークン節約が効かない）。`claude update` で最新化しておく
 
 ## テンプレートの設計原則（編集時に守ること）
 
