@@ -89,6 +89,15 @@ GUIDES = {
 }
 
 
+def is_rename(status):
+    """R（rename）/ C（copy）か。`R100` のようにスコアが付くので先頭 1 文字で見る。
+
+    この判定を外すと「旧パスを照合対象に入れる」「ガイドの改名を検出する」の
+    両方が同時に壊れるため、正を 1 箇所に置く。
+    """
+    return status[:1] in ("R", "C")
+
+
 def changed_entries(rng=None):
     """変更を [(status, [paths...]), ...] で返す。--range が無ければステージ済み。
 
@@ -110,8 +119,7 @@ def changed_entries(rng=None):
     entries, i = [], 0
     while i < len(tokens):
         status = tokens[i]
-        # R/C は「旧パス・新パス」の 2 つを伴う（R100 のようにスコアが付く）
-        n = 2 if status[:1] in ("R", "C") else 1
+        n = 2 if is_rename(status) else 1   # R/C は「旧パス・新パス」の 2 つを伴う
         paths = tokens[i + 1:i + 1 + n]
         if len(paths) < n:      # 想定外の切れ方。黙って誤判定するより止める
             print(f"⚠️  git の出力を解釈できませんでした（status={status}）", file=sys.stderr)
@@ -129,7 +137,7 @@ def match(path, key):
 def guide_state(entries, guide):
     """ガイドがこの変更集合の中でどう扱われたか。'updated' / 'deleted' / 'renamed' / None"""
     for status, paths in entries:
-        if status[:1] in ("R", "C"):
+        if is_rename(status):
             old, new = paths
             if new == guide:
                 return "updated"        # 別名から移ってきた＝実体は在る

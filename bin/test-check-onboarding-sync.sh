@@ -17,7 +17,7 @@ PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 [ -f "$PROJ/bin/check-onboarding-sync.py" ] || { echo "❌ 起動位置がおかしい: $PROJ" >&2; exit 2; }
 
 python3 - "$PROJ" <<'PYEOF'
-import importlib.util, io, os, re, subprocess, sys, tempfile
+import importlib.util, io, re, subprocess, sys, tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 
