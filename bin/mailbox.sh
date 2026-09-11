@@ -241,14 +241,17 @@ print(mid)'
     # スプールを to: で直接数えて「新着あり」と判定するため、ペース外でも毎日起動し、
     # 起動しても消費できず noprogress を繰り返していた（ycom は 36.9 日・8件で実発生）。
     # 正＝dispatcher と同じ「スプールの to:」を agent 側も見る（正を1つにする）。
-    as_agent=""
+    # --as は id の前後どちらでもよい（help の書式 `local-done <id> [--as <agent>]` に合わせる。
+    # 前だけを見る実装だと、書いてあるとおりに打った有人セッションが名乗れずに止まる）。
+    as_agent="" mid=""
     while [ $# -gt 0 ]; do
       case "$1" in
         --as) as_agent="${2:-}"; shift 2 ;;
-        *) break ;;
+        --)   shift; break ;;
+        -*)   die "$cmd: 不明なオプション: $1" ;;
+        *)    [ -n "$mid" ] && die "$cmd: 引数が多すぎます: $1"; mid="$1"; shift ;;
       esac
     done
-    mid="${1:-}"
     # 身元：無人起動では MYAGENT_AGENT が正で、--as で他人を名乗らせない（local-send と同じ規律）。
     me="${MYAGENT_AGENT:-}"
     if [ -n "$me" ] && [ -n "$as_agent" ] && [ "$as_agent" != "$me" ]; then

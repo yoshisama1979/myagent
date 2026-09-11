@@ -111,6 +111,23 @@ RUNARGS=(local-done)
 out="$(run MYAGENT_AGENT=hp-loop-ycom)"
 printf '%s' "$out" | grep -q 'id は必須' && ok "id 無しはエラー" || ng "id 無しが通る"
 
+echo "── §5b 引数の並び（help の書式どおりに打てること）"
+mkmsg M-20260901T000021-web-hanasaka-eee hp-loop-ycom
+RUNARGS=(local-done M-20260901T000021-web-hanasaka-eee --as hp-loop-ycom)
+out="$(run MYAGENT_X=1)"
+printf '%s' "$out" | grep -q '"ok": true' \
+  && ok "local-done <id> --as <agent>（help の書式＝--as が後ろ）が通る" || ng "help の書式で打つと通らない"
+mkmsg M-20260901T000022-web-hanasaka-fff hp-loop-ycom
+RUNARGS=(local-done --as hp-loop-ycom M-20260901T000022-web-hanasaka-fff)
+out="$(run MYAGENT_X=1)"
+printf '%s' "$out" | grep -q '"ok": true' && ok "--as が前でも通る" || ng "--as が前だと通らない"
+RUNARGS=(local-done --bogus x)
+out="$(run MYAGENT_AGENT=hp-loop-ycom)"
+printf '%s' "$out" | grep -q '不明なオプション' && ok "未知のオプションを黙って無視しない" || ng "未知のオプションが素通りする"
+RUNARGS=(local-done aaa bbb)
+out="$(run MYAGENT_AGENT=hp-loop-ycom)"
+printf '%s' "$out" | grep -q '引数が多すぎます' && ok "余分な引数を黙って捨てない" || ng "余分な引数が素通りする"
+
 echo "── §6 許可リスト（bin/ と bash bin/ の両形が要る＝実害の前例あり）"
 SET="$PROJ/.claude/settings.local.json"
 for form in "Bash(bin/mailbox.sh local-inbox" "Bash(bash bin/mailbox.sh local-inbox" \
