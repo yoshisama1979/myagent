@@ -27,6 +27,14 @@
 #   bin/mailbox.sh done <id>
 #       自分宛の new/<id> を処理済み(cur/)へ移動。本文は編集しない。
 #
+#   bin/mailbox.sh local-inbox [--as <agent>]
+#       同一マシン(VPS)のスプールから自分宛の未読(new/)を直接読む（HTTP不経由）。
+#       身元は無人なら MYAGENT_AGENT・有人なら --as。**サイト別の宛名（hp-loop-<site> 等）は
+#       こちらを使う**＝HTTP の inbox はトークンが名乗る総称名でしか開けず、常に count:0 になる。
+#
+#   bin/mailbox.sh local-done <id> [--as <agent>]
+#       同一マシンで new/<id> を cur/ へ移す（自分宛のみ・本文は編集しない）。
+#
 # 【スライス3以降・現在サーバが 501】
 #   bin/mailbox.sh approve <id>      社長(admin)だけ hold/ → new/
 #
@@ -223,6 +231,74 @@ print(mid)'
     id="${1:-}"
     [ -n "$id" ] || die "done <id> の id は必須です"
     auth_curl -X POST "${MAILBOX_URL}/?action=done&id=${id}"; echo
+    ;;
+
+  local-inbox|local-done)
+    # ── 同一VPS内の受信・消費（HTTP 不経由）。2026-09-11 社長ご指示で新設。
+    # なぜ要るか：inbox/done は HTTP API で、身元は MAILBOX_TOKEN が決める。VPS のトークンは
+    # 旧来の総称 "hp-loop" のままで、宛名がサイト別（hp-loop-<site>）へ移行した後は
+    # **自分宛の便が1通も見えない**（inbox は常に count:0）。一方 dispatcher(agent-tick.sh) は
+    # スプールを to: で直接数えて「新着あり」と判定するため、ペース外でも毎日起動し、
+    # 起動しても消費できず noprogress を繰り返していた（ycom は 36.9 日・8件で実発生）。
+    # 正＝dispatcher と同じ「スプールの to:」を agent 側も見る（正を1つにする）。
+    as_agent=""
+    while [ $# -gt 0 ]; do
+      case "$1" in
+        --as) as_agent="${2:-}"; shift 2 ;;
+        *) break ;;
+      esac
+    done
+    mid="${1:-}"
+    # 身元：無人起動では MYAGENT_AGENT が正で、--as で他人を名乗らせない（local-send と同じ規律）。
+    me="${MYAGENT_AGENT:-}"
+    if [ -n "$me" ] && [ -n "$as_agent" ] && [ "$as_agent" != "$me" ]; then
+      die "$cmd: 無人実行では --as は自分（$me）だけです: $as_agent"
+    fi
+    [ -n "$me" ] || me="$as_agent"
+    [ -n "$me" ] || die "$cmd: 名乗る相手が決まりません（無人なら MYAGENT_AGENT・有人なら --as <agent>）"
+    case "$me" in *[!A-Za-z0-9_-]*) die "$cmd: エージェント名は英数字/_/- のみ" ;; esac
+    [ "$cmd" = "local-done" ] && { [ -n "$mid" ] || die "local-done <id> の id は必須です"; }
+    MB_CMD="$cmd" MB_ME="$me" MB_ID="$mid" MB_ROOT="$ROOT_DIR" python3 -c '
+import os, json, re, sys, glob
+ID   = re.compile(r"^M-[A-Za-z0-9_-]{1,120}$")
+root = os.environ["MB_ROOT"]
+me   = os.environ["MB_ME"]
+newd = os.path.realpath(os.path.join(root, "data/mailbox/new"))
+curd = os.path.realpath(os.path.join(root, "data/mailbox/cur"))
+if not os.path.isdir(newd): sys.exit("mailbox の new/ がありません: %s" % newd)
+
+def load(path):
+    try:
+        with open(path, encoding="utf-8") as f: return json.load(f)
+    except Exception: return None
+
+if os.environ["MB_CMD"] == "local-inbox":
+    msgs, unreadable = [], 0
+    for path in sorted(glob.glob(os.path.join(newd, "*.json"))):
+        d = load(path)
+        if d is None: unreadable += 1; continue      # 黙って落とさない（triage の教訓）
+        if str(d.get("to", "")) == me: msgs.append(d)
+    out = {"ok": True, "agent": me, "inbox_of": me, "source": "spool",
+           "count": len(msgs), "messages": msgs}
+    if unreadable: out["unreadable"] = unreadable
+    print(json.dumps(out, ensure_ascii=False, indent=2))
+    sys.exit(0)
+
+mid = os.environ["MB_ID"]
+if not ID.match(mid): sys.exit("local-done: 不正な id: %r" % mid)
+src = os.path.join(newd, mid + ".json")
+if os.path.realpath(os.path.dirname(src)) != newd: sys.exit("local-done: 不正な参照元")
+if not os.path.exists(src): sys.exit("local-done: new/ に見つかりません: %s" % mid)
+d = load(src)
+if d is None: sys.exit("local-done: 壊れたメッセージです（人が見てください）: %s" % mid)
+if str(d.get("to", "")) != me:
+    # 他人宛を消費させない＝その相手の起動理由を横から消すことになる
+    sys.exit("local-done: 自分(%s)宛ではありません（to=%s）: %s" % (me, d.get("to"), mid))
+if not os.path.isdir(curd): os.makedirs(curd, exist_ok=True)
+dest = os.path.join(curd, mid + ".json")
+if os.path.realpath(os.path.dirname(dest)) != curd: sys.exit("local-done: 不正な格納先")
+os.replace(src, dest)                                 # 本文は編集しない・履歴を消さない
+print(json.dumps({"ok": True, "id": mid, "moved_to": "cur"}, ensure_ascii=False))'
     ;;
 
   approve)

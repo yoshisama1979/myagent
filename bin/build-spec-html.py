@@ -33,6 +33,11 @@ for p in sorted((ROOT / "rules").glob("*.md")):
     SOURCES.append((f"rules/{p.name}", f"rules/{p.stem}.html", ""))
 for p in sorted((ROOT / "rules" / "modes").glob("*.md")):
     SOURCES.append((f"rules/modes/{p.name}", f"mode-rules/{p.stem}.html", ""))
+# 変更履歴はモード本体から分離してある（2026-09-11・実行時に読ませないため）。
+# glob は非再帰なのでサブディレクトリを明示して拾う＝仕様書サイトからは従来どおり辿れる。
+for p in sorted((ROOT / "rules" / "modes" / "changelog").glob("*.md")):
+    SOURCES.append((f"rules/modes/changelog/{p.name}",
+                    f"mode-rules/{p.stem}-changelog.html", f"{p.stem} の変更履歴"))
 
 SRC_TO_OUT = {src: out for src, out, _ in SOURCES}
 

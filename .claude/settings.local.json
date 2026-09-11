@@ -49,15 +49,25 @@
       "Bash(bin/mailbox.sh inbox)",
       "Bash(bin/mailbox.sh inbox:*)",
       "Bash(bin/mailbox.sh done:*)",
+      "Bash(bin/mailbox.sh local-inbox)",
+      "Bash(bin/mailbox.sh local-inbox:*)",
+      "Bash(bin/mailbox.sh local-done:*)",
       "Bash(bin/mailbox.sh send:*)",
       "Bash(bin/mailbox.sh local-send:*)",
       "Bash(bash bin/mailbox.sh inbox)",
       "Bash(bash bin/mailbox.sh inbox:*)",
       "Bash(bash bin/mailbox.sh done:*)",
+      "Bash(bash bin/mailbox.sh local-inbox)",
+      "Bash(bash bin/mailbox.sh local-inbox:*)",
+      "Bash(bash bin/mailbox.sh local-done:*)",
       "Bash(bash bin/mailbox.sh send:*)",
       "Bash(bash bin/mailbox.sh local-send:*)",
       "Bash(bash bin/hp-audit.sh:*)",
       "Bash(bin/.venv/bin/python3 bin/ga4-fetch.py:*)",
+      "Bash(bin/.venv/bin/python3 bin/ga4-cohort.py:*)",
+      "Bash(bin/.venv/bin/python bin/ga4-cohort.py:*)",
+      "Bash(bin/.venv/bin/python3 bin/clarity-fetch.py:*)",
+      "Bash(bin/.venv/bin/python bin/clarity-fetch.py:*)",
       "Bash(bin/.venv/bin/python3 bin/ads-fetch.py:*)",
       "Bash(bin/.venv/bin/python bin/ads-fetch.py:*)",
       "Bash(bin/hp-serp.sh:*)",
@@ -70,7 +80,16 @@
       "Bash(cat:*)",
       "Bash(grep:*)",
       "Bash(stat:*)",
-      "Bash(date:*)"
+      "Bash(date:*)",
+      "Bash(python3 bin/check-writeback.py:*)",
+      "Bash(python3 bin/pending-scan.py:*)",
+      "Bash(python3 bin/analyze-mf.py:*)",
+      "Bash(bin/.venv/bin/python3 bin/hp-links.py:*)",
+      "Bash(bash bin/hana-api.sh todos:*)",
+      "Bash(bash bin/hana-api.sh update-todo:*)",
+      "Bash(bin/hana-api.sh update-todo:*)",
+      "Bash(bash bin/hana-api.sh create-todo:*)",
+      "Bash(bin/hana-api.sh create-todo:*)"
     ],
     "deny": [
       "mcp__mfc-ca__mfc_ca_postJournals",
@@ -88,6 +107,36 @@
           {
             "type": "command",
             "command": "python3 /home/vpsuser/projects/myagent/bin/guard-unattended-edits.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/vpsuser/projects/myagent/bin/office-beacon-hook.py pre"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/vpsuser/projects/myagent/bin/office-beacon-hook.py post"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/vpsuser/projects/myagent/bin/office-beacon-hook.py prompt"
           }
         ]
       }

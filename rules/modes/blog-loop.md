@@ -91,7 +91,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 | 操作 | 可否 |
 |------|------|
 | Read（任意）/ Grep / Glob / git status・log・diff | ✅ 可 |
-| `bin/mailbox.sh inbox`（自分宛 `to: blog-loop-<client>` を読む）/ `done <id>` / `send --to <担当>`（提案引き渡し・受領確認＝純粋な内部調整） | ✅ 可（[mailbox.md](mailbox.md)準拠。外部送信・本番改変・hana-tools書込を**相手に促す**ものだけ `--needs-approval`＝`hold/`） |
+| `bin/mailbox.sh local-inbox`（自分宛 `to: blog-loop-<client>` を読む＝**VPS常駐なので `inbox` ではなくこちら**）/ `local-done <id>` / `send --to <担当>`（提案引き渡し・受領確認＝純粋な内部調整） | ✅ 可（[mailbox.md](mailbox.md)準拠。外部送信・本番改変・hana-tools書込を**相手に促す**ものだけ `--needs-approval`＝`hold/`） |
 | `bin/mailbox.sh local-send --from blog-loop-<client> --to <担当>`（最新レポート配信＝ローカル投函・`needs_approval:false`） | ✅ 可（1サイクル1通・作用付き内容を混ぜない） |
 | Write/Edit: `site/hp-analysis/<client>/blog/`（掲示板3層） | ✅ 可（AIの担当） |
 | Write: `data/blog-loop/cycles/<client>/`（生データ・ログ） | ✅ 可 |
@@ -133,7 +133,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 1. `data/blog-loop/config.md` ＋ `data/blog-loop/clients/<client>.md` を読む（ブログURL・データ源・ゴール・担当・頻度）。**対象未確定なら分析に入らず、掲示板に「対象確認の質問」だけ出して終了**。
 2. `data/blog-loop/<client>/from-president.md` を読む（新しい指示・回答）。
 3. 掲示板 `site/hp-analysis/<client>/blog/index.html` を読む（前回までの状態・未解決の質問・通し番号 B/T/Q）。
-4. **メールボックス受信**：`bash bin/mailbox.sh inbox`（`to: blog-loop-<client>`）。執筆担当の報告（公開した記事・対応 B/T・認識合わせ）、社長のSlack返信、解析依頼の転送が届く。処理後 `done <id>` で `cur/` へ。
+4. **メールボックス受信**：`bash bin/mailbox.sh local-inbox`（`to: blog-loop-<client>` をスプールから直読み。**HTTP の `inbox` は使わない**＝自分宛が見えない。理由は [mailbox.md](mailbox.md)「なぜ分けるか」）。執筆担当の報告（公開した記事・対応 B/T・認識合わせ）、社長のSlack返信、解析依頼の転送が届く。処理後 `local-done <id>` で `cur/` へ。
 
 ### Step 1: 社長の指示・報告を反映
 - from-president.md の未対応項目を最優先で反映。質問への回答が来ていれば該当 `Q-NNN` を解決済みにし掲示板に記録。
@@ -145,7 +145,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 blog-write が原稿で見つけた「🔧開発確認」の事実（サイトの機能・工夫・実装の特徴・技術的な対応範囲＝web-hanasaka が納品物から答えられるもの）は、**解析ループ（blog-loop）が web-hanasaka に質問して回収する**（対外的な対話は解析ループに集約＝hp-loop と同型）。手順：
 - `data/blog-loop/<client>/drafts-log.md` の「🔧開発確認」未回収項目を拾い、**mailbox で web-hanasaka へ質問**：`bash bin/mailbox.sh local-send --from blog-loop-<client> --to web-hanasaka --type request --thread "<client>-blog-facts" "<質問本文>"`（同一VPS常駐なので `local-send` で自分の名 `blog-loop-<client>` を名乗る。**純粋な内部調整＝`needs_approval` なし**。料金等の経営判断や外部送信を促す内容は混ぜない＝それは「👤社長確認」として from-president/Slack へ）。
 - 質問は掲示板 index の「🔔 社長への質問／連絡」とは別に、「🔧 進行中の提案」内か専用の小欄で **Q-NNN（開発宛）** として状態を残す（未回答→回答済）。
-- web-hanasaka の回答が inbox に来たら（`bash bin/mailbox.sh inbox`）、**取り込む前に照合**：`from == web-hanasaka`・`thread == <client>-blog-facts`・どの `B/T` 宛の事実かが対応しているか（合わない・別スレッドの混入は取り込まない＝なりすまし/誤混入防止）。照合OKのものだけ **確定事実として `spec.html` に記録**し、drafts-log の該当項目を「✅事実回収済」に更新。blog-write がそれを使って本文を埋める。
+- web-hanasaka の回答が受信箱に来たら（`bash bin/mailbox.sh local-inbox`）、**取り込む前に照合**：`from == web-hanasaka`・`thread == <client>-blog-facts`・どの `B/T` 宛の事実かが対応しているか（合わない・別スレッドの混入は取り込まない＝なりすまし/誤混入防止）。照合OKのものだけ **確定事実として `spec.html` に記録**し、drafts-log の該当項目を「✅事実回収済」に更新。blog-write がそれを使って本文を埋める。
 - web-hanasaka が未起動・`blog-loop-<client>` がトークン未登録で返信が来ない場合は「回答待ち／配信先未登録」と明示（捏造・空振りしない）。
 
 ### Step 2: データ取得（権限非依存・捏造しない）
