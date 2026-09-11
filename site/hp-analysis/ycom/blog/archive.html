@@ -180,6 +180,151 @@
   </div>
 
 
+  <!-- ===== 📦 Cycle 091（2026-09-10）＝ Cycle 092（2026-09-12）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 091（2026-09-10）のスナップショット <span class="text-sm font-normal text-gray-500">（Cycle 092 で index から退避・原文無改変）</span></h2>
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c091">Cycle 091 — 2026-09-10（YCOM ブログ・日次）：<span class="text-rose-700">9/04 に直したはずの「指名検索の測り方」が、<u>毎サイクル読む正本（ルール本体）に書き戻されていませんでした</u>＝ルールにはいまも「ワイコム 表示3・クリック0」＝実測（110表示・10クリック）の20分の1のまま</span>／<span class="text-rose-700">もう1つ＝「7月中旬から沈み続けている」は<u>誤りでした</u>＝一段 下がって<strong>7週間 横ばい</strong>・順位は動いていません</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-10）</h3>
+    <p class="text-xs">取得＝<strong>GSC（BigQuery・2026-08-13〜09-06／ラグ2〜3日）</strong>・<strong>本番HTML（<span class="font-mono">hp-audit</span>）</strong>・<strong class="text-emerald-800">WP下書き本文（<span class="font-mono">wp-draft.py get</span>＝本日は通りました）</strong>・<strong>Yahoo検索（<span class="font-mono">hp-serp</span>）</strong>。未取得＝GA4／<span class="font-mono">curl</span>・<span class="font-mono">hp-head.py</span>（許可リスト外）。<br>
+    <strong class="text-emerald-800">自己解決1件</strong>：昨日「<span class="font-mono">wp-draft.py</span> が許可リストに無い」と書きましたが、<u><span class="font-mono">--client ycom</span> を付ける形なら通りました</u>（＝「bash 前置ギャップ」と同型）。おかげで<strong>8365 のタイトルと <span class="font-mono">?p=2117</span> の本文を、WPの中身そのもので確認できました</strong>。</p>
+  </div>
+
+  <!-- 中心① -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">中心①＝正しい測り方は 9/04 に確定していたのに、<u>正本（ルール本体）に書き戻されていませんでした</u></h3>
+    <p class="text-xs mb-2"><strong class="text-emerald-800">先に、私の名誉のためでなく正確さのために書きます</strong>：「指名検索は『株式会社はなさか』＋『ycom』で測る／『ワイコム』はほとんど検索されていない」ことは、<u>2026-09-04（Cycle 085）に確定し <a href="spec.html" class="underline">📐確定・仕様</a>に記録済み</u>でした（当時の基準値＝124表示・14クリック）。<strong>本日 見つけたのは、その先です。</strong><br>
+    <strong class="text-rose-700">本モードのルール本体（<span class="font-mono">rules/modes/blog-loop.md</span> の北極星の注記）は、いまも「指名検索『ワイコム』28日で表示3・クリック0」＝<u>8/10 の測り方のまま</u>です。</strong>＝私が毎サイクルの冒頭で読む文書のほうが古く、<u>「①→②の橋がほぼゼロ」という誤った前提を毎朝 読み込んでいる</u>状態でした。<span class="text-gray-600">掲示板（spec）に書いて満足し、正本に書き戻していなかった＝<strong>入口が複数ある記録の典型的な事故</strong>です。</span></p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">検索語</th><th class="py-1 pr-3">表示</th><th class="py-1 pr-3">クリック</th><th class="py-1 pr-3">平均順位</th><th class="py-1">受けているページ</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">株式会社はなさか</td><td class="py-1 pr-3">46</td><td class="py-1 pr-3 font-bold">6</td><td class="py-1 pr-3">1.5</td><td class="py-1"><span class="font-mono">/</span>・<span class="font-mono">/company/</span>・<span class="font-mono">/works/</span>・<span class="font-mono">/service/</span></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">ycom</td><td class="py-1 pr-3">59</td><td class="py-1 pr-3 font-bold">4</td><td class="py-1 pr-3">4.2</td><td class="py-1"><span class="font-mono">/</span>・<span class="font-mono">/company/</span>・<span class="font-mono">/service/</span>・<span class="font-mono">/contact/create/</span> ほか</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">ワイコム</td><td class="py-1 pr-3">5</td><td class="py-1 pr-3">0</td><td class="py-1 pr-3">4.5</td><td class="py-1"><span class="font-mono">/</span></td></tr>
+        <tr class="bg-rose-50"><td class="py-1 pr-3 font-bold">合計</td><td class="py-1 pr-3 font-bold">110</td><td class="py-1 pr-3 font-bold">10</td><td class="py-1 pr-3">—</td><td class="py-1 font-bold text-rose-700">ブログ記事＝0本</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs mb-2"><strong>前回の基準値（9/04＝124表示・14クリック）との比較</strong>：本日 <strong>110表示・10クリック</strong>＝<u>横ばい</u>です（spec の「1日数件の規模なので桁で見る」に従い、増減で良し悪しは申しません）。<strong class="text-amber-900">なお「はなさか」を期間で割ると</strong> <u>8/13〜8/25で37表示・5クリック／8/26〜9/06 は10表示・1クリック</u>＝<strong>8月中旬の山</strong>で、そのあと戻っています（<span class="font-mono">B-058</span>・<span class="font-mono">B-073</span> の検査の自己適用）。<u>推測：一時的に社名が人目に触れた何かで、積み上がった指名ではありません。</u>ご回答は不要です。</p>
+    <p class="text-xs bg-emerald-50 border border-emerald-300 rounded p-2"><strong class="text-emerald-800">構造の事実も、9/04 のまま変わっていません（本日 再確認）。</strong>110表示・10クリックの受け皿は <span class="font-mono">/</span>・<span class="font-mono">/company/</span>・<span class="font-mono">/works/</span>・<span class="font-mono">/service/</span> の4枚だけで、<strong class="text-rose-700">ブログ記事が受けた指名検索は 1件もありません</strong>（<span class="font-mono">/contents/</span> のタグページに1表示のみ）。＝<span class="font-mono">B-034</span>（記事テンプレに「最終更新日」「書いた会社」＋構造化データ）の根拠は、そのまま生きています。<strong>本日 直したいのは提案ではなく、<u>正本に残っている古い数字</u>のほうです</strong>（→ <span class="font-mono">B-076</span>）。</p>
+  </div>
+
+  <!-- 中心② -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">中心②（自己訂正）＝「7月中旬から<u>沈み続けている</u>」は誤り。実測は「<u>一段 下がって、7週間 横ばい</u>」でした</h3>
+    <p class="text-xs mb-2">掲示板の ⛳ と 📥⑬ に「7月中旬から沈み続けています」と書いてきました。本日、週ごとに割って測り直しました。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">週（サイト全体）</th><th class="py-1 pr-3">クリック</th><th class="py-1 pr-3">表示</th><th class="py-1">平均順位</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3">6/08〜6/14</td><td class="py-1 pr-3">683</td><td class="py-1 pr-3">21,884</td><td class="py-1">9.0</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3">7/06〜7/12</td><td class="py-1 pr-3">581</td><td class="py-1 pr-3">19,863</td><td class="py-1">10.1</td></tr>
+        <tr class="border-b border-gray-200 bg-amber-50"><td class="py-1 pr-3 font-bold">7/20〜7/26</td><td class="py-1 pr-3 font-bold">422</td><td class="py-1 pr-3 font-bold">14,743</td><td class="py-1 font-bold">8.8</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3">8/17〜8/23</td><td class="py-1 pr-3">422</td><td class="py-1 pr-3">15,290</td><td class="py-1">11.2</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3">8/24〜8/30</td><td class="py-1 pr-3">412</td><td class="py-1 pr-3">15,478</td><td class="py-1">12.0</td></tr>
+        <tr><td class="py-1 pr-3">8/31〜9/06</td><td class="py-1 pr-3">385</td><td class="py-1 pr-3">14,878</td><td class="py-1">10.3</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs mb-2"><strong>読み方</strong>：下がったのは <u>7/06週 → 7/20週の1回だけ</u>（表示 −26%）。<strong>そこから7週間、14,700〜15,500 でほぼ動いていません。</strong>「沈み続けている」は誤った表現でした。<u>8/21 の侵害隔離より1か月 前の出来事です＝侵害対応が原因ではありません。</u></p>
+    <p class="text-xs mb-2"><strong class="text-rose-700">そして、いちばん大事な事実</strong>：この一段下げは<u>1ページの問題ではなく、上位記事すべてに同時に起きていて、順位は動いていません</u>。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b border-rose-300 text-rose-900"><th class="py-1 pr-3">記事</th><th class="py-1 pr-3">表示（7/06週 → 7/20週）</th><th class="py-1">平均順位（同）</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">?p=2117</td><td class="py-1 pr-3">2,739 → 1,627（<strong>−41%</strong>）</td><td class="py-1">6.3 → 6.4</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">?p=7528</td><td class="py-1 pr-3">2,435 → 1,697（−30%）</td><td class="py-1">9.4 → 9.4</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">?p=6141</td><td class="py-1 pr-3">1,813 → 1,477（−19%）</td><td class="py-1">6.3 → 6.8</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 font-mono">?p=5641</td><td class="py-1 pr-3">492 → 374（−24%）</td><td class="py-1">9.6 → 9.3</td></tr>
+        <tr><td class="py-1 pr-3 font-mono">?p=6568</td><td class="py-1 pr-3">594 → 384（−35%）</td><td class="py-1">11.7 → 8.1</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs bg-amber-50 border border-amber-300 rounded p-2"><strong>順位はそのままで、表示だけが全ページ一斉に減っています。</strong>＝減ったのは「自社の見え方」ではなく<u>「検索された回数」のほう</u>です。<strong class="text-rose-700">これは記事の文言（タイトル・説明文・本文）では戻せません。</strong><span class="text-gray-600">推測：夏季の需要減が最有力です（素材・PC・CSS といった調べもの系が主力のため）。ただし<u>断定しません</u>＝前年同期と比べれば一発で分かりますが、<strong>BigQuery のエクスポートは 2026-06-06 から</strong>で、前年同期は<u>原理的に取得できません</u>（本日 実測）。→ 📥 の「GSC画面の前年同期比較」は、<strong>私の側では代替不能</strong>だと確定しました。急ぎません。</span></p>
+    <p class="text-xs mt-2"><strong>⛳ の根拠を1つ弱めます</strong>：<span class="font-mono">/price/basic.html</span> の週次は <u>368表示3クリック（8/10週）→ 367/7（8/17週）→ 278/1（8/24週）→ 285/1（8/31週）</u>、順位 11.2 → 12.8 → 16.1 → 14.5＝<strong>横ばい</strong>です。これまで書いていた「9.3位 → 14.0位 → 21.8位 → 18.5位」は<u>「ホームページ制作 料金表」1語の順位</u>で、ページ全体ではありませんでした。<strong class="text-emerald-800">8365 を公開していただきたい理由そのものは変わりません</strong>＝ブログ側に料金帯を受ける記事が<u>いまも0本</u>だからです（本日の実測＝「料金」を含む検索は28日 532表示・クリック1件、受けているのは <span class="font-mono">/price/basic.html</span> 1枚だけ）。</p>
+  </div>
+
+  <!-- 定点観測 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">🩺 定点観測（本日の実測）</h3>
+    <table class="w-full text-xs border-collapse">
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3 w-1/3">下書き <span class="font-mono">8365</span>（料金相場）</td><td class="py-1">HTTP <strong>500</strong>＝未公開（<span class="font-mono">wp-draft get</span> でも <span class="font-mono">status=draft</span>）。<strong class="text-rose-700">投入から25日目</strong></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3"><span class="font-mono">8365</span> のタイトル</td><td class="py-1">「…目的別の料金目安と、見積もりで失敗しないコツ【大阪】」＝<u>変更なし</u>（<span class="font-mono">B-043</span>・<span class="font-mono">B-064</span> 未実行）。<strong class="text-emerald-800">公開の前提ではありません</strong></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3"><span class="font-mono">?p=2117</span> の社内メモ</td><td class="py-1"><strong class="text-rose-700">WP本文に、まだ残っています</strong>（本日 <span class="font-mono">wp-draft get</span> で本文を実測＝該当段落を1件 検出）。<strong class="text-rose-700">57日目</strong>。28日で267→<strong>260クリック</strong>・6,149表示ぶんの読者が到達しています</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 pr-3"><span class="font-mono">Q-011</span>（作業の宛先）</td><td class="py-1">未回答・4日目。<u>本日も催促を厚くしていません</u></td></tr>
+        <tr><td class="py-1 pr-3">ブログ最大の入口</td><td class="py-1"><span class="font-mono">?p=2117</span> 28日 260クリック／6,149表示／7.1位。「世界地図 フリー素材」だけで 1,598表示・36クリック・5.9位（CTR 2.25%）＝<span class="font-mono">B-046</span> の対象は変わらず</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 提案 -->
+  <div class="bg-white border-2 border-violet-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B</span>）＝3件。<span class="text-emerald-800">3件とも「可否1行」だけで、社長のお手間はそれ以上ありません</span></h3>
+
+    <div class="border border-violet-300 rounded p-3 mb-3">
+      <p class="font-bold text-violet-900"><span class="font-mono">B-076</span>【🔴・可否1行・<u>ルール文書の編集許可</u>】9/04 に確定した「指名検索の測り方」を、<u>ルール本体（正本）に書き戻したい</u></p>
+      <ul class="list-disc list-inside text-xs mt-1 space-y-0.5">
+        <li><strong>観察</strong>：<a href="spec.html" class="underline">📐確定・仕様</a>には 9/04 に「はなさか＋ycom で測る・基準値124表示14クリック」と確定済み。<strong class="text-rose-700">しかし <span class="font-mono">rules/modes/blog-loop.md</span> の北極星の注記は「指名検索『ワイコム』28日で表示3・クリック0」＝8/10 のまま</strong>で、そこから「①→②の橋がほぼゼロ」と書かれています。</li>
+        <li><strong>なぜ問題か</strong>：私が<u>毎サイクルの冒頭で読むのはルール本体</u>です。掲示板に正しい数字があっても、正本が古ければ<strong>毎朝 誤った前提から出発します</strong>。「橋がほぼゼロ」と「110表示あるがブログが受けていない」では打つ手が違います（後者＝<span class="font-mono">B-034</span>）。<span class="text-gray-600">＝入口が複数ある記録を、書いて終わりにしていた事故です。</span></li>
+        <li><strong>改善案</strong>：①ルールの北極星の注記を実測値に更新（<span class="font-mono">rules/modes/blog-loop.md</span>／同型の記述があれば <span class="font-mono">hp-loop.md</span> も）＝<u>「はなさか＋ycom＋ワイコム の3語 合算。2026-09-10 実測 110表示・10クリック。受けているのは会社案内側4ページのみでブログ記事は0本」</u>。②以後の定点観測に「指名検索 3語 合算」を1行 加える。</li>
+        <li><strong>効果</strong>：中（四半期の橋の点検＝A-051 が正しい数字で回ります）／<strong>工数</strong>：小／<strong>優先度</strong>：🔴／<strong class="text-rose-700">栓</strong>：🟥 ルールファイルの編集は社長の明示的な許可をいただく約束です（<span class="font-mono">Q-010</span> と同じ理由）。<u>「はい」の1行で結構です。</u></li>
+      </ul>
+    </div>
+
+    <div class="border border-violet-300 rounded p-3 mb-3">
+      <p class="font-bold text-violet-900"><span class="font-mono">B-077</span>【🟡・可否1行（<span class="font-mono">B-049</span> に同梱で可）】判断ルールをもう1つ＝「<u>順位が動いていないのに表示だけ減った面は、文言の修理では戻らない</u>」</p>
+      <ul class="list-disc list-inside text-xs mt-1 space-y-0.5">
+        <li><strong>観察</strong>（本日）：7/06週→7/20週で上位5記事の表示が <u>−19〜41%</u> 減り、<strong>平均順位はどれも動いていません</strong>（6.3→6.4／9.4→9.4／6.3→6.8／9.6→9.3／11.7→8.1）。</li>
+        <li><strong>なぜ問題か</strong>：この形を見て「アクセスが落ちた＝タイトルや説明文を直そう」と動くと、<u>原因が需要側にあるので必ず空振り</u>します。<span class="font-mono">B-051</span>（表示は保たれCTRだけ落ちた面は対象外）の逆側の見分けです。</li>
+        <li><strong>改善案</strong>：検査一式（<span class="font-mono">B-051</span>／<span class="font-mono">B-058</span>／<span class="font-mono">B-063</span>／<span class="font-mono">B-072</span>／<span class="font-mono">B-073</span>）に1項目 追加＝「<u>順位が±1位以内なのに表示が2割以上 減った</u>面は修理対象にしない。まず同時期に他ページも一斉に減っていないかを見る（一斉なら需要側）」。<strong>効果</strong>：中／<strong>工数</strong>：小／<strong>優先度</strong>：🟡</li>
+      </ul>
+    </div>
+
+    <div class="border border-violet-300 rounded p-3">
+      <p class="font-bold text-violet-900"><span class="font-mono">B-078</span>【🟢・可否1行（<span class="font-mono">B-049</span> に同梱で可）】これから増えるはずだった作業を1件 止める＝<span class="font-mono">?p=7024</span> を <span class="font-mono">B-036</span>（説明文の修理）の対象に加えない</p>
+      <ul class="list-disc list-inside text-xs mt-1 space-y-0.5">
+        <li><strong>観察</strong>（本日）：<span class="font-mono">?p=7024</span>（ページ内リンクの設置の仕方）の説明文は「<u>こんにちは、外出自粛が続いていますが…</u>」＝本文の自動切り出しで<u>主題の語がゼロ</u>＝いかにも直したくなる形です。<strong class="text-rose-700">しかし主要語の順位は 40〜83位</strong>（「ページ内リンク」16表示 61.8位／「htmlページ内リンク」12表示 59.0位／すべてクリック0）。同じ帯は <span class="font-mono">?p=5641</span> が 12.2位・76クリックで受け切っています。</li>
+        <li><strong>なぜ問題か／改善案</strong>：3ページ目より後ろの面は、説明文を直しても<u>読者の目に入りません</u>（<span class="font-mono">B-075</span> と同型）。<span class="font-mono">B-036</span> の対象は現状の3本（<span class="font-mono">?p=2117</span>・<span class="font-mono">?p=2082</span>・<span class="font-mono">?p=8137</span>）のままとし、<span class="font-mono">?p=7024</span> は今後も対象外に。<strong>工数</strong>：0／<strong>優先度</strong>：🟢</li>
+      </ul>
+    </div>
+
+    <p class="text-xs text-gray-600 mt-3"><strong>本日、新しい「記事の直し」を1件も足していない理由</strong>：上位の面を上から順に見直しましたが、<u>買い手になりうる面の直しは既に4件（<span class="font-mono">B-046</span>・<span class="font-mono">B-047</span>・<span class="font-mono">B-055</span>・<span class="font-mono">B-056</span>）で押さえてあり、いずれも 🔒 保留待ち</u>です。新しく上位に出てきた <span class="font-mono">?p=8295</span>・<span class="font-mono">?p=8061</span> は<u>どちらも CSS の実装記事</u>で、<span class="font-mono">B-067</span> の「架けない」側に該当します（読者は制作者）。<strong>数合わせで5件目を足すことはしません。</strong></p>
+  </div>
+
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T</span>）＝1件。<span class="text-gray-600 text-sm font-normal">（完成在庫8本が未公開のため、本日は<u>1本に絞りました</u>＝ゼロにはしません）</span></h3>
+    <p class="font-bold text-sky-900"><span class="font-mono">T-048</span>【🟡・ご回答不要】「料金表を公開している制作会社と、『お問い合わせください』の会社——見積を取る前に読み取れること」</p>
+    <ul class="list-disc list-inside text-xs mt-1 space-y-0.5">
+      <li><strong>想定読者</strong>：複数社の料金表を並べて見比べている検討層（＝③依頼にいちばん近い層）。</li>
+      <li><strong>狙う検索意図・実需の裏（本日 実測）</strong>：「ホームページ制作 料金表」197表示・19.5位・クリック0／「web制作会社 料金表」53表示・9.4位・クリック0／「ホームページ制作 料金」139表示・21.2位・クリック0。<strong class="text-emerald-800">検索結果側も実測しました</strong>（<span class="font-mono">hp-serp</span>「ホームページ制作 料金表」）＝<u>上位10件のうち6件が制作会社の自社料金ページ、4件がメディアのコラム</u>。<strong class="text-rose-700">＝この語で主役になるのは「自社の料金表ページ」で、相場解説のブログ記事ではありません。</strong>だから本記事は相場を並べず、<u>「料金表の出し方から会社を読む」</u>という別の角度にします。</li>
+      <li><strong>タイトル案</strong>：「料金表を公開している制作会社と、『お問い合わせください』の会社——どちらに頼むべきか」</li>
+      <li><strong>アウトライン</strong>：
+        <ul class="list-disc list-inside ml-4 mt-1 space-y-0.5">
+          <li><strong>h2①</strong> 料金表を出せる会社と、出せない会社の違い（＝作るものが決まっているかどうか。良し悪しではありません）</li>
+          <li><strong>h2②</strong> 公開されている金額は「どこまで」の金額か — <u>h3</u>：一式いくら型／ランク型／単価×点数型 の3タイプと、それぞれ<strong>含まれていないもの</strong>（原稿・写真・サーバー・保守）</li>
+          <li><strong>h2③</strong> 「お問い合わせください」でも問題ない場合（要件が固まっていない／システムを含む／既存サイトの引き継ぎ）</li>
+          <li><strong>h2④</strong> 見積を依頼する前に、こちら側で決めておくこと3つ（→ <span class="font-mono">T-047</span> へ内部リンク。ここでは1段落に留める＝重複させない）</li>
+          <li><strong>h2⑤</strong> 参考：当社は公開しています（<u>金額は本文に書かず、料金ページへのリンク1本だけ</u>）</li>
+        </ul>
+      </li>
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/price/basic.html</span>（本命）／<span class="font-mono">T-037</span>／<span class="font-mono">T-047</span>／下書き 8365（公開後）。<strong>CTA</strong>：<span class="font-mono">Q-009</span> のご回答後に確定（暫定 <span class="font-mono">/service/free_advice.html</span>）。</li>
+      <li class="text-emerald-800"><strong>栓なし</strong>：<u><span class="font-mono">Q-002</span>②（記事本文に自社の金額を書いてよいか）のご回答を待ちません</u>＝h2⑤ はリンクのみで成立します。</li>
+      <li class="text-amber-900"><strong>⚠️ カニバリ注意（自己申告）</strong>：<span class="font-mono">T-037</span>（制作会社の料金表は、なぜ並べても比べられないのか）と同じ帯です。<u>別記事にせず <span class="font-mono">T-037</span> の h2 として束ねる</u>のも十分ありだと考えています。<strong>執筆に入る時点で、どちらか一方に決めてください</strong>（私の推奨＝<span class="font-mono">T-037</span> に束ねる。理由＝この帯で自社が持てる面は多くて1枚だからです）。</li>
+      <li><strong>効果</strong>：中（③依頼層）／<strong>工数</strong>：中／<strong>優先度</strong>：🟡（着手は publish が1本 動いてから＝在庫を積まない既定方針）</li>
+    </ul>
+    <p class="text-xs text-gray-600 mt-2"><strong><span class="font-mono">T-027</span> の一次資料を更新しました</strong>（新しい作業は増えません）：「順位は落ちていないのに、アクセスだけ減っていませんか？」の実例を、本日の実測（<u>上位5記事が一斉に −19〜41%・順位は不変・7週間 横ばい</u>）に差し替え。<u>自社の数字を出してよいかは 📥 でお伺いしたままです＝出さずに一般論でも書けます。</u></p>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-10）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：<span class="font-mono">data/blog-loop/ycom/from-president.md</span> に追記はありません（最終＝2026-06-23）。<strong class="text-rose-700"><span class="font-mono">Q-011</span> は4日目・未回答</strong>のため、本日も同じお願いを大きく書き直さず、日数だけ進めました。</li>
+      <li><strong>メールボックス</strong>：<span class="font-mono">to: blog-loop-ycom</span> 宛の新着なし（<span class="font-mono">inbox</span> は本日も <span class="font-mono">hp-loop</span> を名乗ります＝📥 Overseer ①のまま）。</li>
+      <li><strong class="text-rose-700">自己訂正2件</strong>：①9/04 に確定した測り方が<u>正本（ルール本体）に書き戻されていませんでした</u>（→ <span class="font-mono">B-076</span>。<span class="text-gray-600">※本日いったん「1語で測っていた」と書きかけましたが、<u>spec を読み返して事実を訂正しました</u>＝直っていたのは掲示板で、直っていなかったのはルールです</span>）／②「7月中旬から沈み続けている」は誤り＝一段 下がって7週間 横ばい・順位は不変（⛳ と 📥⑬ の表現を本日 修正）。<strong class="text-emerald-800">どちらも「社長にお願いしていること」は変わりません。</strong></li>
+      <li><strong>執筆担当への配信</strong>：本日は <span class="font-mono">local-send</span> を<u>行っていません</u>。理由＝本日の新規3件（<span class="font-mono">B-076</span>・<span class="font-mono">B-077</span>・<span class="font-mono">B-078</span>）は<u>すべて判断ルールと「やらないことを決める」提案</u>で、<strong>執筆担当が着手する内容が1つも変わらない</strong>ためです（1サイクル1通・変化のない日は送らない）。次回起動は 2026-09-14（月）05:30／06:00。</li>
+      <li><strong class="text-emerald-800">本日 できるようになったこと</strong>：<span class="font-mono">wp-draft.py get --client ycom --id …</span> が通り、<u>WPの中身（8365 のタイトル・<span class="font-mono">?p=2117</span> の本文）を実測</u>できました。<strong>できなかったこと</strong>＝<span class="font-mono">curl</span>／<span class="font-mono">hp-head.py</span>／<span class="font-mono">hp-diff.py</span>（許可リスト外・<span class="font-mono">hp-diff</span> は<u>13日連続</u>）。</li>
+      <li><strong>自己改善（Step 7）</strong>：<span class="font-mono">data/hp-improve/skill-kaizen.md</span> に追記＝<strong class="text-amber-900">🙋要・社長判断</strong>「<u>掲示板に確定を書いても、毎サイクル読む正本が古いままなら誤った前提から出発する</u>」（<span class="font-mono">K-782</span>）／「<u>『私が間違えていた』も、実測してから書く</u>」（<span class="font-mono">K-783</span>＝本日 実際にやりかけました）／「<u>『通らない』と書いたコマンドは、引数の形を変えて1回だけ再試行する</u>」（<span class="font-mono">K-784</span>）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 090 の本文を<a href="archive.html#c090" class="underline">アーカイブへ退避</a>（原文無改変・共通規律 §4 の順序＝①archive へ追記 →②存在を確認〈<span class="font-mono">id="c090"</span> 1件・<span class="font-mono">&lt;div&gt;</span> 開き391／閉じ391 で balanced〉→③本体から削除）。<strong class="text-rose-700">お約束した「当日レポート 20KB 以下」は、本日も達成できていません＝3日連続、しかも<u>昨日より悪化しました（23.2KB → 30.4KB）</u>。</strong>掲示板全体は <strong class="text-rose-700">157.8KB → 171.4KB（＋13.6KB）</strong>。<span class="text-gray-600">内訳＝退避 −30.9／本日のレポート +30.4／繰り越しの更新 +14.1。<u>書いたあとで削る努力（4か所）でも 0.5KB しか減りませんでした</u>＝本日の中身は実測の表が半分で、落とすと自己訂正2件（物差し・「沈み続けている」の誤り）の根拠が消えます。<strong>＝「当日レポートを縮める」という私の約束は、3日試して<u>果たせないと分かりました</u>。取り下げて、代わりに 4層化のお願い1本に絞ります。</strong></span><strong>4層化（<span class="font-mono">backlog.html</span> 分離）のお願いは16日目・継続します</strong>＝「🔧進行中」の繰り越しだけで約47KBあり、当日レポートをゼロにしても 100KB を切れません。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 090（2026-09-09）＝ Cycle 091（2026-09-10）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">📦 Cycle 090（2026-09-09）のスナップショット <span class="text-sm font-normal text-gray-500">（Cycle 091 で index から退避・原文無改変）</span></h2>
   <!-- ============================================================ -->
