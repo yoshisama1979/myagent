@@ -70,7 +70,7 @@
 | `rules/modes/hana-memo.md` | **hana-tools のプロジェクトメモへ残存課題・重要仕様を登録・更新するとき**（`/hana-memo`）。API仕様・全置換の鉄則（GET→統合→POST）・HTMLサニタイズ制約。固有値（ベースURL・project_id）は `project-config.md` を正とする |
 | `rules/modes/hp-loop-dialogue.md` | **外部の分析ループ（はなさかAI HP分析ループ）から改善提案を受け取った時**。検証→対応→提案元への報告の標準フロー（R-NNN/Q-NNN の扱い、提案元の限界＝静的GETのみ・SPA/ログイン後は見えない、報告文の作り方）。対の分析ループが無いプロジェクトは出番なし |
 | `rules/modes/mailbox.md` | **hp-loop など別マシンのエージェントとメールボックス（共有受信箱）でやり取りする時**。受信箱を読む／報告・質問を送る操作と、社長承認ゲート（`--needs-approval`）。報告の中身は `rules/modes/hp-loop-dialogue.md` に従う＝こちらは送受信の土管。宛名・トークン未配布のプロジェクトは出番なし |
-| `.claude/rules/private.md`（常時） | 環境固有の実行メモ（各マシン・各プロジェクトで記入。テンプレ時点は雛形） |
+| `.claude/rules/private.md`（常時） | 環境固有の実行メモ＋**検証の落とし穴**（各マシン・各プロジェクトで記入。テンプレ時点は雛形。**2 回目に踏んだら回避手順を書く**＝セッションを分けると会話の知見は共有されない） |
 
 ## スラッシュコマンド (.claude/commands/)
 

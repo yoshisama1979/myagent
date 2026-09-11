@@ -49,7 +49,7 @@ GUIDES = {
             "§7 正本と番号", "§9 やってはいけないこと（統括）",
         ],
         "claude-rules/website/rules/modes/developer.md": [
-            "§4 1 日の流れ", "§5.3 報告 7 項目", "§5.6 直接指示を受けたとき",
+            "§4 1 日の流れ", "§5.3 報告 8 項目", "§5.6 直接指示を受けたとき",
             "§9 やってはいけないこと（開発）",
         ],
         "claude-rules/website/rules/modes/build-progress.md": [
@@ -70,7 +70,7 @@ GUIDES = {
             "§9 やってはいけないこと（開発）", "§11 導入チェックリスト",
         ],
         "claude-rules/website/documents/pending-issues.md": [
-            "§5.3 報告 7 項目（範囲外の気づき）", "§7 正本と番号（PI-NNN）",
+            "§5.3 報告 8 項目（範囲外の気づき）", "§7 正本と番号（PI-NNN）",
         ],
         "claude-rules/website/documents/rule-improvements.md": [
             "§7 正本と番号（RI-NNN）",
