@@ -110,8 +110,9 @@ automation.md §3（外部送信・書き込み・破壊的操作は合意なし
 
 ## 各モードでの使い方
 
-- **サイクル先頭（Step 0 相当）で受信箱を読む**：`bash bin/mailbox.sh inbox`。自分宛 `new/` の未読を取得。
-- 処理したら `bash bin/mailbox.sh done <id>` で `cur/` へ移す。**メッセージ本体は編集しない**。自分宛のメッセージだけ done にできる（admin は例外）。
+- **サイクル先頭（Step 0 相当）で受信箱を読む**：**VPS常駐モード（`hp-loop-<site>`・`blog-loop-<client>` 等）は `bash bin/mailbox.sh local-inbox`**（スプール直読み）。別マシンのエージェントは従来どおり `bash bin/mailbox.sh inbox`（HTTP）。
+  - **なぜ分けるか（2026-09-11・実害37日）**：`inbox` は HTTP API で、**身元を決めるのは `.env` の `MAILBOX_TOKEN`** であって名乗りではない。VPS のトークンは旧来の総称 `hp-loop` のままなので、宛名がサイト別（`hp-loop-ycom` 等）へ移行したあとは **自分宛が1通も見えない**（常に `count: 0`）。一方 dispatcher（`agent-tick.sh`）は**スプールの `to:` をファイルで直接数える**ため「新着あり」と判定して起動する＝**起動はするが消費できない**無限ループになる（`hp-loop:ycom-noprogress` が14日で7回・8件が37日滞留）。`local-inbox` は dispatcher と同じ `to:` を見る＝**正が1つになる**。
+- 処理したら **`bash bin/mailbox.sh local-done <id>`**（VPS常駐）／`bash bin/mailbox.sh done <id>`（別マシン）で `cur/` へ移す。**メッセージ本体は編集しない**。自分宛のメッセージだけ done にできる（admin は例外）。`local-done` は `to:` が自分でなければ拒否する＝**他レーンの起動理由を横から消さない**。
 - 送信は `bash bin/mailbox.sh send --to <agent> --subject "件名" [--type ...] [--thread ...] [--needs-approval] [本文]`（本文は引数末尾 or 標準入力）。外部・破壊的作用を促すものは `--needs-approval` を付け、`hold/` に入れて社長承認を待つ。
 
 > `approve`（`hold/` → `new/`）はスライス3以降。現在サーバが `501` を返す（社長用ブラウザビューと併せて実装）。
@@ -130,6 +131,8 @@ automation.md §3（外部送信・書き込み・破壊的操作は合意なし
 | **`hold/` → `new/` の承認（approve）** | **社長（admin）のみ**（スライス3以降） |
 | 既存メッセージの本文を編集・削除 | ❌ 不可（append-only。履歴を消さない） |
 | 他人の inbox を覗く | ❌ 不可（admin を除く） |
+| `reporter` ロールでの受信・処理済み化・`rule-kaizen` 以外への送信 | ❌ 不可（投函専用） |
+| 発行台帳（`data/rule-reporters.md`）を手で編集する | ❌ 不可（`bin/rule-reporter.py` が表から組み立てる） |
 | `data/secrets/mailbox-tokens.json` の実値を読む・表示する | ❌ 不可（automation.md §2） |
 | トークンをログ・通知・コミットに出す | ❌ 不可 |
 
@@ -166,7 +169,60 @@ openssl rand -hex 24
 - 登録後、別マシンの開発エージェントが `bash bin/mailbox.sh send --to rule-kaizen …` で送れるようになる。未登録のうちは送信側が `unknown_recipient` で弾かれる（テンプレ側はその場合 `rule-improvements.md` に残して社長に伝える設計＝空振りしない）。
 - 受信は VPS 常駐の local-send は経由しない（別マシンからの HTTP `send` が唯一の投函経路）。将来 VPS 内のモードから rule-kaizen へ流したくなったら `bin/mailbox.sh` の `RECIPIENTS` に追加する。
 - **処理済み化（棚卸し時）**：`rule-kaizen` は認証主体を持たないため、宛先本人としての `mailbox.sh done` はできない（サーバは「宛先本人か admin のみ done 可」）。棚卸しでは **president=admin トークンの `mailbox.sh done <id>`**、または VPS 上で当該 JSON を `new/`→`cur/` へ直接移動して処理済みにする（本文は編集しない）。これらは slack 由来でないため slack-poll の追跡状態はなく、filesystem 移動で整合が崩れない。
-- **トークン漏洩時の影響（自覚しておく）**：万一この登録トークンが漏れると、通常 agent 権限として `rule-kaizen` 宛 inbox の閲覧・`done`、および `from: rule-kaizen` を名乗る送信が可能になる。だから `.env` に置かず `data/secrets/` に留める（automation.md §2）。将来コードを触るなら「受信専用（`from` になれず認証もしない）sink ロール」を分離するとより堅い（現状は agent ロールで代用）。
+- **この sink エントリのロールは `reporter` にする**（2026-09-11）。宛先として実在させるだけで誰も認証しないので、権限は最小でよい。万一このトークンが漏れても **`rule-kaizen` 宛に投函できるだけ**で、受信箱は読めず `done` もできない（`agent` のままだと目安箱の中身を読まれる）。`.env` に置かず `data/secrets/` に留めるのは従来どおり（automation.md §2）。
+
+---
+
+## ルール通知の投函専用トークン（`reporter` ロール）
+
+`claude-rules` テンプレは多くの案件へコピー配布されるが、**その大半は解析ループと組んでいない**＝mailbox の身分（`agent` トークン）を持たない。それらの案件からも「ルールに問題がある」ことだけは届いてほしい。そのための**一方向・投函専用**の経路。
+
+**agent トークンを配って済ませない理由**：`agent` は既知の宛先ならどこへでも送れる。通知のためだけに配ると、**解析↔開発のやり取りにゴミを入れられる経路を全案件へ開く**ことになる。目的が違うものを同じ道具にしない。
+
+### できること・できないこと
+
+| | `reporter`（通知専用） | `agent`（解析↔開発） |
+|---|---|---|
+| `send` | **`rule-kaizen` 宛のみ**（他は 403 `recipient_not_allowed`） | 既知の宛先ならどこへでも |
+| `inbox` | ❌ 403（受信箱を持たない） | ✅ 自分宛のみ |
+| `done` | ❌ 403 | ✅ 自分宛のみ |
+| `needs_approval: true` | 無視して `new/` へ（承認待ちに埋もれさせない） | `hold/` へ |
+| 投函上限 | 1日 50 件（超過は 429）。数えるのは**投函の試行**＝弾かれた分も濫用のうち | なし |
+| **宛先になれるか** | ❌ なれない（受信箱を持たないので、宛先にすると誰も読まない `new/` が溜まる） | ✅ なれる |
+
+`from` はトークン由来なので詐称できない＝**どの案件から来たかは自動で分かる**。全案件で共有する1本は作らない（誰から来たか分からなくなり、1案件だけ失効させられなくなる）。
+
+### 発行・失効・一覧
+
+```bash
+python3 bin/rule-reporter.py issue <案件名>              # 発行（既定 365 日）。トークンを表示するのはこの1回だけ
+python3 bin/rule-reporter.py revoke RR-NNN --reason "理由"  # 失効（行は消さず理由を残す）
+python3 bin/rule-reporter.py list                        # 発行状況＋最終使用（日時・接続元IP）
+```
+
+配布先の `.env` に入れるのは2キーだけ（`MAILBOX_URL`/`MAILBOX_TOKEN` とは別名にして、既存の mailbox 設定と混ざらないようにする）：
+
+```
+RULE_REPORT_URL=<mailbox の URL>
+RULE_REPORT_TOKEN=<issue が表示した値>
+```
+
+### 取り消せること（ホワイトリストの運用）
+
+トークン表そのものがホワイトリストで、載っていないトークンは 403。加えて：
+
+- **`revoked: true`** — 失効。**行は消さない**（消すと後から「そんな番号あったか」が分からない）。理由と日付が表と台帳に残る
+- **`expires_at`** — 既定 365 日。切れたら自動で止まる＝**放置トークンが永久に生きる状態を構造的に作らない**。**`YYYY-MM-DD` で書く**（その日の 23:59:59 まで有効。時刻やタイムゾーン付きの文字列は解釈がぶれるので使わない）。読めない値が入っていたら「期限なし」に倒さず 500 で落とす（fail-closed）
+- **最終使用** — API が投函・受信のたびに `data/mailbox/.state/seen-<agent>.json` へ日時と接続元IPを記録する。Tailscale 内からしか届かないので `100.x.x.x` で拠点の見当がつく＝**見覚えのない接続元から使われていたら、それが「把握していない場所で使われた」の合図**。`list` で並べて見る
+- **投函上限** — 漏れたときの被害を「目安箱がゴミで埋まる」以下に抑える保険。記録が読めないときは通す（fail-open）＝上限は認証の代わりではなく、記録の故障で通信を止めるほうが害が大きい
+
+**発行台帳は [`data/rule-reporters.md`](../../data/rule-reporters.md)**（git 追跡・**トークン値は載らない**ので見せても漏れない）。番号・案件・発行日・期限・状態・失効理由を持つ。台帳は表から組み立て直す写しなので**手で編集しない**（表とズレる）。
+
+**未知のロールは `reporter` に倒れる**（最小権限）。ロール名を打ち間違えたトークンは、黙って広い権限を得るのでなく受信箱で 403 になって気づける。
+
+**発行済みの投函専用トークンは宛先にならない**（`known_agents` から外す）。reporter は受信箱を持たないので、宛先にできてしまうと誰かが誤って送ったぶんが `new/` に永久に残る（`inbox` は `new/` を全読みするので全体のコストにもなる）。受信専用の sink（`rule-kaizen`）は `reporter_id` を持たないので、権限が `reporter` でも宛先としては残る＝この2つを分ける軸が `reporter_id` の有無。
+
+**回帰テスト**：`bash bin/test-rule-reporter.sh`（サーバ側の権限判定と発行・失効。**既存の agent／admin の挙動が変わっていないこと**も同じスイートで見張る）。
 
 ---
 
@@ -187,3 +243,4 @@ openssl rand -hex 24
 | — | 2026-08-10 | **冒頭に北極星1行を追記**（A-051・社長確定＝売りはファネル全層で設計 [[feedback_funnel-all-layers]]）。手順・制約は不変＝1行追記のみのため版番号は据え置き |
 | 0.1 | 2026-06-17 | 初版（スライス1）。構成・メッセージ書式・エージェントID・needs_approvalポリシー・制約・段階導入。読み取り（inbox）のみ実装 |
 | 0.2 | 2026-06-17 | スライス2。`send`（投函・needs_approvalで new/⇔hold/振り分け・from はトークン由来で詐称不可・ID/tsサーバ生成）と `done`（自分宛のみ cur/ へ移動・本文編集しない）を実装。宛先存在チェック・型/空/サイズ検証・パストラバーサル防止を追加。使い捨てトークンで全経路を手動検証 |
+| 0.3 | 2026-09-11 | **投函専用ロール `reporter` を追加**。`claude-rules` テンプレを使う案件から「ルールの問題」だけを一方向で通知させる細い経路（`rule-kaizen` 宛の `send` のみ・`inbox`/`done` は 403・1日50件）。あわせて**ホワイトリストの取り消し手段**＝`revoked`（行を消さず理由を残す）・`expires_at`（既定365日で自動停止・読めない値は fail-closed）・**最終使用の記録**（日時と接続元IPを `data/mailbox/.state/` へ・「漏れても気づけない」を塞ぐ）。発行/失効/一覧は `bin/rule-reporter.py`、台帳は `data/rule-reporters.md`（トークン値を載せない）。未知ロールの既定を `agent` から `reporter` へ（最小権限）。`rule-kaizen` の sink エントリも `reporter` 化＝漏れても目安箱を読まれない。回帰テスト `bin/test-rule-reporter.sh` 75件（既存 agent/admin の挙動不変も同時に検証） |
