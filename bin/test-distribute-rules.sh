@@ -18,7 +18,10 @@ PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 T="$(mktemp -d)"
 case "$T" in /tmp/*) ;; *) echo "❌ テストの作業先が /tmp の外: $T" >&2; exit 2 ;; esac
-trap 'rm -rf "$T"' EXIT
+# 「未コミットだと配らせない」を確かめるために、テンプレへ一時的に未追跡ファイルを置く。
+# 途中で落ちても残さないよう、作る前から trap に載せておく。
+DIRTY_PROBE="$PROJ/claude-rules/website/.dirty-probe-$$"
+trap 'rm -rf "$T"; rm -f "$DIRTY_PROBE"' EXIT
 
 export RULES_DIST_REGISTRY="$T/registry.md"
 dr(){ python3 "$PROJ/bin/distribute-rules.py" "$@" 2>&1; }
@@ -39,14 +42,28 @@ if [ -n "$(git -C "$PROJ" status --porcelain -- claude-rules/websystem/ claude-r
   DIRTY="--allow-dirty"
 fi
 
+echo "▼ テンプレ間で同じであるべきもの"
+# rule-report.sh は website / websystem に同一内容で置いてある（テンプレは別々に配布される
+# ので、共通ライブラリに出さず両方に置くのが正）。片方だけ直すと、配った先で挙動が食い違い、
+# しかも黙って食い違う。機械で見張る。
+if diff -q "$PROJ/claude-rules/website/bin/rule-report.sh" \
+           "$PROJ/claude-rules/websystem/bin/rule-report.sh" >/dev/null 2>&1; then
+  say_ok "両テンプレの bin/rule-report.sh が同一（片方だけ直すと黙ってズレる）"
+else
+  say_ng "両テンプレの bin/rule-report.sh が同一" "差分あり＝片方だけ直されています"
+fi
+
 echo "▼ 配る前の安全確認"
 OUT="$(dr apply websystem "$T/nowhere" --yes)";     want_in "配布先がありません" "$OUT" "存在しない配布先は拒否"
 OUT="$(dr apply websystem "$PROJ/claude-rules/websystem" --yes $DIRTY)"
 want_in "テンプレート自身には配れません" "$OUT" "テンプレート自身には配れない"
-if [ -n "$DIRTY" ]; then
-  OUT="$(dr apply websystem "$T")"
-  want_in "未コミットの変更があります" "$OUT" "未コミットのまま配らせない（版と中身がズレるため）"
-fi
+# ここは**いつも**確かめる。テンプレがたまたま汚れている日だけ動く条件付きテストにすると、
+# いちばん効かせたい守り（版の SHA と中身をズラさない）が普段は検証されないまま残る。
+: > "$DIRTY_PROBE"
+OUT="$(dr apply website "$T")"
+rm -f "$DIRTY_PROBE"
+want_in "未コミットの変更があります" "$OUT" "未コミットのまま配らせない（版と中身がズレるため）"
+want_in ".dirty-probe" "$OUT"                  "止めた理由（どのファイルが未コミットか）を示す"
 
 echo "▼ 初回配布"
 mkdir -p "$T/dest"

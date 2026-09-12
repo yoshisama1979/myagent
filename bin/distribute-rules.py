@@ -226,7 +226,7 @@ def record(dest_name, name, version, how):
     os.replace(tmp, REGISTRY)
 
 
-def show_plan(items, dest=None):
+def show_plan(items):
     n = {"overwrite": 0, "create": 0, "skip": 0}
     for _, a in items:
         n[a] += 1
@@ -234,7 +234,6 @@ def show_plan(items, dest=None):
     for rel, a in items:
         if a == "skip":
             print(f"    - 触らない : {rel}  ← 案件の記録")
-    return n
 
 
 def cmd_pack(args):
