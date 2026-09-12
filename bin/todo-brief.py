@@ -260,9 +260,20 @@ def facts(i, ref):
     }
 
 
+def _my_items(a):
+    """この担当ぶんの未完了 ToDo（生データ）。**取り方をここ1箇所に集める。**
+
+    ★`fetch_todos` は担当未指定だと .env の既定ユーザー（社長）ぶんしか返さない★
+      その落とし穴（2026-08-24 実害＝他の担当者の ToDo を見落として重複を作り「社長保有率100%」と
+      誤報した）を各サブコマンドが個別に踏まないよう、`mine()` との組み合わせを1箇所にする
+      （2026-09-11 `outside` 追加で2箇所に増えたため抽出）。
+    """
+    return mine(fetch_todos(assignee=a.assignee), a.assignee)
+
+
 def cmd_candidates(a):
     ref = today()
-    rows = [facts(i, ref) for i in mine(fetch_todos(assignee=a.assignee), a.assignee)]
+    rows = [facts(i, ref) for i in _my_items(a)]
     # 並べ替えは「見やすさ」のためであって優先度ではない（選ぶのは呼び出し側）
     rows.sort(key=lambda r: (-r["overdue_days"], -(r["stale_days"] or 0)))
     if a.limit:
@@ -406,7 +417,7 @@ def outside_tier(row, raw, names):
 def cmd_outside(a):
     ref = today()
     names = client_names()
-    items = mine(fetch_todos(assignee=a.assignee), a.assignee)
+    items = _my_items(a)
     groups = {k: [] for k, _ in OUTSIDE_TIERS}
     for i in items:
         r = facts(i, ref)
@@ -420,9 +431,11 @@ def cmd_outside(a):
         warnings.append("クライアント一覧が読めません（data/clients-cache.json）"
                         "＝お客様の案件は unclassified-due に落ちます。中身は返るので隠れません")
     # 社内の積み残しは**件数だけ**にする＝ここを並べると外の行が必ず埋もれる（本件の再発）。
+    # ★除外の正は pop の1箇所★ 取り出した残りをそのまま並べる＝「pop する」と「一覧から外す」の
+    #   条件が二重にならない（片方だけ直すと内部の行が社長の列に混ざる／逆に外の行が消える）。
     internal = groups.pop("internal")
     shown = [{"tier": k, "label": v, "count": len(groups[k]), "items": groups[k]}
-             for k, v in OUTSIDE_TIERS if k != "internal"]
+             for k, v in OUTSIDE_TIERS if k in groups]
     print(json.dumps({
         "as_of": str(ref), "assignee": a.assignee, "count": len(items),
         "client_aliases_loaded": len(names),
