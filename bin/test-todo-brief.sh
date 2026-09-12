@@ -27,10 +27,13 @@ src = src.replace('STATE = os.path.join(ROOT, "data", "todo-manager", "state.jso
                   'STATE = %s' % json.dumps(os.path.join(d, "state.json")))
 src = src.replace('API = os.path.join(ROOT, "bin", "hana-api.sh")',
                   'API = %s' % json.dumps(os.path.join(d, "api.sh")))
+src = src.replace('CLIENTS_CACHE = os.path.join(ROOT, "data", "clients-cache.json")',
+                  'CLIENTS_CACHE = %s' % json.dumps(os.path.join(d, "clients.json")))
 open(os.path.join(d, "tb.py"), "w", encoding="utf-8").write(src)
 PY
 grep -q 'STATE = "' "$T/tb.py" || { echo "❌ 差し替え失敗（状態ファイル）" >&2; exit 2; }
 grep -q 'API = "'   "$T/tb.py" || { echo "❌ 差し替え失敗（API）" >&2; exit 2; }
+grep -q 'CLIENTS_CACHE = "' "$T/tb.py" || { echo "❌ 差し替え失敗（クライアント一覧）" >&2; exit 2; }
 
 cat > "$T/members.json" <<'M'
 {"hana_user_ids": {"president": 34, "agent": 39, "staff": [37]}}
@@ -478,6 +481,200 @@ for rr in assignee-unclear no-fields work-ambiguous duplicate-suspect due-needs-
 done
 [ -z "$miss" ] \
   && ok "★6区分すべてが HOLD_REASONS にある（弾かれると確認列に載らない）" || ng "受け付けない区分がある:$miss"
+
+# ===========================================================================
+# outside＝「外に約束があるか」で分ける（2026-09-11 社長ご指摘で新設／同日 Codex レビューで補強）
+#
+# ★この節が守っているもの★
+#   2026-09-11、社長より「なぜこれを日々の提案で出してくれなかったんですか」とご指摘。
+#   `candidates` は超過日数だけで並べるため、105日超の社内開発が上位を埋め、**4日超の
+#   「よしだ歯科」（LINE で来たご依頼・社長ご自身が「月曜に作業します」と宣言して流れたもの）
+#   が下に沈み、毎日見落とされていた**。区分が日数に負けたら、この見落としがそのまま再発する。
+#
+# ★初版のテストは弱かった（同日 Codex 指摘＋変異で実証）★
+#   ①各区分の fixture が1件ずつだったため `items[:1]` に切る変異が素通りした
+#   ②区分順を全体で固定していなかったため、2つの区分を入れ替える変異が素通りした
+#   ③クライアント一覧を消すと顧客案件が消えるのに合格した＝**見落とす変異を仕様として固定**していた
+#   よって以下は「各区分2件以上・全IDの集合・区分順の配列・保存則」で固定する。
+# ===========================================================================
+echo
+echo "=== outside：区分が日数に勝つ（本件の再発防止）==="
+cat > "$T/clients.json" <<'CL'
+{"clients":[{"client_name":"よしだ歯科"},{"client_name":"株式会社アースレイズ"},
+            {"client_name":"株式会社未来舎"},{"client_name":"辻村"},
+            {"client_name":"株式会社はなさか"},{"client_name":"YCOM"},{"client_name":"AI"}]}
+CL
+# 長い説明欄（300文字超）の末尾に「LINE」を置く＝表示用の切り詰めで判定が死んでいないか
+LONGDESC="$(python3 -c "print('経緯の記録。'*60 + 'LINEにて先方よりご依頼。')")"
+OUT=$(python3 -c "
+import json,sys
+long=sys.argv[1]
+print(json.dumps([
+ # --- 社内（期限超過だが外への約束なし）＝下に沈むべき側。**古い**ほど区分に勝ってはいけない
+ {'id':901,'assignee_user_id':None,'due_date':'2026-05-01','updated_at':'2026-05-01',
+  'content':'AIチャットのダッシュボードに deploy-prod エイリアスを設定する','description':''},
+ {'id':911,'assignee_user_id':None,'due_date':'2026-05-02','updated_at':'2026-05-02',
+  'content':'ONLINE説明会ページの deadline を pipeline に載せる','description':''},
+ # --- ①社長ご自身の期日つきの言葉（2件）
+ {'id':902,'assignee_user_id':None,'due_date':'2026-09-09','updated_at':'2026-09-09',
+  'content':'よしだ歯科 トップページ 診療一覧の対応',
+  'description':'2026-09-04 社長ご指示「来週やるべきこと。月曜日に作業します」。'},
+ {'id':912,'assignee_user_id':None,'due_date':'2026-09-10','updated_at':'2026-09-10',
+  'content':'あいぼっくす 請求','description':'2026/9/8 社長ご決定）金額は4万円。'},
+ # --- ②見えない経路（2件・うち1件は説明欄が300文字超で末尾に LINE）
+ {'id':903,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'よしだ歯科 HP修正指示書 対応','description':long},
+ {'id':913,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'新規のお客様からのお電話を取り次ぎ','description':''},
+ # --- ③外のお客様（2件・うち1件は法人格つきの短い通称「未来舎」だけで書かれている）
+ {'id':904,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'【アースレイズHP】トップページ コーディング着手','description':''},
+ {'id':914,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'未来舎さんへサブページのデザイン依頼','description':''},
+ # --- ④期日は来ているが区分が付かない（2件）＝**社内と同じ箱に入れてはいけない**
+ {'id':905,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'HANAチャットWeb広告の見直し（撤退ライン設定）','description':'受注ゼロで広告費のみ発生。'},
+ {'id':915,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'はなさか社内の YCOM ドメイン整理','description':'2026-09-04 社長に確認したい件。'},
+ # --- 辻村＝法人格が無い2文字＝採らない（本文のどこにでも当たるため）
+ {'id':916,'assignee_user_id':None,'due_date':'2026-09-11','updated_at':'2026-09-11',
+  'content':'辻村さんの件','description':''},
+ # --- 期限がまだ先＝今日の材料ではない
+ {'id':906,'assignee_user_id':None,'due_date':'2026-12-01','updated_at':'2026-09-01',
+  'content':'よしだ歯科 来期の相談','description':''}]))" "$LONGDESC")
+setj "$OUT" "$OUT"
+o=$(tb 2026-09-11 outside)
+
+tier_ids() { echo "$1" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+print(' '.join(sorted(str(r['id']) for t in d['tiers'] if t['tier']==sys.argv[1] for r in t['items'])))" "$2"; }
+
+# --- ★全IDの集合で固定する（1件に切る変異・取りこぼす変異を両方つかまえる）---
+[ "$(tier_ids "$o" promise-slipped)" = "902 912" ] \
+  && ok "★社長ご自身の期日つきの言葉を<u>全件</u>立てる（#902 #912・件数を切らない）" \
+  || ng "promise-slipped が違う" "$(tier_ids "$o" promise-slipped)"
+[ "$(tier_ids "$o" invisible-channel)" = "903 913" ] \
+  && ok "★見えない経路を全件立てる（#903 LINE／#913 電話）" \
+  || ng "invisible-channel が違う" "$(tier_ids "$o" invisible-channel)"
+[ "$(tier_ids "$o" client-facing)" = "904 914" ] \
+  && ok "★お客様を待たせているものを全件立てる（#904 アースレイズ／#914 未来舎）" \
+  || ng "client-facing が違う" "$(tier_ids "$o" client-facing)"
+# ★901・911 は「130日超の社内開発」だが、ツールから見れば<u>区分が付かなかった期日つき</u>
+#   ＝社内だと決めつけずに本文を返す。実データでも47件がここに入る（棚卸しの対象が見える）。
+[ "$(tier_ids "$o" unclassified-due)" = "901 905 911 915 916" ] \
+  && ok "★区分が付かない期日つきを<u>本文ごと</u>返す（#901 #905 #911 #915 #916＝見落としの隠れ場所）" \
+  || ng "unclassified-due が違う" "$(tier_ids "$o" unclassified-due)"
+
+# --- ★区分の順そのものを配列で固定（2つを入れ替える変異をつかまえる）---
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+got=[t['tier'] for t in d['tiers']]
+want=['promise-slipped','invisible-channel','client-facing','unclassified-due']
+assert got==want, got
+assert 'internal' not in got, got
+" && ok "★区分の並び順を配列全体で固定する（入れ替え変異をつかまえる）" \
+  || ng "★区分順が変わっている" "$o"
+
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+first=d['tiers'][0]['items'][0]['id']
+assert first==902, first          # 902 は5日超、901/911 は130日超
+assert 901 in d['internal_ids'] or 901 in [r['id'] for t in d['tiers'] for r in t['items']]
+" && ok "★130日超の社内タスクより 5日超の #902 が先に出る（日数で並べない）" \
+  || ng "★日数が区分に勝っている＝本件がそのまま再発する" "$o"
+
+# --- ★保存則：どの行も必ずどこか1つの箱に入る（どこにも入らない行＝静かな見落とし）---
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+ids=[r['id'] for t in d['tiers'] for r in t['items']]+d['internal_ids']
+assert len(ids)==len(set(ids)), '同じ行が2つの箱に入っている'
+assert len(ids)==d['count']==d['accounted'], (len(ids), d['count'], d['accounted'])
+" && ok "★保存則＝入力の全件がどこか1つの箱に入る（重複なし・取りこぼしなし）" \
+  || ng "★行が消えている／重複している" "$o"
+
+echo "=== outside：判定の取りこぼしと誤爆 ==="
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+inv=[r['id'] for t in d['tiers'] if t['tier']=='invisible-channel' for r in t['items']]
+assert 903 in inv, '説明欄が300文字を超えると判定が死ぬ'
+" && ok "★説明欄が300文字を超えても末尾の「LINE」を拾う（表示用の切り詰めで判定しない）" \
+  || ng "★300文字で切った文字列で判定している" "$o"
+
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+inv=[r['id'] for t in d['tiers'] if t['tier']=='invisible-channel' for r in t['items']]
+assert 905 not in inv, '撤退ラインが LINE として拾われた'
+assert 911 not in inv, 'ONLINE/deadline/pipeline が LINE として拾われた'
+" && ok "★『撤退ライン』『ONLINE』『deadline』を LINE と誤検知しない" \
+  || ng "★LINE の誤検知がある" "$o"
+
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+pro=[r['id'] for t in d['tiers'] if t['tier']=='promise-slipped' for r in t['items']]
+assert 912 in pro, 'スラッシュ区切りの日付（2026/9/8）を取りこぼした'
+assert 915 not in pro, '「社長に確認」を宣言として拾った'
+" && ok "★日付は 2026/9/8 形式も拾い、「社長に<u>確認</u>」は宣言として拾わない" \
+  || ng "★PROMISE の判定が違う" "$o"
+
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+cli=[r['id'] for t in d['tiers'] if t['tier']=='client-facing' for r in t['items']]
+assert 915 not in cli, '自社名（はなさか・YCOM）をクライアントとして拾った'
+assert 916 not in cli, '法人格の無い2文字（辻村）を拾った'
+assert 901 not in cli, '短い社名（AI）を拾った'
+" && ok "★自社名（はなさか・YCOM）・法人格の無い2文字・短い社名を拾わない" \
+  || ng "★クライアント判定が広すぎる" "$o"
+
+echo "$o" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+assert 906 in d['internal_ids'], '期限が先のものが今日の材料に混ざった'
+assert d['warnings']==[], d['warnings']
+" && ok "期限がまだ先のもの（#906）は外の名前が付いていても今日は立てない" \
+  || ng "期限が先のものが立っている" "$o"
+
+echo "$o" | grep -qE '"priority"|"score"|"recommend"' \
+  && ng "★ツールが優先度を決めている（判断はモードの仕事）" \
+  || ok "★ツールは『今日どれをやるか』を選ばない（candidates と同じ規律）"
+
+echo "=== outside：クライアント一覧が壊れても<u>黙って</u>見落とさない ==="
+rm -f "$T/clients.json"
+o2=$(tb 2026-09-11 outside)
+echo "$o2" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+assert d['client_aliases_loaded']==0
+assert d['warnings'], '一覧が読めないのに警告が無い＝静かに全件見落とす'
+unc=[r['id'] for t in d['tiers'] if t['tier']=='unclassified-due' for r in t['items']]
+assert 904 in unc and 914 in unc, ('顧客案件が消えた', unc)
+pro=[r['id'] for t in d['tiers'] if t['tier']=='promise-slipped' for r in t['items']]
+inv=[r['id'] for t in d['tiers'] if t['tier']=='invisible-channel' for r in t['items']]
+assert 902 in pro and 903 in inv
+" && ok "★一覧が読めないとき＝警告を出し、顧客案件は unclassified-due に<u>本文ごと</u>出す（消さない）" \
+  || ng "★一覧欠損で顧客案件が静かに消える（fail-open）" "$o2"
+
+echo "=== ★ルールの追随：CLAUDE.md に『動作』が残っているか ==="
+# 2026-09-11 の見落としの真因は、自動ロードされる CLAUDE.md 側の項目3が「期日を見る」という
+# <u>動作</u>を落として JST 補正の注意書きだけになっていたこと。main.md に「消すな」と書いても
+# 機械では防げないので、ここで固定する（同日 Codex 指摘）。
+CL_MD="$PROJ/CLAUDE.md"
+grep -q 'todo-brief.py outside' "$CL_MD" \
+  && ok "★CLAUDE.md に outside の呼び出しが書かれている（自動ロードされる唯一のファイル）" \
+  || ng "★CLAUDE.md からコマンドが消えた＝毎朝の期日確認が実行されなくなる"
+grep -q '期日を見る' "$CL_MD" \
+  && ok "★CLAUDE.md に『期日を見る』という<u>動作</u>が残っている（注意書きで置き換えない）" \
+  || ng "★動作が注意書きに置き換わった＝2026-09-11 と同じ事故"
+grep -q 'todo-brief.py outside' "$PROJ/rules/modes/main.md" \
+  && ok "rules/modes/main.md 側にも同じコマンドがある（どちらかだけ直さない）" \
+  || ng "main.md と CLAUDE.md がズレている"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"

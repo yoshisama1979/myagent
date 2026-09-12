@@ -18,12 +18,14 @@
 
 使い方:
   todo-brief.py candidates [--assignee N] [--limit M]   # 候補＋事実（選定はしない）
+  todo-brief.py outside [--assignee N]                   # 「外に約束があるか」で区分（社内の積み残しは件数だけ）
   todo-brief.py record --assignee N --ids 1,2,3          # 今日提案した ID を記録
   todo-brief.py review --assignee N                      # 前回の消化率と次回の推奨件数
   todo-brief.py stale --assignee N                       # 提案済みで動きが無いもの（完了漏れの疑い）
 """
 import argparse
 import datetime
+import unicodedata
 import re
 import json
 import os
@@ -285,6 +287,158 @@ def _cap_for(assignee):
     return hist[-1].get("cap", CAP_START) if hist else CAP_START
 
 
+# ── 「外に約束があるか」で分ける（2026-09-11 社長ご指摘で新設・同日 Codex レビューで補強）──
+#  背景＝`candidates` は超過日数だけで並べる。その結果、105日超の社内開発（VPN接続・管理画面の
+#  機能追加・deploy-prod エイリアス）が上位を占め、**4日超の「よしだ歯科」がその下に沈んだ**。
+#  社長ご指摘＝「なぜこれを日々の提案で出してくれなかったんですか」（2026-09-11）。
+#  誤りは並べ替えの基準にあった＝**日数は「放置の長さ」であって「痛みの大きさ」ではない**。
+#  外のお客様を待たせている行と、自社の積み残しを同じ列に並べれば、長いほうが必ず勝つ。
+#  よって**日数の前に区分で分ける**。区分の判定は機械的な材料だけで行い、
+#  「どれを今日やるか」は選ばない＝`candidates` と同じ規律（判断はモードの仕事）。
+#
+#  ★区分の順は「外への影響が確かな順」であって、実行順ではない★
+#    上の区分のほうが「外に迷惑がかかっている証拠が強い」というだけ。今日どれに手をつけるかは
+#    社長と Main が決める（金額・依存・相手の都合は、この列からは分からない）。
+
+# 社長ご自身が日付つきで宣言された行（例: `2026-09-04 社長ご指示「…月曜日に作業します」`）。
+# これが期限超過＝**ご本人の言葉が流れている**＝いちばん先にお見せする。
+# 実データの語尾は ご指示／ご決定／ご説明／ご判断／指示／） と揺れるので語尾は縛らない。
+# ただし **「社長に確認」「社長へ報告」は宣言ではない**ので、助詞の に／へ が続くものは外す
+# （2026-09-11 Codex 指摘）。日付は `2026-09-04` と `2026/9/4` の両方を受ける。
+PROMISE_RE = re.compile(r"20\d\d[-/]\d{1,2}[-/]\d{1,2}\s*社長(?![にへ])")
+
+# 私（AI）から中身が見えない経路。ここから来たご依頼は **ToDo の期日だけが唯一の手がかり**で、
+# 私が本文を読んで気づくことが原理的にできない（よしだ歯科＝LINE、C-184＝電話）。
+# ⚠️ カタカナの「ライン」は入れない＝「撤退ライン」に当たる（2026-09-11 実データで誤検知を確認）。
+#    その代わり「ライン」表記の LINE 依頼は落ちる＝取りこぼしは `unclassified-due` 側で拾う。
+# ⚠️ ASCII の LINE は前後に英字が続かないときだけ＝`ONLINE` `deadline` `pipeline` に当たらない
+#    （2026-09-11 Codex 指摘。当時の実データでの誤爆はゼロだったが、原理的に当たる）。
+# ⚠️ 判定前に NFKC 正規化する＝全角の `ＬＩＮＥ` `Ｔｅａｍｓ` を取りこぼさない。
+INVISIBLE_RE = re.compile(r"(?<![A-Za-z])LINE(?![A-Za-z])|電話|口頭|対面|Teams")
+
+CLIENTS_CACHE = os.path.join(ROOT, "data", "clients-cache.json")
+
+# 法人格。**前後どちらにも付く**（`株式会社はなさか` / `盛川株式会社`）。
+# 実データには学校法人・社会福祉法人・医療法人社団・事業協同組合もある（2026-09-11 Codex 指摘）。
+LEGAL_RE = re.compile(
+    r"^(株式会社|有限会社|合同会社|合資会社|一般社団法人|公益社団法人|一般財団法人|学校法人"
+    r"|社会福祉法人|医療法人社団|医療法人|宗教法人|特定非営利活動法人|事業協同組合)\s*"
+    r"|\s*(株式会社|有限会社|合同会社|合資会社|事業協同組合)$")
+
+# **自社はクライアントではない**。実キャッシュに `株式会社はなさか`（→`はなさか`）と `YCOM` が
+# 入っており、放っておくと自社タスクが「お客様を待たせている」に化ける（2026-09-11 Codex 指摘）。
+CLIENT_DENY = {"はなさか", "株式会社はなさか", "YCOM", "ycom", "y-com"}
+
+# 区分は「外への影響が確かな順」。値は社長にそのままお見せする言葉にする。
+OUTSIDE_TIERS = [
+    ("promise-slipped",   "社長ご自身の期日つきの言葉が過ぎています"),
+    ("invisible-channel", "私から見えない経路（LINE・電話等）＝期日だけが手がかりです"),
+    ("client-facing",     "外のお客様を待たせています"),
+    ("unclassified-due",  "★期日が来ているのに区分が付きませんでした＝見落としの隠れ場所・必ず目を通す"),
+    ("internal",          "期日が来ていない／期日なし（件数だけ）"),
+]
+
+
+def _norm(s):
+    """判定用に正規化する。全角英数・全角カナを畳んで、表記揺れで取りこぼさないようにする。"""
+    return unicodedata.normalize("NFKC", s or "")
+
+
+def client_names():
+    """クライアント名（と通称）の一覧。**取れなくても落とさない**。
+
+    ★取れなかったことは黙らない★ 一覧が空だと `client-facing` が丸ごと成立しなくなる。
+      以前はそれでも正常終了しており、**「クライアント案件を全件見落とす」変異がテストを通った**
+      （2026-09-11 Codex 指摘）。いまは一致しなかった期日つきの行が `unclassified-due` に
+      **本文つきで**出るので隠れないが、原因が分かるよう警告も返す。
+
+    ★短い通称の扱い★ 以前は4文字未満を一律に捨てていたが、実キャッシュには法人格を外すと
+      4文字未満になる実在クライアントが13件あった（HRC・AUN・コア・創拓・シード・みずの・
+      夢工房・未来舎 ほか）。**法人格が付いている＝会社名だと確定している**ものに限って、
+      2文字以上の通称も採る。法人格の無い短い名前（例: 辻村）は採らない＝本文のどこにでも
+      当たるため。取りこぼしても `unclassified-due` で見える（誤検知は消えないが、見落としは見える）。
+    """
+    try:
+        with open(CLIENTS_CACHE, encoding="utf-8") as f:
+            data = json.load(f) or {}
+    except (OSError, ValueError):
+        return []
+    names = set()
+    for c in data.get("clients") or []:
+        raw = (c.get("client_name") or "").strip()
+        if not raw:
+            continue
+        if len(raw) >= 4:
+            names.add(raw)
+        short = LEGAL_RE.sub("", raw).strip()
+        if short != raw and len(short) >= 2:
+            names.add(short)
+    names -= CLIENT_DENY
+    # 長い順＝正式名を優先して `client` に返す。同じ長さは名前順＝**実行ごとに結果を変えない**。
+    return sorted(names, key=lambda n: (-len(n), n))
+
+
+def outside_tier(row, raw, names):
+    """1件を区分に割り振る。戻りは (区分, 当たったクライアント名 or None)。
+
+    ★判定には `raw`（生データ）の全文を使う★ `facts()` の `description` は**表示用に300文字で
+      切ってある**。切った文字列で判定すると、長い履歴の末尾に「LINEで依頼」「2026-09-04 社長…」が
+      追記された件がそのまま沈む（2026-09-11 Codex 指摘・当時 113件中33件が300文字超）。
+    """
+    desc = _norm(raw.get("description"))
+    text = _norm(raw.get("content")) + " " + desc
+    if row.get("overdue_days") and PROMISE_RE.search(desc):
+        return "promise-slipped", None
+    if not row.get("due_reason"):
+        # 期限がまだ先・期限なし＝今日の材料ではない。ここで拾うと毎日同じ顔ぶれが並び続ける。
+        return "internal", None
+    if INVISIBLE_RE.search(text):
+        return "invisible-channel", None
+    hit = next((n for n in names if n in text), None)
+    if hit:
+        return "client-facing", hit
+    # ★期日は来ているのに区分が付かなかった＝**社内と同じ箱に入れない**★
+    #   以前はここを `internal`（件数だけ）に落としていたため、社名の表記揺れ・通称・キャッシュ
+    #   欠損のいずれでも、期限超過中の顧客案件が本文なしで消えていた（2026-09-11 Codex 指摘）。
+    return "unclassified-due", None
+
+
+def cmd_outside(a):
+    ref = today()
+    names = client_names()
+    items = mine(fetch_todos(assignee=a.assignee), a.assignee)
+    groups = {k: [] for k, _ in OUTSIDE_TIERS}
+    for i in items:
+        r = facts(i, ref)
+        tier, hit = outside_tier(r, i, names)
+        r["client"] = hit
+        groups[tier].append(r)
+    for g in groups.values():
+        g.sort(key=lambda r: (-r["overdue_days"], -(r["stale_days"] or 0)))
+    warnings = []
+    if not names:
+        warnings.append("クライアント一覧が読めません（data/clients-cache.json）"
+                        "＝お客様の案件は unclassified-due に落ちます。中身は返るので隠れません")
+    # 社内の積み残しは**件数だけ**にする＝ここを並べると外の行が必ず埋もれる（本件の再発）。
+    internal = groups.pop("internal")
+    shown = [{"tier": k, "label": v, "count": len(groups[k]), "items": groups[k]}
+             for k, v in OUTSIDE_TIERS if k != "internal"]
+    print(json.dumps({
+        "as_of": str(ref), "assignee": a.assignee, "count": len(items),
+        "client_aliases_loaded": len(names),
+        "warnings": warnings,
+        "note": ("区分は『外への影響が確かな順』であって実行順ではありません"
+                 "（どれを今日やるかは選びません＝判断はモードの仕事）。"
+                 "社内の積み残しは件数だけ返します＝並べると外の行が埋もれます。"
+                 "unclassified-due は『期日が来ているのに区分が付かなかった』もの＝見落としの隠れ場所です"),
+        "tiers": shown,
+        "internal_count": len(internal),
+        "internal_ids": [r["id"] for r in internal],
+        # 保存則の検算用＝どの行も必ずどこか1つの箱に入っている（テストで固定している）
+        "accounted": sum(t["count"] for t in shown) + len(internal),
+    }, ensure_ascii=False, indent=1))
+
+
 def cmd_record(a):
     ids = [int(x) for x in a.ids.split(",") if x.strip()]
     if not ids:
@@ -490,7 +644,7 @@ def cmd_hold(a):
 def main():
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
-    for name in ("candidates", "record", "review", "stale", "check", "check-batch", "hold"):
+    for name in ("candidates", "outside", "record", "review", "stale", "check", "check-batch", "hold"):
         q = sub.add_parser(name)
         q.add_argument("--assignee", type=int, default=None)
         if name == "candidates":
@@ -503,7 +657,7 @@ def main():
         if name == "hold":
             q.add_argument("--add"); q.add_argument("--reason"); q.add_argument("--resolve")
     a = p.parse_args()
-    {"candidates": cmd_candidates, "record": cmd_record, "review": cmd_review,
+    {"candidates": cmd_candidates, "outside": cmd_outside, "record": cmd_record, "review": cmd_review,
      "stale": cmd_stale, "check": cmd_check, "check-batch": cmd_check_batch,
      "hold": cmd_hold}[a.cmd](a)
 
