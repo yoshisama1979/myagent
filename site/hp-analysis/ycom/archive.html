@@ -311,6 +311,65 @@
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
+    <h3 class="text-xl font-semibold mb-1">Cycle 121 — 2026-09-12（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①受信箱に38日ぶんの8通が滞留していたのを解消（取りこぼしはゼロでした） ②「権限が無い」と2週間書いていた2つの点検は、実はコマンドの書き方だけの問題でした ③その2つを実行し、WordPressページの改善案の根拠が固まりました ④定点観測＝退行なし</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（<strong class="text-rose-700">集計最終日 9/8 のまま前進せず＝新しい日が1日も入っていません</strong>）／GA4 ✅／Google広告 ✅（停止継続10日目）／Clarity ✅（9日連続）／本番GET ✅／検索結果の撮影 ✅／スクリーンショット ✅（<strong class="text-emerald-700">3週間ぶりに再開</strong>）／受信箱 ✅（<strong class="text-emerald-700">修理後はじめて開けました</strong>）</p>
+
+    <div class="border-2 border-emerald-400 bg-emerald-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-emerald-900 mb-1">✅ ① 受信箱に溜まっていた8通を、照合したうえですべて処理しました（最も古いもので38日前）</p>
+      <p class="text-sm text-gray-800 mb-2">9/11 に受信箱の不具合が修理されたことで、<strong>この解析ループ宛の受信箱が初めて正しく開けるようになりました</strong>。開けてみると <strong>8通が未処理のまま残っていました</strong>（最古は 8/5 の実装報告）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-700">結論＝取りこぼしはゼロでした。</strong>8通すべての中身を当方の記録と1件ずつ照合したところ、<strong>6通は実装作業の受信簿にすでに記録済み</strong>（報告IDが一致）、<strong>1通は事実確認への回答</strong>（8/5 のフォームのテスト送信は0件＝掲示板の「実需要かスパムか」の2説にすでに反映済み）、<strong>1通は社長のご指示</strong>（HANAチャット広告の見直し＝現在の R-050〜R-054 の出典として台帳に記載済み）でした。<strong>別の経路で全部届いていた</strong>ということです。</p>
+      <p class="text-xs text-gray-600">8通とも処理済みへ移し、<strong>受信箱は空になりました</strong>。<span class="text-gray-500">（この滞留は「未読の指示が埋もれていた」という害ではなく、「毎晩の自動起動が止まらない」という害のほうでした。それも解消しています。）</span></p>
+    </div>
+
+    <div class="border-2 border-rose-400 bg-rose-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-rose-900 mb-1">🔴 ② 2週間「権限がなくて実行できません」と書いていた2つの点検は、<u>コマンドの書き方だけの問題</u>でした</p>
+      <p class="text-sm text-gray-800 mb-2">前回（9/11）とその前のサイクルで、<strong>「検索結果の撮影」と「ページのスクリーンショット」は本セッションでは承認外＝次回へ繰越</strong>と記録していました。本日あらためて<strong>呼び出しの書き方を1つ変えて試したところ、どちらも普通に動きました</strong>（<code>bash</code> を頭に付けるか付けないかの違いだけでした）。</p>
+      <p class="text-sm text-gray-800 mb-2">これは過去にも同じ形で起きています（7/8〜7/13 に配信が13日間止まった原因と同型）。<strong>当方の教訓として記録しました＝「実行できない」と書く前に、同じコマンドの別の書き方を必ず1回試す。</strong></p>
+      <p class="text-xs text-rose-800"><strong>実害＝週次の点検2本が3週間止まっていました</strong>（見た目の確認は 8/21 以来、競合との比較は 9/4 以来）。<strong>本日その2本とも実行して穴を埋めています</strong>（下の③④）。<span class="text-gray-500">社長のご対応は不要です。</span></p>
+    </div>
+
+    <div class="border-2 border-sky-400 bg-sky-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-sky-900 mb-1">🆕 ③ 競合との比較を実行＝WordPressページの改善案（R-057)の根拠が、検索結果と検索語の両側から固まりました</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>「ワードプレスカスタマイズ 大阪」で検索すると、当社のページは6位に出ています</strong>（表示45回・クリック0）。その<strong>上に並ぶ5社のうち3社は、見出しにこの言葉をそのまま入れています</strong>（「ワードプレスカスタマイズ | 大阪の…」「WordPressカスタマイズ | 大阪の…」など）。一方<strong class="text-rose-700">当社の見出しは「WordPressのホームページ制作を大阪で」＝「カスタマイズ」という言葉が入っていません</strong>。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>裏側からも検算しました。</strong>このページ1枚に当たっている検索語は6種類に割れています：</p>
+      <table class="text-xs w-full mb-2 bg-white">
+        <tr class="border-b"><td class="py-1 pr-2">wordpress構築 大阪</td><td class="py-1 pr-2 text-right">53回</td><td class="py-1 pr-2 text-right">22.9位</td><td class="py-1 text-rose-700">見出しに無い</td></tr>
+        <tr class="border-b"><td class="py-1 pr-2">wordpress 制作会社 大阪</td><td class="py-1 pr-2 text-right">51回</td><td class="py-1 pr-2 text-right">20.9位</td><td class="py-1 text-emerald-700">「制作」あり</td></tr>
+        <tr class="border-b bg-amber-50"><td class="py-1 pr-2"><strong>ワードプレスカスタマイズ 大阪</strong></td><td class="py-1 pr-2 text-right"><strong>45回</strong></td><td class="py-1 pr-2 text-right"><strong>11.0位</strong></td><td class="py-1 text-rose-700"><strong>見出しに無い（最も順位が良い）</strong></td></tr>
+        <tr class="border-b"><td class="py-1 pr-2">wordpress 外注 大阪</td><td class="py-1 pr-2 text-right">25回</td><td class="py-1 pr-2 text-right">20.3位</td><td class="py-1 text-rose-700">見出しに無い</td></tr>
+        <tr class="border-b"><td class="py-1 pr-2">wordpress 代行 大阪</td><td class="py-1 pr-2 text-right">14回</td><td class="py-1 pr-2 text-right">24.4位</td><td class="py-1 text-rose-700">見出しに無い</td></tr>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-rose-700">＝255回ぶんの表示が6つの別々の意図に割れているのに、見出しが持っている言葉は「制作」だけ。しかも最も順位が良いのは、見出しに無い「カスタマイズ」です。</strong></p>
+      <p class="text-xs text-gray-700">もう1本（「ホームページ更新代行 大阪」）も見ました＝<strong>当社は上位12件に入っていません</strong>。1位・2位はいずれも見出しに「<strong>修正</strong>」を含んでいます（「ホームページ修正・更新代行」「ホームページ更新代行・修正代行｜料金相場」）＝<strong>前回お伝えした運用代行ページの処方（「修正」を足して主語に据える）を、別の角度から裏づけた形です。</strong></p>
+      <p class="text-xs text-sky-800 mt-2"><strong>→ 新しい提案は起こしていません。</strong>既にある R-057（サービスページ群の入口を開ける）の中身を、<strong>「どのページに何の言葉を入れるか」まで具体化しました</strong>＝開発側がそのまま着手できる状態になっています。</p>
+    </div>
+
+    <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-4 mb-4">
+      <p class="font-bold text-amber-900 mb-1">🆕 ④ 見た目の確認を3週間ぶりに実行＝AIチャットの吹き出しが、スマホで本文に重なっています</p>
+      <p class="text-sm text-gray-800 mb-2">料金表ページと見積りフォームをスマホ幅で撮影しました。<strong>画面下部に固定されているAIチャットの吹き出し（「ご質問はこちらへ、AIがご用件を伺います」）が、本文の上に重なっています</strong>＝料金表では「10ページ規模 約44万円〜」の行に、<strong class="text-rose-700">見積りフォームでは入力欄（担当者名のすぐ下）に</strong>かかっています。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-emerald-700">⚠️ ただし、これは「重なっている」という観察であって、「操作の邪魔になっている」証拠ではありません。</strong>Clarity（実際の操作記録）では、押しても反応しない箇所は買い手向けページで9サイクル連続ほぼゼロのままです。<strong>ここで提案として起こすと、「見た目が気になる」を実害と言い切ることになり、以前 R-040 で犯した「外から見た様子だけで決めつけた」誤りと同じ形になります。</strong></p>
+      <p class="text-xs text-amber-800"><strong>→ 提案にはせず、明日（9/13）に期日が来る月次のCV実測に相乗りさせて確かめます</strong>＝見積りフォームの到達→完了率を、同じ導線のお問い合わせフォーム（到達69→完了42＝60.9%）と比べ、<strong>見積り側だけ極端に低ければそのとき提案にします。差が無ければ追いません。</strong><span class="text-gray-500">社長のご対応は不要です。</span></p>
+      <p class="text-xs text-gray-600 mt-2"><strong>なお料金表ページの第一画面そのものは良好でした</strong>＝「1ページあたり50,000円」と、LP 約15万円〜／5ページ 約28万円〜／10ページ 約44万円〜が最初の画面に出ています（R-055 が前提にしている「料金ページには中身がある」を、見た目でも確認できました）。</p>
+    </div>
+
+    <div class="border border-gray-300 rounded-lg p-4 mb-4 bg-gray-50">
+      <p class="font-bold text-gray-800 mb-2">📊 定点観測（7項目）＝サイト・広告とも退行なし</p>
+      <ul class="text-sm text-gray-700 list-disc pl-5 space-y-1">
+        <li><strong class="text-rose-700">検索データ＝集計最終日 9/8 のまま前進せず</strong>（遅れ4日）。<strong>そのため各提案の「効果の読点」は1つも増やしていません</strong>＝数字が「動いていない」のと「届いていない」のを混ぜないためです。<strong>次回も 9/8 のままなら、転送が止まったものとして扱います。</strong></li>
+        <li>トップページ＝73,529バイト・見出し構成とも前回と1バイトも違わず＝<strong>退行なし</strong>。運用代行／WordPress／レスポンシブの3ページも基準どおり。</li>
+        <li><strong>Google広告＝停止継続10日目</strong>（他3アカウントは 9/10 までデータが来ているのに、YCOM広告だけデータ皆無＝転送の遅れではなく本当に配信ゼロ）。⚠️ <strong>入札方法は「コンバージョン値の最大化」のまま未復旧＝この状態では再開させません。</strong></li>
+        <li>広告の週次点検（無駄配信の刈り取り・CVの健全性）＝<strong>実行しましたが停止中のためデータなし</strong>。</li>
+        <li>Clarity＝9日連続で取得成功。前回「トップで押しても反応しない箇所が9サイクルぶりに出た」件は<strong>連続しませんでした</strong>（本日は0%）＝<strong>起票時に決めた条件どおり「1回きり＝追わない」で決着</strong>としました。</li>
+        <li>在庫＝<strong>判断待ち10件／上限15件（残り5枠）</strong>＝前回から増減なし。<strong>新しい提案・新しいご質問とも0件</strong>（枠はありましたが、新しい検索データが1日も来ていない日に在庫を足さない方針です）。</li>
+        <li>7日以上動いていない提案3件（R-048・R-055・R-057）＝<strong>いずれも開発側へ引き渡し済み＝社長のお待たせではありません。</strong>開発側の待ち行列は7件で、これが在庫の実際のボトルネックです。</li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）に新しい項目はありません（最新は 9/6）。9/6 のご指示（R-050 は開発側へ・督促しない／R-056 は3層モデルで確定）は Cycle 114〜120 で反映済みです。</p>
+
+  </section>
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+
     <h3 class="text-xl font-semibold mb-1">Cycle 120 — 2026-09-11（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①運用代行ページの「0クリック」の根拠に事実誤りが1点あったので訂正（処方は変わりません） ②週次点検で「お客様の声」ページを発見＝5件の実名なし顧客の声が既にあり、活かせていない ③検索データの遅れは解消（9/8 分まで到着） ④定点観測7項目＝退行なし</strong>）</h3>
     <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（<strong class="text-emerald-700">集計最終日 9/8＝前回の 9/6 から2日前進＝通常の3日遅れに戻りました</strong>）／GA4 ✅／Google広告 ✅（配信停止の継続を確認・9日目）／Clarity ✅（8日連続）／本番HTML ✅（hp-audit）／<span class="text-amber-700">検索結果画面の撮影と画面スクリーンショット（hp-serp・hp-shot）は本セッションでは実行許可が下りず未実施＝次回の無人実行へ繰越</span></p>
 
