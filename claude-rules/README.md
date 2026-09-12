@@ -10,7 +10,20 @@
 
 ## 使い方（新規プロジェクトへの導入手順）
 
-1. **フォルダごとコピー**する（`website/` または `websystem/` の中身をプロジェクトルートへ）
+1. **配布する**（手でコピーせず `bin/distribute-rules.py` を使う。版を刻み、配布先を記録するため）
+
+   ```bash
+   # 同じマシン上の案件へ（--yes が無ければ下見だけ）
+   python3 bin/distribute-rules.py apply website /path/to/project --dest-name "案件名" --yes
+   # 別マシンの案件へ（版を刻んだ tar.gz を作って渡す）
+   python3 bin/distribute-rules.py pack website "案件名"
+   python3 bin/distribute-rules.py list          # どこに何版を配ったか
+   ```
+
+   - **版が刻まれる**：`.claude/rules-version` に `<テンプレ>@<配布日>/<SHA>`。現場からの通知（`bin/rule-report.sh`）がこの版を件名に載せるので、受け取った側は `git log <SHA>..HEAD --oneline -- claude-rules/<テンプレ>/` で **「その指摘はもう直っているか」を機械で判定できる**。手でコピーすると版が無く、この判定ができない
+   - **未コミットのまま配れない**：版の SHA と中身がズレると判定が丸ごと嘘になるため、`claude-rules/<テンプレ>/` に未コミットの変更があると止まる
+   - **再配布で案件の記録を消さない**：`documents/`・`project-config.md`・`Design.sample.md`・`.claude/rules/private.md` は**既にあれば触らない**（案件が書き足していくファイル）。それ以外のルール層は毎回上書きされる＝テンプレが正
+   - 配布先の一覧は [`data/rules-distribution.md`](../data/rules-distribution.md)（1案件1行・履歴は git log）
 2. **`project-config.md` を最初に記入する**（プロジェクト固有の値はすべてここに集約。ルール本文には書かない）。**「URL・確認環境」節**（ローカル／ステージング／本番の確認URL）は、AI が表示確認のたびにユーザーへ聞かずに済むよう**早い段階で埋める**（🚨 Basic認証等の実値は書かない）
 3. website の場合：`Design.sample.md` を参考に、そのプロジェクトの `Design.md` を作る（`start.md` §1 の手順。Design.sample.md 自体は記入例なのでコピー先に持ち込まなくてよい）
 4. `documents/pending-issues.md`・`documents/rule-improvements.md` は **空の状態から**運用を始める
@@ -42,15 +55,17 @@
 
 ### ② 送る（テンプレ級だけ・経路はテンプレで異なる）
 
-- **website**：拠点PCの実装エージェントは mailbox を持つ。`[テンプレ還元]` 印の気づきを **`bash bin/mailbox.sh send --to rule-kaizen`** で送る（`thread: website-kaizen`／`subject: [website/<ファイル名>] 要旨`）。手順は website の `rules/modes/mailbox.md`「テンプレ改善提案を送る」節。
-- **websystem**：mailbox インフラを前提にしない。`[テンプレ還元]` 印は `rule-improvements.md` に残し、**棚卸し時に社長が myagent へ持ち帰る**（人手キャリーバック）。プロジェクトが mailbox を配線済み（対の分析ループあり・トークン配布済み）なら website と同じく `rule-kaizen` へ送ってよい（手順は websystem の `rules/modes/mailbox.md` §2-3。`--thread websystem-kaizen`）。
-- 受け口 `rule-kaizen` は myagent VPS の **受信専用の宛先**。有効化には myagent 側でトークン表に1エントリ登録が要る（`myagent/rules/modes/mailbox.md`「`rule-kaizen` を有効にする」）。未登録なら送信側は空振りせず `rule-improvements.md` に残す。
+- **両テンプレ共通**：`[テンプレ還元]` 印の気づきを **`bash bin/rule-report.sh --subject "[<ファイル名>] 要旨" "（指示書）"`** で送る。スクリプトはテンプレに同梱されているので、**mailbox を持たない案件でも届く**（手順は各テンプレの `rules/modes/mailbox.md` §2-3）。
+- **解析↔開発の mailbox とは別の経路**：`.env` のキーも別（`RULE_REPORT_URL` / `RULE_REPORT_TOKEN`）で、権限は**投函だけ**（受信箱を持たず、他の宛先へも送れない）。通知のために `agent` トークンを配ると「どこへでも送れる」権限を全案件へ開くことになるため、目的の違うものを同じ道具にしない。
+- **版は自動で載る**：`.claude/rules-version` を件名に前置するので、受け取った側は「もう直っている件か」を版で仕分けできる。現場が版を書く必要はない。
+- **トークンの発行・失効は myagent 側**：`python3 bin/rule-reporter.py issue <案件名> --id <識別子>` ／ `revoke RR-NNN --reason "…"` ／ `list`（最終使用と接続元IPが見えるので、把握していない場所から使われたら失効させる）。手順は `myagent/rules/modes/mailbox.md`「ルール通知の投函専用トークン」。
+- **未発行の案件は空振りしない**：`.env` にキーが無ければスクリプトが止まり、`rule-improvements.md` に残して社長に依頼するよう促す。
 
 ### ③ 選別・起票・反映（myagent 側・reviewer 型・社長ゲート必須）
 
 myagent の**有人棚卸しセッション**で処理する（無人では反映しない＝ルール編集の社長ゲートと整合）：
 
-1. **受信**：`to: rule-kaizen` の受信箱（`data/mailbox/new/`）と、各プロジェクトの `rule-improvements.md` の `[テンプレ還元]` 印を集める。
+1. **受信**：`to: rule-kaizen` の受信箱（`data/mailbox/new/`）と、各プロジェクトの `rule-improvements.md` の `[テンプレ還元]` 印を集める。届いた件名には**送り主が使っているテンプレ版**が入っているので、まず `git log <版のSHA>..HEAD --oneline -- claude-rules/<テンプレ>/` を引いて**すでに直っていないかを確認する**（直っていれば「その版では未修正／現行では対処済み」と判断して、配布し直しの要否だけ見る）。
 2. **選別**：汎用性を判定する。テンプレ級 → 次へ／そのプロジェクト固有 → 「`project-config.md` 側の話」と切り分けて差し戻す（テンプレ本文に固有値を入れない）。既存ルールとの**矛盾・重複**もここで確認する。
 3. **起票**：すぐ反映しないものは [`TEMPLATE-BACKLOG.md`](TEMPLATE-BACKLOG.md) に `TB-NNN` で積む（届いたが未反映の提案の置き場）。
 4. **差分案 → 社長承認 → commit**：反映する差分案を作り、**社長が承認してからコミット**する（勝手にテンプレを書き換えない）。反映後、**受信メッセージを `new/`→`cur/` へ移す**（`rule-kaizen` は認証主体を持たないため自名義の `mailbox.sh done` は不可＝**president=admin トークンの `mailbox.sh done`**、または棚卸しセッションが VPS 上で当該 JSON を `cur/` へ移動する。本文は編集しない・履歴を消さない）。あわせて `rule-improvements.md` の該当 `RI-NNN` は「反映済み」にする（現場側の記録）。
