@@ -2,7 +2,7 @@
 
 > **北極星は置かない**＝これは通信規約であり、運ぶ中身の目的は送り手側が持つ（A-051 C・2026-08-10 社長確定）
 
-> **version 0.2（スライス2＝読み取り＋投函/処理済み）**（2026-06-17）｜ changelog はファイル末尾。
+> **version 0.4（投函＋ルールの配信）**（2026-09-12）｜ changelog はファイル末尾。
 > 別マシン（事務所・自宅・VPS）にいるエージェント同士が、Tailscale 越しに **非同期でメッセージをやり取りする共有受信箱** の書式・宛先・承認フローを定義する。
 > 土台は [rules/automation.md](../../rules/automation.md)（外部送信・書き込み・秘密情報）と CLAUDE.md の行動指針。衝突したら automation.md が最優先。
 
@@ -195,16 +195,19 @@ openssl rand -hex 24
 ### 発行・失効・一覧
 
 ```bash
-python3 bin/rule-reporter.py issue <案件名>              # 発行（既定 365 日）。トークンを表示するのはこの1回だけ
+python3 bin/rule-reporter.py issue <案件名> --template website   # 発行（既定 365 日）。トークンを表示するのはこの1回だけ
 python3 bin/rule-reporter.py revoke RR-NNN --reason "理由"  # 失効（行は消さず理由を残す）
 python3 bin/rule-reporter.py list                        # 発行状況＋最終使用（日時・接続元IP）
 ```
 
-配布先の `.env` に入れるのは2キーだけ（`MAILBOX_URL`/`MAILBOX_TOKEN` とは別名にして、既存の mailbox 設定と混ざらないようにする）：
+`--template` は**その案件が使うテンプレート**。ルールの配信（下記）で、そのテンプレ以外は取りに来られない。
+
+配布先の `.env` に入れるのは3キー（`MAILBOX_URL`/`MAILBOX_TOKEN` とは別名にして、既存の mailbox 設定と混ざらないようにする）：
 
 ```
-RULE_REPORT_URL=<mailbox の URL>
-RULE_REPORT_TOKEN=<issue が表示した値>
+RULE_REPORT_URL=<tools/mailbox/ の URL>     # ルールの問題を送る（投函のみ）
+RULE_UPDATE_URL=<tools/rules/ の URL>       # ルールの最新版を取りに来る（読み取りのみ）
+RULE_REPORT_TOKEN=<issue が表示した値>      # 1本で両方に使う
 ```
 
 ### 取り消せること（ホワイトリストの運用）
@@ -226,6 +229,26 @@ RULE_REPORT_TOKEN=<issue が表示した値>
 
 ---
 
+## ルールの配信（同じトークンで「取りに来させる」）
+
+テンプレはコピー配布なので、直しても各案件のコピーは古いまま。案件が増えるほど**配り直しが滞る**ので、受け口をもう1つ置いて、現場のエージェントが自分で取りに来られるようにしてある。
+
+| | 受け口 | 権限 | 誰が動かすか |
+|---|---|---|---|
+| 通知 | `site/tools/mailbox/`（POST） | 投函のみ | 現場（`bin/rule-report.sh`） |
+| **配信** | **`site/tools/rules/`（GET のみ）** | **読み取りのみ・紐づけたテンプレ1つだけ** | 現場（`bin/rules-update.sh`） |
+
+- **鍵は同じ1本**（`reporter` トークン）。**認証・失効・期限は `site/tools/lib/token-auth.php` を共有**する＝`revoke` すれば通知も配信も同時に止まる。片方だけ生き残る状態を作らない
+- **配信は明示操作でしか更新されない**：`python3 bin/rules-publish.py publish <テンプレ>`。編集中の版が全案件へ一斉に流れないよう、`claude-rules/` を直しただけでは配らない（未コミットがあると公開も止まる）
+- **現場は人に確認してから適用する**：`bash bin/rules-update.sh`（確認だけ・終了コード 10 で「更新あり」）→ 人の承認 → `--apply`。案件の記録（`documents/`・`project-config.md` 等）は上書きしない。守る一覧は**配布物に同梱**するので、現場のスクリプトに書き写さない
+- **誰がどの版を持っているか**は `rule-reporter.py list`（取りに来た版・日時・接続元IPが同じ状態ファイルに残る）。配布台帳へ書き戻さないのは、書き戻しは取りこぼすから
+- **取得は数えない**（投函の1日50件とは別）。配るのは静的な配布物1つで、上限で通信を止めるより「いつ・どこから・どの版を取ったか」を残すほうが実利がある
+- 手順の正：配る側＝[`claude-rules/first-time-setup.md`](../../claude-rules/first-time-setup.md)（人間用）／現場＝配布物の `rules/modes/rules-update.md`（エージェント用）
+
+**回帰テスト**：`bash bin/test-rules-update.sh`（公開・受け口・現場スクリプトの端から端まで。**案件の記録を消さない**・**人の確認なしに書き換わらない**・壊れた取得を適用しないを見張る）。
+
+---
+
 ## 段階導入（automation.md：小さく作って手動検証→合意→自動化）
 
 | スライス | 内容 | 状態 |
@@ -243,4 +266,5 @@ RULE_REPORT_TOKEN=<issue が表示した値>
 | — | 2026-08-10 | **冒頭に北極星1行を追記**（A-051・社長確定＝売りはファネル全層で設計 [[feedback_funnel-all-layers]]）。手順・制約は不変＝1行追記のみのため版番号は据え置き |
 | 0.1 | 2026-06-17 | 初版（スライス1）。構成・メッセージ書式・エージェントID・needs_approvalポリシー・制約・段階導入。読み取り（inbox）のみ実装 |
 | 0.2 | 2026-06-17 | スライス2。`send`（投函・needs_approvalで new/⇔hold/振り分け・from はトークン由来で詐称不可・ID/tsサーバ生成）と `done`（自分宛のみ cur/ へ移動・本文編集しない）を実装。宛先存在チェック・型/空/サイズ検証・パストラバーサル防止を追加。使い捨てトークンで全経路を手動検証 |
+| 0.4 | 2026-09-12 | **ルールの配信（取りに来させる）を追加**。受け口 `site/tools/rules/`（GET のみ・トークンに紐づけたテンプレ1つだけ）と、配る側 `bin/rules-publish.py publish`（明示操作でしか流れない）、現場側 `bin/rules-update.sh`（確認は書き換えない・**人の確認を得てから** `--apply`・案件の記録は上書きしない・上書き前に退避・SHA256 照合）。トークンは投函と**共通1本**で、`issue --template` が紐づけを持つ＝`revoke` で通知も配信も同時に止まる。認証・失効・期限・最終使用の記録は `site/tools/lib/token-auth.php` に切り出して2つの受け口で共有（取り消しが片方だけ効かない状態を作らない）。取りに来た版は `.state/` に残り `rule-reporter.py list` に出る。回帰テスト `bin/test-rules-update.sh` 57件 |
 | 0.3 | 2026-09-11 | **投函専用ロール `reporter` を追加**。`claude-rules` テンプレを使う案件から「ルールの問題」だけを一方向で通知させる細い経路（`rule-kaizen` 宛の `send` のみ・`inbox`/`done` は 403・1日50件）。あわせて**ホワイトリストの取り消し手段**＝`revoked`（行を消さず理由を残す）・`expires_at`（既定365日で自動停止・読めない値は fail-closed）・**最終使用の記録**（日時と接続元IPを `data/mailbox/.state/` へ・「漏れても気づけない」を塞ぐ）。発行/失効/一覧は `bin/rule-reporter.py`、台帳は `data/rule-reporters.md`（トークン値を載せない）。未知ロールの既定を `agent` から `reporter` へ（最小権限）。`rule-kaizen` の sink エントリも `reporter` 化＝漏れても目安箱を読まれない。回帰テスト `bin/test-rule-reporter.sh` 75件（既存 agent/admin の挙動不変も同時に検証） |

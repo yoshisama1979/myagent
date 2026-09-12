@@ -16,8 +16,13 @@ claude-rules テンプレを使う各案件から「ルールの問題」を一�
 トークン値を出すのは issue の1回だけ。台帳（data/rule-reporters.md・git 追跡）には
 番号と案件名しか書かない＝台帳を見せてもトークンは漏れない。
 
+このトークン1本で、案件は2つのことができる（受け口は別・鍵は共通）：
+  - ルールの問題を目安箱へ投函する（tools/mailbox/・投函のみ）
+  - 自分のテンプレートの最新版を取りに来る（tools/rules/・読み取りのみ）
+どちらも失効させれば同時に止まる。取りに来られるのは発行時に紐づけた template だけ。
+
 使い方:
-  python3 bin/rule-reporter.py issue <案件名> [--days 365]
+  python3 bin/rule-reporter.py issue <案件名> --template website [--days 365]
   python3 bin/rule-reporter.py revoke <RR-NNN|案件名> --reason "理由"
   python3 bin/rule-reporter.py list
 """
@@ -41,6 +46,7 @@ STATE = Path(os.environ.get("RULE_REPORTER_STATE") or PROJ / "data/mailbox/.stat
 
 JST = timezone(timedelta(hours=9))
 ROLE = "reporter"
+TEMPLATES = ("website", "websystem")   # bin/distribute-rules.py の TEMPLATES と対
 PREFIX = "rr-"                      # agent_id の接頭辞（agent トークンと一目で見分ける）
 LEDGER_HEADER = """# ルール通知トークン 発行台帳（rule-reporter）
 
@@ -53,8 +59,8 @@ LEDGER_HEADER = """# ルール通知トークン 発行台帳（rule-reporter）
 - 最終使用（日時・接続元IP）は `python3 bin/rule-reporter.py list` で見る
 - 失効は行を消さず「失効」に変える。**消すと後から「そんな番号あったか」が分からなくなる**
 
-| 番号 | 案件 | agent_id | 発行日 | 期限 | 状態 | 失効日 | 備考・失効理由 |
-|------|------|----------|--------|------|------|--------|----------------|
+| 番号 | 案件 | テンプレ | agent_id | 発行日 | 期限 | 状態 | 失効日 | 備考・失効理由 |
+|------|------|----------|----------|--------|------|------|--------|----------------|
 """
 
 
@@ -179,8 +185,8 @@ def write_ledger(d):
     out = [LEDGER_HEADER.rstrip("\n")]
     for _, e in rows:
         state = "失効" if e.get("revoked") else "有効"
-        out.append("| {} | {} | `{}` | {} | {} | {} | {} | {} |".format(
-            e.get("reporter_id", ""), e.get("project", ""), e.get("agent_id", ""),
+        out.append("| {} | {} | {} | `{}` | {} | {} | {} | {} | {} |".format(
+            e.get("reporter_id", ""), e.get("project", ""), e.get("template", "—"), e.get("agent_id", ""),
             e.get("issued_at", "")[:10], e.get("expires_at", ""), state,
             (e.get("revoked_at") or "")[:10], e.get("note", "") or e.get("revoked_reason", "") or "",
         ))
@@ -223,6 +229,7 @@ def cmd_issue(args):
         "role": ROLE,
         "reporter_id": number,
         "project": project,
+        "template": args.template,
         "issued_at": now().isoformat(timespec="seconds"),
         "expires_at": (now() + timedelta(days=args.days)).strftime("%Y-%m-%d"),
         "revoked": False,
@@ -230,11 +237,12 @@ def cmd_issue(args):
     save_tokens(d)
     write_ledger(d)
 
-    print(f"✅ {number} を発行しました（案件: {project} / agent_id: {agent_id}）")
+    print(f"✅ {number} を発行しました（案件: {project} / agent_id: {agent_id} / テンプレ: {args.template}）")
     print(f"   期限: {d[token]['expires_at']}（{args.days} 日）")
     print()
-    print("   配布先の .env に入れる2行（この値を表示するのはこの1回だけ）:")
-    print(f"     RULE_REPORT_URL=<mailbox の URL>")
+    print("   配布先の .env に入れる3行（この値を表示するのはこの1回だけ）:")
+    print("     RULE_REPORT_URL=http://<この VPS の Tailscale IP>/tools/mailbox/")
+    print("     RULE_UPDATE_URL=http://<この VPS の Tailscale IP>/tools/rules/")
     print(f"     RULE_REPORT_TOKEN={token}")
     print()
     print("   ⚠️ この値はコミット・ログ・チャットに貼らないこと。台帳には番号しか残りません。")
@@ -263,6 +271,7 @@ def cmd_list(_args):
         print("発行済みのルール通知トークンはありません")
         return
     today = now().strftime("%Y-%m-%d")
+    fetched = []
     print(f"{'番号':<8} {'案件':<18} {'状態':<6} {'期限':<11} {'最終使用':<18} {'接続元':<16} 当日/通算")
     print("-" * 100)
     for _, e in rows:
@@ -278,6 +287,17 @@ def cmd_list(_args):
         print(f"{e.get('reporter_id', ''):<8} {e.get('project', ''):<18} {state:<6} "
               f"{e.get('expires_at', ''):<11} {last:<18} {s.get('last_ip', '—'):<16} "
               f"{s.get('today', 0)}/{s.get('total', 0)}")
+        if s.get("last_rules_version"):
+            fetched.append((e, s))
+    if fetched:
+        # 「どの案件がいまどの版を持っているか」。取りに来た記録は API が同じ状態ファイルに
+        # 残すので、別に配布台帳へ書き戻さなくても分かる（書き戻しは取りこぼす）。
+        print()
+        print("最後に取りに来たルールの版:")
+        for e, s in fetched:
+            when = (s.get("last_rules_at") or "")[:16].replace("T", " ")
+            print(f"  {e.get('reporter_id', ''):<8} {e.get('project', ''):<18} "
+                  f"{s['last_rules_version']}  ({when} / {s.get('last_rules_action', '')})")
     print()
     print("※ 見覚えのない接続元から使われていたら、その番号を revoke してください:")
     print("   python3 bin/rule-reporter.py revoke RR-NNN --reason \"理由\"")
@@ -289,6 +309,8 @@ def main(argv=None):
 
     p = sub.add_parser("issue", help="案件に投函専用トークンを発行する")
     p.add_argument("project", help="案件名（台帳に載る表示名。日本語可）")
+    p.add_argument("--template", required=True, choices=TEMPLATES,
+                   help="この案件が使うテンプレート（これ以外は取りに来られない）")
     p.add_argument("--id", help="agent_id に使う識別子（英小文字・数字・ハイフン）。"
                                 "案件名が英数字だけでないときは必須")
     p.add_argument("--days", type=int, default=365, help="有効日数（既定 365）")

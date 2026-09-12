@@ -1,0 +1,297 @@
+#!/usr/bin/env bash
+# ルールの「取りに来させる」経路の回帰テスト。
+#
+# 対象は3つ：
+#   (1) bin/rules-publish.py          配ってよい版を公開する（配布物・版・変更点を作る）
+#   (2) site/tools/rules/index.php    受け口（読み取り専用・テンプレはトークンに紐づく）
+#   (3) claude-rules/*/bin/rules-update.sh  現場が取りに来て適用する
+#
+# 守りたい不変条件：
+#   - **案件の記録を消さない**（documents/・project-config.md・.claude/rules/private.md 等）
+#   - 人の確認なしに書き換わらない（既定は確認だけ・--apply で初めて書く）
+#   - 上書きで未コミットの変更を黙って消さない（git があれば止める・退避は必ず作る）
+#   - 失効・期限・紐づけたテンプレ以外は 403（投函側と同じホワイトリストが効く）
+#   - 壊れた取得を適用しない（SHA256 照合）
+#   - 両テンプレの rules-update.sh が同一（片方だけ直すとズレる）
+#
+# ⚠️ 本番の data/secrets/・data/cache/ には触れない：/tmp に偽プロジェクトを組み、
+#    スクリプトと index.php の実物をコピーして流す。トークンは架空の値だけを使う。
+# 触ったら必ず流すこと：bash bin/test-rules-update.sh
+set -u
+PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+[ -f "$PROJ/bin/rules-publish.py" ] || { echo "❌ 起動位置がおかしい: $PROJ" >&2; exit 2; }
+command -v php >/dev/null || { echo "❌ php が見つかりません" >&2; exit 2; }
+
+T="$(mktemp -d)"
+case "$T" in /tmp/*) ;; *) echo "❌ テストの作業先が /tmp の外: $T" >&2; exit 2 ;; esac
+SRV_PID=""
+cleanup(){ [ -n "$SRV_PID" ] && kill "$SRV_PID" 2>/dev/null; rm -rf "$T"; }
+trap cleanup EXIT
+
+P=0; N=0
+say_ok(){ P=$((P+1)); printf '  ✅ %s\n' "$1"; }
+say_ng(){ N=$((N+1)); printf '  ❌ %s\n' "$1"; if [ -n "${2:-}" ]; then printf '      → %s\n' "$2"; fi; }
+has(){ case "$2" in *"$1"*) return 0 ;; *) return 1 ;; esac; }
+want_in(){     if has "$1" "$2"; then say_ok "$3"; else say_ng "$3" "$(printf '%s' "$2" | tr '\n' ' ' | cut -c1-200)"; fi; }
+want_not_in(){ if has "$1" "$2"; then say_ng "$3" "$(printf '%s' "$2" | tr '\n' ' ' | cut -c1-200)"; else say_ok "$3"; fi; }
+want_eq(){     if [ "$1" = "$2" ]; then say_ok "$3"; else say_ng "$3" "実際=[$1] 期待=[$2]"; fi; }
+
+# ── 偽の myagent（配る側）を組む ─────────────────────────────────────────
+mkdir -p "$T/bin" "$T/site/tools/rules" "$T/site/tools/lib" "$T/data/secrets" "$T/data/mailbox/.state"
+cp "$PROJ/bin/rules-publish.py" "$PROJ/bin/distribute-rules.py" "$T/bin/"
+cp "$PROJ/site/tools/rules/index.php" "$T/site/tools/rules/index.php"
+cp "$PROJ/site/tools/lib/token-auth.php" "$T/site/tools/lib/token-auth.php"
+
+mk_template(){  # $1=テンプレ名 $2=CLAUDE.md の中身
+  mkdir -p "$T/claude-rules/$1/rules/modes" "$T/claude-rules/$1/documents" \
+           "$T/claude-rules/$1/.claude/rules" "$T/claude-rules/$1/bin"
+  printf '%s\n' "$2" > "$T/claude-rules/$1/CLAUDE.md"
+  printf 'ルール層（上書きされる）\n'      > "$T/claude-rules/$1/rules/modes/developer.md"
+  printf '引き継ぎの雛形\n'                > "$T/claude-rules/$1/documents/handoff.md"
+  printf '案件固有の設定（雛形）\n'        > "$T/claude-rules/$1/project-config.md"
+  printf '環境の癖（雛形）\n'              > "$T/claude-rules/$1/.claude/rules/private.md"
+  printf '設計の雛形\n'                    > "$T/claude-rules/$1/Design.sample.md"
+  cp "$PROJ/claude-rules/website/bin/rules-update.sh" "$T/claude-rules/$1/bin/rules-update.sh"
+}
+mk_template website  "ルール第1版"
+mk_template websystem "システム側 第1版"
+
+git -C "$T" init -q 2>/dev/null
+git -C "$T" config user.email t@example.com; git -C "$T" config user.name t
+git -C "$T" add -A >/dev/null; git -C "$T" commit -qm "初版のルール" >/dev/null
+
+echo "── 公開（bin/rules-publish.py）"
+OUT="$(cd "$T" && python3 bin/rules-publish.py status 2>&1)"
+want_in "未公開" "$OUT" "公開前は「未公開」と出る"
+
+printf 'ルール第1版（未コミットの加筆）\n' >> "$T/claude-rules/website/CLAUDE.md"
+OUT="$(cd "$T" && python3 bin/rules-publish.py publish website 2>&1)"; RC=$?
+want_eq "$RC" "1" "未コミットの変更があると公開しない"
+want_in "未コミット" "$OUT" "止まった理由を言う"
+git -C "$T" checkout -- claude-rules/website/CLAUDE.md
+
+OUT="$(cd "$T" && python3 bin/rules-publish.py publish website 2>&1)"
+want_in "配信する版を更新しました" "$OUT" "公開できる"
+V1="$(cd "$T" && python3 -c 'import json;print(json.load(open("data/cache/rules-release/website/meta.json"))["version"])')"
+want_in "website@" "$V1" "版に版番号が入る"
+[ -f "$T/data/cache/rules-release/website/package.tar.gz" ] && say_ok "配布物ができる" || say_ng "配布物ができる"
+[ -s "$T/data/cache/rules-release/website/changelog.tsv" ] && say_ok "変更点の一覧ができる" || say_ng "変更点の一覧ができる"
+
+INSIDE="$(tar tzf "$T/data/cache/rules-release/website/package.tar.gz")"
+want_in "website/.claude/rules-version" "$INSIDE" "配布物に版が刻まれている"
+want_in "website/.claude/rules-keep" "$INSIDE" "配布物に「守るファイル」の一覧が入る"
+KEEP="$(tar xzf "$T/data/cache/rules-release/website/package.tar.gz" -O website/.claude/rules-keep)"
+want_in "documents/" "$KEEP" "守るファイルに案件の記録が入る"
+
+ACT="$(sha256sum "$T/data/cache/rules-release/website/package.tar.gz" | cut -d' ' -f1)"
+EXP="$(cd "$T" && python3 -c 'import json;print(json.load(open("data/cache/rules-release/website/meta.json"))["sha256"])')"
+want_eq "$ACT" "$EXP" "meta の SHA256 が実物と一致する"
+
+OUT="$(cd "$T" && python3 bin/rules-publish.py status 2>&1)"
+want_in "$V1" "$OUT" "status に公開中の版が出る"
+
+# ── 受け口（php -S） ─────────────────────────────────────────────────────
+FUTURE="$(date -d '+30 day' +%F)"; PAST="$(date -d '-1 day' +%F)"
+cat > "$T/data/secrets/mailbox-tokens.json" <<JSONEOF
+{
+  "tk-web":     { "agent_id": "rr-web",  "role": "reporter", "reporter_id": "RR-001", "template": "website" },
+  "tk-sys":     { "agent_id": "rr-sys",  "role": "reporter", "reporter_id": "RR-002", "template": "websystem" },
+  "tk-notpl":   { "agent_id": "rr-no",   "role": "reporter", "reporter_id": "RR-003" },
+  "tk-revoked": { "agent_id": "rr-rev",  "role": "reporter", "reporter_id": "RR-004", "template": "website", "revoked": true },
+  "tk-expired": { "agent_id": "rr-exp",  "role": "reporter", "reporter_id": "RR-005", "template": "website", "expires_at": "$PAST" },
+  "tk-admin":   { "agent_id": "boss",    "role": "admin" }
+}
+JSONEOF
+
+PORT=0
+for try in 1 2 3 4 5; do
+  P_TRY=$(( 18000 + RANDOM % 2000 ))
+  php -S "127.0.0.1:$P_TRY" -t "$T/site" >"$T/php.log" 2>&1 &
+  SRV_PID=$!
+  for i in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 0.2
+    if curl -s -o /dev/null "http://127.0.0.1:$P_TRY/tools/rules/index.php" 2>/dev/null; then PORT=$P_TRY; break; fi
+  done
+  [ "$PORT" != 0 ] && break
+  kill "$SRV_PID" 2>/dev/null; SRV_PID=""
+done
+[ "$PORT" != 0 ] || { echo "❌ php -S を起動できませんでした"; cat "$T/php.log"; exit 2; }
+URL="http://127.0.0.1:$PORT/tools/rules/index.php"
+
+echo
+echo "── 受け口（site/tools/rules/index.php）"
+api(){ CODE="$(curl -s -o "$T/out" -w '%{http_code}' -H "Authorization: Bearer $1" "$URL?$2")"; OUT="$(cat "$T/out")"; }
+
+api tk-web "action=version"
+want_eq "$CODE" "200" "紐づいたテンプレの版は取れる"
+want_in "$V1" "$OUT" "版が返る"
+api tk-notpl "action=version"
+want_eq "$CODE" "403" "テンプレ未紐づけは 403"
+want_in "template_not_assigned" "$OUT" "理由が分かる"
+api tk-web "action=version&template=websystem"
+want_eq "$CODE" "403" "自分のテンプレ以外は取れない"
+api tk-revoked "action=version"
+want_eq "$CODE" "403" "失効トークンは弾かれる"
+want_in "token_revoked" "$OUT" "失効と分かる"
+api tk-expired "action=version"
+want_eq "$CODE" "403" "期限切れトークンは弾かれる"
+api tk-sys "action=version"
+want_eq "$CODE" "503" "未公開のテンプレは 503"
+want_in "not_published" "$OUT" "未公開と分かる"
+api tk-admin "action=version&template=website"
+want_eq "$CODE" "200" "admin はテンプレを指定して確認できる"
+touch "$T/data/cache/rules-release/website/.publishing"
+api tk-web "action=version"
+want_eq "$CODE" "503" "公開の最中は配らない（版と実体がズレた瞬間を見せない）"
+rm -f "$T/data/cache/rules-release/website/.publishing"
+api tk-web "action=changelog"
+want_eq "$CODE" "200" "変更点の一覧が取れる"
+want_in "初版のルール" "$OUT" "変更点に件名が入る"
+api tk-web "action=nosuch"
+want_eq "$CODE" "400" "知らない action は 400"
+CODE="$(curl -s -o /dev/null -w '%{http_code}' -X POST -H "Authorization: Bearer tk-web" "$URL?action=version")"
+want_eq "$CODE" "405" "書き込み系メソッドは受けない（読み取り専用）"
+CODE="$(curl -s -o /dev/null -w '%{http_code}' "$URL?action=version")"
+want_eq "$CODE" "401" "トークン無しは 401"
+
+curl -s -o "$T/pkg.tar.gz" -H "Authorization: Bearer tk-web" "$URL?action=fetch"
+want_eq "$(sha256sum "$T/pkg.tar.gz" | cut -d' ' -f1)" "$EXP" "取得した配布物が壊れていない"
+
+STATE="$T/data/mailbox/.state/seen-rr-web.json"
+[ -f "$STATE" ] && want_in "$V1" "$(cat "$STATE")" "取りに来た版が記録される（誰が何版を持っているか）" \
+  || say_ng "取りに来た版が記録される"
+want_in "last_ip" "$(cat "$STATE" 2>/dev/null)" "接続元も記録される"
+
+# ── 現場側（bin/rules-update.sh） ────────────────────────────────────────
+echo
+echo "── 現場（claude-rules/*/bin/rules-update.sh）"
+want_eq "$(md5sum < "$PROJ/claude-rules/website/bin/rules-update.sh")" \
+        "$(md5sum < "$PROJ/claude-rules/websystem/bin/rules-update.sh")" \
+        "両テンプレの rules-update.sh が同一"
+
+# 第1版を受け取った案件を作る（＝配布直後の状態）
+SITE="$T/proj"
+mkdir -p "$SITE"
+mkdir -p "$T/x1"
+tar xzf "$T/data/cache/rules-release/website/package.tar.gz" -C "$T/x1"
+cp -r "$T/x1/website/." "$SITE/"
+printf 'RULE_UPDATE_URL=%s\nRULE_REPORT_TOKEN=tk-web\n' "$URL" > "$SITE/.env"
+printf 'この案件で育てた引き継ぎ\n' > "$SITE/documents/handoff.md"
+printf 'この案件のパス設定\n'       > "$SITE/project-config.md"
+git -C "$SITE" init -q; git -C "$SITE" config user.email t@example.com; git -C "$SITE" config user.name t
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm init >/dev/null
+
+run_up(){ OUT="$(cd "$SITE" && bash bin/rules-update.sh "$@" 2>&1)"; RC=$?; }
+
+run_up
+want_eq "$RC" "0" "最新なら終了コード 0"
+want_in "最新です" "$OUT" "最新だと分かる"
+
+# 第2版を公開する
+printf 'ルール第2版\n' > "$T/claude-rules/website/CLAUDE.md"
+printf 'ルール層（第2版）\n' > "$T/claude-rules/website/rules/modes/developer.md"
+printf '新しく足したルール\n' > "$T/claude-rules/website/rules/modes/new-rule.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "共有ファイルの所有者表を追加" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+V2="$(cd "$T" && python3 -c 'import json;print(json.load(open("data/cache/rules-release/website/meta.json"))["version"])')"
+
+run_up
+want_eq "$RC" "10" "更新があると終了コード 10（人に確認する合図）"
+want_in "共有ファイルの所有者表を追加" "$OUT" "何が変わるかを見せる"
+want_in "人の確認が必要" "$OUT" "勝手に適用しないと明示する"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第1版" "確認だけでは1文字も書き換えない"
+
+# 未コミットの変更があるときは止まる
+printf '作業中の加筆\n' >> "$SITE/CLAUDE.md"
+run_up --apply
+want_eq "$RC" "1" "上書き対象に未コミットがあると適用しない"
+want_in "未コミット" "$OUT" "止まった理由を言う"
+want_in "--force" "$OUT" "承知のうえで進む方法を示す"
+git -C "$SITE" checkout -- CLAUDE.md
+
+run_up --apply
+want_eq "$RC" "0" "適用できる"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第2版" "ルール層は上書きされる"
+want_eq "$(cat "$SITE/documents/handoff.md")" "この案件で育てた引き継ぎ" "案件の記録（documents/）は消えない"
+want_eq "$(cat "$SITE/project-config.md")" "この案件のパス設定" "案件の記録（project-config.md）は消えない"
+[ -f "$SITE/rules/modes/new-rule.md" ] && say_ok "新しいファイルが置かれる" || say_ng "新しいファイルが置かれる"
+want_eq "$(head -1 "$SITE/.claude/rules-version")" "$V2" "版が書き換わる"
+ls "$SITE/.claude/rules-backup/"*.tar.gz >/dev/null 2>&1 && say_ok "上書き前の退避ができる" || say_ng "上書き前の退避ができる"
+BK="$(ls "$SITE/.claude/rules-backup/"*.tar.gz | head -1)"
+want_in "CLAUDE.md" "$(tar tzf "$BK")" "退避に上書きしたファイルが入っている"
+
+run_up
+want_eq "$RC" "0" "適用後は最新になる"
+
+mkdir -p "$T/nopy3"
+printf '#!/bin/sh\nexit 1\n' > "$T/nopy3/python3"; chmod +x "$T/nopy3/python3"   # python3 は在るが動かない環境
+ln -sf "$(command -v python3)" "$T/nopy3/python"
+OUT="$(cd "$SITE" && PATH="$T/nopy3:$PATH" bash bin/rules-update.sh 2>&1)"; RC=$?
+want_in "最新です" "$OUT" "python3 が使えない環境でも python で動く"
+
+
+# 以降は「更新がある」状態で、書き込みの安全装置を見る
+printf 'ルール第3版\n' > "$T/claude-rules/website/CLAUDE.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "三版" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+
+# 書き込み先の途中がリンクなら、辿った先を壊さずに止まる（mkdir も cp もリンクを辿るため）
+OUTSIDE="$T/outside"; mkdir -p "$OUTSIDE"
+cp -r "$SITE/rules/modes" "$OUTSIDE/modes"
+rm -rf "$SITE/rules/modes"; ln -s "$OUTSIDE/modes" "$SITE/rules/modes"
+run_up --apply --force
+want_eq "$RC" "1" "書き込み先の途中がシンボリックリンクなら適用しない"
+want_in "シンボリックリンク" "$OUT" "止まった理由を言う"
+want_eq "$(cat "$OUTSIDE/modes/developer.md")" "ルール層（第2版）" "リンクの先（プロジェクト外）を書き換えていない"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第2版" "止まったときに1ファイルも書き換えていない（半端な適用を残さない）"
+want_eq "$(head -1 "$SITE/.claude/rules-version")" "$V2" "止まったときに版を進めない（「最新です」と嘘をつかせない）"
+rm -f "$SITE/rules/modes"; cp -r "$OUTSIDE/modes" "$SITE/rules/modes"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm restore >/dev/null
+
+# 危険なパスを含む配布物は展開しない（SHA256 は合わせたうえで検査される）
+REL="$T/data/cache/rules-release/website"
+python3 - "$REL" <<'PYIN'
+# 展開先の外を指すメンバー（../danger）を含む配布物を作り、meta の SHA256 も合わせる
+# ＝「照合を通ったあとの展開」で守れているかを見る
+import hashlib, io, json, pathlib, sys, tarfile, time
+rel = pathlib.Path(sys.argv[1])
+pkg = rel / "package.tar.gz"
+with tarfile.open(pkg, "w:gz") as tf:
+    for name, body in (("website/.claude/rules-keep", "documents/\n"), ("../danger", "y\n")):
+        data = body.encode()
+        info = tarfile.TarInfo(name); info.size = len(data); info.mtime = int(time.time())
+        tf.addfile(info, io.BytesIO(data))
+m = json.loads((rel / "meta.json").read_text())
+m["sha256"] = hashlib.sha256(pkg.read_bytes()).hexdigest()
+(rel / "meta.json").write_text(json.dumps(m, ensure_ascii=False, indent=2))
+PYIN
+run_up --apply
+want_eq "$RC" "1" "親ディレクトリを指すパスを含む配布物は展開しない"
+want_in "危険なパス" "$OUT" "危険なパスだと分かる"
+[ -f "$T/danger" ] && say_ng "展開先の外にファイルを作っていない" || say_ok "展開先の外にファイルを作っていない"
+
+# 壊れた配布物は適用しない
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+printf 'こわれた中身' > "$T/data/cache/rules-release/website/package.tar.gz"
+run_up --apply
+want_eq "$RC" "1" "取得が壊れていたら適用しない"
+want_in "SHA256" "$OUT" "壊れていると分かる"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第2版" "壊れた取得で中身が変わっていない"
+
+# 設定不足・失効
+printf 'RULE_UPDATE_URL=%s\nRULE_REPORT_TOKEN=tk-revoked\n' "$URL" > "$SITE/.env"
+run_up
+want_eq "$RC" "1" "失効トークンでは更新できない"
+want_in "失効" "$OUT" "失効だと分かる案内が出る"
+printf 'RULE_REPORT_URL=%s\n' "${URL%/tools/rules/index.php}/tools/mailbox/index.php" > "$SITE/.env"
+printf 'RULE_REPORT_TOKEN=tk-web\n' >> "$SITE/.env"
+run_up
+want_in "最新の版" "$OUT" "投函用の設定しか無い .env（index.php 付き）からでも受け口を導ける"
+: > "$SITE/.env"
+run_up
+want_eq "$RC" "1" "設定が空なら止まる"
+
+echo
+echo "────────────────────────────────"
+echo "成功 $P / 失敗 $N"
+[ "$N" -eq 0 ] || exit 1

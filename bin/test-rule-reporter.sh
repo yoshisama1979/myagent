@@ -29,8 +29,9 @@ SRV_PID=""
 cleanup(){ [ -n "$SRV_PID" ] && kill "$SRV_PID" 2>/dev/null; rm -rf "$T"; }
 trap cleanup EXIT
 
-mkdir -p "$T/site/tools/mailbox" "$T/data/mailbox/new" "$T/data/mailbox/cur" "$T/data/mailbox/hold" "$T/data/secrets"
+mkdir -p "$T/site/tools/mailbox" "$T/site/tools/lib" "$T/data/mailbox/new" "$T/data/mailbox/cur" "$T/data/mailbox/hold" "$T/data/secrets"
 cp "$PROJ/site/tools/mailbox/index.php" "$T/site/tools/mailbox/index.php"
+cp "$PROJ/site/tools/lib/token-auth.php" "$T/site/tools/lib/token-auth.php"   # 認証・失効・期限の正（共有）
 
 TODAY="$(date +%F)"
 PAST="$(date -d '-1 day' +%F)"
@@ -177,16 +178,21 @@ export RULE_REPORTER_LEDGER="$T/data/rule-reporters.md"
 export RULE_REPORTER_STATE="$T/data/mailbox/.state"
 rr(){ python3 "$PROJ/bin/rule-reporter.py" "$@" 2>&1; }
 
-OUT="$(rr issue "テスト案件A")";                      want_in "英数字以外が含まれます" "$OUT" "日本語の案件名は --id なしでは弾く（意味のない識別子を黙って作らない）"
-OUT="$(rr issue "テスト案件A" --id "Test_Proj")";      want_in "英小文字・数字・ハイフン" "$OUT" "不正な --id は弾く"
-OUT="$(rr issue "テスト案件A" --id test-proj)";        want_in "RR-005" "$OUT" "既存の最大番号の次を採番する"
+OUT="$(rr issue "テスト案件A" --template website)";   want_in "英数字以外が含まれます" "$OUT" "日本語の案件名は --id なしでは弾く（意味のない識別子を黙って作らない）"
+OUT="$(rr issue "テスト案件A" --id "Test_Proj" --template website)"; want_in "英小文字・数字・ハイフン" "$OUT" "不正な --id は弾く"
+OUT="$(rr issue "テスト案件A" --id test-proj)";        want_in "--template" "$OUT" "テンプレの指定は必須（取りに来られる範囲が決まる）"
+OUT="$(rr issue "テスト案件A" --id test-proj --template website)"; want_in "RR-005" "$OUT" "既存の最大番号の次を採番する"
 want_in "rr-test-proj" "$OUT" "--id が agent_id になる"
-want_in "RULE_REPORT_TOKEN=rr_" "$OUT" "配布用の .env 2行を出す"
+want_in "RULE_REPORT_TOKEN=rr_" "$OUT" "配布用の .env を出す"
+want_in "RULE_UPDATE_URL" "$OUT" "更新の受け口も .env に入れさせる（同じトークンで取りに来る）"
 TOKV="$(printf '%s' "$OUT" | sed -n 's/.*RULE_REPORT_TOKEN=//p')"
 want_in "rr-" "$(python3 -c "
 import json;d=json.load(open('$RULE_REPORTER_TOKENS'));print(d['$TOKV']['agent_id'])")" "トークン表に agent_id が入る"
 want_eq "$(python3 -c "
 import json;d=json.load(open('$RULE_REPORTER_TOKENS'));print(d['$TOKV']['role'])")" "reporter" "ロールは reporter"
+want_eq "$(python3 -c "
+import json;d=json.load(open('$RULE_REPORTER_TOKENS'));print(d['$TOKV']['template'])")" "website" "紐づけたテンプレが表に入る"
+want_in "website" "$(grep '^| RR-005' "$RULE_REPORTER_LEDGER")" "台帳にテンプレが載る"
 want_in "| RR-005 |" "$(cat "$RULE_REPORTER_LEDGER")" "台帳に行が増える"
 want_not_in "$TOKV" "$(cat "$RULE_REPORTER_LEDGER")" "台帳にトークン値が載らない"
 want_eq "$(stat -c '%a' "$RULE_REPORTER_TOKENS")" "600" "トークン表の権限は 600 のまま"
@@ -194,7 +200,7 @@ want_eq "$(stat -c '%a' "$RULE_REPORTER_TOKENS")" "600" "トークン表の権�
 # 発行したトークンが実際に投函でき、失効させると弾かれる（表→API の結線確認）
 req "$TOKV" POST "action=send" '{"to":"rule-kaizen","subject":"s","body":"b"}'
 want_eq "$CODE" "200" "発行したトークンで投函できる"
-OUT="$(rr issue "テスト案件A" --id test-proj)";        want_in "すでにあります" "$OUT" "同じ案件の二重発行を拒む"
+OUT="$(rr issue "テスト案件A" --id test-proj --template website)"; want_in "すでにあります" "$OUT" "同じ案件の二重発行を拒む"
 OUT="$(rr revoke RR-005 --reason "テスト")";          want_in "失効" "$OUT" "番号で失効できる"
 req "$TOKV" POST "action=send" '{"to":"rule-kaizen","subject":"s","body":"b"}'
 want_eq "$CODE" "403" "失効後は 403 で弾かれる"
@@ -212,7 +218,7 @@ want_not_in "rule-kaizen" "$OUT" "受信専用の sink は一覧に出ない（�
 want_not_in "rule-kaizen" "$(grep '^| RR-' "$RULE_REPORTER_LEDGER")" "受信専用の sink は台帳の行に出ない（本文の説明文は別）"
 want_in "失効" "$OUT" "一覧に状態が出る"
 want_not_in "$TOKV" "$OUT" "一覧にトークン値を出さない"
-OUT="$(rr issue "テスト案件A" --id test-proj)";        want_in "RR-006" "$OUT" "失効後は同じ案件に再発行できる"
+OUT="$(rr issue "テスト案件A" --id test-proj --template websystem)"; want_in "RR-006" "$OUT" "失効後は同じ案件に再発行できる"
 OUT="$(rr revoke "テスト案件A" --reason "表示名で引けるか")"; want_in "RR-006" "$OUT" "同名が複数でも有効なほうを失効できる"
 OUT="$(rr revoke "テスト案件A" --reason "全部失効済み")";     want_in "複数一致" "$OUT" "全部失効済みで絞れなければ番号を求める"
 

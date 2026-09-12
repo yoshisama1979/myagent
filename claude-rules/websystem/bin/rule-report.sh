@@ -61,8 +61,16 @@ done
 if [ -z "$body" ] && [ ! -t 0 ]; then body="$(cat)"; fi
 [ -n "$body" ] || die "本文が空です（引数か標準入力で渡してください）"
 
-command -v curl    >/dev/null 2>&1 || die "curl が見つかりません"
-command -v python3 >/dev/null 2>&1 || die "python3 が見つかりません（JSON生成に使用）"
+command -v curl >/dev/null 2>&1 || die "curl が見つかりません"
+# Python は JSON の生成と応答の判定に使う。Windows の Git Bash には python3 が無く python しか
+# 無いことがあるので両方見る（python2 だと落ちるので 3 系かを確認する）。bin/rules-update.sh と同じ。
+PY=""
+for c in python3 python; do
+  if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info[0] >= 3 else 1)' 2>/dev/null; then
+    PY="$c"; break
+  fi
+done
+[ -n "$PY" ] || die "python3（または Python 3 系の python）が見つかりません（JSON生成に使用）"
 [ -f "$ENV_FILE" ] || die ".env が見つかりません（$ENV_FILE）"
 
 # ここから下はトークンを扱う。bash -x（xtrace）が有効だと展開がそのままログに出るので、
@@ -97,7 +105,7 @@ fi
 TEMPLATE="${VERSION%%@*}"                      # website / websystem / unknown
 case "$TEMPLATE" in website|websystem) ;; *) TEMPLATE="rules" ;; esac
 
-json="$(RR_SUBJECT="[$VERSION] $subject" RR_BODY="$body" RR_THREAD="${TEMPLATE}-kaizen" python3 -c '
+json="$(RR_SUBJECT="[$VERSION] $subject" RR_BODY="$body" RR_THREAD="${TEMPLATE}-kaizen" "$PY" -c '
 import os, json
 print(json.dumps({
     "to": "rule-kaizen",
@@ -118,7 +126,7 @@ resp="$(printf '%s' "$json" | curl -sS --max-time 15 --config "$cfg" \
         -X POST -H "Content-Type: application/json" --data-binary @- "${URL}/?action=send")" || \
   die "送信に失敗しました（ネットワーク）。rule-improvements.md に残して社長に伝えてください。"
 
-ok="$(RR_RESP="$resp" python3 -c '
+ok="$(RR_RESP="$resp" "$PY" -c '
 import os, json, sys
 try:
     d = json.loads(os.environ["RR_RESP"])

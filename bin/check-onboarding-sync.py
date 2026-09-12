@@ -75,6 +75,9 @@ GUIDES = {
         "claude-rules/website/documents/rule-improvements.md": [
             "§7 正本と番号（RI-NNN）",
         ],
+        "claude-rules/website/rules/modes/rules-update.md": [
+            "§7 正本と番号（ルールの新しい版を取りに来る）",
+        ],
         "claude-rules/website/project-config.md": [
             "§3 Step 1 プロジェクトの設定を書く", "§11 導入チェックリスト",
         ],
