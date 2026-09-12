@@ -262,6 +262,43 @@ bad = [w for w in ("write_text(", ".unlink(", "os.remove", "shutil.")
 w = [ln for ln in src_txt.split("\n") if "write_text" in ln and "STATE" not in ln and "tmp" not in ln]
 (ok if not w else ng)(f"状態ファイル以外へ書き込まない（{w[:1] or 'なし'}）")
 
+print("\n=== skill-kaizen（🔔 を使わない置き場・2026-09-12 追加）===")
+K = T / "data/hp-improve"; K.mkdir(parents=True, exist_ok=True)
+(K / "skill-kaizen.md").write_text(
+    "# 台帳\n\n"
+    "### K-001 — あ\n本文だけ（採否なし）\n\n"
+    "### K-002 — い\nステータス: ✅反映済み(2026-01-01)\n\n"
+    "### K-003 — う\nステータス: ❌却下\n\n"
+    "### K-partner-702（partner Cycle 178）え\n本文だけ\n\n"
+    "### 📦 退避分の索引\nK-900 K-901 は archive へ\n\n"
+    "### K-001 — あ（同じ番号が再び使われている）\n本文だけ\n",
+    encoding="utf-8")
+got = ps.extract(K / "skill-kaizen.md", "kaizen_entry")
+ids = [g["id"] for g in got]
+(ok if ids == ["K-001", "K-partner-702", "K-001"] else ng)(
+    "採否が付いていない見出しだけを拾う（反映済み・却下は除く）", ids)
+(ok if "K-partner-702" in ids else ng)("接頭辞つきの ID（K-partner-702）も拾える")
+(ok if not any(i.startswith("K-9") for i in ids) else ng)(
+    "見出しでない行の中の ID（索引に並ぶ K-900 等）は項目にしない", ids)
+(ok if all("本文" not in g["head"] for g in got) else ng)("本文を head に持ち込まない（§6 秘密の扱い）")
+
+print("\n=== 同じ ID が複数の項目に使われていたら黙って寄せない ===")
+_src3 = ps.sources
+ps.sources = lambda: [("skill-kaizen", K / "skill-kaizen.md", "kaizen_entry")]
+dup = ps.duplicate_ids()
+(ok if dup and dup[0][2] == 3 and dup[0][3] == 2 and dup[0][4] == 1 else ng)(
+    "項目3 / 異なるID2 / 重複1種 を申告する", dup)
+(K / "skill-kaizen.md").write_text("### K-010 — か\n本文\n", encoding="utf-8")
+(ok if not ps.duplicate_ids() else ng)("重複が無ければ何も言わない（鳴りっぱなしにしない）")
+ps.sources = _src3
+
+print("\n=== 収集対象に skill-kaizen が入っている ===")
+src_txt2 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
+(ok if "skill-kaizen" in src_txt2.split("def sources")[1].split("def ")[0] else ng)(
+    "sources() が skill-kaizen を含む")
+(ok if "duplicate_ids" in src_txt2.split("def cmd_stats")[1] else ng)(
+    "stats が重複IDを報告する（呼ばれない検査を作らない）")
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF

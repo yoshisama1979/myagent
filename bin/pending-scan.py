@@ -27,6 +27,7 @@
   pending-scan.py wip [--lane X]  # 在庫上限に達したレーンを出す（達していれば終了コード1）
 """
 import argparse
+import collections
 import fcntl
 import hashlib
 import json
@@ -46,6 +47,11 @@ PENDING_MARK = "🔔"
 # ID の形。レーンごとに接頭辞が違う（R-014c / R-F17(B) / A-078 / Q-F10 / O-056）
 ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
 # 「🔔→✅」の履歴表記。印と同じセルに解決の履歴を残す台帳があるため、印だけを見ると水増しになる。
+# skill-kaizen は 🔔 を使わず「### K-NNN 見出し＋ステータス行」で書く（台帳の形が違う）。
+# 既存の ID_RE は K-partner-702 のような接頭辞つきを拾えないので専用に持つ。
+KAIZEN_HEAD_RE = re.compile(r"^###\s+.*?(K-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)")
+KAIZEN_DECIDED_RE = re.compile(r"反映済み|却下")
+
 RESOLVED_HIST_RE = re.compile(r"🔔\s*→\s*[✅❌]")
 # 解決済みの状態セル。上の履歴表記に「行頭が ✅/❌」を足したもの＝解決印を増やすときは
 # RESOLVED_HIST_RE だけを直せば両方に効く（2つに書き分けると数え方が食い違う）。
@@ -82,6 +88,10 @@ def sources():
         out.append((f"hp-loop:{s}", PROJ / "data" / "hp-loop" / s / "coverage.md", "md_table"))
     out.append(("partner", PROJ / "data" / "partner" / "ledger.md", "md_table"))
     out.append(("blog-loop:ycom", PROJ / "site" / "hp-analysis" / "ycom" / "blog" / "index.html", "html_table"))
+    # 2026-09-12 社長ご指示で追加。全エージェントが投函する共有の目安箱なのに消化の担当が決まっておらず、
+    # 192件中 反映済み7・却下1・残り184件が未採否のまま（＝台帳の 1/4 が「社長の判断待ち」だった）。
+    # この置き場だけ 🔔 を使わない書式なので専用の kind で読む。
+    out.append(("skill-kaizen", PROJ / "data" / "hp-improve" / "skill-kaizen.md", "kaizen_entry"))
     return [(l, p, k) for l, p, k in out if p.is_file()]
 
 
@@ -98,6 +108,21 @@ def extract(path, kind):
     """(item_id, 行番号, 先頭セル, 状態セル) を返す。判断待ちの印がある項目行だけ。"""
     text = path.read_text(encoding="utf-8", errors="replace")
     rows = []
+    if kind == "kaizen_entry":
+        # 見出しで区切り、本文に「反映済み／却下」が無いものだけを判断待ちとする。
+        # 本文は state.json に持たない（§6 秘密の扱い）＝表示用に見出しの先頭だけ返す。
+        lines = text.split("\n")
+        heads = [(i, m.group(1), ln) for i, ln in enumerate(lines, 1)
+                 for m in [KAIZEN_HEAD_RE.match(ln)] if m]
+        out = []
+        for n, (line_no, kid, head) in enumerate(heads):
+            end = heads[n + 1][0] - 1 if n + 1 < len(heads) else len(lines)
+            body = "\n".join(lines[line_no - 1:end])
+            if KAIZEN_DECIDED_RE.search(body):
+                continue                       # 採否が付いている＝判断待ちではない
+            out.append({"id": kid, "line": line_no,
+                        "head": head.lstrip("# ").strip()[:80], "status": "未採否"})
+        return out
     if kind == "html_table":
         for m in re.finditer(r"<tr\b.*?</tr>", text, re.S):
             if PENDING_MARK not in m.group(0):
@@ -242,6 +267,23 @@ def narrative_counts():
     return out
 
 
+def duplicate_ids():
+    """同じ ID が複数の見出し/行に使われている置き場を返す。
+
+    ★黙って寄せない＝`key_of(lane, id)` は ID で名寄せするので、ID が重複していると
+    **静かに少なく数える**（実測 2026-09-12＝skill-kaizen は見出し184に対し異なるIDは156。
+    K-532 は3つの別物を指していた）。しかも「決めた」がどれに効いたのか言えなくなる＝
+    1件=1ID を前提にした verify（書き戻しの実測）が成立しない。少なく数えるのと同じ壊れ方。
+    """
+    out = []
+    for lane, path, kind in sources():
+        seen = collections.Counter(it["id"] for it in extract(path, kind))
+        dup = {k: v for k, v in seen.items() if v > 1}
+        if dup:
+            out.append((lane, str(path.relative_to(PROJ)), sum(seen.values()), len(seen), len(dup)))
+    return out
+
+
 def coverage_gap():
     """各ソースの「印の総数」と「項目として取り出せた数」の差を返す。
 
@@ -283,6 +325,14 @@ def cmd_stats():
               f"\n     この道具は「表の行」だけを項目として扱います。残りは人が読む必要があります:")
         for lane, p, m, g in sorted(gap, key=lambda x: -(x[2] - x[3]))[:8]:
             print(f"     {lane:18} {p:46} 印{m:3} / 取得{g:3} → 残り{m-g:3}")
+    dup = duplicate_ids()
+    if dup:
+        print("\n  ⚠️ 同じ ID が複数の項目に使われている置き場（ID で名寄せするので静かに少なく数えます）:")
+        for lane, p, rows, ids, ndup in sorted(dup, key=lambda x: -(x[2] - x[3])):
+            print(f"     {lane:16} {p:42} 項目{rows:4} / 異なるID{ids:4} → 重複{ndup}種")
+        print("     ＝「決めた」がどの項目に効いたのか言えず、verify（書き戻しの実測）が成立しません。"
+              "所有モードで採番し直してください。")
+
     nar = narrative_counts()
     if nar:
         print("\n  ⚠️ 機械で項目に切り出せない置き場（地の文に ID が埋まっている）＝ここは人が読む:")

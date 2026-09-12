@@ -26,7 +26,9 @@
   | 掲示板（ローテ強制ライン） | 80KB★ |
 
 - **超えていたら当サイクルで必ずローテしてから終える**（スキップ不可）。実施できない事情があるときだけ例外＝「未実施・理由・繰越先」を明記（同じ先送りを二重記録しない）。
-- 閾値の機械監視は `bin/system-health.py`（精密診断・毎日 cron）が担い、超過は overseer が `O-NNN` 起票。**現在の実測対象**＝自動ロードKB・`data/partner/ledger.md`・`data/hp-improve/skill-kaizen.md`・各掲示板 index・`data/hp-loop/*/coverage.md`。**⚠️ `data/comms/chatwork/ledger.md`（と `site/comms/index.html`）のサイズは未計測＝追加候補**（comms は poll/蒸留の停滞のみ監視）。**宣言と実装の食い違いを残さないため、対象を増やすときは本表と `system-health.py` を対で更新する**。
+- **閾値は「超えたか」でなく「超えていて、かつ増え続けているか」で見る**（2026-09-12 社長ご指示）。実測で25本中13本が常時超過＝**鳴りっぱなしの警告は警告として働かない**（毎日出力され毎週 overseer が読んでいたのに1ヶ月半 誰も動かなかった）。推移は `python3 bin/ledger-watch.py`（`system-health.jsonl` の履歴から週あたりの増加を出す・🔴＝超過かつ増加／🟡＝超過だが横ばい〜減少／🆕＝傾き不明）。
+- **器は2種類に分けて見る**＝**蓄積**（育つ・退避で上限内に収める）と**キュー**（消化すべき・減らないこと自体が異常）。キューはサイズでは捕まらない（件数と滞留日数で見る）＝2026-09-11 の実害（実装報告8通が37日読まれず解析が毎晩空回り）は後者だった。
+- 閾値の機械監視は `bin/system-health.py`（精密診断・毎日 cron）が担い、超過は overseer が `O-NNN` 起票。**現在の実測対象**＝自動ロードKB・`data/partner/ledger.md`・`data/hp-improve/skill-kaizen.md`・各掲示板 index・`data/hp-loop/*/coverage.md`。**2026-09-12 に `data/comms/chatwork/ledger.md`（70KB）と `site/comms/index.html`（80KB）を追加**（社長ご指示。1ヶ月半「未計測＝追加候補」と書いたまま放置され、実測すると 128KB／319KB＝どちらも超過していた）。**宣言と実装の食い違いを残さないため、対象を増やすときは本表と `system-health.py` を対で更新する**。
 
 ## 3. 削除でなく退避（履歴は無欠損）
 

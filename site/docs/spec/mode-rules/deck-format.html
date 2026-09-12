@@ -10,11 +10,12 @@
 <div class="max-w-4xl mx-auto p-6 md:p-10">
   <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
   <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
-    これは自動生成ビューです（生成: 2026-07-24 19:04）。原本は
+    これは自動生成ビューです（生成: 2026-09-12 10:50）。原本は
     <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/deck-format.md</code>。
     編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
   </div>
 <h1 class="text-3xl font-bold mb-4 mt-8">スライド資料（デッキ）作成ルール — HTML → PDF</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>北極星は置かない</strong>＝これは書式・規約であり、目的は使う側（partner 等）の北極星に従う。目的関数を置くと手順が目標に化けて歪む（A-051 C・2026-08-10 社長確定）</div>
 <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.1</strong>（2026-07-13・初版）｜ changelog はファイル末尾「変更履歴」を参照。<br>
 別プロジェクト（hana-chat 営業提案・A4横21ページ）で実際に構築・運用した手順と、<br>
 そこで<strong>実際に踏んだ失敗</strong>を移植したもの。きれいな最終形ではなく失敗が本体。</div>
@@ -156,7 +157,7 @@ EOF</code></pre>
 <p class="text-sm mb-4 leading-relaxed">すべて ✅ なら納品・共有へ、1つでも ❌ なら見直し。</p>
 <hr class="my-8 border-gray-300">
 <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
-<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-13</td><td class="px-3 py-2 border border-gray-200 align-top">初版。別プロジェクト（hana-chat 営業提案 A4横21ページ・HTML→ヘッドレスChrome→PDF）の実践から移植。落とし穴8件（用紙縦×3・背景消え・画像抜け×2・列幅・書き込み未完）を症状/原因/対処の3点セットで収録。検証2手順（MediaBox実寸・SHA256スクショ比較）。スクショの実データ混入事故（他社データを別クライアント資料に貼りかけた）を最重要節として独立。コマンドはこの環境（VPS <code class="bg-gray-100 px-1 rounded text-sm font-mono">/usr/bin/google-chrome</code>）の実例＋読み替え注記。Codexレビュー反映（break-after併記・timeout/virtual-time-budget用途分離・PDF検証の限界注記・deck-rowsマーカー一致・画像チェック欄）</td></tr></tbody></table></div>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">—</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-10</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>冒頭に北極星1行を追記</strong>（A-051・社長確定＝売りはファネル全層で設計 <span class="text-gray-400 text-xs">[[feedback_funnel-all-layers]]</span>）。手順・制約は不変＝1行追記のみのため版番号は据え置き</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-13</td><td class="px-3 py-2 border border-gray-200 align-top">初版。別プロジェクト（hana-chat 営業提案 A4横21ページ・HTML→ヘッドレスChrome→PDF）の実践から移植。落とし穴8件（用紙縦×3・背景消え・画像抜け×2・列幅・書き込み未完）を症状/原因/対処の3点セットで収録。検証2手順（MediaBox実寸・SHA256スクショ比較）。スクショの実データ混入事故（他社データを別クライアント資料に貼りかけた）を最重要節として独立。コマンドはこの環境（VPS <code class="bg-gray-100 px-1 rounded text-sm font-mono">/usr/bin/google-chrome</code>）の実例＋読み替え注記。Codexレビュー反映（break-after併記・timeout/virtual-time-budget用途分離・PDF検証の限界注記・deck-rowsマーカー一致・画像チェック欄）</td></tr></tbody></table></div>
 </div>
 </body>
 </html>

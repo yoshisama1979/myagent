@@ -10,12 +10,13 @@
 <div class="max-w-4xl mx-auto p-6 md:p-10">
   <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
   <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
-    これは自動生成ビューです（生成: 2026-07-24 19:04）。原本は
+    これは自動生成ビューです（生成: 2026-09-12 10:50）。原本は
     <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/blog-write.md</code>。
     編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
   </div>
 <h1 class="text-3xl font-bold mb-4 mt-8">ブログ執筆（対応）モード — 動作ルール</h1>
-<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.1</strong>（2026-06-23・初版＝型）｜ changelog はファイル末尾「変更履歴」を参照。<br>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>北極星：記事ごとに狙う層を宣言して書く＝①出会いの記事（広い読者に届く・アクセスで測る）／②ファンを作る記事（人柄・実例・専門性で信頼を積む・再訪と指名検索で測る）／③依頼を受ける記事（料金・比較・事例・買い手意図の接触で測る）。どの層の記事も正当＝層に合った物差しで測る</strong>（A-051・2026-08-10 社長確定・<span class="text-gray-400 text-xs">[[feedback_funnel-all-layers]]</span>＝売りはファネル全層で設計・レンズでありフィルタでない）</div>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-08-06）｜ changelog はファイル末尾「変更履歴」を参照。<br>
 このモードは <strong>使いながら育てる</strong>（reviewer 型：記録と反映を分け、棚卸しでルールへ昇格）。気づきは <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に溜める。</div>
 <p class="text-sm mb-4 leading-relaxed">このファイルは、<strong>ブログ分析ループ（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog-loop</code>）が出した提案（既存記事の改善 <code class="bg-gray-100 px-1 rounded text-sm font-mono">B-NNN</code>／新規記事のテーマ＋構成 <code class="bg-gray-100 px-1 rounded text-sm font-mono">T-NNN</code>）に実際に対応し、完成原稿ドラフト（本文まで）を作る</strong> 実行モードの <strong>手順・制約・出力フォーマット・自己チェック</strong> を定義する。</p>
 <p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/blog-write &lt;client&gt;</code> スラッシュコマンドから呼び出される（将来は <code class="bg-gray-100 px-1 rounded text-sm font-mono">/loop</code>・cron でループ化する想定。<strong>最初は手動で動かして検証する</strong>）。<br>
@@ -104,6 +105,7 @@ CLAUDE.md の行動指針と <a href="../rules/automation.html" class="text-blue
 <h3 class="text-lg font-semibold mb-3 mt-6">Step 6: 自己改善（軽く・毎回）</h3>
 <ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
 <li>「今回足りなかったものは？」を自問。気づきは <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に <code class="bg-gray-100 px-1 rounded text-sm font-mono">K-NNN</code>（無ければ「特記なし」）。</li>
+<li><strong>社長の判断・許可・情報がないと前に進めない気づき</strong>には、行頭に <code class="bg-gray-100 px-1 rounded text-sm font-mono">🙋要・社長判断</code> を付ける（自分の工夫で解けるものには付けない）。原則＝<a href="../rules/ledger-discipline.html" class="text-blue-600 hover:underline">../ledger-discipline.md</a> §7。</li>
 </ul>
 <hr class="my-8 border-gray-300">
 <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">出力フォーマット（site/drafts/blog/&lt;client&gt;/&lt;slug&gt;.html）</h2>
@@ -133,7 +135,7 @@ CLAUDE.md の行動指針と <a href="../rules/automation.html" class="text-blue
 <p class="text-sm mb-4 leading-relaxed">すべて ✅ なら出力、1つでも ❌ なら見直し。</p>
 <hr class="my-8 border-gray-300">
 <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
-<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-06-23</td><td class="px-3 py-2 border border-gray-200 align-top">初版（型）。blog-loop の対になる実行モード。提案 B/T に対応して<strong>完成原稿ドラフト（本文まで）</strong>を <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/blog/&lt;client&gt;/</code> に生成。公開境界は段階導入（Phase1=ローカル草案／Phase2=WP下書き投稿＝creds+合意後／Phase3=ループ化）。固有事実はプレースホルダで捏造しない。安全/品質/クライアント固有値は automation.md・hp-improve.md・blog-loop の clients/&lt;client&gt;.md を流用</td></tr></tbody></table></div>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">—</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-10</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>冒頭に北極星1行を追記</strong>（A-051・社長確定＝売りはファネル全層で設計 <span class="text-gray-400 text-xs">[[feedback_funnel-all-layers]]</span>）。手順・制約は不変＝1行追記のみのため版番号は据え置き</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-06</td><td class="px-3 py-2 border border-gray-200 align-top"><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">🙋要・社長判断</code> の印を導入（社長承認・A-058）</strong>：自己改善で書く気づきのうち、社長の判断・許可・情報がないと前に進めないものに印を付ける1行を追加。原則の全文は共通ベース <a href="../rules/ledger-discipline.html" class="text-blue-600 hover:underline">ledger-discipline.md</a> §7（本ファイルは参照のみ＝二重定義しない）。読み手＝partner 朝礼が grep して1日最大3件。過去分には遡及しない</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-06-23</td><td class="px-3 py-2 border border-gray-200 align-top">初版（型）。blog-loop の対になる実行モード。提案 B/T に対応して<strong>完成原稿ドラフト（本文まで）</strong>を <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/blog/&lt;client&gt;/</code> に生成。公開境界は段階導入（Phase1=ローカル草案／Phase2=WP下書き投稿＝creds+合意後／Phase3=ループ化）。固有事実はプレースホルダで捏造しない。安全/品質/クライアント固有値は automation.md・hp-improve.md・blog-loop の clients/&lt;client&gt;.md を流用</td></tr></tbody></table></div>
 </div>
 </body>
 </html>

@@ -3,7 +3,7 @@
 > **統括者（overseer）が毎ループ冒頭に読む入口。** 変わりにくい**構造**だけをここに置く。
 > 滞り・版ズレ・未回答などの**変わりやすい状態は保存しない**（統括者が都度生成する＝[rules/modes/overseer.md](rules/modes/overseer.md)）。
 > 役割分担：`OVERVIEW.md`＝ディレクトリの地図／`AI-INDEX.md`＝site/中身の地図／**本ファイル＝動くモード同士の関係の地図**。
-> version 0.4（2026-08-21）｜ changelog は末尾。
+> version 0.5（2026-09-06）｜ changelog は末尾。
 
 ---
 
@@ -31,12 +31,13 @@
 
 | モード | 目的 | 起動 | 一次情報源（読む） | 出力先（書く・誰が） | 承認ゲート | 対話相手 | ルール（版） |
 |--------|------|------|------------------|--------------------|-----------|---------|-------------|
+| **board（経営会議）** | **会社の向かう先を決める**（月〜四半期）。目標そのものを問い直し、決定を台帳に残して実行へ降ろす。**実行を持たない・定時実行しない**（＝partner が日次の締切で沈んだのと同じ経路を塞ぐ） | `/board`（**社長が呼んだときだけ**・cron 非搭載） | `data/board/decisions.md`（決定台帳＝正）・`site/business/goals.html`（北極星）・`data/partner/ledger.md` の §1/§2 だけ・finance-snapshot | `data/board/decisions.md`（AIが追記）・`site/business/goals.html`（**社長がその場で承認したときだけ**） | goals.html 更新・ToDo 起票・実行は社長（board は起票案まで） | 社長 | [rules/modes/board.md](rules/modes/board.md)（0.1） |
 | **Main（日々のマネジメント）** | **日々のタスクを起こし、こなす**（起票・順位づけ・督促・詰まり外し）＋蓄積記録を運用・実装に反映。**無人モードが積んだ「社長にお伺いする件」を実際に聞く唯一の器** | 通常会話 | `data/partner/ledger.md` ヘッダ・`todo-brief.py hold`（確認列）・hana-tools・site/・data/ | hana-tools（合意後）・site/ 各所・コード | 外部送信/hana書込/本番は社長 | 社長 | [rules/modes/main.md](rules/modes/main.md)（0.1） |
 | **chat（会話窓口）** | 社長Slackの会話・相談・質問に答える＝Slack既定受け先（`hanasaka-main`） | `/chat`（反応tick・`to: hanasaka-main`） | Slack新着・site/・data/ | Slackスレッド返信・mailbox転送（解析依頼を hp-loop 等へ） | 外部送信/本番は社長 | 社長（Slack） | [.claude/commands/chat.md](.claude/commands/chat.md) |
 | **talk（相談窓口）** | 社長の相談・雑談・確認に**その場で即答**する軽い器。**起動時に台帳も掲示板も読まない**（必要になったときだけ取りに行く）＝1回$1〜2。重い調査は自分でやらず partner へ渡す | `/talk <thread_ts>`（`bin/talk-tick.sh`・毎分cron・`to: talk`。**agent-tick とは別ロック**＝hp-loop が25分回っていても待たされない） | 自分宛 mailbox（相談ch＝旧#partner の新規投稿）／答えるのに要る範囲だけ site/・data/ | 相談chのスレッド返信・partner への申し送り（mailbox）。**ファイルは1つも書かない**（フックが物理的に拒否） | 調査・実装・記録・外部送信はしない＝partner へ渡す | 社長（Slack 相談ch） | [.claude/commands/talk.md](.claude/commands/talk.md) |
 | **partner（経営パートナー）** | 全社横断で「今日の一手」を出し実行まで伴走。日次レポート（朝礼）＋将来の週次・月次 | `/partner`（daily 07:00・`to: partner` の反応tick） | `data/partner/`（台帳・from-president）・掲示板・hana-tools・財務スナップ・各ループの頭出し・予定・talk からの申し送り | Slack **#report**・`site/business/partner/`・`data/partner/` | 外部送信/本番は社長 | 社長（Slack #report） | [rules/modes/partner.md](rules/modes/partner.md)（1.3） |
 | **Memo** | 断片メモを精度高く記録（一次入力・手動） | `/memo` | 社長の口頭メモ | `site/notes.html`・`site/clients/*/memo.html`（AI追記のみ） | — | 社長 | [rules/modes/memo.md](rules/modes/memo.md) |
-| **triage（残課題の仕分け）** | 全レーンに溜まった**社長の判断待ち**を1箇所に集め、3つ（社長判断／AIが閉じる／その場でやる）に仕分け、**社長に出すのは1回5件まで**に絞って決め切る | `/triage`（**社長が呼んだときだけ**・定時実行しない＝毎朝走らせると読むものが1本増えて、いま直そうとしている問題を増やす） | 各レーンの台帳・掲示板（`bin/pending-scan.py` が走査）・`data/triage/state.json`（**索引であって写しではない**＝ID・置き場・日付だけ） | 各レーンの `from-president.md`（回答を返す）・`data/triage/state.json` | **他モードの台帳を直接書き換えない**＝所有モードが自分で閉じる。閉じたかは次回 `verify` で実測 | 社長 | [rules/modes/triage.md](rules/modes/triage.md)（0.1） |
+| **triage（社長との窓口・v1.0）** | **人間とのやりとりの窓口のトップ**（2026-09-12 社長ご指示で格上げ）。判断待ち（`pending-scan`）と器の異常（`ledger-watch`＝台帳サイズの推移・キューの滞留）を**機械で**集め、3つ（社長判断／AIが閉じる／その場でやる）に仕分け、**社長に出すのは1回5件まで**に絞り推薦をつけて決め切る。**実行は持たず下のセッションへ降ろす**（技術＝開発／日々＝Main／方向＝board）。**見えていない置き場を毎回名指しで報告する**（地の文の印・overseer の O-NNN・comms は印の規約が無い・ID重複） | `/triage`（**社長が呼んだときだけ**・定時実行しない＝毎朝走らせると読むものが1本増えて、いま直そうとしている問題を増やす） | 各レーンの台帳・掲示板（`bin/pending-scan.py` が走査）・`data/triage/state.json`（**索引であって写しではない**＝ID・置き場・日付だけ） | 各レーンの `from-president.md`（回答を返す）・`data/triage/state.json` | **他モードの台帳を直接書き換えない**＝所有モードが自分で閉じる。閉じたかは次回 `verify` で実測 | 社長 | [rules/modes/triage.md](rules/modes/triage.md)（0.1） |
 | **memo-triage** | #memo の新着メモを日中その場で会話返信・軽く点検（曖昧点だけ確認）→memo-stock へ退避 | `/memo-triage`（反応tick・`to: memo`） | `data/mailbox/new/`（`to: memo`） | #memo スレッド返信・`data/mailbox/memo-stock/` 退避（notes は書かない） | — | 社長（#memo） | [rules/modes/memo-triage.md](rules/modes/memo-triage.md)（0.3） |
 | **memo-intake** | 夜バッチで memo-stock の当日メモを notes.html へまとめて清書＋#memo に要約1本 | `/memo-intake`（daily memo・23:00） | `data/mailbox/memo-stock/`（＋取りこぼし救済の new/） | `site/notes.html`（AI追記のみ）・#memo に要約投稿 | — | 社長（#memo・非同期） | [rules/modes/memo-intake.md](rules/modes/memo-intake.md)（0.4） |
 | **Reviewer** | プロジェクトを俯瞰レビュー→改善提案 | `/reviewer-cycle` | `ai-loop/scope.md`・`exclusions.md` | `ai-loop/conversation.md`（AIはこれ1ファイルのみ） | 実装は Dev/社長 | Dev AI（非同期） | [rules/modes/reviewer.md](rules/modes/reviewer.md) |
@@ -175,6 +176,7 @@ talk → partner                    … 深掘りが要る相談の申し送り�
 ## 変更履歴
 | version | 日付 | 内容 |
 |---------|------|------|
+| 0.5 | 2026-09-06 | **board（経営会議）モードを新設し地図の最上層へ追加（社長ご指示）**＝「経営判断や会社運営など総括的なやり取りをするためのエージェント。partner よりもっと上の層」。契機＝**モード19本が全部「日」か「案件」の単位**で、「月〜四半期 × 会社の方向」を持つ器が無かった。partner は「経営横断・能動・頂点」と定義されているのに 2026-09-06 の今日の一手は「ある外注先へ1行送る（3分）」＝**毎朝という締切がある器は日次で完結する話しか出せない**。沈まないための設計は2点のみ＝**定時実行しない・実行を持たない**。実装＝`data/board/decisions.md`（決定台帳・7列固定・見直し期日と降ろし先が必須）＋`bin/board-brief.py`（現在地を機械で出す・exit 0/1/2・ToDo 完了照会は JST 換算）＋`bin/test-board-brief.sh`（33項目）。**降ろし先は「社長が別ウィンドウで Main を立て『board の D-00N を読んで』」**＝新しい配管を作らない。`goals.html` を問い直せる唯一のモードとし、partner が毎朝それを見るので**上下は既存の結線で繋がる** |
 | 0.4 | 2026-08-21 | **talk（相談窓口）と partner（経営パートナー）をモード表へ追加（社長ご指示）**。⚠️ **partner は毎朝7:00に走っているのに、これまで地図に一度も載っていなかった**（＝統括の点検・改善提案から漏れていた）。talk 追加のために表を開いて初めて気づいた。あわせて①ハンドオフ図に「会話と重い処理はレーンごと別」を明記（相談ch新規投稿→talk／#report・朝礼スレッド返信→partner／fetch はメインロックの外＝重い解析中でも会話は届く）②チャネル表に相談ch・#report を追加。**未反映の既知の漏れ**＝`/do`（振り分け窓口）と `/intake` の一部は別エージェントが整備中のため本版では触っていない。 |
 | 0.1 | 2026-06-18 | 初版。モード地図・ハンドオフトポロジ・チャネル/一次情報マップ・ツール一覧・健康シグナル候補・保守責任を定義 |
 | 0.3 | 2026-07-28 | **Finance（経理）モード追加（社長合意・同日）**＝`/finance`＋サブエージェント委任（`.claude/agents/finance.md`・本システム初のサブエージェント型）。台帳 `data/financial/ledger.md`（F-NNN・git外）新設。partner との棲み分け＝数字の整備・検証=finance／経営判断への翻訳・督促=partner。報告は4部構成（結論/根拠/🔍気づき/記録）＝サブエージェントの見聞をメインへ確実に伝える設計 |

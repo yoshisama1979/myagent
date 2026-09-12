@@ -45,6 +45,10 @@ STATE_FILES = [
     ("site/notes.html",                  200 * KB, "★提案既定値"),
     ("site/overseer/index.html",          80 * KB, "hp-loop.md v0.11 と同型"),
     ("site/business/partner/index.html",  80 * KB, "hp-loop.md v0.11 と同型"),
+    # 2026-09-12 社長ご指示で追加。ledger-discipline.md が「未計測＝追加候補」と1ヶ月半 明記したまま
+    # 放置されていた2本（実測 310KB／153KB＝どちらも上限超過）。表と本ファイルは対で更新する規約。
+    ("data/comms/chatwork/ledger.md",     70 * KB, "ledger-discipline.md（comms 台帳70KB）"),
+    ("site/comms/index.html",             80 * KB, "ledger-discipline.md（掲示板80KB）"),
 ]
 # ── 2b) 形の異常：1エントリへの「飲み込み」（サイズ閾値をすり抜ける肥大）──────
 # 契機＝O-019（K-330 が気づき97件を配下に飲み込み 169KB＝全体の54%）→ 2026-08-11 に

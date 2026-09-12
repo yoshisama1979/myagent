@@ -10,11 +10,12 @@
 <div class="max-w-4xl mx-auto p-6 md:p-10">
   <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
   <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
-    これは自動生成ビューです（生成: 2026-07-24 19:04）。原本は
+    これは自動生成ビューです（生成: 2026-09-12 10:50）。原本は
     <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/hp-prospect.md</code>。
     編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
   </div>
 <h1 class="text-3xl font-bold mb-4 mt-8">見込み客HP単発解析（営業用レポート）モード — 動作ルール</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>北極星：解析レポートで見込み客をファネルの入口から商談へ運ぶ（作ったレポート数ではなく、商談へ動いた数）</strong>。渡した先の反応＝一次情報は comms 台帳（C-NNN）で拾う（A-051・2026-08-10 社長確定・<span class="text-gray-400 text-xs">[[feedback_funnel-all-layers]]</span>＝売りはファネル全層で設計・レンズでありフィルタでない）</div>
 <div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.1</strong>（2026-07-22・初版）｜ changelog はファイル末尾。<br>
 このモードは <strong>使いながら育てる</strong>。気づきは hp-loop と同じく <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code> に溜める。</div>
 <p class="text-sm mb-4 leading-relaxed">このファイルは、<strong>見込み客（まだ契約していない相手）のホームページを1回で解析し、社長が営業に使える「クライアント提示用レポート」を発行する</strong> 単発モードの <strong>手順・制約・出力・自己チェック</strong> を定義する。</p>
@@ -99,7 +100,7 @@
 <p class="text-sm mb-4 leading-relaxed">すべて ✅ なら発行、1つでも ❌ なら見直し。</p>
 <hr class="my-8 border-gray-300">
 <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
-<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-22</td><td class="px-3 py-2 border border-gray-200 align-top">初版（社長指示＝ウェブ解析をサービスとして売るため、見込み客サイトを単発解析し提示用レポートを発行する営業モード）。公開情報のみ・GETのみ・Codexクロスレビュー標準組み込み（2026-07-21 ycom 手動テストの型を流用）・レポートは です・ます調のクライアント提示用・「実データ接続で分かること」を営業導線として必須化・出力は gitignore 済の prospects/（クライアント分析はgit外方針）・受注後は hp-loop 登録へ卒業</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-22</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>出し惜しみ禁止に変更</strong>（社長指示「1回の解析で分かったことは全て出し惜しみせずに」）。「TOP5〜7に絞る」→「全件載せる・絞るのは量でなく強調」＝先頭に刺さるTOPを厚く、残りも観点別詳細節で全件（観察→なぜ→改善の方向性）。レポート構成に「5. すべての指摘（詳細）」を追加。※「Web1枚」は単一HTMLファイルの意（1ページに圧縮する意味ではない）</td></tr></tbody></table></div>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">—</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-10</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>冒頭に北極星1行を追記</strong>（A-051・社長確定＝売りはファネル全層で設計 <span class="text-gray-400 text-xs">[[feedback_funnel-all-layers]]</span>）。手順・制約は不変＝1行追記のみのため版番号は据え置き</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-22</td><td class="px-3 py-2 border border-gray-200 align-top">初版（社長指示＝ウェブ解析をサービスとして売るため、見込み客サイトを単発解析し提示用レポートを発行する営業モード）。公開情報のみ・GETのみ・Codexクロスレビュー標準組み込み（2026-07-21 ycom 手動テストの型を流用）・レポートは です・ます調のクライアント提示用・「実データ接続で分かること」を営業導線として必須化・出力は gitignore 済の prospects/（クライアント分析はgit外方針）・受注後は hp-loop 登録へ卒業</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-22</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>出し惜しみ禁止に変更</strong>（社長指示「1回の解析で分かったことは全て出し惜しみせずに」）。「TOP5〜7に絞る」→「全件載せる・絞るのは量でなく強調」＝先頭に刺さるTOPを厚く、残りも観点別詳細節で全件（観察→なぜ→改善の方向性）。レポート構成に「5. すべての指摘（詳細）」を追加。※「Web1枚」は単一HTMLファイルの意（1ページに圧縮する意味ではない）</td></tr></tbody></table></div>
 </div>
 </body>
 </html>

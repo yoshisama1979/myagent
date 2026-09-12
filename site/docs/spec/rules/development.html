@@ -10,7 +10,7 @@
 <div class="max-w-4xl mx-auto p-6 md:p-10">
   <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
   <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
-    これは自動生成ビューです（生成: 2026-07-24 19:04）。原本は
+    これは自動生成ビューです（生成: 2026-09-12 10:50）。原本は
     <code class="bg-gray-100 px-1 rounded font-mono">rules/development.md</code>。
     編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
   </div>
@@ -54,6 +54,9 @@
 3. git commit（コミット）
 4. その後にサーバーへアップロード</code></pre>
 <p class="text-sm mb-4 leading-relaxed">未確定の修正をサーバーで確認したい場合は、<strong>ステージング環境</strong> を使う（本番に直接上げない）。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">テスト・品質担保</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>bin/ のツールを作る・直すときは <a href="testing.html" class="text-blue-600 hover:underline">rules/testing.md</a> に従う</strong>（TDD適応形・2026-08-10 新設）。<br>
+要点だけ＝①無人ループから呼ぶ／状態を書く／判定ロジックを持つツールは<strong>回帰テスト必須・本体と同じコミットに同梱</strong> ②バグは<strong>直す前に再現テスト</strong>（Red→Green→Blue） ③ルール⇄実装⇄テストの三者を同時に更新（宣言だけのルールを作らない）。詳細・テストの書き方の型・現在の空白地帯は testing.md が正（ここに書き写さない）。</p>
 <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">コミット時のルール</h2>
 <h3 class="text-lg font-semibold mb-3 mt-6">1. ステージング後に差分を確認してからコミットする</h3>
 <p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">git add</code>（ステージング）後、必ず <code class="bg-gray-100 px-1 rounded text-sm font-mono">git diff --staged</code> で差分を確認してから <code class="bg-gray-100 px-1 rounded text-sm font-mono">git commit</code> する。<strong>問題ないことを確認してからコミットする</strong>。</p>
