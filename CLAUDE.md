@@ -91,6 +91,7 @@
 | [SYSTEM.md](SYSTEM.md) | 動くモード同士の地図（役割・一次情報源・承認ゲート・ハンドオフ）。統括者の入口 |
 | [rules/modes/](rules/modes/) | **モード別ルールの置き場**（hp-loop・blog-loop・partner・overseer・memo系・intake・mailbox 等）。自動ロードされない＝各スラッシュコマンド冒頭の「まず読む」で必要時に読む（2026-07-24 `.claude/rules/` から移設・トークン節約） |
 | [rules/modes/main.md](rules/modes/main.md) | **Main（日々のマネジメント）＝このセッションの動作ルール**：日々のタスクを起こし・こなす（起票／順位づけ／督促／詰まり外し）。Step 0 で partner 台帳ヘッダと確認列（`todo-brief.py hold`）を見る。**無人モードが積んだ「社長にお伺いする件」を実際に聞く唯一の器**（2026-09-04 社長ご指示で新設） |
+| [rules/modes/board.md](rules/modes/board.md) | **経営会議（board）＝モード地図の最上層**：会社の向かう先（月〜四半期）を社長と決め、`data/board/decisions.md` に残して実行へ降ろす（`/board`・**社長が呼んだときだけ**）。**実行を持たない・定時実行しない**のが沈まないための設計。`site/business/goals.html`（北極星）を問い直せる唯一のモードで、partner が毎朝それを見るので翌朝から日次に効く。現在地は `python3 bin/board-brief.py`（exit 1＝見直し期日が来た決定あり）（2026-09-06 社長ご指示で新設） |
 | [rules/modes/overseer.md](rules/modes/overseer.md) | 統括（Overseer）モード：システム全体の整合・健全性を見張り改善提案（`/overseer`） |
 | [rules/modes/intake.md](rules/modes/intake.md) | **走り書き・打ち合わせメモ・口頭報告を、質問で補いながら整理して hana-tools（ToDo・案件メモ）と `site/` に振り分けて登録する**（`/intake`・対話型。2026-08-19 社長ご指示で新設） |
 | [rules/command-map.md](rules/command-map.md) | **コマンド早見表＝振り分けの正**。`/do`（何でも窓口）はこれ<u>だけ</u>を読んで最適なモードへ振り分け、迷えば選択肢で聞き、該当が無ければモードを使わず普通に答える。社長がブラウザで見る `site/docs/command-map.html` は `python3 bin/build-command-map.py` で**生成**（手書き禁止＝二重管理を避ける）。ダッシュボードのメニューから辿れる |

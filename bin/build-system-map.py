@@ -28,7 +28,7 @@ GROUPS = [
     ("入口・会話", "sky", ["Main", "chat", "talk", "Memo", "memo-triage", "memo-intake", "Intake", "hp-reply"]),
     ("分析・提案ループ", "emerald",
      ["hp-improve", "hp-prospect", "hp-loop", "blog-loop", "blog-write", "blog-improve", "Reviewer"]),
-    ("経営・記録", "amber", ["partner", "Finance", "Comms", "task-partner"]),
+    ("経営・記録", "amber", ["board", "partner", "Finance", "Comms", "task-partner"]),
     ("統括", "violet", ["Overseer", "triage"]),
 ]
 COLORS = {

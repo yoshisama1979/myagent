@@ -71,6 +71,7 @@ site/decks/ai-web-analysis/*.pdf
 site/decks/ai-web-analysis/deck-images/
 site/decks/ai-web-analysis-plans/*.pdf
 site/decks/ai-web-analysis-plans/deck-images/
+site/decks/hikita-proposal-202609/
 # decks: 質問事項レポートの PDF は /questions-deck で毎回再生成する生成物＝追跡しない
 site/decks/analysis-questions/*.pdf
 site/decks/analysis-questions/*/*.pdf
@@ -116,6 +117,9 @@ site/todo/
 # 判断に要る数字・論点は data/partner/from-president.md 側に伏せ字で残し、実体だけここに置く。
 # 2026-09-05 社長ご判断＝「実名などが入るのは問題。消さずに別ファイルへ」
 data/partner/private/
+# board（経営会議）の決定台帳は git 追跡下に置くが、実体（取引先名・生々しい金額・人の話）は
+# こちらへ逃がす（2026-09-06 新設・data/partner/private/ と同じ扱い）。
+data/board/private/
 
 # 草案は git 管理外（2026-08-17 社長判断）。
 # site/drafts/ は「草案・モック・検証」の置き場＝**副次成果物**（partner.md §186 が明記）。
