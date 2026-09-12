@@ -47,6 +47,7 @@ command -v curl >/dev/null 2>&1 || die "curl が見つかりません"
 command -v tar  >/dev/null 2>&1 || die "tar が見つかりません"
 # Python は JSON の読み書きと SHA256 に使う。Windows の Git Bash には python3 が無く
 # python しか無いことがあるので両方見る（python2 だと encoding= 付き open で落ちるので弾く）。
+# ⚠️ この検出と下の read_env() は bin/rule-report.sh にも同じものがある（直すときは両方・TB-012）。
 PY=""
 for c in python3 python; do
   if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info[0] >= 3 else 1)' 2>/dev/null; then
