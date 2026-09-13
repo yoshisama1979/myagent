@@ -25,7 +25,16 @@ description: 社長との窓口 — システム全体から人間の判断が�
 3. `python3 bin/pending-scan.py stats` — レーン別の件数と、**取りこぼし・ID重複**を必ず社長に見せる
 4. `python3 bin/ledger-watch.py` — **器の異常**（台帳サイズの推移・キューの深さ・滞留日数）＋**窓口を最後に開いた日**（放置されている領域の合図）
 5. `python3 bin/board-brief.py` — **exit 1 なら見直し期日が来た決定がある**＝`/board` へ誘導する合図
-6. `python3 bin/todo-brief.py outside` — 外に約束がある順（①社長ご自身の期日超過〜④区分なし）＝Main へ誘導する合図
+6. **`todo-brief outside` は件数だけ取る**（生の JSON は870行＝毎回 文脈に積むと窓口自体が重くなる）
+
+```bash
+python3 bin/todo-brief.py outside | python3 -c "
+import sys, json; d = json.load(sys.stdin)
+print(d['as_of'], '期日到来', sum(t['count'] for t in d['tiers']), '件 / 社内の積み残し', d['internal_count'], '件')
+[print(' ', t['tier'], t['label'][:32], t['count'], '件') for t in d['tiers']]"
+```
+   ＝①社長ご自身の期日超過 ②私から見えない経路 ③外のお客様を待たせている ④区分が付かなかった。
+   **数が動いていたら Main へ誘導する**（どの案件かはここでは開かない＝Main の領分）。
 7. `python3 bin/pending-scan.py list --status open --limit 40` — 中身を読む
 
 **`finance-snapshot.py` は鮮度が切れているときだけ叩く**（外部APIを毎回叩くと窓口自体が重くなる）。

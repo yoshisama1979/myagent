@@ -134,7 +134,7 @@
 | 領域 | 機械の合図（LLM を使わない） | 誘導先 |
 |---|---|---|
 | **会社の向かう先** | `python3 bin/board-brief.py` ＝ **exit 1 なら見直し期日が来た決定がある** | `/board` |
-| **日々のタスク・お客様** | `python3 bin/todo-brief.py outside` ＝ ①社長ご自身の期日が過ぎている ②私から見えない経路 ③外を待たせている ④区分が付かなかった | Main |
+| **日々のタスク・お客様** | `python3 bin/todo-brief.py outside` の**件数だけ**（①社長ご自身の期日が過ぎている ②私から見えない経路 ③外を待たせている ④区分が付かなかった）。**生の JSON は870行あるので全文を積まない**＝手順は `/triage` コマンド側 | Main |
 | **経理・資金** | `python3 bin/finance-snapshot.py` の鮮度（6日以上前なら取り直し） | `/finance` |
 | **人事・採用** | 採用判断の1枚（`site/drafts/recruit/`）の引き金が引かれたか | **決めるのは `/board`・動かすのは Main** |
 | **システムの健全性** | `ledger-watch` の 🔴（超過かつ増加）／overseer の `O-NNN` | 開発セッション |
