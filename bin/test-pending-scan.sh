@@ -299,6 +299,54 @@ src_txt2 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
 (ok if "duplicate_ids" in src_txt2.split("def cmd_stats")[1] else ng)(
     "stats が重複IDを報告する（呼ばれない検査を作らない）")
 
+print("\n=== overseer の 🔔ボックス（2026-09-13 追加・地の文から項目へ）===")
+O = T / "site/overseer"; O.mkdir(parents=True, exist_ok=True)
+def board(items, mark="🔔 社長の判断・対応待ち", tail='</div>'):
+    lis = "\n".join(f"<li>{x}</li>" for x in items)
+    return (f'<html><body><!-- ===== {mark}（未処理だけ） ===== -->\n'
+            f'<div class="border-2"><h2>{mark}</h2><ul>\n{lis}\n</ul>{tail}\n'
+            f'<div class="cycle"><h2>サイクルログ</h2><ul><li>O-999 これは別の節</li></ul></div>'
+            '</body></html>')
+(O / "index.html").write_text(board([
+    "🔴 <strong>O-081</strong>（便が27日滞留／ご判断は…）：O-056 と同じ系統です",
+    "🟡 <strong>O-082</strong>（レーンが止まっています）",
+    "🔵 O-067 の実測更新（新規番号は起こしません）：…",
+    "🔵 O-067 の実測更新（同じ番号の再掲）：…",
+    "先頭に番号が無い項目です（人が読む）",
+]), encoding="utf-8")
+ps.PARSE_WARN.clear()
+got = ps.extract(O / "index.html", "overseer_box")
+ids = [g["id"] for g in got]
+(ok if ids == ["O-081", "O-082", "O-067"] else ng)(
+    "先頭の O番号を主題として拾い、本文中の参照（O-056）は拾わない", ids)
+(ok if "O-999" not in ids else ng)("🔔ボックスの外（サイクルログ）を混ぜない", ids)
+(ok if len(ids) == len(set(ids)) else ng)("同じ番号の再掲（実測更新）は1件にする", ids)
+(ok if any("先頭に O番号が無い項目が 1 件" in w for w in ps.PARSE_WARN) else ng)(
+    "先頭に番号が無い項目を黙って捨てず申告する", ps.PARSE_WARN)
+
+ps.PARSE_WARN.clear()
+(O / "index.html").write_text(board(["🔴 O-001（あ）", "🔴 O-002（い）"], mark="別の見出し"), encoding="utf-8")
+(ok if ps.extract(O / "index.html", "overseer_box") == [] and ps.PARSE_WARN else ng)(
+    "ボックスが見つからないときは 0件と読まずに申告する", ps.PARSE_WARN)
+
+ps.PARSE_WARN.clear()
+# ★入れ子の div があっても最後の項目まで届く（最初の </div> で切ると静かに少なく数える）
+nested = ('<html><body><!-- ===== 🔔 社長の判断・対応待ち（未処理だけ） ===== -->\n'
+          '<div class="box"><h2>🔔 社長の判断・対応待ち</h2><ul>\n'
+          '<li>🔴 O-001（あ）<div class="note">補足</div></li>\n'
+          '<li>🔴 O-002（い）</li>\n<li>🔴 O-003（う）</li>\n</ul></div></body></html>')
+(O / "index.html").write_text(nested, encoding="utf-8")
+got2 = [g["id"] for g in ps.extract(O / "index.html", "overseer_box")]
+(ok if got2 == ["O-001", "O-002", "O-003"] else ng)(
+    "項目の中に <div> があっても最後まで読む（深さで閉じる）", got2)
+
+print("\n=== 収集対象に overseer が入り、NARRATIVE から外れている ===")
+src3 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
+(ok if "overseer_box" in src3.split("def sources")[1].split("def ")[0] else ng)(
+    "sources() が overseer を含む")
+(ok if "PARSE_WARN" in src3.split("def cmd_stats")[1] else ng)(
+    "stats が読み切れなかった置き場を報告する（呼ばれない検査を作らない）")
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF

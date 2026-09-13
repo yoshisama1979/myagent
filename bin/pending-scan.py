@@ -52,6 +52,13 @@ ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
 KAIZEN_HEAD_RE = re.compile(r"^###\s+.*?(K-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)")
 KAIZEN_DECIDED_RE = re.compile(r"反映済み|却下")
 
+# overseer の掲示板は「🔔 社長の判断・対応待ち（未処理だけ）」ボックスに未処理を集約する
+# （overseer.md の出力フォーマット）。各 <li> は先頭に優先度の絵文字＋主題の O-NNN を置く。
+# 実測 2026-09-13＝76項目中74項目がこの形。残り2件は取りこぼしとして数える（黙って落とさない）。
+OVERSEER_MARK = "🔔 社長の判断・対応待ち"
+OVERSEER_LEAD_RE = re.compile(r"^[^O]{0,12}(O-\d{3})")
+PARSE_WARN = []      # 置き場そのものを読めなかったときの申告（silent zero を作らない）
+
 RESOLVED_HIST_RE = re.compile(r"🔔\s*→\s*[✅❌]")
 # 解決済みの状態セル。上の履歴表記に「行頭が ✅/❌」を足したもの＝解決印を増やすときは
 # RESOLVED_HIST_RE だけを直せば両方に効く（2つに書き分けると数え方が食い違う）。
@@ -92,12 +99,17 @@ def sources():
     # 192件中 反映済み7・却下1・残り184件が未採否のまま（＝台帳の 1/4 が「社長の判断待ち」だった）。
     # この置き場だけ 🔔 を使わない書式なので専用の kind で読む。
     out.append(("skill-kaizen", PROJ / "data" / "hp-improve" / "skill-kaizen.md", "kaizen_entry"))
+    # 2026-09-13 社長ご指示で追加。地の文に埋まっていて「人が読むしかない」としていたが、
+    # 掲示板の 🔔ボックスは <ul><li> で1件ずつ並び、74/76 が先頭に主題の O-NNN を持つと実測できた。
+    out.append(("overseer", PROJ / "site" / "overseer" / "index.html", "overseer_box"))
     return [(l, p, k) for l, p, k in out if p.is_file()]
 
 
 # 地の文に ID が埋まっていて行/表として取り出せない置き場。
 # 黙って落とすと「全部見た」と誤読されるので、件数だけは必ず表に出す（silent cap を作らない）。
-NARRATIVE = [("overseer", PROJ / "site" / "overseer" / "index.html", re.compile(r"O-\d{3}"))]
+# 2026-09-13：overseer は 🔔ボックスを項目として読めるようになったので sources() 側へ移した。
+# ここは「地の文にしかない置き場」が再び現れたときのための枠として残す。
+NARRATIVE = []
 
 
 def _strip_tags(s):
@@ -108,6 +120,45 @@ def extract(path, kind):
     """(item_id, 行番号, 先頭セル, 状態セル) を返す。判断待ちの印がある項目行だけ。"""
     text = path.read_text(encoding="utf-8", errors="replace")
     rows = []
+    if kind == "overseer_box":
+        # ★ボックスを div の深さで正しく閉じる★ 最初の </div> で切ると本文の途中で切れ、
+        #   最後の項目まで届かない＝静かに少なく数える。
+        i = text.find(OVERSEER_MARK)
+        if i < 0:
+            PARSE_WARN.append(f"{path.name}: 「{OVERSEER_MARK}」ボックスが見つかりません"
+                              "（掲示板の書式が変わった可能性＝0件と読まずに人が見てください）")
+            return []
+        d0 = text.find("<div", i)
+        depth, end = 0, None
+        for m in re.finditer(r"<div\b|</div>", text[d0:]):
+            depth += 1 if m.group(0).startswith("<div") else -1
+            if depth == 0:
+                end = d0 + m.end()
+                break
+        box = text[d0:end] if end else text[d0:]
+        ul = re.search(r"<ul\b.*?</ul>", box, re.S)
+        if not ul:
+            PARSE_WARN.append(f"{path.name}: 🔔ボックスに <ul> がありません（0件と読まずに人が見てください）")
+            return []
+        out, seen_ids = [], set()
+        for li in re.findall(r"<li\b.*?</li>", ul.group(0), re.S):
+            t = _strip_tags(li).strip()
+            m = OVERSEER_LEAD_RE.match(t)
+            if not m:
+                out.append({"id": None, "line": 0, "head": "", "status": ""})   # 取りこぼしとして数える
+                continue
+            oid = m.group(1)
+            if oid in seen_ids:      # 同じ番号の再掲（実測更新など）は1件として扱う
+                continue
+            seen_ids.add(oid)
+            out.append({"id": oid, "line": text.count("\n", 0, text.find(li)) + 1,
+                        "head": t[:80], "status": t[:160]})
+        skipped_here = sum(1 for o in out if o["id"] is None)
+        if skipped_here:
+            PARSE_WARN.append(f"{path.name}: 先頭に O番号が無い項目が {skipped_here} 件"
+                              "（人が読む必要があります）")
+        return [o for o in out if o["id"]]
+
     if kind == "kaizen_entry":
         # 見出しで区切り、本文に「反映済み／却下」が無いものだけを判断待ちとする。
         # 本文は state.json に持たない（§6 秘密の扱い）＝表示用に見出しの先頭だけ返す。
@@ -332,6 +383,11 @@ def cmd_stats():
             print(f"     {lane:16} {p:42} 項目{rows:4} / 異なるID{ids:4} → 重複{ndup}種")
         print("     ＝「決めた」がどの項目に効いたのか言えず、verify（書き戻しの実測）が成立しません。"
               "所有モードで採番し直してください。")
+
+    if PARSE_WARN:
+        print("\n  ⚠️ 置き場そのものを読み切れなかった分（0件と読まずに人が見る）:")
+        for w in dict.fromkeys(PARSE_WARN):
+            print(f"     {w}")
 
     nar = narrative_counts()
     if nar:
