@@ -180,6 +180,131 @@
   </div>
 
 
+  <!-- ===== 📦 Cycle 093（2026-09-13）＝ Cycle 094（2026-09-14）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c093">Cycle 093 — 2026-09-13（YCOM ブログ・日次）：<span class="text-rose-700">既に「橋」が入っている3記事から、90日で問い合わせは<u>0件</u>でした</span>／<span class="text-emerald-800">だから次の1本は「橋」ではなく<u>買い手が自分で検索してくる記事</u>＝③依頼層の4つの構成案を1本に束ねました</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-13）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。実データ最終日 <strong>2026-09-10</strong>（28日＝1,554クリック・59,145表示・平均10.6位）。</li>
+      <li><strong>GA4</strong>（<span class="font-mono">analytics_265729912</span>）＝取得。<span class="font-mono">landing --raw-page --page contents --days 90</span>（6/15〜9/13）。CV対象には応募系イベントも含まれます（＝CVが出ていれば上振れ側。本日は0なので影響なし）。</li>
+      <li><strong>WordPress 本文</strong>＝<span class="font-mono">wp-draft.py get</span> で 8365（draft のまま）・2117（社内メモ残存）を実測。</li>
+      <li><strong>未取得</strong>：記事→次ページの遷移（道具にモードが無い）／<span class="font-mono">gsc-layer.py</span>・<span class="font-mono">clarity-top.py</span>（許可リスト外で実行不可）／前年同期（原理的に不可）。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心① ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心①　PDCA の「C」：<u>もう入っている橋</u>は、問い合わせを生んだか</h3>
+    <p class="mb-2 text-xs"><strong>問い</strong>：保留中の B のうち6件（B-055・B-056・B-062・B-065・B-066・B-068）は「記事から受け皿ページへ橋を架ければ買い手に近づく」という前提に立っています。<strong>ところが、その橋はすでに3記事で本番稼働しています</strong>（<span class="font-mono">?p=5641</span>・<span class="font-mono">?p=7306</span> の4本リンク／<span class="font-mono">?p=6624</span> の専用文）。<u>提案を積み増す前に、稼働中の橋の結果を見るべきでした</u>。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="bg-gray-100 text-left"><th class="py-1 px-2">GA4・90日・着地ページ</th><th class="py-1 px-2">橋</th><th class="py-1 px-2">着地セッション</th><th class="py-1 px-2">CVセッション</th><th class="py-1 px-2">GSC 28日（〜9/10）</th></tr></thead>
+      <tbody>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2 font-mono">?p=5641</td><td class="py-1 px-2">✅ 4本リンク</td><td class="py-1 px-2">374</td><td class="py-1 px-2"><strong class="text-rose-700">0</strong></td><td class="py-1 px-2">86クリック・11.6位</td></tr>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2 font-mono">?p=7306</td><td class="py-1 px-2">✅ 4本リンク</td><td class="py-1 px-2">198</td><td class="py-1 px-2"><strong class="text-rose-700">0</strong></td><td class="py-1 px-2">47クリック・8.7位</td></tr>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2 font-mono">?p=6624</td><td class="py-1 px-2">✅ 専用文</td><td class="py-1 px-2">150</td><td class="py-1 px-2"><strong class="text-rose-700">0</strong></td><td class="py-1 px-2">32クリック・5.9位・CTR 7.8%</td></tr>
+        <tr class="border-b"><td class="py-1 px-2"><strong>橋あり3記事 計</strong></td><td class="py-1 px-2"></td><td class="py-1 px-2"><strong>722</strong></td><td class="py-1 px-2"><strong class="text-rose-700">0</strong></td><td class="py-1 px-2"></td></tr>
+        <tr><td class="py-1 px-2 text-gray-600">参考：着地上位40記事（橋なし含む）</td><td class="py-1 px-2"></td><td class="py-1 px-2 text-gray-600">?p=2117 の1,565 ほか</td><td class="py-1 px-2 text-gray-600"><strong>40記事すべて 0</strong></td><td class="py-1 px-2"></td></tr>
+      </tbody>
+    </table>
+    <p class="bg-amber-50 border border-amber-300 rounded p-2 text-xs mb-2"><strong class="text-amber-900">⚠️ 言えないこと（先に書きます）</strong>：<u>「橋は効かない」とは申し上げません</u>。C092 の率（ブログ読者の CV 0.061%）を当てると、722セッションで期待できる CV は <strong>約0.4件</strong>＝<u>0件は「期待どおり」でもあり、橋の有無で差があるかは この母数では判定できません</u>。</p>
+    <p class="mb-2"><strong>言えること</strong>：<strong class="text-rose-700">橋を架ける提案の効果を「CVが増える」で書く根拠は、90日の実測にも存在しません。</strong>橋の値打ちは、せいぜい②（覚えられ・信頼される）の層にあり、③には届いていない——<span class="text-xs text-gray-600">推測：送り先の受け皿ページ（/service/・/price/basic.html）自体が、検索でも回遊でも押されていない（📥【hp-loop へ】）。<u>橋より先に、受け皿の説得力と「買い手が自分で検索してくる記事」が要る</u>。</span></p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：③依頼（の測り方）。<strong>やること</strong>：→ <span class="font-mono">B-081</span>（橋の B を買い手換算で置き直す）・<span class="font-mono">T-050</span>（買い手が検索してくる記事を1本に集中）。</p>
+  </div>
+
+  <!-- ===== 中心② ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">🧭 中心②　定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝status=draft（投入 8/17 から28日目）</strong>。タイトル未変更。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝WP本文に残存（60日目）</strong>。28日 286クリック・6,636表示・7.2位（前回 272／6,348 から微増）。</li>
+      <li><span class="font-mono">?p=8137</span>（MEO）＝主要2語「meo 構造化データ」103表示 9.1位・「構造化マークアップ meo」60表示 10.8位、<strong>ともにクリック0</strong>。ページ全体でも28日の上位一覧（6クリック以上）に入らず。<u>C088 の「初めてクリックを取った」は再現していません</u>→ <span class="font-mono">B-081</span> で <span class="font-mono">B-068</span> を🔴→🟡。</li>
+      <li><span class="font-mono">Q-011</span>＝7日目・未回答。本日も同じお願いを書き直さず、日数だけ進めます。</li>
+      <li><strong>掲示板を作り直しました</strong>（178KB → 冒頭の通り）。全文は <a href="index-snapshot-c092.html" class="underline">index-snapshot-c092.html</a>（<span class="font-mono">cmp</span> で元ファイルと一致を確認済み）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-081</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-081</span>　「橋を架ける」提案を、稼働中の橋の実測で置き直す＝<span class="font-mono">B-056</span> 🔴→🟢／<span class="font-mono">B-068</span> 🔴→🟡　🟡　<span class="text-xs font-normal">（可否1行・B-049 に含めて可）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">B-056</span>（素材記事3本 ?p=2117・2082・3528 → <span class="font-mono">/free_photo/</span>）／<span class="font-mono">B-068</span>（?p=8137 を保留解除後の2番目に）。<span class="text-gray-600">B-055（?p=77）・B-062（既に🟢）・B-065（説明文）は据え置き。</span></li>
+      <li><strong>観点</strong>：内部リンク・回遊→CV（PDCA の C）／効果の買い手換算（B-079 の適用2例目）</li>
+      <li><strong>観察（実測）</strong>：橋が本番稼働中の3記事＝90日 722着地・CV 0／着地上位40記事すべて CV 0（GA4）。?p=8137 の主要2語は28日163表示・クリック0（GSC）。</li>
+      <li><strong>なぜ置き直すか</strong>：<span class="font-mono">B-056</span> の行き先 <span class="font-mono">/free_photo/</span> は<u>買い手のページではなく自社の素材ページ</u>、読者は素材を探しに来た人＝買い手換算は <strong>年 0件に近い</strong>（推測：C092 の換算式で、3記事の橋クリックが仮に月数十でも年0.1件未満）。それが🔴で🔒の列に並んでいます。<span class="font-mono">B-068</span> は「クリックが動き出した」が🔴の根拠でしたが、本日の窓では再現しません。</li>
+      <li><strong>改善案（差分の要点）</strong>：(1) <span class="font-mono">B-056</span> を🟢へ＝差分は完成済みなので<u>捨てずに保留解除後の後ろのほうで送る</u>（2117 の社内メモ削除＝B-059 は同梱のまま・こちらは🔴を維持）　(2) <span class="font-mono">B-068</span> を🟡へ＝保留解除後の順番は B-046 → B-053 → B-055 を先に　(3) <strong>今後「橋」の B を起こすときは、効果欄に「稼働中の橋3記事は90日CV0」を併記する</strong>（B-079 の書式に含める）。</li>
+      <li><strong>効果</strong>：クリック換算＝変化なし（やめる・順番を変えるだけ）／<strong>買い手換算＝直接は0件</strong>。価値は🔒解除直後の作業順が「年0件の作業」から始まらなくなること。<strong>工数</strong>：ゼロ</li>
+      <li><strong>選択肢</strong>：<strong>(a) 承認（おすすめ）</strong>／(b) B-056 だけ／(c) 現状維持</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-050</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-050</span>　「ホームページ制作の見積を取る前と、頼んだあとに知っておくこと｜料金表の読み方・決めておく3つ・公開までの流れ」　🔴　<span class="text-xs font-normal">（<span class="font-mono">T-037・T-047・T-048・T-049</span> の統合先）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜ束ねるか</strong>：この4本は<u>同じ読者</u>（発注をほぼ決め、料金表を見ても自社がいくらか決められない人＝③依頼に最も近い層）に向けて、C084〜C092 の4サイクルで少しずつ角度を変えて出してきたものです（C091・C092 でも「束ねるのが推奨」と自分で書いています）。<strong>T を48本積んで1本も公開されていない現状で、同じ読者に4本は多すぎます</strong>。統合は T-034→T-033（C080）と同じ扱い＝各構成案の見出しは章として残し、行も表に残します。<br>
+    <strong>なぜこの帯を先頭に（🔴）</strong>：中心①の通り「橋」では③に届いていません。<u>買い手が自分で検索してくる帯</u>で、実需が確認できているのはここ＝「料金」を含む買い手の検索 28日532表示・クリック1、受けているブログ記事0本（C091 実測・B-058 検査①〜④合格）。検索結果側は「料金表」の語＝自社料金ページが主役（T-048）、「依頼 流れ」の語＝制作会社のブログ記事が主役（T-049）＝<u>1本の記事で両方を取りに行くより、料金表ページ（/price/basic.html）とブログ記事で役割を分け、記事は「読み方と進め方」に徹する</u>。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：社内で「ホームページを作る／作り直す」は決まった。料金表を2〜3社見たが比べられない。頼んだあと自分が何をするのかも分からない。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：「ホームページ制作 料金表」「ホームページ制作 見積もり 比較」「ホームページ制作 依頼 流れ」「ホームページ制作 期間」（<span class="text-amber-900">後ろ2語の実需は自社GSCでは未確認＝正直に明記</span>）</li>
+      <li><strong>タイトル案</strong>：「ホームページ制作の料金表、どう読む？見積を取る前に決める3つと、頼んでから公開までの流れ」</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　料金表を並べても「うちはいくら」が決まらない理由</strong>（旧 T-037・T-048）
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　料金表を出している会社・「お問い合わせください」の会社——何が読み取れるか</li>
+          <li>h3　同じ「5ページ」でも比べられない3つの差（ページの数え方／原稿・写真を誰が用意するか／公開後の費用）</li>
+        </ul>
+      </li>
+      <li><strong>h2　見積を取る前に決めておく3つ</strong>（旧 T-047）
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　① 載せる内容＝ページ数はここから決まる</li>
+          <li>h3　② 原稿と写真を誰が用意するか＝金額と工期が最も動くところ</li>
+          <li>h3　③ 公開後に誰が更新するか＝月々の費用が決まる</li>
+        </ul>
+      </li>
+      <li><strong>h2　実際の料金表で当てはめてみる</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　3つを決めた状態で、公開されている料金表を読む手順（例：<span class="font-mono">/price/basic.html</span>）</li>
+          <li>h3　<span class="text-amber-900">【Q-002② の回答で分岐】(a) 自社の公開料金を本文に引用して試算／(b) 料金表へのリンクだけ／(c) 試算を載せない</span></li>
+        </ul>
+      </li>
+      <li><strong>h2　頼んでから公開まで、発注側がやること</strong>（旧 T-049）
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　工程順のチェックリスト（目的を1行で／素材を集める／確認する人を先に決める）</li>
+          <li>h3　待つ時間の多くは「発注側の返事」——止まりやすい3か所（原稿・決裁者が途中で増える・ドメインとサーバの手配）</li>
+        </ul>
+      </li>
+      <li><strong>h2　まとめ：3つを決めてから見積を取ると、金額も工期もぶれない</strong></li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/price/basic.html</span>（本命）／<span class="font-mono">/flow/</span>（制作の流れ）／<span class="font-mono">/works/</span>／下書き8365（費用相場＝公開後）／T-011（ドメイン・サーバー・SSL の維持費＝完成在庫）</li>
+      <li><strong>CTA</strong>：「3つが決まったら、その内容で見積りを」＝<span class="font-mono">/contact/create/</span>（見積り依頼）。無料相談の窓口は Q-009 の回答後に1つだけ足す。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：「実際に止まった案件の話」1つ（任意・あれば上位と差がつく）。<u>無くても全章 一般論＋公開料金で書けます</u>。</li>
+      <li><strong>効果</strong>：クリック換算＝推測：1ページ目に入れば「料金」帯532表示/28日から月10〜20クリック／<strong>買い手換算＝推測・上限：料金ページ閲覧者の順序つきCV率 4.2%（C092・95人中4人）を当てると年5〜10件</strong>＝<u>稼働中の橋（年0件に近い）とは桁が違う側</u>。※母数が小さく上限の目安です。</li>
+      <li><strong>工数</strong>：中（既存4本の構成案の再編＝執筆担当はそのまま書き始められます）／<strong>優先度</strong>：🔴（ただし着手は 8365 の公開後＝在庫を積まない既定方針）</li>
+      <li><strong>カニバリ注意</strong>：8365（費用相場）＝「いくらかかるか」／T-050＝「料金表の読み方と進め方」で分担。<span class="font-mono">T-030</span>（見積書のどこを見るか）は近い＝着手時に章として足すか判断。</li>
+      <li class="text-emerald-800"><strong>栓：なし。ご回答不要</strong>（Q-002② は3章目の書き方が変わるだけ）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-13）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 7日目・未回答。</li>
+      <li><strong>自己訂正1件</strong>：C088 の「?p=8137 が初めてクリックを取った」は本日の窓で再現しません（主要2語クリック0）→ B-068 を🟡へ提案。</li>
+      <li><strong>自己点検</strong>：橋を架ける B を6件積む前に、稼働中の橋3本の結果（GA4 着地CV）を見ていませんでした＝本日の中心①。</li>
+      <li><strong>統合</strong>：T-037・T-047・T-048・T-049 → T-050（取り下げではない・行は表に残す）。</li>
+      <li><strong>執筆担当への配信</strong>：<u>行っていません</u>。本日の B-081 は承認待ち、T-050 は publish 後の着手＝9/14 の起動でやることは変わらないため（1サイクル1通・変化なしでは送らない）。</li>
+      <li><strong>掲示板の整理</strong>：K-803 の手順で作り直し（①<span class="font-mono">cp</span> で全文を <span class="font-mono">index-snapshot-c092.html</span> へ・<span class="font-mono">cmp</span> 一致 ②アーカイブ先頭にリンク1ブロック ③現状だけで書き直し）。🔧 の番号・📥 の 🔔 行は1件も落としていません。</li>
+      <li><strong>自己改善（Step 7）</strong>：skill-kaizen に K-804＝「掲示板の全文コピー＋書き直しの2例目／提案を積む前に、同型の稼働中施策の結果を先に見る」。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 092（2026-09-12）＝ Cycle 093（2026-09-13）で index を全文コピーして退避・無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c092">📦 Cycle 092（2026-09-12）のスナップショット <span class="text-sm font-normal text-gray-500">（Cycle 093 で退避・無改変）</span></h2>
   <div class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-8 text-sm text-gray-700">
