@@ -35,6 +35,13 @@ ROOT = os.environ.get("LEDGER_WATCH_ROOT") or os.path.dirname(os.path.dirname(os
 KB = 1024
 JST = datetime.timezone(datetime.timedelta(hours=9))
 HEALTH_LOG = os.path.join(ROOT, "data/overseer/system-health.jsonl")
+SESSION_DIR = os.environ.get("LEDGER_WATCH_SESSIONS",
+                            os.path.expanduser("~/.claude/projects/-home-vpsuser-projects-myagent"))
+# 社長が自分で開く窓口。cron で動くモード（partner・hp-loop 等）は「開かれた」の意味が違うので入れない。
+DESKS = {"board": "会社の向かう先（月〜四半期）", "triage": "この窓口",
+         "finance": "経理・資金", "intake": "走り書き・打ち合わせメモの取り込み",
+         "overseer": "システム全体の健全性", "do": "何でも窓口"}
+CMD_RE = re.compile(r"<command-name>/?([a-zA-Z0-9_-]+)</command-name>")
 SNAP_LOG = os.path.join(ROOT, "data/overseer/ledger-watch.jsonl")
 
 
@@ -199,6 +206,42 @@ def decision_queues():
     return out
 
 
+def desks():
+    """窓口（社長が自分で開くモード）を最後に開いた日。
+
+    ★「放置されている領域」は台帳にもキューにも出てこない★
+      判断待ちが0件でも、その領域を何週間も開いていなければ、それ自体が合図になる
+      （2026-09-12 社長ご指示＝「経営やタスク、人事、経理など、すべきことへの誘導まで」）。
+      セッションログの先頭にある `<command-name>` を見るだけ＝LLM を起動しない。
+    """
+    last = {}
+    today = datetime.datetime.now(JST).date()
+    try:
+        files = sorted(glob.glob(os.path.join(SESSION_DIR, "*.jsonl")))
+    except OSError:
+        return [], "セッションログを読めません"
+    for path in files:
+        try:
+            with open(path, errors="replace") as f:
+                head = f.read(16384)
+        except OSError:
+            continue
+        m = CMD_RE.search(head)
+        if not m or m.group(1) not in DESKS:
+            continue
+        day = jst_day(datetime.datetime.fromtimestamp(os.path.getmtime(path), JST).isoformat())
+        if day and (m.group(1) not in last or day > last[m.group(1)]):
+            last[m.group(1)] = day
+    out = []
+    for name, what in DESKS.items():
+        d = last.get(name)
+        out.append({"desk": name, "what": what, "last": str(d) if d else None,
+                    "days": (today - d).days if d else None})
+    # 「一度もなし」が最も放置されている＝先頭に置く（0日扱いにすると最下位に沈む）
+    out.sort(key=lambda e: (0 if e["days"] is None else 1, -(e["days"] or 0)))
+    return out, None
+
+
 def fmt_kb(n):
     return f"{n/KB:,.0f}K"
 
@@ -207,10 +250,11 @@ def report(as_json=False):
     rows, since, n, lim_err = accumulators()
     mail, unreadable = mailbox_queues()
     dec = decision_queues()
+    dk, dk_err = desks()
     if as_json:
         print(json.dumps({"generated": datetime.datetime.now(JST).isoformat(timespec="seconds"),
                           "since": str(since), "snapshots": n, "accumulators": rows,
-                          "mailbox": mail, "decisions": dec, "unreadable": unreadable,
+                          "mailbox": mail, "decisions": dec, "desks": dk, "unreadable": unreadable,
                           "threshold_error": lim_err}, ensure_ascii=False, indent=2))
         return 0
     print(f"■ 器の状態（{datetime.datetime.now(JST).date()}／サイズ履歴 {since}〜・{n}回分）")
@@ -248,6 +292,15 @@ def report(as_json=False):
     for e in dec:
         c = "—" if e["count"] is None else e["count"]
         print(f"  {e['name']:<34}{c:>6}          {e['note']}")
+
+    print("\n【3】窓口（社長が自分で開くモード・最後に開いた日）")
+    print(f"  {'窓口':<12}{'最終':>12}{'経過':>7}  扱うもの")
+    for e in dk:
+        last = e["last"] or "一度もなし"
+        days = "—" if e["days"] is None else f"{e['days']}日"
+        print(f"  /{e['desk']:<11}{last:>12}{days:>7}  {e['what']}")
+    if dk_err:
+        print(f"  ⚠️ {dk_err}")
     return 0
 
 

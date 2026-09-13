@@ -127,6 +127,21 @@ run snapshot >/dev/null
 python3 -c "import sys,json;[json.loads(l) for l in open(sys.argv[1])];print('')" "$L" >/dev/null 2>&1 \
   && ok "追記した行が JSON として読める" || ng "壊れた行を書いている"
 
+echo "── §7 窓口の最終利用（放置されている領域の合図）"
+S2="$TMP/sessions2"; mkdir -p "$S2"
+mkdesk() { printf '{"type":"user","message":{"role":"user","content":"<command-name>/%s</command-name>"}}\n' "$1" > "$S2/$1.jsonl"; touch -d "$2 days ago" "$S2/$1.jsonl"; }
+mkdesk board 1
+mkdesk triage 20
+mkdesk hp-loop 0      # cron のモードは窓口として数えない
+out="$(LEDGER_WATCH_ROOT="$R" LEDGER_WATCH_SESSIONS="$S2" python3 "$TOOL" report 2>&1)"
+printf '%s' "$out" | grep -qE '/board .*1日' && ok "最後に開いた日を出す" || ng "board の経過日数が合わない"
+printf '%s' "$out" | grep -q '/hp-loop' && ng "cron のモードを窓口として数えている" || ok "cron のモード（hp-loop 等）は窓口に含めない"
+printf '%s' "$out" | grep -qE '/finance .*一度もなし' && ok "一度も開いていない窓口を出す" || ng "未使用の窓口が出ない"
+first="$(printf '%s' "$out" | awk '/^【3】/{f=1} f&&/^  \//{print; exit}')"
+printf '%s' "$first" | grep -q '一度もなし' \
+  && ok "「一度もなし」を先頭に置く（0日扱いで沈めない）" || ng "並び順が放置の重い順になっていない: $first"
+printf '%s' "$out" | grep -qE '/triage .*20日' && ok "長く開いていない窓口の日数を出す" || ng "triage の経過日数が合わない"
+
 echo "── §6 異常系"
 rm -f "$R/data/overseer/system-health.jsonl"
 out="$(run report)"; [ -n "$out" ] && ok "履歴が無くても落ちない" || ng "履歴不在で落ちる"
