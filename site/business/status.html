@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>いまの現在地｜株式会社はなさか</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../index.html" class="text-blue-600 hover:underline">ダッシュボード</a>
+    <span class="mx-1">/</span><span>いまの現在地</span>
+  </nav>
+  <h1 class="text-3xl font-bold mb-1">いまの現在地</h1>
+  <p class="text-sm text-gray-600 mb-6">2026-09-13 09:36 時点（毎日 自動更新・
+    <code class="bg-gray-100 px-1 rounded">python3 bin/build-status-page.py</code> の生成物＝手書きしない）。
+    数字の正は <code class="bg-gray-100 px-1 rounded">bin/ledger-watch.py</code>＝<code class="bg-gray-100 px-1 rounded">/triage</code> が読むのと同じもの。</p>
+
+  <h2 class="text-xl font-bold mb-3">🚦 いま開くべき窓口</h2>
+  <div class="space-y-2 mb-8">
+    <div class="border-l-4 border-red-500 bg-red-50 rounded p-3">
+      <span class="font-bold">開発セッション</span>
+      <span class="text-sm text-gray-700 ml-2">skill-kaizen.md が上限の7.8倍・週あたり+82KB（増え続けている器 10本）</span>
+    </div>
+    <div class="border-l-4 border-amber-500 bg-amber-50 rounded p-3">
+      <span class="font-bold">/triage</span>
+      <span class="text-sm text-gray-700 ml-2">yoshida-dev 宛の便が 48日 滞留（7日以上 9件）</span>
+    </div>
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded p-3">
+      <span class="font-bold">/finance</span>
+      <span class="text-sm text-gray-700 ml-2">一度も開いていません（経理・資金）</span>
+    </div>
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded p-3">
+      <span class="font-bold">/intake</span>
+      <span class="text-sm text-gray-700 ml-2">一度も開いていません（走り書き・打ち合わせメモの取り込み）</span>
+    </div>
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded p-3">
+      <span class="font-bold">/do</span>
+      <span class="text-sm text-gray-700 ml-2">一度も開いていません（何でも窓口）</span>
+    </div>
+  </div>
+  <p class="text-xs text-gray-500 mb-8">※ 判断はすべて <code class="bg-gray-100 px-1 rounded">/triage</code> で。
+     個別の作業はそこから各窓口へ降ろします（<a class="text-blue-600 hover:underline" href="../docs/command-map.html">コマンド早見表</a>）。</p>
+
+  <h2 class="text-xl font-bold mb-3">📈 増え続けている器</h2>
+  <p class="text-xs text-gray-600 mb-2">🔴＝上限超過かつ増加中／🟡＝超過だが横ばい〜減少／🆕＝計測開始直後で傾き不明。<strong>上限内のものは出しません</strong>（鳴りっぱなしにしないため）。</p>
+  <table class="w-full text-sm mb-8 border"><thead class="bg-gray-100">
+    <tr><th class="p-2 text-left">器</th><th class="p-2 text-right">現在</th><th class="p-2 text-right">上限</th><th class="p-2 text-right">超過</th><th class="p-2 text-right">週あたり</th></tr>
+  </thead><tbody>
+    <tr class="border-t"><td class="p-2">🔴 <code>data/hp-improve/skill-kaizen.md</code></td>
+      <td class="p-2 text-right">779K</td><td class="p-2 text-right text-gray-500">100K</td>
+      <td class="p-2 text-right font-bold">7.8倍</td><td class="p-2 text-right">+82.0K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>data/hp-loop/shigatoyota/coverage.md</code></td>
+      <td class="p-2 text-right">105K</td><td class="p-2 text-right text-gray-500">100K</td>
+      <td class="p-2 text-right font-bold">1.1倍</td><td class="p-2 text-right">+59.7K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>site/overseer/index.html</code></td>
+      <td class="p-2 text-right">264K</td><td class="p-2 text-right text-gray-500">80K</td>
+      <td class="p-2 text-right font-bold">3.3倍</td><td class="p-2 text-right">+31.3K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>data/hp-loop/ycom/coverage.md</code></td>
+      <td class="p-2 text-right">245K</td><td class="p-2 text-right text-gray-500">100K</td>
+      <td class="p-2 text-right font-bold">2.5倍</td><td class="p-2 text-right">+20.2K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>data/partner/ledger.md</code></td>
+      <td class="p-2 text-right">199K</td><td class="p-2 text-right text-gray-500">70K</td>
+      <td class="p-2 text-right font-bold">2.9倍</td><td class="p-2 text-right">+14.6K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>data/hp-loop/fujisaka/coverage.md</code></td>
+      <td class="p-2 text-right">102K</td><td class="p-2 text-right text-gray-500">100K</td>
+      <td class="p-2 text-right font-bold">1.0倍</td><td class="p-2 text-right">+13.7K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>site/hp-analysis/rally/index.html</code></td>
+      <td class="p-2 text-right">110K</td><td class="p-2 text-right text-gray-500">80K</td>
+      <td class="p-2 text-right font-bold">1.4倍</td><td class="p-2 text-right">+12.0K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>site/hp-analysis/ycom/index.html</code></td>
+      <td class="p-2 text-right">130K</td><td class="p-2 text-right text-gray-500">80K</td>
+      <td class="p-2 text-right font-bold">1.6倍</td><td class="p-2 text-right">+8.7K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>site/hp-analysis/yoshida/index.html</code></td>
+      <td class="p-2 text-right">106K</td><td class="p-2 text-right text-gray-500">80K</td>
+      <td class="p-2 text-right font-bold">1.3倍</td><td class="p-2 text-right">+7.4K</td></tr>
+    <tr class="border-t"><td class="p-2">🔴 <code>site/hp-analysis/fujisaka/index.html</code></td>
+      <td class="p-2 text-right">83K</td><td class="p-2 text-right text-gray-500">80K</td>
+      <td class="p-2 text-right font-bold">1.0倍</td><td class="p-2 text-right">+4.2K</td></tr>
+    <tr class="border-t"><td class="p-2">🆕 <code>site/comms/index.html</code></td>
+      <td class="p-2 text-right">155K</td><td class="p-2 text-right text-gray-500">80K</td>
+      <td class="p-2 text-right font-bold">1.9倍</td><td class="p-2 text-right">傾き不明</td></tr>
+    <tr class="border-t"><td class="p-2">🆕 <code>data/comms/chatwork/ledger.md</code></td>
+      <td class="p-2 text-right">129K</td><td class="p-2 text-right text-gray-500">70K</td>
+      <td class="p-2 text-right font-bold">1.9倍</td><td class="p-2 text-right">傾き不明</td></tr>
+  </tbody></table>
+  <p class="text-xs text-gray-500 -mt-6 mb-8">上限内 13 本は省略（全 25 本・履歴 2026-07-24〜 70回）</p>
+
+  <h2 class="text-xl font-bold mb-3">📥 消化されていないもの</h2>
+  <table class="w-full text-sm mb-8 border"><thead class="bg-gray-100">
+    <tr><th class="p-2 text-left">置き場</th><th class="p-2 text-right">件数</th><th class="p-2 text-right">最古</th></tr>
+  </thead><tbody>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>yoshida-dev</code></td>
+      <td class="p-2 text-right">41</td><td class="p-2 text-right font-bold text-red-700">48日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>yokohawaii-dev</code></td>
+      <td class="p-2 text-right">5</td><td class="p-2 text-right font-bold text-red-700">44日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>hanasaka-main</code></td>
+      <td class="p-2 text-right">3</td><td class="p-2 text-right font-bold text-red-700">29日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>fujisaka-dev</code></td>
+      <td class="p-2 text-right">2</td><td class="p-2 text-right font-bold text-red-700">26日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox hold/ → <code>konjaku-dev</code></td>
+      <td class="p-2 text-right">1</td><td class="p-2 text-right font-bold text-red-700">16日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>konjaku-dev</code></td>
+      <td class="p-2 text-right">8</td><td class="p-2 text-right font-bold text-red-700">15日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox hold/ → <code>shigatoyota-dev</code></td>
+      <td class="p-2 text-right">1</td><td class="p-2 text-right ">12日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>web-hanasaka</code></td>
+      <td class="p-2 text-right">14</td><td class="p-2 text-right ">9日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>rally-dev</code></td>
+      <td class="p-2 text-right">5</td><td class="p-2 text-right ">7日</td></tr>
+    <tr class="border-t"><td class="p-2">mailbox new/ → <code>shigatoyota-dev</code></td>
+      <td class="p-2 text-right">7</td><td class="p-2 text-right ">3日</td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">社長の判断待ち（未提示）<br><span class="text-xs text-gray-600">bin/pending-scan.py list／うち スキル改善提案 161件（下段と同じもの・二重に数えない）</span></td>
+      <td class="p-2 text-right font-bold">216</td><td class="p-2 text-right">—</td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">社長へ提示済み・未決<br><span class="text-xs text-gray-600">同上 --status asked</span></td>
+      <td class="p-2 text-right font-bold">2</td><td class="p-2 text-right">—</td></tr>
+    <tr class="border-t bg-amber-50"><td class="p-2">スキル改善提案の未採否<br><span class="text-xs text-gray-600">見出し198件・うち8KB超の肥大 9件＝**サイズの主因はこの9件**</span></td>
+      <td class="p-2 text-right font-bold">161</td><td class="p-2 text-right">—</td></tr>
+  </tbody></table>
+
+  <h2 class="text-xl font-bold mb-3">🚪 窓口を最後に開いた日</h2>
+  <table class="w-full text-sm mb-8 border"><thead class="bg-gray-100">
+    <tr><th class="p-2 text-left">窓口</th><th class="p-2">扱うもの</th><th class="p-2 text-right">最終</th><th class="p-2 text-right">経過</th></tr>
+  </thead><tbody>
+    <tr class="border-t bg-sky-50"><td class="p-2 font-mono">/finance</td><td class="p-2 text-gray-700">経理・資金</td>
+      <td class="p-2 text-right">一度もなし</td><td class="p-2 text-right">—</td></tr>
+    <tr class="border-t bg-sky-50"><td class="p-2 font-mono">/intake</td><td class="p-2 text-gray-700">走り書き・打ち合わせメモの取り込み</td>
+      <td class="p-2 text-right">一度もなし</td><td class="p-2 text-right">—</td></tr>
+    <tr class="border-t bg-sky-50"><td class="p-2 font-mono">/do</td><td class="p-2 text-gray-700">何でも窓口</td>
+      <td class="p-2 text-right">一度もなし</td><td class="p-2 text-right">—</td></tr>
+    <tr class="border-t "><td class="p-2 font-mono">/triage</td><td class="p-2 text-gray-700">この窓口</td>
+      <td class="p-2 text-right">2026-09-11</td><td class="p-2 text-right">2日</td></tr>
+    <tr class="border-t "><td class="p-2 font-mono"><a class="text-blue-600 hover:underline" href="../overseer/index.html">/overseer</a></td><td class="p-2 text-gray-700">システム全体の健全性</td>
+      <td class="p-2 text-right">2026-09-12</td><td class="p-2 text-right">1日</td></tr>
+    <tr class="border-t "><td class="p-2 font-mono">/board</td><td class="p-2 text-gray-700">会社の向かう先（月〜四半期）</td>
+      <td class="p-2 text-right">2026-09-13</td><td class="p-2 text-right">0日</td></tr>
+  </tbody></table>
+  <p class="text-xs text-gray-500">このページは判断をしません（良し悪しを書かない）。決めるのは社長と <code class="bg-gray-100 px-1 rounded">/triage</code> です。</p>
+</div>
+</body>
+</html>
