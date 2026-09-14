@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台帳・掲示板の器の規律（共通ベース） — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-09-14 16:56）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/ledger-discipline.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">台帳・掲示板の器の規律（共通ベース）</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-08-06・社長承認）｜ changelog はファイル末尾。</div>
+<p class="text-sm mb-4 leading-relaxed">各モードが持つ <strong>台帳（状態の外部化）</strong> と <strong>掲示板（社長向けビュー）</strong> が共通で従う「器の規律」。<br>
+<strong>各モードルールはこの1枚を正とし、自分は"固有分だけ"を持つ</strong>（＝閾値や手順を各ファイルに書き写さない＝二重定義・版ズレを止める）。<br>
+この規律を使うのはサイズで有界化する台帳・掲示板ファミリ＝<strong>hp-loop（coverage）・partner（ledger＋掲示板）・comms（ledger）・skill-kaizen・各解析掲示板・overseer 掲示板</strong>。<br>
+※ memo 系（<code class="bg-gray-100 px-1 rounded text-sm font-mono">memo-stock/</code> へ退避して夜バッチ）は別系統＝本規律の対象外。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. 役割の分離（台帳＝正／掲示板＝ビュー）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>台帳＝source of truth</strong>（判断・継続のための state）。<strong>掲示板＝社長向けのビュー</strong>（読みやすさ優先）。食い違ったら<strong>台帳が正</strong>として掲示板を直す。</li>
+<li>台帳は<strong>毎サイクル全読みする必須入力</strong>＝「今の判断に要る"熱い"状態だけ」を置く。過去の経緯・引用全文・完了済みは本体に溜めない。</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2. 有界に保つ（トリップワイヤ）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>台帳・掲示板は毎回全読みされるため、無限成長＝<strong>毎サイクルの読むコスト増→ヘッドレスの時間上限と衝突</strong>。だから必ず上限を持つ。</li>
+<li><strong>既定トリップワイヤ（★＝出典なしの既定値・各モードは自分の値で上書き可）</strong>：</li>
+</ul>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">対象</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">既定閾値</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">台帳（アクティブ状態だけの目安）</td><td class="px-3 py-2 border border-gray-200 align-top">〜70KB★</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">台帳（全体・ローテ強制ライン）</td><td class="px-3 py-2 border border-gray-200 align-top">100KB★</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">掲示板（ローテ強制ライン）</td><td class="px-3 py-2 border border-gray-200 align-top">80KB★</td></tr></tbody></table></div>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>超えていたら当サイクルで必ずローテしてから終える</strong>（スキップ不可）。実施できない事情があるときだけ例外＝「未実施・理由・繰越先」を明記（同じ先送りを二重記録しない）。</li>
+<li><strong>閾値は「超えたか」でなく「超えていて、かつ増え続けているか」で見る</strong>（2026-09-12 社長ご指示）。実測で25本中13本が常時超過＝<strong>鳴りっぱなしの警告は警告として働かない</strong>（毎日出力され毎週 overseer が読んでいたのに1ヶ月半 誰も動かなかった）。推移は <code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/ledger-watch.py</code>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">system-health.jsonl</code> の履歴から週あたりの増加を出す・🔴＝超過かつ増加／🟡＝超過だが横ばい〜減少／🆕＝傾き不明）。</li>
+<li><strong>器は2種類に分けて見る</strong>＝<strong>蓄積</strong>（育つ・退避で上限内に収める）と<strong>キュー</strong>（消化すべき・減らないこと自体が異常）。キューはサイズでは捕まらない（件数と滞留日数で見る）＝2026-09-11 の実害（実装報告8通が37日読まれず解析が毎晩空回り）は後者だった。</li>
+<li>閾値の機械監視は <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/system-health.py</code>（精密診断・毎日 cron）が担い、超過は overseer が <code class="bg-gray-100 px-1 rounded text-sm font-mono">O-NNN</code> 起票。<strong>現在の実測対象</strong>＝自動ロードKB・<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/partner/ledger.md</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code>・各掲示板 index・<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-loop/*/coverage.md</code>。<strong>2026-09-12 に <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/comms/chatwork/ledger.md</code>（70KB）と <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/comms/index.html</code>（80KB）を追加</strong>（社長ご指示。1ヶ月半「未計測＝追加候補」と書いたまま放置され、実測すると 128KB／319KB＝どちらも超過していた）。<strong>宣言と実装の食い違いを残さないため、対象を増やすときは本表と <code class="bg-gray-100 px-1 rounded text-sm font-mono">system-health.py</code> を対で更新する</strong>。</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">3. 削除でなく退避（履歴は無欠損）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>溢れた分は archive へ<strong>「移動」＝一切消さない</strong>（履歴無欠損・<strong>原文無改変</strong>）。</li>
+<li><strong>未完了・生きている状態は何があっても本体に残す</strong>（＝誤ローテ防止）。完了・停止したものだけ archive へ。</li>
+<li><strong>⚠️「未完了」の定義</strong>＝進行中の作業状態（約束・<code class="bg-gray-100 px-1 rounded text-sm font-mono">R-NNN</code>・未クローズ項目・生きている決め事）を指す。<strong>skill-kaizen の "⏳未反映" はこれに当たらない</strong>（"反映"は棚卸しでの一括昇格判断であって進行中の作業ではない）＝未反映バックログは<strong>本体先頭のテーマ別索引を"正"として archive へ退避してよい</strong>。「索引＝何が倉庫にあるかの source／本文＝archive」の2層で担保する。</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4. 移設の順序（冪等・途中で落ちても欠損しない）</h2>
+<p class="text-sm mb-4 leading-relaxed">必ず <strong>①archive へ追記 → ②追記の存在を確認 → ③本体から削除</strong> の順。<br>
+途中でタイムアウトしても最悪「二重存在」で済み、次サイクルで重複側を消せばよい（欠損・二重刻みが起きない）。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">5. 倉庫を"死蔵"にしない（発見性の3段）</h2>
+<p class="text-sm mb-4 leading-relaxed">退避先（archive）が誰にも読まれないと、実質「取り消せる削除」になる。これを防ぐ3段：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>昇格（本命）</strong>＝普遍的に効く学び・原則は、退避する前に<strong>常時ロードされる場所</strong>（ルール本体・掲示板・共有ライブラリ <code class="bg-gray-100 px-1 rounded text-sm font-mono">win-patterns.md</code> 等）へ<strong>格上げ</strong>する。重要なものは倉庫を読まなくても常に手元にある状態にする。</li>
+<li><strong>テーマ別の軽い索引</strong>＝本体の先頭に、倉庫の中身を<strong>テーマ単位で数行</strong>の目次にして常時残す（例〈GSC逆引き系〉〈掲示板ローテ系〉…と「詳細は archive を grep」）。<strong>全件を1行ずつ並べて本体を再肥大させない</strong>（＝索引自体が固定費になる）。</li>
+<li><strong>grep（本文）</strong>＝索引のテーマから <code class="bg-gray-100 px-1 rounded text-sm font-mono">grep</code> で archive の該当エントリ本文を開く。</li>
+</ol>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>canonical の決め方</strong>＝本体に残したホット分が正（以後の更新はこちら）。<strong>archive は不変スナップショット</strong>（退避した本文は履歴＝後から書き換えない）。退避直後はホット分が本体と archive に二重に載るが、これは §4 の移設順序の安全側（欠損しない）であり、次の棚卸しで本体側だけを更新する。過去 archive に既存の重複ID（例 K-249/261/266 等）があるのは正史でなく記録の堆積＝参照時は本体→archive の順で最新を採る。</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">6. 変更ゲート</h2>
+<p class="text-sm mb-4 leading-relaxed">本共通規律、および各モードの台帳・掲示板ルールの<strong>編集は社長の明示承認が必要</strong>（無人ループでは編集不可＝フックで担保）。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">7. 社長の判断が要る気づきには印を付ける</h2>
+<p class="text-sm mb-4 leading-relaxed">台帳に溜まる気づきは、<strong>「あとで棚卸しすればよいもの」と「社長が決めないと前に進めないもの」が同じ重さで並ぶ</strong>。<br>
+後者は棚卸しを待つと数十サイクル埋もれる（実例＝許可リストの穴が15サイクル連続で放置・<br>
+SSL期限が5日間無人・メール取り込みの2日停止）。そこで<strong>印を1つだけ持つ</strong>。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>付ける対象</strong>＝社長の<strong>判断・許可・情報</strong>がないと前に進めないもの（自分の工夫では解けないもの）。</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">技術的な学び・手順の改善など、棚卸しで足りるものには<strong>付けない</strong>。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>書き方</strong>＝該当エントリの行頭に <code class="bg-gray-100 px-1 rounded text-sm font-mono">🙋要・社長判断</code> を置く。1エントリ1個。</li>
+<li><strong>読み手</strong>＝partner が朝礼で <code class="bg-gray-100 px-1 rounded text-sm font-mono">grep</code> し、<strong>1日あたり最大3件</strong>だけ「📥 欲しい情報」欄に出す。</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">上限を超えた分は翌日に回す（多く出すと社長が動けなくなる＝上限は意図的）。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>決着</strong>＝社長の ◎（採用）／×（やらない）を受けて、当該エントリのステータスを</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">✅反映済み(日付)</code> または <code class="bg-gray-100 px-1 rounded text-sm font-mono">❌却下</code> に更新する。<strong>却下も残す</strong>（同じ要望の再提案を止める）。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>⚠️ 過去分には遡って付けない</strong>（本規律の適用日＝2026-08-06 以降に新しく書かれるものだけが対象）。</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">既存の未反映バックログは従来どおり棚卸しの対象のまま。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">各モードの固有分（早見・詳細は各ルールへ）</h2>
+<p class="text-sm mb-4 leading-relaxed">各モードルールはこの表の「上書き」だけを自分で明記し、原則は本ファイルを参照する。</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">モード</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">台帳</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">掲示板</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">閾値の上書き</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">詳細</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">hp-loop</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-loop/&lt;site&gt;/coverage.md</code></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/hp-analysis/&lt;site&gt;/</code></td><td class="px-3 py-2 border border-gray-200 align-top">台帳100KB／掲示板80KB</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../mode-rules/hp-loop.html" class="text-blue-600 hover:underline">modes/hp-loop.md</a></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">partner</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/partner/ledger.md</code></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/business/partner/</code></td><td class="px-3 py-2 border border-gray-200 align-top">台帳70KB／掲示板80KB★</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../mode-rules/partner.html" class="text-blue-600 hover:underline">modes/partner.md</a></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">comms</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/comms/chatwork/ledger.md</code></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/comms/</code></td><td class="px-3 py-2 border border-gray-200 align-top">台帳70KB</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../mode-rules/comms.html" class="text-blue-600 hover:underline">modes/comms.md</a></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">skill-kaizen</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/hp-improve/skill-kaizen.md</code></td><td class="px-3 py-2 border border-gray-200 align-top">—（掲示板なし）</td><td class="px-3 py-2 border border-gray-200 align-top">本体100KB★</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../mode-rules/hp-improve.html" class="text-blue-600 hover:underline">modes/hp-improve.md</a></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">overseer</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/overseer/index.html</code>（掲示板が state 兼用）</td><td class="px-3 py-2 border border-gray-200 align-top">同左</td><td class="px-3 py-2 border border-gray-200 align-top">掲示板80KB★</td><td class="px-3 py-2 border border-gray-200 align-top"><a href="../mode-rules/overseer.html" class="text-blue-600 hover:underline">modes/overseer.md</a></td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-06</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>§7 新設＝社長判断が要る気づきに <code class="bg-gray-100 px-1 rounded text-sm font-mono">🙋要・社長判断</code> の印（社長承認・A-058）</strong>。契機＝溜める器はあるが「社長の決定が要るもの」を抜き出す印が無く、権限1つの設定と分析手法の学びが同じ重さで並ぶ構造。実測＝K台帳 241件（本体56＋倉庫185）に対し <code class="bg-gray-100 px-1 rounded text-sm font-mono">✅反映済み</code> は3件（すべて6月）＝反映がほぼ止まっていた。実害＝許可リストの穴が15サイクル連続で無言・SSL期限（konjaku-photo.jp 8/15）が5日間無人・メール取り込みの2日停止。<strong>課題は「言う場所が無い」ではなく「届く経路が無い」</strong>＝器を増やさず印と読み手だけ足す。読み手＝partner 朝礼が grep して1日最大3件（上限は意図的）。<strong>過去分には遡及しない</strong>。各モード側は同文1行の参照のみ（hp-improve／hp-loop／partner／overseer／blog-loop／blog-write の6本＝実際に <code class="bg-gray-100 px-1 rounded text-sm font-mono">K-NNN</code> を書く手順を持つファイル）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-07-29</td><td class="px-3 py-2 border border-gray-200 align-top">初版（社長承認・「共通ベースを置いて各エージェントは固有だけ持つ」構造へ）。従来は hp-loop.md を事実上のお手本に各モードが「同型」参照しつつ<strong>閾値・手順を各ファイルへ書き写す</strong>構造で、書き漏れ・版ズレが穴になっていた（O-018＝partner 掲示板トリップワイヤ未明文／O-019＝skill-kaizen にトリップワイヤ自体が無く313KBへ肥大）。器の規律を本1枚に集約＝①役割分離②既定トリップワイヤ③削除でなく退避④移設の冪等順序⑤倉庫を死蔵にしない発見性3段（昇格＋テーマ別索引＋grep・社長の指摘を反映）⑥変更ゲート。各モードは固有分だけ持つ。<strong>既知の残課題（Codexレビュー反映時に明記）</strong>＝hp-loop/partner は移設順序・未完了保持・閾値の全文が当面重複したまま（今回は参照を足しただけ）＝全文の de-dup は別途の全体最適セッションで。comms 台帳サイズの system-health.py 監視も追加候補</td></tr></tbody></table></div>
+</div>
+</body>
+</html>

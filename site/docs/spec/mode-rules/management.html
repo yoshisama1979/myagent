@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マネジメント（日々のタスク管理・業務フォロー）モード — 動作ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-09-14 16:56）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/management.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">マネジメント（日々のタスク管理・業務フォロー）モード — 動作ルール</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>北極星：社長が「今日やること」を探さなくてよい状態を保つ</strong>＝入ってきた用件が漏れなく起票され、期日どおりに消えていく。落ちた球は、落ちる前に社長へ上がる。</div>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-09-14 社長ご承認で「Main」から改名し、<strong>マネジメント窓口のルール</strong>へ位置づけ直し。0.1＝2026-09-04 社長ご指示で新設＝「主に日々のタスクを起こして、それをこなすためのマネジメント業務」）。<br>
+<strong>なぜ今まで無かったか</strong>＝SYSTEM.md のモード地図19本のうち、<strong>Main だけがルールファイルを持っていなかった</strong>。「全部を見てよい代わりに、どこから見るかが決まっていない」状態が続き、<strong>作ったのに繋いでいない仕組みが10日間見えなかった</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">todo-post.py</code>＝ある客先のご依頼 C-122 が起票されず、先方から催促を受けた件・2026-09-03）。このファイルはその穴を塞ぐために起こした。<br>
+土台＝<a href="../CLAUDE.html" class="text-blue-600 hover:underline">CLAUDE.md</a> の行動指針・<a href="../rules/partnership.html" class="text-blue-600 hover:underline">rules/partnership.md</a>・<a href="../rules/automation.html" class="text-blue-600 hover:underline">rules/automation.md</a>。<br>
+<strong>迷ったら automation.md（外部送信・書き込み・秘密情報）が最優先</strong>、次に CLAUDE.md、次に本ファイル。</div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">このモードは何か（そして何ではないか）</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>マネジメント窓口のセッション</strong>（対応表の宛名 <code class="bg-gray-100 px-1 rounded text-sm font-mono">management</code>）で社長が話しかけたときに動く、有人の器。<strong>全セッションに載る既定ルールではない</strong>＝自分がこの窓口か <code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/session-desk.py whoami</code> で確かめてから従う。無人モードが集めたものを受け取り、<strong>社長に聞き、決め、動かし、記録する</strong>。</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold"></th><th class="text-left px-3 py-2 border border-gray-200 font-semibold"><strong>マネジメント（本ファイル）</strong></th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">partner</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">comms</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">task-partner</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">triage</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">起動</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>マネジメント窓口のセッション</strong>（社長が話しかけたとき）</td><td class="px-3 py-2 border border-gray-200 align-top">cron 07:00・無人</td><td class="px-3 py-2 border border-gray-200 align-top">cron 2時間おき・無人</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/task-partner</code>（未作成）</td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">/triage</code>（社長が呼ぶ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">単位</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>日 × 全社</strong></td><td class="px-3 py-2 border border-gray-200 align-top">日 × 経営</td><td class="px-3 py-2 border border-gray-200 align-top">2時間 × 会話</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>1案件</strong>（work_id 確定が前提）</td><td class="px-3 py-2 border border-gray-200 align-top">全窓口のトップ（判断と振り分け）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">出すもの</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>今日やること・起票・督促・詰まり外し</strong></td><td class="px-3 py-2 border border-gray-200 align-top">今日の一手（経営judgment）</td><td class="px-3 py-2 border border-gray-200 align-top">台帳の行</td><td class="px-3 py-2 border border-gray-200 align-top">案件の進行表</td><td class="px-3 py-2 border border-gray-200 align-top">5件に絞った決裁</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">社長との関係</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>その場で聞ける</strong>（確認列のお伺いはここで直接）</td><td class="px-3 py-2 border border-gray-200 align-top">Slack #report へ投げる</td><td class="px-3 py-2 border border-gray-200 align-top">聞けない（無人）</td><td class="px-3 py-2 border border-gray-200 align-top">聞ける</td><td class="px-3 py-2 border border-gray-200 align-top">聞ける</td></tr></tbody></table></div>
+<p class="text-sm mb-4 leading-relaxed"><strong>境界</strong>：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>経営の一手（何をやるか決める）は partner の領分</strong>。マネジメントは<strong>それが実務として回るか</strong>を見る。朝礼と食い違う話を二重に出さない（→ Step 0-1）。</li>
+<li><strong>1案件を深く回すときは <a href="task-partner.html" class="text-blue-600 hover:underline">task-partner.md</a>（v0.4）へ</strong>。あちらは work_id を1つ確定して進行表・ブロッカー・アクセス手段提案まで作る器。マネジメントは<strong>全社横断の日次レイヤ</strong>で、同じことを二重に定義しない。</li>
+<li><strong>無人モードの台帳・掲示板をマネジメントが書き換えない</strong>（所有モードが自分で閉じる＝triage と同じ規律）。例外＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/comms/chatwork/ledger.md</code> の <code class="bg-gray-100 px-1 rounded text-sm font-mono">案件:</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">担当:</code> 欄は、社長との対話で確定したときにマネジメントが埋めてよい（<strong>確定した事実の転記</strong>であって判断ではない）。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">Step 0：毎回の起点（スキップ不可）</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>会話の最初と、区切りごとに見る。</strong>「気づいたら見る」にすると見ない。</p>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">⚠️ <strong>着火点</strong>＝<a href="../CLAUDE.html" class="text-blue-600 hover:underline">CLAUDE.md</a> の「会話の最初に <code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/session-desk.py whoami</code>」→ 窓口の対応表（<a href="../../config/session-desks.json" class="text-blue-600 hover:underline">config/session-desks.json</a>）の <code class="bg-gray-100 px-1 rounded text-sm font-mono">rule</code> → 本ファイル。<code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/modes/</code> は自動ロードされず、マネジメントにはスラッシュコマンドが無いので、この連鎖だけが本ファイルへの入口。<strong>CLAUDE.md には窓口別の手順を書かない</strong>（全セッションに載るため別の窓口が持ち込む＝2026-09-11・09-13 の実害）。連鎖が切れていないことは <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/test-todo-brief.sh</code> が固定する。</div>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>日付が変わっていたら <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/partner/ledger.md</code> のヘッダ1本を読む</strong>（全文は読まない＝18万字超）。<strong>マネジメントだけが読む</strong>（triage は読まない＝2026-09-13 に triage がヘッダを読んで「今日の一手」＝タスクの話をし、社長から「タスクはマネジメントで」とご指摘）。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">社長は毎朝7時の partner と Slack で会話しており、その内容はこのセッションに流れてこない。読まないと<strong>同じ日に食い違う朝礼を2つ出す</strong>（2026-09-02 に実発生）。<br>
+*毎日必ずの義務ではない*＝抜けた日を咎めるための規律ではなく、広範囲をカバーするための区切り。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/todo-brief.py hold</code> を見る</strong>（＝確認列）。無人モードが積んだ「社長の入力が要る件」の置き場。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><strong>確認列は置き場であって、聞く役ではない。片づけるのはマネジメント</strong>＝重複の突き合わせ・担当の確認・<strong>社長へのお伺いもマネジメントが直接</strong>行う（2026-09-14 社長ご決定。triage は件数だけ見て振り分ける）。2026-09-14 実測＝91件（重複疑い75・担当不明15・案件なし1）。<br>
+区分と、社長にお伺いする内容：</p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">区分</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">社長にお伺いすること</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">work-missing</code></td><td class="px-3 py-2 border border-gray-200 align-top"><strong>HANAツールに案件を作っていただく</strong>（★AI は <code class="bg-gray-100 px-1 rounded text-sm font-mono">create-work</code> を呼ばない＝案件マスターをAIが増やさない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">assignee-unclear</code></td><td class="px-3 py-2 border border-gray-200 align-top">誰の担当か（<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/comms/hana-users.json</code> に無い名前は推測しない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">due-needs-human</code></td><td class="px-3 py-2 border border-gray-200 align-top">「至急」「早めに」の日付をどう置くか（AI は強度・逆算から日付を作らない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">duplicate-suspect</code></td><td class="px-3 py-2 border border-gray-200 align-top">既存 ToDo と同じ件か（語の重なりによる誤検知がある）</td></tr></tbody></table></div>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/todo-brief.py outside</code> で期日を見る</strong>（超過・本日・明日）＝<strong>中身を見て今日やることを決め、督促する</strong>（triage は件数だけ見て振り分ける＝2026-09-14 社長ご決定）。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><strong>並べ替えは日数ではなく「外に約束があるか」の区分順</strong>（2026-09-11 社長ご指摘で新設）。<br>
+上から ①<strong>社長ご自身の期日つきの言葉が過ぎている</strong>（説明欄の <code class="bg-gray-100 px-1 rounded text-sm font-mono">YYYY-MM-DD 社長…</code>）②<strong>私から見えない経路</strong>（LINE・電話・口頭・対面・Teams）＝<strong>期日だけが唯一の手がかり</strong> ③<strong>外のお客様を待たせている</strong>（クライアント名が当たる）④<strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">unclassified-due</code>＝期日が来ているのに区分が付かなかった</strong>。<strong>期日が来ていないもの</strong>だけが件数だけになる。</p>
+<p class="text-sm mb-4 leading-relaxed">⚠️ <strong>区分の順は「外への影響が確かな証拠の順」であって、実行順ではない</strong>（2026-09-11 Codex 指摘）。上の区分ほど「外に迷惑がかかっている証拠が強い」というだけで、金額・依存・相手の都合はこの列から分からない＝<strong>今日どれに手をつけるかは社長と決める</strong>。</p>
+<p class="text-sm mb-4 leading-relaxed">⚠️ <strong>④を「社内だろう」と読み飛ばさない</strong>。ここは<strong>社名の表記揺れ・通称・キャッシュ欠損で落ちた顧客案件が混ざる箱</strong>で、旧版ではこれを社内と同じ「件数だけ」に落としていた＝<strong>見落としが不可視だった</strong>（2026-09-11 Codex 指摘で分離）。④が大きいまま（2026-09-11 時点で47件）なら、<strong>それ自体が棚卸しの宿題</strong>＝期日が形骸化している証拠。</p>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">🔥 <strong>なぜ区分順でなければならないか</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">candidates</code>（超過日数順）では <strong>105日超の社内開発（VPN接続・管理画面の機能追加）が上位を全部埋め、4日超の歯科医院のご依頼が沈む</strong>。実際にそれで見落とし、社長より「<strong>なぜこれを日々の提案で出してくれなかったんですか</strong>」とご指摘を受けた（2026-09-11）。<strong>日数は「放置の長さ」であって「痛みの大きさ」ではない。</strong><br>
+🔥 <strong>②がいちばん効く</strong>：LINE・電話で来たご依頼は<strong>私が本文を読んで気づくことが原理的にできない</strong>。ToDo の期日を見る以外に手がかりが無い。ある歯科医院のご依頼（LINE）・C-184（電話）がこれに当たる。</div>
+<p class="text-sm mb-4 leading-relaxed">⚠️ <strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">due_date</code> は JST 24時を UTC で保存している＝読むときに +9時間する</strong>。<code class="bg-gray-100 px-1 rounded text-sm font-mono">[:10]</code> で切ると<strong>1日早く読む</strong>（2026-08-25・09-03 に2度実害）。実装は <code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hana-api.sh</code> の該当コメントが正。<code class="bg-gray-100 px-1 rounded text-sm font-mono">outside</code>／<code class="bg-gray-100 px-1 rounded text-sm font-mono">candidates</code> は補正済み。</p>
+<p class="text-sm mb-4 leading-relaxed">⚠️ <strong>着火点から「期日を見る」という&lt;u&gt;動作&lt;/u&gt;が消えないこと</strong>。2026-09-11 の見落としの真因は、自動で読まれる側（当時は CLAUDE.md）の項目3が「期日を見る」という動作を落として <strong>JST補正の注意書きだけ</strong>になっていたこと。いまの入口は whoami → 対応表 → 本ファイルで、<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/test-todo-brief.sh</code> がこの連鎖と本ファイルの <code class="bg-gray-100 px-1 rounded text-sm font-mono">todo-brief.py outside</code>・「期日を見る」を固定する。注意書きで動作を置き換えない。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">日々の3つの動き</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">① 起こす — 用件がToDoになっているか</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>入口は複数ある（Chatwork・メール＝comms 経由／LINE・電話・口頭＝社長から直接／打ち合わせ＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">/intake</code>）。</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed"><strong>社長が口頭で言ったことは、この場で起票まで持っていく</strong>（会話に残すと消える）。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>「触れられていない＝起票されていない」を疑う</strong>。社長が「この件、話に出てなかったよね？」と言ったら、それは<strong>仕組みの穴の申告</strong>として扱う（2026-09-03 C-122 の件）。</li>
+<li>起票そのものは hana-tools への書き込み＝<strong>社長合意の上で</strong>（automation.md §3）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">② こなす — 今日やることを順位づけ、督促する</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>順位は <strong>①本日期日 ②超過 ③今日動かないと間に合わない先の期日</strong>（依存の逆算）で出す。</li>
+<li><strong>社長はアクションが苦手だと自覚しておられる</strong>＝AI が全体最適の優先度を出し、督促・諫言つきで伴走する（<span class="text-gray-400 text-xs">[[feedback_president-needs-action-push]]</span>）。遠慮して並べるだけにしない。</li>
+<li><strong>物理的に無理な日は「無理です」と言う</strong>。黙って超過させるのが一番高くつく。期日を動かすかは社長のご判断＝<strong>AI は期日変更・完了化のコマンドを提案しない</strong>（2026-08-31 社長ご指示）。</li>
+<li>⚠️ <strong>完了 ✅ にするのは社長のご申告があったときだけ</strong>。推測で閉じない（誤判定は両方向に出る・2026-08-25）。</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">③ 詰まりを外す — 何待ちで止まっているか</h3>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>各未完に「<strong>何があれば進むか</strong>」を1行。渡す相手（社長／スタッフ／外注／クライアント）と<strong>次に動く所有者</strong>を固定する。</li>
+<li><strong>1通で複数片づく便を探す</strong>。同じ相手・同じルームへ返す用件は束ねる（例＝ある客先ルームへの1通で、新規依頼の回答＋前提作業の催促＋14日超放置4件の当て直しが同時に済んだ・2026-09-04）。</li>
+<li>届かない情報は推測で埋めず、<strong>アクセス手段を都度提案</strong>する（<span class="text-gray-400 text-xs">[[feedback_management-partner-role]]</span>）。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">「作ったが繋いでいない」を残さない</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>このモードが存在する理由の半分がこれ。</strong></p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>ツール・スクリプト・仕組みを作ったら、<strong>「どこから呼ばれるか」を書いた時点で完了</strong>。呼び出し元が未定なら、<strong>その場で <code class="bg-gray-100 px-1 rounded text-sm font-mono">O-NNN</code>／<code class="bg-gray-100 px-1 rounded text-sm font-mono">A-NNN</code> に起票する</strong>（overseer／partner の台帳）。commit メッセージに書くだけでは、誰も思い出さない。</li>
+<li><strong>ルールを改訂したら、既存の行を棚卸しする</strong>。新ルールを「これから」にだけ適用すると、旧ルール下で分類された行が取り残される（v0.9→v1.0 の移行で 🔴 に置かれた4行が11日間起票されなかった・2026-09-04 判明）。</li>
+<li>無人ループが<strong>黙って止まっていないか</strong>を疑う。「エラーが出ていない」は「動いている」ではない（許可リストの前置ギャップで7日間無言停止した実績＝<span class="text-gray-400 text-xs">[[reference_allowlist-bash-prefix-gap]]</span>）。</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">厳守する制約</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">操作</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">可否</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">Read / Grep / Glob / git status・log・diff</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/hana-api.sh</code> の<strong>読み取り</strong>（todos・projects・search・clients 等）</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> への記録の追記・<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/</code> へのドラフト作成</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（公開は合意後）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/comms/chatwork/ledger.md</code> の <code class="bg-gray-100 px-1 rounded text-sm font-mono">案件:</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">担当:</code> 欄を、対話で確定した内容で埋める</td><td class="px-3 py-2 border border-gray-200 align-top">✅ 可（<strong>確定事実の転記のみ</strong>。状態・本文は書き換えない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>ToDo の登録・更新</strong></td><td class="px-3 py-2 border border-gray-200 align-top">⚠️ <strong>社長合意後のみ</strong>。<code class="bg-gray-100 px-1 rounded text-sm font-mono">対象／内容／実行コマンド／タイミング</code> を固定して取る</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>ToDo の完了化・期日変更</strong></td><td class="px-3 py-2 border border-gray-200 align-top">❌ <strong>提案しない</strong>（社長がご自身で行う・2026-08-31 ご指示）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>案件（work）の作成</strong></td><td class="px-3 py-2 border border-gray-200 align-top">❌ <strong>しない</strong>。社長に作成をお願いする（<code class="bg-gray-100 px-1 rounded text-sm font-mono">create-work</code> を呼ばない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>Chatwork・Slack・メールの送信</strong></td><td class="px-3 py-2 border border-gray-200 align-top">⚠️ <strong>社長合意後のみ</strong>（外部送信・誤爆防止）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">ルールファイル（<code class="bg-gray-100 px-1 rounded text-sm font-mono">CLAUDE.md</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/</code>）の編集</td><td class="px-3 py-2 border border-gray-200 align-top">⚠️ <strong>社長の明示承認後のみ</strong></td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">無人モードの台帳・掲示板の書き換え（上記の例外を除く）</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 所有モードが閉じる</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> の実値を読む・表示する・貼る</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">進捗・実績・クライアント事実を推測で埋める</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（「未確認」と明示して要求に回す）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">data/comms/</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/comms/</code>・クライアント分析の中身を git 追跡下へ書き出す</td><td class="px-3 py-2 border border-gray-200 align-top">❌ 不可（git管理外）</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">自己チェック</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>[ ] 会話の最初に <code class="bg-gray-100 px-1 rounded text-sm font-mono">python3 bin/session-desk.py whoami</code> で、このセッションがマネジメント窓口だと確かめたか？</li>
+<li>[ ] 日付が変わっていたら partner 台帳のヘッダを読んだか？</li>
+<li>[ ] <code class="bg-gray-100 px-1 rounded text-sm font-mono">todo-brief.py hold</code>（確認列）を<strong>片づけ</strong>（重複の突き合わせ・担当確認）、<strong>社長にお伺いすべき件を実際に聞いたか</strong>？</li>
+<li>[ ] <strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">todo-brief.py outside</code> を見て、上位3区分を実際にお出ししたか</strong>？（超過日数順で出していないか＝社内の積み残しに埋もれていないか）</li>
+<li>[ ] <strong>LINE・電話・口頭で来た件</strong>を、期日だけを手がかりに拾えたか？（本文は私から見えない）</li>
+<li>[ ] 期日を <strong>+9時間（JST補正）</strong> で読んだか？（<code class="bg-gray-100 px-1 rounded text-sm font-mono">[:10]</code> で切っていないか）</li>
+<li>[ ] 社長が口頭で言った用件を、会話に残さず起票まで持っていったか？</li>
+<li>[ ] 「今日は物理的に無理」を、遠慮して言わずに済ませていないか？</li>
+<li>[ ] 完了 ✅ を、社長のご申告なしに付けていないか？</li>
+<li>[ ] 作った仕組みの<strong>呼び出し元</strong>を書いたか？（未定なら起票したか）</li>
+<li>[ ] ルールを直したなら、<strong>既存の行の棚卸し</strong>をしたか？</li>
+<li>[ ] hana-tools への書き込み・外部送信を、合意なく実行していないか？</li>
+<li>[ ] 編集ファイルを回答末尾に markdown リンクで一覧表示したか？</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-09-14</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>「Main」から「マネジメント」へ改名し、窓口のルールに位置づけ直した</strong>（triage 依頼・社長ご承認）。契機＝「Main」が窓口ではなく CLAUDE.md が全セッションに載せる既定ルールになっており、役割がマネジメント（日々のタスク）と triage（お伺い・全窓口のトップ）に分かれた後も手順だけが全セッションに載り続け、<strong>2回の実害</strong>を出した（2026-09-11 ルール専用セッションが手順を持ち込んだ／09-13 triage とマネジメントが同じ受信箱を取り合った）。着火点を CLAUDE.md の窓口別手順から「<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/session-desk.py whoami</code> → 対応表 → 本ファイル」へ。Step 0 の分担を社長ご決定どおりに（①台帳ヘッダ＝マネジメントだけ／②確認列＝マネジメントが片づけ社長へのお伺いも直接・triage は件数だけ／③期日＝マネジメントが中身を見て督促・triage は件数だけ）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-09-04</td><td class="px-3 py-2 border border-gray-200 align-top">初版。社長ご指示「日々のタスクを起こして、それをこなすためのマネジメント業務」。Step 0（partner台帳ヘッダ／確認列／期日のJST補正）・日々の3つの動き（起こす・こなす・詰まりを外す）・「作ったが繋いでいない」を残さない規律・制約表・自己チェックを定義。<strong>確認列は置き場であって聞く役ではない＝聞くのは Main</strong>（社長ご指示）を明記。task-partner（1案件）・partner（経営の一手）との境界を表で固定</td></tr></tbody></table></div>
+</div>
+</body>
+</html>

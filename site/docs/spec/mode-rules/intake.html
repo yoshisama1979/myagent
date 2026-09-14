@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intake（取り込み）モード — 動作ルール — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-09-14 16:56）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/modes/intake.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">Intake（取り込み）モード — 動作ルール</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>北極星：打ち合わせで決まったことが、その日のうちに「誰かが手を動かせる形」で HANAツールに入っていること。</strong><br>
+測るのは「登録した件数」ではなく、<strong>後から誰かがそれを見て着手できたか</strong>。</div>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-08-19・Codexレビュー反映）<br>
+発端＝2026-08-18 の UV 様打ち合わせで <strong>8件中6件が登録できなかった</strong>／柏病院2件は<strong>期日の言及がなく仮置き</strong>になった／<br>
+未完了 ToDo 78件のうち<strong>担当者が全件未設定</strong>だった。いずれも「入れる側」に型が無かったことが原因。<br>
+<strong>⚠️ 2026-08-21 更新</strong>：担当欄そのものは<strong>当面使わない</strong>と社長がご決定（「Todo起票はとりあえずは私社長だけで進めましょう」）。<br>
+<strong>＝担当は社長固定・<code class="bg-gray-100 px-1 rounded text-sm font-mono">assignee_user_id</code> は送らない・社長に担当を聞かない。</strong> 誰がやるかは会話台帳の <code class="bg-gray-100 px-1 rounded text-sm font-mono">担当:</code>（comms v0.9）で把握する。<br>
+土台＝進行管理の一次情報は hana-tools（2026-06-12 社長確定）。CLAUDE.md「メモ・議事録まとめのルール」。</div>
+<p class="text-sm mb-4 leading-relaxed"><strong>対話型。無人では動かさない。</strong> 社長が走り書きを渡した場に呼ばれて動く。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">手順（1回分）</h2>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 0 — 原文をそのまま確保する</h3>
+<p class="text-sm mb-4 leading-relaxed">走り書きの<strong>原文を一字も変えずに控える</strong>。あとで description に丸ごと入れる。<br>
+清書した文だけを残すと、<strong>社長の言い回しに含まれていた含みが消える</strong>（例：「〜っぽい」「〜かも」＝未確定の合図）。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 1 — 4つに分解する</h3>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">種別</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">行き先</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>決まったこと</strong>（やる・いつまでに・誰が）</td><td class="px-3 py-2 border border-gray-200 align-top">hana-tools の ToDo</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>まだ確定していないこと</strong>（数字に「？」が付く、伝聞、感触）</td><td class="px-3 py-2 border border-gray-200 align-top">ToDo にせず、<strong>Step 6 と同じ記録ページの「要確認」節</strong>に置く。確定値として扱わない・見積りの根拠にしない</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>相手に約束したこと</strong></td><td class="px-3 py-2 border border-gray-200 align-top">ToDo（<strong>期日は動かせない</strong>印を付ける）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>背景・経緯・議事録の本文</strong></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/&lt;client&gt;/projects/&lt;project&gt;/</code></td></tr></tbody></table></div>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 2 — 登録先の案件を特定する</h3>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/hana-api.sh projects</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">search &lt;名前&gt;</code> で探す。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>見つかったら</strong> work_id を控える</li>
+<li><strong>見つからなければ勝手に近い案件へぶら下げない</strong>。案件が無い旨を社長に伝え、作成を依頼する</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">（※ 案件作成 API は未実装＝A-066。実装されるまでは社長が画面から作る）</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>見つかった案件が <code class="bg-gray-100 px-1 rounded text-sm font-mono">status: completed</code> なら、<strong>そこにぶら下げてよいか確認する</strong></li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 3 — 足りない項目を「1回で」聞く</h3>
+<p class="text-sm mb-4 leading-relaxed">下の6項目のうち<strong>埋まっていないものだけ</strong>を、<strong>選択肢形式でまとめて1度に</strong>聞く。<br>
+何度も往復すると、走り書きを渡すほうが面倒になり、この仕組みは使われなくなる。</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 4 — 登録案を提示する</h3>
+<p class="text-sm mb-4 leading-relaxed"><strong>書き込む前に必ず</strong>、表で示す：<code class="bg-gray-100 px-1 rounded text-sm font-mono">内容／案件／期日／出典</code>（<strong>担当は社長固定＝聞かない・出さない</strong>＝2026-08-21 社長ご決定）。</p>
+<p class="text-sm mb-4 leading-relaxed"><strong>⚠️ AI が考えた値を「仮置き」として入れてはいけない</strong>（2026-08-19 Codexレビュー🔴）。<br>
+「仮置きと書けば推測してよい」は抜け道になる。<strong>社長が表全体に「OK」と返した瞬間、AI の推測が本登録される。</strong></p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>期日が分からない → <strong>登録しない</strong>。「Step 6 の未登録」へ回して、決まってから入れる</li>
+<li>仮の値を入れてよいのは、<strong>社長が「仮でいいから入れて」と指定したときだけ</strong>（誰の仮値かを description に書く）</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 5 — 合意を得てから登録する</h3>
+<p class="text-sm mb-4 leading-relaxed"><strong>合意は状態で管理する：<code class="bg-gray-100 px-1 rounded text-sm font-mono">下書き → 承認待ち（Step 4 で提示） → 明示承認 → 実行</code>。</strong></p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>「了解」「続けて」「よろしく」では書かない。</strong> 実行してよいのは「<strong>この N 件を登録して</strong>」のように</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed"><strong>対象が特定できる返事</strong>だけ（2026-08-19 Codexレビュー🔴）</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>提示後に内容が1つでも変わったら、承認は無効</strong>。作り直して提示しなおす</li>
+<li>承認の範囲は<strong>提示した表の中だけ</strong>。ついでの追加登録・共有メモへの転記は<strong>別に承認を取る</strong></li>
+</ul>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>ToDo：<code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/hana-api.sh create-todo '&lt;JSON&gt;'</code></li>
+<li>議事録・経緯：<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/clients/.../</code>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/memo.md</code> の構成に従う）</li>
+<li>案件の共有メモ：<code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/hana-api.sh update-note &lt;project_id&gt; '&lt;JSON&gt;'</code></li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">→ <strong>shared は全員が見る</strong>。値付けの考え方・人間関係の機微・交渉方針は入れない（それらは partner 台帳へ）</p>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 5.5 — 途中で失敗したら、最初からやり直さない</h3>
+<p class="text-sm mb-4 leading-relaxed">複数件を順に登録する途中で API エラーが出ることがある。<strong>そのまま再実行すると、成功済みの分が二重登録される</strong><br>
+（2026-08-19 Codexレビュー🔴）。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>登録した順に <strong>成功した id を控える</strong>（報告にも出す）</li>
+<li>再実行する前に <code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/hana-api.sh todos --work_id=&lt;id&gt;</code> で<strong>既に入っているものを確認</strong>する</li>
+<li><strong>失敗した1件だけ</strong>を入れ直す。全件を投げ直さない</li>
+</ul>
+<h3 class="text-lg font-semibold mb-3 mt-6">Step 6 — 登録できなかったものを残す</h3>
+<p class="text-sm mb-4 leading-relaxed">案件が無い等で入らなかった分は、<strong>そのまま消さず</strong>に <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/</code> の記録ページと partner 台帳に残し、<br>
+<strong>「何が揃えば登録できるか」</strong>を1行で書く。</p>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">必ず埋める6項目</h2>
+<p class="text-sm mb-4 leading-relaxed">走り書きに書かれていないことが多い。<strong>書かれていなければ聞く。推測で埋めない。</strong></p>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">#</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">項目</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">なぜ（実際に詰まった例）</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">1</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>どの案件か</strong></td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-18 UV 様の8件中6件が、案件が無くて登録できなかった</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">2</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>担当は誰か</strong></td><td class="px-3 py-2 border border-gray-200 align-top">未完了78件すべてで <code class="bg-gray-100 px-1 rounded text-sm font-mono">assignee_user_id</code> が未設定＝画面から誰のボールか読めない。<strong>⚠️ 2026-08-21 社長ご決定＝&lt;u&gt;ToDo の起票は当面すべて社長（<code class="bg-gray-100 px-1 rounded text-sm font-mono">assignee_user_id</code> は入れない）&lt;/u&gt;</strong>（原文＝「Todo起票はとりあえずは私社長だけで進めましょう」）。会話台帳の <code class="bg-gray-100 px-1 rounded text-sm font-mono">担当:</code>（comms v0.9）は<strong>把握用であって ToDo の担当欄には反映しない</strong>。運用を変えるのは社長のご指示があったときだけ</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">3</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>期日。自社の期日か、先方の期日か</strong></td><td class="px-3 py-2 border border-gray-200 align-top">柏病院2件は期日の言及がなく仮置きになった</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">4</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>決まったことか、まだ確定していないか</strong></td><td class="px-3 py-2 border border-gray-200 align-top">「60Pくらい？」「フォーム3つ？」を確定値と誤読しかけた</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">5</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>相手に約束したことか</strong></td><td class="px-3 py-2 border border-gray-200 align-top">C-060 は社長ご自身が「来週水曜まで」と明示＝重みが違う</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">6</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>出典（いつ・誰との話か）</strong></td><td class="px-3 py-2 border border-gray-200 align-top">後から遡れないと、指示の実体（添付・原文）に辿り着けない</td></tr></tbody></table></div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">厳守する制約</h2>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>推測で埋めない。</strong> 埋めたら必ず「仮置き」と書く（CLAUDE.md「メモ・議事録まとめのルール」）</li>
+<li><strong>書き込み前に登録案を提示する。</strong> hana-tools は共有システム＝勝手に書かない（rules/automation.md §3）</li>
+<li><strong>原文を description に丸ごと残す。</strong> 清書だけにしない</li>
+<li><strong>同じものを2か所に書かない。</strong> 進行＝hana-tools／背景＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code>（2026-06-12 社長確定）。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><strong>ただし「原文」だけは例外＝1か所にだけ全文を置き、他からは参照する</strong>（2026-08-19 Codexレビュー🔴）：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 ml-5">
+<li>走り書きの<strong>全文を置くのは1か所</strong>（議事録を作るならそこ／作らないなら代表 ToDo 1件の description）</li>
+<li>他の ToDo には<strong>その件に関わる部分と、全文の在りか</strong>だけを書く</li>
+<li>未登録分・未確定分の置き場も<strong>1か所に決める</strong>（既定＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/drafts/</code> の記録ページ。partner 台帳には</li>
+</ul>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">「実害と判断」だけを A-NNN で1行。<strong>内容を丸写ししない</strong>）</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>完了マークは付けない。</strong> 「終わった」と判断できるのは社長・担当者だけ。社長が明示したときだけ閉じる</li>
+<li><strong>クライアント機密・秘密情報を共有メモに書かない</strong></li>
+<li><strong>日付は JST で扱う。</strong> hana-tools の <code class="bg-gray-100 px-1 rounded text-sm font-mono">due_date</code> は JST 0時を UTC（<code class="bg-gray-100 px-1 rounded text-sm font-mono">T15:00:00Z</code>）で保存する＝</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">日付部分をそのまま読むと<strong>1日早くずれる</strong>（2026-08-18 に実際に間違えた）</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">やってはいけないこと</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>案件が見つからないからといって、<strong>近い案件に仮でぶら下げる</strong>（後から誰も気づけない）</li>
+<li>期日が書かれていないからといって、<strong>期日なしで登録する</strong>（期日なしは「いつまでも今日ではない」）</li>
+<li>走り書きの曖昧な数字を、<strong>見積りの根拠に使う</strong></li>
+<li>一度に何度も質問を往復する（<strong>1回にまとめる</strong>）</li>
+</ul>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">出力フォーマット</h2>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>## 取り込み結果（YYYY-MM-DD・&lt;出典&gt;）
+
+### ✅ 登録しました
+| id | 内容 | 案件 | 期日 |
+
+### ⏳ 登録できていません
+| 内容 | 何が揃えば入るか |
+
+### ❓ 確認したいこと
+（選択肢形式・1回にまとめる）
+
+### 📄 記録した場所
+- （HANAツール／site/ のリンク）</code></pre>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">自己チェック（登録の前に）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>[ ] 原文をそのまま残したか</li>
+<li>[ ] 6項目のうち、埋まっていないものを聞いたか</li>
+<li>[ ] 推測で埋めた箇所に「仮置き」と書いたか</li>
+<li>[ ] 登録案を社長に提示して合意を得たか</li>
+<li>[ ] 未確定の数字を、確定値として書いていないか</li>
+<li>[ ] 同じ内容を hana-tools と <code class="bg-gray-100 px-1 rounded text-sm font-mono">site/</code> の両方に書いていないか</li>
+<li>[ ] 共有メモに、値付け・人間関係・交渉方針を書いていないか</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>v0.2</strong>（2026-08-19）Codexレビュー🔴を反映：AI由来の仮置きを禁止／合意を状態機械に（曖昧な返事では書かない・変更で承認無効）／部分失敗時の二重登録防止（Step 5.5）／原文の置き場を1か所に限定して重複禁止と整合。</li>
+<li><strong>v0.1</strong>（2026-08-19）新設。社長ご指示「プロジェクト・打ち合わせ・ToDo は今後 HANAツールにも入れる／走り書きを質問で補正しながら整理して登録してほしい」。</li>
+</ul>
+</div>
+</body>
+</html>

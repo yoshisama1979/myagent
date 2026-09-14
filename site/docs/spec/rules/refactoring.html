@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>リファクタリング実施ガイドライン — 仕様書ビュー</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+  <p class="text-sm text-gray-500 mb-2"><a href="../index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
+  <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
+    これは自動生成ビューです（生成: 2026-09-14 16:56）。原本は
+    <code class="bg-gray-100 px-1 rounded font-mono">rules/refactoring.md</code>。
+    編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
+  </div>
+<h1 class="text-3xl font-bold mb-4 mt-8">リファクタリング実施ガイドライン</h1>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700"><strong>version 0.2</strong>（2026-08-11 社長指示「1から進めて」で新設・同日 §4.5 追加）｜ changelog はファイル末尾。<br>
+出自＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">claude-rules/websystem/rules/modes/refactoring.md</code>（250行）を、このリポジトリの実態<br>
+（<code class="bg-gray-100 px-1 rounded text-sm font-mono">bin/</code> の bash・python 運用ツール＋無人 cron ループ＋Markdown 台帳＋静的HTML＋<strong>複数エージェントが同じ作業ツリーに同居</strong>）<br>
+へ適応させたもの。<strong>websystem の Laravel／React／TypeScript 節は不採用</strong>（このリポジトリに該当スタックが無い）。<br>
+テスト・品質担保は <a href="testing.html" class="text-blue-600 hover:underline">testing.md</a> が正（本ファイルは「挙動を変えずに内部を良くする」側だけを扱う）。</div>
+<div class="bg-blue-50 border-l-4 border-blue-400 p-4 my-4 text-sm text-gray-700">🧭 北極星：<strong>足し続けても壊れない状態を保つ。ただし「きれいにすること」自体は成果ではない</strong><br>
+（実測 2026-08-11＝bin/ は直近30日で +8,959行 / −223行。放っておくと足すだけになる一方、<br>
+目的化すると動いているものを壊す。だから「挙動不変」を機械で示せる範囲だけを触る）</div>
+<hr class="my-8 border-gray-300">
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">1. これは何をするルールか</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>外から見た振る舞いを1ミリも変えずに、内部の品質だけを上げる</strong>ときの手順書。<br>
+機能追加・仕様変更・バグ修正は<strong>別の作業</strong>であり、同じコミットに混ぜない。</p>
+<p class="text-sm mb-4 leading-relaxed">このリポジトリで実際に効いた例＝重複の集約（<code class="bg-gray-100 px-1 rounded text-sm font-mono">spotY(spot)</code>／終了コードの決め方を1箇所へ／<br>
+クールダウン状態ファイルの書き込みを1箇所へ）、デッドコード削除（<code class="bg-gray-100 px-1 rounded text-sm font-mono">tag_attr</code>）、定数化（<code class="bg-gray-100 px-1 rounded text-sm font-mono">_METRICS</code>）。<br>
+いずれも<strong>「片方だけ直して不整合になる芽」を摘む</strong>目的だった。この目的から外れる整形はしない。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">2. 絶対に変えないもの</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>外部から観測できるすべて</strong>：コマンドの引数・終了コード・標準出力の文言・生成ファイルのパスと中身。</li>
+<li><strong>無人ループが依存する状態</strong>：カーソル（<code class="bg-gray-100 px-1 rounded text-sm font-mono">state.json</code> 等）・マーカー・ロック・台帳の書式。</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">ここを変えると<strong>次の無人実行で静かに壊れる</strong>（取りこぼし・二重処理）。触るなら仕様変更として別途合意。</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>判定ロジックの結果</strong>：宛先判定・冷却・金額照合・文字コード・許可リスト。<strong>分岐の順序も含めて</strong>同じ結果を返すこと。</li>
+<li><strong>ログ・通知の文言</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">grep</code> で拾っている箇所があるため、文言変更は挙動変更とみなす。</li>
+<li><strong>秘密の扱い</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> の読み方を共通化する場合も、<strong>値をログ・例外メッセージ・コミットへ出さない</strong>規律は不変</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">（<a href="automation.html" class="text-blue-600 hover:underline">automation.md</a> が正）。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">3. スコープ（既定は STRICT）</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">スコープ</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">範囲</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">誰の許可が要るか</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top"><strong>STRICT（既定）</strong></td><td class="px-3 py-2 border border-gray-200 align-top"><code class="bg-gray-100 px-1 rounded text-sm font-mono">git diff --staged</code> に含まれるファイル・行だけ</td><td class="px-3 py-2 border border-gray-200 align-top">不要（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/commit-pipeline</code> ステップ3の通常運転）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">同一ファイル全体</td><td class="px-3 py-2 border border-gray-200 align-top">そのファイルの diff 外の行も触る</td><td class="px-3 py-2 border border-gray-200 align-top">社長に一言（何を・なぜ・影響範囲）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">複数ファイル横断</td><td class="px-3 py-2 border border-gray-200 align-top">共通化・ライブラリ抽出など</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>社長の明示承認</strong>。原則は「直さず起票」→ §7</td></tr></tbody></table></div>
+<p class="text-sm mb-4 leading-relaxed"><strong>⚠️ STRICT には原理的な限界がある</strong>：差分の中しか見ないので、<strong>ファイルをまたぐ重複は永久に見つからない</strong><br>
+（実測 2026-08-11＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> の読み込みを python 11本・shell 5本が各自で実装していた。<br>
+毎コミットで11回リファクタしてきたが、どれも「直前コミットの後始末」で、この重複には一度も触れていない。<br>
+同日の横断作業で python は 11→3本まで減らしたが、<strong>shell 5本・atomic write 10本・flock 6本の自作は残っている</strong>）。<br>
+横断的な重複は<strong>このルールでなく §7 の起票経路で扱う</strong>。差分レビューと全体最適は別物だと自覚すること。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4. 複数エージェント同居のための鉄則（このリポジトリ固有・最重要）</h2>
+<p class="text-sm mb-4 leading-relaxed">同じ作業ツリーで他のエージェントが<strong>同時に別の作業をしている</strong>。リファクタは広い範囲に触りやすく、<br>
+最も混入事故を起こしやすい作業なので、次を必ず守る：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">git add .</code> を使わない。必ず pathspec で自分のファイルだけをステージする。</strong></li>
+<li><strong>ステージ後に <code class="bg-gray-100 px-1 rounded text-sm font-mono">git diff --cached --stat</code> を必ず読む</strong>。身に覚えのないファイル・行数があれば止めて調べる。</li>
+<li><strong>共有ファイル</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">data/partner/*.md</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">site/office/index.html</code> 等）に自分の1行だけを入れたいときは、</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">git show HEAD:&lt;path&gt;</code> に自分の変更だけを当てた内容を <code class="bg-gray-100 px-1 rounded text-sm font-mono">git hash-object -w</code> + <code class="bg-gray-100 px-1 rounded text-sm font-mono">git update-index --cacheinfo</code> で<br>
+ステージする（作業ツリーは触らない＝他エージェントの未コミット分を巻き込まない）。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>他エージェントがインデックスに自分の分を置いている場合は <code class="bg-gray-100 px-1 rounded text-sm font-mono">git commit -- &lt;pathspec&gt;</code> で回避</strong>する</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">（<code class="bg-gray-100 px-1 rounded text-sm font-mono">git restore --staged</code> で相手の作業を剥がさない）。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li>実例＝2026-08-11 に <code class="bg-gray-100 px-1 rounded text-sm font-mono">office/index.html</code>（他エージェントの233行）と <code class="bg-gray-100 px-1 rounded text-sm font-mono">milestones.md</code>（13行）を巻き込みかけ、</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">上記3・4で回避した。過去には3回、混入したまま commit している（<span class="text-gray-400 text-xs">[[project_git-index-race]]</span>）。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">4.5 隔離して直す（worktree の手順・横断的変更のとき）</h2>
+<p class="text-sm mb-4 leading-relaxed">STRICT を超える変更（§3 の「複数ファイル横断」）は、<strong>main の作業ツリーで直接やらない</strong>。<br>
+git worktree で別フォルダを生やし、そこで書いて検証し、通ったものだけ main に入れる。<br>
+失敗しても丸ごと捨てられる＝同居エージェントに一切影響しない。</p>
+<pre class="bg-gray-800 text-gray-100 rounded p-4 text-xs overflow-x-auto mb-6"><code>git worktree add ../myagent-refactor -b refactor/&lt;用件&gt;   # 作業場を生やす（追跡ファイル12MBだけ・.git は共有）
+# …作業・検証・コミット…
+cd /home/vpsuser/projects/myagent                          # ★必ず main 側へ戻ってから
+git merge --ff-only refactor/&lt;用件&gt;
+git worktree remove ../myagent-refactor &amp;&amp; git branch -d refactor/&lt;用件&gt;</code></pre>
+<p class="text-sm mb-4 leading-relaxed"><strong>踏んだ落とし穴（2026-08-11・3回まわして全部当たった）</strong></p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">git checkout &lt;別ブランチ&gt;</code> は同居環境では禁じ手</strong>＝作業ツリーの中身が丸ごと入れ替わり、</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">他のエージェントの足元からファイルが消える。ブランチを分けたいなら必ず worktree。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>worktree の中から <code class="bg-gray-100 px-1 rounded text-sm font-mono">git merge</code> / <code class="bg-gray-100 px-1 rounded text-sm font-mono">git worktree remove</code> を打たない</strong>。前者は自分自身にマージして</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">「Already up to date」になるだけ、後者は立っている床を外して cwd を失う。<strong>必ず main 側へ戻ってから</strong>。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>枝が古くなったら、当てずに作り直す</strong>。ブランチを切った後で main 側が進んでいると、</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">git checkout &lt;枝&gt; -- &lt;file&gt;</code> は<strong>その後の変更を巻き戻す</strong>（実際に、後から main に入った<br>
+新モード204行を消しかけた）。<strong>枝を捨てて、今の版に同じ修正をやり直す方が速くて安全</strong>。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> や <code class="bg-gray-100 px-1 rounded text-sm font-mono">data/</code> は worktree に無い</strong>（git 管理外だから）。実データでの検証が要るときだけ</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">.env</code> をコピーし、<strong>検証が終わったら必ず消す</strong>（コミット前に <code class="bg-gray-100 px-1 rounded text-sm font-mono">git status</code> で確認）。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>マージ前に、対象ファイルが main 側で編集中でないか見る</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">git status --short &lt;paths&gt;</code>）。</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">編集中なら git がマージを拒否する＝<strong>それは正しい動作</strong>。強行せず、<br>
+①相手がコミットするのを待つ ②衝突しないファイルだけ先に入れる（<code class="bg-gray-100 px-1 rounded text-sm font-mono">git checkout &lt;枝&gt; -- &lt;安全な paths&gt;</code>）<br>
+のどちらかを選ぶ。<strong>相手の未コミット作業を上書きする選択肢は無い</strong>。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">5. 挙動不変を「示す」（言うだけにしない）</h2>
+<p class="text-sm mb-4 leading-relaxed">リファクタは「たぶん同じ」で通してはいけない。<strong>同じであることを機械で示してからコミットする</strong>：</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>関連する回帰スイートを流す</strong>（<a href="testing.html" class="text-blue-600 hover:underline">testing.md</a> §7 の表で対象を引く）。**触ったツールにテストが無いなら、</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">まずテストを書く**（リファクタの前提条件＝安全網が無い場所で内部をいじらない）。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>前後の出力を突き合わせる</strong>：読み取り専用ツールは実データで実行し、出力の diff がゼロであることを確認する</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">（実例＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">gsc-fetch</code> の定数抽出は summary・queries の結果一致を確認してからコミットした）。<br>
+⚠️ 実データの結果を報告に貼るときは固有名詞・金額をマスクする。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>無人ループが呼ぶものは <code class="bg-gray-100 px-1 rounded text-sm font-mono">env -i HOME=... PATH=/usr/bin:/bin</code> の空環境でも通す</strong></li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">（対話環境でだけ動く形に退化していないか）。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>示せないなら、やらない</strong>。「動作確認できないが安全なはず」は、このリポジトリで最も高くついてきた判断。</li>
+</ol>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">6. やる／やらないの判断</h2>
+<p class="text-sm mb-4 leading-relaxed"><strong>やる</strong>（＝不整合の芽がある）</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>同じロジックが2箇所以上にあり、<strong>片方だけ直す事故が実際に起こりうる</strong>（起きた前例があるなら最優先）</li>
+<li>定義のみで呼ばれていない関数・到達しないコード（デッドコード）</li>
+<li>同じ値・同じ式の繰り返し（マジックナンバー・SQLの集計式など）</li>
+<li>判定が複数箇所に散っていて、テストがどこを叩けばよいか決められない</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed"><strong>やらない</strong></p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li>既に簡潔で、読んで意図が分かる</li>
+<li>「統一感」「好み」だけが理由（＝挙動不変でも履歴のノイズになり、他エージェントの差分と衝突する）</li>
+<li>将来の拡張を見越した抽象化（使う場面が来てから作る）</li>
+<li><strong>意図が推測でしか分からない</strong>箇所＝<strong>直さずに質問する</strong>（推測修正が別の場所を壊すのは testing.md §3 と同じ）</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">7. 横断的な改善は「直さず起票」する</h2>
+<p class="text-sm mb-4 leading-relaxed">STRICT を超える改善（共通ライブラリの抽出・データモデルの変更・複数ツールの統合）は、<br>
+<strong>その場で実装しない</strong>。次のどちらかに載せる：</p>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>統括（overseer）へ</strong>：<code class="bg-gray-100 px-1 rounded text-sm font-mono">O-NNN</code> として起票し、月次の全体最適棚卸し／「社長との全体最適セッション」の議題にする。</li>
+<li><strong>経営パートナー台帳へ</strong>：社長の判断が要るもの（工数・優先度）は <code class="bg-gray-100 px-1 rounded text-sm font-mono">A-NNN</code>／<code class="bg-gray-100 px-1 rounded text-sm font-mono">P-NNN</code>。</li>
+</ul>
+<p class="text-sm mb-4 leading-relaxed">起票には<strong>必ず実測値を添える</strong>（「重複が多い」ではなく「11本が各自で実装」）。<br>
+数字が無い改善提案は優先度を付けられず、埋もれる。</p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">8. 手順</h2>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>差分を自分で取る</strong>（<code class="bg-gray-100 px-1 rounded text-sm font-mono">git diff --staged</code>／<code class="bg-gray-100 px-1 rounded text-sm font-mono">git show &lt;hash&gt;</code>）。貼ってもらうのを待たない。</li>
+<li><strong>問題点を挙げる</strong>（重複・デッドコード・ネスト・命名・責務）。無ければ「リファクタリング不要」と報告して終わる</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed">——<strong>これは正しい結論であり、何かしら変更するより価値がある</strong>。</p>
+<ol class="list-decimal list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>1コミット1目的</strong>に分ける。混ぜない。</li>
+<li><strong>§5 で挙動不変を示す</strong> → コミット。</li>
+<li>コミットメッセージは既存の型に合わせる：</li>
+</ol>
+<p class="text-sm mb-4 leading-relaxed"><code class="bg-gray-100 px-1 rounded text-sm font-mono">&lt;対象&gt;のリファクタリング（&lt;元コミット&gt; の後始末）：&lt;何を1箇所へ集約したか&gt;</code></p>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">9. 報告フォーマット（<code class="bg-gray-100 px-1 rounded text-sm font-mono">/commit-pipeline</code> ステップ3で出す）</h2>
+<ul class="list-disc list-inside space-y-1 text-sm mb-2 mb-4">
+<li><strong>実施内容</strong>：何を、どのファイルで</li>
+<li><strong>挙動不変の根拠</strong>：流したテスト（スイート名と項目数）／前後で一致を確認した出力</li>
+<li><strong>スコープ</strong>：STRICT／同一ファイル／横断（横断なら許可の経緯）</li>
+<li><strong>やらなかったこと</strong>：気づいたが STRICT 外だったもの＝<strong>§7 で起票した番号</strong>（起票せず流さない）</li>
+<li><strong>質問事項</strong>：意図が読めず触らなかった箇所</li>
+</ul>
+<h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">変更履歴</h2>
+<div class="overflow-x-auto mb-6"><table class="w-full border-collapse text-sm"><thead><tr class="bg-gray-100"><th class="text-left px-3 py-2 border border-gray-200 font-semibold">version</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">日付</th><th class="text-left px-3 py-2 border border-gray-200 font-semibold">内容</th></tr></thead><tbody><tr><td class="px-3 py-2 border border-gray-200 align-top">0.2</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-11</td><td class="px-3 py-2 border border-gray-200 align-top"><strong>§4.5 隔離して直す（worktree の手順）を追加</strong>（社長「今のブランチで管理するルールは記述する必要ありますか」）。同日に3回まわして実際に踏んだ落とし穴5つを手順つきで固定＝①同居環境で <code class="bg-gray-100 px-1 rounded text-sm font-mono">git checkout &lt;別ブランチ&gt;</code> は禁じ手 ②worktree の中から merge / remove を打たない（cwd を失う） ③枝が古くなったら当てずに作り直す（後から main に入った新モード204行を消しかけた） ④.env は worktree に無い＝検証用コピーは必ず消す ⑤マージ前に対象ファイルが main 側で編集中でないか見る（git の拒否は正しい動作・強行しない）</td></tr><tr><td class="px-3 py-2 border border-gray-200 align-top">0.1</td><td class="px-3 py-2 border border-gray-200 align-top">2026-08-11</td><td class="px-3 py-2 border border-gray-200 align-top">初版（社長指示）。websystem の refactoring.md から目的・STRICT スコープ・実施/非実施の判断を移植し、Laravel／React／TypeScript 節は不採用。このリポジトリ固有として <strong>§4 複数エージェント同居の鉄則</strong>（混入3回の前例）・<strong>§5 挙動不変を機械で示す</strong>（testing.md と接続）・<strong>§7 横断的改善は直さず起票</strong>（STRICT の原理的限界＝.env 重複の実測つき）を追加。契機＝<code class="bg-gray-100 px-1 rounded text-sm font-mono">/commit-pipeline</code> ステップ3 と <code class="bg-gray-100 px-1 rounded text-sm font-mono">/refactor</code> が参照する <code class="bg-gray-100 px-1 rounded text-sm font-mono">rules/refactoring.mdc</code> が実在せず、毎コミットの1段が空回りしていたこと</td></tr></tbody></table></div>
+</div>
+</body>
+</html>
