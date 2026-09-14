@@ -25,7 +25,7 @@ OUT = ROOT / "site" / "docs" / "system-map.html"
 # ---- 図の骨格（構造はここが保持・モード名は SYSTEM.md から流し込む）----------
 # (グループ名, 色キー, 属するモードの短名[表の1列目から（…）を除いた部分])
 GROUPS = [
-    ("入口・会話", "sky", ["Main", "chat", "talk", "Memo", "memo-triage", "memo-intake", "Intake", "hp-reply"]),
+    ("入口・会話", "sky", ["マネジメント", "chat", "talk", "Memo", "memo-triage", "memo-intake", "Intake", "hp-reply"]),
     ("分析・提案ループ", "emerald",
      ["hp-improve", "hp-prospect", "hp-loop", "blog-loop", "blog-write", "blog-improve", "Reviewer"]),
     ("経営・記録", "amber", ["board", "partner", "Finance", "Comms", "task-partner"]),

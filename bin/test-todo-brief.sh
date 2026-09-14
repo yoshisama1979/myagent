@@ -666,15 +666,22 @@ echo "=== ★ルールの追随：CLAUDE.md に『動作』が残っているか
 # <u>動作</u>を落として JST 補正の注意書きだけになっていたこと。main.md に「消すな」と書いても
 # 機械では防げないので、ここで固定する（同日 Codex 指摘）。
 CL_MD="$PROJ/CLAUDE.md"
-grep -q 'todo-brief.py outside' "$CL_MD" \
-  && ok "★CLAUDE.md に outside の呼び出しが書かれている（自動ロードされる唯一のファイル）" \
-  || ng "★CLAUDE.md からコマンドが消えた＝毎朝の期日確認が実行されなくなる"
-grep -q '期日を見る' "$CL_MD" \
-  && ok "★CLAUDE.md に『期日を見る』という<u>動作</u>が残っている（注意書きで置き換えない）" \
+# 2026-09-14：窓口＝セッション。CLAUDE.md は全セッションに載るので窓口別の手順は書かない。
+# 守る事故は同じ（2026-09-11＝自動で読まれる側から「期日を見る」動作が消え、実行されなくなった）＝
+# 着火の連鎖「CLAUDE.md の whoami → 対応表の management.rule → そのルールの outside・期日を見る」を固定する。
+grep -q 'session-desk.py whoami' "$CL_MD" \
+  && ok "★CLAUDE.md に窓口の着火（session-desk.py whoami）がある（自動ロードされる唯一のファイル）" \
+  || ng "★CLAUDE.md から着火が消えた＝どの窓口も自分の手順を読まなくなる"
+MG_RULE="$(python3 -c "import json;print(json.load(open('$PROJ/config/session-desks.json'))['desks']['management']['rule'])" 2>/dev/null)"
+[ -n "$MG_RULE" ] && [ -f "$PROJ/$MG_RULE" ] \
+  && ok "★対応表の management が実在するルールを指している（連鎖が切れていない）" \
+  || ng "★対応表の management.rule が無い／存在しない＝マネジメントの期日確認に届かない"
+grep -q 'todo-brief.py outside' "$PROJ/${MG_RULE:-rules/modes/management.md}" \
+  && ok "★マネジメントのルールに outside の呼び出しがある" \
+  || ng "★マネジメントのルールからコマンドが消えた＝毎朝の期日確認が実行されなくなる"
+grep -q '期日を見る' "$PROJ/${MG_RULE:-rules/modes/management.md}" \
+  && ok "★マネジメントのルールに『期日を見る』という<u>動作</u>が残っている（注意書きで置き換えない）" \
   || ng "★動作が注意書きに置き換わった＝2026-09-11 と同じ事故"
-grep -q 'todo-brief.py outside' "$PROJ/rules/modes/main.md" \
-  && ok "rules/modes/main.md 側にも同じコマンドがある（どちらかだけ直さない）" \
-  || ng "main.md と CLAUDE.md がズレている"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"
