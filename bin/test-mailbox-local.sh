@@ -17,6 +17,7 @@ TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 mkdir -p "$TMP/data/mailbox/new" "$TMP/data/mailbox/cur" "$TMP/bin"
 cp "$PROJ/bin/mailbox.sh" "$TMP/bin/mailbox.sh"
+[ -f "$PROJ/bin/session-desk.py" ] && cp "$PROJ/bin/session-desk.py" "$TMP/bin/session-desk.py"
 # .env は読ませない（HTTP 系の必須キー検査に引っかからないよう local-* だけを叩く）
 : > "$TMP/.env"
 printf 'MAILBOX_URL=http://127.0.0.1/none/\nMAILBOX_TOKEN=dummy\n' > "$TMP/.env"
@@ -28,7 +29,9 @@ mkmsg() { # mkmsg <id> <to> [from]
   "subject": "テスト件名", "body": "テスト本文" }
 JSON
 }
-run() { ( cd "$TMP" && env "$@" bash bin/mailbox.sh "${RUNARGS[@]}" 2>&1 ); }
+# CLAUDE_CODE_SESSION_ID は本物のセッションから漏れ込むので必ず外す（テストで明示したときだけ効かせる）。
+# stdin は /dev/null＝local-send が本文待ちで止まらないように。
+run() { ( cd "$TMP" && env -u CLAUDE_CODE_SESSION_ID SESSION_DESK_SESSIONS="$TMP/sessions" "$@" bash bin/mailbox.sh "${RUNARGS[@]}" 2>&1 </dev/null ); }
 cnt() { python3 -c 'import sys,json; print(json.load(sys.stdin)["count"])' 2>/dev/null; }
 
 echo "── §1 local-inbox：自分宛だけを見る"
@@ -127,6 +130,72 @@ printf '%s' "$out" | grep -q '不明なオプション' && ok "未知のオプ�
 RUNARGS=(local-done aaa bbb)
 out="$(run MYAGENT_AGENT=hp-loop-ycom)"
 printf '%s' "$out" | grep -q '引数が多すぎます' && ok "余分な引数を黙って捨てない" || ng "余分な引数が素通りする"
+
+echo "── §7 窓口＝セッションID（2026-09-14 triage 依頼・Red 先行）"
+mkdir -p "$TMP/config" "$TMP/sessions"
+SID_T=aaaaaaaa-1111-4111-8111-111111111111
+SID_N=dddddddd-4444-4444-8444-444444444444
+cat > "$TMP/config/session-desks.json" <<JSON
+{"desks": {"triage": {"label": "社長との窓口", "rule": "rules/modes/triage.md"},
+           "board": {"label": "経営会議", "rule": "rules/modes/board.md"}},
+ "sessions": {"$SID_T": "triage"}}
+JSON
+printf '{"type":"user","message":{"content":"hi"}}\n' > "$TMP/sessions/$SID_T.jsonl"
+printf '{"type":"user","message":{"content":"read the full transcript at: /x/%s.jsonl"}}\n' "$SID_T" > "$TMP/sessions/$SID_N.jsonl"
+touch -d "3 days ago" "$TMP/sessions/$SID_N.jsonl"   # 前身の検出に使う旧ID（いまは動いていない状態で置く）
+mkmsg M-20260914T000001-overseer-t01 triage overseer
+mkmsg M-20260914T000002-overseer-t02 triage overseer
+RUNARGS=(local-inbox)
+out="$(run CLAUDE_CODE_SESSION_ID=$SID_T)"
+printf '%s' "$out" | grep -q '"inbox_of": "triage"' && [ "$(printf '%s' "$out" | cnt)" = "2" ] \
+  && ok "--as 無しの有人セッションは、対応表で自分の宛名を名乗る" || ng "対応表で名乗れていない"
+out="$(run CLAUDE_CODE_SESSION_ID=$SID_N)"
+printf '%s' "$out" | grep -q '未登録' && printf '%s' "$out" | grep -q 'triage' && ! printf '%s' "$out" | grep -q '"ok": true' \
+  && ok "未登録は黙って既定の宛名にせず「前身は triage」と出して止まる" || ng "未登録の扱いが違う"
+RUNARGS=(local-inbox --as board)
+out="$(run CLAUDE_CODE_SESSION_ID=$SID_T)"
+printf '%s' "$out" | grep -q '対応表では triage' && ok "登録済みのセッションは --as で他の窓口を名乗れない（取り合いの再発防止）" || ng "他の窓口を名乗れてしまう"
+RUNARGS=(local-inbox)
+out="$(run CLAUDE_CODE_SESSION_ID=$SID_T MYAGENT_AGENT=hp-loop-ycom)"
+printf '%s' "$out" | grep -q '"inbox_of": "hp-loop-ycom"' && ok "無人（MYAGENT_AGENT）の既存挙動は変えない" || ng "無人の身元が変わった"
+RUNARGS=(local-done M-20260914T000001-overseer-t01)
+out="$(run CLAUDE_CODE_SESSION_ID=$SID_T)"
+printf '%s' "$out" | grep -q '"ok": true' && ok "local-done も対応表で名乗って自分宛を消費できる" || ng "local-done が対応表で名乗れない"
+RUNARGS=(local-send --to board --subject 件名テスト 本文テスト)
+run CLAUDE_CODE_SESSION_ID=$SID_T >/dev/null
+f="$(ls -t "$TMP"/data/mailbox/new/M-*-triage-*.json 2>/dev/null | head -1)"
+[ -n "$f" ] && grep -q '"from": "triage"' "$f" && ok "local-send も --from 無しなら対応表の宛名で出す" || ng "local-send が対応表で名乗れない"
+RUNARGS=(local-send --from board --to triage --subject 件名 本文)
+out="$(run CLAUDE_CODE_SESSION_ID=$SID_T)"
+printf '%s' "$out" | grep -q '対応表では triage' && ok "登録済みは --from で他の窓口を騙れない" || ng "--from で騙れてしまう"
+touch "$TMP/sessions/$SID_N.jsonl"      # 同じ窓口の続きが「いま動いている」状態にする
+out="$( cd "$TMP" && env -u CLAUDE_CODE_SESSION_ID SESSION_DESK_SESSIONS="$TMP/sessions" CLAUDE_CODE_SESSION_ID=$SID_T bash bin/mailbox.sh local-inbox 2>"$TMP/sib.err" </dev/null )"
+printf '%s' "$out" | cnt >/dev/null && grep -q '⚠️' "$TMP/sib.err" \
+  && ok "同じ窓口の続きが並行して動いていたら ⚠️ を stderr に出す（stdout の JSON は壊さない）" || ng "取り合いの警告が出ない／JSON が壊れた"
+touch -d "3 days ago" "$TMP/sessions/$SID_N.jsonl"
+
+echo "── §8 local-send が未知の -- フラグを本文に飲み込まない（O-081・空便14通の実績）"
+before="$(ls "$TMP"/data/mailbox/new | wc -l)"
+RUNARGS=(local-send --from overseer --to triage --subject 件名 --body-file data/x.txt)
+out="$(run MYAGENT_X=1)"
+printf '%s' "$out" | grep -q '不明なオプション' && printf '%s' "$out" | grep -q '標準入力' \
+  && ok "--body-file 等の未知フラグは弾き、本文は標準入力で渡すよう案内する" || ng "未知フラグが本文に入る"
+[ "$(ls "$TMP"/data/mailbox/new | wc -l)" = "$before" ] && ok "弾いたときは1通も投函しない（空便を作らない）" || ng "弾いたのに投函された"
+RUNARGS=(local-send --from overseer --to triage --subject 件名 -- "--で始まる本文")
+run MYAGENT_X=1 >/dev/null
+f="$(ls -t "$TMP"/data/mailbox/new/M-*-overseer-*.json 2>/dev/null | head -1)"
+[ -n "$f" ] && grep -q '"body": "--で始まる本文"' "$f" && ok "-- の後ろは -- で始まっていても本文として通す" || ng "-- 以降の本文が通らない"
+( cd "$TMP" && printf '標準入力の本文' | env -u CLAUDE_CODE_SESSION_ID SESSION_DESK_SESSIONS="$TMP/sessions" MYAGENT_X=1 bash bin/mailbox.sh local-send --from overseer --to board --subject 標準入力 >/dev/null 2>&1 )
+f="$(ls -t "$TMP"/data/mailbox/new/M-*-overseer-*.json 2>/dev/null | head -1)"
+[ -n "$f" ] && grep -q '"body": "標準入力の本文"' "$f" && ok "本文は標準入力から渡せる（案内どおりの渡し方が動く）" || ng "標準入力の本文が入らない"
+if python3 - "$PROJ/bin/mailbox.sh" <<'PYX'
+import re,sys
+s=open(sys.argv[1],encoding="utf-8").read()
+for n in ("SENDERS","RECIPIENTS"):
+    m=re.search(n+r"\s*=\s*\{(.*?)\}", s, re.S); ids=set(re.findall(r'"([A-Za-z0-9_-]+)"', m.group(1)))
+    assert {"triage","board","management","dev"} <= ids, n
+PYX
+then ok "triage・board・management・dev を送信者・宛先の許可リストに持つ"; else ng "許可リストに窓口の宛名が無い"; fi
 
 echo "── §6 許可リスト（bin/ と bash bin/ の両形が要る＝実害の前例あり）"
 SET="$PROJ/.claude/settings.local.json"

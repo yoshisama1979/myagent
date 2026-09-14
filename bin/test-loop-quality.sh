@@ -86,14 +86,23 @@ mkses() { # mkses <file> <site> <ISO時刻>
     printf '{"type":"assistant","timestamp":"%s","message":{"role":"assistant","usage":{"input_tokens":1,"output_tokens":1},"content":[{"type":"tool_use","id":"t1","name":"Edit","input":{"file_path":"/x/data/hp-loop/%s/coverage.md","new_string":"12345"}}]}}\n' "$3" "$2"
   } > "$S/$1.jsonl"
 }
-# 2026-09-11T20:00:00Z = JST では 2026-09-12 05:00。JST で数えれば「今日」に入る。
-mkses s1 alpha "2026-09-11T20:00:00Z"
+# ★日付を固定した「今日から N日」の検査は時限爆弾になる（2026-09-12 に書いた版が 9/14 に落ちた）★
+#   意図は「UTC の時刻を JST の日付に直してから数えるか」なので、変換そのものを直接叩いて固定する。
+python3 - "$TOOL" <<'PYX' && ok "UTC 20:00（JST 翌日5:00）を JST の日付で数える" || ng "UTC のまま数えて1日ずれている"
+import importlib.util, sys, datetime
+spec = importlib.util.spec_from_file_location("lq", sys.argv[1]); lq = importlib.util.module_from_spec(spec); spec.loader.exec_module(lq)
+assert lq.jst_day("2026-09-11T20:00:00Z") == datetime.date(2026, 9, 12)
+assert lq.jst_day("2026-09-11T14:59:59Z") == datetime.date(2026, 9, 11)
+assert lq.jst_day("2026-09-12T05:00:00") == datetime.date(2026, 9, 12)   # タイムゾーン無しは JST
+PYX
+# 範囲の数え方は「いまから1時間前」で作る＝実行日に依存させない
+mkses s1 alpha "$(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%SZ)"
 out="$(LOOP_QUALITY_ROOT="$R" LOOP_QUALITY_SESSIONS="$S" python3 "$TOOL" report --days 1 2>&1)"
 printf '%s' "$out" | grep -qE '^  alpha +1 +1' \
-  && ok "UTC 20:00（JST 翌日5:00）を JST の日付で数える" || ng "UTC のまま数えて1日ずれている"
+  && ok "直近の起動を --days 1 の範囲に数える（実行日に依存しない）" || ng "直近の起動を数えられない"
 
 echo "── §5 産出量の集計"
-mkses s2 alpha "2026-09-11T21:00:00Z"
+mkses s2 alpha "$(date -u -d '2 hours ago' +%Y-%m-%dT%H:%M:%SZ)"
 out="$(run report --days 30)"
 printf '%s' "$out" | grep -qE '^  alpha +2 +2 +1\.0 +5' \
   && ok "起動2・書込2・書込/回1.0・文字/回5" || ng "産出量の集計が合わない"

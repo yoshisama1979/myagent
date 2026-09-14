@@ -23,13 +23,16 @@
 #       from を自己申告できる（同一マシン例外）。needs_approval は常に false。
 #       外部送信/本番改変/書込を促すものは使わず、通常の send（+--needs-approval）を使うこと。
 #       options: --type request|report|ack|fyi（既定 request）/ --thread <id>
+#       有人は --from を省くと**窓口の対応表**（config/session-desks.json）の宛名で出す。
+#       登録済みのセッションは --from で他の窓口を名乗れない。未知の --xxx は弾く（本文はファイルなら < で標準入力へ）。
 #
 #   bin/mailbox.sh done <id>
 #       自分宛の new/<id> を処理済み(cur/)へ移動。本文は編集しない。
 #
 #   bin/mailbox.sh local-inbox [--as <agent>]
 #       同一マシン(VPS)のスプールから自分宛の未読(new/)を直接読む（HTTP不経由）。
-#       身元は無人なら MYAGENT_AGENT・有人なら --as。**サイト別の宛名（hp-loop-<site> 等）は
+#       身元は無人なら MYAGENT_AGENT・有人は**窓口の対応表**（config/session-desks.json・bin/session-desk.py）で
+#       このセッションの宛名を引く。登録済みは --as で他の窓口を名乗れない。未登録なら --as が要る（黙って既定にしない）。**サイト別の宛名（hp-loop-<site> 等）は
 #       こちらを使う**＝HTTP の inbox はトークンが名乗る総称名でしか開けず、常に count:0 になる。
 #
 #   bin/mailbox.sh local-done <id> [--as <agent>]
@@ -47,6 +50,32 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 ENV_FILE="$ROOT_DIR/.env"
 
 die() { echo "エラー: $*" >&2; exit 1; }
+
+# ── 有人セッションの宛名を「窓口の対応表」で引く（2026-09-14 triage 依頼）
+# 正＝config/session-desks.json と bin/session-desk.py。ここでは解釈しない（正を2つ持たない）。
+# なぜ：有人は --as の自己申告だけで身元が決まり、triage とマネジメントが同じ受信箱を読んだ（2026-09-13 実害）。
+# 結果は SD_DESK（宛名）／SD_ERR（引けない理由）／SD_WARN（同じ窓口のIDが並行して動いている）に入れる。
+SD_DESK="" SD_ERR="" SD_WARN=""
+resolve_session_desk() {
+  SD_DESK="" SD_ERR="" SD_WARN=""
+  if [ -z "${CLAUDE_CODE_SESSION_ID:-}" ]; then
+    SD_ERR="このセッションのIDが分かりません"
+    return 0
+  fi
+  local out line
+  if ! out="$(python3 "$SCRIPT_DIR/session-desk.py" name 2>/dev/null)"; then
+    SD_ERR="窓口の対応表を引けません（bin/session-desk.py）"
+    return 0
+  fi
+  while IFS= read -r line; do
+    case "$line" in
+      desk=*)  SD_DESK="${line#desk=}" ;;
+      error=*) SD_ERR="${line#error=}" ;;
+      warn=*)  SD_WARN="${line#warn=}" ;;
+    esac
+  done <<<"$out"
+  return 0
+}
 
 command -v curl >/dev/null 2>&1 || die "curl が見つかりません"
 command -v python3 >/dev/null 2>&1 || die "python3 が見つかりません（送信のJSON生成に使用）"
@@ -143,10 +172,24 @@ print(json.dumps({
         --type)    [ -n "$type_set" ] && dup --type;   type="${2:-}"; type_set=1; shift 2 ;;
         --thread)  [ -n "$thread" ]  && dup --thread;  thread="${2:-}"; shift 2 ;;
         --) shift; body_args+=("$@"); break ;;
+        # ★未知の -- フラグを本文に飲み込まない（O-081）★ 各ループが自力で発明した --body-file 等が
+        #   そのまま本文になり、中身ゼロの便が 27日間・14通 配達されていた。黙って送らず止める。
+        #   本文が - で始まる箇条書き（"- 観察…"）は通す＝弾くのは -- に英字が続く形だけ。
+        --[A-Za-z]*) die "local-send: 不明なオプション: $1（本文は位置引数か -- の後ろに置く。ファイルの中身は標準入力で渡す＝ bin/mailbox.sh local-send --to <宛名> --subject <件名> < ファイル）" ;;
         *)  body_args+=("$1"); shift ;;
       esac
     done
-    [ -n "$from" ] || die "local-send: --from <agent> は必須です"
+    if [ -z "${MYAGENT_AGENT:-}" ]; then
+      resolve_session_desk
+      if [ -n "$SD_WARN" ]; then echo "⚠️ $SD_WARN" >&2; fi
+      if [ -n "$SD_DESK" ]; then
+        if [ -n "$from" ] && [ "$from" != "$SD_DESK" ]; then
+          die "local-send: このセッションは窓口の対応表では $SD_DESK です（--from $from は名乗れません＝取り合い・なりすましの防止）"
+        fi
+        from="$SD_DESK"
+      fi
+    fi
+    [ -n "$from" ] || die "local-send: --from <agent> は必須です（${SD_ERR:-宛名が決まりません}）"
     [ -n "$to" ]   || die "local-send: --to <agent> は必須です"
     # 早期拒否（多重防御の一段目）：from/to に識別子以外の文字が混ざっていたら弾く。
     # from はファイル名(mid)に入るため、ここを抜けないとパストラバーサル(../)の余地になる。
@@ -174,13 +217,13 @@ ID = re.compile(r"^[A-Za-z0-9_-]{1,32}$")
 # 総称 hp-loop は複数サイト化で廃止：宛先は必ず hp-loop-<site>（消費する dispatch が存在する名のみ許可＝孤児化防止）。
 # 各サイトループ hp-loop-<site> は「最新レポートを実装担当へ流す」ために送信者にもなる（同一VPS常駐＝local-send）。
 # ブログ解析ループ blog-loop-<client> も同様（実装担当への配信＋fact質問の送信者）。VPS常駐＝local-send。
-SENDERS    = {"overseer", "hanasaka-main",
+SENDERS    = {"overseer", "hanasaka-main", "triage", "management", "board", "dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "hp-loop-rally", "hp-loop-konjaku", "hp-loop-shigatoyota",
               "blog-loop-ycom",
               # 相談役（軽い会話・2026-08-19）。深掘りが要る話を partner へ渡す唯一の経路。
               "talk"}
-RECIPIENTS = {"overseer", "hanasaka-main", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
+RECIPIENTS = {"overseer", "hanasaka-main", "triage", "management", "board", "dev", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
               "rally-dev", "konjaku-dev", "shigatoyota-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "hp-loop-rally", "hp-loop-konjaku", "hp-loop-shigatoyota",
@@ -257,8 +300,22 @@ print(mid)'
     if [ -n "$me" ] && [ -n "$as_agent" ] && [ "$as_agent" != "$me" ]; then
       die "$cmd: 無人実行では --as は自分（$me）だけです: $as_agent"
     fi
-    [ -n "$me" ] || me="$as_agent"
-    [ -n "$me" ] || die "$cmd: 名乗る相手が決まりません（無人なら MYAGENT_AGENT・有人なら --as <agent>）"
+    # 有人：窓口の対応表で名乗る。登録済みのセッションは --as で他の窓口を名乗れない。
+    #       未登録（または対応表が無い）ときは、明示した --as だけを使う＝黙って既定の宛名にしない。
+    if [ -z "$me" ]; then
+      resolve_session_desk
+      if [ -n "$SD_WARN" ]; then echo "⚠️ $SD_WARN" >&2; fi
+      if [ -n "$SD_DESK" ]; then
+        if [ -n "$as_agent" ] && [ "$as_agent" != "$SD_DESK" ]; then
+          die "$cmd: このセッションは窓口の対応表では $SD_DESK です（--as $as_agent は名乗れません＝取り合いの再発防止）"
+        fi
+        me="$SD_DESK"
+      elif [ -n "$as_agent" ]; then
+        me="$as_agent"
+      else
+        die "$cmd: 名乗る相手が決まりません（${SD_ERR}）。無人なら MYAGENT_AGENT・有人は窓口の対応表に登録するか --as <宛名>"
+      fi
+    fi
     case "$me" in *[!A-Za-z0-9_-]*) die "$cmd: エージェント名は英数字/_/- のみ" ;; esac
     [ "$cmd" = "local-done" ] && { [ -n "$mid" ] || die "local-done <id> の id は必須です"; }
     MB_CMD="$cmd" MB_ME="$me" MB_ID="$mid" MB_ROOT="$ROOT_DIR" python3 -c '

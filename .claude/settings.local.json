@@ -139,6 +139,14 @@
             "command": "python3 /home/vpsuser/projects/myagent/bin/office-beacon-hook.py prompt"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /home/vpsuser/projects/myagent/bin/session-desk.py hook"
+          }
+        ]
       }
     ]
   }
