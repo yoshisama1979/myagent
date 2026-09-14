@@ -55,7 +55,7 @@ for c in python3 python; do
   fi
 done
 [ -n "$PY" ] || die "python3（または Python 3 系の python）が見つかりません"
-[ -f "$ENV_FILE" ] || die ".env が見つかりません（$ENV_FILE）"
+[ -f "$ENV_FILE" ] || die ".env が見つかりません（${ENV_FILE}）"
 
 # ここから下はトークンを扱う。bash -x が有効だと展開がそのままログに出るので切る。
 XTRACE_WAS_ON=""
@@ -101,7 +101,7 @@ else
 fi
 LOCAL_SHA="${LOCAL_VERSION##*/}"
 
-CODE="$(api version "$TMPDIR_WORK/version.json")" || die "サーバに接続できません（$URL）"
+CODE="$(api version "$TMPDIR_WORK/version.json")" || die "サーバに接続できません（${URL}）"
 if [ "$CODE" != "200" ]; then
   ERR="$(RU_F="$TMPDIR_WORK/version.json" "$PY" -c '
 import json, os, sys
@@ -109,7 +109,7 @@ try:
     print(json.load(open(os.environ["RU_F"], encoding="utf-8")).get("error", "unknown"))
 except Exception:
     print("unreadable_response")')"
-  echo "❌ 版を確認できません（HTTP $CODE / $ERR）" >&2
+  echo "❌ 版を確認できません（HTTP $CODE / ${ERR}）" >&2
   case "$ERR" in
     token_revoked|token_expired)
       echo "   この案件のトークンが失効／期限切れです。社長に再発行を依頼してください。" >&2 ;;
@@ -128,7 +128,7 @@ for k in ("version", "sha", "published_at", "sha256", "size", "template"):
     print("REMOTE_%s=%s" % (k.upper(), shlex.quote(str(d.get(k, "")))))')"
 
 echo "いまの版 : $LOCAL_VERSION"
-echo "最新の版 : $REMOTE_VERSION（公開 ${REMOTE_PUBLISHED_AT:0:16})"
+echo "最新の版 : ${REMOTE_VERSION}（公開 ${REMOTE_PUBLISHED_AT:0:16})"
 
 if [ "$LOCAL_VERSION" = "$REMOTE_VERSION" ]; then
   echo "✅ 最新です。更新は要りません。"
@@ -205,7 +205,8 @@ keep_p() {  # $1=相対パス → 案件の記録なら 0
 OVER="$TMPDIR_WORK/overwrite.list"; : > "$OVER"
 NEW="$TMPDIR_WORK/new.list";       : > "$NEW"
 SKIP="$TMPDIR_WORK/skip.list";     : > "$SKIP"
-( cd "$SRC" && find . -type f -printf '%P\n' ) | sort > "$TMPDIR_WORK/all.list"
+# find の -printf は GNU 専用（macOS の BSD find には無い）ので、先頭の ./ を自分で落とす
+( cd "$SRC" && find . -type f ) | sed 's|^\./||' | sort > "$TMPDIR_WORK/all.list"
 while IFS= read -r rel; do
   if [ -e "$ROOT_DIR/$rel" ]; then
     if keep_p "$rel"; then echo "$rel" >> "$SKIP"; else echo "$rel" >> "$OVER"; fi
@@ -216,7 +217,8 @@ done < "$TMPDIR_WORK/all.list"
 
 # 上書き対象に未コミットの変更があると、それは黙って消える。git があるなら止める。
 if [ -s "$OVER" ] && git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  DIRTY="$(cd "$ROOT_DIR" && xargs -d '\n' -a "$OVER" git status --porcelain -- 2>/dev/null || true)"
+  # xargs の -d/-a も GNU 専用。NUL 区切りなら BSD の xargs でも渡せる
+  DIRTY="$(cd "$ROOT_DIR" && tr '\n' '\0' < "$OVER" | xargs -0 git status --porcelain -- 2>/dev/null || true)"
   if [ -n "$DIRTY" ] && [ "$FORCE" != "1" ]; then
     echo "❌ 上書き対象に未コミットの変更があります（消えてしまいます）:" >&2
     printf '%s\n' "$DIRTY" | sed 's/^/   /' >&2

@@ -72,7 +72,7 @@ for c in python3 python; do
   fi
 done
 [ -n "$PY" ] || die "python3（または Python 3 系の python）が見つかりません（JSON生成に使用）"
-[ -f "$ENV_FILE" ] || die ".env が見つかりません（$ENV_FILE）"
+[ -f "$ENV_FILE" ] || die ".env が見つかりません（${ENV_FILE}）"
 
 # ここから下はトークンを扱う。bash -x（xtrace）が有効だと展開がそのままログに出るので、
 # 読み込みと curl 設定の書き出しが終わるまで切る（argv 対策とは別の漏れ口）。
@@ -136,12 +136,12 @@ except json.JSONDecodeError:
 print("ok" if d.get("ok") else (d.get("error") or "unknown_error"))')"
 
 if [ "$ok" = "ok" ]; then
-  echo "✅ 送信しました（版: $VERSION）"
+  echo "✅ 送信しました（版: ${VERSION}）"
   echo "   documents/rule-improvements.md の該当 RI-NNN を「送信済み」にしてください。"
   exit 0
 fi
 
-echo "❌ 送れていません（サーバの応答: $ok）" >&2
+echo "❌ 送れていません（サーバの応答: ${ok}）" >&2
 case "$ok" in
   token_revoked|token_expired)
     echo "   この案件のルール通知トークンが失効／期限切れです。社長に再発行を依頼してください。" >&2 ;;

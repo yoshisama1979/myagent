@@ -169,6 +169,23 @@ want_eq "$(md5sum < "$PROJ/claude-rules/website/bin/rules-update.sh")" \
         "$(md5sum < "$PROJ/claude-rules/websystem/bin/rules-update.sh")" \
         "両テンプレの rules-update.sh が同一"
 
+# 配布先は macOS（bash 3.2 ＋ BSD の find/xargs）のことがある。ここで動いても現場で落ちる
+# 書き方を機械で弾く＝2026-09-13 に実際に踏んだ（$VAR の直後が日本語／find -printf／xargs -d）。
+NG_VAR=""; NG_GNU=""
+for f in "$PROJ"/claude-rules/*/bin/*.sh; do
+  # 見るのはコード行だけ（「-printf は使わない」と書いた説明文を自分で拾わないため）
+  CODE="$(LC_ALL=C grep -vE '^[[:space:]]*#' "$f")"
+  # 変数の直後が非ASCII だと、bash 3.2 は多バイト文字まで変数名として読む（unbound variable）
+  printf '%s' "$CODE" | LC_ALL=C grep -qE '\$[A-Za-z_][A-Za-z0-9_]*[^ -~]' && NG_VAR="$NG_VAR ${f##*/}"
+  # GNU 専用のオプション・bash 4 専用の構文
+  printf '%s' "$CODE" | LC_ALL=C grep -qE 'find [^|]*-printf|xargs +-[da] |stat +-c|date +-d |sed +-i |grep +-P|declare +-A|mapfile|readarray' \
+    && NG_GNU="$NG_GNU ${f##*/}"
+done
+[ -z "$NG_VAR" ] && say_ok "変数の直後に日本語を置いていない（bash 3.2 で unbound variable になる）" \
+                 || say_ng "変数の直後に日本語を置いていない" "$NG_VAR"
+[ -z "$NG_GNU" ] && say_ok "GNU 専用のオプションを使っていない（BSD の find/xargs でも動く）" \
+                 || say_ng "GNU 専用のオプションを使っていない" "$NG_GNU"
+
 # 第1版を受け取った案件を作る（＝配布直後の状態）
 SITE="$T/proj"
 mkdir -p "$SITE"
