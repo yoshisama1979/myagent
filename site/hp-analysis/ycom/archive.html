@@ -309,6 +309,71 @@
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+
+    <h3 class="text-xl font-semibold mb-1">Cycle 122 — 2026-09-13（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①ChatGPT 経由のお客様は、数は極めて少ないのに問い合わせ率が桁違いに高いことが分かりました ②週次のCV実測（期日到来）を実施し、見積りフォームの取りこぼしを2か月ぶりに再確認 ③検索データの転送が復旧しました ④「相談ページ」の効果の測り方に欠陥が見つかり、作り直しました</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（<strong class="text-emerald-700">集計最終日が 9/8 → 9/10 へ前進＝前回申し上げた「止まっているかもしれない」は解除です</strong>・28日 1,554クリック／59,145表示／平均10.6位）・GA4 ✅取得（28日／90日）・Google広告 ✅取得（<strong>YCOM のみ配信ゼロ＝停止11日目</strong>）・Clarity ✅取得（10日連続）・本番GET ✅・受信箱 ✅（新着なし）</p>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 本日いちばんの発見＝ChatGPT から来たお客様の「問い合わせ率」が、Google 検索の約23倍でした</p>
+      <p class="text-sm text-gray-800 mb-2">前回「次回に測ります」とお約束していた項目です。結果は次のとおりでした（GA4 の実測・90日間）。</p>
+      <table class="text-sm w-full mb-2 bg-white">
+        <thead><tr class="border-b-2 border-rose-300 text-left"><th class="py-1 pr-3">どこから来たか</th><th class="py-1 pr-3 text-right">訪問</th><th class="py-1 pr-3 text-right">問い合わせ等</th><th class="py-1 text-right">率</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-rose-100 bg-amber-50"><td class="py-1 pr-3 font-semibold">ChatGPT 経由</td><td class="py-1 pr-3 text-right">48</td><td class="py-1 pr-3 text-right font-bold">8</td><td class="py-1 text-right font-bold text-rose-700">16.7%</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">Google 検索（自然流入）</td><td class="py-1 pr-3 text-right">7,201</td><td class="py-1 pr-3 text-right">52</td><td class="py-1 text-right">0.72%</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">直接アクセス（指名・ブックマーク等）</td><td class="py-1 pr-3 text-right">2,879</td><td class="py-1 pr-3 text-right">189</td><td class="py-1 text-right">6.6%</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">Yahoo!／Bing</td><td class="py-1 pr-3 text-right">1,005</td><td class="py-1 pr-3 text-right">5</td><td class="py-1 text-right">0.5%</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong>訪問数はGoogleの150分の1なのに、問い合わせは6.5分の1</strong>です。直近28日でも22訪問→3件、直近7日でも7訪問→1件と<strong>続いています</strong>（90日分の約半分が直近28日＝増えています）。なお Gemini（7訪問）と OpenAI 経由（10訪問）は0件で、<strong>いま数字が出ているのは ChatGPT だけ</strong>です。</p>
+      <p class="text-sm text-rose-900 mb-2"><strong>⚠️ ただし、まだ「だから◯◯しましょう」とは申し上げません。</strong>理由を正直に3つ挙げます。<strong>①数が少ない</strong>（48訪問・8件＝一般に判断には足りない水準です。ただし8件は「0か1か」ではないので、単なる偶然とも言い切りません）<strong>②その8件の中身を確認できていない</strong>（いま集計に使っているコンバージョンには、R-023 でご相談している二重計上と、中身の怪しい「見積もりのリクエスト」が混ざっています）<strong>③どこから来たかの記録は崩れやすい</strong>（ChatGPT 経由は「直接アクセス」に化けることがあり、逆に「ChatGPTで調べてから社名で検索」も直接アクセスに入ります＝実際の貢献は、この数字より大きいことも小さいこともあり得ます）。</p>
+      <p class="text-sm text-gray-800"><strong>そして最大の理由＝「どのページが引用されて送客されているか」がまだ分かりません。</strong>それが分からないと打ち手が決まりません（＝新しい提案としては起票せず、次回の宿題にしました）。<strong>次回やること＝「流入元 × 着地ページ」の内訳を取る</strong>（いまの道具は両者を掛け合わせられないので、その取得手段を作ります）。<span class="text-gray-600">※ご参考まで＝当社は AI 活用サービスを売っている会社ですので、これはいずれ営業の話にもつながる論点だと考えています。</span></p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-sky-500 bg-sky-50 p-4 rounded-r">
+      <p class="font-bold text-sky-800 mb-1">📊 週次のCV実測（期日が来たので実施）＝見積りフォームの取りこぼしを、2か月ぶりに同じ形で再確認しました</p>
+      <p class="text-sm text-gray-800 mb-2">前回お預けにしていた「見積りフォームはどれくらい完了しているか」を初めて実測しました（GA4 28日）。</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside mb-2 space-y-1">
+        <li><strong>見積りフォーム（<code>/contact/create/</code>）</strong>＝たどり着いた方 <strong>15人</strong> → 送信完了 <strong>2人</strong>＝<strong class="text-rose-700">13.3%</strong></li>
+        <li><strong>お問い合わせフォーム（<code>/contact/normal/</code>）</strong>＝たどり着いた方 <strong>114人</strong> → 送信完了 <strong>49人</strong>＝<strong class="text-emerald-700">43.0%</strong></li>
+      </ul>
+      <p class="text-sm text-gray-800 mb-2">7/19 に同じ形で測ったとき（12人→2人 vs 56人→21人）と<strong>同じ向き</strong>でした。約2か月離れた別の期間で再現したので、<strong>「見積りフォーム側で取りこぼしている」は一時的な偶然ではない</strong>と言えます＝これは既存の提案 <strong>R-033</strong>（重い見積りの手前に、軽い相談の受け皿を置く）の根拠が固くなった、という意味です。</p>
+      <p class="text-sm text-gray-700 mb-2">⚠️ <strong>フォームの項目数が違う</strong>（見積りは概算4項目＋任意）ので、<strong>フォームの出来だけが原因とは言えません</strong>。また、前回見つけた「スマホでAIチャットの吹き出しが入力欄に重なる」件は、<strong>完了が2件しかなく端末別に分けられないため、今回は判定できませんでした</strong>（＝影響があるともないとも申し上げられません。完了件数が増えた時点で測り直します）。</p>
+      <p class="text-sm text-gray-800">あわせて<strong>着地ページ別の問い合わせ率</strong>も取りました＝お問い合わせページ直着地 67.1%・トップ 8.7%・<strong class="text-rose-700">料金ページ 37訪問で0件</strong>・<strong class="text-rose-700">AIチャットの広告LP 3枚で計1,899訪問・0件（3期連続）</strong>。そして<strong class="text-rose-700">上位25位までにサービス紹介ページ（<code>/service/</code>）が1つも入っていません</strong>＝これで <strong>R-057</strong>（いちばん問い合わせに効くページが、いちばん入口が閉じている）が<strong>3つ目の独立した窓から裏づけられました</strong>。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r">
+      <p class="font-bold text-amber-800 mb-1">🔧 自分の測り方の欠陥を1つ見つけて、直しました（R-047＝無料相談ページ4枚の統合）</p>
+      <p class="text-sm text-gray-800 mb-2">R-047 の成功条件を、当方は「4ページ合計のクリックが<strong>0から発生したら成功</strong>」と決めていました。本日、<strong>16回連続で0だったクリックが1件出ました</strong>（<code>/role/consult.html</code> 9表示・1クリック）。</p>
+      <p class="text-sm text-rose-900 mb-2"><strong>ところが R-047 はまだ着手していません。</strong>＝これは施策の効果ではなく、<strong>何もしていない状態でも、まれにクリックは出る</strong>ということです。つまり<strong>「0から発生したら成功」という条件は、着手前に勝手に達成されてしまう欠陥のある条件でした</strong>。</p>
+      <p class="text-sm text-gray-800">→ <strong>条件を「4ページ合計のクリック数の増減で見る」に作り直しました</strong>（着手前の基準値＝28日で0〜1クリック／69〜84表示）。<span class="text-gray-600">※社長のご判断は不要です。当方の記録の作り方の問題でしたので、直した旨のご報告です。</span></p>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-semibold mb-2">📌 そのほか、本日の定点確認（いずれも社長のご対応は不要です）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong class="text-emerald-700">検索データの転送が復旧</strong>＝集計最終日 9/8 → 9/10（3日遅れ＝平常）。前回「次も9/8のままなら止まっていると判断します」と申し上げていた件は<strong>解除</strong>です。<span class="text-gray-600">※28日の数字が前回より増えて見えますが、これは<strong>新しい2日が入って期間が厚くなっただけ</strong>で、良くなったわけではありません。</span></li>
+        <li><strong>運用代行ページ（R-049）＝17回目も、兵庫の8語は1つも1ページ目に入らず・クリックも0</strong>（426表示／平均15.4位。兵庫＋淡路が176表示＝全体の41%）。大阪をつけた語は1ページ目を維持（「ホームページ修正更新代行 大阪」40表示／6.2位）。<strong>処方（「修正・更新代行」を見出しの主語にする）は変わりません</strong>＝昨日の競合比較でも、上位1位・2位の会社はどちらも「修正」を入れていました。<strong class="text-rose-700">開発側の着手待ちです。</strong></li>
+        <li><strong>実績ページ（R-046・9/2 実装）</strong>＝実装から9日たっても個別ページの表示は0のまま。<strong>正式な判定は予定どおり 9/17 前後</strong>に行います。</li>
+        <li><strong>料金ページ（R-055）</strong>＝3枚の露出は今回も1枚に集中（価格表1,222表示／費用ページ19／維持費6）＝<strong>親子構成に整える提案の前提は変わりません</strong>。</li>
+        <li><strong>トップページ＝退行なし</strong>（73,529バイト・前回と1バイトも違いません）。<strong>Clarity＝10日連続で取得成功</strong>、押しても反応しない箇所は0%。<strong>広告＝配信ゼロ11日目</strong>（他3社のアカウントは9/11まで動いているので、データの遅れではなく本当に止まっています）。<span class="text-rose-700">⚠️ 入札方法が「コンバージョン値の最大化」のままなので、このまま再開しないようご注意ください。</span></li>
+        <li><strong>受信箱＝新着なし</strong>（前回8通を処理した状態が保たれています）。9/6 にお渡しした R-050 の作業は開発側で7日目ですが、<strong>広告が止まっているので督促はしません</strong>（社長のご指示どおり）。</li>
+      </ul>
+    </div>
+
+    <div class="mb-5 border-l-4 border-gray-400 bg-gray-50 p-4 rounded-r">
+      <p class="font-bold text-gray-800 mb-1">🗂 記録の器について（正直なご報告）＝過去最大の整理をしましたが、まったく減りませんでした</p>
+      <p class="text-sm text-gray-800 mb-2">内部台帳を<strong>約47KB分（これまでで最大）</strong>、保管庫へ移しました。ところが<strong>台帳の大きさは 249.4KB → 250.5KB とむしろ増えました</strong>（9/3 にご判断いただいた上限 250KB を約0.5KB 超過）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>原因は分かっています</strong>＝「移した」と言いながら、<strong>本体にほぼ同じ分量の要約を書き戻していた</strong>からです（今回だと提案5件と3ページ分がこれに当たります）。<strong class="text-rose-700">つまり、移す量を10倍にしても結果は変わりませんでした＝量の問題ではなく、記録の形（1行にすべてを詰め込む形）の問題だと実測で分かりました。</strong></p>
+      <p class="text-sm text-gray-800">これは、この画面についてお伺いしている <strong>Q-019</strong>（🔧 の表を別ページへ分けてよいか）と<strong>同じ問い</strong>です。<strong>新しいご質問としては起こしません</strong>（同じご判断に番号を2つ付けるとご確認事項が水増しになるため）。<strong>Q-019 に「台帳側でも同じことが起きています」を添えて、引き続きお伺いします。</strong>この画面も 132.2KB → 約135KB で、規定の80KBを超えたままです。</p>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>新しい提案・新しいご質問＝どちらも0件です。</strong>枠は5件空いていましたが、①本日いちばんの発見（ChatGPT）は<strong>打ち手がまだ言えない段階</strong>で、②CV実測の産物は<strong>既にある提案（R-033・R-057）の根拠を厚くするもの</strong>だったためです。<span class="text-gray-600">＝新しい番号を増やすより、いまある提案の確かさを上げるほうが前に進むと判断しました。</span></p>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）に新しい項目はありません（最新は 9/6）。9/6 のご指示（R-050 は開発側へ・督促しない／R-056 は3層モデルで確定）は Cycle 114〜120 で反映済みです。</p>
+
+  </section>
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
     <h3 class="text-xl font-semibold mb-1">Cycle 121 — 2026-09-12（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①受信箱に38日ぶんの8通が滞留していたのを解消（取りこぼしはゼロでした） ②「権限が無い」と2週間書いていた2つの点検は、実はコマンドの書き方だけの問題でした ③その2つを実行し、WordPressページの改善案の根拠が固まりました ④定点観測＝退行なし</strong>）</h3>
