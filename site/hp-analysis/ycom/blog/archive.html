@@ -180,6 +180,129 @@
   </div>
 
 
+  <!-- ===== 📦 Cycle 095（2026-09-15）＝ Cycle 096（2026-09-16）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c095">Cycle 095 — 2026-09-15（YCOM ブログ・日次）：<span class="text-rose-700">「ホームページに正確な会社情報を載せよう」と教える自社記事 <span class="font-mono">?p=8137</span> の記入例が、<u>移転前の自社住所のまま</u>でした</span>／<span class="text-emerald-800">その記事の読者向け構成案 T-042 を、8137 の見出しと実物で照合して改訂しました</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-15）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。実データ最終日 <strong>2026-09-12</strong>（8/18〜9/12＝1,467クリック・57,528表示・平均10.5位）。<span class="font-mono">?p=8137</span> のクエリを28日＋前半（8/18〜8/31）／後半（9/01〜9/12）に割って取得。「meo」（28日）・「ビジネスプロフィール」（90日）を <span class="font-mono">query-pages</span> で。<span class="font-mono">/price/basic.html</span> を 9/06〜9/12 の7日で。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>WordPress 本文</strong>＝<span class="font-mono">wp-draft.py get</span> で <span class="font-mono">8137</span>（publish・<u>本文を全文</u>）・<span class="font-mono">8365</span>（draft のまま）・<span class="font-mono">2117</span>（社内メモ残存）。</li>
+      <li><strong>公開ページ</strong>＝<span class="font-mono">hp-audit</span> で <span class="font-mono">?p=8137</span>・トップ（どちらも HTTP200・<span class="font-mono">LocalBusiness</span> の JSON-LD あり）。</li>
+      <li><strong>未取得</strong>：JSON-LD の<u>中身</u>（住所）＝hp-audit は型だけ／<span class="font-mono">hp-serp.sh</span>・<span class="font-mono">hp-head.py</span>・<span class="font-mono">curl -o</span> が本日は承認待ちで実行不可＝<strong>競合の観察はしていません</strong>（捏造しません）。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。<strong>blog-improve の 9/14 申し送り3点</strong>（drafts-log）を取り込み。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　MEO の記事 <span class="font-mono">?p=8137</span>——「正確な会社情報を」と教える記事の中の会社情報が、古いままでした</h3>
+    <p class="mb-2 text-xs"><strong>気づいたきっかけ</strong>：9/14 に執筆担当（blog-improve）が B-065 の差分を作る途中で本文の旧住所に気づき、申し送りをくれました。私は C085 から同じ記事に3回提案していましたが、<u>本文のコード部分を読んでいませんでした</u>（K-818）。本日、WP 本文を全文読んで確かめました。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="bg-gray-100 text-left"><th class="py-1 px-2">箇所（WP本文・9/15）</th><th class="py-1 px-2">記事にあるもの</th><th class="py-1 px-2">いまのサイト</th></tr></thead>
+      <tbody>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2">「具体的には次のように書きます」の記入例（JSON-LD）</td><td class="py-1 px-2">大阪市中央区 谷町２丁目５−４ エフベースラドルフ 806／〒540-0012</td><td class="py-1 px-2">大阪市北区天満（フッター＝9/14 blog-improve 実測「天満1-5-2…902号」／トップの title「大阪市北区のホームページ制作YCOM」＝9/15 hp-audit）</td></tr>
+        <tr class="border-b"><td class="py-1 px-2">同 電話番号・社名</td><td class="py-1 px-2">06-6948-8580／YCOM</td><td class="py-1 px-2">06-6948-8580（サイトの tel リンクと一致）</td></tr>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2">冒頭の目次ブロック（4本目「構造化データの書き方」）</td><td class="py-1 px-2">リンク先 <span class="font-mono">#about_howto</span></td><td class="py-1 px-2">本文側のアンカーは <span class="font-mono">id="anc_howto"</span>＝<u>押しても飛ばない</u>（他の3本は一致）</td></tr>
+        <tr class="border-b"><td class="py-1 px-2">本文の用語（2か所）</td><td class="py-1 px-2">「Googleマイビジネス」</td><td class="py-1 px-2">現在の名称は「Googleビジネスプロフィール」</td></tr>
+        <tr><td class="py-1 px-2">title ⇔ 本文</td><td class="py-1 px-2">title「MEOに<strong>必須</strong>。」</td><td class="py-1 px-2">本文の結論は「ローカル検索での順位の改善等に<strong>つながると言われています</strong>」</td></tr>
+      </tbody>
+    </table>
+    <p class="mb-2 text-xs"><strong>検索での位置（GSC）</strong>：28日＝「meo 構造化データ」103表示・9.0位／「構造化マークアップ meo」62表示・10.9位・<strong>クリックはどちらも0</strong>。前半14日 111表示・後半12日 54表示＝期間に散っており、順位も 8.9〜11.1 と非整数（B-058 検査①に合格＝人の検索）。「ビジネスプロフィール」を含む語は90日で1表示（93位）だけ。</p>
+    <p class="mb-2"><strong>ブログにとっての意味</strong>：この記事の読者は「自社サイトを持ち、地図での見え方を気にしている会社」＝ブログの中では数少ない買い手寄りの読者です（T-042 の想定読者）。その人が記事の記入例と YCOM のフッターを見比べると、<u>住所が2つある会社</u>に見えます。推測：検索エンジンがコードブロック内の文字を会社情報として扱うことは通常なく、実害は検索評価より<strong>読んだ人の信頼</strong>の側です。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：②信頼（記事自身が信頼を削っている箇所を塞ぐ）。<strong>もう1つの確認</strong>＝サイト共通の <span class="font-mono">LocalBusiness</span> JSON-LD（トップ・記事とも出力あり）の住所は、<u>検索エンジンが実際に読む会社情報</u>です。中身を読めていないので、📥【hp-loop・開発へ】🔴 と mailbox（<span class="font-mono">Q-C</span>）で確認をお願いしました。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝status=draft（投入 8/17 から30日目）</strong>。タイトル未変更。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝WP本文に残存（62日目）</strong>。</li>
+      <li><strong>料金ページ <span class="font-mono">/price/basic.html</span>（C094 の続き）</strong>＝9/06〜9/12 の7日で「ホームページ制作 料金表」19.2位（51表示）・「ホームページ制作 料金」22.5位（35）・「ホームページ 料金」18.8位（17）・「web制作会社 料金表」11.2位（12）。<u>8/21 の週の段差からは戻っていません</u>。</li>
+      <li><span class="font-mono">Q-011</span>＝9日目・未回答。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-083</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-083</span>　<span class="font-mono">?p=8137</span> の記入例の旧住所・飛ばない目次リンク・旧サービス名を、<span class="font-mono">B-065</span>（説明文）と同じ1回の編集で直す　🟡　<span class="text-xs font-normal">（🔒 WP書き込みは保留解除後）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=8137</span>「MEOに必須。会社情報の構造化データを設置しよう。」（公開中）</li>
+      <li><strong>観点</strong>：E-E-A-T（信頼）・鮮度・記事内の導線</li>
+      <li><strong>観察</strong>：上の中心の表のとおり（WP本文・GSC・hp-audit の実測）。</li>
+      <li><strong>なぜ問題か</strong>：記事の主張（「正確な会社情報を載せると信頼できるソースになる」）の反例を、記事自身が自社の情報で示しています。目次の1本は押しても動かず、旧名称は「古い記事」に見せます（2023年8月の画像を使用＝推測：公開は2023年）。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        <ol class="list-decimal list-inside ml-4">
+          <li><strong>記入例の住所</strong>：<strong>(a) 現住所に直す＝おすすめ</strong>（郵便番号・番地・建物名は<u>公開中のフッターからそのまま写す</u>＝新しい事実は不要・推測で埋めない）／(b) 架空の記入例（「株式会社サンプル」等）に置き換える／(c) このまま。<span class="text-gray-600">既定は (a) で差分を作ります。却下は「B-049 まとめて」の1行にどうぞ。</span></li>
+          <li><strong>目次リンク</strong>：目次ブロック（lazyblock index）の4本目のリンク先を <span class="font-mono">#about_howto</span> → <span class="font-mono">#anc_howto</span>（本文側は触らない）。</li>
+          <li><strong>用語</strong>：「Googleマイビジネス」2か所 →「Googleビジネスプロフィール（旧Googleマイビジネス）」（初出）／「Googleビジネスプロフィール」（2回目）。</li>
+          <li><strong>title は触らない</strong>（主要2語「MEO」「構造化データ」は title に入っている・B-065 と同じ方針）。「必須」の言い切りと本文の温度差は<u>今回は直さない</u>＝記録のみ。</li>
+          <li>同じ編集で <span class="font-mono">B-065</span>（説明文・9/14 差分完成）を入れる。<span class="font-mono">B-068</span>（優先順）もこの1回に含める。</li>
+        </ol>
+      </li>
+      <li><strong>効果</strong>：クリック換算＝<strong>ほぼ0</strong>（クリック0の主因は9〜11位という位置＝推測）／<strong>買い手換算＝0件</strong>（読んだ人の信頼の傷を塞ぐ守り）。<strong>工数</strong>：B-065 と合わせて約3分。<strong>優先度</strong>：🟡（年1件未満＝🔴には置きません・B-079 の基準）</li>
+      <li><strong>順序</strong>：<span class="font-mono">T-042</span> から 8137 へリンクを張るのは、<u>この B-083 を直したあと</u>（直す前の記事へ読者を送らない）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-042</span> 改訂版）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-042</span>（C095 改訂版）　「Googleマップに会社が出てこない・情報がずれる——ホームページ側でできる3つのこと」　🟡　<span class="text-xs font-normal">（<u>新しい番号は起こしません</u>・<a href="archive.html#c085" class="underline">C085 初版</a>は原文のまま）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜ新しいテーマでなく改訂か</strong>：完成在庫8本・構成案48本が未公開＝在庫を積まない既定方針。C085 の初版は「8137＝コードの書き方／T-042＝経営者の判断」と<u>役割の言葉で</u>棲み分けていました。K-810（相手の見出しを実物で並べる）を当てるのは本日が初めてです。<br>
+    <strong>カニバリ照合（K-810 の書式）</strong>：8137 の h2 4本＝構造化データとは／会社概要構造化データのメリット／構造化データの書き方／正しく書けているか検証。T-042 初版の h2 6本と並べると、<strong>重なり1本</strong>＝初版 h2③「何のために入れるのか・入れると何が変わるのか」が 8137「メリット」と同じ論点でした → h2③ を2〜3行に縮め、目的・効果の説明は書かずに 8137 へ送ります。改訂後の重なり＝<strong>0本</strong>。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：Googleビジネスプロフィールを自分で登録したが、地図での見え方が思うようにならない中小企業の担当者・経営者。自社サイトを持っている＝買い手寄り。<span class="text-emerald-800">🆕 移転・電話番号の変更をしたことがある会社</span>。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：知りたい（地図の表示とホームページの関係）→ 比べたい（自分で直すか、頼むか）。<span class="text-amber-900">実需（正直に）：入口の帯＝8137 が受ける「meo 構造化データ」「構造化マークアップ meo」28日165表示・クリック0（人の検索と確認済み）。T-042 が狙う「ビジネスプロフィール ホームページ」系は自社GSCで90日1表示＝<u>実需は未確認のまま</u>。本日は競合の検索結果を取得できていません（道具が承認待ち）</span>。</li>
+      <li><strong>タイトル案</strong>：①Googleマップに会社が出てこない・情報がずれる——ホームページ側でできる3つのこと ②移転したのに地図の住所が古いまま？ホームページ側で確かめる場所 ③ビジネスプロフィールを登録したのに反応がない。ホームページとつながっていますか？</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2①　「登録したのに出てこない」とき、先に知っておく前提</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　地図の表示順は何で決まるか——<u>Google の公式ヘルプの説明をそのまま引用</u>して紹介（本文で独自の断定をしない・出典リンク必須）</li>
+          <li>h3　ホームページの情報とプロフィールが食い違うと、見る人には何が起きるか（電話がつながらない・住所が2つ＝<u>読む人の迷い</u>を主語に書く）</li>
+          <li>h3　自己診断チェック3行（社名・住所・電話がサイトとプロフィールで一字一句そろっているか ほか）</li>
+        </ul>
+      </li>
+      <li><strong>h2②　まず直す：会社名・住所・電話番号の書き方をそろえる</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　サイトのどこに何を書くか（フッター・会社概要・アクセス・問い合わせ）</li>
+          <li>h3　ありがちなズレ（ビル名の有無・ハイフン・全角半角・「丁目」の書き方）</li>
+          <li class="text-emerald-800">h3　🆕 <strong>移転・電話番号の変更のあと、古い情報が残りやすい場所</strong>＝過去のブログ記事や記入例／PDF の会社案内・採用資料／ページに埋め込んだ会社情報のコード（構造化データ）／求人媒体・地域ポータル。<u>自社の実例としては書かない</u>（自社の事例を記事にするかは T-040 と同じく社長のご判断・一般論で成立）</li>
+        </ul>
+      </li>
+      <li><strong>h2③　会社情報のコード（構造化データ）は「答え合わせ」の1つ</strong>　― <u>2〜3行のみ</u>。「サイト側でも会社情報を機械が読める形で置ける」ことだけ伝え、<strong>メリット・書き方・検証は書かずに <span class="font-mono">?p=8137</span> へ</strong>（C095 で縮小）</li>
+      <li><strong>h2④　地図で見つけた人が着地するページを用意する</strong>　― プロフィールのリンク先がトップだけになっていないか／サービス・料金・アクセスへの導線</li>
+      <li><strong>h2⑤　自分でやるか、頼むか——分かれ目</strong>　― ①②は自分でできる／③はテンプレートの改修が要ることが多い＝制作会社の領分／頼むときに伝えること（いまの住所・電話・変更の履歴）</li>
+      <li><strong>h2⑥　まとめ（3行）＋次に読む記事</strong></li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">?p=8137</span>（h2③・<u>B-083 を直してから</u>）／<span class="font-mono">/service/web/seo.html</span>（MEO 専用ページは自社に無い＝C085 確認）／<span class="font-mono">/price/basic.html</span>（h2⑤）。8137 の側からも T-042 へ返すリンクを1本（公開後・B-083 と別の小さな編集）。</li>
+      <li><strong>CTA</strong>：h2⑤ の直後に「サイト側のどこを直せばよいか、見てほしい方はご相談ください」1本（本命の窓口は <span class="font-mono">Q-009</span> の回答後に確定）。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：「住所や電話をそろえて地図の見え方が変わった」実例1つ（任意）。<u>無くても全章 一般論＋公式ヘルプの引用で書けます</u>。</li>
+      <li><strong>効果</strong>：クリック換算＝<strong>未確定</strong>（狙う語の自社実需は未確認）／<strong>買い手換算＝推測で年1件未満</strong>（読者は買い手寄りだが母数が小さい）。<strong>工数</strong>：中（新規1本・コード解説なし）。<strong>優先度</strong>：🟡 据え置き。</li>
+      <li class="text-emerald-800"><strong>栓：なし。ご回答不要</strong>／着手は 8365 の公開後（在庫を積まない既定方針）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-15）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 9日目・未回答。<strong>本日の新規質問はゼロ</strong>（B-083 の住所の扱いは既定 (a) で進め、B-049 のまとめ1行に含めました）。</li>
+      <li><strong>blog-improve の 9/14 申し送り3点への対応</strong>：①<span class="font-mono">?p=8137</span> の旧住所 → <span class="font-mono">B-083</span> を起票 ②B-065 の文案は<u>差分ファイルが正</u>（C085 の掲示板文案の「営業時間」は本文に無い）→ 🔧 表に明記 ③B-062 の行き先 → <span class="font-mono">/service/web/operate/</span>（1文の主題＝運用に近い）に変更。いずれもご回答不要。</li>
+      <li><strong>自己訂正</strong>：C085〜C093 で 8137 に説明文（B-065）・優先順（B-068）を提案しながら、本文を読まずに旧住所・目次リンクを見落としていました（K-818）。</li>
+      <li><strong>執筆担当・開発への配信</strong>：web-hanasaka へ mailbox 1通（本日の要点＋<span class="font-mono">Q-C</span>＝サイト共通の LocalBusiness 構造化データの住所は現住所か・スレッド <span class="font-mono">ycom-blog-facts</span>・作用付きの依頼は含めず）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 094 の本文を<a href="archive.html#c094" class="underline">アーカイブへ退避</a>（原文無改変・①archive へ追記 →②<span class="font-mono">id="c094"</span> 1件・<span class="font-mono">&lt;div&gt;</span> を含む行 415／<span class="font-mono">&lt;/div&gt;</span> を含む行 415 を確認 →③index から削除）。</li>
+      <li><strong>道具</strong>：<span class="font-mono">bash bin/hp-serp.sh</span>（9/14 は実行できた）・<span class="font-mono">bin/hp-head.py</span>・<span class="font-mono">curl -o</span>・<span class="font-mono">python3 -c</span> が無人で承認待ち → 📥【Overseer へ】④に追記。</li>
+      <li><strong>自己改善（Step 7）</strong>：skill-kaizen に K-818＝「文言修理を起こす記事は本文を全文読み、記事の主張⇔記事内の自社情報・目次リンク⇔アンカー・旧名称を照合してから書く」。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 094（2026-09-14）＝ Cycle 095（2026-09-15）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c094">Cycle 094 — 2026-09-14（YCOM ブログ・日次）：<span class="text-rose-700">買い手の検索を受けている料金ページが、<u>8/21 の週に段差で順位を6〜11下げ</u>、まだ戻り切っていません</span>／<span class="text-emerald-800">昨日の構成案 T-050 は、下書き 8365 と<u>論点が4つ重なっていました</u>＝構成を差し替えました</span></h2>
 
