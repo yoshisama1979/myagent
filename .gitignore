@@ -140,3 +140,6 @@ _tmp_*
 
 # bin/kaizen.py のロック（2026-09-14）
 data/hp-improve/.skill-kaizen.lock
+
+# triage（第1窓口）の作業場所＝判断待ちの索引 state.json（数分おきに書き換わる）・依頼書と返事（取引先名が入る）（2026-09-15 社長ご指示）
+data/triage/
