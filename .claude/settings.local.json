@@ -83,6 +83,7 @@
       "Bash(date:*)",
       "Bash(python3 bin/check-writeback.py:*)",
       "Bash(python3 bin/pending-scan.py:*)",
+      "Bash(python3 bin/kaizen.py add:*)",
       "Bash(python3 bin/analyze-mf.py:*)",
       "Bash(bin/.venv/bin/python3 bin/hp-links.py:*)",
       "Bash(bash bin/hana-api.sh todos:*)",

@@ -148,7 +148,7 @@ CLAUDE.md の行動指針と [rules/automation.md](../../rules/automation.md)（
 - 停止条件：対象クライアント未確定／事実待ちで着手できない／社長の停止指示 → 一旦停止。
 
 ### Step 6: 自己改善（軽く・毎回）
-- 「今回足りなかったものは？」を自問。気づきは `data/hp-improve/skill-kaizen.md` に `K-NNN`（無ければ「特記なし」）。
+- 「今回足りなかったものは？」を自問。気づきは `python3 bin/kaizen.py add --title '<1行要約>' --lane blog-write <<'EOF'`（本文）`EOF` で `data/hp-improve/skill-kaizen.md` に足す（番号は道具がロックを取って振る＝grep で最大+1 を取らない・Edit／sed で台帳へ直接書かない。O-077・K-637）（無ければ「特記なし」）。
 - **社長の判断・許可・情報がないと前に進めない気づき**には、行頭に `🙋要・社長判断` を付ける（自分の工夫で解けるものには付けない）。原則＝[../ledger-discipline.md](../ledger-discipline.md) §7。
 
 ---
