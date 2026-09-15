@@ -116,6 +116,15 @@ printf '%s' "$out" | grep -q 'うち スキル改善提案 2件（下段と同�
 printf '%s' "$out" | grep -q '8KB超の肥大 1件' && ok "8KB超の肥大エントリを数える（サイズの主因を示す）" || ng "肥大エントリを数えていない"
 printf '%s' "$out" | grep -q 'K-001' && ng "エントリ本文・見出しを出力している（取引先名の漏れ）" || ok "件数だけ出し本文は出さない"
 
+echo "── §4b 見出しは ## も ### も区切り（8KB超を飲み込みで水増ししない・2026-09-14）"
+python3 - "$R" <<'PYX'
+import io,sys
+io.open(sys.argv[1]+"/data/hp-improve/skill-kaizen.md","w",encoding="utf-8").write("### K-201 あ\n"+"a"*5000+"\n## K-202 い\n"+"b"*5000+"\n")
+PYX
+out="$(run report)"
+printf '%s' "$out" | grep -q '8KB超の肥大 0件' && ok "## で始まる次のエントリを直前に飲み込まない（5KB＋5KB を 10KB の1件と数えない）" || ng "## のエントリを飲み込んで8KB超と数えた"
+grep -q 'kaizen.py' "$PROJ/bin/ledger-watch.py" && ok "見出しの解釈は bin/kaizen.py に1本化（パーサを2つ持たない）" || ng "ledger-watch が独自に見出しを解釈している"
+
 echo "── §5 --json と snapshot"
 run report --json | python3 -c "import sys,json; d=json.load(sys.stdin); assert d['accumulators'] and d['mailbox']; print('')" >/dev/null 2>&1 \
   && ok "--json が妥当な JSON を返す" || ng "--json が壊れている"

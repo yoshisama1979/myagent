@@ -162,6 +162,20 @@ def mailbox_queues():
     return sorted(out.values(), key=lambda e: (-(e["oldest"] or 0), -e["count"])), unreadable
 
 
+_KAIZEN = None
+
+
+def _kaizen():
+    """見出しの解釈は bin/kaizen.py が正。ROOT（テストで差し替わる）ではなく、このファイルの隣から読む。"""
+    global _KAIZEN
+    if _KAIZEN is None:
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kaizen.py")
+        spec = importlib.util.spec_from_file_location("_kaizen", path)
+        _KAIZEN = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_KAIZEN)
+    return _KAIZEN
+
+
 def decision_queues():
     """キュー②＝判断待ち。triage の索引と skill-kaizen の未採否を数える（本文は読まない）."""
     out = []
@@ -189,17 +203,18 @@ def decision_queues():
             out.append({"name": "社長の判断待ち", "count": None, "note": "state.json を読めません"})
     sk = os.path.join(ROOT, "data/hp-improve/skill-kaizen.md")
     if os.path.exists(sk):
-        # ★件数の正は pending-scan（triage と同じ数を言う＝パーサを2つ持たない）。
-        #   ここで独自に数えると、同じものを2つの道具が違う数で言う（2026-09-12 に実際に起きた
-        #   ＝見出し184 と 異なるID156 で食い違った。原因は ID の重複21種）。
-        #   本ツール固有の関心は「サイズの主因」だけ＝8KB超の肥大エントリ数を添える。
+        # ★件数の正は pending-scan、見出しの解釈の正は bin/kaizen.py（パーサを2つ持たない）。
+        #   2026-09-12 版はここで `^###` だけを区切りにしたため、8/23 以降の `## K-NNN` 188件を直前に飲み込み
+        #   「8KB超の9件＝サイズの主因」と誤って申告した（実測 2026-09-14＝両方で区切ると 8KB超は0件・
+        #   最大 4.3KB＝791KB は約400件×2KB に均等に広がっている）。本ツールはサイズの申告だけを添える。
         with open(sk, encoding="utf-8", errors="replace") as f:
-            body = f.read()
-        parts = re.split(r"(?m)^(### .*?K-[A-Za-z0-9-]+.*)$", body)
-        ents = [parts[i] + parts[i + 1] for i in range(1, len(parts), 2)]
-        big = sum(1 for e in ents if len(e.encode()) > 8 * KB)
+            r = _kaizen().parse(f.read())
         n = kaizen_open if kaizen_open is not None else None
-        note = f"見出し{len(ents)}件・うち8KB超の肥大 {big}件＝**サイズの主因はこの{big}件**"
+        note = f"見出し{r['count']}件・うち8KB超の肥大 {r['over_8kb']}件・最大 {r['max_entry_bytes'] // KB}KB"
+        if r["offformat"]:
+            note += f"・書式外（## K-）{len(r['offformat'])}件"
+        if r["duplicates"]:
+            note += f"・重複ID {len(r['duplicates'])}種"
         if n is None:
             note += "（件数は bin/pending-scan.py scan を流すと出ます）"
         out.append({"name": "スキル改善提案の未採否", "count": n, "note": note})

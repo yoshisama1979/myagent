@@ -347,6 +347,19 @@ src3 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
 (ok if "PARSE_WARN" in src3.split("def cmd_stats")[1] else ng)(
     "stats が読み切れなかった置き場を報告する（呼ばれない検査を作らない）")
 
+print("\n=== skill-kaizen の見出しは ## も ### も1項目（2026-09-14 triage 依頼・O-035 と同型の3回目）===")
+(K / "skill-kaizen.md").write_text(
+    "# 台帳\n\n## エントリ形式\n\n```\n### K-NNN — 見本（数えない）\n```\n\n"
+    "### 📦 退避分の索引（K番号で grep）\n\n"
+    "### K-101 — あ\n本文\n\n"
+    "## K-102 — い（9月以降の書式ずれ）\n本文\n\n"
+    "### K-103 — う\n本文\n", encoding="utf-8")
+got4 = [g["id"] for g in ps.extract(K / "skill-kaizen.md", "kaizen_entry")]
+(ok if got4 == ["K-101", "K-102", "K-103"] else ng)("## K-NNN も1項目として数える（直前の ### に飲み込ませない）", got4)
+(ok if "K-NNN" not in got4 else ng)("コードブロック内の見本（K-NNN）は項目にしない", got4)
+src4 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
+(ok if "kaizen.py" in src4 else ng)("skill-kaizen の見出し解釈は bin/kaizen.py に1本化（パーサを2つ持たない）")
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF

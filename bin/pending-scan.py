@@ -30,6 +30,7 @@ import argparse
 import collections
 import fcntl
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -47,10 +48,19 @@ PENDING_MARK = "🔔"
 # ID の形。レーンごとに接頭辞が違う（R-014c / R-F17(B) / A-078 / Q-F10 / O-056）
 ID_RE = re.compile(r"\b([ROPQKAFT]-[A-Z]?\d{2,3}[a-z]?)(?:\([A-Za-z0-9]+\))?")
 # 「🔔→✅」の履歴表記。印と同じセルに解決の履歴を残す台帳があるため、印だけを見ると水増しになる。
-# skill-kaizen は 🔔 を使わず「### K-NNN 見出し＋ステータス行」で書く（台帳の形が違う）。
-# 既存の ID_RE は K-partner-702 のような接頭辞つきを拾えないので専用に持つ。
-KAIZEN_HEAD_RE = re.compile(r"^###\s+.*?(K-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*)")
-KAIZEN_DECIDED_RE = re.compile(r"反映済み|却下")
+# skill-kaizen は 🔔 を使わず「K-NNN 見出し」で書く（台帳の形が違う）。見出しの解釈は bin/kaizen.py が正。
+# ★ここで正規表現を持たない★ 2026-09-12 版は `^###` しか項目にせず、8/23 以降の `## K-NNN` 188件を
+#   直前エントリに飲み込んで件数を半分に数えていた（2026-09-14 triage 実測・O-035 と同型の3回目）。
+_KAIZEN = None
+
+
+def _kaizen():
+    global _KAIZEN
+    if _KAIZEN is None:
+        spec = importlib.util.spec_from_file_location("_kaizen", Path(__file__).resolve().parent / "kaizen.py")
+        _KAIZEN = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_KAIZEN)
+    return _KAIZEN
 
 # overseer の掲示板は「🔔 社長の判断・対応待ち（未処理だけ）」ボックスに未処理を集約する
 # （overseer.md の出力フォーマット）。各 <li> は先頭に優先度の絵文字＋主題の O-NNN を置く。
@@ -160,19 +170,15 @@ def extract(path, kind):
         return [o for o in out if o["id"]]
 
     if kind == "kaizen_entry":
-        # 見出しで区切り、本文に「反映済み／却下」が無いものだけを判断待ちとする。
+        # 見出しの解釈（## も ### も1項目・見本の K-NNN は数えない）は bin/kaizen.py が正。
+        # 本文に「反映済み／却下」が無いものだけを判断待ちとする。
         # 本文は state.json に持たない（§6 秘密の扱い）＝表示用に見出しの先頭だけ返す。
-        lines = text.split("\n")
-        heads = [(i, m.group(1), ln) for i, ln in enumerate(lines, 1)
-                 for m in [KAIZEN_HEAD_RE.match(ln)] if m]
         out = []
-        for n, (line_no, kid, head) in enumerate(heads):
-            end = heads[n + 1][0] - 1 if n + 1 < len(heads) else len(lines)
-            body = "\n".join(lines[line_no - 1:end])
-            if KAIZEN_DECIDED_RE.search(body):
+        for e in _kaizen().parse(text)["entries"]:
+            if e["decided"]:
                 continue                       # 採否が付いている＝判断待ちではない
-            out.append({"id": kid, "line": line_no,
-                        "head": head.lstrip("# ").strip()[:80], "status": "未採否"})
+            out.append({"id": e["id"], "line": e["line"],
+                        "head": e["head"].lstrip("# ").strip()[:80], "status": "未採否"})
         return out
     if kind == "html_table":
         for m in re.finditer(r"<tr\b.*?</tr>", text, re.S):

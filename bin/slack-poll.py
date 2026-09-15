@@ -507,6 +507,20 @@ def _pop_channel(args):
     return chan, out
 
 
+def _reject_unknown_flags(args, cmd):
+    """★未知の --xxx を本文に飲み込まない（K-778・2026-09-10 hp-loop ycom で実害）★
+
+    post / reply は --as・--channel を取り除いた残りをそのまま本文にするので、存在しないオプション
+    （--thread-ts 等）を渡すと「--thread-ts 1.2 本文」が**社長チャンネルへ投稿**されていた。
+    mailbox local-send の O-081（3ffbd5e で修理）と同型＝外部送信側に番人が居なかった。
+    弾くのは -- に英字が続く形だけ＝「- 箇条書き」で始まる本文は通す。
+    """
+    for a in args:
+        if a.startswith("--") and len(a) > 2 and a[2].isalpha():
+            sys.exit(f"ERROR: {cmd}: 不明なオプション {a}（使えるのは --as / --channel だけ。"
+                     "本文はそのまま渡すか標準入力で）＝投稿していません")
+
+
 def _body_from(args):
     return " ".join(args) if args else sys.stdin.read()
 
@@ -559,6 +573,7 @@ def _guard_talk_channel(agent, channel):
 def cmd_post(args):
     as_agent, args = _pop_as(args)
     chan_arg, args = _pop_channel(args)
+    _reject_unknown_flags(args, "post")
     channel = _resolve_channel(chan_arg) or get_env("SLACK_CHANNEL_ID")
     if not channel:
         sys.exit("ERROR: 投稿先チャンネルが特定できません（--channel か .env を確認）")
@@ -578,6 +593,7 @@ def cmd_post(args):
 def cmd_reply(args):
     as_agent, args = _pop_as(args)
     chan_arg, args = _pop_channel(args)
+    _reject_unknown_flags(args, "reply")
     if not args:
         sys.exit("ERROR: reply <thread_ts> [本文] が必要です")
     thread_ts = args[0]

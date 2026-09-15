@@ -137,3 +137,6 @@ data/hp-loop/.clarity-quota/
 # 使い捨てスクリプトは testing.md §1 で「_tmp_ 始まり・済んだら削除」と定めた副次物＝git に入れない
 # （ディスクには残るので system-health の残骸検知は従来どおり効く）
 _tmp_*
+
+# bin/kaizen.py のロック（2026-09-14）
+data/hp-improve/.skill-kaizen.lock

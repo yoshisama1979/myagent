@@ -556,6 +556,24 @@ write_env(SLACK_MEMO_CHANNEL_ID=MEMO)
 (ok if caught(sp.cmd_fetch, []) else ng)(
     "SLACK_CHANNEL_ID 未設定なら fetch は止まる（旧threadが空chへフォールバックするのを防ぐ）")
 
+print("\n=== 未知の --xxx を本文として社長チャンネルへ投稿しない（K-778・2026-09-10 実害）===")
+# 存在しないオプションを渡すと、残りの引数がそのまま本文になり投稿されていた（mailbox の O-081 と同型）。
+(ok if caught(sp._reject_unknown_flags, ["本文", "--thread-ts", "1.2"], "post") else ng)("未知の --xxx はエラーで止める")
+(ok if caught(sp._reject_unknown_flags, ["- 箇条書きで始まる本文", "a"], "post") is None else ng)("- で始まる本文は通す")
+_sent = []
+class _FakeClient:
+    def chat_postMessage(self, **kw):
+        _sent.append(kw)
+        return {"ts": "1.1"}
+_orig_client = sp.client
+sp.client = lambda: _FakeClient()
+write_env(SLACK_CHANNEL_ID=MAIN)
+(ok if caught(sp.cmd_post, ["本文", "--bogus"]) else ng)("post に未知の --xxx を渡すと止まる")
+(ok if not _sent else ng)("★止まったとき社長チャンネルへ1文字も送っていない", _sent)
+(ok if caught(sp.cmd_reply, ["1.1", "本文", "--bogus"]) else ng)("reply も同じく止まる")
+(ok if not _sent else ng)("★reply でも送っていない", _sent)
+sp.client = _orig_client
+
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)
 PYEOF

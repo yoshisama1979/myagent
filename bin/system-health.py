@@ -59,13 +59,28 @@ ENTRY_MAX_BYTES = 8 * KB    # 1エントリの上限（★提案既定値。実�
 SWALLOW_MAX = 3             # 1エントリが抱えてよい「- **K-」行の数（★提案既定値）
 SHAPE_TARGETS = ["data/hp-improve/skill-kaizen.md"]
 
+_KAIZEN = None
+
+def _kaizen():
+    """bin/kaizen.py をこのファイルの隣から読む（ROOT はテストで差し替わる）。"""
+    global _KAIZEN
+    if _KAIZEN is None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("_kaizen", os.path.join(os.path.dirname(os.path.abspath(__file__)), "kaizen.py"))
+        _KAIZEN = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_KAIZEN)
+    return _KAIZEN
+
 def entry_shape(path):
     """台帳を見出し単位に割り、巨大エントリと飲み込みを返す（読み取り専用）。"""
     p = os.path.join(ROOT, path)
     if not os.path.exists(p):
         return None
     lines = open(p, encoding="utf-8").read().split("\n")
-    heads = [i for i, l in enumerate(lines) if l.startswith("### ")]
+    # `### ` に加え `## K-NNN` も区切り（見出しの解釈は bin/kaizen.py が正）。2026-09-14 まで `### ` だけで割り、
+    # 8/23 以降の `## K-NNN` 188件を直前に飲み込んで「K-615 が単体26KB」と誤報していた（実測＝最大4.3KB）。
+    kaizen_head = _kaizen().HEAD_RE
+    heads = [i for i, l in enumerate(lines) if l.startswith("### ") or kaizen_head.match(l)]
     entries = []
     for n, i in enumerate(heads):
         j = heads[n + 1] if n + 1 < len(heads) else len(lines)

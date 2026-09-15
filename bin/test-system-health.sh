@@ -81,6 +81,15 @@ both = ("# 台帳\n\n### K-7: 飲み込みかつ巨大\n"
 w = warns_for(both)
 (ok if len(w) == 1 and "飲み込み" in w[0] else ng)(f"原因の本命（飲み込み）だけを言う（{w}）")
 
+print("\n=== `## K-NNN` も1エントリ（2026-09-14 triage 実測・### だけで割ると直前に飲み込んで「単体26KB」と誤報）===")
+mixed = ("# 台帳\n\n### K-1: 型どおり\n- " + ("あ" * 2000) + "\n"
+         + "## K-2: 書式外の見出し\n- " + ("い" * 2000) + "\n"
+         + "## K-3: もう1件\n- " + ("う" * 2000) + "\n")
+(ok if warns_for(mixed) == [] else ng)(f"## K- で区切れば各 6KB＝無警告（{warns_for(mixed)}）")
+shm = sh.entry_shape  # 見出しの解釈は bin/kaizen.py が正
+src = (proj / "bin/system-health.py").read_text(encoding="utf-8")
+(ok if "kaizen.py" in src else ng)("見出しの解釈を bin/kaizen.py から借りる（パーサを3つ目に持たない）")
+
 print("\n=== 壊れた入力で落ちない（監視自身が無言停止しない）===")
 (ok if sh.entry_shape("no-such-file.md") is None else ng)("存在しないファイルは None（例外を投げない）")
 (ok if sh.shape_warnings(None) == [] else ng)("None を渡しても空リスト")
