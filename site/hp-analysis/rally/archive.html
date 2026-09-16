@@ -30,6 +30,44 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== Cycle 051 の記録（Cycle 052 のローテで移動・2026-09-17） ===== -->
+  <section class="mb-10 border-l-4 border-gray-300 pl-4">
+    <h2 class="text-xl font-bold mb-1">Cycle 051 — 2026-09-14 04:0x（<span class="text-emerald-700">表示ページ 29本</span>／<span class="text-rose-700">ユニーク数の初集計で定義に矛盾</span>／月次点検2本）</h2>
+    <p class="text-sm text-gray-600 mb-4">定期実行（3日ペース）。受信箱の新着 0通。<strong>新規の提案＝0件／新規の質問＝0件／クローズ＝0件</strong>（在庫22件・判断待ち13件）。</p>
+
+    <div class="border-l-4 border-rose-500 bg-rose-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-rose-800 mb-2">① ★最重要★ ユニーク訪問スポット数を初めて数えた＝定義と数字が合わない（開発担当へ照会）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>やったこと</strong>＝当方の <code>ga4-fetch.py</code> に「イベントのパラメータ別に数える」モードを追加（T-032・読み取り専用・既存の使い方は不変）。3サイクル持ち越していた宿題です。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実・9/6〜9/12）</strong>＝<code>stamp_get</code> 9件のうち <strong>訪問回数=1 が 8件（2人）・=2 が 1件（1人）</strong>。スポット別＝<strong>安養寺（枚方市）5件・1人</strong>／パナソニック スタジアム 吹田 2件・2人／八角堂 1件／円福寺(だるま寺) 1件。9/8〜9/12 だけなら2件（訪問回数 1 と 2 が各1件）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-rose-800">矛盾</strong>＝安養寺は同じブラウザから5回なのに、訪問回数=2 は全体で1件だけ＝<u>少なくとも4回は「同じ場所で初めて」と記録</u>されています。9/13 に確定した「訪問回数=1＝その場所で初めて」と合いません。</p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>推測</strong>：①同じブラウザで複数のテスト用アカウントを使った（訪問回数はアカウントごと、GA4 の「人」はブラウザごと）②訪問回数の付け方が保存の前後でずれている。<strong>①なら実利用には影響しない</strong>ので、開発担当に確認します。<strong>確定するまで、ユニーク数は実績値に使いません</strong>（初めて出た数字は別の観測と突き合わせてから＝9/8 の7件と同じ扱い）。</p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 「登録の案内」はスタジアムのページで出ていた（R-R22 の根拠候補）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察</strong>＝<code>register_prompt</code> 2件・1人は、どちらも<strong>パナソニック スタジアム 吹田</strong>（スポットIDつき）。同じスポットで <code>stamp_get</code> も2人。キー一覧＝<code>spot_id</code>・<code>spot_name</code>・<code>page_location</code> ほか（<code>point</code> 等は無し）。</p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>推測</strong>：ログインしていない人がスポット画面で GPS チェックを押し、登録を促された。その人の登録完了は出ていません。<strong>意味を開発担当に再照会</strong>（9/13 に照会済みで未回答）。<u>確定すれば「現地にいる人ほど登録の手前で止まっている」ことを1件の実例で示せます</u>＝R-R22（着地ページに登録の入口を置く）を「何を書くか」まで具体化できる材料です。Jリーグのテーマ（全60クラブ・59会場）が入ったことで、<strong>試合日にスタジアムで押す人が出てくる</strong>可能性があります（推測）。</p>
+    </div>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">③ 検索に表示されたページ＝29本（前日 20本）・<code>/map</code> と <code>/people</code> が初めて表示</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察</strong>＝Search Console の最新日 9/10 → <strong>9/11</strong>。工事後6日（9/6〜9/11）＝<strong>29本・120表示・8クリック</strong>。スポット詳細 <strong>21本</strong>（前日15）・テーマ詳細 <strong>5本</strong>（🆕 坂東三十三観音）・🆕 <code>/map</code>（4表示・7.2位）・🆕 <code>/people</code>（1表示）。都道府県・市区町村・人物詳細は <strong>0本のまま</strong>。全体の割合 <strong>0.17%</strong>（工事前 0.012%）。</p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2">検索語（30日）＝「日本三大名園」<strong>10表示・34位</strong>（前日6表示）＝<u>表記ゆれ「三名園は1位・三大名園は34位」の差が表示回数の多い側で開いています</u>（R-R36 の実装時に「一般的な別名を1つ入れる」案として添える方針は変えません）。🆕「白川郷 スタンプラリー」11位。⚠️ 1日分の追加なので傾向のみ。<strong>判定は 9/20</strong>（Q-R18）。</p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>✅ 開発担当の修正が反映</strong>（R-R38 の一部）＝<code>/spots/24</code>（水戸城）の検索結果用の説明文が「水戸城は、かつて日本の城で…」に＝<code>{歴史}</code> が消えました。<span class="text-gray-600">ページ本文にはまだ <code>{歴史}</code>・<code>{見どころ}</code> が残っています＝開発担当の予告どおり「次の段」。</span></li>
+        <li><strong>月次の点検①（GA4 に出てきたURL × 本番の応答）</strong>＝14本すべて正常（エラー0本）。🆕 <code>/collections</code>（GA4 に9回）＝<u>検索に載せない設定（noindex）済み</u>でランキングと同じ扱い＝対応不要。<code>/register</code>・<code>/login</code>・<code>/password-reset</code> は見出し0本・canonical 無しですが、検索の入口ではないため起票しません。</li>
+        <li><strong>月次の点検②（定石の見直し）</strong>＝各点検の「正しいコマンドの入口」を台帳に明記（7月に入口を取り違えて一度「実施不能」と誤報した再発防止）。</li>
+        <li><strong>データ状況</strong>＝GSC ✅（最新 9/11）／GA4 ✅（最新 9/12・9/13 分は未着弾＝通常）／本番GET ✅（19ページ）。<strong>旧サイト <code>mission-p.com</code> は 500 のまま</strong>（R-R40）。</li>
+        <li><strong>到達性</strong>＝トップ 64,821バイト（7サイクル連続で変化なし）／<code>www</code> は本体へ集約（200）。</li>
+        <li><strong>受信箱・配信</strong>＝新着 0通。開発担当へ本レポートを1通（<strong>照会3点</strong>＝①訪問回数の矛盾 ②<code>register_prompt</code> の意味〔再〕③9/6〜9/12 の登録数〔9/13 照会分・回答待ち〕）。<code>rally-dev</code> 宛の未処理扱いは6通＝先方は内容を読んで回答している実績があるため督促しません。</li>
+        <li><strong>次サイクル</strong>＝開発担当の回答 → ユニーク数の確定／週次 #14（リンク構造・9/15 期日）／<strong>9/20＝工事の効果の判定</strong>（Q-R18 推奨日）。</li>
+      </ul>
+    </div>
+  </section>
+
   <!-- ===== Cycle 050 の記録（Cycle 051 のローテで移動・2026-09-14） ===== -->
   <section class="mb-10 border-l-4 border-gray-300 pl-4">
     <h2 class="text-xl font-bold mb-1">Cycle 050 — 2026-09-13 16:5x（★工事後の検索データが初めて届き、表示ページが 2本→20本／次の詰まりは登録）</h2>
