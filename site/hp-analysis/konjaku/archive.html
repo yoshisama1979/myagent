@@ -32,6 +32,62 @@
 
   <!-- ===== Cycle 040 スナップショット（C041 で index から退避） ===== -->
   <!-- ===== Cycle 040 ===== -->
+  <!-- ===== Cycle 041 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 041 — 2026-09-15（🔑 個別写真ページの伸びは「旧サイトに同じ写真が無い」ページからでした／回収率は全体で 5.2%→6.5% に反発・都道府県は4期連続で低下／月次の配管点検を実施／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-4">起動＝定期（3日ペース）。対象：<span class="font-mono">konjaku-photo.jp</span>（新）／<span class="font-mono">konjaku-photo.com</span>（旧）　｜　データ：GSC <span class="font-mono">.jp</span>＝<code>searchconsole_konjaku</code>・<span class="font-mono">.com</span>＝<code>searchconsole_konjakucom</code>（<strong>窓＝9/8〜9/12 の5日</strong>・最新データ日 9/12＝ラグ3日）。<span class="text-amber-700">⚠️ 前回の窓（9/4〜9/8）と <strong>9/8 の1日が重なります</strong>。まったく重ならない比較は前々回の窓（9/2〜9/6）とです。</span>／GA4＝<code>analytics_549912350</code>（9/11〜9/13）／本番GET・スクリーンショット・月次の配管点検を実施。<span class="text-gray-400">生データ＝<code>c041-{com,jp}-pages.txt</code>。前回窓 <span class="font-mono">.jp</span> を取り直し＝53クリック／1,110表示で記録と一致（改訂ゼロ）。</span></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">① 回収率（新サイトが旧サイトから取り戻せている割合）の推移</h3>
+    <table class="w-full text-sm border-collapse mb-2 bg-white">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">層</th><th class="py-1 pr-2 text-right">9/2〜9/6</th><th class="py-1 pr-2 text-right">9/4〜9/8</th><th class="py-1 pr-2 text-right">9/8〜9/12<br><span class="font-normal text-xs">旧→新</span></th><th class="py-1">向き</th></tr></thead>
+      <tbody>
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 pr-2"><strong>個別写真ページ</strong></td><td class="py-1 pr-2 text-right">2.8%</td><td class="py-1 pr-2 text-right">2.8%</td><td class="py-1 pr-2 text-right">457 → 25＝<strong class="text-emerald-800">5.5%</strong></td><td class="py-1 text-emerald-800"><strong>🟢 ほぼ倍増</strong>（下の②）</td></tr>
+        <tr class="border-b border-gray-100 bg-rose-50"><td class="py-1 pr-2">都道府県ページ</td><td class="py-1 pr-2 text-right">37.6%</td><td class="py-1 pr-2 text-right">34.0%</td><td class="py-1 pr-2 text-right">103 → 34＝<strong>33.0%</strong></td><td class="py-1 text-rose-700">低下（下げ幅は縮小）</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">市区町村ページ</td><td class="py-1 pr-2 text-right">0.8%</td><td class="py-1 pr-2 text-right">1.0%</td><td class="py-1 pr-2 text-right">392 → 2＝<strong>0.5%</strong></td><td class="py-1 text-gray-600">ほぼゼロのまま</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">タグページ</td><td class="py-1 pr-2 text-right">0%</td><td class="py-1 pr-2 text-right">0%</td><td class="py-1 pr-2 text-right">41 → 0＝<strong>0%</strong></td><td class="py-1 text-gray-500">ゼロのまま</td></tr>
+        <tr class="border-b border-gray-300 bg-slate-100"><td class="py-1 pr-2"><strong>全体</strong></td><td class="py-1 pr-2 text-right">5.4%</td><td class="py-1 pr-2 text-right">5.2%</td><td class="py-1 pr-2 text-right"><strong>1,027 → 67＝6.5%</strong></td><td class="py-1"><strong>反発</strong>（個別写真の寄与）</td></tr>
+      </tbody>
+    </table>
+    <p class="text-gray-700 mb-3"><strong>正直な読み方</strong>：前回「全層で後退を確認」と申し上げましたが、<strong>今回は全体では上がりました</strong>。ただし上がったのは<strong>個別写真だけ</strong>で、<strong class="text-rose-800">都道府県は 50.0% → 37.6% → 34.0% → 33.0% と4期連続で低下</strong>（下げ幅は小さくなっています）、市区町村はほぼゼロです。<strong>「都道府県・市区町村が取り戻せていない」は変わっておらず、R-J30／R-J24 のご提案の根拠は崩れていません。</strong>GA4 でも同じ向き＝検索エンジンからの流入は 1日約23 → <strong>約28セッション</strong>、旧サイトからの流入も 1日約26 → 約30。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">② 🔑 個別写真の伸びは「旧サイトに同じ写真が無い」ページから来ていました</h3>
+    <p class="text-gray-700 mb-2">新サイトの写真IDは旧サイトと共通ですが、<strong>旧サイトに存在するのは ID 約14,480 まで</strong>です（旧 <span class="font-mono">?p_photo=11737</span> は「[東京都]国分寺駅の古写真」を返す一方、<span class="font-mono">?p_photo=15523</span> は写真の無いトップ相当のページを返す／旧サイトの検索データに出る最大IDは 14475）。<strong>そこで新サイトの個別写真ページを「旧サイトにも同じ写真がある」ものと「新サイトにしか無い」ものに分けました</strong>（どちらもタイトルは同じ共通文「古写真詳細」です）：</p>
+    <table class="w-full text-sm border-collapse mb-2 bg-white">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">新サイトの個別写真ページ</th><th class="py-1 pr-2 text-right">9/4〜9/8<br><span class="font-normal text-xs">検索に出たページ → クリック</span></th><th class="py-1 pr-2 text-right">9/8〜9/12<br><span class="font-normal text-xs">検索に出たページ → クリック</span></th></tr></thead>
+      <tbody>
+        <tr class="border-b border-gray-100 bg-emerald-50"><td class="py-1 pr-2"><strong>新サイトにしか無い写真</strong>（ID 14,500 以上）</td><td class="py-1 pr-2 text-right">92 → 7（1ページあたり 0.08）</td><td class="py-1 pr-2 text-right">91 → <strong class="text-emerald-800">16（0.18）</strong></td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">旧サイトにも同じ写真がある</td><td class="py-1 pr-2 text-right">141 → 6（0.04）</td><td class="py-1 pr-2 text-right">130 → 9（0.07）</td></tr>
+      </tbody>
+    </table>
+    <p class="text-gray-700 mb-2"><strong>＝タイトルは全く同じなのに、旧サイトに競合する同じ写真が無いページは、1ページあたり2〜2.5倍クリックされています</strong>（2期とも同じ向き）。クリックされたページの掲載順位は<strong>1〜6位</strong>が中心です。</p>
+    <p class="text-gray-700 mb-3 bg-white border border-emerald-300 rounded p-3"><strong class="text-emerald-900">意味すること（推測を含みます）</strong>：旧サイトに同じ写真がある場合、Google は<strong>旧サイト側を本家として扱い、新サイト側を控えに回している</strong>と見られます。<strong>その足かせを外すのが 301 リダイレクト</strong>です。<br>これまで R-J30 の但し書きで「個別写真は固有タイトルが無いので、301だけ先に打っても 3% 前後にとどまる可能性」と申し上げていましたが、<strong>今回の観測はそれを弱めます＝旧サイトとの重複さえ無ければ、共通タイトルのままでも上位に出てクリックされています。</strong><span class="text-gray-600">※ ⚠️ 因果は断定しません。新規登録の写真は「新しい」こと自体で有利な可能性があり、クリック数も 16 と小さい標本です。ID 14,480〜14,499 付近は境界が曖昧なので集計から外しています。</span></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">③ 月次の配管点検（6項目・読み取りのみ）</h3>
+    <ul class="list-disc ml-6 text-gray-700 mb-3 text-sm">
+      <li><strong>URLの揺れ</strong>：<span class="font-mono">http://konjaku-photo.jp/</span> → https へ正しく転送 ✅／<span class="font-mono">www.konjaku-photo.jp</span> は<strong>名前解決できないまま</strong>（R-J05・8/10 から不変）／旧 <span class="font-mono">http://www.konjaku-photo.com/</span> → <span class="font-mono">https://konjaku-photo.com/</span> ✅（新サイトへの301は未実装）</li>
+      <li><strong>robots.txt・サイトマップ</strong>：どちらも正常 ✅＝サイトマップは 8/16 の 1,718,018バイト → <strong>1,738,913バイト</strong>に増えており、<strong>新しい写真が自動で追加されています</strong></li>
+      <li><strong>解析タグ</strong>：新サイト＝GTM <span class="font-mono">GTM-NGPVQTKQ</span> のみ／旧サイト＝GTM＋GA4＋CrazyEgg ＝8/16 から変化なし ✅</li>
+      <li><strong>フォーム</strong>：写真投稿フォームはログインが必要なため未点検（次回も同じ）／<strong class="text-rose-700">新サイトに問い合わせページは無い</strong>（<span class="font-mono">/contact</span> は 404・R-J12）</li>
+      <li><strong>混在コンテンツ</strong>：新旧とも 0件 ✅</li>
+      <li><strong>バージョン露出</strong>：新サイト＝なし ✅／旧サイト＝jQuery 1.8.2・Bootstrap 3.2.0（<strong>301 で旧サイトを閉じれば無関係</strong>）。<span class="text-gray-600">旧サイトの HTML に地図用の API キーが載っています＝ブラウザ用キーとしては通常ですが、<strong>利用元の制限がかかっているかを開発担当に確認</strong>します（社長のお手数はかかりません）。</span></li>
+    </ul>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">④ サイト・連絡の定点</h3>
+    <ul class="list-disc ml-6 text-gray-700 mb-3 text-sm">
+      <li><strong class="text-rose-700">本番ページの変更は 8/16 から31日連続でゼロ</strong>＝トップ 27,079バイト・市区町村ページ 18,179バイト・都道府県ページ 23,035バイトとも<strong>前回とバイト単位で同一</strong>／旧 <span class="font-mono">.com</span> は 200 のまま＝<strong>301 未実装（31日目）</strong>／存在しない写真ID（<span class="font-mono">/old-photos/999999</span>）も 200 のまま（R-J15）。</li>
+      <li><strong class="text-rose-700">開発担当の受信箱は 17日間開かれていません</strong>＝こちらからの未受領が <strong>9通</strong>（<span class="text-gray-600">前回の「7通」は 8/28 分を数え漏らしていました。お詫びして訂正します＋前回配信の 9/12 分</span>）。<strong>一度も減っていません</strong>／先方からの発信も 8/29 が最後（Q-J10）。</li>
+      <li>トップ＝投稿写真 <strong>17,789枚（3日間で ±0）</strong>・登録ユーザー 6,841人（+1）。「PICK UP」の先頭は東大阪市立中央体育館の連番で、<strong>「最新の古写真」の7・8枠目と重複</strong>（R-J27・見立ては保留を継続）。人気ランキングは3件（♡2・♡1・♡1）のまま。</li>
+      <li><strong class="text-rose-700">最新コメントは 8/27 のまま＝19日間</strong>＝「古写真の使用許可はどこへ問い合わせれば？」のお問い合わせがそのままです（R-J12）。</li>
+    </ul>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑤ 新規のご提案はゼロ（意図的）／既存提案の更新は1件</h3>
+    <p class="text-gray-700 mb-3">機械判定は起票可（判断待ち6件／上限15件）ですが、<strong>在庫21件が17日間1件も動いていない</strong>ため足していません。<strong>更新＝R-J30（301の段階移行）の但し書きを②の観測で弱めました</strong>（新しい番号は起こしていません）。推奨の順番＝<strong>まず都道府県47件、次に個別写真</strong>は変わりません。<span class="text-gray-600">7日を超えて止まっている提案は全件「開発側の受信箱が開かれていない」が理由です（社長待ち以外の停滞＝Q-J10）。</span></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑥ 社長のご指示への対応</h3>
+    <p class="text-gray-700 mb-2"><strong>受信＝なし</strong>（<code>to: hp-loop-konjaku</code> は0件）。<strong><code>from-president.md</code> に新しいご指示はありません</strong>（最新は 9/2＝Cycle 037 で対応済み）。</p>
+
+    <p class="text-xs text-gray-500 mt-3">実装担当への配信：本文冒頭で「受信した の1行返信」を<strong>4度目の再依頼</strong>。<strong class="text-rose-700">※「投函した」であって「届いた」ではありません</strong>（Q-J10）。</p>
+  </section>
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 040 — 2026-09-12（🔴 「後退している」を、重ならない2期間で確かめました／🔑 いちばん効いている層がいちばん速く削られています／🔧 前回までの自分の読み方を1段直しました／新規提案ゼロ）</h2>
     <p class="text-sm text-gray-500 mb-4">対象：<span class="font-mono">konjaku-photo.jp</span>（新）／<span class="font-mono">konjaku-photo.com</span>（旧）　｜　データ：GSC <span class="font-mono">.jp</span>＝<code>searchconsole_konjaku</code>・<span class="font-mono">.com</span>＝<code>searchconsole_konjakucom</code>（<strong>どちらも取得できています</strong>・最新データ日 9/8＝ラグ4日）／GA4＝<code>analytics_549912350</code>／本番GET・スクリーンショット実施</p>
