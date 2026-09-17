@@ -90,6 +90,94 @@ grep -q 'K-003' "$TMP/idmap.md" && grep -q 'K-003c' "$TMP/idmap.md" && ok "対�
 grep -q 'え（重複）' "$TMP/idmap.md" && ng "対応表に見出しの文言を写した（取引先名が git へ出うる）" || ok "対応表に見出しの文言を写さない（ID・行・日付だけ）"
 KAIZEN_LEDGER="$TMP/norm.md" KAIZEN_IDMAP="$TMP/idmap.md" python3 "$TOOL" normalize --apply 2>&1 | grep -q '"changes": \[\]' && ok "2回目は何もしない（冪等）" || ng "2回目にも付け替えた"
 
+echo "── §1b-2 環境変数は揃えて読む（KAIZEN_LEDGER だけ差し替えたとき本番へ書かない）"
+# 2026-09-16 実害：テストが本番の月別ファイルへ計18件書いた。原因＝台帳だけ差し替えても月別・索引が本番の既定のままだった。
+iso="$(env -u KAIZEN_DIR -u KAIZEN_QUEUE -u KAIZEN_IDMAP -u KAIZEN_ARCHIVE -u KAIZEN_LOCK KAIZEN_LEDGER="$TMP/iso.md" python3 -c "
+import importlib.util,os
+spec=importlib.util.spec_from_file_location('k','bin/kaizen.py');k=importlib.util.module_from_spec(spec);spec.loader.exec_module(k)
+print(k.KDIR); print(k.QUEUE); print(k.IDMAP); print(k.ARCHIVE); print(k.LOCK)")"
+[ "$(printf '%s\n' "$iso" | grep -c "$TMP")" = "5" ] && ok "台帳を差し替えたら月別・索引・対応表・倉庫・ロックの5つともその隣を見る" || ng "本番を指すものがある: $iso"
+printf '%s' "$iso" | grep -q 'data/hp-improve/kaizen$' && ng "本番の月別ディレクトリを指した" || ok "本番の置き場を指さない"
+
+echo "── §1c 分割（索引＝状態／月別＝経緯／原文は消さない。2026-09-16 社長ご承認）"
+D="$TMP/kz"; Q="$TMP/queue.md"
+cp "$L" "$TMP/split-ledger.md"   # §2 以降の採番を汚さないよう写しで試す
+printf '\n### K-030 — 月別に分かれる分（dev・2026-08-05）\n本文月\n' >> "$TMP/split-ledger.md"
+SAVED_LEDGER="$KAIZEN_LEDGER"    # ⚠️ unset すると以降のテストが本番の台帳へ書く（2026-09-16 実際に9件書いた）
+export KAIZEN_DIR="$D" KAIZEN_QUEUE="$Q" KAIZEN_LEDGER="$TMP/split-ledger.md"
+KAIZEN_LEDGER="$TMP/split-ledger.md" python3 "$TOOL" normalize --apply >/dev/null 2>&1
+before_hash="$(python3 -c 'import hashlib,sys,importlib.util,glob,os;spec=importlib.util.spec_from_file_location("k","bin/kaizen.py");k=importlib.util.module_from_spec(spec);spec.loader.exec_module(k);fs=sorted(glob.glob(sys.argv[1]+"/*.md")) if os.path.isdir(sys.argv[1]) else [sys.argv[1]];es=[e for f in fs for e in k.parse(open(f,encoding="utf-8").read())["entries"]];print(hashlib.sha1("".join(sorted(e["hash"] for e in es)).encode()).hexdigest()[:12])' "$TMP/split-ledger.md")"
+python3 "$TOOL" migrate > "$TMP/mig-dry.json" 2>&1
+[ ! -d "$D" ] && ok "移行は既定で下見（月別ファイルを作らない）" || ng "下見で月別ファイルを作った"
+python3 "$TOOL" migrate --apply > "$TMP/mig.json" 2>&1
+[ -f "$D/2026-08.md" ] && ok "見出しの日付で月別に分かれる" || ng "月別ファイルができていない（$(ls "$D" 2>&1)）"
+[ -f "$D/undated.md" ] && ok "日付の無い分は undated へ（落とさない）" || ng "日付なしの行き先が無い"
+grep -q '"identical": true' "$TMP/mig.json" && ok "移行の前後で全原文のハッシュ集合が一致（1バイトも変えていない）" || ng "ハッシュ集合が一致しない: $(head -c 200 "$TMP/mig.json")"
+[ -f "$L" ] && ok "旧の器を消さない（数字が出るまで両方に原文がある）" || ng "旧の器を消した"
+again="$(python3 "$TOOL" migrate --apply 2>&1 || true)"
+[ "$(python3 "$TOOL" list | jq1 'd["count"]')" = "6" ] && printf '%s' "$again" | grep -q '移行済み' && ok "2回目の移行は断る（原文を二重に写さない）" || ng "2回目の移行で二重になった: $(printf '%s' "$again" | head -c 120)"
+[ "$before_hash" = "$(python3 -c 'import hashlib,sys,importlib.util,glob,os;spec=importlib.util.spec_from_file_location("k","bin/kaizen.py");k=importlib.util.module_from_spec(spec);spec.loader.exec_module(k);fs=sorted(glob.glob(sys.argv[1]+"/*.md")) if os.path.isdir(sys.argv[1]) else [sys.argv[1]];es=[e for f in fs for e in k.parse(open(f,encoding="utf-8").read())["entries"]];print(hashlib.sha1("".join(sorted(e["hash"] for e in es)).encode()).hexdigest()[:12])' "$D")" ] && ok "テスト側でも原文のハッシュ集合が同一" || ng "原文が変わった"
+[ "$(python3 "$TOOL" list | jq1 'd["count"]')" = "6" ] && ok "月別ができたら一覧は月別を見る（旧の器を二重に数えない）" || ng "二重に数えた: $(python3 "$TOOL" list | jq1 'd["count"]')"
+python3 "$TOOL" show K-001 | grep -q '本文あ' && ok "show は原文を全文出す" || ng "show が原文を出さない"
+sout="$(python3 "$TOOL" show K-999 2>&1 || true)"
+printf '%s' "$sout" | grep -q 'K-999' && ok "無いIDは名指しでエラー" || ng "無いIDのエラーが不親切: $sout"
+python3 "$TOOL" index --rebuild >/dev/null 2>&1
+[ -f "$Q" ] && ok "索引を作る" || ng "索引ができない"
+[ "$(grep -c '^| K-' "$Q")" = "5" ] && ok "索引には未採否の全件が載る（採否済み K-002 は載せない・絞り込まない）" || ng "索引の件数が違う: $(grep -c '^| K-' "$Q")"
+grep -q 'K-partner-702' "$Q" && ok "接頭辞つきIDも索引に載る" || ng "接頭辞つきIDが索引から落ちた"
+grep -q 'あ' "$Q" && ok "1行要約は見出しをそのまま使う（要約し直して意味を変えない）" || ng "見出しが索引に無い"
+printf '\n### K-040 — 見出しに印の無い分（dev・2026-08-07）\n- 🙋要・社長判断＝本文にだけ印がある\n' >> "$D/2026-08.md"
+python3 "$TOOL" index --rebuild >/dev/null 2>&1
+grep '^| K-040 ' "$Q" | grep -q '🙋' && ok "🙋 は本文まで見て拾う（見出しだけ見ると社長に出す分を落とす＝実測113/147件）" || ng "本文の🙋を索引が落とした: $(grep '^| K-040 ' "$Q")"
+python3 "$TOOL" lint >/dev/null 2>&1 && ok "索引と原文が一致していれば lint は通る" || ng "一致しているのに lint が落ちた: $(python3 "$TOOL" lint 2>&1 | head -2)"
+python3 "$TOOL" normalize | grep -q '"changes": \[\]' && ok "分割後も normalize が動く（器をまたいで重複を見る）" || ng "分割後に normalize が壊れた: $(python3 "$TOOL" normalize 2>&1 | head -3)"
+mspec="$(python3 "$TOOL" list | python3 -c "
+import sys,json;d=json.load(sys.stdin);e=[x for x in d['entries'] if x['id']=='K-001'][0];print(f\"{e['src']}:{e['line']}:{e['hash']}\")" 2>/dev/null)"
+python3 "$TOOL" move "$mspec" >/dev/null 2>&1 && ok "分割後も退避できる（在処:行:照合 で指す）" || ng "分割後に退避が壊れた: $mspec / $(python3 "$TOOL" move "$mspec" 2>&1 | head -2)"
+grep -q '本文あ' "$A" && ok "退避した原文が倉庫に入る" || ng "倉庫に入っていない"
+printf '\n### K-020 — 索引に無い新顔\n本文\n' >> "$D/2026-08.md"
+lz="$(python3 "$TOOL" lint 2>&1 || true)"
+printf '%s' "$lz" | grep -q '索引' && ok "原文にあって索引に無ければ lint が止める（取りこぼしを黙らない）" || ng "索引のズレを見逃した: $lz"
+python3 "$TOOL" index --rebuild >/dev/null 2>&1
+python3 "$TOOL" lint >/dev/null 2>&1 && ok "作り直せば通る（索引は生成物＝原文から復元できる）" || ng "作り直しても落ちる"
+nid="$(printf '本文' | python3 "$TOOL" add --title '新規' --lane dev)"
+[ -f "$D/$(date +%Y-%m).md" ] && ok "追記は当月のファイルへ入る（月替わりで器が変わる＝肥大しない）" || ng "当月ファイルに入らない（$nid・$(ls "$D")）"
+python3 "$TOOL" show "$nid" | grep -q '新規' && ok "足した直後から show で引ける" || ng "足した分が引けない"
+echo "── §1d Codex レビューの必須指摘（2026-09-17）"
+# ① 足した分が索引へ自動で載る（索引に載らない＝triage が読む索引から新顔が消える）
+nid2="$(printf '本文' | python3 "$TOOL" add --title '自動で索引へ' --lane dev)"
+grep -q "^| $nid2 " "$Q" && ok "足した分が索引へ自動で載る（作り直しを待たない）" || ng "足した分が索引に載らない: $nid2"
+python3 "$TOOL" lint >/dev/null 2>&1 && ok "足した直後も lint が通る" || ng "足した直後に索引がずれた: $(python3 "$TOOL" lint 2>&1 | head -2)"
+# ⑥ 月別があるのに索引が無ければ「問題なし」と言わない
+mv "$Q" "$Q.bak"
+l6="$(python3 "$TOOL" lint 2>&1)"; rc6=$?
+mv "$Q.bak" "$Q"
+[ "$rc6" != 0 ] && printf '%s' "$l6" | grep -q '索引' && ok "索引が無ければ lint は問題なしと言わない" || ng "索引なしで通した: rc=$rc6 $l6"
+# ⑦ 移行後に旧の器を指す move は断る（有効なコピーが残ったまま倉庫にも入る＝二重）
+lspec="$(KAIZEN_DIR="$TMP/none" python3 "$TOOL" list | python3 -c "import sys,json;d=json.load(sys.stdin);e=d['entries'][0];print(f\"{e['src']}:{e['line']}:{e['hash']}\")")"
+arc_before="$(wc -c < "$A")"
+m7="$(python3 "$TOOL" move "$lspec" 2>&1)"; rc7=$?
+[ "$rc7" != 0 ] && [ "$(wc -c < "$A")" = "$arc_before" ] && printf '%s' "$m7" | grep -q '在処' && ok "移行後は旧の器を指す move を断る" || ng "旧の器から退避した: rc=$rc7 $m7"
+# ⑤ 索引の作り直しはロックの下
+python3 "$TOOL" lock -- sleep 3 & lp=$!; sleep 0.7
+i5="$(KAIZEN_LOCK_WAIT=0.5 python3 "$TOOL" index --rebuild 2>&1)"; rc5=$?
+wait $lp
+[ "$rc5" != 0 ] && printf '%s' "$i5" | grep -q 'ロック' && ok "索引の作り直しはロックを取る（追記と混ざらない）" || ng "ロックを取らずに索引を書いた: rc=$rc5 $i5"
+# ② 移行は確認と読み取りをロックの下で（待っている間に何も書かない）
+D2="$TMP/kz2"; Q2="$TMP/q2.md"; cp "$TMP/split-ledger.md" "$TMP/l2.md"
+python3 "$TOOL" lock -- sleep 3 & lp=$!; sleep 0.7
+m2="$(KAIZEN_LEDGER="$TMP/l2.md" KAIZEN_DIR="$D2" KAIZEN_QUEUE="$Q2" KAIZEN_LOCK_WAIT=0.5 python3 "$TOOL" migrate --apply 2>&1)"; rc2=$?
+wait $lp
+[ "$rc2" != 0 ] && printf '%s' "$m2" | grep -q 'ロック' && [ ! -e "$D2" ] && [ ! -e "$D2.staging" ] && ok "移行はロックを取ってから確認・読み取りをする" || ng "ロックの外で移行を始めた: rc=$rc2 $m2"
+# ③ 途中の移行（仮置き）は原文として数えない・完了したら仮置きを残さない
+mkdir -p "$D2.staging"; printf '### K-900 — 途中まで\n本文\n' > "$D2.staging/2026-08.md"
+[ "$(KAIZEN_LEDGER="$TMP/l2.md" KAIZEN_DIR="$D2" KAIZEN_QUEUE="$Q2" python3 "$TOOL" list | jq1 'd["count"]')" = "6" ] && ok "移行の仮置き（途中の状態）は原文として数えない" || ng "仮置きを数えた"
+rm -rf "$D2.staging"
+KAIZEN_LEDGER="$TMP/l2.md" KAIZEN_DIR="$D2" KAIZEN_QUEUE="$Q2" python3 "$TOOL" migrate --apply >/dev/null 2>&1
+[ -d "$D2" ] && [ ! -e "$D2.staging" ] && [ -f "$Q2" ] && ok "移行は仮置きから一度に公開し、仮置きを残さない" || ng "仮置きが残った／公開されない: $(ls -d "$D2"* 2>&1)"
+
+unset KAIZEN_DIR KAIZEN_QUEUE; export KAIZEN_LEDGER="$SAVED_LEDGER"
+
 echo "── §2 採番（ロック付き・### の独立見出しで末尾に足す）"
 id="$(printf '本文です' | k add --title 'テストの気づき' --lane dev)"
 [ "$id" = "K-011" ] && ok "台帳と archive を通した素の K 番号の最大+1（K-partner は数えない）" || ng "採番が違う: $id"
