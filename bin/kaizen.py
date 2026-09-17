@@ -131,14 +131,18 @@ def _all_entries(paths=None):
     return out
 
 
-def _entry_text(e):
-    lines = _read(e["path"]).split("\n")
-    start = e["line"] - 1
-    end = len(lines)
+def _span(lines, line):
+    """見出し行（1始まり）から、次の #〜### 見出しの手前までの [start, end)。エントリの範囲の定義はここ1つ。"""
+    start = line - 1
     for j in range(start + 1, len(lines)):
         if ANY_HEAD_RE.match(lines[j]):
-            end = j
-            break
+            return start, j
+    return start, len(lines)
+
+
+def _entry_text(e):
+    lines = _read(e["path"]).split("\n")
+    start, end = _span(lines, e["line"])
     return "\n".join(lines[start:end]).rstrip("\n")
 
 
@@ -319,12 +323,7 @@ def cmd_move(a):
         texts, drops = [], {}
         for e in picked:
             lines = _read(e["path"]).split("\n")
-            start = e["line"] - 1
-            end = len(lines)
-            for j in range(start + 1, len(lines)):
-                if ANY_HEAD_RE.match(lines[j]):
-                    end = j
-                    break
+            start, end = _span(lines, e["line"])
             texts.append("\n".join(lines[start:end]).rstrip("\n"))
             drops.setdefault(e["path"], set()).update(range(start, end))
         arc = _read(ARCHIVE)
@@ -479,12 +478,7 @@ def _migration_plan():
     lines = src.split("\n")
     by_month = {}
     for e in es:
-        start = e["line"] - 1
-        end = len(lines)
-        for j in range(start + 1, len(lines)):
-            if ANY_HEAD_RE.match(lines[j]):
-                end = j
-                break
+        start, end = _span(lines, e["line"])
         e["path"] = LEDGER
         by_month.setdefault(_month_of(e), []).append("\n".join(lines[start:end]).rstrip("\n"))
     return es, by_month
