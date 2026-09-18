@@ -13,6 +13,7 @@
 #   - 失効・期限・紐づけたテンプレ以外は 403（投函側と同じホワイトリストが効く）
 #   - 壊れた取得を適用しない（SHA256 照合）
 #   - 両テンプレの rules-update.sh が同一（片方だけ直すとズレる）
+#   - 配布後に現場で書き足した配布ファイルを、上書きで黙って消さない（控えと比べて名指し・--apply は止まる）
 #
 # ⚠️ 本番の data/secrets/・data/cache/ には触れない：/tmp に偽プロジェクトを組み、
 #    スクリプトと index.php の実物をコピーして流す。トークンは架空の値だけを使う。
@@ -199,10 +200,31 @@ git -C "$SITE" init -q; git -C "$SITE" config user.email t@example.com; git -C "
 git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm init >/dev/null
 
 run_up(){ OUT="$(cd "$SITE" && bash bin/rules-update.sh "$@" 2>&1)"; RC=$?; }
+# 案件のツリー全体（種別と中身）。退避の置き場と .git は除く＝「元に戻ったか」を部分でなく全体で見る
+snap(){ (cd "$SITE" && find . \( -path ./.git -o -path ./.claude/rules-backup \) -prune -o \( -type f -o -type d \) -print \
+  | LC_ALL=C sort | while IFS= read -r f; do
+      if [ -d "$f" ]; then echo "d $f"; else echo "f $f $(sha256sum < "$f" | cut -c1-16)"; fi
+    done); }
 
 run_up
 want_eq "$RC" "0" "最新なら終了コード 0"
 want_in "最新です" "$OUT" "最新だと分かる"
+want_in "--apply  で作れます" "$OUT" "控えが無ければ、最新のうちに作れると案内する"
+[ -f "$SITE/.claude/rules-base.tar.gz" ] && say_ng "確認だけでは控えも書かない" || say_ok "確認だけでは控えも書かない"
+
+# 控えが無くても、最新なら配信中の配布物と比べて書き足しを名指しできる（この仕組みより前に配られた案件）
+printf '| /mine | この案件だけのコマンド |\n' >> "$SITE/CLAUDE.md"
+git -C "$SITE" commit -qam "控えより前に書き足した" >/dev/null
+run_up
+want_in "- CLAUDE.md" "$OUT" "控えが無くても、最新なら書き足しを名指しする"
+git -C "$SITE" checkout -q HEAD~1 -- CLAUDE.md; git -C "$SITE" commit -qam "戻す" >/dev/null
+
+run_up --apply
+want_eq "$RC" "0" "最新のまま --apply すると控えだけ作る"
+want_in "控えを作りました" "$OUT" "控えを作ったと言う"
+[ -f "$SITE/.claude/rules-base.tar.gz" ] && say_ok "控えができる" || say_ng "控えができる"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第1版" "控えを作るだけではルールを書き換えない"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "控え" >/dev/null
 
 # 第2版を公開する
 printf 'ルール第2版\n' > "$T/claude-rules/website/CLAUDE.md"
@@ -217,6 +239,10 @@ want_eq "$RC" "10" "更新があると終了コード 10（人に確認する合
 want_in "共有ファイルの所有者表を追加" "$OUT" "何が変わるかを見せる"
 want_in "人の確認が必要" "$OUT" "勝手に適用しないと明示する"
 want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第1版" "確認だけでは1文字も書き換えない"
+BEFORE="$(snap)"; mkdir -p "$T/tmpchk"
+OUT="$(cd "$SITE" && TMPDIR="$T/tmpchk" bash bin/rules-update.sh 2>&1)"
+want_eq "$(snap)" "$BEFORE" "確認だけでは案件のツリーに何も残さない（控え・一時ファイルを含めて）"
+want_eq "$(ls -A "$T/tmpchk")" "" "確認のあと、作業用の一時ファイルも残さない"
 
 # 未コミットの変更があるときは止まる
 printf '作業中の加筆\n' >> "$SITE/CLAUDE.md"
@@ -225,6 +251,17 @@ want_eq "$RC" "1" "上書き対象に未コミットがあると適用しない"
 want_in "未コミット" "$OUT" "止まった理由を言う"
 want_in "--force" "$OUT" "承知のうえで進む方法を示す"
 git -C "$SITE" checkout -- CLAUDE.md
+
+# 控えが無い（壊れた・消えた）まま新しい版を適用しようとしたら止まる＝書き足しを調べずに上書きしない
+mv "$SITE/.claude/rules-base.tar.gz" "$T/base-aside.tar.gz"
+run_up --apply
+want_eq "$RC" "1" "控えが無いまま新しい版は適用しない"
+want_in "見つけられない" "$OUT" "止まった理由を言う"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第1版" "止まったときに書き換えていない"
+printf 'こわれた控え' > "$SITE/.claude/rules-base.tar.gz"
+run_up --apply
+want_eq "$RC" "1" "控えが読めないときも適用しない"
+mv "$T/base-aside.tar.gz" "$SITE/.claude/rules-base.tar.gz"
 
 run_up --apply
 want_eq "$RC" "0" "適用できる"
@@ -246,11 +283,103 @@ ln -sf "$(command -v python3)" "$T/nopy3/python"
 OUT="$(cd "$SITE" && PATH="$T/nopy3:$PATH" bash bin/rules-update.sh 2>&1)"; RC=$?
 want_in "最新です" "$OUT" "python3 が使えない環境でも python で動く"
 
+# 控え（前回適用した配布物）で「配布後に書き足した配布ファイル」を見つける（2026-09-13 現場実例：
+# CLAUDE.md のコマンド表に足した1行が更新で黙って消えた）
+[ -f "$SITE/.claude/rules-base.tar.gz" ] && say_ok "適用すると控えが残る" || say_ng "適用すると控えが残る"
+want_in "CLAUDE.md" "$(tar tzf "$SITE/.claude/rules-base.tar.gz" 2>/dev/null)" "控えに配布ファイルが入っている"
+want_not_in "編集された配布ファイル" "$OUT" "何も書き足していなければ警告しない"
+printf '| /mine | この案件だけのコマンド |\n' >> "$SITE/CLAUDE.md"
+printf 'この案件のパス設定（追記）\n' >> "$SITE/project-config.md"
+python3 -c "import sys;p=sys.argv[1];b=open(p,'rb').read();open(p,'wb').write(b.replace(b'\n',b'\r\n'))" "$SITE/rules/modes/developer.md"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "現場で書き足した" >/dev/null
+run_up
+want_eq "$RC" "0" "最新なら書き足しがあっても終了コードは 0 のまま"
+want_in "編集された配布ファイル" "$OUT" "コミット済みの書き足しでも、最新のうちから名指しする（次の更新で消えるため）"
+want_in "- CLAUDE.md" "$OUT" "書き足したファイルを名指しする"
+want_in "固有の追加" "$OUT" "移し先（project-config.md「固有の追加」）を示す"
+want_not_in "- project-config.md" "$OUT" "案件の記録（project-config.md）は比べない"
+want_not_in "- rules/modes/developer.md" "$OUT" "改行コードだけの違いは書き足しと数えない"
+
 
 # 以降は「更新がある」状態で、書き込みの安全装置を見る
 printf 'ルール第3版\n' > "$T/claude-rules/website/CLAUDE.md"
 git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "三版" >/dev/null
 (cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+
+run_up
+want_eq "$RC" "10" "書き足しがあっても確認は 10（更新あり）"
+want_in "- CLAUDE.md" "$OUT" "確認の段階で、消えるファイルを名指しする"
+run_up --apply
+want_eq "$RC" "1" "書き足した配布ファイルを上書きする適用は止まる（コミット済みでも）"
+want_in "書き足した分が消えます" "$OUT" "止まった理由を言う"
+want_in "--force" "$OUT" "承知のうえで進む方法を示す"
+want_in "この案件だけのコマンド" "$(cat "$SITE/CLAUDE.md")" "止まったときに書き足しが残っている"
+want_eq "$(head -1 "$SITE/.claude/rules-version")" "$V2" "止まったときに版を進めない"
+printf 'ルール第2版\n' > "$SITE/CLAUDE.md"
+printf 'ルール層（第2版）\n' > "$SITE/rules/modes/developer.md"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "書き足しを project-config.md へ移した" >/dev/null
+run_up
+want_not_in "編集された配布ファイル" "$OUT" "配布時の中身に戻せば警告は消える"
+
+# 書いている最中に止まったら、理由を問わず書いた分を戻す。失敗は cp の代わりを置いて確実に起こす
+# （chmod では root で失敗しない）。戻ったかは適用前後でツリー全体を突き合わせる＝一部だけ戻る欠陥も落とす
+mkdir -p "$T/claude-rules/website/rules/newdir/deep"
+printf 'テンプレートの新しい階層\n' > "$T/claude-rules/website/rules/newdir/deep/added.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "新しい階層" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+REALCP="$(command -v cp)"
+mkdir -p "$T/fakecp"
+cat > "$T/fakecp/cp" <<FAKECP
+#!/bin/sh
+# 宛先が FAKECP_ON で終わる cp だけ失敗させる。FAKECP_MODE=term なら先に呼び出し元へ TERM を送る
+for a in "\$@"; do
+  case "\$a" in
+    *"\${FAKECP_ON:-//none//}")
+      if [ "\${FAKECP_MODE:-}" = term ]; then kill -TERM "\$PPID"; sleep 1; fi
+      exit 1 ;;
+  esac
+done
+exec "$REALCP" "\$@"
+FAKECP
+chmod +x "$T/fakecp/cp"
+run_fail(){ OUT="$(cd "$SITE" && PATH="$T/fakecp:$PATH" FAKECP_ON="$1" FAKECP_MODE="${2:-}" bash bin/rules-update.sh --apply --force 2>&1)"; RC=$?; }
+
+BEFORE="$(snap)"
+run_fail ".claude/rules-version"     # 全ファイル（上書き・新規・新しい階層）を書いた後、版で失敗
+want_eq "$RC" "1" "最後（版）で書けなくなったら止まる"
+want_in "元に戻しました" "$OUT" "戻したと言う"
+want_eq "$(snap)" "$BEFORE" "上書きした分・新しく置いたファイル・作ったディレクトリまで、適用前と同じに戻る"
+run_fail "rules/modes/developer.md" term
+[ "$RC" -ne 0 ] && say_ok "kill（TERM）で止められたら成功扱いにしない" || say_ng "kill（TERM）で止められたら成功扱いにしない" "RC=$RC"
+want_eq "$(snap)" "$BEFORE" "kill（TERM）で止められても、書いた分を元に戻す"
+run_up
+want_not_in "編集された配布ファイル" "$OUT" "戻したあとは「書き足し」と誤検知しない（止まり続けない）"
+
+# 上書き先が同じ名前のディレクトリだと、cp はその中に書いて「成功」してしまう＝書く前に止める
+git -C "$SITE" rm -q rules/modes/new-rule.md
+mkdir -p "$SITE/rules/modes/new-rule.md"; printf '案件のファイル\n' > "$SITE/rules/modes/new-rule.md/keep.txt"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "同じ名前のディレクトリ" >/dev/null
+BEFORE="$(snap)"
+run_up --apply --force
+want_eq "$RC" "1" "上書き先がディレクトリなら適用しない（--force でも）"
+want_in "通常のファイルではありません" "$OUT" "止まった理由を言う"
+want_eq "$(snap)" "$BEFORE" "止まったときに何も書き換えていない"
+rm -rf "$SITE/rules/modes/new-rule.md"; git -C "$SITE" checkout -q HEAD~1 -- rules/modes/new-rule.md
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "戻す" >/dev/null
+ls "$SITE/.claude/"rules-base.tar.gz.* >/dev/null 2>&1 && say_ng "控えの一時ファイルを残さない" || say_ok "控えの一時ファイルを残さない"
+
+# テンプレートに新しく入ったファイルと同じ名前のファイルが、既にこの案件にある（コミット済み）
+printf 'この案件で作った固有のルール\n' > "$SITE/rules/modes/mine.md"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "固有のルール" >/dev/null
+printf 'テンプレートの新しいルール\n' > "$T/claude-rules/website/rules/modes/mine.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "mine を新設" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+run_up --apply
+want_eq "$RC" "1" "同じ名前のファイルがあると適用しない"
+want_in "同じ名前" "$OUT" "止まった理由を言う"
+want_in "rules/modes/mine.md" "$OUT" "ぶつかったファイルを名指しする"
+want_eq "$(cat "$SITE/rules/modes/mine.md")" "この案件で作った固有のルール" "案件のファイルが残っている"
+git -C "$SITE" rm -q rules/modes/mine.md; git -C "$SITE" commit -qm "固有のルールを rules/local へ" >/dev/null
 
 # 書き込み先の途中がリンクなら、辿った先を壊さずに止まる（mkdir も cp もリンクを辿るため）
 OUTSIDE="$T/outside"; mkdir -p "$OUTSIDE"
@@ -294,6 +423,20 @@ run_up --apply
 want_eq "$RC" "1" "取得が壊れていたら適用しない"
 want_in "SHA256" "$OUT" "壊れていると分かる"
 want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第2版" "壊れた取得で中身が変わっていない"
+
+# 書き足しで止まっても、人が判断すれば --force で進める。進めたら控えは新しい版になり、以後は名指ししない
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+printf '| /mine | この案件だけのコマンド |\n' >> "$SITE/CLAUDE.md"
+git -C "$SITE" commit -qam "また書き足した" >/dev/null
+run_up --apply
+want_eq "$RC" "1" "書き足しがあると止まる（--force 前）"
+run_up --apply --force
+want_eq "$RC" "0" "--force なら書き足しがあっても適用できる"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第3版" "--force で配布の中身になる"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "更新" >/dev/null
+run_up
+want_eq "$RC" "0" "--force のあとは最新"
+want_not_in "編集された配布ファイル" "$OUT" "--force のあとは控えが新しい版になり、名指ししない"
 
 # 設定不足・失効
 printf 'RULE_UPDATE_URL=%s\nRULE_REPORT_TOKEN=tk-revoked\n' "$URL" > "$SITE/.env"
