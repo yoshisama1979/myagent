@@ -308,6 +308,63 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+  <!-- ===== Cycle 123（2026-09-16 定例）＝Cycle 124 の index 更新で移送 ===== -->
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+
+    <h3 class="text-xl font-semibold mb-1">Cycle 123 — 2026-09-16（y-com.info・<strong class="text-sky-700">3日ごとの定例</strong>／主産物＝<strong class="text-rose-700">①前回の「ChatGPT 経由は問い合わせ率23倍」を自分で検証し、誤りと分かったので訂正 ②開発側が 9/4 から受信箱を開いていないことを発見 ③実績ページ（R-046）の正式判定 ④R-023 のご決定を反映</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（集計最終日 9/10 → 9/13＝平常・28日 1,448クリック／57,122表示／平均10.6位）・GA4 ✅取得（90日・着地×流入元）・Google広告 ✅取得（YCOM のみ配信ゼロ＝停止14日目）・Clarity ✅取得（11日連続）・本番GET ✅・受信箱 ✅（新着なし）</p>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ① 訂正です＝「ChatGPT 経由のお客様は問い合わせ率が約23倍」は誤りでした</p>
+      <p class="text-sm text-gray-800 mb-2">前回「どのページに着地しているかを次回調べます」とお約束した件を調べたところ、<strong>数字の中身が違っていました</strong>（GA4・90日）。</p>
+      <table class="text-sm w-full mb-2 bg-white">
+        <thead><tr class="border-b-2 border-rose-300 text-left"><th class="py-1 pr-3">ChatGPT 経由の着地ページ</th><th class="py-1 pr-3 text-right">訪問</th><th class="py-1 text-right">コンバージョン</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">提携パートナー募集（<code>/partners/coder.html</code>）</td><td class="py-1 pr-3 text-right">16</td><td class="py-1 text-right">1</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">デザイナー募集（<code>/partners/designer.html</code>）</td><td class="py-1 pr-3 text-right">15</td><td class="py-1 text-right">1</td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">料金表・ブログ・トップ・サービス等（計6ページ）</td><td class="py-1 pr-3 text-right">10</td><td class="py-1 text-right">0</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong>集計を「お問い合わせ・見積り・電話・メール」だけに絞り直すと、ChatGPT 経由は 50訪問で1件（2.0%）</strong>でした。前回の8件のうち<strong class="text-rose-700">7件は、採用・提携パートナーへの応募</strong>だったことになります（Google 検索は同じ絞り方で 6,974訪問・24件＝0.34%）。<span class="text-gray-600">※上の表は ChatGPT がリンクに付ける目印（utm）で拾えた分だけで、合計は50訪問に届きません。</span></p>
+      <p class="text-sm text-rose-900 mb-2"><strong>原因は当方の集計道具です。</strong>道具の既定の集計対象に採用の応募が含まれており、<strong>9/2 にいただいた「採用のCVを営業のCVと同じ棚に置かない」を、道具の既定値に反映していませんでした</strong>。着地ページ別に見れば採用ページは見分けられますが、「どこから来たか」別に見るとページが見えないため、混ざったことに気づけませんでした。</p>
+      <p class="text-sm text-gray-800"><strong>対応</strong>＝①この件は「追わない」で決着（お問い合わせ1件では打ち手が立ちません。今後90日で5件以上になったら改めて見ます）②以後、流入元の比較は必ず営業のCVだけで集計します（記録＝K-820）③<strong>R-023（二重計上の整理）で棚が分かれれば、この種の誤読は起きにくくなります</strong>。<span class="text-gray-600">※副次の事実＝ChatGPT は当社の<strong>提携・採用ページ</strong>をよく紹介しているようです（採用のお話としてご参考まで。本ループの目標外なので深追いはしません）。</span></p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ② 開発側（web-hanasaka）が 9/4 から受信箱を開いていません（Q-020）</p>
+      <p class="text-sm text-gray-800 mb-2">「送ったものが受け取られているか」を初めて点検しました。<strong>開発側あての未読は15通</strong>（この分析から12通・ブログ分析から3通）、先方が最後に受け取ったのは <strong>9/3 分</strong>、先方からの最後の報告も <strong>9/3</strong> でした。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>届いていないもの</strong>＝9/4 以降の最新レポート10回分／<strong>R-057</strong>（サービスページの改修・9/4 起票）／<strong>R-040</strong> の確定文案（9/5）／<strong>R-050</strong> 広告の除外設定の作業依頼（9/6 ご決定）。<strong>9/3 以前にお渡しした R-018・R-049・R-047・R-048・R-055 は受け取られています</strong>（こちらは純粋に開発側の着手待ちです）。</p>
+      <p class="text-sm text-rose-900"><strong>当方の見落としです</strong>＝10サイクルにわたり「開発側の作業待ち・督促しません」と書いてきましたが、自分宛の新着しか見ていませんでした。以後は毎回、送った側の未読件数も記録します（K-821）。<strong>拠点PCの確認は社長にしかできないため、最上部の Q-020 でお願いしています。</strong></p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-sky-500 bg-sky-50 p-4 rounded-r">
+      <p class="font-bold text-sky-800 mb-1">📊 ③ 実績ページ（R-046・9/2 実装）の正式判定＝まだ効果は出ていません</p>
+      <p class="text-sm text-gray-800 mb-2">実装日で前後に同じ長さ（12日ずつ）に割って、検索での表示を比べました。</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside mb-2 space-y-1">
+        <li><strong>実装前</strong>（8/21〜9/1）＝実績まわり計 <strong>34表示・2クリック</strong>（うち個別の実績ページ 7表示）</li>
+        <li><strong>実装後</strong>（9/2〜9/13）＝計 <strong>26表示・0クリック</strong>（<strong class="text-rose-700">個別の実績ページ 0表示</strong>）</li>
+      </ul>
+      <p class="text-sm text-gray-800">39ページそれぞれを「別のページ」として Google に伝える修正でしたが、<strong>12日ではまだ個別ページの表示に移っていません</strong>（まとめ役のページの表示は 10→1 に減りました）。数が少なく、Google の読み直しに時間がかかる種類の修正なので<strong>「効かなかった」とはまだ言いません</strong>。<strong>10/2（実装から30日）に個別ページの表示が0のままなら、「この修正だけでは表示は増えない」と結論して追跡を終えます</strong>（修正そのものは正しい状態への是正なので、元に戻す話ではありません）。</p>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-semibold mb-2">📌 そのほか、本日の定点確認（いずれも社長のご対応は不要です）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong class="text-emerald-700">R-023＝9/14 のご決定（○）を反映</strong>しました。残りは「作業をどなたが行うか」の一問です（最上部 🔔）。</li>
+        <li><strong>運用代行ページ（R-049）＝18回目もクリック0</strong>（408表示／平均15.3位）。兵庫の8語は今回も1ページ目に0語（いちばん近いのは「ホームページ 保守 代行 芦屋」11.7位）。兵庫＋淡路が表示の44%。<strong>本文改修の依頼は先方が受け取り済みで、着手待ち</strong>です。</li>
+        <li><strong>無料相談ページ（R-047）</strong>＝4ページ計70表示・1クリック（前回見つけた1クリックがまだ集計期間内に残っているだけで、新しいクリックではありません）。<strong>サービスページ群（R-057）</strong>＝979表示・2クリックで変化なし。<strong>料金ページ（R-055）</strong>＝価格表1,248表示に集中したまま。</li>
+        <li><strong>効果の測り方を1つ直しました</strong>＝AIサービスページ（R-048）の条件も「表示が0から発生したら成功」でしたが、着手前からすでに2表示あるため、R-047 と同じく<strong>「数の増減で見る」</strong>に改めました（当方の記録の作り方の問題＝ご判断不要）。</li>
+        <li><strong>トップページ＝退行なし</strong>（73,529バイト・前回と同一）。<strong>Clarity＝11日連続で取得</strong>。<span class="text-amber-700">トップで「押しても反応しない所を押した」訪問が 20訪問中3（15%）</span>＝前回は0%でした。次回も続くようなら、どこを押しているかを調べます。</li>
+        <li><strong>広告＝配信ゼロ14日目</strong>（他3社のアカウントは9/14まで動いている＝本当に止まっています）。<span class="text-rose-700">⚠️ 入札方法が「コンバージョン値の最大化」のままなので、このまま再開しないようご注意ください。</span></li>
+        <li><strong>道具台帳</strong>＝9/13 のご指示どおり <span class="font-mono">bin/loop-quality.py</span> を登録しました。<strong>ご指示の番号 T-032 は 9/14 に別の道具で使われていたため、T-033 で登録</strong>しています（番号の二重使用を避けるため）。</li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>新しい提案＝0件／新しいご質問＝1件（Q-020）</strong>。本日の成果は「前回の発見の検証と訂正」「届いていない依頼の発見」「R-046 の判定」で、新しい提案を足すより、いまある記録の確かさを上げる日でした。</p>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）の新しい項目2件に対応しました＝<strong>9/13 triage（道具台帳への登録）→ Cycle 123 で T-033 として登録</strong>／<strong>9/14 triage（R-023 の「正」）→ Cycle 123 で掲示板・台帳・確定仕様に反映</strong>。</p>
+
+  </section>
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
     <h3 class="text-xl font-semibold mb-1">Cycle 122 — 2026-09-13（y-com.info・<strong class="text-sky-700">社長の手動起動</strong>／主産物＝<strong class="text-rose-700">①ChatGPT 経由のお客様は、数は極めて少ないのに問い合わせ率が桁違いに高いことが分かりました ②週次のCV実測（期日到来）を実施し、見積りフォームの取りこぼしを2か月ぶりに再確認 ③検索データの転送が復旧しました ④「相談ページ」の効果の測り方に欠陥が見つかり、作り直しました</strong>）</h3>
