@@ -180,6 +180,120 @@
   </div>
 
 
+  <!-- ===== 📦 Cycle 098（2026-09-19）＝ Cycle 099（2026-09-20）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c098">Cycle 098 — 2026-09-19（YCOM ブログ・日次）：<span class="text-rose-700">自社サイトの2ページで、運用費の金額が違っています＝「月額1.5万円〜・平均3万円」と「月額3,000円／1万円／3万円／5万円」</span>／<span class="text-emerald-800">完成原稿 T-006（運用・保守）を公開前に照合＝同じテーマの自社記事は無し・リンク先の直しと h3 2本で済みます</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-19）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。実データ最終日 <strong>2026-09-16</strong>（9/05〜9/16＝655クリック・26,753表示・平均9.4位）。ページ別28日（上位12）・90日で「保守」「運用」「維持」「更新」を含む語とその着地ページ・<span class="font-mono">?p=7585</span> の28日・料金ページの週（9/10〜9/16）。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>WordPress 本文</strong>（<span class="font-mono">wp-draft.py get</span>・読み取りのみ）＝<span class="font-mono">17</span>・<span class="font-mono">835</span>・<span class="font-mono">7585</span>（全文）／<span class="font-mono">8365</span>・<span class="font-mono">2117</span>（status と社内メモの有無）。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝<span class="font-mono">/service/web/operate/</span>・<span class="font-mono">/beginner/maint.html</span>・<span class="font-mono">/price/basic.html</span>・<span class="font-mono">?p=7585</span>（すべて HTTP200）。</li>
+      <li><strong>ローカルの完成原稿</strong>＝<span class="font-mono">site/drafts/blog/ycom/T-006_body.html</span>（見出し・リンク・<span class="font-mono">【要・</span> の位置と本文）。</li>
+      <li><strong>検索結果</strong>（<span class="font-mono">hp-serp.sh</span>）＝「ホームページ 保守 費用 月額」上位10。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+      <li class="text-rose-700"><strong>9/18 のサイクルは途中で止まっていました</strong>＝Cycle 097 をアーカイブへ移す手順だけ済み、index の更新・配信・日報はありません（アーカイブ側の注記「Cycle 098（2026-09-18）で退避」はその名残・原文のまま）。本日の回を Cycle 098 とします。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　完成在庫 T-006（運用・保守）を、公開前に「自社の既存ページ」と照合しました（K-831 の3件目）</h3>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="bg-gray-100 text-left"><th class="py-1 px-2">相手（9/19 実測）</th><th class="py-1 px-2">検索（GSC 90日）</th><th class="py-1 px-2">見つかったもの</th><th class="py-1 px-2">扱い</th></tr></thead>
+      <tbody>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2"><span class="font-mono">/beginner/maint.html</span>「ホームページの運用費って何？」（全ページ共通メニュー「ホームページの運用費について」の行き先）</td><td class="py-1 px-2">「運用費」2表示・7.0位（ほぼ出ていない）</td><td class="py-1 px-2"><strong>「月額1.5万円～で始めることができます」「弊社のお客様の平均的な予算は月額３万円」「運用環境の管理＋年2Pの更新で月額1.5万円」</strong></td><td class="py-1 px-2">📥【hp-loop へ】／T-006 からはリンクしない</td></tr>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2"><span class="font-mono">/service/web/operate/</span>「運用代行・保守・更新代行」／<span class="font-mono">/price/basic.html</span>「運用・維持管理の料金」</td><td class="py-1 px-2">operate＝「保守 代行」「更新代行」「運用代行 大阪」など計約600表示・<strong>クリック0</strong>（大半が「地名＋保守 代行」の総当たり型＝B-071 の見立てと同じ）</td><td class="py-1 px-2"><strong>運用おまかせ 月額50,000円／運用サポート 月額30,000円／エコノミー管理 月額10,000円／維持管理のみ 月額3,000円／完全納品 無料</strong>（両ページ同じ）。<u>月額1.5万円のプランは載っていません</u>。各プランの中身は「打ち合わせで説明」＝公開されていない</td><td class="py-1 px-2"><span class="font-mono">T-006</span> の受け皿（済）</td></tr>
+        <tr class="border-b"><td class="py-1 px-2"><span class="font-mono">?p=17</span>「ホームページの維持費はいくらくらいかかるのか？」（公開中・見出しなし）</td><td class="py-1 px-2">「ホームページ 維持費」11表示・81.7位ほか計16表示（クリック0）</td><td class="py-1 px-2">T-006 と<u>近いが別の問い</u>（T-006＝運用と保守の違い／17＝維持費はいくら）。<strong>T-006 に無い自社の経験が1つ</strong>＝「制作費無料とうたって維持管理費で稼ぐ業者」「長い契約年数に注意」「YCOMにも元々そういったところから来ていただいたお客様が数名」</td><td class="py-1 px-2"><span class="font-mono">T-006</span> 改訂（h3 1本）／17 は書き直さない</td></tr>
+        <tr class="border-b"><td class="py-1 px-2"><span class="font-mono">?p=7585</span>「『公開（更新）に失敗しました。返答が正しい JSON レスポンスではありません。』のエラーを修正する方法」</td><td class="py-1 px-2">そのエラー文で計約170表示・14〜32位・クリック0（28日は39表示・24〜32位）</td><td class="py-1 px-2">T-006 のチェックリスト1行目が<u>このエラー文そのもの</u>なのに、7585 へのリンクが無い。<strong>7585 の本文いちばん上の見出しが「たいとるのやくわり」のまま公開中</strong>（書きかけの仮見出し・9/19 公開ページで表示を確認）</td><td class="py-1 px-2"><span class="font-mono">B-086</span></td></tr>
+        <tr class="border-b"><td class="py-1 px-2"><span class="font-mono">?p=835</span>（2013年・外部の制作会社検索サイトの告知）</td><td class="py-1 px-2">「webサイト運用に強い制作会社の探し方は？. my location is japan.」2表示・1.5位（AI の検索とみられる文型）</td><td class="py-1 px-2">運用・保守とは無関係の記事</td><td class="py-1 px-2">対象外</td></tr>
+        <tr><td class="py-1 px-2">完成原稿 <span class="font-mono">T-006</span>（ローカル・WP未投入）</td><td class="py-1 px-2">—</td><td class="py-1 px-2"><span class="font-mono">【要・</span> は1か所だけ（ファイル冒頭の HTMLコメント＝読者には見えない）。本文のリンク先＝<span class="font-mono">/service/web/operate/</span>×2・<span class="font-mono">/price/</span>×2・<span class="font-mono">/works/</span>・<span class="font-mono">/contact/normal/</span>。<u>費用の段が「月額の固定費（内容で変動）」だけ</u>で、自社が公開しているプランの段階（5つ）に触れていない</td><td class="py-1 px-2"><span class="font-mono">T-006</span> 改訂</td></tr>
+      </tbody>
+    </table>
+    <p class="mb-2"><strong>ブログにとっての意味</strong>：T-006 は T-007（4737）や T-042（5792）と違い、<u>同じテーマの自社記事がありません</u>＝新しいURLで出してよい記事です。直すのはリンク先2か所と h3 2本だけ。一方で、T-006 の読者が次に見る<strong>運用費のページが2通りの金額を言っている</strong>ことが分かりました。料金ページとサービスページは5段階（3,000円〜5万円）でそろっているので、推測：<span class="font-mono">/beginner/maint.html</span> の「1.5万円〜・平均3万円」が古い価格体系の残りです。ブログからは直せないので hp-loop へお伝えし、T-006 からはこのページにリンクしません。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：③依頼（運用・保守を外に頼むか考えている、既にサイトを持つ事業者）。<strong>規模</strong>：検索から来ている人の言葉は、ほぼ「地名＋保守 代行」の総当たり型でクリック0＝<u>人の検索の実需は今の GSC では見えません</u>。上位10（9/19 hp-serp）は制作会社・料金まとめの「保守費用の相場と、月額に含まれない作業」型（lichtos・Web幹事・plust・freee ほか）。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝status=draft（投入 8/17 から34日目）</strong>。タイトル未変更。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝WP本文に残存（66日目）</strong>。直近28日 265クリック・6,201表示（〜9/16）。</li>
+      <li><strong>料金ページ <span class="font-mono">/price/basic.html</span>（9/10〜9/16）</strong>＝「ホームページ制作 料金表」51表示・20.6位（前回 20.1位）／「ホームページ制作 料金」32表示・22.5位（前回 22.6位）＝<strong>戻っていません</strong>（8/21 の週の段差のまま・5週目）。</li>
+      <li><span class="font-mono">Q-011</span>＝13日目・未回答。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-086</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-086</span>　<span class="font-mono">?p=7585</span>（WordPress の JSON エラー）の見出し「たいとるのやくわり」を直す＋T-006 と相互にリンク　🟢　<span class="text-xs font-normal">（🔒 WP書き込みは保留解除後／T-006 側のリンクはローカル改訂で今から）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=7585</span>（2022年5月・公開中）× 完成原稿 <span class="font-mono">T-006</span></li>
+      <li><strong>観点</strong>：信頼（読者に見える書きかけ）・内部リンク</li>
+      <li><strong>観察</strong>：①本文の最初の見出し（h2）が<strong>「たいとるのやくわり」</strong>＝記事タイトルのすぐ下に表示されている（9/19 公開ページの本文テキストで確認）。検索結果の説明文も同じ文字列で始まる（<span class="font-mono">B-032</span>＝C060・8/09 に説明文の側だけ記録済み＝<u>本文の見出しとして読者に見えている点は今回が初出</u>）。②T-006 のチェックリスト1行目は「更新時に『更新に失敗しました。返答が正しいJSONレスポンスではありません』と出る」＝7585 の題そのものだが、リンクが無い。③7585 の末尾には「WordPressのことでお困りですか？」の橋（<span class="font-mono">/service/web/operate/</span> ほか）が既にある。</li>
+      <li><strong>なぜ問題か</strong>：エラー文を貼って検索する人は、いまサイトが壊れて困っている事業者＝保守の入口にいる人です。その人が最初に読む見出しが書きかけだと、「この会社にサイトを預けて大丈夫か」の印象で損をします（推測）。T-006 からは「詳しい直し方」への道が無く、読者はチェックリストの1行で止まります。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        <ol class="list-decimal list-inside ml-4">
+          <li><strong>7585</strong>：h2「たいとるのやくわり」を<u>中身に合う見出しに置き換える</u>（例「このエラーが出たときに、まず試すこと」）。検索結果の説明文（抜粋）も同じ仮文字列を外す。<span class="text-gray-600">本文のリライト（<span class="font-mono">B-032</span>）とは切り離して、他の 🔒 の編集と同じログインで30秒。</span></li>
+          <li><strong>T-006</strong>：チェックリスト1行目の「軽い対処の目安」の欄に「<span class="font-mono">?p=7585</span>（このエラーの直し方）」へのリンク1本。</li>
+          <li><strong>7585 → T-006</strong>：T-006 の公開後、7585 の末尾（既存の橋の直前）に「直しても繰り返すときは、保守の体制を見直すサインです」＋T-006 へのリンク1行。<span class="text-gray-600">公開前は何もしない。</span></li>
+        </ol>
+      </li>
+      <li><strong>効果</strong>：クリック換算＝<strong>ほぼ0</strong>（7585 は28日39表示・24〜32位・クリック0）／<strong>買い手換算＝推測で年1件未満</strong>。<strong>工数</strong>：①30秒（WP画面）②③各1行。<strong>優先度</strong>：🟢（年1件未満＝🔴に置きません・B-079）。<strong>栓</strong>：①は 🔒 保留解除後／②は今から（執筆担当のローカル改訂）／③は T-006 の公開後。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-006</span> C098 改訂版）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-006</span>（C098 改訂版）　「ホームページの運用・保守とは？自社で続けるコツと、運用代行に頼むべきケース」＝<u>自社の公開済みのプラン段階と、自社の経験を使う版</u>　🔴 据え置き　<span class="text-xs font-normal">（完成原稿は <span class="font-mono">site/drafts/blog/ycom/T-006_body.html</span>・原文は残したまま差分で）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>改訂の要点（完成原稿への差分）</strong>：①リンク先 <span class="font-mono">/price/</span>×2 → <span class="font-mono">/price/basic.html</span>（<span class="font-mono">B-054</span>・T-007 と同じ理由）②h2③ に h3 を2本足す（下の🆕）③チェックリスト1行目から <span class="font-mono">?p=7585</span> へ（<span class="font-mono">B-086</span>②）④<span class="font-mono">/beginner/maint.html</span> には<u>リンクしない</u>（金額の食い違いが直るまで）⑤タイトル案の末尾「【大阪】」は外す（8365 の <span class="font-mono">B-043</span> と同じ方針＝地名を足しても人の検索は増えていない）。<strong>社長への質問は増えません。</strong></p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：サイトを作ったあと更新が止まっている／WordPress のエラーで困った／保守をお願いしていた会社と連絡が取れない、中小企業の担当者・経営者（完成原稿と同じ）。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：知りたい〜比べたい＝「ホームページ 保守 とは」「ホームページ 運用 保守 違い」「ホームページ 保守 費用 月額」。<strong>競合</strong>（9/19 hp-serp 上位10）＝「保守費用は妥当？相場と<u>含まれない作業</u>」（lichtos 1位）・Web幹事・plust・StockSun・freee ほか＝相場と内訳のまとめが中心。推測：差がつくのは「何が月額に含まれるかを確かめる観点」と「制作費無料・長期契約の落とし穴を実際に引き継いだ側の話」。</li>
+      <li><strong>タイトル案</strong>：①ホームページの運用・保守とは？自社で続けるコツと、運用代行に頼むべきケース ②ホームページの「保守」に毎月いくら払う？——月額に含まれるものと、頼むべきケース</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）<span class="font-normal text-emerald-800">　🆕＝C098 で変えたところ／無印＝完成原稿のまま</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2①　ホームページの「運用」と「保守」は何が違う？</strong>（表のまま）</li>
+      <li><strong>h2②　自社運用でつまずく典型（チェックリスト）</strong>　― <span class="text-emerald-800">🆕 1行目（JSON エラー）の「軽い対処の目安」に <span class="font-mono">?p=7585</span> へのリンク</span></li>
+      <li><strong>h2③　運用・保守を外注するメリットと費用の考え方</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li class="text-emerald-800">h3　🆕 月額には何が含まれている？契約前に確かめる4つ　― ①サーバー・ドメインの管理（名義は誰か）②更新作業は月に何回・何ページまでか ③障害が起きたときの対応とバックアップ ④解析・改善の報告はあるか。<u>一般の確認観点として書く</u>（上位の「含まれない作業」型に並ぶ最低限）。<strong>自社の例</strong>＝「維持管理のみ」から「運用おまかせ」まで段階を選べる形で公開している、と書き <span class="font-mono">/service/web/operate/</span> の料金の目安へリンク（<u>金額は本文に書き写さない</u>＝<span class="font-mono">Q-002</span>② の回答まで。T-007 と同じ既定）。各プランの中身は公開ページに無い＝<u>本文で断定しない</u></li>
+          <li class="text-emerald-800">h3　🆕 「制作費無料」や長い契約年数には気をつける　― <span class="font-mono">?p=17</span> に自社が公開済みの内容だけを使う（制作費を無料にして維持管理費で回収する売り方がある／複数年契約だと合わない会社でも払い続けることになる／サーバー・ドメインは1年単位の契約が多い／そうした会社から移ってきたお客様が実際にいる＝人数・社名は書かない）。T-006 の「保守をお願いしていた会社と連絡が取れない」チェック行・CTA の「引き継ぎ歓迎」とつながる</li>
+          <li>h3（既存）スポット依頼の実情／費用は内容で変わる（完成原稿のまま・リンク先だけ <span class="font-mono">/price/basic.html</span> へ）</li>
+        </ul>
+      </li>
+      <li><strong>h2④　運用代行に頼むべきか？判断チェックリスト</strong>（完成原稿のまま）</li>
+      <li><strong>h2⑤　まとめ</strong>（CTA は完成原稿のまま＝引き継ぎ歓迎は公開可の確定事実）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/service/web/operate/</span>（h2③・h2⑤＝そのまま）／<span class="text-emerald-800">🆕 <span class="font-mono">/price/</span>×2 → <span class="font-mono">/price/basic.html</span>／<span class="font-mono">?p=7585</span>（h2②）</span>／<span class="font-mono">/works/</span>・<span class="font-mono">/contact/normal/</span>（そのまま）。<u>リンクしない</u>＝<span class="font-mono">/beginner/maint.html</span>（金額の食い違いが直るまで）。</li>
+      <li><strong>器</strong>：<u>新しいURLで公開</u>（同じテーマの自社記事が無い＝T-007／T-042 のような書き直しにしない）。<span class="font-mono">?p=17</span> は書き直さない（<span class="font-mono">B-069</span> のパーク提案のまま）。T-006 公開後に 17 の末尾へ T-006 へのリンク1行を足すかは、その時に 17 の表示を見て決めます。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：無し。任意＝各プランで実際に引き受ける作業の範囲（公開ページは「打ち合わせで説明」）＝お答えがあれば h3🆕① を具体化できますが、無くても成立します。</li>
+      <li><strong>公開の順番について（推測・念のため）</strong>：T-006 は「更新を止めると改ざん・乗っ取りのリスク」を書く記事です。自社ブログの侵害（<span class="font-mono">T-040</span>）の扱いが決まっていない今は、<u>一般論のまま・自社の件には触れない</u>書き方を保ちます（完成原稿も触れていません）。WP への投入は保留解除後＝ローテーション完了後なので、順番の上でも矛盾しません。</li>
+      <li><strong>効果</strong>：クリック換算＝<strong>未確定</strong>（今の GSC に見える「保守」系の語はほぼ総当たり型でクリック0）／<strong>買い手換算＝推測で年1件未満</strong>。ただし保守・運用は月額の継続収益に直結する商品で、<u>引き継ぎ相談の入口</u>になる（推測）。<strong>工数</strong>：小（h3 2本・リンク3か所・タイトルの【大阪】を外す）。<strong>優先度</strong>：🔴 据え置き（完成在庫の順番は変えません＝8365 → T-007 → 以下）。</li>
+      <li class="text-emerald-800"><strong>栓：なし</strong>（金額は既定「リンクのみ」）／WP への投入は保留解除後かつ 8365 の公開後。<strong>ローカルの差分作りは今からできます</strong>（✍️ 執筆担当への指示に追加）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-19）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 13日目・未回答。<strong>本日の新規質問はゼロ</strong>（T-006 の金額の扱いは T-007 と同じ既定で進めます）。</li>
+      <li><strong>執筆担当（blog-improve / blog-write）からの新しい申し送り</strong>：9/14 以降なし。次回起動は 9/21（月）。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>見送ったもの（記録だけ）</strong>：<span class="font-mono">/price/basic.html</span> のタイトルが「ホームページ制作 料金表【1ページ5万円〜】」になり、総額の目安・FAQ が増えていることを本日の取得で見ました。料金の帯の段差（5週目）との関係は、いつ変わったかが私の側では分からないため<u>結び付けていません</u>（サイトのページの変更履歴は hp-loop の担当）。</li>
+      <li><strong>道具</strong>：<span class="font-mono">gsc-fetch.py</span> は <span class="font-mono">bin/.venv/bin/python3</span> 経由で実行可（<span class="font-mono">python3 bin/gsc-fetch.py</span> の形は承認待ち）。一時ファイルは <span class="font-mono">/tmp</span> に書けない＝<span class="font-mono">data/blog-loop/cycles/ycom/</span> に置きました。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 097 の本文は 9/18 の中断した回が<a href="archive.html#c097" class="underline">アーカイブへ退避済み</a>（本日 <span class="font-mono">id="c097"</span> 1件・「本日の記録（2026-09-17）」まで入っていることを確認）→ index から削除。</li>
+      <li><strong>配信</strong>＝web-hanasaka へ1通（<span class="font-mono">M-20260919T050703-blog-loop-ycom-785a50</span>・type report・作用付きの依頼は含めず）。Slack 日報＝投稿済み。</li>
+      <li><strong>自己改善（Step 7）</strong>：skill-kaizen に <span class="font-mono">K-838</span>＝「Step 0 で前回の回が途中で止まったかを機械で見る（archive と index の最新サイクル id の突き合わせ）」。学び：K-831 の照合の相手に「料金を書いている全ページ」を含めると、ブログ外の金額のずれも拾える。</li>
+    </ul>
+  </div>
   <!-- ===== 📦 Cycle 097（2026-09-17）＝ Cycle 098（2026-09-18）で index から退避・原文無改変 ===== -->
   <!-- 注記（2026-09-19 追記）：9/18 の実行は退避だけで中断。Cycle 098 は 2026-09-19 に実施し、この退避分をそのまま使った（上の日付はその名残） -->
   <!-- ============================================================ -->
