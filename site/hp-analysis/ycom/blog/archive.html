@@ -179,6 +179,121 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 099（2026-09-20）＝ Cycle 100（2026-09-21）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c099">Cycle 099 — 2026-09-20（YCOM ブログ・日次）：<span class="text-emerald-800">完成原稿 T-011（ドメイン・サーバー・SSL）が社長の確認待ちにしていた2か所は、自社の公開ページに答えがありました＝「契約の代行（管理費あり）」と「自分で契約して制作だけ頼む（月額なし）」</span>／<span class="text-rose-700">T-011 のリンク先の SSL 解説 <span class="font-mono">?p=5838</span>（2018年）に、今は当てはまらない記述＝「EV認証ではアドレスバーに企業名が出る」</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-20）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日は 9/16 のまま</strong>（昨日から新しい日なし＝料金ページの週の数字は C098 から動いていません）。90日で「ドメイン」「サーバー」「ssl」「維持費」を含む語とその着地ページ／<span class="font-mono">?p=5838</span> のクエリ。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>WordPress 本文</strong>（<span class="font-mono">wp-draft.py get</span>・読み取りのみ）＝<span class="font-mono">8365</span>（status）・<span class="font-mono">2117</span>（社内メモの有無）。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit --text</span>・HTTP GET のみ）＝<span class="font-mono">/beginner/cost.html</span>・<span class="font-mono">/price/basic.html</span>・<span class="font-mono">?p=5838</span>・<span class="font-mono">?p=17</span>・<span class="font-mono">?p=101</span>（すべて HTTP200）。</li>
+      <li><strong>ローカルの完成原稿</strong>＝<span class="font-mono">site/drafts/blog/ycom/T-011_body.html</span>（見出し・リンク・<span class="font-mono">【要・</span> の位置・金額の書き方）＋ drafts-log の「T-011 の残課題」。</li>
+      <li><strong>検索結果</strong>（<span class="font-mono">hp-serp.sh</span>）＝「ホームページ 維持費 ドメイン サーバー」上位10。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　完成在庫 T-011（ドメイン・サーバー・SSL）を、公開前に「自社の既存ページ」と照合しました（K-831 の4件目）</h3>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="bg-gray-100 text-left"><th class="py-1 px-2">相手（9/20 実測）</th><th class="py-1 px-2">検索（GSC 90日）</th><th class="py-1 px-2">見つかったもの</th><th class="py-1 px-2">扱い</th></tr></thead>
+      <tbody>
+        <tr class="border-b bg-emerald-50"><td class="py-1 px-2"><span class="font-mono">/beginner/cost.html</span>「ホームページの維持費は必要？ドメイン、サーバーについてとその費用。」（T-011 がリンク済み・共通メニュー「ホームページの維持管理費について」の行き先）</td><td class="py-1 px-2">「サーバー 管理 代行 費用」6表示・22.7位ほか計約14表示・<strong>クリック0</strong></td><td class="py-1 px-2"><strong>「初めての方には弊社で契約代行いたします／サーバー・ドメイン管理代行費用 月額3,000円」</strong>と<strong>「納品プラン＝自分で管理して維持管理費用を節約したい！ 管理代行費用 無料」「制作時にお客様の方でご契約をしていただき、必要な情報を弊社に送っていただくことで制作が可能」</strong>。<u><span class="font-mono">/price/basic.html</span> の「維持管理のみ ¥3,000/月」「完全納品プラン 無料」と一致</u>（C098 の <span class="font-mono">/beginner/maint.html</span> のような食い違いは無し）</td><td class="py-1 px-2">T-011 の <span class="font-mono">【要・社長確認】</span> ①②を解消／リンクはそのまま</td></tr>
+        <tr class="border-b bg-emerald-50"><td class="py-1 px-2"><span class="font-mono">/price/basic.html</span>（よくある質問・運用の料金の注記）</td><td class="py-1 px-2">—（料金の帯は C098 のとおり）</td><td class="py-1 px-2">「月額費用は必ずかかりますか？→<strong>いいえ。サーバーなどをすべてご自身でご用意いただければ『完全納品』として月額費用なし</strong>／当社で用意するサーバーで運用する場合は最低 月額3,000円〜」「<strong>他社で制作されたホームページの引き継ぎもご相談いただけます</strong>」</td><td class="py-1 px-2">T-011 の残課題③（引き継ぎ歓迎と書いてよいか）も公開済みの事実</td></tr>
+        <tr class="border-b bg-rose-50"><td class="py-1 px-2"><span class="font-mono">?p=5838</span>「SSL証明書の３つの型『ドメイン認証型（DV）』『実在証明型（OV）』『EV認証』を知っておこう。」（2018年6月22日・T-011 の SSL の章が「詳しくは」で送る先）</td><td class="py-1 px-2">計約145表示・26〜38位・<strong>クリック0</strong>（「ssl 証明 書 dv ov ev」46・「ドメイン 認証 型 ssl」40・「ssl ev dv」26・「dv 証明書」13）</td><td class="py-1 px-2">①<strong>「『EV認証』ではアドレスバーに企業の名前まで出てくるので安心ですね」</strong>＋「こんなアドレスバー見たことありませんか？」の画像 ②「ドメイン認証型については無料で発行してもらえるサービスも<u>出てきています</u>…いずれなるでしょう」＝2018年時点の見通しのまま</td><td class="py-1 px-2"><span class="font-mono">B-087</span></td></tr>
+        <tr class="border-b"><td class="py-1 px-2"><span class="font-mono">?p=101</span>「URLとはドメイン上のファイルを指定しているだけ。ドメインとURLの関係を見てみる。」（2010年）</td><td class="py-1 px-2">「ドメイン url」ほか3表示</td><td class="py-1 px-2">ドメインと URL の構造の話＝T-011（公開に何がいるか・いくらか）とは別の問い</td><td class="py-1 px-2">対象外</td></tr>
+        <tr class="border-b"><td class="py-1 px-2"><span class="font-mono">?p=17</span>「ホームページの維持費はいくらくらいかかるのか？」</td><td class="py-1 px-2">「ホームページ 維持費」11表示・81.7位ほか計16表示</td><td class="py-1 px-2">C098 で照合済み（T-006 側で使用）。T-011 からはリンクしていない</td><td class="py-1 px-2">変更なし</td></tr>
+        <tr><td class="py-1 px-2">完成原稿 <span class="font-mono">T-011</span>（ローカル・WP未投入）</td><td class="py-1 px-2">—</td><td class="py-1 px-2"><span class="font-mono">【要・</span> は3か所＝冒頭の説明コメント1＋本文2（<u>どれも HTMLコメント内＝読者には見えない</u>）。本文の2つ＝FAQ「誰のものになりますか」の後（名義・引き継ぎの方針）／まとめの CTA（①代行の範囲 ②維持費をまとめて管理するプランの有無）。リンク＝<span class="font-mono">/price/</span>×1・<span class="font-mono">/beginner/cost.html</span>・<span class="font-mono">/beginner/consult.html</span>・<span class="font-mono">?p=5838</span>・<span class="font-mono">?p=5050</span>×2・<span class="font-mono">?p=77</span>・<span class="font-mono">/works/</span>・<span class="font-mono">/contact/normal/</span>。金額は「世間一般の目安の幅」だけで、自社の金額は無し</td><td class="py-1 px-2"><span class="font-mono">T-011</span> 改訂</td></tr>
+      </tbody>
+    </table>
+    <p class="mb-2"><strong>ブログにとっての意味</strong>：T-011 の本文は2か所で「代行してよいと書けるか」「まとめて管理するプランはあるか」を社長に確認待ちにしていましたが、<strong>どちらも自社の公開ページが既に答えています</strong>（契約代行＝月額の管理費あり／自分で契約すれば完全納品＝月額なし・制作は可能）。社長にお聞きする必要はありません。残るのは「代行したときのドメインの名義はお客様か」だけで、これは公開ページに無い＝<u>本文は一般論のまま・コメントで残す</u>（任意・無くても公開できます）。同じテーマの自社<u>ブログ記事</u>は無く、<span class="font-mono">/beginner/cost.html</span> とは 7/20 の設計どおり「全体像（記事）／費用のページ（サイト）」で分けられています＝<strong>新しいURLで出してよい記事です</strong>。</p>
+    <p class="mb-2">もう1つ：T-011 が SSL の詳しい話を任せている <span class="font-mono">?p=5838</span> は、<strong>「EV認証ならアドレスバーに企業名が出る」と画像つきで説明しています</strong>。一般に公表されているとおり、主要ブラウザ（Chrome・Firefox）は 2019年にこの表示をやめています（現在は鍵マークから証明書の詳細を開いて確認する形）。新しい記事から「詳しくはこちら」で送る先が古いままだと、送った側の記事の信頼も削ります。→ <span class="font-mono">B-087</span>。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：①出会う〜③依頼の手前（初めて会社のサイトを持つ人・「何をそろえて、毎年いくらかかるか」）。<strong>規模</strong>：GSC に見えている関連語は90日で計30表示に届かず、クリック0。上位10（9/20 hp-serp）は <strong>サーバー・ドメインの事業者（GMO・さくら・エックスサーバー・ロリポップ・バリュードメイン ほか）と freee・マネーフォワード・STUDIO</strong>＝推測：自社サービスへの申し込みを勧める側の記事が大半。制作会社が書ける差は「<u>制作会社に任せるときの2つの形（代行／完全納品）と、名義・引き継ぎ</u>」で、T-011 は名義の章を既に持っています。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝status=draft（投入 8/17 から35日目）</strong>。タイトル未変更（9/20 <span class="font-mono">wp-draft.py get</span>）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝WP本文に残存（67日目）</strong>。</li>
+      <li><strong>料金ページ <span class="font-mono">/price/basic.html</span></strong>＝GSC に新しい日が無いため C098 の数字のまま（9/10〜9/16「料金表」20.6位／「料金」22.5位・5週目）。</li>
+      <li><span class="font-mono">Q-011</span>＝14日目・未回答。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-087</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-087</span>　<span class="font-mono">?p=5838</span>（SSL証明書の3つの型）の、今は当てはまらない2段落を直す　🟢　<span class="text-xs font-normal">（🔒 WP書き込みは保留解除後・差分作りは今から）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=5838</span>（2018年6月22日・公開中）</li>
+      <li><strong>観点</strong>：鮮度・信頼（新しい記事 T-011 の「詳しくは」の行き先）</li>
+      <li><strong>観察</strong>：①EV認証の段で「アドレスバーに企業の名前まで出てくるので安心ですね」＋アドレスバーの画像（9/20 公開ページの本文テキストで確認）。②DV の段で「無料で発行してもらえるサービスも出てきています」「いずれなるでしょう」＝将来の見通しとして書かれている。③記事の結論（一般的なサイトは DV で十分／暗号の強さは3つとも同じ）は T-011 の SSL の章と同じで、<u>今も正しい</u>。④GSC 90日＝計約145表示・26〜38位・クリック0。</li>
+      <li><strong>なぜ問題か</strong>：①は現在のブラウザでは見られない表示です（一般に公表された変更＝Chrome・Firefox とも 2019年）。EV を検討している読者が「企業名が出るなら」と判断材料にすると誤ります。②は既に実現していることを予言として書いているので、記事全体が古く見えます。T-011 が公開されると、そこからこの記事へ読者を送ることになります（推測：送った先が古いと、T-011 の信頼も一緒に下がる）。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        <ol class="list-decimal list-inside ml-4">
+          <li><strong>EV の段</strong>：「アドレスバーに企業の名前まで出てくる」を「以前はアドレスバーに企業名が表示されていましたが、現在の主要ブラウザでは表示されず、鍵マークから証明書の詳細を開くと確認できます」の趣旨に。画像は外すか「以前の表示例」と添える。<span class="text-gray-600">執筆担当は<u>ブラウザ提供元の公表で年とバージョンを確かめてから</u>書く（私の側は一般知識＝一次資料は未確認）。</span></li>
+          <li><strong>DV の段</strong>：「無料で発行してもらえるサービスも出てきています…いずれなるでしょう」を「現在はレンタルサーバーに付属する無料SSLが一般的です」の趣旨に（T-011 の FAQ「SSLは無料のものでいいのでしょうか？」と同じ言い方にそろえる）。</li>
+          <li><strong>触らないもの</strong>：タイトル・説明文・3つの型の説明の骨格・結論（<span class="font-mono">B-051</span> の線引き＝表示は保たれている面の文言修理はしない）。</li>
+          <li><strong>T-011 公開後</strong>：記事の末尾に「ドメイン・サーバーも含めた全体像と維持費は」＋T-011 へのリンク1行。<span class="text-gray-600">公開前は何もしない。</span></li>
+        </ol>
+      </li>
+      <li><strong>効果</strong>：クリック換算＝<strong>ほぼ0</strong>（26〜38位・クリック0）／<strong>買い手換算＝推測で年1件未満</strong>。価値は「T-011 から送る先の事実を正しくする」こと。<strong>工数</strong>：2段落の差し替え＝5分（WP画面）。<strong>優先度</strong>：🟢（年1件未満＝🔴に置きません・B-079）。<strong>栓</strong>：WPへの書き込みは 🔒 保留解除後／差分作りは今から（blog-improve のローカル）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-011</span> C099 改訂版）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-011</span>（C099 改訂版）　「ホームページ公開に必要なもの一式｜ドメイン・サーバー・SSLの基礎と維持費の内訳」＝<u>自社の公開ページにある「任せ方の2つの形」を使う版</u>　優先度 据え置き　<span class="text-xs font-normal">（完成原稿は <span class="font-mono">site/drafts/blog/ycom/T-011_body.html</span>・原文は残したまま差分で）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>改訂の要点（完成原稿への差分）</strong>：①まとめの CTA の <span class="font-mono">【要・社長確認】</span>（代行の範囲・まとめて管理するプラン）を<u>公開ページの事実で解消して削除</u> ②h2「自分で全部そろえる？制作会社にまとめて任せる？」に h3 を1本足す（下の🆕）③リンク先 <span class="font-mono">/price/</span> → <span class="font-mono">/price/basic.html</span>（<span class="font-mono">B-054</span>・T-006／T-007 と同じ理由）④FAQ「誰のものになりますか」の後のコメント（名義の方針）は<u>残す</u>＝公開ページに無い事実 ⑤<u>自社の金額は本文に書き写さない</u>（<span class="font-mono">Q-002</span>② の回答まで・T-006／T-007 と同じ既定）。<strong>社長への質問は増えません。</strong></p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：初めて会社のホームページを持つ／作り直す、中小企業の経営者・担当者。「何をそろえて、毎年いくらかかるのか」が分からない人（完成原稿と同じ）。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：知りたい〜比べたい＝「ホームページ 維持費 ドメイン サーバー」「ホームページ 公開 必要なもの」「サーバー 管理 代行 費用」。<strong>競合</strong>（9/20 hp-serp 上位10）＝サーバー・ドメイン事業者と会計大手の「維持費の内訳と相場」型。推測：差がつくのは「制作会社に任せるときの形と、名義・引き継ぎ」＝事業者側の記事が書かない部分。</li>
+      <li><strong>タイトル案</strong>：完成原稿のまま（地名は入っていない）。</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）<span class="font-normal text-emerald-800">　🆕＝C099 で変えたところ／無印＝完成原稿のまま</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　ホームページ公開に必要なもの一式（全体像）</strong></li>
+      <li><strong>h2　ドメインとは？</strong>（h3 費用／失敗しないための注意点＝名義）</li>
+      <li><strong>h2　サーバーとは？</strong>（h3 サーバーの管理は誰がやる？）</li>
+      <li><strong>h2　SSLとは？</strong>（h3 SSL証明書の種類＝DV/OV/EV の表・<span class="font-mono">?p=5838</span> へのリンクはそのまま。<u>EV で企業名が出るとは書いていない</u>＝本文は正しい）</li>
+      <li><strong>h2　まとめると：ホームページの「維持費」はこう考える</strong>（表・<span class="text-emerald-800">🆕 <span class="font-mono">/beginner/cost.html</span> への案内はそのまま</span>）</li>
+      <li><strong>h2　自分で全部そろえる？ 制作会社にまとめて任せる？</strong>（比較表のまま）
+        <ul class="list-[circle] list-inside ml-4">
+          <li class="text-emerald-800">h3　🆕 制作会社に任せるときは「2つの形」がある　― ①<strong>契約・更新ごと代行してもらう</strong>（窓口が一本になる・月額の管理費がかかる・名義を確認する）②<strong>自社で契約して、制作だけ頼む</strong>（月額の管理費なし・契約した情報を制作会社に渡せば制作できる・更新や障害対応は自社）。どちらを選ぶかの目安は比較表の「かけられる手間」「トラブル時に誰が動くか」。<strong>自社の例</strong>＝「YCOMでも、初めての方向けの契約代行と、ご自身で契約いただく完全納品の両方を選べます」＋ <span class="font-mono">/beginner/cost.html</span>・<span class="font-mono">/price/basic.html</span> へリンク（<u>金額は書き写さない</u>）</li>
+        </ul>
+      </li>
+      <li><strong>h2　よくある質問</strong>（4問のまま。「誰のものになりますか」の後の名義コメントは残す）</li>
+      <li><strong>h2　まとめ</strong>　― <span class="text-emerald-800">🆕 CTA の本文を公開ページの事実で確定</span>：「初めての方には、ドメイン・サーバーの契約の代行からお受けしています。ご自身で契約いただいて、制作だけのご依頼も可能です。他社で作ったホームページの引き継ぎもご相談ください」の趣旨（出典＝<span class="font-mono">/beginner/cost.html</span>・<span class="font-mono">/price/basic.html</span>）。<span class="font-mono">【要・社長確認】</span> コメントは削除。</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="text-emerald-800">🆕 <span class="font-mono">/price/</span> → <span class="font-mono">/price/basic.html</span>／h3🆕 から <span class="font-mono">/beginner/cost.html</span>・<span class="font-mono">/price/basic.html</span></span>／そのまま＝<span class="font-mono">/beginner/cost.html</span>（維持費の章）・<span class="font-mono">?p=5838</span>・<span class="font-mono">?p=5050</span>・<span class="font-mono">?p=77</span>・<span class="font-mono">/works/</span>・<span class="font-mono">/contact/normal/</span>・<span class="font-mono">/beginner/consult.html</span>（<span class="font-mono">Q-009</span> の回答が出たら本命の扉へ）。未公開記事（T-003・T-006）へのコメントはそのまま。</li>
+      <li><strong>器</strong>：<u>新しいURLで公開</u>（同じテーマの自社ブログ記事は無い＝T-007／T-042 のような書き直しにしない）。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：無し。任意＝代行したときのドメインの名義（お客様名義で取るか）＝お答えがあれば FAQ を具体化できますが、無くても成立します。</li>
+      <li><strong>効果</strong>：クリック換算＝<strong>小</strong>（上位は事業者と大手媒体・GSC に見えている関連語は90日で計30表示未満・クリック0）／<strong>買い手換算＝推測で年1件未満</strong>。ただし「代行（月額の管理費）」は継続収益の入口です（推測）。<strong>工数</strong>：小（h3 1本・CTA の差し替え・リンク1か所）。<strong>優先度</strong>：据え置き（完成在庫の順番は変えません＝8365 → T-007 → 以下）。</li>
+      <li class="text-emerald-800"><strong>栓：なし</strong>／WP への投入は保留解除後かつ 8365 の公開後。<strong>ローカルの差分作りは今からできます</strong>（✍️ 執筆担当への指示に追加）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-20）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 14日目・未回答。<strong>本日の新規質問はゼロ</strong>（T-011 の金額の扱いは T-006・T-007 と同じ既定）。</li>
+      <li><strong>執筆担当（blog-improve / blog-write）からの新しい申し送り</strong>：9/14 以降なし。次回起動は 9/21（月）。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>完成在庫の照合（K-831）の進み</strong>：T-042（C096）・T-007（C097）・T-006（C098）・T-011（本日）＝4本済み。残り＝<span class="font-mono">T-008</span>（ピラー）と、事実待ちの T-002・T-003・T-004。</li>
+      <li><strong>道具</strong>：一時ファイルは <span class="font-mono">data/blog-loop/cycles/ycom/</span> に置きました（<span class="font-mono">/tmp</span> 不可のまま）。index からアーカイブへの退避は、スクリプト実行が承認待ちのため <span class="font-mono">sed -n</span>・<span class="font-mono">head</span>・<span class="font-mono">tail</span> で行を切り出して組み立てました（行数を突き合わせて確認済み）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 098 の本文を<a href="archive.html#c098" class="underline">アーカイブへ退避</a>（原文無改変）→ index から削除。</li>
+      <li><strong>配信</strong>＝web-hanasaka へ1通（<span class="font-mono">M-20260920T050719-blog-loop-ycom-9a14dc</span>・type report・作用付きの依頼は含めず）。Slack 日報＝投稿済み。</li>
+      <li><strong>自己改善（Step 7）</strong>：学び＝完成原稿の <span class="font-mono">【要・社長確認】</span> は、書いた時点で公開ページに答えが無くても<u>後から公開ページ側が答えている</u>ことがある（T-007・T-011 の2例）。照合の手順に「残課題の問いを、料金・よくある質問のページの文言で1つずつ引く」を足すと、社長への質問を増やさずに済みます（skill-kaizen <span class="font-mono">K-843</span>）。</li>
+    </ul>
+  </div>
 
   <!-- ===== 📦 Cycle 098（2026-09-19）＝ Cycle 099（2026-09-20）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c098">Cycle 098 — 2026-09-19（YCOM ブログ・日次）：<span class="text-rose-700">自社サイトの2ページで、運用費の金額が違っています＝「月額1.5万円〜・平均3万円」と「月額3,000円／1万円／3万円／5万円」</span>／<span class="text-emerald-800">完成原稿 T-006（運用・保守）を公開前に照合＝同じテーマの自社記事は無し・リンク先の直しと h3 2本で済みます</span></h2>
