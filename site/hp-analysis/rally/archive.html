@@ -30,6 +30,23 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== Cycle 054（Cycle 053 追補）の記録（Cycle 055 のローテで移動・2026-09-21） ===== -->
+  <div class="border-4 border-rose-600 bg-rose-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-rose-800 mb-2">🔑 <span class="underline decoration-2">追補（2026-09-20 11:14・Cycle 054）＝登録完了は「0件」ではありません。9/18・9/19 に各1件、<u>別の人</u>で発生しています</span></h2>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-rose-500 rounded p-2"><strong class="text-rose-800">経緯</strong>＝本日 11:08、開発担当（rally-dev）から「<strong>旧システムから移行した古いアカウントを削除してよいか判断したいので、登録イベントの現在値がほしい</strong>」という依頼が届きました。先方は「<u>新規登録がまだ1人もいないなら、古いアカウントを消しても失うものが少ない</u>」という前提で、<strong>不可逆な削除</strong>を検討されていました。<br><strong class="text-rose-800">実測の結果、その前提は成り立ちません。</strong>GA4 を引き直したところ <strong>9/18 に1件・9/19 に1件＝計2件</strong>（別ユーザー）の登録完了が記録されていました。<u>削除の前に必ず確認いただくよう、根拠つきで返信済みです。</u></p>
+    <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-200 bg-gray-50"><td class="py-1 px-2 w-56"><strong>2026-09-01〜09-19 の実測</strong></td><td class="py-1 px-2"><strong>値</strong></td></tr>
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 px-2">登録完了（<code>sign_up</code>）</td><td class="py-1 px-2"><strong class="text-rose-800">計2件／2人</strong>（9/18 に1件・9/19 に1件。9/1〜9/17 は 0件）</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2">スタンプ取得（<code>stamp_get</code>）</td><td class="py-1 px-2">計12件／3人＝<strong>9/6</strong> 7件（安養寺・八角堂・円福寺＝すべて枚方市周辺／1人）・<strong>9/10〜9/12</strong> 2件（パナソニック スタジアム 吹田／2人）・<strong class="text-emerald-800">9/19 3件（徳島城博物館2・旧徳島城表御殿庭園1／2人）</strong></td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2">全体</td><td class="py-1 px-2">ユーザー 119／セッション開始 161／初回訪問 109／イベント 1,036</td></tr>
+        <tr><td class="py-1 px-2">9/19（当窓で最大の日）</td><td class="py-1 px-2">初回訪問 23・セッション開始 33・着地ページ 17面に分散（都道府県ページを含む）＝<u>検索からの自然流入の形</u></td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-800 mb-2 bg-white border border-gray-300 rounded p-2"><strong>🚦 先方にお伝えした「止めてください」の理由は2つ</strong><br><strong>①</strong> 登録完了は 0件ではない（上表）。<br><strong>②</strong> <strong class="text-rose-800">GA4 は 9/5 以前の登録を1件も測れていません</strong>＝GTM の公開が 9/6 で、それ以前は計測タグ自体が配信されていませんでした（6/27〜9/5 の61日分を実査＝<code>sign_up</code>・<code>stamp_get</code> とも1件も存在しない）。<u>「GA4 で0件」は「登録が無かった」ではなく「測っていなかった」</u>です。<br><strong class="text-emerald-800">③ 確実な決着の付け方も添えました</strong>＝<code>sign_up</code> が発火しているのは<strong>メール認証の完了ページ</strong>なので、発火している以上アカウントは DB に実在します。<strong>DB で <code>created_at</code> が 9/18・9/19 の行を引けば、その2件が旧アカウント由来か新規かが一意に分かります</strong>（当方の推測を待つ必要はありません）。</p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>この2件が本物か、動作確認かは当方からは断定できません</strong>（確度：低）。一方で <strong class="text-emerald-800">9/19 の徳島のスタンプ3件（2人）は、動作確認とは考えにくい</strong>と見ています（確度：中）＝これまでテストが疑われた枚方・吹田から離れた土地で、同じ日の着地が17面に分散しているため。<span class="text-gray-600">※ただし GA4 の地域データには徳島県が出ていません（携帯回線では珍しくありませんが、裏は取れていません）。</span><br><strong>📌 社長にお願いすることは増えていません</strong>（新しい質問 0件・新しい提案 0件）。<span class="text-gray-600">開発側が DB を確認されるまで、削除は行われない見込みです。念のためお耳に入れておきます。</span></p>
+  </div>
+
   <!-- ===== ✅ 解決済みの質問（Cycle 053・2026-09-20） ===== -->
   <section class="mb-10 border-l-4 border-emerald-400 pl-4">
     <h2 class="text-xl font-bold mb-1">✅ Q-R18 決着（2026-09-20・Cycle 053）— 効果の判定日を 9/13 → 9/20 へずらすか</h2>

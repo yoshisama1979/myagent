@@ -5,6 +5,10 @@
 > 初版＝2026-08-19（C024）。C021 以前の詳細ナラティブは掲示板 `site/hp-analysis/rally/archive.html` にも各サイクルのスナップショットがある。
 
 
+## C055 のローテで押し出したもの（2026-09-21）＝全文は [coverage-snapshot-c053.md](coverage-snapshot-c053.md)
+
+- **サイクル履歴**：C052 の全文＝スナップショットの `- **C052（2026-09-17` 行（台帳側は1行の要点＋参照に置換）。
+
 ## C052 のローテで押し出したもの（2026-09-17）＝全文は [coverage-snapshot-c051.md](coverage-snapshot-c051.md)
 
 > ローテ直前（99,394B）の `coverage.md` をそのまま保存（改変なし）。索引だけを残す。
