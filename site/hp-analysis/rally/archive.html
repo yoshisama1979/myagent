@@ -30,6 +30,18 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== ✅ 完了した提案（Cycle 056・2026-09-23） ===== -->
+  <section class="mb-8 border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5">
+    <h2 class="text-xl font-bold text-emerald-800 mb-1">✅ R-R22 完了（2026-09-22 本番反映・2026-09-23 Cycle 056 で実測確認）— 検索から着地するページに「参加する」入口を置く</h2>
+    <p class="text-sm text-gray-800">8月の起票 → 9/13 に着手推奨1位へ繰り上げ → <strong>9/22 に開発担当（rally-dev）が本番反映</strong>。当方の確認（9/23 00:4x）＝<strong>スポット詳細 <code>/spots/507</code>（兼六園）・テーマ詳細 <code>/spots/themes/nihon-sanmeien</code> の両方で、見出し直下に「〈名前〉のスタンプを集めませんか」＋「登録は無料・メールアドレスだけ」＋メール入力欄＋「無料ではじめる」</strong>が PC・スマホとも最初の画面に出ることをスクリーンショットで確認。改善案②（文言にスポット名と「スタンプ」）も反映。<br><span class="text-gray-600">注＝入口は描画後に出る（配信HTMLの <code>&lt;a href="/register"&gt;</code> は0本のまま）。スマホ画面で浮動ボタン「近くのスポットを探す」が送信ボタンに重なって写るが、当方の撮影方法では固定要素の位置を正しく判定できない（K-624）ため実機確認を依頼。</span><br><strong>効果検証</strong>＝GA4 のトップ以外に着地した訪問の <code>form_start</code>・<code>sign_up</code>（基準＝9/6〜9/12 で着地27回・登録0／9/18〜9/21 は登録4件＝反映前）。定点＝2026-10-04 頃。</p>
+  </section>
+
+  <!-- ===== Cycle 055（反応・追補）／Cycle 053 の判定ブロック・本体（Cycle 056 のローテで移動・2026-09-23） ===== -->
+  <section class="mb-8 border border-gray-300 bg-white rounded-lg p-5">
+    <h2 class="text-xl font-bold mb-1">Cycle 055（9/21 16:58・反応）／Cycle 053（9/20 04:0x）の記録</h2>
+    <p class="text-sm text-gray-700"><strong>全文はスナップショット <a href="index-snapshot-c055.html" class="text-blue-600 hover:underline">index-snapshot-c055.html</a></strong>（Cycle 056 のローテ直前の index をそのまま保存・消していません）。要点＝<strong>C055</strong>：開発側の依頼2点に実測で回答＝テーマ詳細は公開26面のうち21本が索引済み（未索引5本に技術障害なし）・都道府県名の検索語は4語・4表示と不足（土地の需要は「〈スポット名〉 スタンプ」で来る）・C049 の「5本以上」は下限値だったと自己訂正。<strong>C053</strong>：9/20 判定＝9/6 の工事は効いた（表示ページ 2本→149本・露出率 0.012%→0.90%・定点8件 0/8→1/8）／登録完了の初計測（9/18）はテスト疑いで保留／R-R44（計測URLに認証トークン）起票／清水寺ページの「2004年登録」誤マッチ＝他スポット欄の本文同居の初の実害。</p>
+  </section>
+
   <!-- ===== Cycle 054（Cycle 053 追補）の記録（Cycle 055 のローテで移動・2026-09-21） ===== -->
   <div class="border-4 border-rose-600 bg-rose-50 rounded-lg p-5 mb-6">
     <h2 class="text-xl font-bold text-rose-800 mb-2">🔑 <span class="underline decoration-2">追補（2026-09-20 11:14・Cycle 054）＝登録完了は「0件」ではありません。9/18・9/19 に各1件、<u>別の人</u>で発生しています</span></h2>
