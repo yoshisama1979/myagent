@@ -179,6 +179,130 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 101（2026-09-22）＝ Cycle 102（2026-09-23）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c101">Cycle 101 — 2026-09-22（YCOM ブログ・日次）：<span class="text-emerald-800">9/21 の週次起動で、執筆担当がローカルの差分7件を全部仕上げました＝保留が解けたら、すぐ送れるものが揃っています</span>／<span class="text-rose-700">そのうえで1つ減らす提案＝2か月レビュー待ちの下書き 8363（?p=5050 の全面リライト）は、完成原稿 T-008・T-011 と同じ論点を3本抱えている＝公開せずパークに</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-22）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日 9/18 → 9/19</strong>（1日分の新着）。9/08〜9/19＝クリック604・表示25,463・CTR2.37%・平均9.1位。個別＝ページ別28日・<span class="font-mono">?p=5819／5902／5872／4450</span>（90日）・「制作」「依頼」「外注」「作り方」「作成」「コピー」を含む語（28〜90日）・9月の「大阪」を含む語。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>WordPress</strong>（<span class="font-mono">wp-draft.py get</span>・読み取りのみ）＝<span class="font-mono">8365</span>（status）・<span class="font-mono">2117</span>（社内メモの有無）・<span class="font-mono">8363</span>（status・見出し）。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝<span class="font-mono">?p=5872</span>・<span class="font-mono">?p=4450</span>（本文テキスト）。競合＝<span class="font-mono">hp-serp.sh</span>「ホームページ 画像 無断転載 対策」。</li>
+      <li><strong>ローカルの完成原稿</strong>＝<span class="font-mono">T-008_body.html</span>・<span class="font-mono">T-011_body.html</span>（見出し）／<span class="font-mono">drafts-log.md</span>・<span class="font-mono">improve-log.md</span>（9/21 の作業記録）。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-emerald-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-emerald-800 mb-2">🧭 中心　9/21 の執筆担当の成果＝<u>保留が解けた日に送れる差分</u>が揃いました</h3>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="bg-gray-100 text-left"><th class="py-1 px-2">担当</th><th class="py-1 px-2">仕上がったもの（9/21・ローカルのみ・WP書き込みゼロ）</th><th class="py-1 px-2">私の側で確かめたこと／申し送りの反映</th></tr></thead>
+      <tbody>
+        <tr class="border-b"><td class="py-1 px-2">blog-write</td><td class="py-1 px-2"><span class="font-mono">T-008</span>・<span class="font-mono">T-011</span>・<span class="font-mono">T-006</span>・<span class="font-mono">T-007</span> の完成原稿を C097〜C100 の改訂版どおりに更新（ファイル更新 9/21 05:33〜05:41）</td><td class="py-1 px-2">T-008／T-011 の見出しを本日読み直し＝改訂版の構成どおり</td></tr>
+        <tr class="border-b"><td class="py-1 px-2">blog-improve</td><td class="py-1 px-2"><span class="font-mono">B-086①</span>（7585 の仮見出し）・<span class="font-mono">B-087</span>（5838 の SSL の古い2段落・年は Chrome 77＝2019年9月／Firefox 70＝2019年10月で裏取り）・<span class="font-mono">B-088</span>（5050 の切れたリンク2本と Amazon）</td><td class="py-1 px-2">申し送り2点を反映＝(a) <span class="font-mono">B-086</span>：説明文は本文冒頭の自動切り出し＝<u>h2 を直せば説明文も直る</u>（2手→1手）／(b) <span class="font-mono">B-088</span>：言語の一覧の古さは起票しない（年1件未満）。<strong>さらに「8363 を反映すれば B-088 は不要・どちらか一方」の選択肢</strong>＝下の <span class="font-mono">B-089</span> で私のおすすめを出しました</td></tr>
+      </tbody>
+    </table>
+    <p class="mb-2"><strong>ブログにとっての意味</strong>：保留が解けた日に社長（または Q-011 で決まる宛先）がやることは、<u>もう「作る」ではなく「送る・押す」だけ</u>です＝8365 の公開 → 用意済みの差分をWPへ。9/28 の週次起動でも新しくやることはありません。<strong>逆に言えば、公開が1本も動かない限り、ここから先に積むものは「在庫」になります</strong>。本日は既存の改善1件（うち中身は「やることを減らす」）と、在庫にしない前提の構成案1件だけにしました。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：変わらず ③依頼（料金）が詰まり＝<span class="font-mono">/price/basic.html</span> は28日（〜9/19）で「ホームページ制作 料金表」20.5位・207表示・「料金」22.7位・125表示・<strong>どちらもクリック0</strong>（8/21 の週の段差から7週目・戻らず）。その帯を受けるブログ記事は 0本＝<strong>8365 が1本目</strong>です。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝status=draft（投入 8/17 から37日目）</strong>。タイトル未変更（9/22 <span class="font-mono">wp-draft.py get</span>）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝WP本文に残存（69日目）</strong>。本日も <span class="font-mono">【要・社長確認</span> を1か所実測。28日（〜9/19）254クリック・5,966表示＝ブログ最多の記事。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝16日目・未回答。</li>
+      <li><span class="text-gray-600">参考（使わなかった観察）：「外注 ホームページ 大阪」は90日で57表示・4.2位だが<u>6/24〜7/31 に集中し 8月以降0</u>＝B-058 の見分けで根拠に使いません。9月の「〇〇 大阪」（wordpress 制作会社／運用代行／更新代行 等）も地名の総当たり型＝B-071 と同じ扱い。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-089</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-089</span>　<span class="font-mono">?p=5050</span> の全面リライト下書き 8363（<span class="font-mono">B-014</span>）は公開せずパーク＝5050 は B-088 の小さな直しだけで足ります　🟡　<span class="text-xs font-normal">（🟥 可否1行・既定 (a)・B-049 のまとめ1行に同梱可）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：WP下書き <span class="font-mono">8363</span>「【改善版｜元5050】初めてのホームページの作り方｜3つの方法・必要なもの・費用の全体像【2026年版】」（7/20 作成・9/22 も status=draft）／元記事 <span class="font-mono">https://y-com.info/contents/?p=5050</span>（公開中）</li>
+      <li><strong>観点</strong>：カニバリ（重複）／社長の作業量</li>
+      <li><strong>観察（9/22 実測）</strong>：
+        <table class="w-full text-xs border-collapse my-1">
+          <thead><tr class="bg-gray-100 text-left"><th class="py-1 px-2">8363 の h2（6本）</th><th class="py-1 px-2">同じ論点を持つ完成原稿</th></tr></thead>
+          <tbody>
+            <tr class="border-b"><td class="py-1 px-2">ホームページの作り方は大きく3ルート</td><td class="py-1 px-2">T-008 h2②「自分で作る？プロに依頼する？」（一部）</td></tr>
+            <tr class="border-b bg-amber-50"><td class="py-1 px-2">どのルートでも共通で必要なもの：サーバーとドメイン</td><td class="py-1 px-2"><strong>T-011</strong> h2①〜③（必要なもの一式・ドメイン・サーバー）</td></tr>
+            <tr class="border-b bg-amber-50"><td class="py-1 px-2">公開までの流れ（全体像）</td><td class="py-1 px-2"><strong>T-008</strong> h2①「まず全体像｜検討ステップ」＋自社 <span class="font-mono">/flow/</span></td></tr>
+            <tr class="border-b"><td class="py-1 px-2">自分でコードを書いて作りたい人向け：基礎知識の地図</td><td class="py-1 px-2">— ＝<u>いまの 5050 の本体と同じ役割</u>（C100 で T-008 から 5050 へ送る先として決めた部分）</td></tr>
+            <tr class="border-b bg-amber-50"><td class="py-1 px-2">自分で作る？制作会社に依頼する？（判断の目安）</td><td class="py-1 px-2"><strong>T-008</strong> h2②・下書き 8362（<span class="font-mono">?p=77</span> 改善版＝「そろそろプロに頼むべきか」）</td></tr>
+            <tr><td class="py-1 px-2">まとめ</td><td class="py-1 px-2">—</td></tr>
+          </tbody>
+        </table>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>GSC 90日＝5050 に来る「作り方」系は計5表示（「ホームページ 作り方 html」3・「…初心者」1・「ホームページ 作り方」1）・<strong>クリック0</strong>。5050 の表示の大半は「ホームページ 作成 java」12 など<u>自作の技術</u>の語。</li>
+          <li>8363 の起票（7/17 Q-001「周辺知識も書く」→ B-014）は、完成原稿 T-008（ピラー）・T-011（必要なもの一式）の公開前照合（C099・C100）より<u>前</u>。当時は重なりが見えていませんでした。</li>
+        </ul>
+      </li>
+      <li><strong>なぜ問題か</strong>：8363 を公開すると、<strong>「初めてのホームページの全体像」を名乗る記事が3本</strong>（8363・T-008・T-011）になり、同じ読者を取り合います（推測：検索エンジンがどれを出すか迷い、どれも上がらない型）。さらに、C100 で T-008 の h2② は「自作の道具・技術は 5050 へ」と送る設計にしました＝5050 が全体像の記事に変わると、その送り先が消えます。<u>社長にとっては、2か月見比べていただけていない下書きを1本、リストから外せる</u>ことが一番の効き目です。</li>
+      <li><strong>改善案</strong>：
+        <ol class="list-decimal list-inside ml-4">
+          <li><strong>(a) 既定＝8363 はパーク</strong>（公開しない・<u>削除もしない</u>）。5050 は<u>いまの役割（自作の技術の地図）のまま</u> <span class="font-mono">B-088</span> の差分（9/21 完成・5分）だけを保留解除後に。</li>
+          <li>8363 の中で 5050 の役割と一致する h2「自分でコードを書いて作りたい人向け：基礎知識の地図」は、将来 5050 を直すときの材料として残す（B-032 と同じ「本文のリライト」扱い・起票はしません）。</li>
+          <li><strong>(b)</strong> 8363 を生かす場合は、3ルート・サーバー/ドメイン・公開までの流れ・判断の目安の4章を削って「自作の技術の地図」に絞り直す＝実質 5050 と同じものになるため、おすすめしません。</li>
+          <li><strong>触らないもの</strong>：5050 のタイトル・説明文・技術解説（B-051・B-088 と同じ線引き）。</li>
+        </ol>
+      </li>
+      <li><strong>効果</strong>：クリック換算＝±0（どちらを選んでも「作り方」系の需要は90日5表示）／<strong>買い手換算＝年1件未満</strong>。価値は<strong>社長のレビュー1件の削減</strong>と、T-008・T-011 の取り合い予防。<strong>工数</strong>：ゼロ（何もしない判断）。<strong>優先度</strong>：🟡（年1件未満のため🔴に置かない＝B-079）。<strong>栓</strong>：🟥 可否1行（「B-049 まとめてOK」に同梱可）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-051</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-051</span>　「サイトの画像や文章、コピーされないようにできる？——右クリック禁止が効かない理由と、運営者が本当にやること」　🟢　<span class="text-xs font-normal">（器＝<span class="font-mono">?p=5872</span> の書き直し・既定 (a)／<strong>執筆は publish が動いてから＝在庫を積まない</strong>）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜこのテーマか（観察）</strong>：<span class="font-mono">?p=5872</span>「右クリック禁止！ホームページの画像もテキストもコピーできなくするための対応方法いろいろ。」（公開中）は、GSC 90日で<strong>「右クリック禁止 なぜ」60表示・3.9〜6.7位・クリック0</strong>（6/24〜8/07＝28表示・3.9位／8/08〜9/19＝32表示・6.7位＝期間に散っている＝人の検索・B-058 の見分けに合格）。<u>1ページ目の上のほうに出ているのに1回も押されていない</u>。題は「方法」、読者の問いは「なぜ」＝題が問いに答えていません。一方で<strong>本文の結論は既に「なぜ」への答え</strong>（「コピーを全くできなくするのは無理」「右クリック禁止は使い勝手を損なう」「お客様から頼まれることがたまにある」）で、姉妹記事 <span class="font-mono">?p=4450</span>（2017年・代表）には<strong>実際にお客様の取引先から「コピーガードしてほしい」と頼まれ、右クリック禁止でなく背景画像で対応した経緯</strong>が書かれています＝<u>他社が書けない一次情報</u>。競合（hp-serp「ホームページ 画像 無断転載 対策」）の上位には制作会社のコラムが3社（merci-design・rakuraku-edit・finepros）＝制作会社が書く題材として成立しています。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：①「右クリック禁止のサイト、なぜ？」と思った閲覧者（量はこちら）②<strong>自社サイトの写真・文章を勝手に使われたくない会社の担当者</strong>（制作を頼むとき・頼んだあとに実際に出る要望＝5872・4450 の経験）。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：「右クリック禁止 なぜ」（知りたい）を正面から。周辺＝「右クリック禁止 画像保存」「右クリックできないサイト」。<u>「コピーする方法」は書かない</u>（運営者側の記事にする）。</li>
+      <li><strong>タイトル案</strong>：「右クリック禁止のサイトはなぜある？——画像や文章は守れるのか、制作会社の答え」／副案「ホームページの画像をコピーされたくない——右クリック禁止が効かない理由と、代わりにやること」</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　結論：右クリック禁止で、画像や文章は守れません</strong>（冒頭で答える＝題の問いへの即答）
+        <ul class="list-[circle] list-inside ml-4"><li>ブラウザのメニュー・開発者ツール・画面の撮影で取れる（5872 本文の結論をそのまま・言い回しだけ整える）</li></ul></li>
+      <li><strong>h2　それでもサイトが右クリックを禁止する理由</strong>
+        <ul class="list-[circle] list-inside ml-4"><li>h3 写真・イラストを守りたい（撮影費をかけた写真・作品）</li><li>h3 取引先や撮影したカメラマンから求められる<span class="text-gray-600">（4450 の実例＝お客様のさらに先のお客様から一言。<u>事実は 4450 に書いてある範囲だけ</u>・社名や業種は足さない）</span></li><li>h3 「禁止されていること」を見せて抑止したい</li></ul></li>
+      <li><strong>h2　右クリック禁止のデメリット＝困るのは、悪意のない読者</strong>
+        <ul class="list-[circle] list-inside ml-4"><li>印刷・お気に入り・翻訳など右クリックの便利な機能まで消える／スマホでは長押し／警告を出すと「犯人扱い」の印象（4450 の「気分が悪い」）</li></ul></li>
+      <li><strong>h2　運営者が本当にやること（守る・見つける・対処する）</strong>
+        <ul class="list-[circle] list-inside ml-4"><li>h3 載せる前に：解像度を必要なぶんだけにする・透かし（ウォーターマーク）・背景画像で表示する（4450 の方法＝「もどき」であることも正直に）</li><li>h3 載せるときに：著作権の表示と、使ってよい範囲（引用・転載の条件）をサイトに書いておく</li><li>h3 見つけたら：画像検索で探す／まず連絡、応じなければ削除の申し立て<span class="text-gray-600">（法的な手続きは一般論まで・断定しない。詳しくは専門家へ）</span></li></ul></li>
+      <li><strong>h2　制作を頼むときに伝えておくこと</strong>（③への橋・短く）
+        <ul class="list-[circle] list-inside ml-4"><li>「どの写真を、誰から、どこまで守りたいか」を伝えると、使い勝手を落とさない方法を一緒に選べる</li><li>自社でも「右クリック禁止はおすすめしない」とお伝えしている（5872・4450 に既に書いてある立場）</li></ul></li>
+      <li><strong>h2　まとめ</strong>＝防ぐより「出す量を選ぶ・書いておく・見つけて対処する」</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">?p=4450</span>（背景画像で表示する方法＝技術の詳細）／<span class="font-mono">T-033</span>（フリー素材を載せる前に確かめる3つ・未公開＝公開後に）／買い手側は末尾に1本だけ＝<span class="font-mono">/service/</span>（Q-009 の回答後は本命の相談窓口へ）。</li>
+      <li><strong>CTA</strong>：「写真の見せ方・守り方もふくめてご相談ください」の1本（<span class="font-mono">B-066</span> の既存ブロックの流用で可）。</li>
+      <li><strong>器</strong>：<strong>(a) 既定＝新しいURLでなく <span class="font-mono">?p=5872</span> を書き直す</strong>（いまの順位 3.9〜6.7位を捨てない・T-042／T-007 と同じ扱い）。5872 のコード例（<span class="font-mono">oncontextmenu</span> 等）は「こう書けば禁止できるが、おすすめしない」の注記つきで1か所に残す。<span class="font-mono">4450</span> はそのまま（技術の詳細として送る先）。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：なし（5872・4450 に公開済みの立場と経験だけで書けます）。<span class="text-gray-600">あれば良いもの＝最近もお客様から同じ要望があったか（1行）。</span></li>
+      <li><strong>効果</strong>：クリック換算＝推測で月1〜3（60表示/90日のうち上位での CTR が数%に戻れば）／<strong>買い手換算＝年1件未満</strong>。価値は②信頼（「正直に止める制作会社」という見え方）。<strong>工数</strong>：中（既存本文の再構成）。<strong>優先度</strong>：🟢（年1件未満）。<strong>栓</strong>：なし／<strong>執筆は publish が1本動いてから</strong>（在庫を積まない）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-22）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 16日目・未回答。<strong>本日の新規質問はゼロ</strong>（B-089・T-051 の器はどちらも既定 (a) で進め、却下だけ1行で＝B-049 のまとめに同梱）。</li>
+      <li><strong>執筆担当</strong>：9/21 の週次起動で7件すべて完成（上の 🧭）。✍️ 欄を「9/28 はやることなし」に更新し、済んだ項目に ✅ を付けました。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>本日ぶんの新しい観察</strong>：8363 と完成原稿2本の見出しの重なり（B-089）／<span class="font-mono">?p=5872</span> の「なぜ」への不一致（T-051）。未検討だった上位記事 <span class="font-mono">?p=5819</span>（仕事の区切り）・<span class="font-mono">?p=5902</span>（暗い場所の撮影）は買い手でない読者＝B-061 の考え方で対象外。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 100 の本文を<a href="archive.html#c100" class="underline">アーカイブへ退避</a>（原文無改変・行数 6,316＋1＋121＝6,438 を確認）→ index から削除。index 内の <span class="font-mono">#c100</span> リンクは <span class="font-mono">archive.html#c100</span> に付け替えました。</li>
+      <li><strong>自己改善（Step 7）</strong>：学び＝<u>「改善版の下書き（B）」と「新規の完成原稿（T）」は別々の列で管理しているため、同じ論点を持っていても照合の網にかからない</u>。C096〜C100 の公開前照合は「新規原稿 × 公開中の記事・サイトのページ」だけで、<strong>「新規原稿 × 未公開の改善版下書き（8362・8363 等）」が抜けていた</strong>。照合の相手に「WP内の未公開の改善版下書き」を足す（skill-kaizen <span class="font-mono">K-858</span>）。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（<span class="font-mono">M-20260922T050832-blog-loop-ycom-e4a4be</span>・type=report・作用付きの依頼なし）／Slack 日報を投稿。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 100（2026-09-21）＝ Cycle 101（2026-09-22）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c100">Cycle 100 — 2026-09-21（YCOM ブログ・日次）：<span class="text-emerald-800">最後に残っていた完成原稿 T-008（総合ガイド）の照合が済みました＝社長にお聞きしていた「他社サイトの引き継ぎ」「対応エリア」は、自社サイトの料金ページと共通フッタに答えがありました</span>／<span class="text-rose-700">ただし T-008 は<u>いま公開してはいけない記事</u>です＝中の案内リンク7本が全部、まだ公開していない記事を指しています</span></h2>
 
