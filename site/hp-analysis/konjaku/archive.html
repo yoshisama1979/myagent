@@ -30,6 +30,85 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== ✅ 解決済みの質問 Q-J10（C044 で index から退避） ===== -->
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">✅ Q-J10 解決（2026-09-22・Cycle 044）— 開発担当（<code>konjaku-dev</code>）の受信箱</h2>
+    <div class="bg-white border border-emerald-300 rounded p-4 text-sm text-gray-800 space-y-2">
+      <p><strong>ご質問（9/6 起票・未回答16日目で解決）</strong>：開発担当が 8/29 以降、受信箱を一度も開いていない（最終時点で未受領11通・不通23日・本番反映ゼロ37日）。選択肢＝①開発機の <code>.env</code>（<code>MAILBOX_URL</code>／<code>MAILBOX_TOKEN</code>）をご確認 ②開発担当に「受信箱を確認して」とお声がけ ③いまは実装を止めていて構わない。</p>
+      <p><strong>解決の経緯</strong>：2026-09-22 14:32 に開発担当から受信確認（<code>M-20260922T143240-konjaku-dev-e4284c2c3123ad8c</code>）＝「8/28 の社長決定便から Cycle 043（9/21）まで konjaku-dev 宛 12通すべて受領・既読」。こちらの送信控え（<code>new/</code> の konjaku-dev 宛）も <strong>11通 → 0通</strong> を確認。</p>
+      <p><strong>原因（先方申告）</strong>：開発側マシンで受信箱を読む運用が回っていなかった。mailbox 自体は疎通していた。<strong>こちらの推測（8/29 と同じ <code>.env</code> の設定漏れ）は外れていた</strong>＝選択肢②に相当。再発防止＝先方が「以後はサイクル先頭で受信箱を確認する」。</p>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 043 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 043 — 2026-09-21（🔧 <span class="text-rose-800">前回お出しした「効果の合格ライン」が、実装ゼロのまま3日で外れました</span>＝5日間の測定では効果を判定できません／窓を長くして測り直し、判定に必要な期間を確定しました／🆕 新着投稿・コメント・PICK UP がすべて停止／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：<strong>GSC ✅ 取得</strong>（新 <span class="font-mono">.jp</span>＝<span class="font-mono">searchconsole_konjaku</span>／旧 <span class="font-mono">.com</span>＝<span class="font-mono">searchconsole_konjakucom</span>・窓 <strong>9/14〜9/18</strong>＋<strong>9/1〜9/18 の長い窓</strong>・データは3日遅れ）／<strong>本番ページ ✅ 取得</strong>（5URL）／<strong>スクショ ✅</strong>（トップ＋コメント一覧）。<strong>受信＝なし</strong>（<code>to: hp-loop-konjaku</code> は0件）。<strong><code>from-president.md</code> に新規のご指示はありません</strong>（最終＝9/2）。</p>
+
+    <div class="bg-amber-50 border-2 border-amber-500 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-amber-900 mb-2">① 🔧 前回（9/18）お出しした「合格ライン」は、<strong>本番を1行も変えていないのに3日で外れました</strong>＝5日間の測定は判定に使えません</p>
+      <p class="text-gray-800 mb-2">前回、私は「何も実装していない期間のふだんの揺れ幅」として<strong>都道府県 33〜50%</strong>という合格ラインをお出ししました。<strong>本日6回目を測ったところ、都道府県は 61.6% で、その幅の外へ出ました。</strong>本番のページは相変わらず<strong>8/16 から37日間、1バイトも変わっていません</strong>（本日も5つのURLで確認済み）。<strong>＝幅が広がったのではなく、5回の測定では幅そのものを決められなかった、というのが正しい読みです。</strong></p>
+      <table class="w-full text-xs border-collapse mb-2 bg-white">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">測った期間（各5日）</th><th class="py-1 pr-2 text-right">全体</th><th class="py-1 pr-2 text-right">都道府県ページ</th><th class="py-1 pr-2 text-right">個別写真ページ</th><th class="py-1 text-right">市区町村ページ</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200 text-gray-500"><td class="py-1 pr-2">8/30〜9/3</td><td class="py-1 pr-2 text-right">6.2%</td><td class="py-1 pr-2 text-right">50.0%</td><td class="py-1 pr-2 text-right">3.4%</td><td class="py-1 text-right">1.3%</td></tr>
+          <tr class="border-b border-gray-200 text-gray-500"><td class="py-1 pr-2">9/2〜9/6</td><td class="py-1 pr-2 text-right">5.4%</td><td class="py-1 pr-2 text-right">37.6%</td><td class="py-1 pr-2 text-right">2.8%</td><td class="py-1 text-right">0.8%</td></tr>
+          <tr class="border-b border-gray-200 text-gray-500"><td class="py-1 pr-2">9/4〜9/8</td><td class="py-1 pr-2 text-right">5.2%</td><td class="py-1 pr-2 text-right">34.0%</td><td class="py-1 pr-2 text-right">2.8%</td><td class="py-1 text-right">1.0%</td></tr>
+          <tr class="border-b border-gray-200 text-gray-500"><td class="py-1 pr-2">9/8〜9/12</td><td class="py-1 pr-2 text-right">6.5%</td><td class="py-1 pr-2 text-right">33.0%</td><td class="py-1 pr-2 text-right">5.5%</td><td class="py-1 text-right">0.5%</td></tr>
+          <tr class="border-b border-gray-200 text-gray-500"><td class="py-1 pr-2">9/11〜9/15（前回）</td><td class="py-1 pr-2 text-right">7.5%</td><td class="py-1 pr-2 text-right">48.7%</td><td class="py-1 pr-2 text-right">7.7%</td><td class="py-1 text-right">0.24%</td></tr>
+          <tr class="font-bold bg-rose-50"><td class="py-1 pr-2">9/14〜9/18（本日）</td><td class="py-1 pr-2 text-right">7.0%</td><td class="py-1 pr-2 text-right text-rose-800">61.6% ←幅の外</td><td class="py-1 pr-2 text-right">4.7%</td><td class="py-1 text-right">1.2%</td></tr>
+          <tr class="bg-gray-100 text-xs"><td class="py-1 pr-2">6回の幅</td><td class="py-1 pr-2 text-right">5.2〜7.5%</td><td class="py-1 pr-2 text-right"><strong>33.0〜61.6%</strong></td><td class="py-1 pr-2 text-right">2.8〜7.7%</td><td class="py-1 text-right">0.24〜1.3%</td></tr>
+        </tbody>
+      </table>
+      <p class="text-xs text-gray-600 mb-2">※ 実数も併記します（5日間）＝都道府県は<strong>旧 73クリック → 新 45クリック</strong>（前回は旧78→新38）。割合が跳ねた主因は<strong>新サイトが増えた分より、旧サイトが減った分</strong>です。</p>
+      <p class="text-gray-800 bg-white border border-amber-400 rounded p-2"><strong class="text-amber-900">正直に申し上げます。前回「合格ラインが決まりました」と書いたのは早すぎました。</strong>5回分のデータで幅を決め、6回目でその幅を外したことになります。<strong>教訓＝短い窓で測った幅を、そのまま合否の基準にしてはいけない。</strong>そこで本日、<strong>「どれくらいの期間で測れば判定できるのか」を実測しました</strong>（次の②）。</p>
+    </div>
+
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-emerald-900 mb-2">② 🔑 本日の成果＝<strong>効果を判定するのに必要な期間が決まりました＝「最低2週間・差が10ポイント未満なら効いたと言わない」</strong></p>
+      <p class="text-gray-800 mb-2">同じデータを、窓の長さを変えて測り直しました（もっとも揺れの大きい都道府県ページで比較）。<strong>窓を長くすると、揺れは実際に小さくなります。</strong></p>
+      <table class="w-full text-xs border-collapse mb-2 bg-white">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">測り方</th><th class="py-1 pr-2">結果（都道府県の回収率）</th><th class="py-1">揺れ幅</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">5日間の窓 × 6本</td><td class="py-1 pr-2">33.0 / 34.0 / 37.6 / 48.7 / 50.0 / <strong>61.6</strong>%</td><td class="py-1 text-rose-800"><strong>28.6ポイント</strong>（約1.9倍）</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">9日間の窓 × 2本（重なりなし）</td><td class="py-1 pr-2">9/1〜9/9＝<strong>37.9%</strong>（旧182→新69）／9/10〜9/18＝<strong>50.0%</strong>（旧146→新73）</td><td class="py-1 text-amber-800"><strong>12.1ポイント</strong>（約1.3倍）</td></tr>
+          <tr class="bg-emerald-50"><td class="py-1 pr-2"><strong>18日間の窓 × 1本</strong></td><td class="py-1 pr-2">9/1〜9/18＝<strong>43.3%</strong>（旧328クリック→新142）</td><td class="py-1">（比較対象は10月に2本目が取れます）</td></tr>
+        </tbody>
+      </table>
+      <p class="text-gray-800 mb-2"><strong class="text-emerald-900">→ 以後の効果判定のルール（台帳に記録しました）</strong>：<strong>①301や固有タイトルを入れたあとの合否は、最低2週間の固定した期間で測る ②差が10ポイント未満なら「効いた」と書かない ③割合だけでなく新旧の実数を必ず併記する</strong>。<span class="text-xs text-gray-600">※ 検算＝9日窓2本の実数の合計（新69+73=142／旧182+146=328）が18日窓の実数と一致しています。集計は手作業のため、こうした突き合わせを入れています。</span></p>
+      <p class="text-xs text-gray-600"><strong>これが実務で意味すること</strong>＝301リダイレクトを打ったあと、<strong>3日後・1週間後の数字で「効いた／効かなかった」を判断してはいけません</strong>。2週間待ってから見ます。逆に<strong>実装した当日にその場で判定できるもの</strong>（301がちゃんと返るか・タイトルがURLごとに変わったか）は、待たずに確認します。</p>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">③ 揺れに左右されない根拠は、本日も不変です（ただし「約200倍」という言い方は訂正します）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-3">
+      <li><strong class="text-rose-800">水準＝検索の入口の 93% が、いまも旧サイトにあります</strong>（5日間で旧 <strong>1,047</strong>クリック 対 新 <strong>73</strong>）。<strong>6回の測定すべてで不変</strong>。18日間の長い窓でも同じ（旧 3,714 対 新 234＝6.3%）。</li>
+      <li><strong class="text-rose-800">順位はほぼ同じなのに、検索結果に出る回数が 17.6倍ちがいます</strong>（旧 6.2位／表示 17,769 対 新 7.3位／表示 1,011）＝<strong>新サイトが「下に沈んでいる」のではなく、そもそも出る機会を持っていません</strong>。順位を上げる施策では動かず、301で明示的に渡すしかありません。</li>
+      <li><strong>種類差＝固有タイトルを持つ都道府県ページだけが回収できている</strong>（本日 61.6% 対 市区町村 1.2%）。<span class="text-amber-900"><strong>🔧 訂正＝前回「約200倍」と申し上げた倍率は、窓の取り方で大きく動きます</strong>（本日の5日窓＝約52倍／18日の固定窓＝約48倍＝43.3% 対 0.90%）。<strong>向き（都道府県が桁違いに強い）は6回すべてで不変ですが、以後は倍率を言わず「桁が2つちがう」と書きます。</strong></span></li>
+    </ul>
+    <p class="text-sm text-gray-700 mb-3">→ <strong>R-J30（301の段階移行）・R-J24（固有タイトル）・R-J19（301本体）のご提案の中身・優先度・着手順は、本日も変わりません。</strong></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">④ サイトと連絡の定点＝<strong class="text-rose-800">本番37日不変に加えて、投稿・コメント・PICK UP もすべて止まりました</strong></h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+      <li><strong>本番ページ＝37日連続で変更ゼロ</strong>（8/16〜9/21）。5つのURLがバイト単位で前回と同一（トップ 27,079B／市区町村 18,179B＝タイトルはトップと同じまま／都道府県 23,035B＝「都道府県ID: 39の古い写真」のまま／存在しないID 999999 が 200 を返すまま／旧 <span class="font-mono">.com</span> 978,202B＝301なし）。</li>
+      <li><strong class="text-rose-800">🆕 投稿写真 17,799枚（±0）・登録ユーザー 6,841人（±0）</strong>。<strong>「最新の古写真」8枠も前回とまったく同じ顔ぶれ</strong>でした（前回・前々回は毎回すべて入れ替わっていました）。<span class="text-xs text-gray-600">※ ただし<strong>投稿ゼロ自体は初めてではありません</strong>＝9/15 も ±0、9/18 は +10 でした。<strong>まとめて登録される波があり、1回のゼロでは何も判断できません。</strong></span></li>
+      <li><strong class="text-rose-800">コメント 1,496件（±0）・最新コメントは 8/27 のまま＝25日間そのまま</strong>。この最新コメントが、例の<strong>「古写真の使用許可はどこへ問い合わせれば？」というお問い合わせ</strong>です（R-J12）。</li>
+      <li><strong>PICK UP も前回と同一</strong>（小諸駅前×2＋東大阪市立中央体育館）＝新着が無いので当然です。<strong>R-J27 の見立ては引き続き保留</strong>します（供給が止まっている期間に、表示ロジックの良し悪しは判定できません）。</li>
+      <li><strong class="text-rose-800">開発担当（<code>konjaku-dev</code>）は 8/29 以降つながらず 23日目・未受領 11通</strong>（前回から1通も減っていません＝受信箱は開かれていません）。</li>
+    </ul>
+    <p class="text-xs text-gray-600 mb-3">⚠️ <strong>この「止まった」を傾向として読むのは、本日①で反省したばかりの誤りです。</strong>過去3回は ±0 → +10 → ±0 と振れており、投稿はまとめて登録される波があります（8月には島根・熊本のまとめ登録がありました）。<strong>次の2〜3回の観測で続くようなら、あらためてご報告します。</strong>一方で<strong>コメントの停止（25日）は波では説明がつかず、R-J12 の実害として継続してご報告します。</strong></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑤ 新しいご提案はゼロ（意図的）</h3>
+    <p class="text-sm text-gray-700 mb-2">新規起票は「可」の状態（判断待ち 6／上限15）ですが、本日も見送りました。理由は<strong>在庫21件が23日間まるごと動いていない</strong>ためです。本日の成果は次の3つです。</p>
+    <ol class="list-decimal list-inside text-sm text-gray-700 space-y-1 mb-3">
+      <li><strong>自分が前回お出しした「合格ライン」を、実測で外れたと認めて撤回した</strong>（①）</li>
+      <li><strong>代わりに「どれくらいの期間で測れば判定できるか」を実測で確定した</strong>＝最低2週間・差10ポイント未満は効いたと言わない（②）＝<strong>301を打ったあと、効果を見誤らないための土台</strong></li>
+      <li><strong>在庫21件をすべて本日の本番取得で生存確認＝撤回0件</strong>。ただし<strong>根拠の言い方を1つ直しました</strong>（「約200倍」→「桁が2つちがう」・③）</li>
+    </ol>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑥ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">新規のご指示はありません（<code>from-president.md</code> 最終＝9/2 の「301の優先度を上げる／移行前の基準値を固定する」）。<strong>移行前の基準値は本日の窓（5日・18日の2種類）で更新し、あわせて②の判定ルールとセットで記録しました</strong>（対応：Cycle 043）。</p>
+  </section>
+
   <!-- ===== Cycle 040 スナップショット（C041 で index から退避） ===== -->
   <!-- ===== Cycle 040 ===== -->
   <!-- ===== Cycle 042 ===== -->
