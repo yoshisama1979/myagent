@@ -30,6 +30,41 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== ✅ 本番反映済みの提案 R-J20／R-J02（C046 で index から退避） ===== -->
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">✅ R-J20 完了／R-J02 タイトル分完了（2026-09-23 夜・Cycle 046）— ページごとのタイトル（R-J24 の最小形と同時）</h2>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+      <li><strong>R-J20（一覧・年代・都道府県ページの固有 title/description）＝✅完了</strong>。本番GET＝<span class="font-mono">/prefectures/39/old-photos</span>「広島県の古写真 | 今昔写語」（旧「都道府県ID: 39の古い写真」）・<span class="font-mono">/prefectures/13/old-photos</span>「茨城県の古写真…」・<span class="font-mono">/eras/meiji</span>「明治以前の古写真…」・<span class="font-mono">/cities/334/old-photos</span>「山形県 山形市の古写真…」（旧＝トップと同一）。description も各ページ固有。</li>
+      <li><strong>R-J02（個別比較ページの固有 title/meta/SSR）＝タイトル・meta 分は✅完了、残る本文のSSR化は R-J24 に一本化</strong>。本番GET＝<span class="font-mono">/old-photos/1000</span>「神戸海岸オリエンタルホテル（兵庫県） | 今昔写語」・<span class="font-mono">/old-photos/12337</span>「日立市本山小学校（茨城県） | …」（旧＝全件「古写真詳細」。12337 は「日立市 昔の写真」で1.0位・クリック0だったページ）。</li>
+      <li>開発担当の報告＝<code>M-20260923T192055-konjaku-dev-e271119a9e54bbe6</code>。<strong>本文は「読み込み中...」のまま＝SSR 化はしていない最小形</strong>。効果の判定は 9/24〜10/7 の14日固定窓（10/10 頃）で R-J24 の行で追跡。</li>
+    </ul>
+  </section>
+
+  <!-- ===== Cycle 045（C046 で index から退避） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 045 — 2026-09-23（受信対応・<span class="text-emerald-800">✅ 問い合わせページ（R-J12）が本番公開＝39日ぶりの本番変更</span>／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">起動のきっかけ：<strong>開発担当（<code>konjaku-dev</code>）からの実装報告1通</strong>（定期の解析日ではない臨時の回）。データ状況：<strong>本番ページ ✅ 取得</strong>（問い合わせ・トップ）／<strong>スクショ ✅</strong>（問い合わせ PC/SP）／<strong>GSC・GA4＝新規取得なし</strong>（臨時の回のため。定期の解析は 9/24）。<strong><code>from-president.md</code> に新規のご指示はありません</strong>（最終＝9/2）。</p>
+
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-emerald-900 mb-2">① ✅ R-J12（問い合わせ窓口）を本番で確認＝完了</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li><strong>開発担当の報告</strong>：<span class="font-mono">/contact</span> を本番公開（開発 → 検証環境で送信テスト → 本番）。<strong>社長が本番で送信テストまで実施・成功</strong>。</li>
+        <li><strong>本番での確認（こちら）</strong>：<span class="font-mono">konjaku-photo.jp/contact</span>＝<strong>HTTP 200</strong>（前日は 404）・タイトル「お問い合わせ | 今昔写語」・説明文あり・見出し1つ。画面でも<strong>フォーム5項目</strong>（お名前／メール／種別＝写真の利用について・掲載内容について・削除のご依頼・その他／対象写真のURL（任意）／内容）と、<strong>開閉式の「個人情報の取扱いについて」</strong>を確認しました。</li>
+        <li><strong>導線</strong>：トップの配信HTMLに <span class="font-mono">/contact</span> へのリンクが2本（サイドバー＋フッター）。<strong>トップのHTMLは 27,079B → 27,654B に変わりました＝8/16 以来39日ぶりの本番変更</strong>（増えた分は問い合わせ導線と見られます＝推測）。</li>
+        <li><span class="text-gray-600">※ サイトマップへの収録は先方の申告のみで、こちらでは今回確認できていません（次の定期回で確認します）。</span></li>
+      </ul>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">② 北極星との接続</h3>
+    <p class="text-sm text-gray-700 mb-3">問い合わせ窓口は閲覧を直接増やす施策ではなく<strong>守りの土台</strong>です＝①写真の利用・削除の依頼を受けられるので、<strong>SNSで広げる施策（R-J01 の OGP）を安心して進められる</strong>状態になりました ②利用許諾の引き合い（8/27 の実例）をフォームで受けられます。<strong>効果は数字では測りにくい</strong>ため、完了判定は本番の取得で行いました。<span class="text-gray-600">※ 送信件数を測るには、フォーム送信を GA4 のイベントにする必要があります（R-J22 の範囲・新しい番号は起こしません）。</span></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">③ 新しいご提案はゼロ</h3>
+    <p class="text-sm text-gray-700 mb-3">臨時の回のため、<strong>報告の検証と反映</strong>に絞りました。在庫は 21件 → <strong>20件</strong>。次の定期の解析は <strong>9/24</strong>（GSC・定点スクショ・週次の棚卸し）です。<strong>次に進めたいのは R-J28／R-J30（301）</strong>＝上の🔔をご覧ください。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">④ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">新規のご指示はありません（<code>from-president.md</code> 最終＝9/2）。R-J12 の公開のご判断（9/22 🔔①）は、社長の本番送信テストをもって完了と扱いました。</p>
+  </section>
+
   <!-- ===== ✅ 本番反映済みの提案 R-J12（C045 で index から退避） ===== -->
   <section class="mb-10">
     <h2 class="text-xl font-bold mb-2">✅ R-J12 本番反映（2026-09-23・Cycle 045）— 問い合わせ窓口（<span class="font-mono">/contact</span>）</h2>

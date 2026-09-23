@@ -175,6 +175,10 @@
   </table>
   <p class="text-sm text-gray-700 mb-2"><strong>読み方</strong>：タイトルが区別できる階層ほど露出率が高い。<strong>推測</strong>＝Google のレンダリング（JS実行）は全ページには回らず、配信HTMLだけで判別できるページが優先されている。<strong>＝R-J24 の効果は、他サイトの一般論ではなく自社内の実測で裏づけられている。</strong></p>
   <p class="text-sm text-gray-700 mb-3"><strong>着手順の結論</strong>＝①市区町村（最も損をしており、かつ旧サイトで911種が閲覧されている最大の入口）→②都道府県（効くことの実証済みサンプル・内部IDを地名に置換するだけ）→③個別写真（効果最大だが約1.6万ページ＝型が固まってから）。<strong>文言設計は不要</strong>＝描画後のタイトルは既に正しい地名（<span class="font-mono">/prefectures/28</span> は「愛知県で撮影された古い写真」）＝<span class="font-mono">generateMetadata</span> へ移すだけ。</p>
+  <div class="bg-emerald-50 border border-emerald-400 rounded p-3 mb-8 text-sm text-gray-800">
+    <p><strong>✅ 2026-09-23 夜（C046）＝上表の「配信HTMLの title」は過去の状態（before）になった</strong>。本番の配信 title は5層とも URL ごとに一意＝<strong>都道府県「◯◯県の古写真 | 今昔写語」／市区町村「◯◯県 ◯◯市の古写真 | …」／個別写真「{写真名}（{都道府県}） | …」／タグ「#{タグ名} の古写真 | …」／年代「{年代}の古写真 | …」</strong>。description・og:title・og:description・twitter:title・twitter:description も同内容で個別化。<strong>本文は「読み込み中...」のまま（SSR 化なし）＝最小形</strong>。og:image・canonical・JSON-LD・h1（下層）は無し。</p>
+    <p class="mt-1"><strong>🔧 ソフト404の範囲（C031 の記述を訂正）</strong>：存在しないIDは<strong>5層すべて（<span class="font-mono">/cities/{id}/old-photos</span>・<span class="font-mono">/prefectures/{id}/old-photos</span>・<span class="font-mono">/tags/{id}/old-photos</span>・<span class="font-mono">/eras/{slug}</span>・<span class="font-mono">/old-photos/{id}</span>）で HTTP 200＋トップと同じ title</strong>。C031 が「階層は正常に404」としたのは <span class="font-mono">/old-photos</span> の付かない別URL（そもそも存在しないルート）を見ていたため。</p>
+  </div>
 
   <div class="bg-emerald-50 border border-emerald-300 rounded p-4 mb-8 text-sm">
     <p class="font-semibold text-emerald-900 mb-2">🔄 C024（2026-08-21）更新＝GSC 4日窓（2026-08-15〜08-18）／需要側の指標が加わった</p>
