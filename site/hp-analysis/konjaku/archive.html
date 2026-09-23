@@ -30,6 +30,42 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== Cycle 046（C047 で index から退避） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 046 — 2026-09-23 夜（受信対応・<span class="text-emerald-800">✅ ページごとのタイトルが5層すべてで本番に</span>／🔧 ソフト404の範囲を訂正／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">起動のきっかけ：<strong>開発担当（<code>konjaku-dev</code>）からの実装報告1通</strong>（本日2回目の臨時の回）。データ状況：<strong>本番ページ ✅ 取得（17URL・<span class="font-mono">.jp</span> 16＋<span class="font-mono">.com</span> 1）</strong>／スクショ・GSC・GA4＝新規取得なし（効果の判定は14日の固定窓が要るため・定期の解析は 9/24）。<strong><code>from-president.md</code> に新規のご指示はありません</strong>（最終＝9/2）。</p>
+
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-emerald-900 mb-2">① ✅ R-J24 の最小形（ページごとのタイトル）を本番で確認</p>
+      <table class="w-full text-xs border-collapse bg-white mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">層</th><th class="py-1 pr-2">これまで（配信HTMLのタイトル）</th><th class="py-1">9/23 夜（本番で確認）</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">市区町村</td><td class="py-1 pr-2">トップと完全に同じ文</td><td class="py-1">「山形県 山形市の古写真 | 今昔写語」「富山県 中新川郡立山町の古写真 | …」</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">個別写真</td><td class="py-1 pr-2">全件「古写真詳細」</td><td class="py-1">「神戸海岸オリエンタルホテル（兵庫県） | …」「日立市本山小学校（茨城県） | …」</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">都道府県</td><td class="py-1 pr-2">「都道府県ID: 39の古い写真」</td><td class="py-1">「広島県の古写真 | …」「茨城県の古写真 | …」</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">タグ</td><td class="py-1 pr-2">トップと同じ文</td><td class="py-1">「#戸坂 の古写真 | …」</td></tr>
+          <tr><td class="py-1 pr-2">年代</td><td class="py-1 pr-2">トップと同じ文</td><td class="py-1">「明治以前の古写真 | …」</td></tr>
+        </tbody>
+      </table>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>説明文（description）と SNS 用のタイトル・説明文も同じ内容でページごとに変わりました。<strong>SNS の画像指定（og:image）・canonical・構造化データは未整備のまま</strong>（先方も範囲外と明記）。</li>
+        <li><strong>本文は依然「読み込み中...」＝本文のSSR化はしていません。</strong>＝9/12 に「完全なSSR化を待たず、タイトルだけ先に」とご提案した<strong>最小形そのもの</strong>です。<strong>タイトルだけの効果を、ほかの変更と混ざらずに測れます</strong>。</li>
+        <li>R-J20（一覧・年代・都道府県のタイトル）は<strong>これで完了</strong>、R-J02（個別写真のタイトル）は<strong>タイトル分が完了・残る本文のSSR化は R-J24 に一本化</strong>しました（アーカイブへ）。在庫 20 → <strong>18件</strong>。</li>
+        <li><span class="text-gray-600">あわせて「ご意見・ご要望」ページ（<span class="font-mono">/feedback</span>）が新設されていました（200）。トップの配信HTMLも 27,654B → 28,771B に増え、見出し（h1）が1つ付きました（先方の報告には無い変更＝本日こちらで検出）。</span></li>
+      </ul>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">② 🔧 私の訂正：ソフト404は5層すべて</h3>
+    <p class="text-sm text-gray-700 mb-3">存在しないIDのページ（例 <span class="font-mono">/cities/99999/old-photos</span>）が、<strong>市区町村・都道府県・タグ・年代・個別写真の5層すべてで「200＋トップと同じタイトル」</strong>を返しています。8/28 に「壊れているのは個別写真だけで、市区町村・都道府県は正常に404」と書いたのは、<strong>末尾の <span class="font-mono">/old-photos</span> が無い別のURLを見ていた私の誤り</strong>でした。R-J15 の範囲を5層に直しました（新しい番号は起こしていません）。<span class="text-gray-600">タイトルをサーバ側で作る仕組みが入ったので、同じ場所で「見つからなければ404」を返せば5層まとめて直せる見込みです（推測）。</span></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">③ 北極星との接続と、次の一手</h3>
+    <p class="text-sm text-gray-700 mb-3"><strong>検索に「出ているのに取れていない」ページを取れるようにする、いちばん安い一手</strong>が入りました（北極星の経路①＝検索から届く）。効果は <strong>9/24〜10/7 の14日固定窓</strong>で測り、<strong>10/10 頃</strong>に判定します（before＝市区町村 0.90%・個別写真 4.28%・18日窓）。<br>
+    <strong class="text-rose-800">そして、これで R-J30 の但し書きが外れました。</strong>受け止める側のタイトルがそろったので、<strong>確定している 57.4% に301を打てば効く状態です</strong>。<strong>残る入口は社長のご判断（上の🔔 R-J30）だけ</strong>です。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">④ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">新規のご指示はありません（<code>from-president.md</code> 最終＝9/2）。</p>
+  </section>
+
   <!-- ===== ✅ 本番反映済みの提案 R-J20／R-J02（C046 で index から退避） ===== -->
   <section class="mb-10">
     <h2 class="text-xl font-bold mb-2">✅ R-J20 完了／R-J02 タイトル分完了（2026-09-23 夜・Cycle 046）— ページごとのタイトル（R-J24 の最小形と同時）</h2>
