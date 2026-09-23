@@ -30,6 +30,70 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== ✅ 本番反映済みの提案 R-J12（C045 で index から退避） ===== -->
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-2">✅ R-J12 本番反映（2026-09-23・Cycle 045）— 問い合わせ窓口（<span class="font-mono">/contact</span>）</h2>
+    <div class="bg-white border border-emerald-300 rounded p-4 text-sm text-gray-800 space-y-2">
+      <p><strong>提案（C007 起票）</strong>：法的表記と問い合わせ窓口の整備＝出典／利用許諾／削除の窓口。<strong>9/22 社長判断で運営者情報は掲出しない</strong>＝スコープは (1) 問い合わせフォーム＋(2) フッター/サイドバー導線の2点に確定。</p>
+      <p><strong>起票の根拠となった実害</strong>：8/27 に <span class="font-mono">/comments</span> へ「古写真の使用許可を取りたいが、どこに問い合わせればよいか」という匿名コメント（窓口が無いためコメント欄で聞くしかなく、匿名のため返信手段も無かった）。</p>
+      <p><strong>反映</strong>：開発担当の報告（<code>M-20260923T094739-konjaku-dev-f23a6dc93e7e58c9</code>）＝develop → staging（Basic認証下で送信テスト）→ main。社長が本番で送信テスト成功。</p>
+      <p><strong>本ループの本番確認（C045・9/23）</strong>：<span class="font-mono">https://konjaku-photo.jp/contact</span>＝<strong>HTTP 200</strong>（9/22 は 404）・title「お問い合わせ | 今昔写語」・description あり・h1×1。フォーム＝お名前／メール／種別（写真の利用について・掲載内容について・削除のご依頼・その他）／対象写真URL（任意）／内容。個人情報の取扱いは開閉式。トップの配信HTMLに <code>href="/contact"</code> が2本（サイドバー＋フッター）＝<strong>トップ 27,079B → 27,654B＝8/16 以来39日ぶりの本番変更</strong>。スクショ <code>konjaku-c045-jp-contact-*</code>。<span class="text-gray-600">※ サイトマップ収録は先方の申告のみ（こちらでは未検証）。</span></p>
+      <p><strong>残り（別番号で継続）</strong>：利用許諾の方針＝Q-J03（窓口公開とは切り離し）／問い合わせ送信の計測＝R-J22 の範囲。</p>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 044（C045 で index から退避） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 044 — 2026-09-22（受信対応・<span class="text-emerald-800">✅ 開発担当との連絡が23日ぶりに復旧</span>／🆕 タグの新旧IDが一致と確定＝301の行き先が決まっている範囲が57.4%に／開発担当から社長への確認依頼2件／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">起動のきっかけ：<strong>開発担当（<code>konjaku-dev</code>）からの新着2通</strong>（定期の解析日ではない臨時の回）。データ状況：<strong>本番ページ ✅ 取得</strong>（トップ・問い合わせ・旧サイトのトップとタグ）／<strong>スクショ ✅</strong>（新サイトのタグ1196）／<strong>GSC＝新規取得なし</strong>（9/21 に取得した18日間の固定窓を再集計）。<strong><code>from-president.md</code> に新規のご指示はありません</strong>（最終＝9/2）。</p>
+
+    <div class="bg-emerald-50 border-2 border-emerald-500 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-emerald-900 mb-2">① ✅ 開発担当との連絡が復旧しました（Q-J10 解決）</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li><strong>観察</strong>：9/22 14:32 に開発担当から受信確認＝「<strong>8/28 の便から Cycle 043（9/21）まで12通すべて受領・既読</strong>」。こちらの送信控えでも<strong>未受領 11通 → 0通</strong>を確認しました（数字が合っています）。</li>
+        <li><strong>原因（先方の説明）</strong>：開発側マシンで受信箱を読む運用が回っていなかった。連絡の仕組み自体は生きていた。<span class="text-gray-600">※ こちらが推測していた「設定ファイルの抜け（8/29 と同じ）」は外れていました。</span></li>
+        <li><strong>再発防止（先方）</strong>：以後はサイクル先頭で受信箱を確認する。<span class="text-gray-600">こちらは引き続き毎回「未受領の数」を数えて、増え続けたら早めにご報告します。</span></li>
+      </ul>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">② 🆕 タグページの新旧IDが一致すると確定＝301の行き先が決まっている範囲が 57.4% に</h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+      <li><strong>開発担当の回答（コードで確定）</strong>：新サイトのタグは旧サイトのデータから<strong>IDをそのまま保存して取り込んでいる</strong>ため、旧 <span class="font-mono">?p_tag=1196</span> と新 <span class="font-mono">/tags/1196/old-photos</span> は同じタグ。写真・ユーザーも同じ方式。</li>
+      <li><strong>本番での確認（こちら）</strong>：旧 <span class="font-mono">.com</span> のタグ1196＝「<strong>戸坂</strong>に関する日本の古い写真」／新 <span class="font-mono">.jp</span> のタグ1196（画面表示後）＝「<strong>#戸坂</strong> の古写真」（安芸吊り橋 戸坂側より北望・1件）＝<strong>一致</strong>。<span class="text-gray-600">※ 本番での確認は1件です。コードの説明と本番の結果の両方がそろったので「確定」としました。</span></li>
+      <li><strong>18日間（9/1〜9/18）の旧サイトのクリック 3,714 で数え直すと</strong>：</li>
+    </ul>
+    <table class="w-full text-xs border-collapse mb-2 bg-white">
+      <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">層</th><th class="py-1 pr-2 text-right">旧サイトのクリック（18日間）</th><th class="py-1">行き先</th></tr></thead>
+      <tbody>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-2">個別写真</td><td class="py-1 pr-2 text-right">1,660（44.7%）</td><td class="py-1">✅ 確定（ID一致）</td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-2">都道府県</td><td class="py-1 pr-2 text-right">328（8.8%）</td><td class="py-1">✅ 確定（新ID＝JISコード+5）</td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-2"><strong>タグ</strong></td><td class="py-1 pr-2 text-right"><strong>144（3.9%）</strong></td><td class="py-1"><strong>✅ 🆕 本日確定（ID一致）</strong></td></tr>
+        <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2">市区町村</td><td class="py-1 pr-2 text-right">1,442（38.8%）</td><td class="py-1">❌ 未入手（<code>city_mapping.json</code>）</td></tr>
+        <tr class="border-b border-gray-300"><td class="py-1 pr-2">トップ・その他</td><td class="py-1 pr-2 text-right">140（3.8%）</td><td class="py-1">トップ同士で対応</td></tr>
+        <tr class="font-bold"><td class="py-1 pr-2">行き先が確定</td><td class="py-1 pr-2 text-right text-emerald-800">2,132（57.4%）</td><td class="py-1">—</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-700 mb-3">→ <strong>R-J30（301の段階移行）で「先に打てる範囲」にタグが加わりました</strong>（ご判断のお願いは変わりません）。<strong>残る待ちは市区町村の対応表だけ</strong>です（R-J28）。<span class="text-xs text-gray-600">※ タグページも配信HTMLのタイトルはトップと同じ共通文のままなので、301だけでは評価を受け取りにくい点は個別写真と同じです（R-J24 ④）。</span></p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">③ 開発担当から社長への確認依頼2件＋問い合わせページの本番公開（上の🔔へ転記済み）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-3">
+      <li><strong>問い合わせページ（R-J12）</strong>＝開発環境で実装済み（フォーム＋フッター/サイドバー導線。<strong>運営者情報は 9/22 社長判断で掲出しない</strong>）・<strong>本番は未反映</strong>（本日 <span class="font-mono">/contact</span>＝404 を確認）。<strong>本番公開は社長のご判断待ち</strong>とのことです。</li>
+      <li><strong>読み取り専用SQLの実行</strong>＝本番DBの実数（市区町村が空の1,872件の復元可能数・北海道579枚の内訳・旧から引き継いだ写真の最大ID）は、<strong>開発担当がSQLを社長にお渡しして実行していただく</strong>運用とのことです。<span class="text-gray-600">※ 市区町村の復元については「緯度経度からの割り出し・タイトルの地名」が候補として示されました。</span></li>
+      <li><strong>旧サイトの Google Maps APIキーの制限確認</strong>＝Google Cloud コンソールの確認が必要で、開発側からはできないため社長確認事項として引き継がれました。</li>
+    </ul>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">④ 本番の定点（本日の取得）</h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-3">
+      <li><strong>本番の変更は 8/16 から38日連続でゼロ</strong>＝新 <span class="font-mono">.jp</span> トップ 27,079B（前回とバイト同一・canonical／OGP／構造化データなし）／<span class="font-mono">/contact</span> 404／旧 <span class="font-mono">.com</span> トップ 200（301なし）。</li>
+    </ul>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑤ 新しいご提案はゼロ</h3>
+    <p class="text-sm text-gray-700 mb-3">臨時の回のため、新しい分析は行わず<strong>受信内容の検証と反映</strong>に絞りました。成果＝①連絡の復旧を実数で確認 ②タグの一致を本番で確認し、301の範囲を更新 ③開発担当から社長への確認依頼を🔔へ転記。次の定期の解析は 9/24 の予定です。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑥ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">新規のご指示はありません（<code>from-president.md</code> 最終＝9/2）。</p>
+  </section>
+
   <!-- ===== ✅ 解決済みの質問 Q-J10（C044 で index から退避） ===== -->
   <section class="mb-10">
     <h2 class="text-xl font-bold mb-2">✅ Q-J10 解決（2026-09-22・Cycle 044）— 開発担当（<code>konjaku-dev</code>）の受信箱</h2>
