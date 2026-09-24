@@ -1,0 +1,29 @@
+  <!-- ===== Cycle 056 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 056 — 2026-09-23（<span class="text-emerald-700">✅ R-R22 完了を本番で確認＝着地ページに登録の入口</span>／<span class="text-sky-700">R-R44 は GA4 の着弾待ち</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">定期実行（3日ペース）＋受信箱の新着 1通（開発担当の完了報告）。<strong>新規の提案＝0件／新規の質問＝0件／クローズ＝1件（R-R22 ✅）</strong>（判断待ち13件・自動停止ライン15件）。<span class="text-gray-500">新規ゼロの理由＝着手推奨の上位がそのまま生きている（在庫22件）ため、今回は実装の検証と優先順位の付け直しに使いました。</span></p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① ★最重要★ ✅ R-R22 完了＝検索から着地するスポット・テーマのページに「参加する」入口ができた（9/22 本番反映）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝本番を PC・スマホ幅で撮影。<strong>兼六園（スポット詳細）</strong>＝見出しと紹介文の直下に「<strong>兼六園のスタンプを集めませんか</strong>」「このスポットを実際に訪れると、スマホの位置情報でスタンプを集められます。登録は無料・メールアドレスだけで始められます。」＋メール欄＋「無料ではじめる」。<strong>日本三名園（テーマ詳細）</strong>＝紹介文の下に同じ部品（「日本三名園を巡るのスタンプを集めませんか」）。スマホでも最初の画面に入ります。<span class="text-gray-600">改善案②（文言に場所の名前と「スタンプ」）も反映＝「兼六園 スタンプ」で来た人への答えになっています。</span></p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>北極星との接続</strong>＝「発見→<u>登録</u>」の段の、いちばん太い穴（着地の約6割がトップ以外なのに、そこに扉が無い）が塞がった。<strong>効果の測り方</strong>＝GA4 のトップ以外に着地した訪問の <code>form_start</code>・<code>sign_up</code>（反映前＝9/18〜21 で登録4件）。<strong>定点＝10/4 頃</strong>（GSC の次の定点と同じ日）。<br><span class="text-gray-600">⚠️ 限界＝①入口は描画後に出る（配信HTMLに登録へのリンクは0本のまま＝検索エンジン向けの話ではないので問題なし）②スマホ画面で浮動ボタン「近くのスポットを探す」が送信ボタンに重なって写りますが、<u>当方の撮影方法は固定要素の位置を正しく写せない</u>（9/5 に判明）ため判定せず、開発担当に実機での確認をお願いしました。③テーマ名が「〜を巡る」で終わるため「日本三名園を巡るのスタンプ」と少し不自然（軽微・開発担当へ参考として）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 数字は反映前の最新でも伸びている＝訪問は2倍以上・登録完了は4件に</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察</strong>＝GA4（最新 9/21）＝9/20〜21 の2日で初めての訪問 <strong>42人</strong>（9/6〜12 は7日で25人）・メール入力の開始 5人・<strong>登録完了 2件</strong>（9/18〜21 の計4件・4人）・スタンプ取得 2件（吹田のスタジアム）。着地は <strong>トップ21回・<code>/map</code> 20回</strong>が並び、残りはスポット・県・人物のページに分散。GSC（最新 9/20）＝9/6〜20 に表示されたページは <strong>約310本</strong>（9/16 分まで149本）・14日で 1,649表示・75クリック。</p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>読み</strong>＝「発見される」は引き続き広がっている。<strong>次に効くのは <code>/map</code></strong>＝検索でも（34表示・平均4.0位）サイト内でも（着地20回）トップと並ぶ面なのに、<u>見出しも登録の入口も無い最後の主要な着地面</u>（→ R-R26＋R-R01 残件を着手推奨①へ）。<span class="text-gray-600">推測：R-R22 の部品をそのまま置けるので工数は小。登録4件の中に動作確認が混ざっている可能性は残る（データベースとの突き合わせは開発担当に照会済み）。</span></p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>⏳ R-R44（計測の認証トークン）</strong>＝9/22 に完了と報告。GA4 は 9/21 分までなので、反映前の4件はトークン入りのまま（想定どおり）。<u>9/22 以降の登録が記録された次のサイクルで判定</u>します。<span class="text-gray-600">※ トークンの実値は当方の記録に転記していません。</span></li>
+        <li><strong>⚠️ 開発担当の報告の本文が欠落</strong>＝本文欄が送信コマンドの文字列（<code>--body-file …</code>）になっていた（送る側の道具がこのオプションを知らないため＝8月末と同じ）。件名にある「<strong>R-R19 の期限に訂正が1点</strong>」の中身が不明＝本文の再送をお願いしました（標準入力で送る方法を添えて）。<span class="text-gray-600">当方は証明書の期限を直接読む道具が使えない（許可待ち）ため、自分では確かめられません。</span></li>
+        <li><strong>🔎 旧形式のURL <code>/station/mikumanohonguu/</code></strong>（熊野本宮）＝検索に1回表示・本番は <strong>404</strong>。旧サイトの住所が検索エンジンに残っている痕跡。<span class="text-gray-600">1件・1表示のため起票しません（種として観察を続け、増えたら R-R40 の「旧サイトからの引き継ぎ」に合流させます）。</span></li>
+        <li><strong>到達性・変化</strong>＝トップ 200・<strong>65,158バイト（9サイクルぶりに変化・+337バイト＝9/22 の反映に伴うもの）</strong>／<code>www</code> は本体へ集約／<code>/map</code> 56,030バイト・見出し0本（R-R01 残件は未解消）。</li>
+        <li><strong>データ状況</strong>＝GSC ✅（最新 9/20）／GA4 ✅（最新 9/21）／本番GET・スクリーンショット ✅。</li>
+        <li><strong>受信箱・配信</strong>＝新着 1通（開発担当・9/23 00:40）を処理。開発担当へ本レポート＋本文の再送のお願いを1通。</li>
+        <li><strong>次サイクル（9/26 頃）</strong>＝R-R44 の判定（9/22 以降の登録が入っていれば）・R-R22 の初期の反応・週次 #14（9/24 期日）/#6/#7/#8/#5（9/27 期日）・win-patterns への昇格文（M-28）・R-R19 の訂正内容の反映。</li>
+      </ul>
+    </div>
+  </section>

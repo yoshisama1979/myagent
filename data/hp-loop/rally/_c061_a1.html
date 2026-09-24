@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全国スタンプラリー HP分析｜アーカイブ｜HP分析ハブ</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+<div class="max-w-4xl mx-auto p-6 md:p-10">
+
+  <nav class="text-sm text-gray-500 mb-4">
+    <a href="../../index.html" class="text-blue-600 hover:underline">トップ</a>
+    <span class="mx-1">/</span>
+    <a href="../index.html" class="text-blue-600 hover:underline">HP分析ハブ</a>
+    <span class="mx-1">/</span>
+    <a href="index.html" class="text-blue-600 hover:underline">全国スタンプラリー</a>
+    <span class="mx-1">/</span>
+    <span>アーカイブ</span>
+  </nav>
+
+  <h1 class="text-3xl font-bold mb-2">🗄️ アーカイブ — 全国スタンプラリー</h1>
+  <p class="text-gray-600 mb-6">完了したもの（✅本番反映済みの提案・❌中止・✅解決済みの質問）と、過去サイクルの記録（スナップショット）を新しい順に蓄積。履歴は消さない・改変しない。</p>
+
+  <div class="flex flex-wrap gap-3 mb-8 text-sm">
+    <a href="index.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📋 最新レポート</a>
+    <a href="spec.html" class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200">📐 確定・仕様</a>
+    <span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 font-semibold">🗄️ アーカイブ（このページ）</span>
+  </div>
+
+  <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
+
+  <!-- ===== ✅ 完了した提案（Cycle 061・2026-09-24） ===== -->
+  <section class="mb-8 border-2 border-emerald-500 bg-emerald-50 rounded-lg p-5">
+    <h2 class="text-xl font-bold text-emerald-800 mb-1">✅ R-R26 ＋ R-R01 の残件 完了（2026-09-23 夜〜09-24 の間に本番反映・2026-09-24 Cycle 061 で実測確認）— 地図ページ <code>/map</code> に見出しと「無料ではじめる」</h2>
+    <p class="text-sm text-gray-800"><strong>R-R26</strong>（8月起票 → 9/17 着手推奨②・9/23 着手推奨①）／<strong>R-R01</strong>（SPA の SEO 土台・9/6 で大半解消、残件は <code>/map</code> の h1 だけだった）。<strong>開発担当からの完了報告は無し＝当方の定点確認で検出</strong>。<br>
+    確認（9/24 19:3x）＝①配信HTMLで <code>/map</code> の <strong>h1=1「スタンプスポットの地図」</strong>（前回 h1=0・56,030B → 57,031B）・title「スポットマップ｜日本全国スタンプラリー」は 9/6 から ②スクリーンショット PC・スマホとも、地図の左上に見出しと<strong>「無料ではじめる」ボタン</strong>が最初の画面に出る（描画後に出る＝配信HTMLの <code>/register</code> リンクは0本のまま＝R-R22 と同じ形）。<br>
+    <span class="text-gray-600">R-R26 の改善案③（カードに実際の写真）は R-R28（写真が145枚しかない・社長が別線で進行中）で扱うため、R-R26 としては閉じます。R-R01 はこれで残件ゼロ＝完了。</span><br>
+    <strong>効果検証</strong>＝GA4 <code>/map</code> 着地セッションの <code>form_start</code>・<code>sign_up</code>（基準＝0件）／GSC <code>/map</code> の表示・順位（基準＝9/17〜20 の4日で34表示・平均4.0位）。定点＝2026-10-04 頃（R-R22 と同日）。</p>
+  </section>
+
+  <!-- ===== Cycle 056 の最新レポート枠＋Cycle 060 追補（Cycle 061 のローテで移動・2026-09-24・本文は改変なし） ===== -->
+  <section class="mb-8 border border-gray-300 bg-white rounded-lg p-5">
+    <h2 class="text-xl font-bold mb-1">Cycle 056（9/23 定期）／Cycle 060（9/23 19:2x・反応）の最新レポート枠</h2>
+  <!-- 🔑 Cycle 056：R-R22 完了 -->
+  <div class="border-4 border-emerald-600 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-emerald-800 mb-2">🔑 <span class="underline decoration-2">9/23（Cycle 056）＝着手推奨1位の R-R22 が本番に出ました。検索から着地するページに「参加する」入口ができました</span></h2>
+    <table class="w-full text-sm border-collapse bg-white rounded mb-2">
+      <tbody class="align-top text-gray-800">
+        <tr class="border-b border-gray-200 bg-gray-50"><td class="py-1 px-2 w-44"></td><td class="py-1 px-2"><strong>本日の確認（本番の画面を PC・スマホで撮影）</strong></td></tr>
+        <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 px-2">✅ R-R22（登録の入口）</td><td class="py-1 px-2">スポット詳細（兼六園）・テーマ詳細（日本三名園）とも、<strong>見出しのすぐ下に「〈名前〉のスタンプを集めませんか／登録は無料・メールアドレスだけ」＋メール欄＋「無料ではじめる」</strong>。スマホでも最初の画面に出ます＝<u>9/13 以来の最大の穴が埋まりました</u>。</td></tr>
+        <tr class="border-b border-gray-200"><td class="py-1 px-2">⏳ R-R44（計測の認証トークン）</td><td class="py-1 px-2">開発担当は 9/22 に完了と報告。<strong>GA4 のデータは 9/21 分までしか届いていない</strong>ため、反映後の登録が記録されてから判定します（反映前の4件はトークン入りのまま＝想定どおり）。</td></tr>
+        <tr><td class="py-1 px-2">📈 数字（反映前の最新）</td><td class="py-1 px-2">9/20〜21 の2日で<strong>初めての訪問 42人</strong>（9/6〜12 は7日で25人）・<strong>登録完了は 9/18〜21 で計4件</strong>。検索に表示されたページは 9/20 分までで<strong>約310本</strong>（9/16 分まで 149本）。<code>/map</code> は4日で34表示・平均4.0位＝<u>トップの2倍、いちばん表示される面</u>。</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-gray-800 mb-2 bg-white border-2 border-amber-400 rounded p-2"><strong class="text-amber-900">⚠️ 開発担当の報告の本文が届いていません</strong>＝件名（「R-R22・R-R44 完了／<u>R-R19 の期限に訂正が1点</u>」）だけが届き、本文は送信コマンドの文字列（<code>--body-file …</code>）になっていました（8月末と同じ送り方の誤り）。<strong>完了の判定は当方の実測で行った</strong>ので支障はありません。<u>R-R19 の「期限の訂正」の中身だけが分からない</u>ため、開発担当に本文の再送をお願いしました（<strong>社長のお手は不要</strong>です）。</p>
+    <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>📌 社長にお願いすることは増えていません</strong>（新しい質問 0件・新しい提案 0件・<span class="text-emerald-700">R-R22 が完了して在庫 23→22件</span>）。<span class="text-gray-700">開発担当への次の推奨は <strong>R-R26＋R-R01 の残り（<code>/map</code> に見出しと登録の扉）</strong>＝いまいちばん表示される面です。</span><span class="text-gray-600">前回までの記録（9/21 の依頼への回答・9/20 の判定）は<a href="index-snapshot-c055.html" class="text-blue-600 hover:underline">スナップショット</a>と<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました。</span></p>
+    <p class="text-xs text-gray-500 mt-2">9/23 の追補3本（Cycle 057 清水寺の「？」・Cycle 058 リンク点検・Cycle 059 登録数の出し方）は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました。</p>
+    <div class="text-sm text-gray-800 mt-2 bg-emerald-50 border-2 border-emerald-500 rounded p-2"><strong class="text-emerald-800">追補（Cycle 060・9/23 19:2x・開発担当の回答で起動）＝登録数の「本当の数」が届き、GA4 と日別で一致しました</strong>
+      <table class="text-xs mt-1 mb-1 border-collapse">
+        <tr class="border-b border-emerald-300"><th class="text-left pr-3">日付</th><th class="text-left pr-3">データベース（実数）</th><th class="text-left">GA4 登録完了</th></tr>
+        <tr><td class="pr-3">9/16・9/17</td><td class="pr-3">0・0</td><td>0・0</td></tr>
+        <tr><td class="pr-3">9/18〜9/21</td><td class="pr-3">各1件（計4件・<strong>テスト0件</strong>）</td><td>各1件（計4件）</td></tr>
+        <tr><td class="pr-3">9/22</td><td class="pr-3">0件</td><td>0件（本日届いた分）</td></tr>
+      </table>
+      <ul class="list-disc ml-5 space-y-0.5">
+        <li><strong>わかったこと①＝GA4 の登録の数え方は正しい</strong>＝取りこぼし・二重計上・テスト混入なし。<u>以後、登録は GA4 だけで追えます</u>（開発担当に毎回お願いしなくてよい）。</li>
+        <li><strong>わかったこと②＝9/18 の1件は本物の利用者</strong>（責任者が確認）＝枚方市で操作が集中していたので「テストかも」と保留していた分を<u>実績に戻します</u>。</li>
+        <li><strong>わかったこと③＝初めて「実際に使っている人」が出ました</strong>＝9/20 に登録した方が <strong>9/22〜23 に 19回スタンプ</strong>（データベース）。GA4 でも 9/22 に<strong>スタンプ9件・すべて「初めて行った場所」</strong>（2人）＝<u>北極星（登録→スタンプ収集）の最後まで到達した初めての実例</u>です。</li>
+        <li><strong>⚠️ 注意＝「全アカウント 4,686件」は指標に使えません</strong>＝大半は旧システムから引き継いだ休眠アカウント。スタンプの記録があるアカウントは<strong>全体で4件だけ</strong>（旧アカウントの整理は開発側で進行中）。</li>
+        <li><strong>R-R22（9/22 反映）の効果</strong>＝反映後の初日 9/22 は登録0件・メール入力の開始0件（初めての訪問26人）。<u>1日では判断しません</u>＝予定どおり 10/4 頃に反映前（9/18〜21 の4件）と比べます。</li>
+      </ul>
+      <span class="text-gray-700">開発担当からは「日別の件数は期間を指定すればいつでも出せる／定期提供も可」との申し出あり＝<u>GA4 と一致したので、当面は不要と返信</u>（ずれが出たときだけお願いします）。<strong>社長のお手は不要</strong>です。</span></div>
+  </div>
+  </section>
+

@@ -1,0 +1,83 @@
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R08</td><td class="py-1 pr-2">🟦 <strong>初回訪問のCV根治【🔧一部反映】</strong>＝残作業：位置情報を拒否したときに「近くのスポット」枠が空になる（代替の入口が無い）＋登録フォーム周りの価値提示。※軽微：登録フォームが <code>action=""・method="get"</code>＝JS失敗時にメールアドレスがURLに載る形（POST化を推奨）</td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">—</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R14</td><td class="py-1 pr-2">🟦 <strong>トップの「空の店先」解消【🔧一部反映】</strong>＝残作業：位置情報なしでも見えるサンプルスポットのカード陳列＋エリア／テーマのタイル入口（何が集められるかを位置許可の前に見せる）</td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R06＝対象者）</span></td><td class="py-1">Q-R06</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R07</td><td class="py-1 pr-2">場所詳細／エリア／テーマページの<strong>コンテンツ設計</strong>（Cycle 003 で具体化済）。<strong>R-R33・R-R37 の直後に効く続き</strong>。<span class="text-sky-700">※テーマ層の目標値は競合実測で確定済み</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（Q-R06）</span></td><td class="py-1">Q-R06・R-R33</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2 font-mono">R-R13</td><td class="py-1 pr-2">🟦 <strong>継続（リテンション・再訪）</strong>＝バッジ図鑑の「進捗＋あと少し」訴求／再訪メール／PWA。<span class="text-gray-500">※R-R32 が先</span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（既存機能の有無）</span></td><td class="py-1">📥 既存機能</td></tr>
+        <tr><td class="py-1 pr-2 font-mono">R-R15</td><td class="py-1 pr-2"><strong>現地・弱電波での実利用の信頼性</strong>＝初期描画の実測／PWAオフライン耐性／電波弱時の graceful degradation。<span class="text-gray-500">※本番の応答は 0.09〜0.26秒と良好＝優先度は据え置き</span></td><td class="py-1 pr-2">🟢</td><td class="py-1 pr-2">🔔要回答<br><span class="text-xs text-gray-500">（実施可否の方針判断）</span></td><td class="py-1">方針</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mt-3"><strong class="text-sky-800">【Cycle 056 の変更・2026-09-23】</strong><strong class="text-emerald-800">新規R 0件・新規Q 0件・クローズ 1件（R-R22 ✅完了）</strong>＝在庫 22件・判断待ち 13件（自動停止ライン15件）。<strong>区分の更新</strong>＝<strong>R-R44</strong> ✅AI即応 → ⏳検証中。<strong>根拠の更新</strong>＝<strong>R-R26</strong>（着手推奨①へ・<code>/map</code> 34表示/4日・平均4.0位）／<strong>R-R19</strong>（期限の訂正あり・本文欠落で再送依頼）。<span class="text-gray-600">Cycle 053 の変更は<a href="index-snapshot-c055.html" class="text-blue-600 hover:underline">スナップショット</a>にあります。</span></p>
+  </div>
+
+  <!-- 🛠 対応実績（月次） -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-1">🛠 対応実績（月次）— 対象月：<span class="text-emerald-800">2026-08</span></h2>
+    <p class="text-xs text-gray-600 mb-2">原簿＝<code>data/hp-loop/rally/deploy-log.md</code>。<strong>すべて当方の本番実査（hp-audit・スクショ）で反映を確認済み</strong>のものだけを載せています。<span class="text-gray-500">（2026-07分は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました）</span></p>
+
+    <p class="text-sm font-bold text-emerald-900 mb-1">■ 8月のいちばん大きな出来事＝<span class="underline">32サイクル続いた「本番に何も出ない」状態が終わりました</span></p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-3">
+      <li><strong>8/15</strong>：<code>rally-dev</code>（開発担当）との通信が開通・GA4 と Search Console のデータ連携が開通（<span class="text-gray-600">それまで17〜20サイクル「データ未取得」でした</span>）</li>
+      <li><strong>8/29</strong>：<strong class="text-emerald-800">31サイクルぶりに <code>rally-dev</code> から初の返信</strong>＝過去13通すべて受領・<strong>6件を実装</strong>（原因＝拠点PCの環境移行で受信箱が未処理のままでした）</li>
+      <li><strong>8/30</strong>：<strong class="text-emerald-800">本番反映が同日2回</strong>＝<u>✅完了 9件</u>（下記）。<span class="text-gray-600">起票から解決まで1日。</span></li>
+    </ul>
+
+    <p class="text-sm font-bold text-gray-800 mb-1">■ 8/30 に本番へ出たもの（✅＝実査で確認済み）</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-3">
+      <li><strong>R-R21・R-R34・R-R25 ✅完了</strong>：<strong>約14,600ページに固有の「名札」（title・説明文）とcanonical</strong>＝それまで全ページが同じ名前でした</li>
+      <li><strong>R-R33 🔧半分完了</strong>：<strong>スポット詳細14,477ページに本文・見出し・写真・関連リンクをサーバ側HTMLへ出力</strong>（<span class="text-gray-600">＝検索エンジンが中身を読めるように。<u>一覧ページは未着手＝残りの半分</u></span>）</li>
+      <li><strong>R-R06 ✅完了</strong>：<strong><code>robots.txt</code> が 404 → 200</strong>／<strong><code>sitemap.xml</code> が 12URL → 約1.5万URL</strong>（<span class="text-gray-600">真因＝サーバ手前のプロキシ設定がアプリの出力を横取りしていました</span>）</li>
+      <li><strong>R-R02 ✅完了</strong>：全ページに OGP 7件＋Twitterカード4件（<span class="text-gray-600">＝SNS共有時の見え方が整いました</span>）</li>
+      <li><strong>R-R24 ✅完了</strong>：<code>/spots</code> の行き止まり（404）を解消＝<code>/spots/areas</code> へ転送</li>
+      <li><strong>R-R27 ✅完了</strong>：存在しないURLが本物の404を返すように（<span class="text-gray-600">従来は「読み込み中…」のまま</span>）</li>
+      <li><strong>R-R30 ✅完了</strong>：<code>/people</code> が素のシェル（12,504B）→ 共通レイアウト内（54,983B）へ</li>
+      <li><strong>R-R17 ✅サイト側＋GTM</strong>：登録完了・スタンプ取得の計測イベントを実装（<span class="text-emerald-700">→ GTM の公開も 9/6 に完了＝Q-R17 解決。実数は 9/7 から</span>）</li>
+      <li><strong>R-R28 🔧一部</strong>：一覧APIが写真を返すよう修正（<span class="text-gray-600">見た目は未変化＝主因は写真が145枚しかないというデータ量でした</span>）</li>
+      <li><strong>R-R32 ①🔧・R-R23 ③🔴差し戻し</strong>：未ログイン時の行き先を統一／浮動ボタンの重なりは<u>実測で未解消</u></li>
+    </ul>
+
+    <p class="text-sm font-bold text-gray-800 mb-1">■ 8月に見つかった障害・R外の変更</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5">
+      <li><strong class="text-red-800">8/15：本番が約20分ダウン</strong>（当方の実査で検出・報告なし）。<span class="text-gray-600">8/29 に原因の仮説を特定＝証明書の自動更新が引き金（推測）。<u>次の更新は 10/14 前後＝同じことが起きうる日</u>→ R-R19</span></li>
+      <li><strong>8/16〜8/17</strong>：メニューに発見軸2本を追加（「人物からさがす」「タグからさがす」・報告なし・実査検出）</li>
+      <li><strong>8/30</strong>：スポットデータの追加が継続中（京都府 1,039件 → 1,053件）</li>
+    </ul>
+    <p class="text-xs text-gray-600 mt-2">※ 次回の月次（対象月 2026-09）は 10月最初のサイクルで作成します（定石 #12）。</p>
+  </div>
+
+  <!-- ===== Cycle 056 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 056 — 2026-09-23（<span class="text-emerald-700">✅ R-R22 完了を本番で確認＝着地ページに登録の入口</span>／<span class="text-sky-700">R-R44 は GA4 の着弾待ち</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">定期実行（3日ペース）＋受信箱の新着 1通（開発担当の完了報告）。<strong>新規の提案＝0件／新規の質問＝0件／クローズ＝1件（R-R22 ✅）</strong>（判断待ち13件・自動停止ライン15件）。<span class="text-gray-500">新規ゼロの理由＝着手推奨の上位がそのまま生きている（在庫22件）ため、今回は実装の検証と優先順位の付け直しに使いました。</span></p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-800 mb-2">① ★最重要★ ✅ R-R22 完了＝検索から着地するスポット・テーマのページに「参加する」入口ができた（9/22 本番反映）</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察（事実）</strong>＝本番を PC・スマホ幅で撮影。<strong>兼六園（スポット詳細）</strong>＝見出しと紹介文の直下に「<strong>兼六園のスタンプを集めませんか</strong>」「このスポットを実際に訪れると、スマホの位置情報でスタンプを集められます。登録は無料・メールアドレスだけで始められます。」＋メール欄＋「無料ではじめる」。<strong>日本三名園（テーマ詳細）</strong>＝紹介文の下に同じ部品（「日本三名園を巡るのスタンプを集めませんか」）。スマホでも最初の画面に入ります。<span class="text-gray-600">改善案②（文言に場所の名前と「スタンプ」）も反映＝「兼六園 スタンプ」で来た人への答えになっています。</span></p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>北極星との接続</strong>＝「発見→<u>登録</u>」の段の、いちばん太い穴（着地の約6割がトップ以外なのに、そこに扉が無い）が塞がった。<strong>効果の測り方</strong>＝GA4 のトップ以外に着地した訪問の <code>form_start</code>・<code>sign_up</code>（反映前＝9/18〜21 で登録4件）。<strong>定点＝10/4 頃</strong>（GSC の次の定点と同じ日）。<br><span class="text-gray-600">⚠️ 限界＝①入口は描画後に出る（配信HTMLに登録へのリンクは0本のまま＝検索エンジン向けの話ではないので問題なし）②スマホ画面で浮動ボタン「近くのスポットを探す」が送信ボタンに重なって写りますが、<u>当方の撮影方法は固定要素の位置を正しく写せない</u>（9/5 に判明）ため判定せず、開発担当に実機での確認をお願いしました。③テーマ名が「〜を巡る」で終わるため「日本三名園を巡るのスタンプ」と少し不自然（軽微・開発担当へ参考として）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 数字は反映前の最新でも伸びている＝訪問は2倍以上・登録完了は4件に</h3>
+      <p class="text-sm text-gray-800 mb-2"><strong>観察</strong>＝GA4（最新 9/21）＝9/20〜21 の2日で初めての訪問 <strong>42人</strong>（9/6〜12 は7日で25人）・メール入力の開始 5人・<strong>登録完了 2件</strong>（9/18〜21 の計4件・4人）・スタンプ取得 2件（吹田のスタジアム）。着地は <strong>トップ21回・<code>/map</code> 20回</strong>が並び、残りはスポット・県・人物のページに分散。GSC（最新 9/20）＝9/6〜20 に表示されたページは <strong>約310本</strong>（9/16 分まで149本）・14日で 1,649表示・75クリック。</p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>読み</strong>＝「発見される」は引き続き広がっている。<strong>次に効くのは <code>/map</code></strong>＝検索でも（34表示・平均4.0位）サイト内でも（着地20回）トップと並ぶ面なのに、<u>見出しも登録の入口も無い最後の主要な着地面</u>（→ R-R26＋R-R01 残件を着手推奨①へ）。<span class="text-gray-600">推測：R-R22 の部品をそのまま置けるので工数は小。登録4件の中に動作確認が混ざっている可能性は残る（データベースとの突き合わせは開発担当に照会済み）。</span></p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>⏳ R-R44（計測の認証トークン）</strong>＝9/22 に完了と報告。GA4 は 9/21 分までなので、反映前の4件はトークン入りのまま（想定どおり）。<u>9/22 以降の登録が記録された次のサイクルで判定</u>します。<span class="text-gray-600">※ トークンの実値は当方の記録に転記していません。</span></li>
+        <li><strong>⚠️ 開発担当の報告の本文が欠落</strong>＝本文欄が送信コマンドの文字列（<code>--body-file …</code>）になっていた（送る側の道具がこのオプションを知らないため＝8月末と同じ）。件名にある「<strong>R-R19 の期限に訂正が1点</strong>」の中身が不明＝本文の再送をお願いしました（標準入力で送る方法を添えて）。<span class="text-gray-600">当方は証明書の期限を直接読む道具が使えない（許可待ち）ため、自分では確かめられません。</span></li>
+        <li><strong>🔎 旧形式のURL <code>/station/mikumanohonguu/</code></strong>（熊野本宮）＝検索に1回表示・本番は <strong>404</strong>。旧サイトの住所が検索エンジンに残っている痕跡。<span class="text-gray-600">1件・1表示のため起票しません（種として観察を続け、増えたら R-R40 の「旧サイトからの引き継ぎ」に合流させます）。</span></li>
+        <li><strong>到達性・変化</strong>＝トップ 200・<strong>65,158バイト（9サイクルぶりに変化・+337バイト＝9/22 の反映に伴うもの）</strong>／<code>www</code> は本体へ集約／<code>/map</code> 56,030バイト・見出し0本（R-R01 残件は未解消）。</li>
+        <li><strong>データ状況</strong>＝GSC ✅（最新 9/20）／GA4 ✅（最新 9/21）／本番GET・スクリーンショット ✅。</li>
+        <li><strong>受信箱・配信</strong>＝新着 1通（開発担当・9/23 00:40）を処理。開発担当へ本レポート＋本文の再送のお願いを1通。</li>
+        <li><strong>次サイクル（9/26 頃）</strong>＝R-R44 の判定（9/22 以降の登録が入っていれば）・R-R22 の初期の反応・週次 #14（9/24 期日）/#6/#7/#8/#5（9/27 期日）・win-patterns への昇格文（M-28）・R-R19 の訂正内容の反映。</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="text-xs text-gray-500 mb-8">📖 <strong>Cycle 052 以前の記録</strong>は <a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>にあります（Cycle 052 の全文＝<a href="index-snapshot-c052.html" class="text-blue-600 hover:underline">スナップショット</a>・消していません）。</p>
+
+  <hr class="my-8 border-gray-300">
+  <p class="text-xs text-gray-400">HP分析ループ（<code>/hp-loop rally</code>）が自動生成。回答は <code>data/hp-loop/rally/from-president.md</code> または Slack の rally 日報スレッドへ。</p>
+
+</div>
+</body>
+</html>
