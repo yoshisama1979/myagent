@@ -308,6 +308,53 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+  <!-- ===== Cycle 125（2026-09-22 定例）＝Cycle 126 の index 更新で移送 ===== -->
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+
+    <h3 class="text-xl font-semibold mb-1">Cycle 125 — 2026-09-22（y-com.info・<strong class="text-sky-700">3日ごとの定例＋月次の配管点検＋週次のCV実測</strong>／主産物＝<strong class="text-rose-700">①訂正：運用代行ページには Clarity（画面操作の記録）が入っておらず、9/9 の「画面の故障は無い」は根拠が足りませんでした ②開発側の受信箱は19日目（未読22通）③お問い合わせの入口は「直接来訪」と「トップ」がほとんど</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（集計最終日 9/16 → 9/19＝平常・28日 1,393クリック／55,909表示／平均10.1位）・GA4 ✅取得（営業の問い合わせだけで集計）・Google広告 ✅取得（YCOM のみ配信ゼロ＝停止20日目）・Clarity ✅取得（13日連続）・本番GET ✅（トップ＋主要16ページの計測タグを1枚ずつ点検）・受信箱 ✅（新着なし）</p>
+
+    <div class="mb-5 border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r">
+      <p class="font-bold text-amber-800 mb-1">🔍 ① 訂正：運用代行ページ（R-049）など <span class="font-mono">/service/web/</span> 配下には、Clarity が入っていませんでした（月1回の配管点検）</p>
+      <p class="text-sm text-gray-800 mb-2">主要ページの計測タグを1枚ずつ確かめました。<strong><span class="font-mono">/service/web/</span> 配下（運用代行・WordPress・制作相談・CMS・レスポンシブ・一覧の6枚）には、GTM（計測タグをまとめて入れる箱）も Clarity も入っておらず</strong>、あるのは古いアナリティクス（UA）のタグだけでした。サービス一覧・システム開発・AI・料金・実績・フォーム・トップには入っています。過去の Clarity の記録にも、<span class="font-mono">/service/web/</span> 配下のページは1件も出てきません。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>GTM が無いこと自体は既知です</strong>＝8/21 に R-039(b) として把握し、「先に GTM を入れてから古いタグを消す」2段階の手順で開発側へお渡し済みです（新しい問題ではありません）。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong class="text-rose-700">当方の見落とし</strong>＝9/9（Cycle 118）に「運用代行ページのクリック0は、画面の故障ではなく検索語の不一致が原因」と判定したとき、<strong>「Clarity でも故障は見当たらない」と書いていましたが、Clarity はこのページを記録していませんでした</strong>。9/19 の「AIチャットの吹き出しの重なりは、Clarity の数字では操作の邪魔になっていない」も同じで、運用代行ページについては根拠になっていません。</p>
+      <p class="text-sm text-gray-800 mb-2"><strong>結論は変わるか</strong>＝<strong>「検索語の不一致」という判定は変わりません</strong>。もう一つの根拠（検索結果の実画面を撮って確かめた＝上位3社は検索語をそのまま題名に入れ、当社は入れていない）だけで成り立っているためです。変わるのは「画面の故障は無い」とは言い切れなくなった点だけです。</p>
+      <p class="text-sm text-gray-800"><strong>今後への影響</strong>＝R-049(g) で相談ボタンを置いても、<strong>今のままではボタンが押されたかを測れません</strong>（GTM が無いため）。→ 開発側への最新レポートに、<strong>R-039(b) の「<span class="font-mono">/service/web/</span> 配下に GTM を入れる」を R-049 と同じ回に行う</strong>という順番のメモを添えました（追加の作業ではなく、順番の指定です）。<strong>社長のご対応は不要です。</strong></p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ② 開発側（web-hanasaka）の受信箱は19日目も止まっています（Q-020）</p>
+      <p class="text-sm text-gray-800">未読は <strong class="text-rose-700">18通 → 22通</strong>（増えたのはこのループとブログ分析からの定例報告だけ）。先方の最後の受け取りも、先方からの最後の報告も <strong>9/3</strong> のままです。<strong>引き続き、拠点PCのご確認（最上部 Q-020）をお願いします。</strong>このため本日も新しい提案は起こしていません。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-sky-500 bg-sky-50 p-4 rounded-r">
+      <p class="font-bold text-sky-800 mb-1">📊 ③ お問い合わせはどこから来ているか（週次のCV実測・営業の問い合わせだけで集計・28日）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>流入元別</strong>＝直接来訪 909訪問で <strong>57件</strong>／Google 検索 1,832訪問で <strong>10件</strong>／ChatGPT 24訪問で <strong>2件</strong>／そのほかは0件。</li>
+        <li><strong>入口ページ別</strong>＝お問い合わせページに直接 69訪問で39件・トップ 281訪問で19件。<strong>ブログ記事（上位の記事だけで約1,300訪問）と AIチャットの広告用ページ3枚（815訪問）はいずれも0件</strong>＝これまでと同じ形です。</li>
+        <li><strong>ChatGPT 経由</strong>＝9/5 以降の17日で21訪問・2件。90日で数えると51訪問・2件で、9/16 に決めた「90日で5件以上になったら改めて見る」にはまだ届きません。<strong>2件とも最近出ている</strong>ことだけ記録します。</li>
+        <li>広告を止めた後は、海外の広告掲載先（tipsguru.in）からの訪問が0になりました＝あの訪問は広告経由だったことを改めて確認しました。</li>
+      </ul>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-semibold mb-2">📌 そのほか、本日の定点確認（いずれも社長のご対応は不要です）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>運用代行ページ（R-049）＝20回目もクリック0</strong>（376表示／平均14.8位）。</li>
+        <li><strong>実績ページ（R-046）</strong>＝検索に出る個別の実績ページが <strong>1本（7表示）→ 3本（計14表示）</strong>に増えました。数が少ないため「効き始めた」とはまだ読みません。10/2 の判定まで様子を見ます。</li>
+        <li><strong>無料相談ページ（R-047）</strong>＝4ページ計64表示・2クリック（前回と同じ水準）。<strong>サービスページ群（R-057）</strong>＝16ページ計952表示・2クリック。<strong>料金ページ（R-055）</strong>＝価格表1,208表示・5クリックに集中したまま。</li>
+        <li><strong>配管点検（月1回）</strong>＝アドレスの4通りの書き方はすべてトップへ正しく転送・robots.txt／sitemap.xml 正常・http の混在0・フォームの不要コードの撤去（R-039(c)）は維持。古いUAタグと Crazy Egg はトップに残ったまま（R-039(b)＝開発側待ち）。</li>
+        <li><strong>トップページ＝退行なし</strong>（73,529バイト・4回連続で同一）。Clarity のトップは2訪問・押しても反応しない所のクリック0。</li>
+        <li><strong>広告＝配信ゼロ20日目</strong>。<span class="text-rose-700">⚠️ 入札方法が「コンバージョン値の最大化」のままなので、このまま再開しないようご注意ください。</span></li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>新しい提案＝0件／新しいご質問＝0件</strong>。①は既存の提案（R-039・R-049）の順番の話で、②の「栓」が続いているためです。<strong>本日の成果は、当方の過去の判定の訂正（①）と週次・月次の定点2本</strong>です。</p>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）に 9/16 以降の新しい項目はありません。</p>
+
+  </section>
   <!-- ===== Cycle 124（2026-09-19 定例）＝Cycle 125 の index 更新で移送 ===== -->
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
