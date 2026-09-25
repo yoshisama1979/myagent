@@ -178,6 +178,101 @@
       <p class="mt-1"><strong class="text-rose-700">＝だからこそ、社長の一手は変わらず「買い手向けの記事を1本 publish する」だけです。</strong>CTA も title 改善も、<strong>買い手が読んでいない記事に付けている限り CV は増えません</strong>（Cycle 027 で B-009 を「最優先」と伝えたのは誤り＝流入改善であってCV改善ではない。同じ判断軸を B-015・B-019・B-021 にも当てています）。買い手を連れて来られるのは<strong>完成在庫5本（T-003/T-006/T-007/T-008/T-011）</strong>で、料金事実も社長回答も不要で公開できます。<span class="text-xs">※ Cycle 032 の訂正＝作成ソフト系は既存 p=77 が全クエリを受けていたため、T-005 新規公開ではなく <strong>B-012＝p=77 リライト</strong>が正解。この「head は既存の受け皿に譲り、記事は情報意図で棲み分ける」型は T-007・T-011・T-012・T-013 にも適用。</span></p>
     </div>
   </div>
+  <!-- ===== 📦 Cycle 104（2026-09-25）＝ Cycle 105（2026-09-26）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c104">Cycle 104 — 2026-09-25（YCOM ブログ・日次）：<span class="text-rose-700">自社サービス「今昔写語」を紹介するブログ3本・7本のリンクが、すべて旧ドメイン <span class="font-mono">http://konjaku-photo.com/</span> を向いています</span>／<span class="text-emerald-800">新ドメインへ張り替える小さな直し（B-093）と、この移行を「リニューアルで入口はどう移るか」の実例として T-038 に足す改訂版を出します</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-25）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日 9/21 → 9/22</strong>（1日分の新着）。28日（8/28〜9/22）＝クリック1,254・表示52,411・CTR2.39%・平均10.1位。個別＝ブログ配下のページ別90日・<span class="font-mono">?p=6350</span> の語（90日）・買い手の語（90日・3,000語）・<span class="font-mono">/price/basic.html</span>（9/16〜9/22 の週）。<strong>参考に今昔写語側の GSC</strong>（<span class="font-mono">searchconsole_konjaku</span>＝<span class="font-mono">.jp</span>・<span class="font-mono">searchconsole_konjakucom</span>＝<span class="font-mono">.com</span>・どちらも28日）。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit --text／--links</span>・HTTP GET のみ）＝<span class="font-mono">?p=6350</span>・<span class="font-mono">?p=2012</span>・<span class="font-mono">?p=4593</span>・<span class="font-mono">?p=2117</span>・<span class="font-mono">?p=8365</span>／<span class="font-mono">konjaku-photo.com</span>・<span class="font-mono">konjaku-photo.jp</span> のトップ。</li>
+      <li><strong>WordPress（<span class="font-mono">wp-draft.py get</span>）＝本日は未実施</strong>（この起動では実行の許可が出ませんでした）。8365 の状態は公開URLの応答（HTTP500＝下書きのまま・9/16 と同じ応答）で代わりに見ています。</li>
+      <li><strong>競合（hp-serp）</strong>＝「ドメイン変更 SEO 引き継ぎ」1回。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　ブログから今昔写語への入口が、旧サイトに向いたまま</h3>
+    <p class="mb-2"><strong>観察</strong>：<span class="font-mono">?p=6350</span>「古写真と今の写真を比較する『今昔写語』をもっともっと広めたい！」（2019-03-08・代表）は、<strong>今昔写語そのものの名前で検索した人の、2番目の検索結果</strong>になっています（90日＝「今昔写真」148表示・2.2位／「今の写真」110表示・1.5位／「今昔写語」60表示・2.6位・2クリック）。1番目は今昔写語の<strong>旧サイト</strong> <span class="font-mono">konjaku-photo.com</span>（28日「今昔写真」1.0位・45表示・15クリック）。<strong>新サイト <span class="font-mono">konjaku-photo.jp</span> は同じ「今昔写真」で10.5位</strong>（28日8表示）です。そのうえで、6350 の本文にある今昔写語へのリンク3本は<strong>すべて <span class="font-mono">http://konjaku-photo.com/</span></strong>（旧サイト・http）。同じカテゴリ「自社サイト」の <span class="font-mono">?p=2012</span>（スマホ対応・2016）と <span class="font-mono">?p=4593</span>（スタッフ募集・2017）にも2本ずつ＝<strong>3記事・7本</strong>。9/25 の実測で旧サイトは HTTP200 で旧版のまま表示され、新サイトも200。</p>
+    <p class="mb-2"><strong>なぜ中心に置くか</strong>：今昔写語は旧サイトから新サイトへ移す途中です（HP分析 <a href="../../konjaku/index.html" class="underline">konjaku 掲示板</a>＝301 の範囲は社長のご判断待ち）。<u>自社ブログのリンクは、はなさかが自分で今すぐ向け直せる数少ない入口</u>です。6350 の 90日の表示回数は 1,649・平均3.9位で、今昔写語の名前で探した人の一部がここを通って旧サイトへ行っています。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：YCOM の売上に直接効く話ではありません（今昔写語は自社サービス＝北極星は「比較ページが見られること」）。YCOM 側では ②信頼（自分のサービスの引っ越しを自分でやっている会社）の材料になります＝下の <span class="font-mono">T-038</span> 改訂版。<strong>詰まりの本丸は変わらず ③の料金</strong>＝<span class="font-mono">/price/basic.html</span> は 9/16〜9/22 の週も「ホームページ制作 料金表」20.5位・53表示／「料金」21.9位・35表示＝どちらもクリック0（10週目）。ブログから効かせられるのは 8365 の公開だけです（⛳）。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から40日目）</strong>。公開URLは HTTP500＝下書きのときの応答のまま（本日は <span class="font-mono">wp-draft.py</span> の許可が出ず、本文・タイトルは見ていません）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝公開ページに残存（72日目）</strong>。本日も <span class="font-mono">【要・社長確認</span> を1か所実測（<span class="font-mono">hp-audit --text</span>）。28日（〜9/22）225クリック・5,304表示＝ブログ最多の記事。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝19日目・未回答。</li>
+      <li><span class="text-gray-600">参考（使わなかった観察）：<span class="font-mono">?p=5500</span>（Kindle でウェブを読む・90日1,730表示・9.6位）・<span class="font-mono">?p=6721</span>（Laravel の POST）は事業から遠い読者＝<span class="font-mono">B-061</span> の考え方で対象外。「ホームページ作成ソフト」の帯（90日 約700表示・32〜42位）は <span class="font-mono">?p=77</span> が受けており、書き直し（<span class="font-mono">B-052</span>・下書き8362）で扱い済み。「404 リダイレクト」の帯（約750表示・1〜3位）は <span class="font-mono">?p=8126</span>＝<span class="font-mono">B-053</span> で扱い済み。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-093</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-093</span>　今昔写語へのリンク7本（3記事）を、旧 <span class="font-mono">http://konjaku-photo.com/</span> から新 <span class="font-mono">https://konjaku-photo.jp/</span> へ張り替える　🟢　<span class="text-xs font-normal">（回答不要／実行は 🔒 ローテ後・1本10秒）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=6350</span>（3本）／<span class="font-mono">?p=2012</span>（2本）／<span class="font-mono">?p=4593</span>（2本）。いずれもトップページ宛て（<span class="font-mono">http://konjaku-photo.com/</span>）。</li>
+      <li><strong>観点</strong>：鮮度（リンク先）・内部の送客</li>
+      <li><strong>観察</strong>：上の「中心」のとおり。行き先はどれも<u>トップ→トップ</u>なので、新旧のID対応表（今昔写語の 301 の設計）を待たずに張り替えられます。ほかの記事にもあるかは、ブログ全文を語で探す道具が無いため<u>見つかった3本まで</u>です（📥 Overseer⑥）。</li>
+      <li><strong>ついでに（同じ画面で）</strong>：6350 本文の写真の出典リンク <span class="font-mono">blogs.yahoo.co.jp/…</span>（「泰弘さんの【追憶の記】」）＝推測：Yahoo!ブログは 2019年にサービスを終えており、リンク切れの可能性が高い（本日は到達確認の許可が出ず<u>未実測</u>）。切れていれば、出典の文字は残してリンクだけ外す。<span class="font-mono">?p=4593</span> の <span class="font-mono">http://mission-p.com/</span>（日本全国スタンプラリー）も同じく旧URLの可能性＝要確認。<span class="font-mono">?p=4593</span> には <span class="font-mono">B-084</span>（「募集は終了しています」の1行）が既にあるので、同じ1回の編集で。</li>
+      <li><strong>なぜ問題か</strong>：旧サイトは旧版のまま動いており、ブログから来た人は古い画面を見ます。検索エンジンにとっても、<u>運営元の会社のブログが旧ドメインを推している</u>状態が続きます（推測：新サイトの評価の立ち上がりを遅らせる要因の1つ。大きさは測れません）。</li>
+      <li><strong>改善案</strong>：7本の URL を <span class="font-mono">https://konjaku-photo.jp/</span> に置き換えるだけ。本文・タイトル・アンカー文言は触らない。<strong>今昔写語の 301 が入ったあとでも、張り替えは無駄になりません</strong>（転送を1回経由しなくなる）。</li>
+      <li><strong>効果</strong>：YCOM の買い手換算＝0（今昔写語の閲覧のため）。今昔写語側＝推測で月数件の来訪が新サイトに直接着く（6350 の90日15クリックの一部）。<strong>工数</strong>：5分（1回の編集で3記事）。<strong>優先度</strong>：🟢。<strong>栓</strong>：🔒 WP 書き込みはローテ後（差分作りは栓なし＝blog-improve でローカルに可）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-038</span> 改訂版＝C104）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-038</span>（C077 の構成案を改訂）　「ホームページをリニューアル・ドメイン変更すると、前のページに来ていたお客さんはどこへ行くのか——自社サービスの引っ越しで実際に起きたこと」　🟡　<span class="text-xs font-normal">（新しい番号は立てません／<strong>執筆は publish が動いてから＝在庫を積まない</strong>）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜ新しい T でなく T-038 の改訂か</strong>：はじめは「ドメイン変更の実例」で新しい記事（T-054）を考えましたが、<a href="archive.html#c077" class="underline">C077 の T-038</a>（リニューアルで前のページのお客さんはどこへ行くか）と読者も問いも同じでした＝2本にすると、C102・C103 で見つけた「同じ読者を取り合う」型を自分で作ることになります。<br><strong>何が変わったか</strong>：C077 は「他社との差がつく材料は1つだけ＝自社サイトのソフト404を自分で直した記録（<span class="font-mono">B-045</span> の修理後）」としていました。今回、<strong>2つ目の一次情報</strong>が見えています＝今昔写語の移行です。①新旧2つのドメインが同時に動いていて、②検索の1位は旧ドメインのまま（「今昔写真」旧1.0位／新10.5位）、③アクセス解析も新旧で分かれ（HP分析 konjaku の記録）、④運営元のブログのリンクまで旧ドメインを向いていた（<span class="font-mono">B-093</span>）。<u>上位10件（hp-serp「ドメイン変更 SEO 引き継ぎ」）はサーバー会社・SEO会社の手順解説で、実データの記録はありません</u>。<br><strong>正直な見立て</strong>：YCOM の検索では「リニューアル」系はほぼ未獲得（90日「ホームページリニューアル 大阪」6表示・68位）＝アクセスを取りに行く記事ではなく、<u>リニューアルを相談しに来た人に見せられる「うちは自分のサービスでこうやった」の記録</u>です（②信頼→③）。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：サイトの作り直し・ドメイン変更（社名変更・サービス名変更を含む）を考えている会社の担当者・経営者。「前のページに来ていた人と検索順位はどうなるのか」が不安な人。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：「ホームページ リニューアル アクセス 落ちた」「ドメイン変更 seo」「サイト移行 注意点」「旧ページ リダイレクト」。※自社ではどれも未獲得＝取れるかは書いてみないと分かりません。</li>
+      <li><strong>タイトル案</strong>：C077 案に「ドメイン変更」を足す＝「ホームページをリニューアル・ドメイン変更すると、前のお客さんはどこへ行く？——自社サービスの引っ越しで分かった、順位と入口を落とさない順番」</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）＝C077 から変える所だけ <span class="text-rose-700">🆕</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　リニューアル後にアクセスが落ちる会社と落ちない会社の違いは「引っ越しの仕方」</strong>（C077 のまま・結論の先出し）</li>
+      <li><strong>h2　消えるのは「ページ」ではなく「URL」</strong>（C077 のまま）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 検索エンジンは URL 単位で評価を持っている</li><li>h3 お気に入り・名刺・<span class="text-rose-700">🆕 自社のブログや取引先のサイト</span>からのリンクも URL 宛てに来る</li><li><span class="text-rose-700">🆕</span> h3 ドメインごと変えると、全ページの URL が一度に変わる（リニューアルとの違い）</li></ul></li>
+      <li><strong>h2　引っ越し先の決め方は3通り</strong>（C077 のまま＝301／410／404。<span class="font-mono">?p=8126</span> へ内部リンク）</li>
+      <li><strong>h2　やってしまいがちな「全部トップページへ」がなぜ損なのか</strong>（C077 のまま・自社サイトのソフト404の実例＝<span class="font-mono">B-045</span> の修理後）</li>
+      <li><strong class="text-rose-700">🆕 h2　自社サービスをドメインごと引っ越してみて、実際に起きたこと</strong>（本記事の核の2つ目）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 新しいサイトを公開しても、検索の1位は古いサイトのまま（転送を入れるまでは新旧が並ぶ）</li><li>h3 アクセス解析が新旧で分かれ、「新サイトは何人に見られているか」が一時分からなくなる</li><li>h3 「新旧の対応表」を作るのが一番時間がかかる（トップ・一覧・個別ページで対応の付け方が違う）</li><li>h3 自社のブログのリンクも古いままだった（<span class="font-mono">B-093</span>）＝社外より先に、自分で直せる入口から</li><li><u>書く数字・固有名は社長の可否のあと</u>（下の「用意すべき内容」）。結果の章は、今昔写語の 301 を入れて14日以上たってから（HP分析 konjaku の規律＝短い窓の上下で合否を言わない）</li></ul></li>
+      <li><strong>h2　引っ越しがうまくいったか、どう確かめるか</strong>（C077 のまま＋<span class="text-rose-700">🆕</span>「旧ドメインを1つ叩いて新ドメインの同じページに着くか」「解析の数字が新側に移ったか」の2点）</li>
+      <li><strong>h2　制作会社に頼むとき、この1行を仕様に入れてください</strong>（C077 のまま＝「旧URL→新URLの対応表を作り 301 で転送」＋<span class="text-rose-700">🆕</span>「アクセス解析と Search Console を新ドメインでも用意してから切り替える」）</li>
+      <li><strong>h2　まとめ／ご相談</strong>（C077 のまま）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">?p=8126</span>（404・リダイレクトの設定・1〜3位）／<span class="font-mono">?p=6350</span>（今昔写語の紹介）／<span class="font-mono">/price/basic.html</span>（料金表・リニューアルの相談）。未公開の <span class="font-mono">T-014</span>（リニューアル費用）・<span class="font-mono">T-030</span>（見積書）は公開後に。</li>
+      <li><strong>CTA</strong>：<span class="font-mono">Q-009</span> で決まる本命の相談窓口1つ（未定の間は <span class="font-mono">/service/free_advice.html</span>）。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：<strong>🟥 今昔写語の移行を、実名と数字で記事にしてよいか</strong>（(a) 実名・数字あり／(b) 「自社サービス」とぼかし、数字は割合だけ／(c) 書かない＝C077 のまま）。<span class="font-mono">T-040</span>（侵害を記事にしてよいか）と同じ種類のご判断です。急ぎません＝執筆は publish が動いてから、結果の章は 301 の14日後。</li>
+      <li><strong>効果</strong>：クリック換算＝推測で月0〜1（未獲得の帯）／<strong>買い手換算＝年1件未満</strong>。価値は②信頼（リニューアルを相談する人に見せる記録）。<strong>工数</strong>：中。<strong>優先度</strong>：🟡（C077 と同じ）。<strong>栓</strong>：― publish 後／核の章の1つは <span class="font-mono">B-045</span> 修理後、もう1つは今昔写語の 301＋14日後と社長の可否。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-25）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 19日目・未回答。<strong>本日の新規質問は1件だけ・急ぎません</strong>（T-038 に今昔写語の移行を書いてよいか＝T-040 と並べて 🙋 欄に）。<span class="font-mono">B-093</span> は回答不要。</li>
+      <li><strong>件数を絞りました</strong>：未消化が多いため B1＋T1（T は新しい番号を立てず既存の改訂）。</li>
+      <li><strong>執筆担当</strong>：9/28 の起動でやることは変わりません（<span class="font-mono">B-091</span> のコメント付け替えだけ）。<span class="font-mono">B-093</span> の差分は<u>次の保留解除の際にまとめて</u>で足ります（急ぎません）。<span class="font-mono">T-038</span> は執筆しない。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 102 と Cycle 103 の本文を <a href="archive.html#c103" class="underline">アーカイブ</a>へ原文のまま移しました（道具の実行許可が出なかったため、行番号で切り出して差し込み・行数で照合）。</li>
+      <li><strong>自己改善（Step 7）</strong>：学び＝<u>自社のほかのサイト（今昔写語など）へのリンクを、相手サイトの移行と照らし合わせていなかった</u>。ほかの解析ループ（konjaku）の掲示板にある「ドメインを移した」事実は、ブログ側の外部リンクの点検項目になる（skill-kaizen <span class="font-mono">K-876</span>）。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（<span class="font-mono">M-20260925T050722-blog-loop-ycom-f8efe5</span>・type=report・作用付きの依頼なし）／Slack 日報を投稿。</li>
+    </ul>
+  </div>
+
+
   <!-- ===== 📦 Cycle 103（2026-09-24）＝ Cycle 104（2026-09-25）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c103">Cycle 103 — 2026-09-24（YCOM ブログ・日次）：<span class="text-rose-700">「WordPress のパスワードを忘れた」記事が2本あり、手順はほぼ同じ（2020年 ?p=6874・2021年 ?p=7393）＝同じ読者を取り合っています</span>／<span class="text-emerald-800">1本にまとめ、「前の担当者から ID をもらえていない」読者を相談につなぐ構成案を出します</span></h2>
 
