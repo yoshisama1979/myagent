@@ -178,6 +178,100 @@
       <p class="mt-1"><strong class="text-rose-700">＝だからこそ、社長の一手は変わらず「買い手向けの記事を1本 publish する」だけです。</strong>CTA も title 改善も、<strong>買い手が読んでいない記事に付けている限り CV は増えません</strong>（Cycle 027 で B-009 を「最優先」と伝えたのは誤り＝流入改善であってCV改善ではない。同じ判断軸を B-015・B-019・B-021 にも当てています）。買い手を連れて来られるのは<strong>完成在庫5本（T-003/T-006/T-007/T-008/T-011）</strong>で、料金事実も社長回答も不要で公開できます。<span class="text-xs">※ Cycle 032 の訂正＝作成ソフト系は既存 p=77 が全クエリを受けていたため、T-005 新規公開ではなく <strong>B-012＝p=77 リライト</strong>が正解。この「head は既存の受け皿に譲り、記事は情報意図で棲み分ける」型は T-007・T-011・T-012・T-013 にも適用。</span></p>
     </div>
   </div>
+  <!-- ===== 📦 Cycle 105（2026-09-26）＝ Cycle 106（2026-09-27）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c105">Cycle 105 — 2026-09-26（YCOM ブログ・日次）：<span class="text-rose-700">「ホームページ制作はどれくらいかかる？」＝制作会社を選ぶ人が必ず調べる問いに、YCOM は公開ページに答え（3〜5か月）を持っているのに、検索では候補にすら出ていません</span>／<span class="text-emerald-800">代表の2019年の記事「スピード重視 VS 品質重視」を独自の章に使う構成案（T-054）と、その記事の小さな直し（B-094）を出します</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-26）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日 9/22 → 9/23</strong>（1日分の新着）。28日（8/29〜9/23）＝クリック1,252・表示52,337・CTR2.39%・平均9.9位（前日とほぼ同じ）。個別＝ブログ配下のページ別28日・<span class="font-mono">?p=5960</span>／<span class="font-mono">?p=5902</span> の語（90日）・「期間」「納期」「急ぎ」を含む語（90日・サイト全体）・<span class="font-mono">/price/basic.html</span>（9/17〜9/23 の週）。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit --text／--links</span>・HTTP GET のみ）＝<span class="font-mono">?p=5960</span>・<span class="font-mono">/flow/</span>・<span class="font-mono">?p=2117</span>・<span class="font-mono">?p=8365</span>。</li>
+      <li><strong>WordPress（<span class="font-mono">wp-draft.py get</span>）＝本日は未実施</strong>。8365 の状態は公開URLの応答（HTTP500＝下書きのまま）で見ています。</li>
+      <li><strong>競合（hp-serp）</strong>＝「ホームページ制作 期間 どれくらい」1回＋上位の1本（エックスサーバー社の解説）の目次を <span class="font-mono">hp-audit --text</span> で。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　「どれくらいかかるか」の問いに、答えは持っているのに記事が無い</h3>
+    <p class="mb-2"><strong>観察</strong>：①<span class="font-mono">/flow/</span>（制作の流れ）には「<strong>制作期間の目安　おおよそ3か月〜5か月が目安です</strong>」と公開済み（9/26 <span class="font-mono">hp-audit --text</span>）。②一方、サイト全体の GSC 90日で「期間」を含む語は <strong>2語・計3表示</strong>（「ホームページ 費用 期間」2表示・22位ほか）、「納期」は「短納期 コーディング」（外注先を探す語）のみ、「急ぎ」は0＝<u>制作期間を調べる人の検索結果に、YCOM はほぼ出ていません</u>。③「ホームページ制作 期間 どれくらい」の上位10件（hp-serp）は、サーバー会社1・制作会社7ほか＝<strong>制作会社が自社の集客記事として書く定番の問い</strong>です。上位のエックスサーバー社の記事は「規模別（LP 約1か月／5ページ 約2か月／10ページ 約3か月／100ページ以上 8〜9か月）→工程別→短縮する3つのコツ→FAQ」の構成（2026-07-23 更新）。</p>
+    <p class="mb-2"><strong>なぜ中心に置くか</strong>：期間は料金と並んで、<u>発注を決める前に必ず確かめる2つ目の問い</u>です（推測：料金を調べた人の次の検索）。料金の帯は <span class="font-mono">/price/basic.html</span> と下書き 8365 が受ける設計ですが、期間の帯は受けるページも記事も無い＝ファネル③の入口の穴です。しかも答え（3〜5か月）と、他社が書けない材料＝<strong>代表ご自身の「スピードと品質」の考え方（<span class="font-mono">?p=5960</span>・2019）</strong>が、すでに自社サイトの中にあります。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：③依頼（検討段階）。<strong>詰まりの本丸は変わらず ③の料金</strong>＝<span class="font-mono">/price/basic.html</span> は 9/17〜9/23 の週も「ホームページ制作 料金表」20.4位・54表示／「料金」21.6位・34表示＝どちらもクリック0（<strong class="text-rose-700">11週目</strong>）。同じ週「ホームページ制作 5万」は 9.3位・11表示・クリック0（待機列の <span class="font-mono">T-016</span>＝5万・10万でどこまで、の需要の裏づけが続いています）。ブログから今すぐ効かせられるのは、変わらず 8365 の公開だけです（⛳）。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から41日目）</strong>。公開URLは HTTP500＝下書きのときの応答のまま（9/26 <span class="font-mono">hp-audit</span>）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝公開ページに残存（73日目）</strong>。本日も <span class="font-mono">【要・社長確認</span> を1か所実測。28日（〜9/23）224クリック・5,235表示＝ブログ最多の記事。</li>
+      <li><span class="font-mono">/flow/</span> の誤変換2か所（C100 で hp-loop へ申し送り）＝<strong>9/26 も残っています</strong>（「要望や<u>政策</u>の方針を<u>きけんとう</u>するために」）。T-054 はこのページへ送る記事なので、公開前に直っていると安心です。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝20日目・未回答。</li>
+      <li><span class="text-gray-600">参考（使わなかった観察）：<span class="font-mono">?p=5902</span>（暗い所の写真の撮り方・28日651表示）＝「室内撮影 設定」122表示・37位など写真技術の読者＝事業から遠い（<span class="font-mono">B-061</span> の考え方で対象外）。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-094</span>）</h3>
+  <div class="bg-white border-2 border-emerald-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-emerald-800 mb-2"><span class="font-mono">B-094</span>　<span class="font-mono">?p=5960</span>「スピード重視 VS 品質重視 どっちが大事かということについて書いてみる」（2019-01-10・代表）＝誤字3か所を直す＋T-054 公開後に1行で送る　🟢　<span class="text-xs font-normal">（回答不要／実行は 🔒 ローテ後・2分）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=5960</span></li>
+      <li><strong>観点</strong>：E-E-A-T（代表の一次情報）・内部リンク</li>
+      <li><strong>観察</strong>：GSC 28日＝787表示・8クリック・CTR1.02%・平均6.7位。90日の主な語＝「スピード重視」146表示・5.2位・2クリック／「品質重視」59表示・<strong>1.9位</strong>・4クリック／「クオリティ重視」24表示・2.7位・0。本文は代表の仕事観（「30%の時間で70%の品質」「時間を決めて一定の品質を出す」「見積りの力」）。<strong>誤字3か所</strong>＝「すごく<u>書品</u>やサービスの特性に」→商品／「満足<u>今の</u>いくものが」→満足のいく／「思って<u>う</u>ので」→思っているので（9/26 <span class="font-mono">hp-audit --text</span>）。関連記事4本は写真・ファイリング・Amazon・動画編集＝仕事観の読者の次の一歩になる記事は無し。</li>
+      <li><strong>なぜ問題か</strong>：この記事は YCOM の<u>代表の考え方が一番まっすぐ書かれた記事</u>の1つで、「品質重視」では1〜2位に出ています。誤字は、制作会社の代表の文章としての信頼を小さく削ります（推測：影響の大きさは測れません）。</li>
+      <li><strong>改善案</strong>：①誤字3か所だけ直す（<u>代表の文章の言い回し・主張は一切変えない</u>）。②<span class="font-mono">T-054</span> が公開されたら、末尾（関連記事の前）に1行「この考え方で、ホームページ制作の進め方も組んでいます → 制作期間の目安と、早く公開するための考え方（T-054）」。T-054 未公開の間は②はしない（行き先の無い案内を作らない＝<span class="font-mono">B-090</span> の教訓）。</li>
+      <li><strong>効果</strong>：<strong>買い手換算＝年1件未満</strong>（読者の大半は「仕事の進め方」を調べる一般の人・<span class="font-mono">B-081</span> のとおり橋を架けても送客は小さい）。主な価値は T-054 の<u>独自の章の出典</u>になること。<strong>工数</strong>：①1分・②30秒。<strong>優先度</strong>：🟢。<strong>栓</strong>：🔒 WP 書き込みはローテ後（差分作りは栓なし＝blog-improve でローカルに可・急ぎません）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-054</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-054</span>　「ホームページ制作の期間はどれくらい？——目安3〜5か月の内訳と、遅れるのはどこか、早く公開したいときの考え方」　🟡　<span class="text-xs font-normal">（<strong>執筆は publish が動いてから＝在庫を積まない</strong>）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>重複の確認</strong>：同じ問いの自社記事・既存の T は無し（掲示板・アーカイブを「期間」で照合）。ピラー <span class="font-mono">T-008</span> はまとめに「制作期間の目安3〜5か月」を1行で持つだけ＝本記事は T-008 の<u>スポーク（詳しくはこちら）の1本</u>として足せます（T-008 のスポーク7本に1本追加・T-008 は在庫の最後のまま）。<br><strong>他社との差</strong>：上位は「規模別の目安表＋短縮のコツ」の一般論で、どこも似た構成です。差がつくのは①<u>自社の公開済みの目安</u>（3〜5か月・<span class="font-mono">/flow/</span>）で言い切れること、②<u>代表の考え方</u>（<span class="font-mono">?p=5960</span>＝全部そろえてから出すより、7割の品質で決めた時間に出して育てる）を「早く公開したいとき」の章の芯にできること、③制作から運用・保守まで一貫＝「公開後に育てる」を実際に引き受けられること（<span class="font-mono">/flow/</span> に公開済み）。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：初めて（または久しぶりに）制作会社への依頼を考えている中小企業の経営者・担当者。「いつまでに公開できるか」から逆算して、いつ相談すればよいかを知りたい人。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：「ホームページ制作 期間」「ホームページ 作成期間 目安」「ホームページ制作 どれくらいかかる」「ホームページ 制作 短縮」。※自社は90日でほぼ表示なし＝<u>取れるかは書いてみないと分かりません</u>（需要の大きさを自社データで示せない＝正直に）。</li>
+      <li><strong>タイトル案</strong>：「ホームページ制作の期間はどれくらい？目安3〜5か月の内訳と、早く公開したいときに発注側ができること」</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　結論：YCOM の目安は3〜5か月。長さを決めるのは「ページ数」より「そろうまでの待ち」</strong>（先に答え。<span class="font-mono">/flow/</span> の公開値を出典に）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 期間を左右する4つ＝ページ数／機能（お知らせ更新・予約・問い合わせフォーム等）／原稿と写真がそろう時期／社内で確認する人の数</li><li>h3 一般的な規模別の目安（他社・サーバー会社の公開値を<u>出典つきで</u>紹介するだけ。自社の規模別の実数は下の「用意すべき内容」）</li></ul></li>
+      <li><strong>h2　ご相談から公開までの流れと、それぞれの目安</strong>（<span class="font-mono">/flow/</span> の工程名に合わせる＝お問い合わせ → ご説明・打ち合わせ → … → 公開 → 運用。各工程の週数は社長の確認後に）</li>
+      <li><strong>h2　遅れるのは「制作」より「待ち」——発注側で先に用意できるもの</strong>
+        <ul class="list-[circle] list-inside ml-4"><li>h3 原稿（会社案内・サービス説明）は誰がいつまでに書くか</li><li>h3 写真（撮り直すか・手持ちを使うか）＝<span class="font-mono">?p=4907</span>（ホームページ用写真をキレイに撮る方法）へ</li><li>h3 確認する人と「ここまでに返す」を決めておく</li><li>h3 ドメイン・サーバーの名義と契約（<span class="font-mono">T-011</span> 公開後にリンク）</li></ul></li>
+      <li><strong>h2　早く公開したいときは「全部そろえてから」より「7割で出して育てる」</strong>（本記事の核＝他社に書けない章）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 代表の考え方（<span class="font-mono">?p=5960</span> を引用・リンク）＝時間を決め、その中で一定の品質を出す</li><li>h3 最初に出すページを絞る（まず必要なページだけ公開 → 公開後に足す）</li><li>h3 公開後に育てる前提で、運用の分担を先に決める（<span class="font-mono">/service/web/operate/</span> へ）</li><li>※「急ぎの案件で実際にどう進めたか」の1例があれば、ここが一番強くなります（下の「用意すべき内容」）</li></ul></li>
+      <li><strong>h2　よくある質問</strong>（「1か月で作れますか」「リニューアルでも同じくらい？」「公開日を先に決めてもいい？」＝答えは社長の確認後。確認できない問いは載せない）</li>
+      <li><strong>h2　まとめ／まずは公開したい時期からご相談ください</strong>（<span class="font-mono">/flow/</span>・<span class="font-mono">/price/basic.html</span>）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/flow/</span>（制作の流れ・期間の目安）／<span class="font-mono">/price/basic.html</span>（料金表）／<span class="font-mono">?p=5960</span>（代表の考え方）／<span class="font-mono">?p=4907</span>（写真）／<span class="font-mono">/service/web/operate/</span>（運用）。未公開の <span class="font-mono">T-011</span>（必要なもの一式）・<span class="font-mono">T-008</span>（ピラー）・8365（費用）は公開後に。逆向き＝<span class="font-mono">B-094</span>②（5960 → 本記事）。</li>
+      <li><strong>CTA</strong>：<span class="font-mono">Q-009</span> で決まる本命の相談窓口1つ（未定の間は <span class="font-mono">/flow/</span> の「お見積りはこちら／お問い合わせ」ボタンの現物を流用）。</li>
+      <li><strong>用意すべき内容（捏造しない）</strong>：①工程ごとの週数の目安（YCOM の実際）②規模別の実数（例：5ページ前後なら何か月）③「急いで公開した案件」または「待ちで延びた案件」の実例1つ（社名は伏せて可）。<u>①〜③が無くても記事は成立</u>します（公開済みの「3〜5か月」と一般論＋代表の考え方で書けます）＝栓ではありません。</li>
+      <li><strong>効果</strong>：クリック換算＝推測で月0〜数件（未獲得の帯・上位は制作会社の記事が並ぶ）／<strong>買い手換算＝年1件未満〜1件</strong>（推測：期間を調べる人は料金を調べる人と同じ③の段階＝読者の質は高いが量は測れない）。<strong>工数</strong>：中。<strong>優先度</strong>：🟡。<strong>栓</strong>：― publish 後（在庫を積まない）／事実①〜③は任意。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-26）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 20日目・未回答。<strong>本日の新規質問はゼロ</strong>（<span class="font-mono">B-094</span> は回答不要・<span class="font-mono">T-054</span> の「用意すべき内容」は任意）。</li>
+      <li><strong>件数を絞りました</strong>：未消化が多いため B1＋T1。</li>
+      <li><strong>観点の輪番</strong>：前日までの「カニバリ・外部リンクの鮮度」から、本日は<u>「買い手が料金の次に調べる問い」の穴</u>と <u>E-E-A-T（代表の一次情報）</u>へ。</li>
+      <li><strong>執筆担当</strong>：9/28 の起動でやることは変わりません（<span class="font-mono">B-091</span> のコメント付け替えだけ）。<span class="font-mono">B-094</span>①の差分は<u>次の保留解除の際にまとめて</u>で足ります。<span class="font-mono">T-054</span> は執筆しない。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 104 の本文を <a href="archive.html#c104" class="underline">アーカイブ</a>へ原文のまま移しました。</li>
+      <li><strong>自己改善（Step 7）</strong>：学び＝<u>新規ネタ探しが「GSC に表示がある取りこぼし」に偏り、表示ゼロ＝候補にも出ていない買い手の定番の問い（期間など）が見えていなかった</u>。「買い手の定番の問い×自社の公開ページにある答え×自社記事の有無」を輪番の観点に足す提案（skill-kaizen <span class="font-mono">K-882</span>）。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（<span class="font-mono">M-20260926T050614-blog-loop-ycom-c75b9f</span>・type=report・作用付きの依頼なし）／Slack 日報を投稿。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 104（2026-09-25）＝ Cycle 105（2026-09-26）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c104">Cycle 104 — 2026-09-25（YCOM ブログ・日次）：<span class="text-rose-700">自社サービス「今昔写語」を紹介するブログ3本・7本のリンクが、すべて旧ドメイン <span class="font-mono">http://konjaku-photo.com/</span> を向いています</span>／<span class="text-emerald-800">新ドメインへ張り替える小さな直し（B-093）と、この移行を「リニューアルで入口はどう移るか」の実例として T-038 に足す改訂版を出します</span></h2>
 
