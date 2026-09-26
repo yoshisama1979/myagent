@@ -20,3 +20,5 @@
 | RR-007 | 全国スタンプラリー（starally） | websystem | `rr-starally` | 2026-09-13 | 2027-09-13 | 有効 |  |  |
 | RR-008 | hana_tools | websystem | `rr-hana-tools` | 2026-09-14 | 2027-09-14 | 有効 |  |  |
 | RR-009 | konjaku_photo | websystem | `rr-konjaku-photo` | 2026-09-14 | 2027-09-14 | 有効 |  |  |
+| RR-010 | よしだ歯科 | website | `rr-yoshida` | 2026-09-18 | 2027-09-18 | 有効 |  |  |
+| RR-011 | 大阪トヨペット toyopet-lp | website | `rr-toyopet-lp` | 2026-09-18 | 2027-09-18 | 有効 |  |  |
