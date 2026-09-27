@@ -193,6 +193,119 @@ printf '%s' "$got" | grep -q '^keep' \
 printf '%s' "$got" | grep -q 'globbed_states' \
   && ok "壊れた群の名前を申告する（どこが読めないか分かる）" || ng "壊れた群を名指ししない: $got"
 
+# ── 【2】宛先が最後に取りに来た日（2026-09-27 追加・O-082／⑤の出典）
+# 件数だけでは「届いていない」と「届いているのに取りに来ていない」を区別できない。
+# 取りに来た時刻は cur/ の **ctime（改名された時刻）**で見る＝mv は mtime を持ち越すため。
+echo
+echo "── 【2】宛先が最後に取りに来た日"
+mkdir -p "$R/data/mailbox/cur"
+printf '%s' '{"id":"M-1","to":"alpha-dev","ts":"2026-01-01T00:00:00+09:00"}' > "$R/data/mailbox/cur/M-1.json"
+printf '%s' '{"id":"M-2","to":"alpha-dev","ts":"2026-01-02T00:00:00+09:00"}' > "$R/data/mailbox/cur/M-2.json"
+printf '%s' '{"id":"M-3","to":"beta-dev","ts":"2026-01-03T00:00:00+09:00"}'  > "$R/data/mailbox/cur/M-3.json"
+printf '%s' 'これは JSON ではない' > "$R/data/mailbox/cur/broken.json"
+got="$(LEDGER_WATCH_ROOT="$R" python3 -c '
+import importlib.util, sys, datetime
+spec = importlib.util.spec_from_file_location("_lw", sys.argv[1])
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+rows = {e["to"]: e for e in m.pickups()}
+today = datetime.datetime.now(m.JST).date().isoformat()
+print("宛先数", len(rows))
+print("alpha件数", rows.get("alpha-dev", {}).get("count"))
+print("beta件数", rows.get("beta-dev", {}).get("count"))
+print("alpha最終", rows.get("alpha-dev", {}).get("last"), "今日", today)
+print("経過", rows.get("alpha-dev", {}).get("days"))
+' "$TOOL")"
+printf '%s' "$got" | grep -q '^宛先数 2$'   && ok "宛先ごとに1行にまとめる（壊れた JSON は数えず落ちない）" || ng "宛先の数がおかしい: $got"
+printf '%s' "$got" | grep -q '^alpha件数 2$'   && ok "処理済みの件数を宛先ごとに数える" || ng "件数がおかしい: $got"
+last="$(printf '%s' "$got" | sed -n 's/^alpha最終 \([0-9-]*\) 今日 \([0-9-]*\)$/\1 \2/p')"
+[ -n "$last" ] && [ "${last% *}" = "${last#* }" ]   && ok "取りに来た日は送信時刻（2026-01-01）でなく改名時刻＝今日になる"   || ng "ctime を見ていない（mtime を見ている疑い）: $got"
+printf '%s' "$got" | grep -q '^経過 0$'   && ok "経過日数を出せる" || ng "経過日数がおかしい: $got"
+
+# ★実際の経路（new/ → cur/ の os.replace）で確かめる＝テストが「cur/ に直接作る」だけだと
+#   mv で mtime が持ち越される問題を踏めない（Codex 指摘 🔴4）。古い mtime を付けてから動かす。
+python3 - "$R" <<'PYMOVE'
+import os, sys, time
+R = sys.argv[1]
+os.makedirs(f"{R}/data/mailbox/new", exist_ok=True)
+src = f"{R}/data/mailbox/new/M-9.json"
+with open(src, "w", encoding="utf-8") as f:
+    f.write('{"id":"M-9","to":"gamma-dev","ts":"2026-01-01T00:00:00+09:00"}')
+old = time.time() - 60 * 60 * 24 * 40
+os.utime(src, (old, old))
+os.replace(src, f"{R}/data/mailbox/cur/M-9.json")
+PYMOVE
+got2="$(LEDGER_WATCH_ROOT="$R" python3 -c '
+import importlib.util, sys, datetime
+spec = importlib.util.spec_from_file_location("_lw", sys.argv[1])
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+r = {e["to"]: e for e in m.pickups()}.get("gamma-dev", {})
+print(r.get("last"), datetime.datetime.now(m.JST).date().isoformat())
+' "$TOOL")"
+a2="$(printf '%s' "$got2" | cut -d" " -f1)"; b2="$(printf '%s' "$got2" | cut -d" " -f2)"
+if [ "$a2" = "$b2" ]; then ok "new/ → cur/ を実際に動かしても取りに来た日は今日（mtime 40日前に引きずられない）"; else ng "mtime に引きずられている（$got2）"; fi
+
+# ── alerts（前回以降の警報・O-051／triage.md v1.4 の出典）
+# ★0件のとき「0件」と言えること／入力が無いときは「0件」と言わず**判定不能**と言えること（Codex 指摘 🔴3）。
+# ★cron.log はブロック形式（`# system-health YYYY-MM-DD HH:MM` の下に日付の無い ⚠️ 行が並ぶ）＝
+#   行ごとに日付を求めると実データで1件も拾えない（実測ヒット0件・Codex 指摘 🔴1）。
+echo
+echo "── alerts（前回以降の警報）"
+mkdir -p "$R/data/overseer"
+: > "$R/data/overseer/failures.jsonl"
+out="$(LEDGER_WATCH_ROOT="$R" python3 "$TOOL" alerts --days 7 2>&1)"
+printf '%s' "$out" | grep -q '判定不能' \
+  && ok "出典が1つでも無いときは「0件」と言わず判定不能と言う" || ng "欠けた出典を0件にした: $out"
+printf '%s' "$out" | grep -q 'cron.log が ありません' \
+  && ok "どの出典が欠けたかを名指しする" || ng "欠けた出典を名指ししない: $out"
+
+today="$(date +%Y-%m-%d)"; old="$(date -d '30 days ago' +%Y-%m-%d 2>/dev/null || date +%Y-%m-%d)"
+printf '# system-health %s 01:15\n- ⚠️ 器が太い（毎晩同じ顔で並ぶ＝ここでは拾わない）\n' "$today" \
+  > "$R/data/overseer/cron.log"
+out="$(LEDGER_WATCH_ROOT="$R" python3 "$TOOL" alerts --days 7 2>&1)"
+printf '%s' "$out" | grep -q '前回以降の警報 0件' \
+  && ok "警報が無いとき「0件」と明記する（黙って省かない）" || ng "0件を言わない: $out"
+printf '%s' "$out" | grep -q '器が太い' \
+  && ng "毎晩の器サイズ警告まで拾っている（263件の鳴りっぱなしに戻る）: $out" \
+  || ok "毎晩の器サイズ警告は拾わない（ledger-watch【1】と重複させない）"
+
+{
+  printf '{"ts":"%sT01:00:00+09:00","fail":"partner-timeout"}\n' "$today"
+  printf '{"ts":"%sT01:00:00+09:00","fail":"古すぎる分"}\n' "$old"
+  printf 'これは JSON ではない\n'
+} > "$R/data/overseer/failures.jsonl"
+printf '# system-health %s 01:15\n- メモリ: OOM kill 18回（前回から +2）\n' "$today" \
+  > "$R/data/overseer/cron.log"
+out="$(LEDGER_WATCH_ROOT="$R" python3 "$TOOL" alerts --days 7 2>&1)"
+printf '%s' "$out" | grep -q 'partner-timeout' \
+  && ok "窓の中の警報を出す" || ng "窓の中の警報が出ない: $out"
+if printf '%s' "$out" | grep -q '古すぎる分'; then ng "古い分まで出している: $out"; else ok "窓より古い警報は出さない"; fi
+printf '%s' "$out" | grep -q '読めない行 1件' \
+  && ok "壊れた行は「読めない行」として申告する（黙って捨てない）" || ng "壊れた行を黙って捨てた: $out"
+printf '%s' "$out" | grep -q 'OOM kill が前回から +2' \
+  && ok "cron.log のブロックから OOM の増加を拾う（日付はブロック見出しから取る）" || ng "OOM を拾えない: $out"
+printf '%s' "$out" | grep -q '直近7日' \
+  && ok "どの窓で数えたかを明記する" || ng "窓の根拠を言わない: $out"
+
+# 毎晩の監視そのものが止まっていることを言えるか（2026-09-20〜27 に7日間 実在した）
+printf '# system-health %s 01:15\n- メモリ: OOM kill 18回（前回から +0）\n' "$old" \
+  > "$R/data/overseer/cron.log"
+out="$(LEDGER_WATCH_ROOT="$R" python3 "$TOOL" alerts --days 60 2>&1)"
+printf '%s' "$out" | grep -q '監視の無言停止' \
+  && ok "毎晩の監視が出ていないこと自体を警報にする" || ng "監視の無言停止を言わない: $out"
+
+# 省略件数を隠さない
+python3 - "$R" <<'PYGEN'
+import sys, datetime
+R = sys.argv[1]
+today = datetime.date.today().isoformat()
+with open(f"{R}/data/overseer/failures.jsonl", "w", encoding="utf-8") as f:
+    for i in range(20):
+        f.write('{"ts":"%sT0%d:00:00+09:00","fail":"件%d"}\n' % (today, i % 10, i))
+PYGEN
+out="$(LEDGER_WATCH_ROOT="$R" python3 "$TOOL" alerts --days 7 2>&1)"
+printf '%s' "$out" | grep -q '件は省略' \
+  && ok "全件より少なく表示するときは省略件数を言う" || ng "省略を黙っている: $out"
+
 echo
 echo "合計: 合格 ${PASS} ／ 不合格 ${FAIL}"
 [ "$FAIL" -eq 0 ]

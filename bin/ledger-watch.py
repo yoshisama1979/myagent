@@ -43,6 +43,9 @@ DESKS = {"board": "会社の向かう先（月〜四半期）", "triage": "こ�
          "overseer": "システム全体の健全性", "do": "何でも窓口"}
 CMD_RE = re.compile(r"<command-name>/?([a-zA-Z0-9_-]+)</command-name>")
 SNAP_LOG = os.path.join(ROOT, "data/overseer/ledger-watch.jsonl")
+FAILURES = os.path.join(ROOT, "data/overseer/failures.jsonl")
+CRON_LOG = os.path.join(ROOT, "data/overseer/cron.log")
+ALERT_FALLBACK_DAYS = 7   # 前回この窓口を開いた日が分からないときの窓（★提案既定値）
 
 
 def thresholds():
@@ -178,6 +181,37 @@ def mailbox_queues():
     return sorted(out.values(), key=lambda e: (-(e["oldest"] or 0), -e["count"])), unreadable
 
 
+def pickups():
+    """キュー①の裏側＝**宛先ごとに「最後に取りに来た日」**。
+
+    便が届いていないのか、届いているのに取りに来ていないのかは、件数だけでは区別できない
+    （実測＝new/ の滞留の大半が「こちら→開発側」宛て＝先方が取りに来ていない／O-082）。
+    ⚠️ 取りに来た時刻は `cur/` のファイルの **ctime（改名された時刻）** で見る。mv は mtime を
+      持ち越すので mtime では送信時刻しか分からない。バックアップから戻すと ctime は狂う（その旨を表示）。
+    """
+    today = datetime.datetime.now(JST).date()
+    out = {}
+    d = os.path.join(ROOT, "data/mailbox", "cur")
+    for p_ in glob.glob(os.path.join(d, "*.json")):
+        try:
+            with open(p_, encoding="utf-8") as f:
+                to = str(json.load(f).get("to", "?"))
+            ct = os.stat(p_).st_ctime
+        except (OSError, ValueError):
+            continue
+        day = datetime.datetime.fromtimestamp(ct, JST).date()
+        e = out.setdefault(to, {"to": to, "count": 0, "last": None})
+        e["count"] += 1
+        if e["last"] is None or day > e["last"]:
+            e["last"] = day
+    rows = []
+    for e in out.values():
+        rows.append({"to": e["to"], "count": e["count"],
+                     "last": e["last"].isoformat() if e["last"] else None,
+                     "days": (today - e["last"]).days if e["last"] else None})
+    return sorted(rows, key=lambda e: -(e["days"] if e["days"] is not None else 10 ** 6))
+
+
 _KAIZEN = None
 
 
@@ -289,6 +323,165 @@ def desks():
     return out, None
 
 
+CURRENT_OPEN_WINDOW_H = 2   # ★提案既定値。この時間内の起動は「いま開いているこの回」とみなす
+
+
+def desk_openings(desk):
+    """その窓口を開いた**日時の履歴**（古い順）。
+
+    ★`desks()`（【3】）はファイルの mtime と先頭16KB しか見ないので「最後に触った時刻」しか出ない。
+      「前回この窓口を開いた時刻」には使えない（実測 2026-09-27＝triage の履歴は1本のセッションログに
+      3回分〔08-28・09-05・09-13〕入っていて、mtime では今日しか出なかった＝Codex 指摘）。
+      ここでは全行を走査して `<command-name>` の行の timestamp を拾う（全540本・1.0GB で約4秒）。
+    """
+    out = []
+    try:
+        files = sorted(glob.glob(os.path.join(SESSION_DIR, "*.jsonl")))
+    except OSError:
+        return out
+    for path in files:
+        try:
+            with open(path, errors="replace") as f:
+                for ln in f:
+                    if "<command-name>" not in ln:
+                        continue          # 1GB を正規表現に掛けないための前さばき
+                    m = CMD_RE.search(ln)
+                    if not m or m.group(1) != desk:
+                        continue
+                    try:
+                        ts = json.loads(ln).get("timestamp")
+                    except ValueError:
+                        ts = None
+                    if not ts:
+                        continue
+                    try:
+                        out.append(datetime.datetime.fromisoformat(ts.replace("Z", "+00:00")))
+                    except ValueError:
+                        continue
+        except OSError:
+            continue
+    return sorted(out)
+
+
+def previous_desk_opening(desk, now=None):
+    """**前回**その窓口を開いた日時（いま開いているこの回は除く）。取れなければ None."""
+    now = now or datetime.datetime.now(JST)
+    hist = [d.astimezone(JST) for d in desk_openings(desk)]
+    # いま開いているこの回を落とす（このコマンドは窓口の起動直後に走るので最新＝今回になる）
+    cut = now - datetime.timedelta(hours=CURRENT_OPEN_WINDOW_H)
+    past = [d for d in hist if d <= cut]
+    return past[-1] if past else None
+
+
+def alerts(days=None, desk="triage", now=None):
+    """前回この窓口を開いた時刻より後の警報。**0件でも0件と言えるように**件数と入力の状態を返す（O-051）。
+
+    出典は既存の2本だけ（`failures.jsonl`＝無人ループの異常終了・`cron.log` の警報行）＝
+    外部サービス・費用・新しい依存を増やさない（2026-09-27 社長ご承認・triage.md v1.4）。
+    ★`cron.log` は**ブロック形式**＝`# system-health YYYY-MM-DD HH:MM` の下に日付を持たない
+      `- ⚠️ …` が並ぶ。行ごとに日付を求めると**1件も拾えない**（実測＝3,766行に対しヒット0件・Codex 指摘）。
+    """
+    now = now or datetime.datetime.now(JST)
+    if days is None:
+        last = previous_desk_opening(desk, now)
+        since = last or (now - datetime.timedelta(days=ALERT_FALLBACK_DAYS))
+        basis = f"前回 /{desk} を開いた {last:%Y-%m-%d %H:%M} 以降" if last \
+            else f"直近{ALERT_FALLBACK_DAYS}日（前回 /{desk} を開いた記録が取れないため）"
+    else:
+        since = now - datetime.timedelta(days=days)
+        basis = f"直近{days}日"
+    rows, status, unreadable = [], {}, 0
+
+    if not os.path.exists(FAILURES):
+        status["failures.jsonl"] = "ありません＝判定不能（0件ではない）"
+    else:
+        status["failures.jsonl"] = "読めました"
+        with open(FAILURES, encoding="utf-8", errors="replace") as f:
+            for ln in f:
+                ln = ln.strip()
+                if not ln:
+                    continue
+                try:
+                    r = json.loads(ln)
+                except ValueError:
+                    unreadable += 1
+                    continue
+                t = _as_dt(r.get("ts"))
+                if t and t > since:
+                    rows.append({"at": t, "src": "failures.jsonl",
+                                 "what": str(r.get("fail") or r.get("why") or "（内容欄なし）")[:120]})
+
+    # ★`cron.log` は毎晩の system-health の出力そのもの＝器のサイズ警告が毎日同じ顔で並ぶ。
+    #   素直に ⚠️ を全部拾うと**前回から263件**になり、鳴りっぱなしで警報として働かない
+    #   （実測 2026-09-27・ledger-discipline §2 と同じ型）。器のサイズは ledger-watch【1】と
+    #   system-health が既に持っているので**ここでは重複させない**。この出典から取るのは2つだけ：
+    #     ① OOM kill が前回から増えた（failures.jsonl には出ない・VPS ごとの危険）
+    #     ② 毎晩の監視そのものが出ていない（＝監視の無言停止。2026-09-20〜27 に7日間 実在した）
+    if not os.path.exists(CRON_LOG):
+        status["cron.log"] = "ありません＝判定不能（0件ではない）"
+    else:
+        status["cron.log"] = "読めました"
+        blk = re.compile(r"^#\s*system-health\s+(20\d\d-\d\d-\d\d)[ T](\d\d:\d\d)")
+        oom = re.compile(r"OOM kill\s*(\d+)回（前回から \+(\d+)）")
+        at, last_block = None, None
+        with open(CRON_LOG, encoding="utf-8", errors="replace") as f:
+            for ln in f:
+                m = blk.match(ln)
+                if m:
+                    at = _as_dt(f"{m.group(1)}T{m.group(2)}:00+09:00")
+                    last_block = at or last_block
+                    continue
+                if not at or at <= since:
+                    continue
+                mo = oom.search(ln)
+                if mo and int(mo.group(2)) > 0:
+                    rows.append({"at": at, "src": "cron.log",
+                                 "what": f"OOM kill が前回から +{mo.group(2)}（累計{mo.group(1)}回）"})
+        if last_block is None:
+            rows.append({"at": now, "src": "cron.log",
+                         "what": "🚨 毎晩の system-health の記録が1件もありません＝監視の無言停止"})
+        else:
+            gap = (now.date() - last_block.date()).days
+            if gap >= 2:
+                rows.append({"at": last_block, "src": "cron.log",
+                             "what": f"🚨 毎晩の system-health が {gap}日 出ていません"
+                                     f"（最後は {last_block:%Y-%m-%d}）＝監視の無言停止"})
+    rows.sort(key=lambda e: (e["at"], e["src"]))
+    return {"since": since.isoformat(timespec="minutes"), "basis": basis, "count": len(rows),
+            "rows": rows, "sources": status, "unreadable": unreadable}
+
+
+def _as_dt(v):
+    """文字列を JST の日時に。読めなければ None（黙って今日扱いにしない）。"""
+    if not v:
+        return None
+    try:
+        d = datetime.datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return d.astimezone(JST) if d.tzinfo else d.replace(tzinfo=JST)
+
+
+ALERT_SHOW = 15
+
+
+def report_alerts(days=None):
+    a = alerts(days)
+    broken = [k for k, v in a["sources"].items() if v != "読めました"]
+    head = "判定不能" if broken else f"{a['count']}件"
+    print(f"前回以降の警報 {head}（{a['basis']}）")
+    for k in broken:
+        print(f"  🚨 出典 {k} が {a['sources'][k]}")
+    if a["unreadable"]:
+        print(f"  ⚠️ 読めない行 {a['unreadable']}件（黙って捨てていません）")
+    shown = a["rows"][-ALERT_SHOW:]
+    if len(a["rows"]) > len(shown):
+        print(f"  （全{len(a['rows'])}件のうち直近{len(shown)}件を表示／{len(a['rows']) - len(shown)}件は省略）")
+    for r in shown:
+        print(f"  {r['at']:%Y-%m-%d %H:%M}  {r['src']:<16}{r['what']}")
+    return 1 if broken else 0
+
+
 def fmt_kb(n):
     return f"{n/KB:,.0f}K"
 
@@ -298,11 +491,13 @@ def report(as_json=False):
     mail, unreadable = mailbox_queues()
     dec = decision_queues()
     dk, dk_err = desks()
+    pk = pickups()          # 人向けと機械向けで二度数えない（正を2つ持たない）
     if as_json:
         print(json.dumps({"generated": datetime.datetime.now(JST).isoformat(timespec="seconds"),
                           "since": str(since), "snapshots": n, "accumulators": rows,
-                          "mailbox": mail, "decisions": dec, "desks": dk, "unreadable": unreadable,
-                          "threshold_error": lim_err}, ensure_ascii=False, indent=2))
+                          "mailbox": mail, "pickups": pk, "decisions": dec, "desks": dk,
+                          "unreadable": unreadable, "threshold_error": lim_err},
+                         ensure_ascii=False, indent=2))
         return 0
     print(f"■ 器の状態（{datetime.datetime.now(JST).date()}／サイズ履歴 {since}〜・{n}回分）")
     print("  数えるだけで良し悪しは判断しない。🔴＝超過かつ増え続けている／🟡＝超過だが横ばい〜減少／🆕＝超過だが傾き不明（計測開始直後）／✅＝上限内\n")
@@ -335,6 +530,14 @@ def report(as_json=False):
         print(f"  {label:<34}{e['count']:>6}{(e['oldest'] if e['oldest'] is not None else '—'):>10}")
     if unreadable:
         print(f"  ⚠️ 読めなかったメッセージ {unreadable} 件")
+    if pk:
+        print("  宛先が最後に取りに来た日（cur/ の改名時刻からの**推定**"
+              "＝復元・cp でずれる。確定値にするには処理時刻の記録が要る／K-890）")
+        print(f"  {'宛先':<26}{'最終(推定)':>12}{'経過':>7}{'処理済':>7}")
+        for e in pk:
+            last = e["last"] or "一度もなし"
+            days = "—" if e["days"] is None else f"{e['days']}日"
+            print(f"  {e['to']:<26}{last:>12}{days:>7}{e['count']:>7}")
     print()
     for e in dec:
         c = "—" if e["count"] is None else e["count"]
@@ -367,10 +570,15 @@ def snapshot():
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("cmd", nargs="?", default="report", choices=["report", "snapshot"])
+    ap.add_argument("cmd", nargs="?", default="report", choices=["report", "snapshot", "alerts"])
+    ap.add_argument("--days", type=int, default=None, help="alerts の窓を日数で指定（既定＝前回この窓口を開いた日以降）")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args()
-    return snapshot() if a.cmd == "snapshot" else report(a.json)
+    if a.cmd == "snapshot":
+        return snapshot()
+    if a.cmd == "alerts":
+        return report_alerts(a.days)
+    return report(a.json)
 
 
 if __name__ == "__main__":

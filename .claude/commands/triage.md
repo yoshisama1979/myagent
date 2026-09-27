@@ -4,7 +4,7 @@ description: 社長との窓口 — システム全体から人間の判断が�
 
 # /triage — 社長との窓口
 
-**まず読む**：[rules/modes/triage.md](../../rules/modes/triage.md)（このモードの正・v1.0）
+**まず読む**：[rules/modes/triage.md](../../rules/modes/triage.md)（このモードの正）
 
 ## これは何のためにあるか
 
@@ -44,7 +44,23 @@ import sys, json, collections; d = json.load(sys.stdin)
 print('確認列', d['count'], '件', dict(collections.Counter(i['tag'] for i in d['items'])))"
 ```
    **片づけ（重複の突き合わせ・担当確認・社長へのお伺い）はマネジメントが直接行う**＝ここでは開かない（2026-09-14 社長ご決定）。
-7. `python3 bin/pending-scan.py list --status open --limit 40` — 中身を読む
+7. **前回以降の警報（必須・0件でも「0件」と書く）** — 社長へ警報が届く経路が Slack しかないため（O-051）。
+   **無言で省かない**。件数は道具が言う（数え直さない）。
+
+```bash
+python3 bin/ledger-watch.py alerts
+```
+   出典＝`data/overseer/failures.jsonl`（無人ループの異常終了）＋`data/overseer/cron.log` の警報行。
+   既定の窓は「前回この窓口を開いた日以降」（取れなければ直近7日。どちらを使ったか道具が明記する）。
+
+8. **窓口別・社長がすべきこと（必須・0件でも「0件」と書く）** — 「どの窓口で・社長が何を・あと何日」の3点だけ。
+   **窓口の中身は開かない**／**社長でなければ物理的にできないものに限る**（AI が代われるものは出さない）。
+   出典＝5（`board-brief`）／6（`todo-brief outside` の①と `hold`）／経理は `data/financial/` の鮮度と
+   `ledger-watch`【3】の `/finance` 最終／7（警報のうち AI で閉じられないもの）。
+   ⚠️ **開発・解析の滞り（`git status bin/`・「宛先が取りに来ていない」）はここに出さない**＝社長の仕事ではない。
+   それは下の「誘導する」でその窓口へ向けて言う。**期限が無いものは「期限未設定」と書く**（日数を作らない）。
+   **手書きの一覧ファイルは作らない**（書き忘れで腐る）。
+9. `python3 bin/pending-scan.py list --status open --limit 40` — 中身を読む
 
 **`finance-snapshot.py` は鮮度が切れているときだけ叩く**（外部APIを毎回叩くと窓口自体が重くなる）。
 
@@ -62,7 +78,7 @@ print('確認列', d['count'], '件', dict(collections.Counter(i['tag'] for i in
 残りは次回に回す＝`ask` を打たなければ次回また候補に上がる。
 
 **件数の多い置き場は、先に AI が仕分けてから5件枠に載せる。**
-skill-kaizen は 156件が未採否（2026-09-12）＝そのまま出さない。
+カイゼンは件数が多いので**そのまま出さない**。**件数は `python3 bin/kaizen.py list` に聞く**（ここに数字を書き写すと古くなる）。
 
 ## 社長への出し方
 
@@ -104,7 +120,7 @@ skill-kaizen は 156件が未採否（2026-09-12）＝そのまま出さない�
 
 **他モードの台帳を横から書き換えない。** 所有しているモードが自分で閉じる。
 
-1. 回答を、そのレーンの `from-president.md` の末尾へ追記する
+1. 回答を、そのレーンの `from-president.md` の末尾へ**追記のみ**で書く（**この窓口は有人なので書ける**。無人モードは `bin/guard-unattended-edits.py` が拒否する＝O-079）
 2. `python3 bin/pending-scan.py decide <key> --kind <president|ai-close|do-now> --note "from-president.md へ記載"`
 3. **次回の起動時に `verify`**（上の手順1）＝決めたのに消えていないものを洗う
 

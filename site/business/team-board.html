@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="600">
+<title>はなさか 目標と現在地</title>
+<!-- このファイルは bin/build-team-board.py の生成物です。手で編集しないでください
+     （目標の正は site/business/goals.html。ここを直しても次の生成で消えます）。 -->
+<style>
+  :root { --bg:#0f172a; --fg:#f8fafc; --dim:#94a3b8; --line:#1e293b; --ac:#38bdf8; --ok:#4ade80; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--fg); font-family:"Noto Sans JP",system-ui,sans-serif;
+          padding:1.6vh 2vw; min-height:100vh; }
+  header { display:flex; justify-content:space-between; align-items:baseline;
+            border-bottom:2px solid var(--line); padding-bottom:.8vh; margin-bottom:1.1vh; }
+  h1 { font-size:1.9vw; letter-spacing:.04em; }
+  .as { color:var(--dim); font-size:1.1vw; }
+  .ns { display:flex; gap:.8vw; align-items:baseline; margin-bottom:.7vh; }
+  .ns .num { color:var(--ac); font-size:1.15vw; font-weight:700; }
+  .ns .t { font-size:1.35vw; font-weight:700; line-height:1.25; }
+  .grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.9vw 1vw; }
+  .card { background:#152036; border:1px solid var(--line); border-radius:.5vw; padding:1vh .9vw; }
+  .card h3 { font-size:1.25vw; line-height:1.4; font-weight:700; margin-bottom:.7vh; }
+  .card .num { color:var(--ac); margin-right:.5vw; }
+  .st { color:var(--dim); font-size:.85vw; font-weight:400; margin-left:.6vw; white-space:nowrap; }
+  .row { display:flex; gap:.7vw; font-size:.95vw; line-height:1.5; margin-top:.3vh; }
+  .k { color:var(--dim); flex:0 0 3vw; }
+  .v { flex:1; }
+  .now { color:var(--ok); font-weight:700; }
+  footer { margin-top:1.2vh; color:var(--dim); font-size:.85vw; border-top:1px solid var(--line); padding-top:1vh; }
+  @media (max-width:900px) {
+    h1 { font-size:5vw; } .grid { grid-template-columns:1fr; }
+    .ns .t { font-size:5vw; } .ns .num { font-size:4vw; }
+    .card h3 { font-size:4.2vw; } .row { font-size:3.6vw; } .k { flex:0 0 10vw; }
+    .as, .st, footer { font-size:3vw; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>いま会社が目指していること</h1>
+  <div class="as">2026-09-27 10:26 現在</div>
+</header>
+<div class="ns"><span class="num">G0</span><span class="t">システム制作・運用をメイン事業へ転換、ストック収益基盤を確立する</span></div><div class="ns"><span class="num">G1</span><span class="t">月額プロダクト（HANAチャット・AIウェブ解析・以後の商品）を多くの企業に届け、月額収益化する</span></div><div class="ns"><span class="num">G2</span><span class="t">月額運用契約を含むシステム受注を継続的に積み上げる</span></div><div class="ns"><span class="num">G3</span><span class="t">社内管理ツールHANAを進化させ、業務効率と意思決定スピードを上げる</span></div>
+<div class="grid">
+<article class="card"><h3><span class="num">G0.1</span>FY2026 売上目標（3段階：保守 / 標準 / ストレッチ）<span class="st">進行中</span></h3></article><article class="card"><h3><span class="num">G0.2</span>FY2026 ストック収益比率 20%以上（最重点論点）<span class="st">進行中</span></h3><div class="row"><span class="k">目標</span><span class="v">ストック収益 売上比 20%以上</span></div><div class="row"><span class="k">現在</span><span class="v now">契約値ベース 月¥837,300 / 年¥10.0M</span></div></article><article class="card"><h3><span class="num">G0.3</span>回収と資金繰りを健全に保つ<span class="st">進行中</span></h3></article><article class="card"><h3><span class="num">G0.4</span>社長の時間を「売る仕組み」に振り向ける<span class="st">進行中</span></h3><div class="row"><span class="k">現在</span><span class="v now">担当の付いた57件／57件＝100%</span></div></article><article class="card"><h3><span class="num">G0.5</span>月次で収支をトントンにする<span class="st">新設 2026-09-23</span></h3></article><article class="card"><h3><span class="num">G1.1</span>認知獲得（リード数を増やす）<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">月間リード 100件</span></div></article><article class="card"><h3><span class="num">G1.2</span>商談化率の向上<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">リード→商談率 20%（月20件の商談）</span></div></article><article class="card"><h3><span class="num">G1.3</span>成約率の向上<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">商談→成約率 25%（月5件の新規契約）</span></div></article><article class="card"><h3><span class="num">G1.4</span>継続率・LTVの向上<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">月次解約率 2%以下 / 平均契約期間 24ヶ月</span></div></article><article class="card"><h3><span class="num">G2.1</span>既存クライアントからの追加受注・継続契約<span class="st">進行中</span></h3><div class="row"><span class="k">目標</span><span class="v">既存クライアントからの月額契約 5社以上</span></div></article><article class="card"><h3><span class="num">G2.2</span>新規クライアント獲得<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">月間新規問い合わせ 5件 / 月間新規受注 2件</span></div></article><article class="card"><h3><span class="num">G2.3</span>案件単価の向上<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">平均案件単価 ¥X（要決定）</span></div></article><article class="card"><h3><span class="num">G2.4</span>営業パイプラインの可視化<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">商談ステージ別の件数を毎月レビュー</span></div></article><article class="card"><h3><span class="num">G3.1</span>既存業務の自動化<span class="st">進行中</span></h3><div class="row"><span class="k">目標</span><span class="v">月間削減工数 30時間</span></div></article><article class="card"><h3><span class="num">G3.2</span>スキル管理・人事評価のシステム化<span class="st">進行中</span></h3><div class="row"><span class="k">目標</span><span class="v">半期1回の評価サイクルを完全システム化</span></div></article><article class="card"><h3><span class="num">G3.3</span>AI協働基盤の充実<span class="st">進行中</span></h3><div class="row"><span class="k">目標</span><span class="v">Claude Code 経由の作業効率を計測可能にする</span></div></article><article class="card"><h3><span class="num">G3.4</span>内部品質・運用安定化<span class="st">構想中</span></h3><div class="row"><span class="k">目標</span><span class="v">障害ゼロ・データ消失ゼロ・セキュリティ事故ゼロ</span></div></article>
+</div>
+<footer>目標の正＝経営会議（board）が決めた目標ツリー。この画面は毎日つくり直しています。</footer>
+</body>
+</html>

@@ -78,7 +78,7 @@ deck-format.md の実行コマンドで `deck.pdf` を生成し、**検証A**（
 | 掲示板・config・from-president の Read | ✅ 可（読むだけ） |
 | Write: `site/decks/analysis-questions/`（deck.html・deck.pdf） | ✅ 可（毎回上書き再生成） |
 | Edit: `site/decks/index.html`（自デッキの行のみ） | ✅ 可 |
-| 追記: `data/hp-improve/skill-kaizen.md`（Step 5 の気づき1行のみ） | ✅ 可（他モードと同じカイゼン台帳運用） |
+| 追記: `python3 bin/kaizen.py add`（原文＝`data/hp-improve/kaizen/<YYYY-MM>.md`）（Step 5 の気づき1行のみ） | ✅ 可（他モードと同じカイゼン台帳運用） |
 | ヘッドレス Chrome での PDF レンダリング（ローカル file:// のみ） | ✅ 可 |
 | 掲示板・from-president.md の編集 | ❌ 不可（読み取り専用。質問の解決・消し込みは各ループの仕事） |
 | 質問の創作・改変・推測での補完 | ❌ 不可（不明は原文のまま・「未確認」と明示） |
@@ -89,4 +89,4 @@ deck-format.md の実行コマンドで `deck.pdf` を生成し、**検証A**（
 
 - **回答の受け皿は増やさない**：このデッキは既存の回答チャネル（from-president.md / Slack 返信）への**入口を1枚にまとめる読み取りビュー**であって、新しい台帳ではない。デッキに答えを書き込む運用にしない
 - 質問ゼロの日でも生成してよい（「現在、未回答の質問はありません」の1枚＋サマリ）
-- 気づきがあれば `python3 bin/kaizen.py add --title '<1行要約>' --lane questions-deck <<'EOF'`（本文）`EOF` で `data/hp-improve/skill-kaizen.md` に足す（番号は道具がロックを取って振る＝grep で最大+1 を取らない・Edit／sed で台帳へ直接書かない。O-077・K-637）（無ければ「特記なし」）
+- 気づきがあれば `python3 bin/kaizen.py add --title '<1行要約>' --lane questions-deck <<'EOF'`（本文）`EOF` で（原文は `data/hp-improve/kaizen/<YYYY-MM>.md` に入る）足す（番号は道具がロックを取って振る＝grep で最大+1 を取らない・Edit／sed で台帳へ直接書かない。O-077・K-637）（無ければ「特記なし」）

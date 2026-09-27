@@ -67,7 +67,7 @@
 1. [SYSTEM.md](../../SYSTEM.md) を読む（構造・モード地図・健康シグナル候補）。
 2. **Slack の新着を取り込む**：`bin/.venv/bin/python3 bin/slack-poll.py fetch` を実行（last-seen 以降の新着だけ→`data/mailbox/new/` に投函。新着なしならほぼ0コスト。失敗しても致命でない＝次サイクルで再取得）。
 3. **自分宛の受信箱を読む**：`data/mailbox/new/` の中で `"to": "overseer"` の JSON を読む（＝社長が Slack で送った指示・回答）。本文は編集しない。
-4. **`data/overseer/from-president.md` を読む**（＝`/triage` が社長の判断をここへ書き戻す。他8レーンと同じ入口。2026-09-01 社長承認で追加＝mailbox は `overseer` 宛の受信ができず〔送信はできる／O-056 の系〕、このファイルが無いと社長の決定が統括に届かない）。反映したら該当 `O-NNN` を更新し、読んだ節に「反映済み YYYY-MM-DD」を書き添える。
+4. **`data/overseer/from-president.md` を読む**（＝`/triage` が社長の判断をここへ書き戻す。他8レーンと同じ入口。2026-09-01 社長承認で追加＝mailbox は `overseer` 宛の受信ができず〔送信はできる／O-056 の系〕、このファイルが無いと社長の決定が統括に届かない）。反映したら該当 `O-NNN` を更新する。**`from-president.md` 自体には書き込まない**（無人セッションは `bin/guard-unattended-edits.py` が物理的に拒否する＝社長の領域・責務分離）。消し込みは**掲示板の `O-NNN` カード側**に「反映済み YYYY-MM-DD（出典＝`from-president.md` の◯◯節）」と残す。**ガードが止める場所に手順を書かない**（2026-09-13 ご決定(B)・O-079・2026-09-27 社長ご承認で改訂）。
 5. `site/overseer/index.html`（統括レポート掲示板）を読む（前回までの所見・未解決の提案・社長判断）。
 6. 受信箱・`from-president.md` の社長指示・回答を**最優先で反映**：該当する `O-NNN` を解決/更新し、何をしたかを掲示板に記録。各メッセージには **元の Slack スレッドへ返信**（`bin/.venv/bin/python3 bin/slack-poll.py reply <thread_ts> --as overseer "..."`。`thread_ts` は mailbox メッセージの `slack.thread_ts`。`--as overseer` でそのスレッドの持ち主を overseer に保つ）。処理したメッセージは **`bin/.venv/bin/python3 bin/slack-poll.py done <msg_id>`** で `cur/` へ移す（raw mv は使わない・本文は編集しない・履歴を消さない）。
 
@@ -88,7 +88,7 @@ SYSTEM.md「健康シグナル候補」を、**事実で**確認する。LLM の
 
   > 契機＝2026-08-11 社長「後戻りできなくなる前に、全体の設計やコードの最適化の提案をしてくれるようになっていますか」。当時の実測＝統括の起票38件のうち**79%が障害/予防**で、コードの層は一度も見ていなかった（`bin/` 61本中、視野に入っていたのは5本）。周期を30日→14日にしたのは、コードは**ルールより速く増える**ため（実測＝直近14日で `bin/` は純 +7,796行）。
 - **版ズレ**：各ルールが参照するパス・コマンド・ファイルが実在するか（Grep/Glob/ls で照合）。SYSTEM.md の版表と実ファイルの version が一致するか。
-- **共通部の流用整合（hp-improve ↔ hp-loop）**：hp-loop が hp-improve から「流用（重複定義しない）」と宣言しているもの（評価観点・進め方の原則・カイゼン台帳 `data/hp-improve/skill-kaizen.md`）が、実際に再記述でなく参照で繋がっているか。一方を直して他方に古い記述が残る版ズレ・二重記述が再発していないか。
+- **共通部の流用整合（hp-improve ↔ hp-loop）**：hp-loop が hp-improve から「流用（重複定義しない）」と宣言しているもの（評価観点・進め方の原則・カイゼン台帳 `data/hp-improve/kaizen/<YYYY-MM>.md`（索引＝`kaizen-queue.md`））が、実際に再記述でなく参照で繋がっているか。一方を直して他方に古い記述が残る版ズレ・二重記述が再発していないか。
 - **滞り**：各掲示板/会話の未回答 `Q-NNN`・未処理提案、mailbox `new/`・`hold/` の滞留、（読めれば）期日超過 ToDo。**`to: rule-kaizen`（テンプレ改善提案）の受信箱は有人棚卸しで空にする設計なので溜まりやすい**＝長く放置（例：2週間以上）されていたら「棚卸し未実施」として社長に想起させる（`claude-rules/TEMPLATE-BACKLOG.md` への起票漏れも併せて見る）。**websystem テンプレ配布先は mailbox を持たないことがあり、その場合は人手キャリーバック（best-effort）**＝rule-kaizen 受信箱には現れない（2026-08-15 更新：websystem テンプレにも mailbox.md／hp-loop-dialogue.md を追加済みで、対の分析ループ＋トークン配布があるプロジェクト＝例 rally は mailbox 経由で送れる）。棚卸し想起の際は「各 websystem 配布先の `rule-improvements.md` の `[テンプレ還元]` 印も社長に確認するよう促す」（受信箱の有無だけで還元状況を判断しない）。
 - **未完の型**：設計途中の宿題（コマンド未作成・スライス未実装など）。
 - **リンク切れ／二重台帳化**：相互リンク整合、一次情報源が複数化していないか。
@@ -117,7 +117,7 @@ SYSTEM.md「健康シグナル候補」を、**事実で**確認する。LLM の
 - **停止条件**：社長の停止指示／合意待ち・回答待ちが溜まった／確認手段が無く前進できない → 一旦停止。
 
 ### Step 6: 自己改善（軽く・毎回）
-- 「今回このモードに足りなかった観点・ツールは？」を自問。気づきは `python3 bin/kaizen.py add --title '<1行要約>' --lane overseer <<'EOF'`（本文）`EOF` で `data/hp-improve/skill-kaizen.md` に足す（番号は道具がロックを取って振る＝grep で最大+1 を取らない・Edit／sed で台帳へ直接書かない。O-077・K-637）（無ければ「特記なし」）。
+- 「今回このモードに足りなかった観点・ツールは？」を自問。気づきは `python3 bin/kaizen.py add --title '<1行要約>' --lane overseer <<'EOF'`（本文）`EOF` で（原文は `data/hp-improve/kaizen/<YYYY-MM>.md` に入る）足す（番号は道具がロックを取って振る＝grep で最大+1 を取らない・Edit／sed で台帳へ直接書かない。O-077・K-637）（無ければ「特記なし」）。
 - **社長の判断・許可・情報がないと前に進めない気づき**には、行頭に `🙋要・社長判断` を付ける（自分の工夫で解けるものには付けない）。原則＝[../ledger-discipline.md](../ledger-discipline.md) §7。
 
 ---
