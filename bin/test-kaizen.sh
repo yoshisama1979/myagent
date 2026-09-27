@@ -143,6 +143,49 @@ python3 "$TOOL" lint >/dev/null 2>&1 && ok "作り直せば通る（索引は生
 nid="$(printf '本文' | python3 "$TOOL" add --title '新規' --lane dev)"
 [ -f "$D/$(date +%Y-%m).md" ] && ok "追記は当月のファイルへ入る（月替わりで器が変わる＝肥大しない）" || ng "当月ファイルに入らない（$nid・$(ls "$D")）"
 python3 "$TOOL" show "$nid" | grep -q '新規' && ok "足した直後から show で引ける" || ng "足した分が引けない"
+echo "── §1c-2 索引の見出し解釈（原文の書き方は1系統ではない・2026-09-23）"
+# ★実測＝索引254行のうち 題が空 26件・降ろし先が読めない 126件（50%）。原文には4系統の書き方があり、
+#   生成側は「先頭の（レーン・日付）」の1系統しか見ていなかった。**誰の気づきか分からなければ
+#   誰に降ろすかも決められない**ので、索引としては致命的だった。データは失われておらず読み方の問題。
+DX="$TMP/dialect"; QX="$TMP/qx.md"; rm -rf "$DX"; mkdir -p "$DX"
+cat > "$DX/2026-09.md" <<'DLC'
+# カイゼン台帳 2026-09
+
+### K-901: （hp-loop yokohawaii・2026-09-01 Cycle 058）｜①先頭に レーン・日付
+本文
+
+### K-902 — ②末尾に レーン Cycle・日付（hp-loop rally Cycle 045・2026-09-02）
+本文
+
+### K-903
+**（partner Cycle 168・2026-09-03）③見出しに題もレーンも無い**
+本文
+
+### K-904 — ④本文が名乗る
+- **モード**：hp-loop ycom｜2026-09-04 Cycle 117（社長の手動起動）
+本文
+
+### K-905 — ⑤宛名の書き方（blog-loop-ycom・2026-09-05）
+本文
+
+### K-906 — ⑥実在しない語に引っかからない（new/ 残存の話・hp-loop:shigatoyota・2026-09-06）
+本文
+DLC
+KAIZEN_LEDGER="$TMP/l9.md" KAIZEN_DIR="$DX" KAIZEN_QUEUE="$QX" python3 "$TOOL" index --rebuild >/dev/null
+lane_of() { grep "^| $1 " "$QX" | awk -F'|' '{gsub(/^ +| +$/,"",$4); print $4}'; }
+title_of() { grep "^| $1 " "$QX" | awk -F'|' '{gsub(/^ +| +$/,"",$5); print $5}'; }
+[ "$(lane_of K-901)" = "hp-loop:yokohawaii" ] && ok "①先頭の『レーン 日付』を読む" || ng "①: $(lane_of K-901)"
+[ "$(lane_of K-902)" = "hp-loop:rally" ] && ok "②末尾の『レーン Cycle・日付』を読む（Cycle 番号をレーンに混ぜない）" || ng "②: $(lane_of K-902)"
+[ "$(lane_of K-903)" = "partner" ] && ok "③見出しが ID だけなら本文1行目から読む" || ng "③: $(lane_of K-903)"
+[ -n "$(title_of K-903)" ] && ok "③題も本文1行目から拾う（見出し欄を空にしない）" || ng "③の題が空のまま"
+case "$(title_of K-903)" in "（"*) ng "③の題に出自の括弧が残っている: $(title_of K-903)";; *) ok "③の題から出自の括弧を落とす";; esac
+[ "$(lane_of K-904)" = "hp-loop:ycom" ] && ok "④本文の『**モード**：』から読む" || ng "④: $(lane_of K-904)"
+[ "$(lane_of K-905)" = "blog-loop:ycom" ] && ok "⑤「blog-loop-ycom」も同じレーンに寄せる（名寄せできないと降ろし先が決まらない）" || ng "⑤: $(lane_of K-905)"
+[ "$(lane_of K-906)" = "hp-loop:shigatoyota" ] && ok "⑥実在するレーン名を優先する（「new」のような語を先に採らない）" || ng "⑥: $(lane_of K-906)"
+[ "$(grep -c '^| K-' "$QX")" = "6" ] && ok "6件とも索引に載る" || ng "件数が違う: $(grep -c '^| K-' "$QX")"
+empty_lane="$(awk -F'|' '/^\| K-/{gsub(/^ +| +$/,"",$4); if($4=="") n++} END{print n+0}' "$QX")"
+[ "$empty_lane" = "0" ] && ok "4系統すべてでレーン欄が埋まる" || ng "レーンが空の行が $empty_lane 件ある"
+
 echo "── §1d Codex レビューの必須指摘（2026-09-17）"
 # ① 足した分が索引へ自動で載る（索引に載らない＝triage が読む索引から新顔が消える）
 nid2="$(printf '本文' | python3 "$TOOL" add --title '自動で索引へ' --lane dev)"

@@ -222,14 +222,21 @@ SENDERS    = {"overseer", "hanasaka-main", "triage", "management", "board", "dev
               "hp-loop-rally", "hp-loop-konjaku", "hp-loop-shigatoyota",
               "blog-loop-ycom",
               # 相談役（軽い会話・2026-08-19）。深掘りが要る話を partner へ渡す唯一の経路。
-              "talk"}
+              "talk",
+              # 経理（2026-09-23 追加・board D-005）。**送信側にも入れる**＝2026-09-06 に経理が
+              # journal-mcp の修理案を出したのに報告を返す配管が無く14日 届かなかった（board D-009 追補）。
+              # 受信専用にすると同じ損が繰り返る。窓口は config/session-desks.json に登録済み。
+              "finance"}
 RECIPIENTS = {"overseer", "hanasaka-main", "triage", "management", "board", "dev", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
               "rally-dev", "konjaku-dev", "shigatoyota-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
               "hp-loop-rally", "hp-loop-konjaku", "hp-loop-shigatoyota",
               "blog-loop-ycom",
               # 経営パートナー（レポート）。talk からの申し送りを受ける。
-              "partner"}
+              "partner",
+              # 経理（2026-09-23 追加）。board D-005 は board と finance の両方を足す決定だったが、
+              # 実装に入っていたのは board だけだった（実測＝`local-send --to finance` が弾かれる）。
+              "finance"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
 if not ID.match(frm) or frm not in SENDERS:

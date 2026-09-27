@@ -118,6 +118,24 @@ def sources():
     return [(l, p, k) for l, p, k in out if p.is_file()]
 
 
+_KIND_CACHE = None
+
+
+def kind_of(path):
+    """その置き場を**どう読むか**は sources() が決める。呼ぶ側が拡張子から導き直さない。
+
+    導き直すと、書式の違う置き場を「拡張子が同じ別の書式」として読んで **0件** を返し、
+    呼び出し側がそれを「消えた＝閉じられた」と表示する（実測 2026-09-23＝統括掲示板は
+    kind が overseer_box なのに `list` が拡張子だけ見て html_table で読み、60件中55件を
+    「ソースから読めませんでした＝閉じられた可能性」と出した。生きている 🔴 が閉じた候補に
+    見える＝検知は動いているのに届かない型）。sources_in（bin/kaizen.py）と同じ直し方。
+    """
+    global _KIND_CACHE
+    if _KIND_CACHE is None:
+        _KIND_CACHE = {str(p_): k for _l, p_, k in sources()}
+    return _KIND_CACHE.get(str(path)) or ("html_table" if Path(path).suffix == ".html" else "md_table")
+
+
 # 地の文に ID が埋まっていて行/表として取り出せない置き場。
 # 黙って落とすと「全部見た」と誤読されるので、件数だけは必ず表に出す（silent cap を作らない）。
 # 2026-09-13：overseer は 🔔ボックスを項目として読めるようになったので sources() 側へ移した。
@@ -419,7 +437,7 @@ def cmd_list(lane=None, status="open", limit=None):
         p = PROJ / r["src"]
         live = ""
         if p.is_file():
-            for it in extract(p, "html_table" if p.suffix == ".html" else "md_table"):
+            for it in extract(p, kind_of(p)):
                 if it["id"] == r["id"]:
                     live = it["status"]
                     break

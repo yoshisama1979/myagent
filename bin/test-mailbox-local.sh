@@ -188,14 +188,20 @@ f="$(ls -t "$TMP"/data/mailbox/new/M-*-overseer-*.json 2>/dev/null | head -1)"
 ( cd "$TMP" && printf '標準入力の本文' | env -u CLAUDE_CODE_SESSION_ID SESSION_DESK_SESSIONS="$TMP/sessions" MYAGENT_X=1 bash bin/mailbox.sh local-send --from overseer --to board --subject 標準入力 >/dev/null 2>&1 )
 f="$(ls -t "$TMP"/data/mailbox/new/M-*-overseer-*.json 2>/dev/null | head -1)"
 [ -n "$f" ] && grep -q '"body": "標準入力の本文"' "$f" && ok "本文は標準入力から渡せる（案内どおりの渡し方が動く）" || ng "標準入力の本文が入らない"
-if python3 - "$PROJ/bin/mailbox.sh" <<'PYX'
-import re,sys
+if python3 - "$PROJ/bin/mailbox.sh" "$PROJ/config/session-desks.json" <<'PYX'
+import re,sys,json
 s=open(sys.argv[1],encoding="utf-8").read()
+# ★期待値は窓口の対応表（config/session-desks.json）から引く。ここに宛名を書き写すと、
+#   窓口を足したときに「決定には入っているのに実装に入っていない」が黙って通る。
+#   実害 2026-09-20＝board の決定 D-005 は board と finance の両方を宛名に足す決定だったが、
+#   実装に入っていたのは board だけで、`local-send --to finance` が弾かれた（14日 気づかれず）。
+desks = set(json.load(open(sys.argv[2], encoding="utf-8"))["desks"])
 for n in ("SENDERS","RECIPIENTS"):
     m=re.search(n+r"\s*=\s*\{(.*?)\}", s, re.S); ids=set(re.findall(r'"([A-Za-z0-9_-]+)"', m.group(1)))
-    assert {"triage","board","management","dev"} <= ids, n
+    missing = desks - ids
+    assert not missing, "%s に窓口 %s が無い" % (n, sorted(missing))
 PYX
-then ok "triage・board・management・dev を送信者・宛先の許可リストに持つ"; else ng "許可リストに窓口の宛名が無い"; fi
+then ok "対応表の窓口すべてを送信者・宛先の許可リストに持つ（書き写さず config から引く）"; else ng "対応表にある窓口が mailbox.sh の許可リストに無い"; fi
 
 echo "── §6 許可リスト（bin/ と bash bin/ の両形が要る＝実害の前例あり）"
 SET="$PROJ/.claude/settings.local.json"

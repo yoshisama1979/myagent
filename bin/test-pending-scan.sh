@@ -21,6 +21,7 @@ from pathlib import Path
 proj = Path(sys.argv[1])
 spec = importlib.util.spec_from_file_location("ps", proj / "bin/pending-scan.py")
 ps = importlib.util.module_from_spec(spec); spec.loader.exec_module(ps)
+_REAL_SOURCES = ps.sources   # 以降のテストは sources を差し替えるので、本物を控える
 
 P = N = 0
 def ok(m, d=""):        # d は無視（`(ok if c else ng)(m, 詳細)` の書き方を安全にするため）
@@ -346,6 +347,40 @@ src3 = (proj / "bin/pending-scan.py").read_text(encoding="utf-8")
     "sources() が overseer を含む")
 (ok if "PARSE_WARN" in src3.split("def cmd_stats")[1] else ng)(
     "stats が読み切れなかった置き場を報告する（呼ばれない検査を作らない）")
+
+# ★置き場の読み方（kind）は sources() が正。呼ぶ側が拡張子から導き直すと、書式の違う置き場を
+#   「拡張子が同じ別の書式」で読んで 0件を返し、生きている項目が「閉じられた可能性」に化ける。
+#   実測 2026-09-23＝`list --lane overseer` が 60件中 55件を「ソースから読めませんでした」と出した
+#   （掲示板の kind は overseer_box なのに、拡張子だけ見て html_table で読んでいた）。
+#   ＝検知は動いているのに届かない型。bin/kaizen.py の sources_in と同じ直し方。
+_stub_sources = ps.sources
+ps.sources = _REAL_SOURCES   # ★この節は「kind は sources() が決める」契約を見る＝差し替えた偽物では見えない
+ps._KIND_CACHE = None        # 置き場は試験の途中で増える＝作る前に引いた写しを持ち越さない
+(ok if ps.kind_of(O / "index.html") == "overseer_box" else ng)(
+    "統括掲示板の読み方は sources() から引く（拡張子から導き直さない）", ps.kind_of(O / "index.html"))
+(ok if ps.kind_of(T / "site/hp-analysis/ycom/index.html") == "html_table" else ng)(
+    "表形式の掲示板はこれまでどおり html_table")
+(ok if ps.kind_of(T / "data/どこにも無い.md") == "md_table" else ng)(
+    "sources() に無い置き場は従来どおり拡張子で決める（後方互換）")
+ps._KIND_CACHE = None
+# `list` が本文を出せる（0件を「閉じられた可能性」と言わない）ことを端から端まで見る
+(O / "index.html").write_text(
+    '<h2>🔔 社長の判断・対応待ち</h2><div class="box"><ul>'
+    '<li><strong>🔴 O-777（生きている項目）</strong>：本文が読めること</li>'
+    '</ul></div>', encoding="utf-8")
+ps._KIND_CACHE = None
+ps.save_state({"items": {"overseer|O-777": {"lane": "overseer", "id": "O-777", "status": "open",
+               "src": "site/overseer/index.html", "line": 1, "first_seen": ps.today()}}})
+buf = io.StringIO(); _so = sys.stdout; sys.stdout = buf
+try:
+    ps.cmd_list(lane="overseer")
+finally:
+    sys.stdout = _so
+out_l = buf.getvalue()
+(ok if "読めませんでした" not in out_l else ng)(
+    "生きている項目を「閉じられた可能性」と言わない", out_l.strip()[:120])
+(ok if "本文が読めること" in out_l else ng)("list が掲示板の本文を出す", out_l.strip()[:120])
+ps.sources = _stub_sources; ps._KIND_CACHE = None
 
 print("\n=== skill-kaizen の見出しは ## も ### も1項目（2026-09-14 triage 依頼・O-035 と同型の3回目）===")
 (K / "skill-kaizen.md").write_text(

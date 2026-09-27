@@ -459,6 +459,126 @@ def cmd_show(a):
     die(3, f"{a.id} は原文にも倉庫にも見つかりません（`python3 bin/kaizen.py list` で確かめてください）")
 
 
+# ── 索引の行を作るための読み取り（原文は無改変・ここは「読み方」だけ）
+# ★原文の見出しには**3系統の書き方**がある（2026-09-23 実測）。1系統しか想定しないと静かに取りこぼす：
+#     ①`### K-577: （hp-loop yokohawaii・2026-08-19 Cycle 058）｜…`  レーンが先頭・`レーン・日付`
+#     ②`### K-543 — …（hp-loop rally Cycle 045・2026-09-02）`        `レーン Cycle N・日付`
+#     ③`### K-678`＋本文1行目 `**（partner Cycle 168・2026-09-01）題**`  見出しに題もレーンも無い
+#   実測＝254行中、題が空 26件・降ろし先が読めない 126件（50%）。データは失われておらず読み方の問題。
+#   **誰の気づきか分からなければ、誰に降ろすかも決められない**ので索引としては致命的だった。
+_CYCLE_RE = re.compile(r"(?:Cycle|サイクル|C)\s*\d+", re.I)
+_LANE_OK_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*(?::[A-Za-z0-9_-]+)?$")
+# 「<基底> <サイト>」と空白で書かれた分を `<基底>:<サイト>` に寄せる。寄せないと `hp-loop:rally` と
+# `hp-loop rally` が別レーンとして並び、名寄せできない（実測＝7件と5件に割れていた）。
+_LANE_BASES = ("hp-loop", "blog-loop", "blog-improve", "blog-write",
+               "hp-improve", "hp-prospect", "memo-intake", "memo-triage")
+
+
+# ④の書き方＝本文が「- **モード**：partner（…）｜…」の形で名乗る（実測3件）。括弧の中を見ても拾えない。
+_LANE_LABEL_RE = re.compile(r"モード\**\s*[：:]\s*([^｜|（(\n]{2,40})")
+# 題の前に置かれる「出自だけの区切り」＝モード名・日付・サイクル番号・🙋 の印。題ではないので落とす。
+_META_SEG_RE = re.compile(r"^(?:\**モード\**\s*[：:].*|.*(?:20\d\d-\d\d-\d\d|Cycle\s*\d+).*|🙋[^｜]*)$")
+
+
+_KNOWN_LANES = None
+
+
+def _known_lanes():
+    """実在するレーン名。**表を手で持たない**＝窓口の対応表とモードルールの置き場から引く。
+    手で持つと、レーンが増えたときに索引だけ古くなる（宣言と実装の食い違い＝ledger-discipline §2）。"""
+    global _KNOWN_LANES
+    if _KNOWN_LANES is None:
+        import glob as _g
+        names = set(_LANE_BASES)
+        try:
+            with open(os.path.join(ROOT, "config/session-desks.json"), encoding="utf-8") as f:
+                names |= set(json.load(f).get("desks", {}))
+        except Exception:
+            pass
+        for f_ in _g.glob(os.path.join(ROOT, "rules/modes/*.md")):
+            names.add(os.path.basename(f_)[:-3])
+        _KNOWN_LANES = names
+    return _KNOWN_LANES
+
+
+def _norm_lane(tok):
+    """`hp-loop rally`／`hp-loop-rally` を `hp-loop:rally` に寄せる。寄せないと名寄せできない。"""
+    base, _, site = tok.partition(" ")
+    if site and base in _LANE_BASES:
+        return f"{base}:{site.strip()}"
+    for b in sorted(_LANE_BASES, key=len, reverse=True):   # 長い基底から見る
+        if tok.startswith(b + "-") and tok[len(b) + 1:]:
+            return f"{b}:{tok[len(b) + 1:]}"
+    return tok
+
+
+def _lane_from(text):
+    """レーンを1つ拾う。無ければ空。日付・サイクル番号は落としてから見る。
+
+    ★**実在するレーン名を優先し、形だけ合う語は最後の手段**にする。先頭から形だけで採ると
+      `（new/ 残存）`の `new`、`（WIP）`、`（/service/web/ …）`の `service` のような語を
+      レーンとして載せてしまう（実測 2026-09-23＝254件中8件）。
+    """
+    m = _LANE_LABEL_RE.search(text)
+    cands = [m.group(1)] if m else []
+    cands += re.findall(r"[（(]([^（()）]{2,80})[)）]", text)
+    # `- 🙋要・社長判断｜2026-09-15 partner Cycle 183｜本題…` のように、括弧ではなく ｜ で
+    # 名乗る書き方がある。冒頭の数区切りだけ見る（本文の ｜ まで拾うと題の語をレーンにしてしまう）。
+    cands += [seg for seg in text.split("\n")[0].split("｜")[:3]]
+    loose = ""
+    for g in cands:
+        for tok in re.split(r"[・／/、,｜|]", g):
+            tok = _CYCLE_RE.sub("", DATE_RE.sub("", tok)).strip(" 　-—:：")
+            if not tok:
+                continue
+            tok = _norm_lane(tok)
+            if not _LANE_OK_RE.match(tok):
+                # `（hp-prospect ×2件同時再現・…）`のように、名乗りの後ろに日本語が続く書き方がある。
+                # 基底だけで引き直す（それでも駄目なら諦める）。
+                tok = tok.split(" ", 1)[0].split(":", 1)[0]
+                if not _LANE_OK_RE.match(tok):
+                    continue
+            if tok in _known_lanes() or tok.split(":", 1)[0] in _known_lanes():
+                return tok
+            loose = loose or tok
+    return loose
+
+
+def _row_fields(e):
+    """索引1行ぶんの (日付, レーン, 見出し)。見出しに無ければ本文の1行目まで見る。"""
+    h = re.sub(r"^#+\s*", "", e["head"])
+    h = re.sub(r"^" + re.escape(e["id"]) + r"\s*[—:：-]?\s*", "", h).strip()
+    body = _entry_text(e)
+    src, from_body = h, False
+    if not h:                                  # ③の書き方＝題も出自も本文の1行目にある
+        for ln in body.split("\n")[1:]:
+            if ln.strip():
+                src, from_body = ln.strip().strip("*").strip(), True
+                break
+    lane = _lane_from(src) or _lane_from(body[:600])
+    m = DATE_RE.search(src) or DATE_RE.search(body)
+    title = src
+    if from_body:
+        # 本文から題を作るときは、頭に付いている「出自」を落とす。落とさないと索引の題が
+        # `- **モード**：partner（…）｜2026-09-07 Cycle 175-b` のような**名乗りだけ**になり、
+        # 索引を読んでも何の話か分からない（実測 2026-09-23＝5件）。
+        title = re.sub(r"^[-*・]\s*", "", title)
+        title = re.sub(r"^[（(][^（()）]{0,80}[)）]\s*", "", title)
+        while "｜" in title:
+            head_, _, rest = title.partition("｜")
+            if not rest.strip() or not _META_SEG_RE.match(head_.strip()):
+                break
+            title = rest.strip()
+        if _META_SEG_RE.match(title.strip()):
+            # 1行目が丸ごと名乗りだった（題は次の行にある）。名乗りを索引の題にすると何の話か分からない。
+            for ln in body.split("\n")[1:]:
+                t2 = re.sub(r"^[-*・]\s*", "", ln.strip().strip("*").strip())
+                if t2 and not _META_SEG_RE.match(t2) and t2 != title.strip():
+                    title = t2
+                    break
+    return (m.group(1) if m else ""), lane, title.replace("|", "｜").strip()
+
+
 def _queue_text(entries):
     head = ("# カイゼン台帳：判断待ちの索引（生成物・手で書かない）\n\n"
             "`python3 bin/kaizen.py index --rebuild` が原文から作る。**1行＝1件・未採否の全件**（絞り込まない）。\n"
@@ -466,15 +586,11 @@ def _queue_text(entries):
             "| ID | 日付 | レーン | 見出し（原文のまま） | 🙋 | 原文の在処 | 照合 |\n|---|---|---|---|---|---|---|\n")
     rows = []
     for e in entries:
-        h = re.sub(r"^#+\s*", "", e["head"])
-        h = re.sub(r"^" + re.escape(e["id"]) + r"\s*[—:：-]?\s*", "", h)
-        m = DATE_RE.search(h)
-        lane = re.search(r"[（(]\s*([A-Za-z0-9_:\- ]{2,24})[・／/]", h)
-        title = h.replace("|", "｜").strip()
+        date, lane, title = _row_fields(e)
         # 🙋（社長の判断が要る印）は**本文まで見て**拾う。見出しだけ見ると、実測で 147件中113件を落とし、
         # 社長に出すはずの項目が索引から消える（2026-09-16 移行直後の実測で判明）。
-        ask = "🙋" in h or "🙋" in _entry_text(e)
-        rows.append(f"| {e['id']} | {m.group(1) if m else ''} | {(lane.group(1).strip() if lane else '')} | "
+        ask = "🙋" in e["head"] or "🙋" in _entry_text(e)
+        rows.append(f"| {e['id']} | {date} | {lane} | "
                     f"{title} | {'🙋' if ask else ''} | {e['src']}:{e['line']} | {e['hash']} |")
     return head + "\n".join(rows) + "\n"
 
