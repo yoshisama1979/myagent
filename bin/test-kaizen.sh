@@ -176,6 +176,38 @@ rm -rf "$D2.staging"
 KAIZEN_LEDGER="$TMP/l2.md" KAIZEN_DIR="$D2" KAIZEN_QUEUE="$Q2" python3 "$TOOL" migrate --apply >/dev/null 2>&1
 [ -d "$D2" ] && [ ! -e "$D2.staging" ] && [ -f "$Q2" ] && ok "移行は仮置きから一度に公開し、仮置きを残さない" || ng "仮置きが残った／公開されない: $(ls -d "$D2"* 2>&1)"
 
+# ⑧ 畳んだ器への追記を黙らない（2026-09-20）。移行の途中＝両方に原文がある状態は正しいので鳴らさない
+lz8a="$(python3 "$TOOL" lint 2>&1 || true)"
+printf '%s' "$lz8a" | grep -q '畳んだ器' && ng "移行の途中（印なし）で鳴った＝鳴りっぱなしになる: $lz8a" || ok "移行の途中で両方に原文があっても lint は鳴らさない（関門が両方持つと決めている）"
+cp "$TMP/split-ledger.md" "$TMP/split-ledger.bak"
+printf '<!-- kaizen:retired -->\n\n# 畳みました\n\n原文は kaizen/YYYY-MM.md・全文は `kaizen.py show K-NNN`。\n\n<!-- kaizen:retired:end -->\n' > "$TMP/split-ledger.md"
+python3 "$TOOL" lint >/dev/null 2>&1 && ok "道しるべ1枚に畳めば lint は通る" || ng "畳んでも落ちた: $(python3 "$TOOL" lint 2>&1 | head -2)"
+printf '\n### K-950 — 畳んだ器への追記（dev・2026-09-20）\n本文\n' >> "$TMP/split-ledger.md"
+lz8b="$(python3 "$TOOL" lint 2>&1 || true)"
+printf '%s' "$lz8b" | grep -q '畳んだ器' && ok "畳んだ器に足されたら lint が名指しで止める（月別の道具からは見えない）" || ng "畳んだ器への追記を見逃した: $lz8b"
+
+# ★見出しを伴わない1行の追記も止める。旧いモードルールは今も「skill-kaizen.md に1行書く」と
+#   指示しており（実測 2026-09-23＝rules/modes の9本）、見出しが無いと項目として数えられないまま
+#   道しるべに残る。そこで終端の印より後ろに何かあれば追記とみなす（Codex 指摘 2026-09-23）。
+printf '<!-- kaizen:retired -->\n\n# 畳みました\n\n原文は kaizen/YYYY-MM.md・全文は `kaizen.py show K-NNN`。\n\n<!-- kaizen:retired:end -->\n' > "$TMP/split-ledger.md"
+printf -- '- 今回足りなかったこと：とくになし\n' >> "$TMP/split-ledger.md"   # ★`--` が要る（本文が - で始まると printf が option と読む）
+lz8c="$(python3 "$TOOL" lint 2>&1 || true)"
+printf '%s' "$lz8c" | grep -q '終端より後ろ' && ok "見出しの無い1行の追記も lint が止める（旧ルールの書き方）" || ng "見出し無しの追記を見逃した: $lz8c"
+
+# 終端の印そのものが消えていれば、書き換えられた合図として申告する
+printf '<!-- kaizen:retired -->\n\n# 畳みました\n\n原文は kaizen/YYYY-MM.md・全文は `kaizen.py show K-NNN`。\n' > "$TMP/split-ledger.md"
+lz8d="$(python3 "$TOOL" lint 2>&1 || true)"
+printf '%s' "$lz8d" | grep -q '終端の印' && ok "終端の印が消えていれば書き換えの可能性として申告する" || ng "印の消失を見逃した: $lz8d"
+mv "$TMP/split-ledger.bak" "$TMP/split-ledger.md"
+
+# ★月別が1本も無い置き場で add すると、畳んだ器に足して道しるべを壊す。作らずに止めて復元を求める。
+D8="$TMP/kz8"; rm -rf "$D8"; mkdir -p "$D8"
+printf '<!-- kaizen:retired -->\n\n# 畳みました\n\n<!-- kaizen:retired:end -->\n' > "$TMP/l8.md"
+a8="$(printf '本文' | KAIZEN_LEDGER="$TMP/l8.md" KAIZEN_DIR="$D8" KAIZEN_QUEUE="$TMP/q8.md" python3 "$TOOL" add --title '月別が無いとき' --lane dev 2>&1; echo "rc=$?")"
+printf '%s' "$a8" | grep -q 'rc=0' && ng "月別0本で畳んだ器に足した: $a8" || ok "月別が1本も無ければ add は畳んだ器に足さず止まる"
+printf '%s' "$a8" | grep -q '復元' && ok "止めるだけでなく復元のしかたを言う" || ng "止まったが直し方が出ない: $a8"
+grep -q '月別が無いとき' "$TMP/l8.md" && ng "畳んだ器に書き込んだ" || ok "畳んだ器の中身を変えていない"
+
 unset KAIZEN_DIR KAIZEN_QUEUE; export KAIZEN_LEDGER="$SAVED_LEDGER"
 
 echo "── §2 採番（ロック付き・### の独立見出しで末尾に足す）"

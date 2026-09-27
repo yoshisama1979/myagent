@@ -41,7 +41,7 @@ STATE_FILES = [
     # (path, 閾値bytes, 出典)   ★=出典なしの提案既定値
     ("data/partner/ledger.md",            70 * KB, "partner.md v0.3"),
     ("data/partner/milestones.md",       500 * KB, "★提案既定値（cold store＝毎朝読まない追記専用台帳。超過時はローテでなく年度別ファイルへの追記先切替を提案・過去行の削除改変は不可）"),
-    ("data/hp-improve/skill-kaizen.md",  100 * KB, "★提案既定値（archive 分離済みの共有台帳）"),
+    ("data/hp-improve/kaizen-queue.md",   70 * KB, "★提案既定値（カイゼンの索引＝判断のたびに全読みする状態。2026-09-20 に旧 skill-kaizen.md 455KB から3層へ分割）"),
     ("site/notes.html",                  200 * KB, "★提案既定値"),
     ("site/overseer/index.html",          80 * KB, "hp-loop.md v0.11 と同型"),
     ("site/business/partner/index.html",  80 * KB, "hp-loop.md v0.11 と同型"),
@@ -57,7 +57,9 @@ STATE_FILES = [
 # サイズ閾値は「合計」しか見ないため、1本が台帳の6割を占める形の異常は検知できない＝別に測る。
 ENTRY_MAX_BYTES = 8 * KB    # 1エントリの上限（★提案既定値。実測の中央値は約1KB）
 SWALLOW_MAX = 3             # 1エントリが抱えてよい「- **K-」行の数（★提案既定値）
-SHAPE_TARGETS = ["data/hp-improve/skill-kaizen.md"]
+# 分割後は原文＝月別（kaizen/YYYY-MM.md）が形の検査の対象。旧の1枚は道しるべに畳んだので見ない。
+def shape_targets():
+    return [os.path.relpath(f, ROOT) for f in sorted(glob.glob(os.path.join(ROOT, "data/hp-improve/kaizen/*.md")))]
 
 _KAIZEN = None
 
@@ -344,6 +346,29 @@ def hp_loop_states():
         out.append((os.path.relpath(f, ROOT), 100 * KB, "hp-loop.md（100KBローテ）"))
     for f in sorted(glob.glob(os.path.join(ROOT, "site/hp-analysis/*/index.html"))):
         out.append((os.path.relpath(f, ROOT), 80 * KB, "hp-loop.md v0.11（80KB堆積疑い）"))
+    return out
+
+
+def globbed_states():
+    """本数が増える器（サイト数・月数・モード数で増える）。STATE_FILES に1本ずつ書けないのでここで展開する。
+
+    ★ledger-discipline.md §2「対象を増やすときは本表と system-health.py を対で更新する」に従う。
+      from-president.md 系＝規律 v0.3（2026-09-20 社長承認）で対象に入ったのに監視が無かった分
+      （実測＝partner 86.5KB・14日で +32KB。朝礼が毎朝 Step 0 で全読みする）。
+      カイゼンの月別＝原文の置き場。毎回は読まない（全文は kaizen.py show）ので cold store 扱い。
+    """
+    out = []
+    for f in sorted(glob.glob(os.path.join(ROOT, "data/hp-improve/kaizen/*.md"))):
+        out.append((os.path.relpath(f, ROOT), 500 * KB,
+                    "★提案既定値（カイゼンの経緯＝月別の原文。毎回は読まない cold store。月替わりで器が変わる）"))
+    # 1階層だけの glob では 11本中3本しか拾えない（hp-loop はサイトごとに持つ）＝recursive で全部見る。
+    # ただし退避・仮置きの写しは現役の器ではないので除く（将来 archive/from-president.md ができても誤監視しない）。
+    skip = ("archive", "staging", "_arc", "tmp", "backup")
+    for f in sorted(glob.glob(os.path.join(ROOT, "data/**/from-president.md"), recursive=True)):
+        rel = os.path.relpath(f, ROOT)
+        if any(part.startswith(skip) for part in rel.split(os.sep)[:-1]):
+            continue
+        out.append((rel, 70 * KB, "ledger-discipline.md v0.3（社長の指示が溜まる器・70KB）"))
     return out
 
 # ── 3) 故障：tick.log（タイムアウト・異常終了・警報）────────────────────
@@ -656,7 +681,7 @@ def main():
     now = datetime.datetime.now()
     al = autoload()
     states = []
-    for path, th, src in STATE_FILES + hp_loop_states():
+    for path, th, src in STATE_FILES + hp_loop_states() + globbed_states():
         b = size(path)
         if b is not None:
             states.append({"path": path, "bytes": b, "threshold": th, "source": src})
@@ -700,7 +725,11 @@ def main():
         elif s_["path"] in prev_states and s_["bytes"] - prev_states[s_["path"]] > 20 * KB:
             warns.append(f"{s_['path']} が7日で +{(s_['bytes']-prev_states[s_['path']])//KB}KB（閾値内だが増加が速い）")
     # 形の異常：サイズが閾値内でも「1本が台帳を食う」形は別に検知する（O-019 の再発防止）
-    for tgt in SHAPE_TARGETS:
+    targets = shape_targets()
+    if not targets:
+        warns.append("形の検査の対象が0本です（カイゼンの原文 data/hp-improve/kaizen/*.md が見つからない）"
+                     "＝検査が黙って止まっています")
+    for tgt in targets:
         warns.extend(shape_warnings(entry_shape(tgt)))
     # バックアップの欠落：本番ツールが git に入っていない（2026-08-11 の1ヶ月放置の再発防止）
     warns.extend(tool_debt_warnings(uncommitted_tools()))

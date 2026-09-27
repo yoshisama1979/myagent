@@ -66,6 +66,8 @@ FENCE_RE = re.compile(r"^\s*```")
 LANE_RE = re.compile(r"^[A-Za-z0-9_:-]{1,40}$")
 SPEC_RE = re.compile(r"^(?:(?P<file>[^:]+):)?(?P<line>\d{1,7}):(?P<hash>[0-9a-f]{12})$")
 BIG = 8 * 1024
+RETIRED_MARK = "<!-- kaizen:retired -->"   # 畳んだ器の印。これがある器への追記は lint が止める
+RETIRED_END = "<!-- kaizen:retired:end -->"   # 道しるべの終端。この後ろに何か足されたら追記＝lint が止める
 
 
 def die(code, msg):
@@ -115,10 +117,22 @@ def _month_files():
 
 def _sources():
     """原文の在処。月別ができていればそれが正＝旧の1枚は数えない（両方にあっても二重に数えない）。"""
-    mf = _month_files()
+    return sources_in(_LED_DIR, ledger=LEDGER, kdir=KDIR)
+
+
+def sources_in(ledger_dir, ledger=None, kdir=None):
+    """**その置き場の中で**原文の在処を決める（規則は _sources と同じ）。
+
+    ROOT を差し替えて試す側（ledger-watch・pending-scan のテスト）が、この規則を写し取らずに使えるようにする。
+    写し取ると「月別があるのに旧を読む」版ズレが起き、置き場を渡せないと**試験が本番の台帳を読む**
+    （2026-09-20＝ledger-watch のテストが仕掛けを素通りして本番を数えた。環境変数の取り違えと同じ型）。
+    """
+    import glob as _g
+    mf = sorted(_g.glob(os.path.join(kdir or os.path.join(ledger_dir, "kaizen"), "*.md")))
     if mf:
         return mf
-    return [LEDGER] if os.path.exists(LEDGER) else []
+    led = ledger or os.path.join(ledger_dir, "skill-kaizen.md")
+    return [led] if os.path.exists(led) else []
 
 
 def _all_entries(paths=None):
@@ -250,6 +264,28 @@ def cmd_lint(_a):
         msgs.append(f"重複 ID {len(r['duplicates'])}種（決めたとき、どの項目に効いたか言えない）: {top}")
     if r["unclosed_fence"]:
         msgs.append("閉じていないコードブロックがあります（``` の数が奇数）")
+    # 畳んだ器への追記を黙らない。移行の途中（旧と月別の両方に原文がある）は triage の関門が
+    # 「数字が出るまで両方に持つ」と決めた**正しい状態**なので鳴らさない（鳴りっぱなしの警告は働かない
+    # ＝ledger-discipline §2）。危ないのは畳んだ**後**＝道しるべに戻った器へ誰かが追記したときで、
+    # これは月別を見ている道具の誰も気づけない。そこで器自身に畳んだ印を書かせ、印つきの器に
+    # 項目があるときだけ止める（2026-09-20）。
+    if os.path.exists(LEDGER) and RETIRED_MARK in _read(LEDGER):
+        txt = _read(LEDGER)
+        rel = os.path.relpath(LEDGER, ROOT)
+        n = parse(txt)["count"]
+        if n:
+            msgs.append(f"畳んだ器（{rel}）に項目が {n}件 書かれています＝"
+                        "月別を見ている道具からは見えません。`python3 bin/kaizen.py add` で足し直してください")
+        # ★見出しの数だけでは足りない。旧いモードルールは今も「skill-kaizen.md に**1行**書く」と
+        #   指示しており（実測 2026-09-23＝rules/modes の9本）、見出しを伴わない1行は上の count に
+        #   入らないまま道しるべに残る（Codex 指摘）。そこで道しるべ自身に終端を持たせ、
+        #   **その後ろに何か増えていたら**追記とみなす。終端が消えていれば書き換えられた印。
+        if RETIRED_END not in txt:
+            msgs.append(f"畳んだ器（{rel}）に終端の印（{RETIRED_END}）がありません＝"
+                        "道しるべが書き換えられた可能性があります（git の履歴と見比べてください）")
+        elif txt.split(RETIRED_END, 1)[1].strip():
+            msgs.append(f"畳んだ器（{rel}）の終端より後ろに書き足されています＝"
+                        "月別を見ている道具からは見えません。`python3 bin/kaizen.py add` で足し直してください")
     print("\n".join(msgs) if msgs else f"書式・ID とも問題なし（{r['count']}件）")
     return 1 if msgs else 0
 
@@ -265,8 +301,17 @@ def cmd_add(a):
     if not body.strip():
         die(2, "本文（標準入力）が空です＝足していません")
     with locked():
+        mf = _month_files()
+        if not mf and os.path.exists(LEDGER) and RETIRED_MARK in _read(LEDGER):
+            # 畳んだ器しか残っていない＝月別が消えている（誤削除・不完全な checkout）。ここで旧の器へ
+            # 足すと道しるべを壊し、月別を見ている道具からは永久に見えない（lint は足した**後**にしか
+            # 鳴らない）。0本から新しい月別を作ると「過去の月が消えたこと」を隠すので、作らずに止めて
+            # 復元を求める（Codex 指摘 2026-09-23）。
+            die(3, f"原文の月別（{os.path.relpath(KDIR, ROOT)}/*.md）が1本もありません＝"
+                   f"{os.path.relpath(LEDGER, ROOT)} は畳んだ器なので足しません。"
+                   "git から月別を復元してから足し直してください")
         target = LEDGER
-        if _month_files():
+        if mf:
             target = os.path.join(KDIR, datetime.datetime.now(JST).strftime("%Y-%m") + ".md")
             if not os.path.exists(target):
                 _write(target, MONTH_HEAD.format(m=datetime.datetime.now(JST).strftime("%Y-%m")) + "\n")

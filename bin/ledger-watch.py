@@ -57,9 +57,25 @@ def thresholds():
     except Exception as e:                    # 壊れていても本ツールは止めない（数字は出す）
         return {}, f"閾値を読み込めません（{type(e).__name__}）"
     out = {}
-    for p, lim, src in list(getattr(mod, "STATE_FILES", [])) + list(getattr(mod, "hp_loop_states", lambda: [])()):
-        out[p] = (lim, src)
-    return out, None
+    lost = []
+
+    def _take(rows):
+        for p, lim, src in rows:
+            out[p] = (lim, src)
+
+    # ★群ごとに独立して取り込む。1つの try でまとめると、動的な群（月数・サイト数で増える器）が
+    #   落ちたときに **固定の STATE_FILES ごと** 閾値が消え、全部の器が「上限なし」扱いになる
+    #   （申告はするが数字は丸ごと空＝一番効く分を落とす）。Codex 指摘 2026-09-23。
+    try:
+        _take(list(getattr(mod, "STATE_FILES", [])))
+    except Exception as e:
+        lost.append(f"STATE_FILES（{type(e).__name__}）")
+    for name in ("hp_loop_states", "globbed_states"):   # 本数が増える器（サイト数・月数・モード数）
+        try:
+            _take(list(getattr(mod, name, lambda: [])()))
+        except Exception as e:   # 読み込めても呼び出し・形で落ちうる＝同じ契約（止めずに申告する）で守る
+            lost.append(f"{name}（{type(e).__name__}）")
+    return out, ("閾値の一部を読めません＝" + "・".join(lost) if lost else None)
 
 
 def jst_day(ts):
@@ -201,14 +217,30 @@ def decision_queues():
             out.append({"name": "社長へ提示済み・未決", "count": c["asked"], "note": "同上 --status asked"})
         except (OSError, ValueError):
             out.append({"name": "社長の判断待ち", "count": None, "note": "state.json を読めません"})
-    sk = os.path.join(ROOT, "data/hp-improve/skill-kaizen.md")
-    if os.path.exists(sk):
+    # 原文の在処は kaizen.py が決める（2026-09-20 に3層へ分割＝旧の1枚は道しるべに畳んだ）。
+    # ここでパスを直書きすると、畳んだ器を数えて0件と言うか、月別を見落として黙る。
+    srcs = _kaizen().sources_in(os.path.join(ROOT, "data/hp-improve"))
+    if srcs:
         # ★件数の正は pending-scan、見出しの解釈の正は bin/kaizen.py（パーサを2つ持たない）。
         #   2026-09-12 版はここで `^###` だけを区切りにしたため、8/23 以降の `## K-NNN` 188件を直前に飲み込み
         #   「8KB超の9件＝サイズの主因」と誤って申告した（実測 2026-09-14＝両方で区切ると 8KB超は0件・
         #   最大 4.3KB＝791KB は約400件×2KB に均等に広がっている）。本ツールはサイズの申告だけを添える。
-        with open(sk, encoding="utf-8", errors="replace") as f:
-            r = _kaizen().parse(f.read())
+        # ★1本ずつ parse して足し合わせる。連結してから parse すると、**次のファイルの前文が
+        #   前のファイルの最後の項目の本文になる**（項目の範囲＝次の見出しの手前まで＝kaizen.py の parse）。
+        #   実測（Codex 指摘 2026-09-20）＝前文9KBのファイルを足すと、ファイル別では 8KB超0件・最大19B
+        #   なのに、連結すると 8KB超1件・最大9,020B と誤報した。ここは肥大の申告が仕事なので致命的。
+        r = {"count": 0, "over_8kb": 0, "max_entry_bytes": 0, "offformat": [], "duplicates": {}}
+        seen = {}
+        for f_ in srcs:
+            with open(f_, encoding="utf-8", errors="replace") as f:
+                one = _kaizen().parse(f.read())
+            r["count"] += one["count"]
+            r["over_8kb"] += one["over_8kb"]
+            r["max_entry_bytes"] = max(r["max_entry_bytes"], one["max_entry_bytes"])
+            r["offformat"] += one["offformat"]
+            for e in one["entries"]:
+                seen[e["id"]] = seen.get(e["id"], 0) + 1
+        r["duplicates"] = {k: v for k, v in seen.items() if v > 1}   # 重複は器をまたいで見る
         n = kaizen_open if kaizen_open is not None else None
         note = f"見出し{r['count']}件・うち8KB超の肥大 {r['over_8kb']}件・最大 {r['max_entry_bytes'] // KB}KB"
         if r["offformat"]:

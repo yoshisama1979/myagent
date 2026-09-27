@@ -96,12 +96,30 @@ print("\n=== 壊れた入力で落ちない（監視自身が無言停止しな�
 (ok if warns_for("") == [] else ng)("空ファイルは無警告")
 (ok if warns_for("見出しの無い本文だけ\n") == [] else ng)("### が1つも無くても無警告")
 
-print("\n=== 実データ形式：本番の skill-kaizen を読める（パースの前提が崩れていない）===")
+print("\n=== 実データ形式：本番のカイゼン原文を読める（パースの前提が崩れていない）===")
+# 2026-09-20 に3層へ分割＝形の検査の対象は月別（kaizen/YYYY-MM.md）。旧の1枚は道しるべに畳んだので
+# パスを直書きすると「0本」を無警告として通してしまう（＝監視の無言停止）。対象は本体に聞く。
 real = sh.ROOT
 sh.ROOT = str(proj)
-shp = sh.entry_shape("data/hp-improve/skill-kaizen.md")
-(ok if shp and shp["entries"] else ng)(f"本番台帳を見出し単位に割れる（{len(shp['entries']) if shp else 0}本）")
-(ok if sh.shape_warnings(shp) == [] else ng)(f"退避後の本番台帳は無警告（{sh.shape_warnings(shp)}）")
+tgts = sh.shape_targets()
+(ok if tgts else ng)(f"形の検査の対象が1本以上ある（{len(tgts)}本・0本は監視の無言停止）")
+sh.ROOT = str(T)   # 月別ファイルが1本も無い置き場＝対象0本
+(ok if sh.shape_targets() == [] else ng)("月別が無ければ対象は0本")
+sh.ROOT = str(proj)
+n_ent = 0
+warns = []
+for t in tgts:
+    shp = sh.entry_shape(t)
+    n_ent += len(shp["entries"]) if shp else 0
+    warns += sh.shape_warnings(shp)
+(ok if n_ent else ng)(f"本番の原文を見出し単位に割れる（{n_ent}本）")
+# ★本番の警告件数は合否にしない。月別の中身は他モードが毎日書き足すので、8KB超の項目が1件
+#   生まれただけでコードと無関係に赤くなり、「直すべき赤」を示さない試験になる
+#   （鳴りっぱなしの警告は警告として働かない＝ledger-discipline §2）。Codex 指摘 2026-09-23。
+#   警告が出る/出ないの合否は上の固定入力（8KB超・飲み込み）で見ている。ここは「読めるか」だけ。
+#   肥大そのものの申告は運用側の診断（system-health の毎日 cron・ledger-watch）が持つ。
+print(f"   （参考）本番の月別 {len(tgts)}本の形の警告 {len(warns)}件"
+      + ("：" + "／".join(w[:60] for w in warns[:3]) if warns else ""))
 sh.ROOT = real
 
 print("\n=== 本番ツールが git に入っていない（2026-08-11 の1ヶ月放置の再発防止）===")
@@ -202,6 +220,43 @@ print("\n=== 読み取り専用（監視が台帳を書き換えない）===")
 before = sorted(p.name for p in T.iterdir())
 sh.entry_shape("ledger.md"); sh.shape_warnings(sh.entry_shape("ledger.md"))
 (ok if sorted(p.name for p in T.iterdir()) == before else ng)("entry_shape/shape_warnings はファイルを増減させない")
+
+print("\n=== 名前かぶり：関数名を関数内の変数で潰していない（2026-09-24 実害）===")
+# 実害＝SHAPE_TARGETS（定数）を shape_targets()（関数）へ変えたとき、main() の
+#   `shape_targets = shape_targets()` が残り UnboundLocalError で毎晩まるごと落ちた（9/20〜9/24 の4日間）。
+#   このスイートは関数を1本ずつ呼ぶので main() の中の潰しは素通りする＝静的に見る。
+import ast
+
+def shadowed(src):
+    """モジュール直下の関数名を、関数の中でローカル変数に代入して潰している箇所を返す。"""
+    tree = ast.parse(src)
+    funcs = {n.name for n in tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))}
+    bad = []
+    for fn in tree.body:
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        for node in ast.walk(fn):
+            tgts = []
+            if isinstance(node, ast.Assign):
+                tgts = node.targets
+            elif isinstance(node, (ast.AugAssign, ast.AnnAssign)):
+                tgts = [node.target]
+            elif isinstance(node, (ast.For, ast.AsyncFor)):
+                tgts = [node.target]
+            for t in tgts:
+                for nm in ast.walk(t):
+                    # 代入される名前だけを見る（`d[f(x)] += 1` の f は読み出し＝潰していない）
+                    if isinstance(nm, ast.Name) and isinstance(nm.ctx, ast.Store) and nm.id in funcs:
+                        bad.append(f"{fn.name}() 内で {nm.id} を代入（L{nm.lineno}）")
+    return bad
+
+(ok if shadowed("def f():\n    return 1\ndef main():\n    f = f()\n") else ng)(
+    "検査そのものが名前かぶりを見つけられる（Red の担保）")
+hits = shadowed((proj / "bin/system-health.py").read_text())
+if hits:
+    ng("本体に関数名の潰しが無い", "／".join(hits))
+else:
+    ok("本体に関数名の潰しが無い")
 
 print(f"\n合計: 合格 {P} ／ 不合格 {N}")
 sys.exit(1 if N else 0)

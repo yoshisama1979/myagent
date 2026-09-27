@@ -110,7 +110,7 @@ def sources():
     # この置き場だけ 🔔 を使わない書式なので専用の kind で読む。
     # 2026-09-16：台帳を「索引＝状態／月別＝経緯」に分けたので、原文の在処は bin/kaizen.py に聞く
     #（月別がまだ無ければ従来の1枚を返す＝分割の前後で同じ数を言う）。
-    for f in _kaizen()._sources():
+    for f in _kaizen().sources_in(str(PROJ / "data" / "hp-improve")):
         out.append(("skill-kaizen", Path(f), "kaizen_entry"))
     # 2026-09-13 社長ご指示で追加。地の文に埋まっていて「人が読むしかない」としていたが、
     # 掲示板の 🔔ボックスは <ul><li> で1件ずつ並び、74/76 が先頭に主題の O-NNN を持つと実測できた。

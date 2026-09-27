@@ -114,6 +114,18 @@ printf '%s' "$out" | grep -qE 'スキル改善提案の未採否 +2' \
 printf '%s' "$out" | grep -q 'うち スキル改善提案 2件（下段と同じもの・二重に数えない）' \
   && ok "合計に含まれる分を明示して二重計上に見えないようにする" || ng "内訳の注記が無い"
 printf '%s' "$out" | grep -q '8KB超の肥大 1件' && ok "8KB超の肥大エントリを数える（サイズの主因を示す）" || ng "肥大エントリを数えていない"
+
+# 分割後＝月別が原文。①差し替えた ROOT の月別を読む（本番を読まない）②ファイルをまたいで本文が混ざらない
+mkdir -p "$R/data/hp-improve/kaizen"
+cat > "$R/data/hp-improve/kaizen/2026-08.md" <<'MD'
+### K-101 月別の1件目
+本文
+MD
+{ head -c 9000 /dev/zero | tr '\0' 'z'; printf '\n\n### K-102 月別の2件目\n本文\n'; } > "$R/data/hp-improve/kaizen/2026-09.md"
+out="$(run report)"
+printf '%s' "$out" | grep -q '見出し2件' && ok "月別があれば月別を読む（差し替えた ROOT の分＝試験が本番を読まない）" || ng "月別を読んでいない: $(printf '%s' "$out" | grep 'スキル改善提案の未採否')"
+printf '%s' "$out" | grep -q '8KB超の肥大 0件' && ok "ファイルをまたいで本文が混ざらない（次のファイルの前文を前の項目に飲み込まない）" || ng "連結して飲み込んだ: $(printf '%s' "$out" | grep 'スキル改善提案の未採否')"
+rm -rf "$R/data/hp-improve/kaizen"
 printf '%s' "$out" | grep -q 'K-001' && ng "エントリ本文・見出しを出力している（取引先名の漏れ）" || ok "件数だけ出し本文は出さない"
 
 echo "── §4b 見出しは ## も ### も区切り（8KB超を飲み込みで水増ししない・2026-09-14）"
@@ -158,6 +170,28 @@ rm -f "$R/bin/system-health.py"
 out="$(run report)"
 printf '%s' "$out" | grep -q '閾値を読み込めません\|system-health.py を読み込めません' \
   && ok "閾値を読めないときは黙らず申告する" || ng "閾値不在を黙って素通りする"
+
+# ★動的な群（月数・サイト数・モード数で増える器）が壊れても、固定の STATE_FILES の閾値まで消さない。
+#   1つの try でまとめていたため、globbed_states が落ちると **全部の器が上限なし**になっていた
+#   （申告は出るので気づけるが、一番効く固定分の数字を道連れにしていた）。Codex 指摘 2026-09-23。
+mkdir -p "$R/bin"
+cat > "$R/bin/system-health.py" <<'SHSTUB'
+KB = 1024
+STATE_FILES = [("data/partner/ledger.md", 70 * KB, "固定の器")]
+def hp_loop_states(): return []
+def globbed_states(): raise RuntimeError("壊れた群")
+SHSTUB
+got="$(LEDGER_WATCH_ROOT="$R" python3 -c '
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("_lw", sys.argv[1])
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+th, err = m.thresholds()
+print("keep" if "data/partner/ledger.md" in th else "lost", "|", err)
+' "$TOOL")"
+printf '%s' "$got" | grep -q '^keep' \
+  && ok "動的な群が壊れても固定の閾値は残る" || ng "壊れた群が固定の閾値を道連れにする: $got"
+printf '%s' "$got" | grep -q 'globbed_states' \
+  && ok "壊れた群の名前を申告する（どこが読めないか分かる）" || ng "壊れた群を名指ししない: $got"
 
 echo
 echo "合計: 合格 ${PASS} ／ 不合格 ${FAIL}"
