@@ -178,6 +178,112 @@
       <p class="mt-1"><strong class="text-rose-700">＝だからこそ、社長の一手は変わらず「買い手向けの記事を1本 publish する」だけです。</strong>CTA も title 改善も、<strong>買い手が読んでいない記事に付けている限り CV は増えません</strong>（Cycle 027 で B-009 を「最優先」と伝えたのは誤り＝流入改善であってCV改善ではない。同じ判断軸を B-015・B-019・B-021 にも当てています）。買い手を連れて来られるのは<strong>完成在庫5本（T-003/T-006/T-007/T-008/T-011）</strong>で、料金事実も社長回答も不要で公開できます。<span class="text-xs">※ Cycle 032 の訂正＝作成ソフト系は既存 p=77 が全クエリを受けていたため、T-005 新規公開ではなく <strong>B-012＝p=77 リライト</strong>が正解。この「head は既存の受け皿に譲り、記事は情報意図で棲み分ける」型は T-007・T-011・T-012・T-013 にも適用。</span></p>
     </div>
   </div>
+  <!-- ===== 📦 Cycle 107（2026-09-28）＝ Cycle 108（2026-09-29）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c107">Cycle 107 — 2026-09-28（YCOM ブログ・日次）：<span class="text-rose-700">代表の2017年の記事「ホームページのデザインにこだわりすぎるとよくない理由」（?p=4539）が、実在の病院2院のサイトを「すばらしくヒドい」と名指ししたまま公開中です</span>／<span class="text-emerald-800">その段落と誤字3か所を直し、同じ考えを書いた自社ページ（デザインプランとシンプルプランの比較）へつなぐ小さな直し（B-096）と、この考えを軸にした構成案「デザインの要望の伝え方」（T-055）を出します</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-09-28）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日 9/24 → 9/25</strong>（1日分の新着）。28日（8/31〜9/25）＝クリック1,260・表示51,760・CTR2.43%・平均9.6位（前日とほぼ同じ）。個別＝ブログ配下のページ別90日・未診断の記事の語（<span class="font-mono">?p=7737・5941・7085・3066・7964・5500・8078・6721・7113・1997・4539</span>）・「見積」「制作会社」「代行」「依頼」「デザイン」「ホームページ」を含む語（90日・サイト全体）・<span class="font-mono">/price/basic.html</span>（9/19〜9/25 の週）。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝<span class="font-mono">?p=4539</span>（信号・本文・リンク）・<span class="font-mono">/service/web/design.html</span>・<span class="font-mono">?p=2117</span>・<span class="font-mono">?p=8365</span>・<span class="font-mono">/flow/</span>。</li>
+      <li><strong>WordPress（<span class="font-mono">wp-draft.py get</span>）＝本日は未実施</strong>。8365 は公開URLの応答（HTTP500＝下書きのまま）で見ています。</li>
+      <li><strong>競合（hp-serp）</strong>＝「ホームページ デザイン 要望 伝え方」の1回。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　代表の「見た目より、情報の分かりやすさ」の記事に、他社を名指しで笑う段落が残っています</h3>
+    <p class="mb-2"><strong>何を見たか</strong>：まだ一度も診断していない記事を、90日の表示が多い順に洗いました。上位の未診断記事は、ほとんどが CSS・jQuery・Laravel・Kindle などの作る側の読者（<span class="font-mono">B-061</span> の考え方で対象外）。その中で <strong><span class="font-mono">?p=4539</span>「ホームページのデザインにこだわりすぎるとよくない理由」（2017-04-24・代表）</strong>だけが、<u>依頼する側に向けて書かれた記事</u>でした（90日 131表示・9クリック・平均10.9位）。</p>
+    <p class="mb-2"><strong>中身</strong>：主張は「ホームページは見た目より<u>情報のデザイン</u>。お客さんの疑問をひとつずつ解消すれば選ばれる」＝自社ページ <span class="font-mono">/service/web/design.html</span>（デザインプランとシンプルプランの比較・「まずはコンテンツが大切」）と同じ考えで、<u>他社の制作会社の記事には無い、代表の言葉</u>です。<strong>ただし</strong>、h2「デザインはとっても重要」の中で<strong class="text-rose-700">実在の病院（「愛生会病院」＋もう1院）を「すばらしくヒドい」「お客さん減ってるんじゃないか」と名指し</strong>しています（本文画像2枚＝推測：その2サイトの画面。画像の中身は未確認）。</p>
+    <p class="mb-2"><strong>なぜ気にするか（推測）</strong>：この記事を読むのは、自分のサイトを見直そうとしている発注者です。他社のサイトを名指しで笑う段落は、「頼んだら自分のサイトもこう言われるのか」と読める一文になります。実名の段落は先方の目に触れる可能性もあります。記事の主張（情報のデザイン）には不要な段落です。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：②信頼（代表の考え方が書かれた数少ない記事）→ ③検討（デザインにいくらかけるか）の橋。<strong>詰まりの本丸は変わらず ③の料金</strong>＝<span class="font-mono">/price/basic.html</span> は 9/19〜9/25 の週も「ホームページ制作 料金表」<strong>19.9位</strong>・54表示／「料金」20.8位・28表示＝どちらもクリック0（<strong class="text-rose-700">13週目</strong>・「料金表」が20位を切ったのは C100 以降で初めて＝ただし0.3位の差で、戻り始めとは言えません）。ブログから今すぐ効かせられるのは、変わらず 8365 の公開だけです（⛳）。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から43日目）</strong>。公開URLは HTTP500＝下書きのときの応答のまま（9/28 <span class="font-mono">hp-audit</span>）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝公開ページに残存（75日目）</strong>。本日も <span class="font-mono">【要・社長確認：内部リンク先の最終決定——…】</span> を1か所実測。</li>
+      <li><span class="font-mono">/flow/</span> の誤変換（「要望や<u>政策</u>の方針を<u>きけんとう</u>するために」）＝<strong>9/28 も残っています</strong>（hp-loop へ申し送り済み）。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝22日目・未回答。</li>
+      <li><span class="text-gray-600">参考（使わなかった観察）：未診断の技術記事（<span class="font-mono">?p=7737</span> clip-path・<span class="font-mono">?p=5941</span> background-attachment・<span class="font-mono">?p=7964</span> 正規表現・<span class="font-mono">?p=6721</span> Laravel・<span class="font-mono">?p=5500</span> Kindle ほか）はどれも作る側の読者・クリック0〜2＝対象外。「代行」を含む語（<span class="font-mono">/service/web/operate/</span> へ・90日で数百表示）はほぼ全部が地名の総当たり＝<span class="font-mono">B-071</span> の観察と同じで、新しい T は立てません。「ホームページ ダサい」は5表示・54位だけ＝「作り直すべきか」の問いは <span class="font-mono">T-014</span>（リニューアル）の h2② に吸収済み（<a href="archive.html#c059" class="underline">C059</a> で「タイミングの帯は独立記事にしない」と判断済み）なので、新しい T にしません。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-096</span>）</h3>
+  <div class="bg-white border-2 border-amber-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-amber-900 mb-2"><span class="font-mono">B-096</span>　<span class="font-mono">?p=4539</span>「ホームページのデザインにこだわりすぎるとよくない理由」＝実在の病院2院を名指しで笑う段落を外す・誤字3か所・デザインの受け皿ページへ1行　🟡　<span class="text-xs font-normal">（回答不要＝既定は (1)〜(3)／実行は 🔒 ローテ後・10分）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=4539</span>（2017-04-24・代表・カテゴリ「デザイン」）</li>
+      <li><strong>観点</strong>：E-E-A-T（会社の印象・信頼）／内部リンク（記事→受け皿ページ）／誤字</li>
+      <li><strong>観察</strong>（9/28 <span class="font-mono">hp-audit --text／--links</span>）：
+        ①h2「デザインはとっても重要」の中＝「これとかひどいでしょ！」「もはや伝説となった『愛生会病院』」「たくさんのリニューアル反対の声の中、惜しまれつつリニューアルされました。」「ですが、それに劣らぬデザインのサイトを発見。」「どちらもすばらしくヒドい！」「さすがにお客さん減ってるんじゃないかとも思えるレベル。」「しかも両方とも病院って、、おい」。本文画像は2枚（<span class="font-mono">wp-content/uploads/2017/04/3d34316d.jpg</span>・<span class="font-mono">img1.png</span>）＝推測：この2サイトの画面（中身は未確認）。1院目は記事の時点で既に「リニューアルされました」＝情報としても古い。
+        ②誤字＝「自己満足の<u>たえ</u>のデザイン」（→ため）／「システム系の会社とか危険<u>かお</u>・・・」（→かも）／「納得<u>しし</u>て安心したうえで」（→納得して）。
+        ③本文から自社ページへの文脈リンクは0本。関連記事4本はロゴ一覧・英字フォント・404ページ・スマホのデザイン＝どれも作る側の記事。自社の <span class="font-mono">/service/web/design.html</span>（「デザインを一番に考えていると失敗します」＝デザインプランとシンプルプランを7項目で比較）は、全ページ共通メニューに1本あるだけ。
+        ④GSC 90日＝131表示・9クリック・平均10.9位。個別に見える語は「ホームページ ダサい」5表示・54位だけ（残りは Search Console 側で語が伏せられている＝推測）。</li>
+      <li><strong>なぜ問題か</strong>：①は、この記事の読者＝<u>自分のサイトを見直そうとしている発注者</u>（医療機関を含む）にとって、「頼んだら自分のサイトもこう言われるのか」と読める段落です（推測：影響の大きさは測れません）。記事の主張（見た目より情報の分かりやすさ）には要らない段落で、外しても論旨は変わりません。③は、読み終えた人が「では自分はデザインにいくらかけるべきか」を知るページ（design.html）が、記事の中から見えません。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        (1) 「これとかひどいでしょ！」から「しかも両方とも病院って、、おい」までの段落と、その間の画像2枚を外す（<u>画像の中身は WP の管理画面で確かめてから</u>）。直後の「まあここまでだったらひどいって自分でわかるでしょ。」も、指すものが消えるので外し、「さすがに個人で作っているデザインはダサいものが多いですが、」から続ける。
+        (2) 誤字3か所を直す（たえ→ため／かお→かも／納得しして→納得して）。
+        (3) 最後の「…もし自分の自己満足ならお金がかかるだけなのでやらない方がいいです。」の後に1行＝「デザインにどこまで費用をかけるか（デザインプランとシンプルプランの違い）は、こちらにまとめています → <span class="font-mono">/service/web/design.html</span>」。
+        <span class="text-gray-600">※タイトル・説明文・それ以外の代表の文章と口調は変えない。</span>
+        <br><span class="text-amber-900">🙋 任意（社長ご自身の文章なので、こちらからは既定にしません）：「特にシステム屋さんはセンス悪いところが多いです。」＝YCOM は <span class="font-mono">/service/system/</span> でシステム開発も受けている＝自社にも跳ね返る一文／「どっかの優秀な制作会社引っ張ってきてやるかもねｗ」。直す・残すはお任せします（ご回答は不要です）。</span></li>
+      <li><strong>効果</strong>：クリック換算＝ほぼ0（90日9クリック・正直に）。<strong>買い手換算＝年1件未満</strong>。主な価値は①の<u>「実名で他社を笑う段落」という減点とリスクを1つ消す</u>ことと、代表の考え方の記事（②信頼）から design.html（③検討）へ1本の橋を架けること。<strong>工数</strong>：10分。<strong>優先度</strong>：🟡（効果は小さいが、実名の段落は放置の理由がない）。<strong>栓</strong>：🔒 WP 書き込みはローテ後（差分作りは栓なし＝blog-improve でローカルに可・急ぎません）。社長が WP 画面で直接直されるなら 🟦 で今すぐも可。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-055</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-055</span>　「ホームページのデザイン、制作会社にどう伝える？——『かっこよく』の前に決める3つと、デザインにお金をかけるかの分かれ目」　🟡　<span class="text-xs font-normal">（執筆は publish が動いてから＝在庫を積まない）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>重複の照合（C106 の学び＝h2 の中身で照合）</strong>：<span class="font-mono">T-050</span>（C094 改訂版）の h2 は「料金表の言葉を読む」「見積を頼む前に書く1枚メモ（載せたい内容／原稿と写真を誰が用意するか／公開後に誰が更新するか）」「頼んでから公開まで発注側がやること」＝<u>デザインの要望の伝え方は無し</u>。<span class="font-mono">T-035</span>（ロゴを新しくしたら）・<span class="font-mono">T-014</span>（リニューアル）・<span class="font-mono">T-043</span>（WordPress の引き渡し）とも問いが違います。<strong>T-050 の「載せたい内容」の行とだけ隣り合う</strong>ので、本記事の h2② はその行を「デザインの打ち合わせ用に1段深くしたもの」と位置づけて相互リンクし、見積の話は書きません。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：制作会社への依頼を決めかけている（または見積の段階の）中小企業の経営者・担当者。デザインの希望を聞かれても「かっこよく」「今っぽく」「シンプルに」としか言えず、出てきた案が思っていたのと違ったらどうしよう、と不安な人。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：「ホームページ デザイン 要望 伝え方」「ホームページ デザイン 依頼 伝え方」「デザイン イメージ 伝え方 制作会社」。<span class="text-amber-900">自社は90日でこの帯の表示なし（「デザイン」を含む語は全部 <span class="font-mono">?p=6448・7085</span> の作る側の語）＝取れるかは書いてみないと分かりません。</span></li>
+      <li><strong>検索結果の観察（hp-serp・9/28「ホームページ デザイン 要望 伝え方」上位10）</strong>：xdesigner（伝え方のポイント6個）・techport（デザイナーへの要望の伝え方）・zpx（依頼するときのポイント4選）・chaco-web・docodoor・cure-inc（会社らしさを共有する）・picks-design ほか＝<u>ほぼ全部が制作会社の「イメージの伝え方」</u>（参考サイトを出す・色や雰囲気を言葉にする）。<strong>差＝「見た目の前に、誰が何を探しに来るかを決める」から入る記事は上位に無い</strong>＝これが代表の <span class="font-mono">?p=4539</span> と自社の <span class="font-mono">/service/web/design.html</span> の考え方そのもの（他社が書けない章）。</li>
+      <li><strong>タイトル案</strong>：「ホームページのデザイン、制作会社にどう伝える？『かっこよく』の前に決める3つと、デザインにお金をかけるかの分かれ目」</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　結論：デザインの希望は「見た目」より先に「誰が・何を探しに来るか」から伝えると、ずれにくい</strong>（先に答え。「かっこよく」だけで伝えると、制作会社は想像で埋めるしかない）</li>
+      <li><strong>h2　伝える前に決める3つ</strong>（本記事の核①）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 来る人と、その人が探しているもの（例：営業時間・行き方・料金＝<span class="font-mono">?p=4539</span> の「何かを知りたくてホームページを見ている」を引用・リンク）。<span class="font-mono">T-050</span> の1枚メモ「載せたい内容」の行を1段深くしたもの＝相互リンク</li><li>h3 最初の画面で一番に見せたいもの（1つに絞る）</li><li>h3 「これはやめてほしい」を先に言う（例：動きの多い演出・小さすぎる文字・派手な色）</li></ul></li>
+      <li><strong>h2　見た目のイメージの伝え方</strong>（上位の記事と同じ論点は短く・一般論）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 参考サイトは2〜3件、「どこが良いか」を1行ずつ添える（丸ごと真似してほしいわけではない、と伝える）</li><li>h3 「かっこよく」「おしゃれに」を言い換える（写真が多いか少ないか・色の数・文字の大きさ・余白）</li><li>h3 ロゴ・会社の色・使いたい写真があれば最初に渡す（<span class="font-mono">T-035</span> は公開後にリンク）</li></ul></li>
+      <li><strong>h2　デザインにどこまでお金をかけるか——こだわる／抑えるの分かれ目</strong>（本記事の核②）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 デザイナーが作り込む形と、シンプルな形の違い（<span class="font-mono">/service/web/design.html</span> の7項目＝見た目・オリジナリティ・制作費・制作スピード・運用費・SEO・コンバージョン を要約してリンク。<u>金額は書かない</u>＝<span class="font-mono">Q-002</span>② の回答まで）</li><li>h3 「デザインは SEO には関係ない」「成約は中身（分かりやすさ）が先」＝design.html の公開済みの記述だけを使う</li><li>h3 代表の考え＝「そのこだわりは必要ですか？自己満足ならお金がかかるだけ」（<span class="font-mono">?p=4539</span> を引用・リンク。B-096 の直しの後に）</li></ul></li>
+      <li><strong>h2　よくある質問</strong>（「デザイン案は何案出ますか」「途中で方向を変えられますか」「修正は何回まで？」＝<u>答えは社長の確認後。確認できない問いは載せない</u>）</li>
+      <li><strong>h2　まとめ／「誰に何を見せたいか」を1行で書いて、ご相談ください</strong>（<span class="font-mono">/service/web/design.html</span>・<span class="font-mono">/flow/</span>）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/service/web/design.html</span>（主）・<span class="font-mono">?p=4539</span>・<span class="font-mono">/flow/</span>・<span class="font-mono">/works/</span>（制作実績＝参考サイトの一つとして自社実績を見てもらう）。未公開の <span class="font-mono">T-050</span>（1枚メモ）・<span class="font-mono">T-035</span>（ロゴ）・<span class="font-mono">T-008</span>（ピラー）は公開後に（行き先の無い案内は作らない＝<span class="font-mono">B-090</span> の教訓）。</li>
+      <li><strong>逆向きの1行</strong>：<span class="font-mono">?p=4539</span> の末尾（B-096 (3) の1行の後）に「制作会社にデザインの希望を伝えるときは → T-055」。T-055 が未公開の間は付けない。</li>
+      <li><strong>CTA</strong>：<span class="font-mono">Q-009</span> で決まる本命の相談窓口1つ（未定の間は design.html の現物の問い合わせボタンを流用）。</li>
+      <li><strong>用意すべき内容（捏造しない・任意）</strong>：①デザイン案の数・修正回数の目安（FAQ 用）②「伝え方でずれた／うまくいった」実例1つ（社名は伏せて可）。<u>①②が無くても記事は成立</u>します（FAQ を外すだけ）。</li>
+      <li><strong>効果</strong>：クリック換算＝推測で月0〜数件（自社に表示の実績なし）／<strong>買い手換算＝年1件未満</strong>（<span class="font-mono">B-079</span> の物差しで 🔴 に置かない）。価値は、<u>代表の考え方（②信頼）を、依頼直前の読者（③検討）が読む形に置き直す</u>こと＋ design.html への入口が初めてブログにできること。<strong>工数</strong>：中（h2 6本・自社の公開ページの要約が中心）。<strong>優先度</strong>：🟡。<strong>栓</strong>：― publish 後（在庫を積まない）。<span class="font-mono">T-008</span>（ピラー）のスポークに1本追加。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-09-28）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 22日目・未回答。<strong>本日の新規質問はゼロ</strong>（<span class="font-mono">B-096</span> は回答不要・任意の1点だけ 🙋 で添えています）。</li>
+      <li><strong>件数を絞りました</strong>：未消化が多いため B1＋T1。</li>
+      <li><strong>観点の輪番</strong>：前日の「カニバリ・内部リンク・鮮度」から、本日は<u>未診断記事の棚卸し</u>と <u>E-E-A-T（会社の印象）</u>へ。新規 T は C106 の学びどおり、既存の構成案と <u>h2 の中身</u>で照合してから立てました（T-050・T-035・T-014・T-043）。</li>
+      <li><strong>執筆担当</strong>：9/28 の週次起動（05:30／06:00）でやることは変わりません（<span class="font-mono">B-091</span> のコメント付け替えだけ）。<span class="font-mono">B-096</span> (1)〜(3) の差分は急ぎません（手が空いたときにローカルで可・画像の中身は WP で確かめてから）。T-055 は執筆しない。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 106 の本文を <a href="archive.html#c106" class="underline">アーカイブ</a>へ原文のまま移しました（①archive へ追記 →②<span class="font-mono">id="c106"</span> 1件・移した範囲の <span class="font-mono">&lt;div</span> 開き6／閉じ6 を確認 →③index から削除）。</li>
+      <li><strong>自己改善（Step 7）</strong>：学び＝<u>未診断の記事が約107サイクル残っていた</u>（?p=4539）＝観点の輪番が「数字の大きい記事」「一度触れた記事」に偏っていた。GSC のページ一覧と掲示板の言及数を突き合わせる手作業を、読み取り専用の道具にして週1で回す提案（skill-kaizen <span class="font-mono">K-896</span>）。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（<span class="font-mono">M-20260928T050814-blog-loop-ycom-8fbe64</span>・type=report・作用付きの依頼なし・スプールで配達を確認）／Slack 日報を投稿（ts=1790539704.953789）。</li>
+      <li><strong>掲示板の大きさ</strong>：index は約135KB（器の規律の80KBを超えたまま・Overseer へ申し送り済み）。本日は Cycle 106 を退避しただけで、繰り越し欄の畳み直しはしていません。</li>
+    </ul>
+  </div>
   <!-- ===== 📦 Cycle 106（2026-09-27）＝ Cycle 107（2026-09-28）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c106">Cycle 106 — 2026-09-27（YCOM ブログ・日次）：<span class="text-rose-700">【訂正】昨日の構成案 T-054（制作期間）は「重複なし」ではありませんでした＝1章が、次に公開する予定の T-050 の章と同じ中身です</span>／<span class="text-emerald-800">検索結果の上位が重ならない（10件中1件）ので記事は分けたまま、重なった章を T-050 に寄せる改訂版と、「更新したのに変わらない」2記事の小さな直し（B-095）を出します</span></h2>
 
