@@ -157,6 +157,30 @@
 
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
 
+  <!-- ===== Cycle 086 ===== -->
+  <section class="mb-10">
+    <h3 class="text-xl font-bold mb-1">Cycle 086 — 2026-09-29 未明（軽い巡回・火曜 1:00 fallback cron／新着なし・🟢1件）</h3>
+    <p class="text-sm text-gray-600 mb-3"><strong>モード判定</strong>：今週（09-28 月曜起算）の精密診断は Cycle 085 で実施済み＝月曜便は成功＝軽い巡回。<strong>確認した範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし・<span class="font-mono">thread_not_found</span> 1件＝O-078）／<span class="font-mono">to: overseer</span> 0通／<span class="font-mono">from-president.md</span>（最新節 09-27＝Cycle 085 で反映済み・新規節なし）／<span class="font-mono">failures.jsonl</span> 末尾・<span class="font-mono">fetch-fail</span> 全20件の日付／<span class="font-mono">tick.log</span> 09-28 21:37〜21:49／<span class="font-mono">bin/agent-tick.sh:176-185</span>／<span class="font-mono">data/mailbox/hold/</span>。</p>
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>健康サマリ</strong>：故障は静かです。新しい綻びは1件（🟢O-094）＝<u>社長の Slack に、自然に直る一過性の失敗まで警報が届く</u>。</p>
+      <ul class="list-disc ml-5 mt-2">
+        <li><strong>故障</strong>＝Cycle 085 以降の新しい行は 09-28 21:41 の <span class="font-mono">fetch-fail</span> 1件だけ（Slack 応答の <span class="font-mono">TimeoutError: The read operation timed out</span>）。21:42 以降の tick は正常・本サイクルの <span class="font-mono">fetch</span> も成功。</li>
+        <li><strong>hold/</strong>＝2通（<span class="font-mono">shigatoyota-dev</span> 09-01・<span class="font-mono">rally-dev</span> 09-23）＝O-060 の既知分。件数のみのご報告です。</li>
+      </ul>
+    </div>
+
+    <div class="bg-green-50 border-l-4 border-green-500 rounded p-4 mb-3 text-sm leading-relaxed">
+      <p class="font-bold">🟢 O-094 — Slack 取り込みの失敗1回で社長に警報が飛ぶ（一過性でも「トークン/ネットワークを確認してください」）</p>
+      <p class="mt-1"><strong>観察</strong>：<span class="font-mono">bin/agent-tick.sh:179-182</span> は <span class="font-mono">slack-poll.py fetch</span> が1回でも非0なら即 <span class="font-mono">alert</span> する。<span class="font-mono">failures.jsonl</span> の <span class="font-mono">fetch-fail</span> は全20件＝<u>かたまり</u>（08-18 に8件・09-06〜09-08 に9件）と<u>単発</u>（09-21 23:28・09-28 21:41）に分かれる。単発2件はどちらも次の tick（約1分後）で回復しており、Cycle 084 で「再発すれば見る」とした件が、同じ形でもう一度起きた。09-28 は <span class="font-mono">.last-alert</span> が 21:41 に更新されている＝社長へ届いている。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>：09-23 のご指示（Slack は「社長が急いで動くこと」だけ）に対し、この警報は<u>社長に確認作業を求めるが、実際は何もしなくてよかった</u>。推測：こうした空振りが重なると、本物の警報（トークン失効・長時間の停止）も読まれなくなる＝O-051（届く経路が Slack だけ）の効き目を削る。</p>
+      <p class="mt-1"><strong>推奨（開発）</strong>：<span class="font-mono">fail "fetch-fail"</span> の記録は今のまま残し、<span class="font-mono">alert</span> だけを「<strong>連続 N 回</strong>（案：3回＝約3分）失敗したとき」に絞る。連続回数は小さな状態ファイルで数え、成功で0に戻す。回帰テスト（<span class="font-mono">rules/testing.md</span> §2）＝単発1回では鳴らない／3回連続で鳴る／成功でリセット、の3件。N は★既定値・要合意ではなく開発判断で可（値付け・人・お金・外部露出に当たらない＝§7 の3問で非該当）。</p>
+      <p class="mt-1"><strong>効果</strong>：空振りの警報が消え、かたまり（08-18 型）は従来どおり届く。<strong>工数</strong>：小（10行程度＋テスト）。<strong>優先度</strong>：🟢 判断不要・開発の順番待ち。<strong>関連</strong>：O-051・O-078・09-23 Slack 報告の設計変更。<strong>ステータス</strong>：⏳ 開発へ（triage 経由）。</p>
+    </div>
+
+    <p class="text-sm">既存カードは軽い巡回の規定どおり再掲しません。Slack 投稿は控えます（社長が動くことは無い＝鳴らさない。O-094 は判断不要）。次の精密診断＝<strong>2026-10-05 月曜 1:00</strong>。</p>
+    <p class="text-sm mt-2"><strong>自己改善（Step 6）</strong>：単発の <span class="font-mono">fetch-fail</span> を2回とも「一過性」で流していたが、<u>その1回ごとに社長へ警報が飛んでいたか</u>（<span class="font-mono">.last-alert</span> の更新時刻）までは見ていなかった。「起票しない」判断の前に、その事象が社長に何を届けたかを確かめる。</p>
+  </section>
+
   <!-- ===== Cycle 085 ===== -->
   <section class="mb-10 border-t-4 border-blue-500 pt-4">
     <h3 class="text-xl font-bold mb-1">Cycle 085 — 2026-09-28 未明（<span class="underline">精密診断＋全体最適棚卸し（ルール＋コード）</span>・月曜 1:00 cron）／社長のご判断待ちは🙋1件</h3>
