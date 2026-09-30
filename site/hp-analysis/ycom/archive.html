@@ -245,6 +245,37 @@
   </section>
 
   <section class="border-2 border-sky-300 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-lg font-semibold mb-2">🛠 対応実績（月次）＝ <strong>2026-08（8月分）</strong>（2026-09-01 掲載 → <strong>2026-10-01（Cycle 128）に index から移送</strong>＝9月分と入れ替え）</h3>
+    <p class="text-sm text-sky-900 mb-3">前月に実装担当（web-hanasaka）が本番反映した作業の一覧です（毎月はじめに更新・2026-07-29 社長指示＝定額内でどれだけ作業が進んだかの可視化）。<strong>掲載はすべて本ループが本番HTMLを取得して反映を独立確認済みのもの</strong>です（報告だけで未確認のものは載せません）。<strong class="text-emerald-700">8月＝計16件（うちご依頼した提案 R-NNN 由来 8件／開発側が内部で見つけて直した分 8件）</strong>。7月分は <a href="archive.html" class="underline">アーカイブ</a> へ移しました。</p>
+    <table class="w-full text-sm border-collapse">
+      <thead><tr class="text-left border-b border-sky-300 text-sky-900"><th class="py-1 pr-3">反映日</th><th class="py-1 pr-3">対応</th><th class="py-1 pr-3">内容</th><th class="py-1">効果・検証</th></tr></thead>
+      <tbody class="align-top text-gray-700">
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-05</td><td class="py-1 pr-3 font-mono">R-037</td><td class="py-1 pr-3"><strong class="text-emerald-700">料金ページ（<span class="font-mono">/price/</span>）に残っていた旧A/Bテストの仕掛けを撤去</strong>＝ページを一時的に真っ白にしてから差し替える古いスクリプト（<span class="font-mono">async-hide</span>）が動いたままだった</td><td class="py-1">✅ 独立GETで確認（08-06）。<strong>白画面のリスクが消え、計測は維持</strong>（稼働中のタグは GTM 1本のみに整理）。<span class="text-gray-500">※65サイクル見逃していた「動かない層」を月次点検で発見した1件目</span></td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-05</td><td class="py-1 pr-3 font-mono">R-038</td><td class="py-1 pr-3">トップページの主要カード「WEBシステム」の<strong>リンク先が間違っていたのを是正</strong>（CMSのページ → システム開発のページ）</td><td class="py-1">✅ 独立確認（08-06）。R-042（下記08-11）と対で「入口と受け皿」が揃いました＝<strong>効果判定は ~09-10</strong></td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-05</td><td class="py-1 pr-3 font-mono">R-041</td><td class="py-1 pr-3">実績一覧（<span class="font-mono">/works/</span>）の<strong>スマホ表示崩れを修正</strong>（4列が画面からはみ出す／長いURLが突き抜ける／見出し帯の重なり）</td><td class="py-1">✅ スマホ幅の実画像を取得して確認（08-06）＝2列に折り返し・重なり解消</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-05</td><td class="py-1 pr-3 font-mono">R-043</td><td class="py-1 pr-3">サービス系カードの<strong>スマホ表示崩れを修正</strong>（1カラム化・アイコンの回り込み解除・行間）</td><td class="py-1">✅ スマホ実画像で確認（08-06）。<span class="text-gray-500">※影響範囲は当方の想定（1ページ）より広く実際は3ページ＝開発側の指摘で台帳を訂正しました</span></td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-06</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3"><span class="font-mono">/price/basic.html</span> の<strong>廃止済みGoogleツールの残骸を除去</strong>（ページの読み込みを止めてしまう古い書き方）</td><td class="py-1">✅ 独立GETで確認（08-12）＝残骸なし・計測は維持</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-06</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3">実績ページの<strong>安全性の統一（出力エスケープ）＋実績詳細39ページの画像altの誤り是正</strong>＋PHP8 でのエラー防止</td><td class="py-1">🔧 alt 是正は独立確認（08-12・<span class="font-mono">?p_id=8086</span> で空→「GOLFZONE24」）。安全性の統一は<strong>外から見て差分が出ない種類の変更</strong>のため当方では検証不能＝開発側の申し送りを受領</td></tr>
+        <tr class="border-b border-sky-100 bg-sky-50"><td class="py-1 pr-3 whitespace-nowrap">08-11</td><td class="py-1 pr-3 font-mono">R-045(b)</td><td class="py-1 pr-3"><strong class="text-emerald-700">料金ページの「維持管理費」の節から、運用代行ページへの初めての本文リンクを追加</strong>（それまでは別ページを1枚挟む2ホップだけでした）</td><td class="py-1">✅ 独立GETで確認（08-13）＝本文からの文脈リンク 0→1本。<strong>効果判定 ~09-10</strong></td></tr>
+        <tr class="border-b border-sky-100 bg-sky-50"><td class="py-1 pr-3 whitespace-nowrap">08-11</td><td class="py-1 pr-3 font-mono">R-042</td><td class="py-1 pr-3"><strong class="text-emerald-700">システム開発ページを共通メニュー（メガメニュー＋フッター）に掲載＝全ページに導線を通した</strong>。それまで被リンクは2本だけで、事業3本柱の1つが実質孤立していました<br><span class="text-xs text-gray-500">※共通テンプレート＝全ページ影響のため社長承認をいただいて実施</span></td><td class="py-1">✅ 独立GETで確認（08-13）＝トップ1→3本・料金0→2本・実績0→2本・サービス1→3本、退行なし。<strong>効果判定 ~09-10</strong></td></tr>
+        <tr class="border-b border-sky-100 bg-sky-50"><td class="py-1 pr-3 whitespace-nowrap">08-11</td><td class="py-1 pr-3 font-mono">R-045(a)</td><td class="py-1 pr-3">サービス一覧の運用代行への<strong>リンク文言を、実際に検索されている言葉へ寄せた</strong>（「運営・運用について」→「運用代行・保守について」）</td><td class="py-1">✅ 独立GETで確認（08-13）</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">7月下旬〜<br>8月中旬<br><span class="text-xs text-gray-500">（反映日不詳）</span></td><td class="py-1 pr-3 font-mono">R-039(a)</td><td class="py-1 pr-3"><strong class="text-emerald-700">robots.txt と sitemap.xml を実体として設置</strong>（従来はどちらもトップページへ転送＝実質「未設置」で、検索エンジンにサイト構造を伝えられていませんでした）。sitemap は52URL・更新日つき</td><td class="py-1">✅ 本番GETで確認（08-21・08-22）＝両方とも正常応答。<span class="text-gray-500">※反映日は外から特定できず（当方の月次点検で「報告のない反映」として検出→開発側に照会し、社長承認済みの作業と確認）</span><br>⚠️ <strong>実績詳細39ページが sitemap に未収録</strong>＝R-046 で対応中</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-21</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3"><strong class="text-rose-700">社内向け2ページが「サーバーエラー（500）」を返していたのを解消</strong>（該当ページを削除）</td><td class="py-1">✅ 独立GETで確認（08-22）</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-21</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3"><strong>販売終了したパッケージ商品のページ5本を削除</strong>＋残っていた「10万円パッケージ」の記述を撤去（※社長ご判断「商品自体が現存しない」）</td><td class="py-1">✅ 独立GETで確認（08-22）</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-21</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3"><strong>WEBコーダー募集の停止を反映</strong>＝タイトル・本文に停止告知、応募フォームを撤去（サーバ側処理も無効化）、共通テンプレートから募集CTAを撤去（3ページ）</td><td class="py-1">✅ 独立GETで確認（08-22）＝フォーム0件</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-21</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3"><strong class="text-rose-700">価格表の食い違いを是正</strong>＝サービスページに残っていた販売終了パッケージの旧価格表を撤去し、現行の料金体系へ統一。あわせて募集ページの時給を大阪府最低賃金（1,177円）へ更新</td><td class="py-1">✅ 独立GETで確認（08-22）＝「パッケージ」の記述 5→0件</td></tr>
+        <tr class="border-b border-sky-100"><td class="py-1 pr-3 whitespace-nowrap">08-21</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3"><strong>会社概要の地図が表示されなかった問題を修正</strong>（Google の仕様変更でエラーになっていた）。副次で、<strong class="text-rose-700">初心者向け相談ページの地図が2016年以降ずっと表示されていなかったのも復旧</strong></td><td class="py-1">🔧 地図の描画自体は<strong>外からの取得では検証不能</strong>（JS実行後の挙動）。ただし<strong>ページ取得が2.18秒で安定</strong>することは確認（従来は当方の撮影がハングする事象あり）</td></tr>
+        <tr><td class="py-1 pr-3 whitespace-nowrap">08-05</td><td class="py-1 pr-3">R外</td><td class="py-1 pr-3">実績ページのCSS内部整理（未使用コードの削除）</td><td class="py-1">出力CSSに差分ゼロ＝見た目・構造への影響なし（開発側報告）。当方に観測点なし</td></tr>
+      </tbody>
+    </table>
+    <p class="text-sm text-sky-900 mt-3 bg-white border border-sky-300 rounded p-3"><strong>■ 8月をまとめると</strong><br>
+    <strong class="text-emerald-700">① 量は7月の倍以上に増えました</strong>（7月6件 → 8月16件）。特に 8/21 に開発側から<strong>まとめて8件の報告</strong>があり、うち<strong>5件は当方が出した提案ではなく、開発側が内部で見つけて直したもの</strong>です（500エラー・販売終了商品・価格の食い違い・地図の不具合）＝7/29 にお願いした「R番号に紐づかない本番変更も報告する」規約が機能しています。<br>
+    <strong class="text-amber-700">② 8月の中身は「掃除」が中心でした</strong>＝16件のうち<strong>9件が不具合・古い残骸・実態と違う記述の除去</strong>で、集客を増やす類の施策ではありません。これは悪いことではなく、<strong>7月の月次点検（配管一斉点検）で見つかった宿題を消化した月</strong>という位置づけです。<br>
+    <strong class="text-rose-700">③ 一方、お問い合わせ（本ループの最終目標）は8月中に増えていません</strong>＝8/30 の実測で、広告の着地ページ3枚は2週間・1,682セッションで<strong>お問い合わせ0件</strong>。また7月の目玉だった料金ページの拡充も、8/31 に順位が施策前を下回ったため<strong>次弾を当方から撤回</strong>しました。<strong>＝9月は「掃除」から「お問い合わせを増やす打ち手」へ重心を戻します</strong>（最優先＝広告の是正2件／次＝運用代行ページの本文拡充＋対応エリアの明記）。<br>
+    <span class="text-xs text-gray-500">※ 上記のうち R-042・R-045・R-038 の効果判定は 9/10 ごろに出ます。／原簿＝内部の受信簿（deploy-log）。この表はそこからの派生ビューです。<strong class="text-rose-700">なお本レポート作成時に、8/11 の3件が受信簿に記録漏れしていたのを発見し補完しました</strong>（検証自体は 8/13 に済んでいたもの＝実害なし）。</span></p>
+  </section>
+
+  <section class="border-2 border-sky-300 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-lg font-semibold mb-2">🛠 対応実績（月次）＝ <strong>2026-07（7月分・初回）</strong>（2026-08-01 掲載 → <strong>2026-09-01（Cycle 110）に index から移送</strong>＝8月分と入れ替え）</h3>
     <p class="text-sm text-gray-700 mb-3">前月に実装担当（web-hanasaka）が本番反映した作業の一覧（2026-07-29 社長指示＝定額内でどれだけ作業が進んだかの可視化）。掲載はすべて本ループが本番HTMLの取得で反映を独立確認済みのもの。※受信簿（deploy-log）は 07-29 新設のため、この初回のみ、それ以前の完了記録（アーカイブ・内部台帳）から復元。</p>
     <table class="w-full text-sm border-collapse">
@@ -308,6 +339,53 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+  <!-- ===== Cycle 127（2026-09-28 定例＋週次4本）＝Cycle 128 の index 更新で移送 ===== -->
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+
+    <h3 class="text-xl font-semibold mb-1">Cycle 127 — 2026-09-28（y-com.info・<strong class="text-sky-700">3日ごとの定例＋週次4本（画面の確認・競合・見落としの点検・広告＝期日 9/26 を2日超過して消化）</strong>／主産物＝<strong class="text-rose-700">①「更新代行 大阪」は比較記事でなくサービスページ同士の勝負（9/12 と同形）＝運用代行ページの名前の直し（R-049(e)）がそのまま効く語 ②「運用代行 大阪」3位台は同じ長さの期間でも持続 ③実績一覧ページ（R-031）は1件ごとの説明が無い ④開発側の受信箱は25日目（未読30通）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（集計最終日 9/22 → 9/25＝平常・28日 1,260クリック／51,760表示／平均9.6位）・Google広告 ✅取得（YCOM のみ配信ゼロ＝停止26日目・週次のCV内訳もデータなし）・Clarity ✅取得（15日連続）・本番GET ✅（トップ・実績一覧）・画面撮影 ✅（実績一覧 PC/スマホ）・検索結果 ✅（Yahoo!＝Google と同じ索引）・受信箱 ✅（新着なし）・GA4＝週次 CV実測は明日 9/29 が期日のため本日は取得せず</p>
+
+    <div class="mb-5 border-l-4 border-emerald-500 bg-emerald-50 p-4 rounded-r">
+      <p class="font-bold text-emerald-800 mb-1">🔍 ① 「ホームページ更新代行 大阪」の上位は、「更新代行」を先頭に掲げたサービスページが占めたまま（9/12 と同じ形＝3回目の裏づけ）</p>
+      <p class="text-sm text-gray-800 mb-2">運用代行ページ（R-049）がいま最も多く表示されている語のひとつが <strong>「ホームページ更新代行 大阪」（9/6〜9/25：42表示・平均12.6位・0クリック）</strong>です。この語の上位を Yahoo!（Google と同じ索引）で改めて見ました。<strong>1〜4位のうち3本が、ページ名の先頭に「更新代行」「更新」を置いたサービスページ</strong>でした（デジクリ「ホームページ修正・更新代行」／エムハンド「更新代行 - 大阪のホームページ制作会社」／キューブキューブ「ホームページ更新｜大阪の…」。残り1本は料金相場の記事）。比較・ランキング記事は8位・10位の2本だけです。当社のページは上位16件に入っていません（12.6位＝2ページ目と整合）。<span class="text-xs text-gray-600">※この語は 9/12 の週次でも調べており、顔ぶれはほぼ同じです（当方が重複に気づかず同じ語を選びました＝次回から選び方を直します）。</span></p>
+      <p class="text-sm text-gray-800 mb-2"><strong>本日の新しい点は、9/19 に調べた「運用代行 大阪」との対比です</strong>＝「運用代行」は比較記事が上位を占めていてサービスページが入りにくい一方、<strong>「更新代行」はサービスページ同士の勝負</strong>で、ページ名が検索語から始まっているかが分かれ目になっています。当社の運用代行ページのタイトルは「ホームページの<u>運用代行</u>・保守・<u>更新代行</u>｜大阪の…」で、<strong>「更新代行」は3番目</strong>です（本番で確認済み）。R-049(e)「更新代行／修正更新代行を主語にする」は、この形に合わせる改修です。</p>
+      <p class="text-sm text-gray-800"><strong>意味づけ</strong>＝R-049(e) の処方は変わりません（新しい提案にはしません）。9/19 から育てていた「比較サイトへの掲載（サイトの外の入口）」の検討は、<strong>「運用代行」の語に限った話</strong>と範囲を絞ります。<strong>社長のご対応は不要です。</strong></p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-emerald-500 bg-emerald-50 p-4 rounded-r">
+      <p class="font-bold text-emerald-800 mb-1">📈 ② 「ホームページ運用代行 大阪」の3位台は続いています</p>
+      <p class="text-sm text-gray-800">前回（9/25）お伝えした上昇を、期間を3日延ばして確かめました＝<strong>9/6〜9/25：42表示・平均3.1位</strong>（前回 9/6〜9/22：35表示・3.5位）。一時的な跳ねではなさそうです。<strong>クリックはまだ0件</strong>で、Yahoo! の画面では前回同様に上位20件に出てきません（推測：地域や検索者によって表示が変わる）。<strong>評価はもう1回分の期間を待って行います</strong>。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-sky-500 bg-sky-50 p-4 rounded-r">
+      <p class="font-bold text-sky-800 mb-1">🖼 ③ 実績一覧ページ（R-031）を画面で確認しました＝1件ごとに「何を作り、どうなったか」がありません</p>
+      <p class="text-sm text-gray-800 mb-2">実績ページは、見た人の問い合わせ率が見ていない人の <strong>4.3倍</strong>（9/4 の実測）と、お問い合わせに効くページです。PC とスマホで撮影して見たところ、各実績は<strong>「番号・会社名・サイトのURL・サムネイル画像」だけ</strong>で、<strong>業種・作ったもの（コーポレート／予約システム等）・成果の一言が1件もありません</strong>。見出しの下の説明文も「クライアント様には非常にお喜びいただいています」の1文だけです。</p>
+      <p class="text-sm text-gray-800 mb-2">各実績に付いている <strong>「制作STORY」は灰色のラベルで、押せる状態に見えません</strong>（ページを調べた範囲では、このラベルはリンクになっていません。推測：制作の経緯を書く予定の欄が空のまま）。見る側からは「押せないボタンが並んでいる」ように見えます。スマホでは画面右下の AIチャットの吹き出しが4件目の実績名に重なっていました（トップ以外で4ページ目の観察・操作を妨げる証拠ではありません）。</p>
+      <p class="text-sm text-gray-800"><strong>意味づけ</strong>＝R-031「実績一覧を、成果が分かる事例ページへ」の根拠が1つ増えました（新しい提案にはしません）。R-031 のうち<strong>既存の事例の束ね直し（業種・作ったものの一言を足す）はご回答なしで進められる部分</strong>です。成果の数字やお客様の声は、9/2 のご判断どおり<strong>今は載せません</strong>。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ④ 開発側（web-hanasaka）の受信箱は25日目も止まっています（Q-020）</p>
+      <p class="text-sm text-gray-800">未読は <strong class="text-rose-700">26通 → 30通</strong>（増えたのはこのループとブログ分析からの定例報告だけ）。先方の最後の受け取りも、先方からの最後の報告も <strong>9/3</strong> のままです。①②のとおり、運用代行ページは<strong>見出しを直せば効く形</strong>がはっきりしてきました。<strong>引き続き、拠点PCのご確認（最上部 Q-020）をお願いします。</strong></p>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-semibold mb-2">📌 そのほか、本日の定点確認（いずれも社長のご対応は不要です）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>運用代行ページ（R-049）＝22回目もクリック0</strong>（28日 252表示）。提携パートナーのページ（R-040）も同じ系統の語で 121表示・0クリック。</li>
+        <li><strong>実績ページ（R-046）</strong>＝検索に出る個別の実績ページは <strong>4本（計11表示）</strong>で横ばい。10/2 の判定まで待ちます。</li>
+        <li><strong>無料相談ページ（R-047）</strong>＝相談の役割ページ 7表示・3クリック／運営相談 46表示・0クリック。<strong>サービスページ群（R-057）</strong>＝WordPress 262表示・1クリック・サービス一覧 84表示・1クリック。<strong>料金ページ（R-055）</strong>＝価格表 1,169表示・5クリックに集中したまま（料金トップ 21表示）。</li>
+        <li><strong>トップページ＝退行なし</strong>（73,529バイト・6回連続で同一）。Clarity のトップは7訪問・押しても反応しない所のクリック0。</li>
+        <li><strong>広告＝配信ゼロ26日目</strong>（他の3アカウントは 9/26 まで届いている＝本当に停止中）。週次のCV内訳もデータなし（停止中で当然）。<span class="text-rose-700">⚠️ 入札方法が「コンバージョン値の最大化」のままなので、このまま再開しないようご注意ください。</span></li>
+        <li><strong>開発側へお渡し済みで7日以上動いていない提案</strong>＝R-048（38日）・R-055（31日）・R-057（24日）。<strong>社長待ちではなく、Q-020（受信箱の停止）が原因</strong>です（R-057 は先方に未達）。</li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>新しい提案＝0件／新しいご質問＝0件</strong>。①〜③は既存の R-049・R-031 の根拠の更新で、④の「栓」が続いている間は届かない先に在庫を足さないためです。<strong>次回（10/1）は月次の実績レポート（9月分）と、10/2 の R-046 判定</strong>が控えています。</p>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）に 9/14 以降の新しい項目はありません。</p>
+
+  </section>
   <!-- ===== Cycle 126（2026-09-25 定例）＝Cycle 127 の index 更新で移送 ===== -->
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
