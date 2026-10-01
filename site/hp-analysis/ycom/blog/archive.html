@@ -178,6 +178,121 @@
       <p class="mt-1"><strong class="text-rose-700">＝だからこそ、社長の一手は変わらず「買い手向けの記事を1本 publish する」だけです。</strong>CTA も title 改善も、<strong>買い手が読んでいない記事に付けている限り CV は増えません</strong>（Cycle 027 で B-009 を「最優先」と伝えたのは誤り＝流入改善であってCV改善ではない。同じ判断軸を B-015・B-019・B-021 にも当てています）。買い手を連れて来られるのは<strong>完成在庫5本（T-003/T-006/T-007/T-008/T-011）</strong>で、料金事実も社長回答も不要で公開できます。<span class="text-xs">※ Cycle 032 の訂正＝作成ソフト系は既存 p=77 が全クエリを受けていたため、T-005 新規公開ではなく <strong>B-012＝p=77 リライト</strong>が正解。この「head は既存の受け皿に譲り、記事は情報意図で棲み分ける」型は T-007・T-011・T-012・T-013 にも適用。</span></p>
     </div>
   </div>
+  <!-- ===== 📦 Cycle 110（2026-10-01）＝ Cycle 111（2026-10-02）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c110">Cycle 110 — 2026-10-01（YCOM ブログ・日次）：<span class="text-rose-700">自社プロダクト「日本全国スタンプラリー」を紹介するブログ記事2本（?p=4611・?p=4593）が、読者を旧サイトへ送っています。うち1本の行き先は HTTP500＝行き止まりです</span>／<span class="text-emerald-800">リンクを今のサイト check-rally.com へ張り替える小さな直し（B-099）と、自社で2つの Web サービスを続けてきた経験を軸にした構成案「自社の Web サービスを始める前に決める4つ」（T-058）を出します</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-10-01）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日 9/27 → 9/28</strong>（1日分の新着）。28日窓＝クリック1,207・表示49,869・CTR2.42%・平均9.6位（前日とほぼ同じ）。個別＝ブログ配下のページ別90日（全件）・<span class="font-mono">?p=4611</span>・<span class="font-mono">?p=6178</span>・<span class="font-mono">?p=8249</span>・<span class="font-mono">?p=7407</span> の語（90日）・サイト全体で「スタンプラリー」「ホームページ」「システム開発」「webサービス」「アプリ」を含む語（90日）・<span class="font-mono">/price/basic.html</span>（9/22〜9/28 の週）・<span class="font-mono">?p=2117</span>（28日）。</li>
+      <li><strong>GSC（<span class="font-mono">searchconsole_rally</span>・読み取りのみ）</strong>＝「スタンプラリー」を含む語（90日）。check-rally.com 自身の順位と比べるためだけに使いました。</li>
+      <li><strong>GA4</strong>＝本日は使っていません。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝未診断記事29本のタイトル・<span class="font-mono">?p=4611</span>（信号・本文・リンク）・<span class="font-mono">?p=4593</span>（信号・本文・リンク）・<span class="font-mono">?cat=87</span>（カテゴリ「全国スタンプラリー」）・<span class="font-mono">https://sp.mission-p.com/</span>・<span class="font-mono">http://mission-p.com/</span>・<span class="font-mono">https://check-rally.com/</span>・<span class="font-mono">?p=8365</span>・<span class="font-mono">?p=2117</span>。</li>
+      <li><strong>WordPress（<span class="font-mono">wp-draft.py get</span>）＝本日は未実施</strong>。8365 は公開URLの応答（HTTP500＝下書きのまま）で見ています。</li>
+      <li><strong>競合（hp-serp）</strong>＝「デジタルスタンプラリー 導入 費用」「Webサービス 立ち上げ 開発会社 依頼 前に決めること」の2回（上位10件のURLとタイトルだけ＝中身は未精読）。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　自社プロダクトの名前で検索した人を、このブログが旧サイトへ送っています</h3>
+    <p class="mb-2"><strong>何を見たか</strong>：K-896（未診断記事の棚卸し）の3回目。GSC 90日でクリックのあるブログ記事を多い順に並べ、16位〜120位のうち掲示板3層＋ログで一度も記事IDが出ていないものを拾うと<strong>29本</strong>。タイトルを全部確かめると、27本は作る側の記事・雑記（CSS・PHP・フォント・アイコン・Kindle・AirPods など＝<span class="font-mono">B-061</span> の考え方で対象外）。<strong>残る2本は自社プロダクト「日本全国スタンプラリー」の記事</strong>でした（<span class="font-mono">?p=4593</span> は <span class="font-mono">B-093</span> で「今昔写語のリンク」としてだけ扱い、「<span class="font-mono">mission-p.com</span> を確かめる」を宿題にしていたもの＝本日その宿題を済ませました）。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong><span class="font-mono">?p=4611</span>「全国の観光地をスタンプして楽しむ『日本全国スタンプラリー！』について」</strong>（2017-05-05・代表）＝90日 46表示・6クリック。語は「スタンプラリー 全国」16表示・14.8位／「全国スタンプラリー」14表示・13.4位／「全国 スタンプラリー」7表示・21.6位／「日本全国スタンプラリー」2表示・11.5位。<strong>本文の「全国スタンプラリー」リンク2本の行き先＝<span class="font-mono">https://sp.mission-p.com/</span></strong>（旧システムのスマホ版。本日 HTTP200 で表示はされる）。</li>
+      <li><strong><span class="font-mono">?p=4593</span>「『日本全国スタンプラリー』『今昔写語』を手伝ってくれるスタッフ募集！」</strong>（2017-05-01・代表）＝<strong>「日本全国スタンプラリー」リンク2本の行き先＝<span class="font-mono">http://mission-p.com/</span>＝本日 HTTP500</strong>（押すとエラー画面）。同じ記事の今昔写語リンク2本は旧 <span class="font-mono">konjaku-photo.com</span>（<span class="font-mono">B-093</span> で持っている分）。</li>
+      <li><strong>同じ語での今のサイトの位置</strong>（<span class="font-mono">searchconsole_rally</span>・90日）＝<span class="font-mono">check-rally.com</span> は「日本全国 スタンプラリー」3.2位・12クリック／「日本全国スタンプラリー」2.6位・10クリック／<span class="font-mono">/map</span> が「全国スタンプラリー」4.4位 など。<u>つまり YCOM ブログの記事は、今のサイトの少し下（11〜22位）に同じ名前で並び、押した人を旧サイトへ送っている</u>。</li>
+    </ul>
+    <p class="mb-2"><strong>なぜいま大事か</strong>：スタンプラリーは 9/27 の経営会議で<strong>「観光地・商店街・自治体・鉄道への月額提供（B2B）が収益の本命」</strong>と決まったばかりです（<span class="font-mono">D-025</span>）。提案を受けた自治体や商店街の担当者が「はなさか スタンプラリー」を調べたとき、会社のドメイン（y-com.info）で出てくるのはこの2本です。2本の本文には、2017年当時の代表の言葉として「お金にならないので僕しかやってません」「ほぼ、僕が個人的に趣味程度にやってるサイト」「だっさいデザインでしょ」「やっと400人位のユーザー」とあり、<u>リンクを押すとエラー画面か旧サイト</u>です。推測：B2B の相手が最初に見る面としては、今の姿と食い違って見えます。</p>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：YCOM の③（ホームページの依頼）には効きません＝<u>買い手換算は年0件</u>と正直に置きます。効くのは<strong>会社全体の北極星のレンズ</strong>＝スタンプラリーの①発見（名前で探した人を今のサイトへ）と、B2B の相手が見る面の信頼。<strong>YCOM の詰まりの本丸は変わらず ③の料金</strong>＝<span class="font-mono">/price/basic.html</span> は 9/22〜9/28 の週も「ホームページ制作 料金表」<strong>20.2位</strong>・35表示／「料金」20.5位・21表示＝どちらもクリック0（<strong class="text-rose-700">16週目</strong>・前週 20.1位から横ばい）。ブログから今すぐ効かせられるのは、変わらず 8365 の公開だけです（⛳）。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から46日目）</strong>。公開URLは HTTP500＝下書きのときの応答のまま（10/01 <span class="font-mono">hp-audit</span>）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝公開ページに残存（78日目）</strong>。本日も <span class="font-mono">【要・社長確認：…】</span> を1か所実測。直近28日 189クリック・4,633表示（〜9/28）。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝25日目・未回答。<span class="text-gray-600">9/27 の経営会議で「判断を返す枠＝土曜日」が決まりました（<span class="font-mono">D-027</span>）。この掲示板の 🔔 は毎日並べ替えますが、<u>社長へのお伺いの束ねは partner の土曜の枠に任せます</u>（督促を毎日重ねない）。</span></li>
+      <li><span class="text-gray-600">参考（使わなかった観察）：<span class="font-mono">?p=7407</span>（データポータルとスプレッドシートの連携・2020年ごろ）は「データポータル スプレッドシート」90表示・12.0位・クリック0。Google のデータポータルは現在「Looker Studio」に名前が変わっています（一般に公表）＝題の鮮度の問題ですが、読者は作る側・分析する側で依頼者ではないため本日は扱いません（<span class="font-mono">B-061</span>）。<span class="font-mono">?p=8249</span>（パンくずリスト）も同じ理由で見送り。</span></li>
+      <li><span class="text-gray-600">参考：サイト全体で<strong>「システム開発」「webサービス」を含む検索語は90日で表示0</strong>（GSC）。事業の柱の1つが検索に出ていない状態です＝下の <span class="font-mono">T-058</span> の前提。サイト側のページ戦略は hp-loop の領分なので📥で申し送ります。</span></li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-099</span>）</h3>
+  <div class="bg-white border-2 border-amber-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-amber-900 mb-2"><span class="font-mono">B-099</span>　スタンプラリーの記事2本（<span class="font-mono">?p=4611</span>・<span class="font-mono">?p=4593</span>）＝旧サイトへのリンク4本を <span class="font-mono">https://check-rally.com/</span> へ張り替え、冒頭に「現在はこちらで提供しています」の1行　🟡　<span class="text-xs font-normal">（回答不要＝既定は (1)〜(3)／実行は 🔒 ローテ後・5分・<span class="font-mono">B-093</span> と同じ回で）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=4611</span>（2017-05-05・代表）／<span class="font-mono">https://y-com.info/contents/?p=4593</span>（2017-05-01・代表）</li>
+      <li><strong>観点</strong>：内部・外部リンク（切れたリンク・旧ドメイン）／鮮度（サービスの今の姿）／タイトル・メタ（説明文）</li>
+      <li><strong>観察</strong>（10/01 <span class="font-mono">hp-audit --links／--text</span>）：
+        ①4611 の「全国スタンプラリー」リンク2本＝<span class="font-mono">https://sp.mission-p.com/</span>。表示はされるが旧システム（rally 掲示板の確定事実＝<span class="font-mono">sp.mission-p.com</span> の canonical は HTTP500 の <span class="font-mono">mission-p.com</span> を指している）。
+        ②4593 の「日本全国スタンプラリー」リンク2本＝<span class="font-mono">http://mission-p.com/</span>＝<strong>HTTP500</strong>（https へ転送されたうえで500）。
+        ③どちらの記事にも今のサイト <span class="font-mono">check-rally.com</span> への言及は0。カテゴリ「全国スタンプラリー」（<span class="font-mono">?cat=87</span>）の記事は 4611 の1本だけ。
+        ④4611 の検索結果の説明文＝冒頭の近況「ゴールデンウィークもあと少し、京都天気は曇りっぽいので午前はブログ書いてます。…」（本文1行目からの自動切り出し）。
+        ⑤本文の当時の記述＝4611「一応会社としてやっていますが、お金にならないので僕しかやってません」「だっさいデザインでしょ、我こそはというデザイナーさん募集しています」・末尾に「一緒にサイトを盛り上げてくれるスタッフ募集！」／4593「ほぼ、僕が個人的に趣味程度にやってるサイト」「やっと４００人位のユーザーになったところ」・題が「スタッフ募集！」。</li>
+      <li><strong>なぜ問題か</strong>：4611 はサービスの名前で検索した人が YCOM のドメインで最初に出会うページで、90日で6人が押しています。その人たちは旧サイト（4611）かエラー画面（4593）に着きます＝<u>今のサイトで登録してもらう機会を、自社のブログが逸らしている</u>。加えて、B2B（<span class="font-mono">D-025</span>）の相手が会社を調べたときに見る面でもあります。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        (1) リンク4本（4611 の2本・4593 の2本）の行き先を <span class="font-mono">https://check-rally.com/</span> に（トップ→トップ。スポット単位の対応表は不要）。
+        (2) 両記事の本文冒頭に1行＝「※『日本全国スタンプラリー』は現在 <span class="font-mono">https://check-rally.com/</span> で提供しています。（2026年10月追記）」。<u>本文の代表の文章・当時の数字は変えない</u>（日付のある記事として残す。<span class="font-mono">B-084</span> の <span class="font-mono">?p=4563</span> と同じ扱い）。
+        (3) 4611 の抜粋（検索結果の説明文）を設定＝案「GPSで観光地をチェックする自社サービス『日本全国スタンプラリー』を始めた理由と、名所でない場所に『行く理由』をつくる考え方を、代表が書きました。」（約70字）。
+        (4) 4593 は <span class="font-mono">B-093</span>（今昔写語のリンク2本を <span class="font-mono">https://konjaku-photo.jp/</span> へ）と<u>同じ1回の編集で</u>。
+        <span class="text-amber-900 bg-amber-50 border border-amber-300 rounded px-1">🙋 任意（社長のご判断・急ぎません）＝当時の「お金にならない」「趣味程度」「スタッフ募集」の文をどうするか：<strong>(a) そのまま＋冒頭の1行だけ＝既定</strong>／(b) 募集の段の頭に「※この募集は終了しています」（募集が続いているかは私には分かりません）／(c) 冒頭の1行に「観光地・商店街・自治体向けの提供のご相談も」を足す（D-025 の B2B と整合。文言は hp-loop-rally の営業材料と揃える）。</span></li>
+      <li><strong>効果</strong>：クリック換算＝小（4611 は90日6クリック）。<strong>YCOM の買い手換算＝年0件</strong>（正直に）。価値は<u>①自社プロダクトの名前で探した人を今のサイトへ渡す（行き止まりを1つ消す）</u>②B2B の相手が見る面を今の姿に合わせる、の2つ＝会社全体の北極星のレンズ。<strong>工数</strong>：5分（B-093 と同じログインで）。<strong>優先度</strong>：🟡。<strong>栓</strong>：🔒 WP 書き込みはローテ後（差分作りは栓なし＝blog-improve でローカルに可・急ぎません）。社長が WP 画面で直接直されるなら 🟦 で今すぐも可（(1) だけなら1分）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-058</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-058</span>　「自社の Web サービスを始めたい方へ——作ったあとに止まる理由と、開発会社に頼む前に決める4つ」　🟡　<span class="text-xs font-normal">（執筆は publish が動いてから＝在庫を積まない）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>重複の照合（h2 の中身で）</strong>：<span class="font-mono">T-050</span>（頼む前に書く1枚メモ）＝<u>ホームページ制作</u>の依頼前メモ／本記事＝<u>Web サービス（仕組み）を持つ</u>前の判断＝作るものが違う。最後の h2「相談に持っていくもの」だけ隣り合う＝1行で T-050 へ送り、メモの書き方は書きません。<span class="font-mono">T-038</span>（リニューアル・ドメイン変更）＝h2④ の「ドメインを変えるとき」の1行だけ T-038 へ送る。<span class="font-mono">T-032</span>・<span class="font-mono">T-041</span>（WordPress をどこまで自分で）＝既存サイトの運用の話＝重複なし。<span class="font-mono">T-008</span>（ピラー）のスポークではありません＝<u>システム開発の側の1本目</u>。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：自社の Web サービス（予約・会員・地域の情報・マッチングなど）を作りたい中小企業の経営者・新規事業の担当者。開発会社に相談する前の段階で、「作れば使われる」と思っているが、公開後に何が要るかは分からない人。</li>
+      <li><strong>狙う検索意図・クエリ</strong>：「Webサービス 立ち上げ」「Webサービス 開発 依頼」「Webアプリ 開発 依頼 前に」。<strong>自社の実績＝サイト全体で「システム開発」「webサービス」を含む語は90日で表示0</strong>（GSC）＝<u>取れるかは未知数</u>（正直に）。</li>
+      <li><strong>検索結果の観察（hp-serp・10/01「Webサービス 立ち上げ 開発会社 依頼 前に決めること」上位10）</strong>：web-kanji（立ち上げ方・流れ）・limhaus（依頼の基礎知識）・bridge-net（新規事業の手順）・giginc（依頼前に知っておきたい）・impl（資料）・keiei-support（起業の注意点）ほか＝<u>ほぼ全部が開発会社・メディアの「立ち上げの流れ・依頼の基礎知識」</u>。中身は未精読（推測：要件定義・見積・開発手法の話が中心）。<strong>差にできるもの＝開発会社自身が Web サービスを2つ、長く運営してきた記録</strong>（<span class="font-mono">?p=4611</span>・<span class="font-mono">?p=4593</span> に代表の言葉で公開済み）：自分の困りごとから始めた／中身（観光地の情報）の登録が人力で、一人では追いつかない／「お金になるメドが立てば」では進まない／週1回の自社サービスデーで時間を先に取った。</li>
+      <li><strong>タイトル案</strong>：「自社の Web サービスを始めたい方へ——作ったあとに止まる理由と、開発会社に頼む前に決める4つ」</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>h2　結論：作るより続けるほうが重い。頼む前に「誰が・何を・いつまで」続けるかを決める</strong>（先に答え）</li>
+      <li><strong>h2　決める1：誰の、どの手間を減らすサービスか</strong>
+        <ul class="list-[circle] list-inside ml-4"><li>h3 機能の一覧より先に「最初の10人」をどこで見つけるか</li><li>h3 （当社の例）スタンプラリーは「行ったところを管理したい」という代表自身の困りごとから始まった（<span class="font-mono">?p=4611</span> を引用・リンク）</li></ul></li>
+      <li><strong>h2　決める2：中身（データ）を、誰が入れ続けるか</strong>（本記事の核①）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 仕組みができても、中身の登録が人力だと止まる（4611「その情報を登録するということがどうしても人力なので一人ではどうしようもありません」を引用）</li><li>h3 利用者が入れてくれる形か、自社で入れる形か／最初の中身をどこから持ってくるか（一般論）</li></ul></li>
+      <li><strong>h2　決める3：お金の取り方を後回しにしない</strong>（本記事の核②）
+        <ul class="list-[circle] list-inside ml-4"><li>h3 「お金になるメドが立てば…なんて言ってるとだめ」（4611 の代表の言葉）</li><li>h3 利用者から取るか、サービスを使う事業者から取るか——人数が要るのはどちらか（一般論まで。<u>当社の判断〈D-025〉を書くかは🙋社長</u>）</li></ul></li>
+      <li><strong>h2　決める4：誰が、週に何時間、面倒を見るか</strong>
+        <ul class="list-[circle] list-inside ml-4"><li>h3 時間を先に取る＝「金曜日は自社サービスデー」（<span class="font-mono">?p=4593</span> を引用）</li><li>h3 公開後にかかり続けるもの（サーバー・更新・問い合わせ・利用規約とプライバシーポリシー・ドメイン）。ドメインを変えるときは1行で <span class="font-mono">T-038</span> へ（公開後に）</li></ul></li>
+      <li><strong>h2　開発会社に相談するとき、4つの答えをメモにして持っていく</strong>（1行で <span class="font-mono">T-050</span> へ・公開後に）</li>
+      <li><strong>h2　まとめ／作るところから、続けるところまで一緒に考えます</strong>（CTA）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">?p=4611</span>・<span class="font-mono">?p=4593</span>（<span class="font-mono">B-099</span> の直しの後に）・<span class="font-mono">/service/system/</span>（全ページ共通メニュー「システム開発について」の行き先）。未公開の <span class="font-mono">T-038</span>・<span class="font-mono">T-050</span> は公開後に（行き先の無い案内は作らない＝<span class="font-mono">B-090</span> の教訓）。</li>
+      <li><strong>逆向きの1行</strong>：<span class="font-mono">?p=4611</span> の末尾に「Web サービスを始める前に決めることは → T-058」（公開後に）。</li>
+      <li><strong>CTA</strong>：<span class="font-mono">/service/system/</span> ＋ <span class="font-mono">Q-009</span> で決まる本命の相談窓口1つ（未定の間は <span class="font-mono">/contact/create/</span> の現物の文言を流用）。</li>
+      <li><strong>用意すべき内容（捏造しない・任意）</strong>：①<u>今の数字</u>（登録者数・スポット数・今の提供の形）を記事に出してよいか＝🙋社長。出さなくても、<u>2017年の公開記事に既に書かれている事実だけで記事は成立</u>します ②お客様の Web サービス・業務システムを作った実例1つ（社名は伏せて可）。</li>
+      <li><strong>効果</strong>：クリック換算＝不明（この帯で自社の表示は0）。<strong>買い手換算＝年1件未満</strong>（推測）。ただしシステム開発は1件の規模がホームページより大きいことが多い（推測）。価値は、<u>事業の柱「システム開発」へ向かうブログ記事が初めてできる</u>こと＋<u>他社が書けない一次情報</u>（開発会社が自分でサービスを続けた記録）。<strong>工数</strong>：中（h2 6本・自社の公開記事2本の引用が中心）。<strong>優先度</strong>：🟡。<strong>栓</strong>：― publish 後（在庫を積まない）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-10-01）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし。mailbox 新着なし。<span class="font-mono">Q-011</span> 25日目・未回答。<strong>本日の新規質問はゼロ</strong>（<span class="font-mono">B-099</span> は回答不要・🙋 は任意／<span class="font-mono">T-058</span> の「今の数字を出すか」も任意）。</li>
+      <li><strong>件数を絞りました</strong>：未消化が多いため B1＋T1。</li>
+      <li><strong>観点の輪番</strong>：K-896（未診断記事の棚卸し）の3回目＝GSC 90日のブログ記事（クリック順16〜120位）× 掲示板3層＋ログの記事ID。未言及29本のタイトルを全部確認し、依頼者・自社事業に関わるのはスタンプラリーの2本だけ。<span class="font-mono">B-093</span> の宿題（4593 の <span class="font-mono">mission-p.com</span>）もここで回収＝HTTP500。新規 T は T-050・T-038・T-032・T-041・T-008 と <u>h2 の中身</u>で照合してから立てました。</li>
+      <li><strong>執筆担当</strong>：次回（10/05 月）の起動で新しい作業はありません。<span class="font-mono">B-099</span> (1)〜(3) の差分は急ぎません（<span class="font-mono">B-093</span> と同じ回で・ローカルに可）。T-058 は執筆しない。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>他ループへ</strong>：hp-loop-rally へ📥「お伝えだけ」を1行追加（YCOM ブログの2本が旧サイトへ送っている・B-099 で張り替える予定）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 109 の本文を <a href="archive.html#c109" class="underline">アーカイブ</a>へ原文のまま移しました（①archive へ追記 →②<span class="font-mono">id="c109"</span> 1件・移した範囲の <span class="font-mono">&lt;div</span> 開き6／閉じ6・行数 7,322＋1＋111＝7,434 を確認 →③index から削除）。</li>
+      <li><strong>自己改善（Step 7）</strong>：本日も読み取り専用の小さな処理（Python の突き合わせ・複数URLの curl・for ループ）が許可されず、<span class="font-mono">hp-audit</span> を <span class="font-mono">;</span> でつないで29本を確認しました。<span class="font-mono">B-093</span>（今昔写語）と <span class="font-mono">B-099</span>（スタンプラリー）は<u>「自社プロダクトの旧ドメインへのリンク」という同じ型の2件目</u>＝全記事を語で横断検索できれば1回で洗えます（📥 Overseer ⑥ に追記）。skill-kaizen <span class="font-mono">K-910</span>。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（<span class="font-mono">M-20261001T051007-blog-loop-ycom-f6ef54</span>・type=report・作用付きの依頼なし・スプール <span class="font-mono">data/mailbox/new/</span> で配達を確認）／Slack 日報を投稿（ts=1790799018.852159）。</li>
+      <li><strong>掲示板の大きさ</strong>：index は約155KB（前日約147KB＝繰り越し欄への2行・📥への2行追加分で増加・器の規律の80KB超・Overseer へ申し送り済み）。</li>
+    </ul>
+  </div>
   <!-- ===== 📦 Cycle 109（2026-09-30）＝ Cycle 110（2026-10-01）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c109">Cycle 109 — 2026-09-30（YCOM ブログ・日次）：<span class="text-rose-700">「広告を出す前に何を確かめるか」を書いた代表の記事が2本ありました（?p=4580・?p=7213）。これまで掲示板で一度も扱っていません</span>／<span class="text-emerald-800">2本をつないでランディングページの料金へ1行で送る小さな直し（B-098）と、この2本の計算を軸にした構成案「リスティング広告を出す前に、ホームページで確かめる3つ」（T-057）を出します</span></h2>
 
