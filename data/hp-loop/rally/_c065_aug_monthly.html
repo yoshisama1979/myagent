@@ -1,0 +1,34 @@
+  <!-- 🛠 対応実績（月次） -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-8">
+    <h2 class="text-lg font-semibold mb-1">🛠 対応実績（月次）— 対象月：<span class="text-emerald-800">2026-08</span></h2>
+    <p class="text-xs text-gray-600 mb-2">原簿＝<code>data/hp-loop/rally/deploy-log.md</code>。<strong>すべて当方の本番実査（hp-audit・スクショ）で反映を確認済み</strong>のものだけを載せています。<span class="text-gray-500">（2026-07分は<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>へ移しました）</span></p>
+
+    <p class="text-sm font-bold text-emerald-900 mb-1">■ 8月のいちばん大きな出来事＝<span class="underline">32サイクル続いた「本番に何も出ない」状態が終わりました</span></p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-3">
+      <li><strong>8/15</strong>：<code>rally-dev</code>（開発担当）との通信が開通・GA4 と Search Console のデータ連携が開通（<span class="text-gray-600">それまで17〜20サイクル「データ未取得」でした</span>）</li>
+      <li><strong>8/29</strong>：<strong class="text-emerald-800">31サイクルぶりに <code>rally-dev</code> から初の返信</strong>＝過去13通すべて受領・<strong>6件を実装</strong>（原因＝拠点PCの環境移行で受信箱が未処理のままでした）</li>
+      <li><strong>8/30</strong>：<strong class="text-emerald-800">本番反映が同日2回</strong>＝<u>✅完了 9件</u>（下記）。<span class="text-gray-600">起票から解決まで1日。</span></li>
+    </ul>
+
+    <p class="text-sm font-bold text-gray-800 mb-1">■ 8/30 に本番へ出たもの（✅＝実査で確認済み）</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5 mb-3">
+      <li><strong>R-R21・R-R34・R-R25 ✅完了</strong>：<strong>約14,600ページに固有の「名札」（title・説明文）とcanonical</strong>＝それまで全ページが同じ名前でした</li>
+      <li><strong>R-R33 🔧半分完了</strong>：<strong>スポット詳細14,477ページに本文・見出し・写真・関連リンクをサーバ側HTMLへ出力</strong>（<span class="text-gray-600">＝検索エンジンが中身を読めるように。<u>一覧ページは未着手＝残りの半分</u></span>）</li>
+      <li><strong>R-R06 ✅完了</strong>：<strong><code>robots.txt</code> が 404 → 200</strong>／<strong><code>sitemap.xml</code> が 12URL → 約1.5万URL</strong>（<span class="text-gray-600">真因＝サーバ手前のプロキシ設定がアプリの出力を横取りしていました</span>）</li>
+      <li><strong>R-R02 ✅完了</strong>：全ページに OGP 7件＋Twitterカード4件（<span class="text-gray-600">＝SNS共有時の見え方が整いました</span>）</li>
+      <li><strong>R-R24 ✅完了</strong>：<code>/spots</code> の行き止まり（404）を解消＝<code>/spots/areas</code> へ転送</li>
+      <li><strong>R-R27 ✅完了</strong>：存在しないURLが本物の404を返すように（<span class="text-gray-600">従来は「読み込み中…」のまま</span>）</li>
+      <li><strong>R-R30 ✅完了</strong>：<code>/people</code> が素のシェル（12,504B）→ 共通レイアウト内（54,983B）へ</li>
+      <li><strong>R-R17 ✅サイト側＋GTM</strong>：登録完了・スタンプ取得の計測イベントを実装（<span class="text-emerald-700">→ GTM の公開も 9/6 に完了＝Q-R17 解決。実数は 9/7 から</span>）</li>
+      <li><strong>R-R28 🔧一部</strong>：一覧APIが写真を返すよう修正（<span class="text-gray-600">見た目は未変化＝主因は写真が145枚しかないというデータ量でした</span>）</li>
+      <li><strong>R-R32 ①🔧・R-R23 ③🔴差し戻し</strong>：未ログイン時の行き先を統一／浮動ボタンの重なりは<u>実測で未解消</u></li>
+    </ul>
+
+    <p class="text-sm font-bold text-gray-800 mb-1">■ 8月に見つかった障害・R外の変更</p>
+    <ul class="text-sm text-gray-700 list-disc list-inside space-y-0.5">
+      <li><strong class="text-red-800">8/15：本番が約20分ダウン</strong>（当方の実査で検出・報告なし）。<span class="text-gray-600">8/29 に原因の仮説を特定＝証明書の自動更新が引き金（推測）。<u>次の更新は 10/14 前後＝同じことが起きうる日</u>→ R-R19</span></li>
+      <li><strong>8/16〜8/17</strong>：メニューに発見軸2本を追加（「人物からさがす」「タグからさがす」・報告なし・実査検出）</li>
+      <li><strong>8/30</strong>：スポットデータの追加が継続中（京都府 1,039件 → 1,053件）</li>
+    </ul>
+    <p class="text-xs text-gray-600 mt-2">※ 次回の月次（対象月 2026-09）は 10月最初のサイクルで作成します（定石 #12）。</p>
+  </div>

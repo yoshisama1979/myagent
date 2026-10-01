@@ -1,0 +1,14 @@
+  <!-- ===== ✅ 完了した提案（Cycle 065・2026-10-02） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-emerald-800 mb-1">✅ R-R44 完了（2026-09-22 本番反映・2026-10-02 Cycle 065 で実測確認）— 登録完了の計測（<code>sign_up</code>）から認証トークンを外す</h2>
+    <p class="text-sm text-gray-800">9/28・9/30 の <code>sign_up</code> 2件の記録URLは <code>/register/verify</code> のみ（<code>?</code> 以降なし・<code>token=</code> なし）。基準＝反映前の 9/18〜21 は4件中4件にトークン。起票 9/20（Cycle 053）→ 開発担当の実装報告 9/22 → 反映後の登録が 9/28 まで無く判定保留 → 10/2 確認。</p>
+  </div>
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-emerald-800 mb-1">✅ R-R29 完了（タグ＝〜9/26 頃に本番反映・2026-10-02 Cycle 065 で実測確認／人物側は 9/5 完了）— 中身が空の新機能をメニューの一等地に常設しない</h2>
+    <p class="text-sm text-gray-800"><code>/spots/tags</code> にタグ9種（寺院 1,757・博物館/資料館 1,516・公園 1,132・道の駅 1,019・神社 828・跡地 250・碑 114・スタジアム 52・銅像 20）。タグ詳細は固有の名札つき（例「寺院のスタンプスポット1757件」・h1=1）。Search Console でも <code>/spots/tags/temple</code> 7表示・平均2.4位・1クリック。報告なし・実査検出。これで「空の棚」は人物・タグとも解消。</p>
+  </div>
+  <div class="border border-gray-300 bg-white rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-1">🔀 R-R14 を R-R08 へ統合（2026-10-02 Cycle 065）— トップの「空の店先」解消</h2>
+    <p class="text-sm text-gray-800">トップページの刷新（9/29〜10/2 の間・報告なし）で、新しいテーマ8件・ステッカー12種・遊び方4ステップが位置情報の許可なしに見えるようになった＝R-R14 の主部分（何が集められるかを位置許可の前に見せる）は反映。残り（位置情報を拒否したときの「近くのスポット」枠の代わりの入口）は R-R08 の残作業と同じため統合。Q-R06（対象者）の回答待ちという区分は R-R14 としては消滅。</p>
+    <details class="mt-2"><summary class="text-xs text-gray-500 cursor-pointer">統合・完了時点の行（index から移動・改変なし）</summary>
+    <table class="w-full text-sm border-collapse mt-2"><tbody class="align-top">
