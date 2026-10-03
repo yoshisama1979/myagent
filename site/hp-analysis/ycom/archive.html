@@ -339,6 +339,57 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+  <!-- ===== Cycle 128（2026-10-01 定例＋月次＋週次CV実測）＝Cycle 129 の index 更新で移送 ===== -->
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 128 — 2026-10-01（y-com.info・<strong class="text-sky-700">3日ごとの定例＋月次の実績レポート（9月分）＋週次のお問い合わせ実測（期日 9/29 を2日超過して消化）</strong>／主産物＝<strong class="text-rose-700">①9月の本番反映は2件・9/4 以降ゼロ ②検索から来た人のお問い合わせは 6→9件（少数・前の28日との比較）③「運用代行 大阪」3位は画面上では見えていない（3回目の確認）④開発側の受信箱は28日目（未読34通）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（集計最終日 9/25 → 9/28＝平常・28日 1,207クリック／49,869表示／平均9.6位）・GA4 ✅（お問い合わせ5種・採用は除外）・Google広告 ✅（YCOM のみ配信ゼロ＝停止29日目）・Clarity ✅（16日連続）・本番GET ✅（トップ・運用代行ページ）・検索結果 ✅（Yahoo!＝Google と同じ索引）・受信箱 ✅（新着なし）</p>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🛠 ① 9月の対応実績＝2件（9/2・9/3）。9/4 以降の本番反映はゼロです</p>
+      <p class="text-sm text-gray-800">上の「🛠 対応実績（月次）」を9月分に差し替えました。反映された2件（実績ページを検索に出やすくする修正／不要なプログラムの撤去）はどちらも独立確認済みです。<strong>9/4 以降ゼロなのは作業量の問題ではなく、開発側の受信箱が止まっているため</strong>（④・Q-020）です。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-emerald-500 bg-emerald-50 p-4 rounded-r">
+      <p class="font-bold text-emerald-800 mb-1">📊 ② お問い合わせの実測（週次）＝検索から来た人のお問い合わせは 6件 → 9件。減ったのは「直接来た人」の分です</p>
+      <p class="text-sm text-gray-800 mb-2">営業のお問い合わせ5種（お問い合わせ完了・見積り依頼完了・スマホのメール／電話・その他。<strong>採用の応募は含めません</strong>）を、直近28日（9/3〜）と、その前の28日（8/6〜9/2）で比べました。</p>
+      <table class="w-full text-sm border-collapse mb-2">
+        <thead><tr class="text-left border-b border-emerald-300"><th class="py-1 pr-3">どこから来たか</th><th class="py-1 pr-3">8/6〜9/2</th><th class="py-1">9/3〜（直近）</th></tr></thead>
+        <tbody class="align-top">
+          <tr class="border-b border-emerald-100"><td class="py-1 pr-3">Google 検索</td><td class="py-1 pr-3">1,964訪問・<strong>6件</strong></td><td class="py-1">1,691訪問・<strong class="text-emerald-700">9件</strong></td></tr>
+          <tr class="border-b border-emerald-100"><td class="py-1 pr-3">直接（ブックマーク・URL入力など）</td><td class="py-1 pr-3">974訪問・<strong>57件</strong></td><td class="py-1">828訪問・<strong class="text-rose-700">37件</strong></td></tr>
+          <tr><td class="py-1 pr-3">ChatGPT</td><td class="py-1 pr-3">－</td><td class="py-1">23訪問・2件</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800"><strong>意味づけ</strong>＝このループの目標は「検索から来た買い手のお問い合わせ」なので、見るべきは Google 検索の行です。6→9件は<strong>数が小さく、まだ「増えた」とは言えません</strong>（同じ比較をあと2回続けて判断します）。直接の減少（57→37件）は、推測：既存のお客様がフォームを連絡に使っている分の増減で、検索の施策とは別の話です。<strong>9月の見積り依頼完了は1件</strong>（6月3・7月2・8月1件＝もともと月1〜3件）。入口はトップページ（263訪問・12件）とお問い合わせページ直行（49訪問・22件）がほぼすべてで、ブログから入った人のお問い合わせは今回も0件でした。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r">
+      <p class="font-bold text-amber-800 mb-1">🔍 ③ 「ホームページ運用代行 大阪」の3位は、実際の検索画面では見えていません（3回目の確認）＝この順位を成果として数えません</p>
+      <p class="text-sm text-gray-800">前回「もう1回分待って評価する」とお伝えした件です。<strong>9/6〜9/28：45表示・平均3.0位・クリック0</strong>で、数字の上では3位が23日続いています。一方、本日 Yahoo!（Google と同じ索引）で同じ語を検索すると、<strong>上位10件に当社のページはありません</strong>（9/19・9/25 に続いて3回目。上位は比較記事とサービスページ）。<strong>評価＝この「3位」は画面上の見え方を表していない</strong>（推測：地域や検索する人によって表示が変わる）ので、R-049 の成果には数えません。<strong>R-049 の処方（ページの名前を検索語に合わせて直す）は変わりません。</strong>社長のご対応は不要です。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ④ 開発側（web-hanasaka）の受信箱は28日目も止まっています（Q-020）</p>
+      <p class="text-sm text-gray-800">未読は <strong class="text-rose-700">30通 → 34通</strong>。先方の最後の受け取りも、先方からの最後の報告も <strong>9/3</strong> のままです。①のとおり、<strong>これが9月の反映ゼロの直接の原因</strong>です。<strong>引き続き、拠点PCのご確認（最上部 Q-020）をお願いします。</strong></p>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-semibold mb-2">📌 そのほか、本日の定点確認（いずれも社長のご対応は不要です）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>運用代行ページ（R-049）＝23回目もクリック0</strong>（28日 226表示）。ページの名前は変わっていません（改修が未着手＝④と整合）。提携パートナーのページ（R-040）108表示・0クリック。</li>
+        <li><strong>実績ページ（R-046）</strong>＝検索に出る個別の実績ページは <strong>3本（計10表示）</strong>で横ばい。<strong>判定は次回（10/4）</strong>に、反映から30日（10/2）までのデータで行います（本日の時点ではデータが 9/28 までしかないため）。</li>
+        <li><strong>料金ページ（R-055）</strong>＝価格表 1,086表示・4クリック（料金トップ 18表示）。<strong>サービスページ群（R-057）</strong>＝WordPress 248表示・1クリック・サービス一覧 78表示・1クリック。<strong>相談ページ（R-047）</strong>＝相談の役割ページ 6表示・3クリック／運営相談 42表示・0クリック。</li>
+        <li><strong>トップページ＝退行なし</strong>（73,529バイト・7回連続で同一）。Clarity のトップは6訪問・押しても反応しない所のクリック0。</li>
+        <li><strong>広告＝配信ゼロ29日目</strong>（他の3アカウントは 9/29 まで届いている＝本当に停止中）。<span class="text-rose-700">⚠️ 入札方法が「コンバージョン値の最大化」のままなので、このまま再開しないようご注意ください。</span></li>
+        <li><strong>開発側へお渡し済みで7日以上動いていない提案</strong>＝R-048（41日）・R-055（34日）・R-057（27日）。<strong>社長待ちではなく、Q-020（受信箱の停止）が原因</strong>です。</li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>新しい提案＝0件／新しいご質問＝0件</strong>。受信箱が止まっている間は、届かない先に在庫を足さないためです。<strong>次回（10/4）は R-046（実績ページ）の30日判定</strong>と、Q-020 の確認です。</p>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）に 9/14 以降の新しい項目はありません。</p>
+
+  </section>
   <!-- ===== Cycle 127（2026-09-28 定例＋週次4本）＝Cycle 128 の index 更新で移送 ===== -->
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
 
