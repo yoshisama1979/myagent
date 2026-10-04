@@ -30,6 +30,64 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== Cycle 066 の記録（Cycle 067 のローテで移動・2026-10-05・本文は改変なし） ===== -->
+  <!-- ===== Cycle 066 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 066 — 2026-10-04（<span class="text-emerald-700">着手推奨①〜③が本番へ＝完了3件・質問2件解決</span>／<span class="text-rose-700">10/4 定点＝発見は伸び、登録は10月 0件</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">反応（開発担当からの報告2通で起動・手動）。<strong>新規の提案＝0件／新規の質問＝0件</strong>＝在庫 13件（R）・質問3件・判断待ち（着手時）9件。<br><strong>データ状況</strong>＝GSC ✅（最新 10/2）／GA4 ✅（最新 10/3）／本番GET・スクショ ✅／索引の実見（<code>site:</code> 検索）は<strong>本日は測れず</strong>（下の②）／証明書の読み取り（<code>hp-head.py</code>）・sitemap の全件集計（<code>sitemap-count.py</code>）は実行許可の外で未実施。<br><strong>本サイクルで回した定石</strong>＝日次一式（変化検知・在庫の進捗・到達性・GA4・GSC・配信の到達確認）＋10/4 に予約していた定点。週次（リンク実査 #14＝期日 10/6、棚卸し・競合・ビジュアル＝10/9）は次の定期サイクルで行います。</p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-900 mb-2">① 開発担当の報告を本番で確かめました＝3件とも反映済み</h3>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 w-40 font-semibold">R-R31 ✅<br><span class="text-xs font-normal text-gray-500">スポット検索</span></td><td class="py-1 px-2"><code>/spots/search</code>＝見出し（h1）0 → <strong>1</strong>・検索フォーム 0 → <strong>2本</strong>（ページ内とメニュー内・JS が動かなくても検索できる形）・56,133B。<span class="text-gray-600">開発担当からの補正を受け取りました＝「スマホに検索窓が無い」は不正確で、☰ メニューの中にはありました。見出しが 0 と測れていたのは、読み込み中の枠の内側にあって配信HTMLに出ていなかったためです。</span></td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">R-R08 ✅<br><span class="text-xs font-normal text-gray-500">位置情報を拒否したとき</span></td><td class="py-1 px-2">スマホ幅で撮影＝「位置情報の使用が許可されていません。地方やキーワードからもスポットを探せます」の下に、<strong>地方11件（北海道 972件・関東 2,364件・関西 3,605件…）とキーワード検索欄</strong>が出ています（10/2 は注意書きだけでした）。登録フォーム・ログインフォームは <code>method="post"</code> に（JS が動かないときにメールアドレスが URL に載る形が解消）。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">R-R38 ✅<br><span class="text-xs font-normal text-gray-500">sitemap の点検</span></td><td class="py-1 px-2">開発担当がデータベースで確認＝sitemap は詳細ページと同じ表から作られ、非公開・削除済みが混ざる仕組みが無い／本番 sitemap <strong>14,767件</strong>・抜き取り27件すべて 200。当方の確認＝<code>/spots/1500</code>・<code>/spots/67</code> は 404、<code>sitemap.xml</code> は 200（996,505B）。<span class="text-gray-600">件数そのものは開発担当の申告値です（当方の全件集計の道具は実行許可の外）。</span></td></tr>
+          <tr><td class="py-1 px-2 font-semibold">報告にあったその他<br><span class="text-xs font-normal text-gray-500">（当方では未検証）</span></td><td class="py-1 px-2">テーマの登録案内の文言を「「日本三名園を巡る」でスタンプを集めませんか」の形に（スマホ撮影では該当の枠が浮動ボタンに重なって読み切れず＝判定しません）／現在地の座標を約100m に丸めて送信／目安箱の通知メールの不具合修正／退会・パスワード再設定などのフォームも POST に。</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800"><strong>北極星への接続</strong>＝1階②（登録の障壁）：位置情報を許可しない人にも「探す入口」ができた＝トップに来た人が何もできずに帰る場面が1つ減りました。<strong>測る窓</strong>＝GA4 でトップ着地セッションの次ページ遷移とメール入力開始（基準＝9/22〜10/3：56セッション中 入力開始1）。</p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 10/4 の定点＝「発見」は伸び続け、「登録」は動いていません</h3>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 w-40 font-semibold">発見（GSC・9/6〜10/2）</td><td class="py-1 px-2">検索に出たページ <strong>1,329本＝約8.0%</strong>（10/2 時点 1,135本）・表示 6,870回・クリック 302。層ごと＝スポット詳細 1,168/14,477（8.1%）・市区町村 87/1,918（4.5%）・都道府県 14/47・テーマ 18/27・人物 30/106・タグ 2/9。直近14日（9/20〜10/2）＝表示 5,563・クリック 232・平均 10.0位。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">定点8件の索引</td><td class="py-1 px-2">Search Console に表示が出ているのは <strong>2/8</strong>（<code>/spots/300</code> 4表示・<code>/spots/9900</code> 11表示）。<span class="text-amber-800"><strong>⚠️ 索引の実見は測れませんでした</strong>＝<code>site:</code> 検索を4件試したところ、9/20 に登録済みと確認した <code>/spots/300</code> を含め4件とも検索結果が0件で返りました。<u>登録が消えたのではなく、当方の測り方（Yahoo の <code>site:</code> 検索）が今日は機能しなかった</u>と読みます（残り4件と未索引テーマ5本は叩かずに中止）。次のサイクルで取り直します。</span></td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">未索引だった新テーマ6本</td><td class="py-1 px-2">Search Console に表示が出ているのは灘五郷の酒蔵の1本だけ（5表示・1クリック）＝10/2 と同じ。残り5本（中山道・東海道・特別史跡・Jリーグ・タワー連盟）は表示0のまま。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">登録（GA4・9/22〜10/3）</td><td class="py-1 px-2">初めての訪問 <strong>407人</strong> → メール入力開始 12回（7人）→ 登録完了 <strong>2件</strong>（9/28・9/30）。うち <strong>10/1〜10/3 は 初訪問 129人・入力開始 3回・登録完了 0件</strong>。スタンプ取得は12日間で70回（3人）。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">R-R22 の効果<br><span class="text-xs font-normal text-gray-500">（下層の登録の入口・9/22 反映）</span></td><td class="py-1 px-2">着地面の上位40面のうち、入力開始または登録完了があったのは<strong>トップ（56セッション中1）と <code>/map</code>（50セッション中2）だけ</strong>。スポット詳細・テーマ詳細・人物詳細・市区町村に着地したセッション（1面あたり2〜10セッション）は <strong>すべて 0</strong>。<span class="text-gray-700">＝基準（8/30 時点 0件/12セッション）から動いていません。<strong>推測</strong>：検索から来た人の目的は「その場所の情報」で、最初の1ページでは登録に至らない。件数が小さい（1面あたり数セッション）ため、撤回の判断はまだしません。</span></td></tr>
+          <tr><td class="py-1 px-2 font-semibold">R-R26 の効果<br><span class="text-xs font-normal text-gray-500">（<code>/map</code> の登録の入口・9/24 反映）</span></td><td class="py-1 px-2"><code>/map</code> 着地 50セッション中、入力開始/登録完了のあったセッション <strong>2</strong>（基準 0）。Search Console の <code>/map</code>＝213表示・18クリック・平均5.3位（9/6〜）。<span class="text-gray-700">＝入口として動き始めています（小さい数字です）。</span></td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong>読み方</strong>＝訪問は増えています（初めての訪問 9/24 14人 → 10/1〜3 は1日平均43人）が、登録は増えていません。<u>いま細いのは「発見」ではなく「登録」</u>です。開発担当は登録の流れ（パスワードを使わず、メールのリンクかコードでログインする形）を検討中とのことで、当方の観察（入力開始 12回に対し完了 2件）と向きが合っています。</p>
+      <p class="text-sm text-gray-700 bg-white border border-gray-300 rounded p-2"><strong>新しい提案にしなかったもの（種として保持）</strong>＝①人物の一覧 <code>/people</code> に 28セッション着地して入力開始 0（人物の一覧に登録の入口があるかは次の定期で撮影して確認）②「登録の入口を置く」だけでは下層からの登録が起きていない＝次に試す手は「入口の数」ではなく「登録の手間」側（開発担当の検討と同じ向き）。どちらも、いま新しい番号を立てると判断待ちを増やすだけなので立てません。</p>
+    </div>
+
+    <div class="border-l-4 border-amber-500 bg-amber-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-amber-900 mb-2">③ 開発担当からの回答とご連絡</h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>口コミは承認制ではありません</strong>＝書かれるとすぐ公開。通報されたもの・管理画面で伏せたものが非表示になる方式。星の評価は 9/26 に外し、「参考になった」とレビュアーランキングが付いています。</li>
+        <li><strong>使っているサービス</strong>（経営会議からの照会への回答）＝地図：Google Maps／メール送信：Xserver の共用サーバー／データベース・画像：Xserver VPS の中（外部ストレージなし）／ドメイン：お名前.com で登録・DNS はムームードメイン。旧システム <code>sp.mission-p.com</code> のサーバーは稼働中で契約も継続（<code>mission-p.com</code> の期限は 2027-07）。</li>
+        <li><strong class="text-amber-900">⚠️ ドメイン <code>check-rally.com</code> の有効期限は 2026-12-23</strong>。自動更新かどうかは社長がご確認中と伺っています。<span class="text-gray-700">証明書の自動更新（11/4 頃）・証明書の期限（12/4）と時期が近いので、11月〜12月のサイクルでは到達性を重点的に見ます。</span></li>
+        <li><strong>反映日の目安</strong>＝口コミ機能は 9/25〜26 作成（GA4 の新イベントが 9/27 から出ている点と一致）／トップの刷新は 9/29 作成・本番は 9/29〜10/2 の間／タグ一覧の反映日は開発側でも未特定。</li>
+        <li><strong>9/23 の本文が欠けていた便（R-R19）</strong>＝中身は証明書の期限の訂正で、当方が 10/2 に訂正した内容（期限 12/4）と同じ。確認コマンドは社長がお時間のあるときに（急ぎません）。</li>
+        <li><strong>規約・プライバシーポリシー（R-R09）</strong>＝文案は作成済み・問い合わせ窓口のメールアドレスを用意中。</li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>変化検知</strong>＝トップ 79,108B → 79,761B（+653B・R-R08 の反映分）。<code>/register</code> 35,254B・見出し h1 0（衛生のみ・起票しません）。GA4 の着地面に <code>/dev/gacha-reveal</code>（4セッション・3人）が出ていましたが、本日の本番GETは 404＝すでに閉じられています。</li>
+        <li><strong>到達性</strong>＝本体 200・0.12秒／<code>www</code> は本体へ転送・200。<code>/privacy</code> 404（R-R09 生存）。</li>
+        <li><strong>在庫の動き</strong>＝完了3件・解決した質問2件。R-R09 は🔔のまま待ち先を開発側へ。<strong>開発担当がそのまま着手できる仕事は 0件</strong>になりました。</li>
+        <li><strong>受信箱・配信</strong>＝開発担当から2通（10/4 09:47・11:15）＝9/24 以来の発信。2通とも処理済みにしました。開発担当の受信箱には当方からの未読が18通（督促はしません）。本レポートを1通配信。</li>
+        <li><strong>対応記録</strong>＝社長指示ファイルに新しいご指示はありません（最新は 9/27 節＝対応済み：Cycle 063・064）。9/27 のご指示「新しい質問を増やさない」に従い、新規の質問・提案は0件です。</li>
+        <li><strong>次サイクル（10/5 頃・定期）</strong>＝<code>site:</code> 検索の取り直し（定点8件・未索引テーマ5本）＋サイト内リンクの実査（#14）＋ <code>/people</code> の撮影。</li>
+      </ul>
+    </div>
+  </section>
   <!-- ===== ✅ 完了した提案・解決した質問（Cycle 066・2026-10-04／Cycle 066 のローテで移動） ===== -->
   <section class="mb-10 border border-emerald-300 bg-emerald-50 rounded-lg p-5">
     <h2 class="text-xl font-bold text-emerald-800 mb-1">✅ R-R31・R-R08・R-R38 完了（2026-10-04 本番反映・同日 Cycle 066 で実査確認）／✅ Q-R11・Q-R05 解決</h2>
