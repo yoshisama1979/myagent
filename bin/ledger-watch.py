@@ -373,79 +373,89 @@ def previous_desk_opening(desk, now=None):
     return past[-1] if past else None
 
 
+def _alerts_from_failures(since, rows, status):
+    """出典①＝無人ループの異常終了。1行1件の JSONL。読めない行は捨てずに数える。"""
+    unreadable = 0
+    if not os.path.exists(FAILURES):
+        status["failures.jsonl"] = "ありません＝判定不能（0件ではない）"
+        return unreadable
+    status["failures.jsonl"] = "読めました"
+    with open(FAILURES, encoding="utf-8", errors="replace") as f:
+        for ln in f:
+            ln = ln.strip()
+            if not ln:
+                continue
+            try:
+                r = json.loads(ln)
+            except ValueError:
+                unreadable += 1
+                continue
+            t = _as_dt(r.get("ts"))
+            if t and t > since:
+                rows.append({"at": t, "src": "failures.jsonl",
+                             "what": str(r.get("fail") or r.get("why") or "（内容欄なし）")[:120]})
+    return unreadable
+
+
+def _alerts_from_cron(since, now, rows, status):
+    """出典②＝毎晩の system-health の出力。**ブロック形式**（見出しに日付・中の行には無い）。
+
+    ★行ごとに日付を求めると実データで1件も拾えない（実測 3,766行でヒット0件・Codex 指摘 2026-09-27）。
+    ★中の ⚠️ は器のサイズ警告で毎日同じ顔で並ぶ＝素で拾うと前回から263件になり、鳴りっぱなしで
+      警報として働かない（§ledger-discipline 2）。器のサイズは【1】と system-health が既に持つので
+      **ここでは重複させず**、この出典からしか分からない2つだけを取る：
+        ① OOM kill が前回から増えた（failures.jsonl には出ない）
+        ② 毎晩の監視そのものが出ていない（＝監視の無言停止。2026-09-20〜27 に7日間 実在した）
+    """
+    if not os.path.exists(CRON_LOG):
+        status["cron.log"] = "ありません＝判定不能（0件ではない）"
+        return
+    status["cron.log"] = "読めました"
+    blk = re.compile(r"^#\s*system-health\s+(20\d\d-\d\d-\d\d)[ T](\d\d:\d\d)")
+    oom = re.compile(r"OOM kill\s*(\d+)回（前回から \+(\d+)）")
+    at, last_block = None, None
+    with open(CRON_LOG, encoding="utf-8", errors="replace") as f:
+        for ln in f:
+            m = blk.match(ln)
+            if m:
+                at = _as_dt(f"{m.group(1)}T{m.group(2)}:00+09:00")
+                last_block = at or last_block
+                continue
+            if not at or at <= since:
+                continue
+            mo = oom.search(ln)
+            if mo and int(mo.group(2)) > 0:
+                rows.append({"at": at, "src": "cron.log",
+                             "what": f"OOM kill が前回から +{mo.group(2)}（累計{mo.group(1)}回）"})
+    if last_block is None:
+        rows.append({"at": now, "src": "cron.log",
+                     "what": "🚨 毎晩の system-health の記録が1件もありません＝監視の無言停止"})
+        return
+    gap = (now.date() - last_block.date()).days
+    if gap >= 2:
+        rows.append({"at": last_block, "src": "cron.log",
+                     "what": f"🚨 毎晩の system-health が {gap}日 出ていません"
+                             f"（最後は {last_block:%Y-%m-%d}）＝監視の無言停止"})
+
+
 def alerts(days=None, desk="triage", now=None):
     """前回この窓口を開いた時刻より後の警報。**0件でも0件と言えるように**件数と入力の状態を返す（O-051）。
 
-    出典は既存の2本だけ（`failures.jsonl`＝無人ループの異常終了・`cron.log` の警報行）＝
-    外部サービス・費用・新しい依存を増やさない（2026-09-27 社長ご承認・triage.md v1.4）。
-    ★`cron.log` は**ブロック形式**＝`# system-health YYYY-MM-DD HH:MM` の下に日付を持たない
-      `- ⚠️ …` が並ぶ。行ごとに日付を求めると**1件も拾えない**（実測＝3,766行に対しヒット0件・Codex 指摘）。
+    出典は既存の2本だけ（`failures.jsonl`・`cron.log`）＝外部サービス・費用・新しい依存を増やさない
+    （2026-09-27 社長ご承認・triage.md v1.4）。読み方は出典ごとに分けてある（上の2関数）。
     """
     now = now or datetime.datetime.now(JST)
     if days is None:
         last = previous_desk_opening(desk, now)
         since = last or (now - datetime.timedelta(days=ALERT_FALLBACK_DAYS))
         basis = f"前回 /{desk} を開いた {last:%Y-%m-%d %H:%M} 以降" if last \
-            else f"直近{ALERT_FALLBACK_DAYS}日（前回 /{desk} を開いた記録が取れないため）"
+            else f"直近{ALERT_FALLBACK_DAYS}日（今日より前に /{desk} を開いた記録が取れないため）"
     else:
         since = now - datetime.timedelta(days=days)
         basis = f"直近{days}日"
-    rows, status, unreadable = [], {}, 0
-
-    if not os.path.exists(FAILURES):
-        status["failures.jsonl"] = "ありません＝判定不能（0件ではない）"
-    else:
-        status["failures.jsonl"] = "読めました"
-        with open(FAILURES, encoding="utf-8", errors="replace") as f:
-            for ln in f:
-                ln = ln.strip()
-                if not ln:
-                    continue
-                try:
-                    r = json.loads(ln)
-                except ValueError:
-                    unreadable += 1
-                    continue
-                t = _as_dt(r.get("ts"))
-                if t and t > since:
-                    rows.append({"at": t, "src": "failures.jsonl",
-                                 "what": str(r.get("fail") or r.get("why") or "（内容欄なし）")[:120]})
-
-    # ★`cron.log` は毎晩の system-health の出力そのもの＝器のサイズ警告が毎日同じ顔で並ぶ。
-    #   素直に ⚠️ を全部拾うと**前回から263件**になり、鳴りっぱなしで警報として働かない
-    #   （実測 2026-09-27・ledger-discipline §2 と同じ型）。器のサイズは ledger-watch【1】と
-    #   system-health が既に持っているので**ここでは重複させない**。この出典から取るのは2つだけ：
-    #     ① OOM kill が前回から増えた（failures.jsonl には出ない・VPS ごとの危険）
-    #     ② 毎晩の監視そのものが出ていない（＝監視の無言停止。2026-09-20〜27 に7日間 実在した）
-    if not os.path.exists(CRON_LOG):
-        status["cron.log"] = "ありません＝判定不能（0件ではない）"
-    else:
-        status["cron.log"] = "読めました"
-        blk = re.compile(r"^#\s*system-health\s+(20\d\d-\d\d-\d\d)[ T](\d\d:\d\d)")
-        oom = re.compile(r"OOM kill\s*(\d+)回（前回から \+(\d+)）")
-        at, last_block = None, None
-        with open(CRON_LOG, encoding="utf-8", errors="replace") as f:
-            for ln in f:
-                m = blk.match(ln)
-                if m:
-                    at = _as_dt(f"{m.group(1)}T{m.group(2)}:00+09:00")
-                    last_block = at or last_block
-                    continue
-                if not at or at <= since:
-                    continue
-                mo = oom.search(ln)
-                if mo and int(mo.group(2)) > 0:
-                    rows.append({"at": at, "src": "cron.log",
-                                 "what": f"OOM kill が前回から +{mo.group(2)}（累計{mo.group(1)}回）"})
-        if last_block is None:
-            rows.append({"at": now, "src": "cron.log",
-                         "what": "🚨 毎晩の system-health の記録が1件もありません＝監視の無言停止"})
-        else:
-            gap = (now.date() - last_block.date()).days
-            if gap >= 2:
-                rows.append({"at": last_block, "src": "cron.log",
-                             "what": f"🚨 毎晩の system-health が {gap}日 出ていません"
-                                     f"（最後は {last_block:%Y-%m-%d}）＝監視の無言停止"})
+    rows, status = [], {}
+    unreadable = _alerts_from_failures(since, rows, status)
+    _alerts_from_cron(since, now, rows, status)
     rows.sort(key=lambda e: (e["at"], e["src"]))
     return {"since": since.isoformat(timespec="minutes"), "basis": basis, "count": len(rows),
             "rows": rows, "sources": status, "unreadable": unreadable}
