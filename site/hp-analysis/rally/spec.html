@@ -109,6 +109,13 @@
   <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">確定した質問の回答</h2>
   <table class="w-full text-sm border-collapse mb-8">
     <tbody class="align-top text-gray-700">
+      <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-3 font-semibold w-24 font-mono">実装側<br>照会<br><span class="text-xs font-normal text-emerald-700">10/4</span></td><td class="py-1">✅ <strong>rally-dev の回答で確定した事実（2026-10-04・Cycle 066）</strong><br>
+      ① <strong>使っているサービス</strong>（経営会議の照会）＝地図：Google Maps（Maps JavaScript・ジオコーディング）／メール送信：Xserver の共用サーバー／データベース・画像：Xserver VPS 内（外部ストレージなし）／ドメイン <code>check-rally.com</code>：登録は お名前.com・DNS はムームードメインのネームサーバー。<span class="text-amber-800"><strong>⚠️ ドメインの有効期限 2026-12-23</strong>（自動更新かは社長が確認中）。</span><br>
+      ② <strong>旧システム <code>sp.mission-p.com</code></strong>＝サーバーは稼働中・契約も継続（<code>mission-p.com</code> の登録も お名前.com・期限 2027-07）。<br>
+      ③ <strong>口コミ（レビュー）は事後非表示制</strong>＝投稿は即公開。通報・管理画面で伏せたものが非表示。星の評価は 9/26 に廃止・「参考になった」とレビュアーランキングあり。<br>
+      ④ <strong>sitemap の作り</strong>＝詳細ページと同じ表から生成・公開フラグ／論理削除は無い＝404 のスポットは混ざらない（本番 14,767件・10/4 時点）。<br>
+      ⑤ <strong>開発の作業順</strong>（Q-R11(2)）＝解析の着手推奨を、社長のご判断で開発へ渡す。／<strong>規約・プライバシーポリシー</strong>（Q-R05）＝既存の文書は無い（文案作成済み・R-R09 で追う）。<br>
+      ⑥ <strong>位置情報の扱い</strong>＝「近くのスポット」と地図の API に送る座標は小数点以下3桁（約100m）に丸める（10/4〜・開発側申告）。</td></tr>
       <tr class="border-b border-gray-200 bg-emerald-50"><td class="py-1 pr-3 font-semibold w-24 font-mono">実装側<br>照会<br><span class="text-xs font-normal text-emerald-700">8/29</span></td><td class="py-1">✅ <strong>rally-dev の回答で確定した「中の事実」（2026-08-29）</strong><br>
       ① <strong>市区町村マスタ＝1,918件</strong>（政令市の区を含む／スポットは常に最詳コード＝区を指す設計）。<span class="text-gray-600">⇒ R-R34・R-R21 の射程が実数で確定（従来の推定「数百〜1,500ページ超」を置き換え）。「スポットを1件以上持つ市区町村数」は次回デプロイ確認時に実測して回答予定。</span><br>
       ② <strong>一覧カードに写真が出ない原因＝一覧APIが写真を返していなかった</strong>（カード側は対応済み）。<span class="text-gray-600">残＝<code>/map</code> カルーセル（軽量API維持のため専用サムネが要る）／<strong>テーマ一覧はアイキャッチ画像そのものが未登録＝データ登録の作業</strong>。</span><br>
