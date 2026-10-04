@@ -30,6 +30,87 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== 撤回・訂正の記録（C052・2026-10-04） ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">❌ 撤回した提案 — R-J27（トップの PICK UP）／⚠️ 撤回した対応表 — 都道府県17行（2026-10-04・Cycle 052）</h2>
+    <p class="text-sm text-gray-500 mb-3">開発担当（<code>konjaku-dev</code>）からの回答 <code>M-20261004T094701</code> を受けて撤回・訂正したものの記録です。</p>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">R-J27 ❌ 撤回（8/26 起票 → 10/4 撤回）</p>
+      <p class="text-gray-800 mb-2"><strong>撤回の理由</strong>＝開発担当の回答で、PICK UP（みんなの比較写真）は<strong>「今の写真が付いている古写真を、今の写真の最新投稿日時の新しい順に15件」</strong>出す仕様だと分かりました。つまり、ご提案の中身「比較が成立している写真を出す」は<strong>すでに実装されていました</strong>。顔ぶれが 9/18 から変わらないのは不具合ではなく、<strong>9/18 以降「今の写真」の新しい投稿が無いため</strong>です。</p>
+      <p class="text-gray-800 mb-2"><strong>解析側の誤り</strong>＝外から見える画面だけで内部の並び順を推定し続け、「新着の複製」（8月）→「止まっている」（9/3）→「更新の間隔が長い」（9/6）→「新しい投稿を取り込まない」（9/27）と4回見立てを変えましたが、<strong>4回とも仕組みを外していました</strong>。開発担当に1行聞けば分かることでした。</p>
+      <p class="text-gray-800 mb-2"><strong>引き継ぎ先</strong>＝動かない真因（今の写真の投稿が無い）は <strong>R-J18</strong>（空枠を参加の入口に変える）が受け持ちます。「成立している写真の中で日替わりにする・地域を散らす」という着想は <strong>R-J17</strong> の注記に1行で残しました。PICK UP が変わらない日数は、以後「今の写真の投稿が無い日数」として読みます。</p>
+      <p class="text-xs text-gray-500 mb-1">撤回時点の行（原文のまま）：</p>
+      <table class="w-full text-sm border-collapse"><tbody class="align-top">
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-J27</td><td class="py-1 pr-2"><strong>トップの「PICK UP（みんなの比較写真）」が「最新の古写真」の複製になっている</strong>。<span class="text-xs text-amber-700"><span class="text-rose-800"><strong>✅ 9/27＝見立てを確定：PICK UP は新しい投稿を取り込まない</strong>＝投稿 +10（9/24）・+15（9/27）で「最新の古写真」8枠は2回とも全部入れ替わったのに、<strong>PICK UP は 9/18 から同じ顔ぶれ</strong>（小諸駅前×2・東大阪市立中央体育館。<strong>10/3 も不変＝15日・3回目の全入れ替えでも動かず</strong>）。ご提案の中身は変わりません。</span>人気ランキングも<strong>3件のみ（♡2・♡1・♡1）が33日連続（10/3）</strong>＝ランキング面は実質機能していません。改善案＝PICK UP を「比較が成立している写真」「人気」「地域を散らす」等の別ロジックに（R-J17・R-J18 とセットで効く）。<a href="archive.html" class="underline">機序の変遷はアーカイブへ</a></span></td><td class="py-1 pr-2">🟡</td><td class="py-1 pr-2">✅AI即応</td><td class="py-1">🆕提案・<strong class="text-rose-700">機序を確定（9/27・定点2回）</strong></td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">⚠️ 都道府県の新旧ID対応表（8/29 掲載）のうち 旧20〜36 の17行を撤回</p>
+      <p class="text-gray-800 mb-2"><strong>8/29〜10/4 の間「確定・仕様」に載っていた誤った17行（原文のまま）</strong>：</p>
+      <p class="font-mono text-xs text-gray-700 leading-6 mb-2">20→13 茨城／21→14 栃木／22→15 群馬／23→16 埼玉／24→17 千葉／25→18 東京／26→19 神奈川／27→20 新潟／28→21 富山／29→22 石川／30→23 福井／31→24 山梨／32→25 長野／33→26 岐阜／34→27 静岡／35→28 愛知／36→29 三重</p>
+      <p class="text-gray-800 mb-2"><strong>正しい17行（10/4・開発担当が47件を本番で照合）</strong>：</p>
+      <p class="font-mono text-xs text-gray-700 leading-6 mb-2">20→18 東京／21→19 神奈川／22→17 千葉／23→16 埼玉／24→13 茨城／25→14 栃木／26→15 群馬／27→25 長野／28→24 山梨／29→20 新潟／30→28 愛知／31→27 静岡／32→26 岐阜／33→29 三重／34→22 石川／35→21 富山／36→23 福井</p>
+      <p class="text-gray-800"><strong>なぜ誤ったか</strong>＝旧サイトの番号は JIS の順（北から）に並ぶ前提で表を書いていましたが、実際は地方順でした。両端を確かめた3組（旧37 大阪・39 京都・44 島根）がたまたま全部正しい帯に入っていたため、残りを「機械的な規則」で埋めて確定扱いにしていました。<strong>残り30行（旧13〜19・37〜59）は当時から正しく、変わっていません。</strong>あわせて、9/27 の実装依頼に書いた「旧ID+5」も誤りでした（+5 は JISコード→新ID の規則）。<strong>301 はまだ実装されておらず、誤った表で転送された実害はありません。</strong></p>
+    </div>
+  </section>
+
+  <!-- ===== Cycle 051（C052 で index から退避） ===== -->
+  <!-- ===== Cycle 051 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 051 — 2026-10-03（定期の解析・変化の確認／9月ぶんの対応実績／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：<strong>本番ページ ✅</strong>（<span class="font-mono">.jp</span> トップ・市区町村1本・存在しないID・旧 <span class="font-mono">.com</span> 2本）／<strong>検索 ✅</strong>（新旧とも 9/25〜9/29・<code>--dataset</code> 明示）／<strong>スクショ ✅</strong>（トップ PC 全体を目視）／メールボックス ✅。<strong>新しい提案はありません</strong>（社長のご指示 9/27「新しい質問を増やさない」に沿い、今日は変化の確認と月次の実績まとめに使いました）。</p>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">① 開発担当宛の未読は8通（9/23 夜から10日）＝301の依頼は6日未読</p>
+      <p class="text-gray-800 mb-2">前回（9/30）の7通に、前回のレポート1通が加わって<strong>8通</strong>。1通も減っていません。開発担当からの最後の返信は 9/23 夜のままです。未読の中身＝<strong>301の依頼（9/27）</strong>・<strong>利用許諾の告知ページの依頼（9/27）</strong>・<strong>マネジメントからの目安箱の確認（9/29）</strong>・サーバー名の照会（9/27）とレポート4通。</p>
+      <p class="text-gray-800">読み方：開発担当は<strong>週末ごろにまとめて回す運用</strong>で、今日がその週末の入り口です。<strong>止まっているとはまだ判定しません。</strong>今回のレポートは「どの順に開けばよいか」の索引1通にして渡しました。<strong>次回（10/6）に未読のままなら、止まりとして triage へ上げます。</strong><span class="text-gray-600">いま社長にお願いすることはありません。</span></p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">② 本番の変化：なし（9/23 夜から10日）</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>旧 <span class="font-mono">.com</span>＝写真ページ（<span class="font-mono">?p_photo=1000</span>）・県ページ（<span class="font-mono">?p_pref=39</span>）とも <strong>200</strong>＝<strong>301はまだ入っていません</strong>。</li>
+        <li><span class="font-mono">.jp</span> トップ＝28,771B（9/23 夜から同じ）／市区町村ページのタイトル「山形県 山形市の古写真」＝<strong>9/23 の改修は維持</strong>／存在しないID <span class="font-mono">/old-photos/999999</span>＝<strong>200</strong>のまま（R-J15）。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">③ 検索（9/25〜9/29 の5日）：入口の9割超が旧サイト、は10回目も変わらず</p>
+      <table class="w-full text-xs border-collapse bg-white mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">ドメイン</th><th class="py-1 pr-2 text-right">クリック</th><th class="py-1 pr-2 text-right">表示</th><th class="py-1 pr-2 text-right">CTR</th><th class="py-1 text-right">平均順位</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">旧 <span class="font-mono">.com</span></td><td class="py-1 pr-2 text-right">998</td><td class="py-1 pr-2 text-right">16,054</td><td class="py-1 pr-2 text-right">6.22%</td><td class="py-1 text-right">6.4</td></tr>
+          <tr><td class="py-1 pr-2">新 <span class="font-mono">.jp</span></td><td class="py-1 pr-2 text-right">76</td><td class="py-1 pr-2 text-right">1,054</td><td class="py-1 pr-2 text-right">7.21%</td><td class="py-1 text-right">7.7</td></tr>
+        </tbody>
+      </table>
+      <p class="text-gray-800">新サイトの取り分＝<strong>7.1%（76／1,074）</strong>（前回 7.7%・前々回 6.9%＝<strong>5日の窓の揺れの範囲で、上がったとも下がったとも言いません</strong>）。1日あたり約200クリックが旧サイトに落ちています＝<strong>301が入るまでは動かない数字</strong>です。<span class="text-gray-600">※ 前回の窓と3日重なっています。</span></p>
+      <p class="text-gray-800 mt-2"><strong>9/23 のタイトル改修（R-J24）の判定</strong>は予定どおり <strong>9/24〜10/7 の14日窓・10/10 ごろ</strong>です。いま手元にあるのは改修後6日ぶん（9/24〜9/29）で、途中で数字を覗いて結論めいたことを書くと判定を曲げるので、<strong>今回は層別の途中経過を取りませんでした</strong>（前回 9/30 の「4日では横ばい」が最新の途中経過です）。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">④ トップの定点：投稿が再開（+12枚）・PICK UP は15日動かず</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>投稿写真 <strong>17,836枚（9/30 から +12）</strong>・登録ユーザー 6,841人（±0）。</li>
+        <li>「最新の古写真」8枠は<strong>全部入れ替わり</strong>（釜石・大槌・大船渡など三陸沿岸の町名と、栃木県の2枚＝<span class="text-gray-600">縮小画像からの読み取り</span>）。都道府県カードの<strong>岩手県は合計 81枚</strong>（同じく読み取り。8/31 時点 74枚）。</li>
+        <li><strong>PICK UP（みんなの比較写真）は 9/18 から15日同じ顔ぶれ</strong>（小諸駅前×2・東大阪市立中央体育館）＝新着が全部入れ替わったのは 9/24・9/27・今回の3回で、<strong>3回とも PICK UP は動きませんでした</strong>（R-J27 の見立てどおり）。</li>
+        <li>人気ランキングは3件のまま（33日連続）。<strong>最新コメントは 8/27 のまま（37日）</strong>＝「古写真の使用許可はどこへ？」への返信はまだ付いていません（上の🔔①の文案）。</li>
+      </ul>
+      <p class="text-gray-800 mt-2"><span class="text-gray-600"><strong>北極星との接続（観察どまり・提案にはしません）</strong>＝岩手県は 8/31 の調査で「ページは生きているのに14日間 検索表示ゼロ」だった5県の1つです。写真が増えても検索に出ない原因（未インデックスか・競合に負けているか）の切り分けは開発担当への照会待ちのままなので、<strong>「岩手が増えたから取れる」とは書きません</strong>。</span></p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">⑤ 9月ぶんの対応実績をまとめました（上の🛠節）</p>
+      <p class="text-gray-800">本番に出たのは <strong>9/23 の1日に2件</strong>（朝＝問い合わせページ R-J12／夜＝ページごとのタイトル R-J24 の最小形・R-J20 完了）と、目安箱ページの新設です。<strong>8/16 から38日間ゼロだった本番反映が、連絡が通った翌日に動いた</strong>＝止まっていた理由は作業量ではなく連絡でした。10月の最初の関門も同じ場所（開発担当の受信箱）にあります。</p>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑥ 北極星との接続と、次の一手</h3>
+    <p class="text-sm text-gray-700 mb-3">閲覧を増やす最大の一手（R-J30＝301）は<strong>開発の着手待ち</strong>のままです。次回（10/6）は ①開発担当が今週末に依頼を開いたか（未読のままなら triage へ）②301が入っていれば実装当日の確認（旧URLが301を返すか・行き先の県名が合っているか・市区町村は200のままか）を行います。その次（10/9〜10/12 の回）がタイトル改修の14日判定です。収益の軸（場を貸す）側の次の一手は、本日の R-J31 のご承認です。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑦ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">対応：Cycle 051＝<code>from-president.md</code> に 9/27 節より後の新しいご指示はありません（9/27 節は Cycle 050 で反映済み）。同節 ⑤「新しい質問を増やさない・判断待ちは土曜に集約」に沿い、<strong>新規の提案・お伺いは0件</strong>、土曜に載せる件は R-J31 の1つだけにしています。</p>
+  </section>
   <!-- ===== Cycle 050（C051 で index から退避） ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 050 — 2026-09-30（定期の解析・9/27 のご決定の反映／週次の棚卸し／新規提案ゼロ）</h2>
