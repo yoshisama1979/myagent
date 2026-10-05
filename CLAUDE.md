@@ -63,6 +63,7 @@ triage から各窓口へ振り分け、個別の相談は各窓口で直接行�
 - **登録済み** → 出た窓口の**ルール**を読んでその手順に従う（例＝マネジメントなら [rules/modes/management.md](rules/modes/management.md) の Step 0＝partner 台帳ヘッダ・確認列の片づけ・期日を見る）。受信箱は `bash bin/mailbox.sh local-inbox`（宛名は対応表が決める）。
 - **未登録** → どの窓口か社長に確認する。**黙って既定の窓口として振る舞わない**。対応表＝[config/session-desks.json](config/session-desks.json)。
 - **⚠️ が出たら**（同じ窓口のIDが2つ動いている）→ どちらを窓口にするか社長に確認する。
+- **受信箱は「見る」で終わらせず「判定」まで** → 会話の最初に `bash bin/mailbox.sh local-inbox` を読み、1通ごとに**①終わったものは `bash bin/mailbox.sh local-done <id>` で処理済みにする／②残すならなぜ残すかを1行言う**のどちらかまでやる。`local-done` は `new/`→`cur/` の移動で削除ではない＝**スプールを `rm`・`mv` で直に触らない**。**どの窓口も同じ**なので窓口ごとに書かない。詳細＝[rules/modes/mailbox.md](rules/modes/mailbox.md)「窓口（有人セッション）での受信と処理済み化」。
 
 ⚠️ hana-tools の期日は `+9時間`（JST補正）で読む ― `[:10]` で切ると1日早く読む（2度実害）。どの窓口でも共通。
 

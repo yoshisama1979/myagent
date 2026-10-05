@@ -10,7 +10,7 @@
 <div class="max-w-4xl mx-auto p-6 md:p-10">
   <p class="text-sm text-gray-500 mb-2"><a href="index.html" class="text-blue-600 hover:underline">← 仕様書一覧</a></p>
   <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 mb-6 text-xs text-gray-700">
-    これは自動生成ビューです（生成: 2026-09-14 16:56）。原本は
+    これは自動生成ビューです（生成: 2026-10-04 12:25）。原本は
     <code class="bg-gray-100 px-1 rounded font-mono">CLAUDE.md</code>。
     編集は原本の Markdown に行い、<code class="bg-gray-100 px-1 rounded font-mono">python3 bin/build-spec-html.py</code> で再生成してください。
   </div>
@@ -62,6 +62,7 @@ triage から各窓口へ振り分け、個別の相談は各窓口で直接行�
 <li><strong>登録済み</strong> → 出た窓口の<strong>ルール</strong>を読んでその手順に従う（例＝マネジメントなら <a href="mode-rules/management.html" class="text-blue-600 hover:underline">rules/modes/management.md</a> の Step 0＝partner 台帳ヘッダ・確認列の片づけ・期日を見る）。受信箱は <code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/mailbox.sh local-inbox</code>（宛名は対応表が決める）。</li>
 <li><strong>未登録</strong> → どの窓口か社長に確認する。<strong>黙って既定の窓口として振る舞わない</strong>。対応表＝<a href="config/session-desks.json" class="text-blue-600 hover:underline">config/session-desks.json</a>。</li>
 <li><strong>⚠️ が出たら</strong>（同じ窓口のIDが2つ動いている）→ どちらを窓口にするか社長に確認する。</li>
+<li><strong>受信箱は「見る」で終わらせず「判定」まで</strong> → 会話の最初に <code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/mailbox.sh local-inbox</code> を読み、1通ごとに<strong>①終わったものは <code class="bg-gray-100 px-1 rounded text-sm font-mono">bash bin/mailbox.sh local-done &lt;id&gt;</code> で処理済みにする／②残すならなぜ残すかを1行言う</strong>のどちらかまでやる。<code class="bg-gray-100 px-1 rounded text-sm font-mono">local-done</code> は <code class="bg-gray-100 px-1 rounded text-sm font-mono">new/</code>→<code class="bg-gray-100 px-1 rounded text-sm font-mono">cur/</code> の移動で削除ではない＝<strong>スプールを <code class="bg-gray-100 px-1 rounded text-sm font-mono">rm</code>・<code class="bg-gray-100 px-1 rounded text-sm font-mono">mv</code> で直に触らない</strong>。<strong>どの窓口も同じ</strong>なので窓口ごとに書かない。詳細＝<a href="mode-rules/mailbox.html" class="text-blue-600 hover:underline">rules/modes/mailbox.md</a>「窓口（有人セッション）での受信と処理済み化」。</li>
 </ul>
 <p class="text-sm mb-4 leading-relaxed">⚠️ hana-tools の期日は <code class="bg-gray-100 px-1 rounded text-sm font-mono">+9時間</code>（JST補正）で読む ― <code class="bg-gray-100 px-1 rounded text-sm font-mono">[:10]</code> で切ると1日早く読む（2度実害）。どの窓口でも共通。</p>
 <h2 class="text-xl font-semibold border-b border-gray-300 pb-2 mb-4 mt-10">自動化・外部送信を作るときの核（必読）</h2>

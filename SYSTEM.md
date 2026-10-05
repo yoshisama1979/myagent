@@ -117,7 +117,7 @@ talk → partner                    … 深掘りが要る相談の申し送り�
 | HP分析の判断state | `data/hp-loop/<site>/coverage.md`（カバレッジ台帳・判断のsource of truth） | hp-loop（AI） | 掲示板は報告ビュー／台帳が正 |
 | ブログ分析ループ会話 | `data/blog-loop/<client>/from-president.md`（社長）/ `site/hp-analysis/<client>/blog/`（AI・3層） | 役割で分離 | 責務分離 |
 | Reviewer会話 | `ai-loop/conversation.md` | Reviewer提案・人判断 | append中心 |
-| 拠点横断メッセージ | `data/mailbox/{new,cur,hold}/`（API: `site/tools/mailbox/`） | 各エージェント（append-only） | hold/=社長ゲート |
+| 拠点横断メッセージ | `data/mailbox/{new,cur,hold}/`（API: `site/tools/mailbox/`） | 各エージェント（append-only） | hold/=社長ゲート。**登録窓口（有人セッション）の受信規律の核は CLAUDE.md の窓口の節・詳細は [rules/modes/mailbox.md](rules/modes/mailbox.md)**＝窓口ごとに写さない（2026-10-04 v0.5） |
 | 日常メモ窓口 | Slack **#memo**（`SLACK_MEMO_CHANNEL_ID`）→ `to: memo` → `data/mailbox/memo-stock/` → `site/notes.html` | 社長(Slack)／memo-triage退避／memo-intake清書 | 2層（日中triage・夜intake） |
 | 相談窓口 | Slack **相談ch**（`SLACK_TALK_CHANNEL_ID`／未設定なら旧 `SLACK_PARTNER_CHANNEL_ID`）→ 新規投稿は `to: talk` → `bin/talk-tick.sh`（毎分・別ロック） | 社長(Slack)／talk が返信 | **スレッド＝claudeセッション**（`--resume`）＝会話が続く。過去の朝礼スレッドへの返信は threads.json の持ち主に従い partner に届く |
 | レポート窓口 | Slack **#report**（`SLACK_REPORT_CHANNEL_ID`）→ `to: partner` → daily 07:00 の `/partner` | partner（投稿）／社長（返信・追加情報） | 日次・将来の週次/月次も同じ場所。2026-08-19 に会話（相談ch）と分離＝#partner が朝礼に占領され相談の場が無くなっていたため |
