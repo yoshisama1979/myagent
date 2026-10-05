@@ -31,6 +31,83 @@
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
   <!-- ===== 撤回・訂正の記録（C052・2026-10-04） ===== -->
+  <!-- ===== Cycle 052 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 052 — 2026-10-04（臨時・開発担当からの返信への対応／都道府県の対応表を訂正／R-J27 を撤回／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：<strong>本番ページ ✅</strong>（新旧あわせて19本を取得）／メールボックス ✅（開発担当から2通）／<strong>検索・スクショは今回取っていません</strong>（前日 10/3 に取得済み・トップは不変。次の定期回 10/6 で取ります）。検索データは 9/21 に保存した18日ぶん（9/1〜9/18・旧 <span class="font-mono">.com</span>）を読み直して使いました。</p>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">① 開発担当が9通すべてを読みました（止まりではありませんでした）</p>
+      <p class="text-gray-800">10/4 朝に返信が2通届きました。9/23〜10/3 に送った9通（301の依頼・利用許諾の告知ページ・サーバー名の照会・目安箱の確認ほか）は<strong>すべて受信済み</strong>です。前回「10/6 に未読のままなら triage へ上げる」と書いた件は<strong>不要になりました</strong>。</p>
+    </div>
+
+    <div class="bg-rose-50 border-2 border-rose-400 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-rose-900 mb-2">② 🔴 訂正：都道府県の「新旧の番号の対応表」に誤りがありました（17行）。301 を入れる前に開発担当が見つけてくれました</p>
+      <p class="text-gray-800 mb-2"><strong>何が誤っていたか（2つ）</strong></p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1 mb-2">
+        <li><strong>9/27 の実装依頼に書いた「旧の番号に5を足す」は誤り</strong>でした。開発担当が47県すべてを本番で照合したところ、<strong>5を足して合うものは1件もありません</strong>（「+5」は JIS の県コードから新サイトの番号を出す規則で、旧サイトの番号とは無関係でした）。</li>
+        <li><strong>8/29 から「確定・仕様」に載せていた対応表も、47行のうち17行（旧20〜36）が誤り</strong>でした。旧サイトの番号は北から順ではなく<strong>地方順</strong>に並んでいます（旧20＝東京・21＝神奈川・22＝千葉 …）。</li>
+      </ul>
+      <p class="text-gray-800 mb-2"><strong>解析側でも確かめました</strong>＝旧サイトと新サイトのページタイトルを両方取得して突き合わせ、<strong>6組すべてが開発担当の新しい表と一致</strong>しました。</p>
+      <table class="w-full text-xs border-collapse bg-white mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">旧 <span class="font-mono">.com ?p_pref=</span></th><th class="py-1 pr-2">旧のタイトル</th><th class="py-1 pr-2">新 <span class="font-mono">.jp /prefectures/</span></th><th class="py-1 pr-2">新のタイトル</th><th class="py-1">これまでの表では</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">13</td><td class="py-1 pr-2">北海道</td><td class="py-1 pr-2">6</td><td class="py-1 pr-2">北海道</td><td class="py-1">6（正しかった）</td></tr>
+          <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2">20</td><td class="py-1 pr-2">東京都</td><td class="py-1 pr-2">18</td><td class="py-1 pr-2">東京都</td><td class="py-1 text-rose-700"><strong>13＝茨城県に着く</strong></td></tr>
+          <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2">27</td><td class="py-1 pr-2">長野県</td><td class="py-1 pr-2">25</td><td class="py-1 pr-2">長野県</td><td class="py-1 text-rose-700"><strong>20＝新潟県に着く</strong></td></tr>
+          <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2">34</td><td class="py-1 pr-2">石川県</td><td class="py-1 pr-2">22</td><td class="py-1 pr-2">石川県</td><td class="py-1 text-rose-700"><strong>27＝静岡県に着く</strong></td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">44</td><td class="py-1 pr-2">島根県</td><td class="py-1 pr-2">37</td><td class="py-1 pr-2">島根県</td><td class="py-1">37（正しかった）</td></tr>
+          <tr><td class="py-1 pr-2">59</td><td class="py-1 pr-2">沖縄県</td><td class="py-1 pr-2">52</td><td class="py-1 pr-2">沖縄県</td><td class="py-1">52（正しかった）</td></tr>
+        </tbody>
+      </table>
+      <p class="text-gray-800 mb-2"><strong>実害はありません</strong>＝301 はまだ1本も入っていないためです。ただし誤った表のまま実装されていたら、<strong>旧サイトの都道府県ページで4番目にクリックの多い東京（18日間で21クリック）が茨城県のページに着いていました</strong>。</p>
+      <p class="text-gray-800"><strong>なぜ気づけなかったか</strong>＝8/29 に両端を確かめたのは3県（大阪・京都・島根）だけで、その3県がたまたま全部「合っている帯」に入っていました。残りは「機械的な規則で埋まる」として確定扱いにしていました。<strong>一部が合っていることは、全部が合っていることの根拠になりません。</strong>「確定・仕様」の表は47件を照合し直した版に差し替え、誤っていた17行は<a href="archive.html" class="underline">アーカイブ</a>に原文のまま残しました。</p>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-400 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-amber-900 mb-2">③ 開発担当の回答と、こちらの実測が食い違っている点が1つあります（開発担当へ照会しました・社長へのお伺いではありません）</p>
+      <p class="text-gray-800 mb-2">開発担当＝「旧サイトに <span class="font-mono">?p_city=</span> という形のURLは無い。市区町村は <span class="font-mono">?p_pref=60</span> 以上の番号に入っている」。</p>
+      <p class="text-gray-800 mb-2">こちらの実測＝<strong>どちらの形も生きています</strong>。<span class="font-mono">?p_city=334</span> は「小田原市」、<span class="font-mono">?p_pref=60</span> は「会津若松市」のページを返します（本日取得）。そして<strong>検索に出ているのは <span class="font-mono">?p_city=</span> の側だけ</strong>です（9/1〜9/18 の18日間＝<span class="font-mono">?p_city=</span> が 557ページ・1,442クリック／<span class="font-mono">?p_pref=</span> の60以上は 0ページ）。</p>
+      <p class="text-gray-800"><strong>なぜ大事か</strong>＝301 の第2段（市区町村・旧サイトのクリックの約4割）の対応表を、検索に出ていない側の番号で作ると、<strong>入口に1本も当たりません</strong>。2つの番号が同じ表なのか別の表なのかは、こちらからは見えないので断定せず、開発担当に確認を頼みました。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">④ 301（R-J30）の現在地：実装するのは「旧サイトの担当」で、実装日は未定</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>旧 <span class="font-mono">.com</span> は <span class="font-mono">konjaku-dev</span> の担当の外（別のサーバー・別のエージェント）でした。<strong>開発担当が訂正済みのルールを社長経由で旧サイトの担当へ渡した</strong>とのことです。実装日は決まり次第、連絡が来ます。</li>
+        <li>本日の旧サイト＝写真ページ・県ページ6本とも <strong>200</strong>＝<strong>301 はまだ入っていません</strong>。</li>
+        <li><strong>個別写真は「新サイトに在る番号だけ」転送</strong>になります。旧にあって新に無い写真があるためです（例＝旧 <span class="font-mono">?p_photo=11500</span>「河内小阪駅(6)」は旧では表示されますが、新 <span class="font-mono">/old-photos/11500</span> は「見つかりません」＝本日確認）。<span class="text-gray-600">→「先に打てる 57.4%」は上限の数字で、新に無い写真の分だけ下がります（件数は開発側のデータベースでしか分かりません）。</span></li>
+        <li>県ページには「2ページ目以降」のURLにも検索クリックがあります（18日間で約70クリック＝県ページ全体の約2割・<span class="text-gray-600">手集計の概数</span>）。<strong>ページ番号つきのURLも転送の対象に含めるよう</strong>開発担当へ伝えました。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">⑤ R-J27（トップの PICK UP）を撤回しました＝在庫 19 → 18件</p>
+      <p class="text-gray-800 mb-2">開発担当の回答＝PICK UP は<strong>「今の写真が付いている古写真を、今の写真の投稿が新しい順に15件」</strong>出す仕様で、顔ぶれが 9/18 から変わらないのは<strong>今の写真の新しい投稿が無いため</strong>でした（不具合ではありません）。</p>
+      <p class="text-gray-800">つまり、ご提案していた「比較が成立している写真を出す」は<strong>すでに実装されていました</strong>。8月から4回見立てを変えましたが、4回とも仕組みを外していました（画面の外から並び順を推定し続けたためです）。<strong>動かない本当の原因は「今の写真を投稿する人がいない」こと</strong>で、それは R-J18（空枠を参加の入口に変える）が受け持つ課題です。PICK UP が変わらない日数は、以後その目印として読みます。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">⑥ 開発担当が進めていること（いずれも本番にはまだ出ていません）</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li><strong>市区町村ページの不具合の修正</strong>＝目安箱（10/1）の「東大阪市で投稿しても絞り込めない」がきっかけ。新しく投稿した写真が市区町村ページに出ない不具合で、原因は保存している値の混在（市区町村コードと番号）＝<strong>R-J29 でご報告していたものと同じ根</strong>です。直ると市区町村ページの件数とサイトマップのページ数が増えます。<span class="text-gray-600">※ タイトル改修の効果を測っている期間（9/24〜10/7）と重なると市区町村の判定が濁るため、反映日の連絡を頼んでいます（開発担当は「重ならない見込み」）。</span></li>
+        <li><strong>利用許諾の告知ページ</strong>（<span class="font-mono">/photo-use</span> の予定）＝社長のご承認を確認して着手。本日は 404＝未公開です。内容＝写真の利用希望は問い合わせページへ案内／既存の写真の扱いは整理中（提供できるとは断定しない）。</li>
+        <li><strong>目安箱の「下宇和駅＝吉田湾では？」</strong>＝写真の説明の正誤は社長のご確認待ち、とのことです（マネジメント経由の件・未修正）。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">⑦ サーバー・外部サービスの名前が分かりました（経営会議の材料）</p>
+      <p class="text-gray-800">新 <span class="font-mono">.jp</span>＝<strong>エックスサーバー VPS</strong>（データベース・画像も同じ VPS の中）／旧 <span class="font-mono">.com</span>＝<strong>共用レンタルサーバー</strong>（別契約・事業者名は未確認）／メール配信サービス・CrazyEgg は<strong>使っていない</strong>。<span class="text-gray-600">金額は回答に含まれていません。<a href="spec.html" class="underline">「確定・仕様」に表で残しました</a>。</span></p>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑧ 北極星との接続と、次の一手</h3>
+    <p class="text-sm text-gray-700 mb-3">閲覧を増やす最大の一手（301）は、<strong>行き先の表が正しくなったことで初めて安全に打てる状態</strong>になりました。次は ①旧サイトの担当から実装日の連絡が来たら、その日のうちに確認（県47件が正しい県に着くか・ページ番号つきも転送されるか・市区町村は2つの形とも 200 のままか・新に無い写真は 200 のままか）②10/6 の定期回＝検索とトップの定点 ③10/9〜10/12 の回＝タイトル改修の14日判定、の順です。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑨ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">対応：Cycle 052＝<code>from-president.md</code> に 9/27 節より後の新しいご指示はありません。同節 ⑤「新しい質問を増やさない」に沿い、<strong>新規の提案・お伺いは0件・在庫は1件減</strong>です。同節 ①の「都道府県＝JIS+5」という書き方は、上の②のとおり「対応表47件」と読み替えて扱います（ファイル自体は書き換えていません）。</p>
+  </section>
+
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">❌ 撤回した提案 — R-J27（トップの PICK UP）／⚠️ 撤回した対応表 — 都道府県17行（2026-10-04・Cycle 052）</h2>
     <p class="text-sm text-gray-500 mb-3">開発担当（<code>konjaku-dev</code>）からの回答 <code>M-20261004T094701</code> を受けて撤回・訂正したものの記録です。</p>
