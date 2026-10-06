@@ -339,6 +339,58 @@
 
   <!-- ===== 過去サイクルログ（新しい順） ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">過去サイクルログ</h2>
+  <!-- ===== Cycle 129（2026-10-04 定例＋週次4本）＝Cycle 130 の index 更新で移送 ===== -->
+  <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
+    <h3 class="text-xl font-semibold mb-1">Cycle 129 — 2026-10-04（y-com.info・<strong class="text-sky-700">3日ごとの定例＋週次4本（画面の確認・競合・見落としの点検・広告＝期日の1日前に実施）</strong>／主産物＝<strong class="text-rose-700">①実績ページの修正（R-046）は30日たっても検索からの表示を増やさなかった＝効果なしとして判定を打ち切り ②「保守 大阪」の検索画面はサービスページ同士の勝負（更新代行と同じ形）③AIサービスのページはまだどこからもリンクされていない ④開発側の受信箱は31日目（未読38通）</strong>）</h3>
+    <p class="text-sm text-gray-500 mb-4">データ状況：GSC ✅取得（集計最終日 9/28 → 10/1＝平常・28日 1,189クリック／48,197表示／平均9.4位）・Google広告 ✅（配信ゼロ継続）・Clarity ✅（17日連続）・本番ページの実査 ✅・検索画面の実査 ✅（Yahoo!＝Googleと同じ索引。Google 本体の広告枠までは再現できません）・画面撮影 ✅／GA4 のお問い合わせ実測は週次のため今回は対象外（次回 10/7）。</p>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ① 実績ページの修正（R-046・9/2 反映）は、30日たっても検索からの表示を増やしませんでした＝効果の判定を「効果なし」で打ち切ります</p>
+      <p class="text-sm text-gray-800 mb-2">9/2 に開発側が行った「実績の個別ページ39枚を、1枚ずつ検索に出られる状態にする修正」の結果です。反映日の前後を<strong>同じ30日ずつ</strong>で比べました。</p>
+      <table class="w-full text-sm border-collapse mb-2">
+        <thead><tr class="text-left border-b border-rose-300"><th class="py-1 pr-3">検索結果に表示された回数</th><th class="py-1 pr-3">前（8/3〜9/1）</th><th class="py-1">後（9/2〜10/1）</th></tr></thead>
+        <tbody class="align-top">
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">個別の実績ページ（39枚のうち表示されたもの）</td><td class="py-1 pr-3">5枚・計18回・クリック0</td><td class="py-1"><strong>3枚・計11回・クリック0</strong></td></tr>
+          <tr class="border-b border-rose-100"><td class="py-1 pr-3">実績の一覧ページ</td><td class="py-1 pr-3">23回・クリック2</td><td class="py-1">43回・クリック0</td></tr>
+          <tr><td class="py-1 pr-3">実績まわり全体</td><td class="py-1 pr-3">64回・クリック2</td><td class="py-1">79回・クリック1</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong>読み方</strong>＝修正そのものは正しく入っており、壊れてもいません（本番ページを直接確認済み）。ただ、<strong>実績ページが検索で当たっている言葉は「株式会社はなさか」（社名）だけ</strong>でした。＝実績ページには「業種」「地域」「何を作ったか」という<strong>お客様が検索で打つ言葉が書かれていない</strong>ので、技術的に正しく直しても、検索の入口にはなりません。</p>
+      <p class="text-sm text-gray-800"><strong>意味づけと次の扱い</strong>＝一方で、9/4 の検証では<strong>「実績ページを見た人は、見ていない人の4.3倍お問い合わせに至る」</strong>と分かっています。＝実績ページは<strong>「検索から人を連れてくる面」ではなく「来た人の背中を押す面」</strong>です。そこで R-031（実績を業種・作ったものの一言つきに書き直す）の効果は、検索の表示回数ではなく<strong>「実績ページを見た人が何人お問い合わせに進んだか」</strong>で測ることに改めます（次回 10/7 の週次実測から）。新しい提案は起こしません。<span class="text-xs text-gray-600">※この結果は、全サイト共通の「効かなかった型」集に1件として記録しました（他のお客様サイトで同じ期待を置かないため）。</span></p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r">
+      <p class="font-bold text-amber-800 mb-1">🔍 ② 競合の確認（週次）＝「ホームページ 保守 大阪」の検索画面は、サービスページ同士の勝負でした</p>
+      <p class="text-sm text-gray-800">上位12件のうち <strong>6件が制作会社の保守サービスのページ</strong>（URL に support・maintenance・hoshu-kanri と「保守」を表す言葉）、解説記事3件、比較記事2件。これで運用代行ページ（R-049）が当たっている言葉は3種類に整理できました＝<strong>「運用代行」だけが比較記事に占められ、「更新代行」「保守」はサービスページが並ぶ</strong>＝当社のページがそのまま戦える場です。ただし「保守」系は当社の表示がまだ少ない（13語で計43回・17位前後）ため、<strong>先に直すのは「更新代行」を名前の先頭に置くこと（R-049(e)・引き渡し済み）のまま</strong>で変わりません。新しい提案は起こしません。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-sky-500 bg-sky-50 p-4 rounded-r">
+      <p class="font-bold text-sky-800 mb-1">🖼 ③ 画面の確認（週次）＝AIサービスのページ（<span class="font-mono">/service/ai/</span>・R-048）</p>
+      <p class="text-sm text-gray-800">パソコン幅・スマホ幅で撮影して確認しました（表示崩れはありません）。<strong>サービス一覧からこのページへのリンクは、今日も0本のまま</strong>です（R-048 は未着手＝④の受信箱停止と整合）。あわせて気づいた点を R-048 に添えました＝(1) ページ上部の大見出しが「AIサービス」で、<strong>主力の「AI-OCR」という言葉が入っていない</strong>（検索結果に出るページ名には入っています）(2) スマホの最初の画面に「無料サンプル検証」という言葉はあるのに、<strong>押せるボタンが無い</strong> (3) AIチャットの吹き出しが本文の3行目に重なる（他の4ページと同じ現象）。検索表示は28日で3回＝リンクが通るまで増えない見込みです。</p>
+    </div>
+
+    <div class="mb-5 border-l-4 border-rose-500 bg-rose-50 p-4 rounded-r">
+      <p class="font-bold text-rose-800 mb-1">🔴 ④ 開発側（web-hanasaka）の受信箱は31日目も止まっています（Q-020）</p>
+      <p class="text-sm text-gray-800">未読は <strong class="text-rose-700">34通 → 38通</strong>。先方の最後の受け取りも、先方からの最後の報告も 9/3 のままです。本番ページにも変化はありません（トップ・運用代行ページとも前回と同一）。<strong>お願いは最上部の Q-020 のとおりで変わりません</strong>（拠点PCで web-hanasaka が動いているかの一言）。</p>
+    </div>
+
+    <div class="mb-5">
+      <p class="font-semibold mb-2">📌 そのほか、本日の定点確認（いずれも社長のご対応は不要です）</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>運用代行ページ（R-049）＝24回目もクリック0</strong>（28日 199表示）。ページの名前は変わっていません（改修が未着手＝④と整合）。「運用代行 大阪」の2.9位は前回確定のとおり実際の画面では見えていないため成果に数えません。提携パートナーのページ（R-040）は99表示・クリック0。</li>
+        <li><strong>料金ページ（R-055）</strong>＝価格表 1,032表示・4クリック（料金トップ 18表示）。<strong>サービスページ群（R-057）</strong>＝WordPress 236表示・1クリック／サービス一覧 77表示・2クリック／レスポンシブ 74表示（6.8位）・クリック0。<strong>相談ページ（R-047）</strong>＝3枚で49表示・4クリック。</li>
+        <li><strong>トップページ＝退行なし</strong>（73,529バイト・8回連続で同一）。Clarity のトップは6訪問・押しても反応しない所のクリック0。</li>
+        <li><strong>広告＝配信ゼロ32日目</strong>（他の3アカウントは 10/2 まで届いている＝本当に停止中）。直近7日のコンバージョンもデータなし。<span class="text-rose-700">⚠️ 入札方法が「コンバージョン値の最大化」のままなので、このままでは再開させません。</span></li>
+        <li><strong>開発側へお渡し済みで7日以上動いていない提案</strong>＝R-048（44日）・R-055（37日）・R-057（30日）。<strong>社長待ちではなく、Q-020（受信箱の停止）が原因</strong>です。</li>
+        <li><strong>当方の進め方の見直し</strong>＝週に1度の点検が3回続けて期日を2日過ぎていました（3日おきの実行と7日周期が噛み合わないため）。今回から<strong>期日の1日前に済ませる</strong>形に改めました。</li>
+      </ul>
+    </div>
+
+    <p class="text-sm text-gray-700 mb-2"><strong>新しい提案＝0件／新しいご質問＝0件</strong>。受信箱が止まっている間は、届かない先に在庫を足さないためです。本日の成果は「効果の判定（①）」と「既存の提案の根拠の更新（②③）」です。</p>
+
+    <p class="text-sm text-gray-700"><strong>対応記録</strong>＝社長の指示ファイル（<code>data/hp-loop/from-president.md</code>）に 9/14 以降の新しいご指示はありません（最終＝9/14「R-023 の正」＝Cycle 123 で対応済み）。当ループあての受信箱も新着0件でした。</p>
+
+  </section>
   <!-- ===== Cycle 128（2026-10-01 定例＋月次＋週次CV実測）＝Cycle 129 の index 更新で移送 ===== -->
   <section class="border-2 border-gray-400 rounded-lg p-5 mb-6 bg-white">
     <h3 class="text-xl font-semibold mb-1">Cycle 128 — 2026-10-01（y-com.info・<strong class="text-sky-700">3日ごとの定例＋月次の実績レポート（9月分）＋週次のお問い合わせ実測（期日 9/29 を2日超過して消化）</strong>／主産物＝<strong class="text-rose-700">①9月の本番反映は2件・9/4 以降ゼロ ②検索から来た人のお問い合わせは 6→9件（少数・前の28日との比較）③「運用代行 大阪」3位は画面上では見えていない（3回目の確認）④開発側の受信箱は28日目（未読34通）</strong>）</h3>
