@@ -58,9 +58,26 @@ bash bin/hana-api.sh update-note 130 '{"visibility":"shared","body":"<p>運用�
 
 # Chatwork通知
 bash bin/hana-api.sh chatwork '{"room_id":"123","message":"メッセージ"}'
+
+# 未請求の案件一覧（請求チェック・読み取り）
+bash bin/hana-api.sh unbilled
+
+# 請求状態の更新（unbilled / billed / not_required）
+bash bin/hana-api.sh work-billing 140 '{"billing_status":"billed","billed_on":"2026-10-07"}'
+bash bin/hana-api.sh work-billing 140 '{"billing_status":"not_required","billing_note":"先方都合で無償対応"}'
 ```
 
-> **書き込み系（create-todo / update-todo / update-note / chatwork）は共有システムへの書き込み・外部送信**。社長合意の上で実行する（[rules/automation.md](../rules/automation.md) §3）。`gsc_dataset` は `bin/gsc-fetch.py --dataset` にそのまま渡せる。
+### 請求チェックの読み方（2026-10-07 追加）
+
+- **`billing_status` が null（記録なし）は「未請求」ではありません。** 請求の記録がまだ無いだけです。未請求と数えてよいのは `billing_status == "unbilled"` のみ（実測 2026-10-07：works 219件すべて null ＝ `unbilled` は 0件）。
+- **一度 3状態のどれかにすると null へは戻せません。** `work-billing` は社長合意の上で実行してください。
+  ラッパー側でも、本文を **JSON として読んで構造で**確かめ、通らないものは API を叩く前に落とします（妥当な JSON か／ルートがオブジェクトか／トップレベルに `billing_status` がちょうど1個あるか／値が3値のいずれかか）。
+  ⚠️ **包含検査（正規表現）では守れません**＝`{"billing_status":"unbilled","billing_status":"billed"}` は先頭に一致して通るのに、PHP の `json_decode` は後勝ちで `billed` を書きます。`{"billing_status":"paid","meta":{"billing_status":"billed"}}` も同様に素通りします。どちらも「**検証した値と実際に書かれる値が違う**」形で、戻せない項目では最悪の壊れ方です（2026-10-07 コミット前 Codex レビュー🔴）。
+- ⚠️ **通ってしまう値を取り違える事故は、この検証では防げません**（`unbilled` のつもりで `billed` と書く等）。実行前に値を声に出して確かめてください。
+- ⚠️ 存在しない `work_id` はサーバが 404 を返しますが、**`curl -s` は終了コード0を返します**＝rc だけ見て「更新できた」と読まないこと（K-954）。
+- `PUT /works/{id}/status` で completed にすると `warnings` に `{"type":"work_unbilled",...}` が載ることがありますが、**ブロックはされません**（警告が出ていても状態変更そのものは通っています）。
+
+> **書き込み系（create-todo / update-todo / update-note / chatwork / work-billing）は共有システムへの書き込み・外部送信**。社長合意の上で実行する（[rules/automation.md](../rules/automation.md) §3）。`gsc_dataset` は `bin/gsc-fetch.py --dataset` にそのまま渡せる。
 >
 > スキル（スラッシュコマンド）：`/hana-clients` `/hana-todos` `/hana-create-todo` `/hana-update-todo` `/hana-projects` `/hana-project-notes` `/hana-outsources` `/hana-chatwork`
 

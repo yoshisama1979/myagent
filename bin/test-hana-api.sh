@@ -147,7 +147,7 @@ want_in "q=a%2Cb" "$(url)" "カンマ区切り（OR検索）も値としてエ�
 
 echo
 echo "=== 無人実行での書き込み拒否（automation.md）==="
-for c in create-todo update-todo update-note chatwork; do
+for c in create-todo update-todo update-note chatwork work-billing; do
   rm -f "$REC"/*
   OUT="$(MYAGENT_UNATTENDED=1 bash "$T/bin/hana-api.sh" "$c" 1 '{"a":1}' 2>&1 </dev/null)"; RC=$?
   if [ "$RC" -eq 2 ] && [ ! -f "$REC/argv" ]; then
@@ -216,7 +216,7 @@ assert_secure() {  # 1経路ぶん実行し、curl に渡った argv を検査�
     say_ok "証明書の検証を切らない：$label"
   fi
 }
-# 読み取り系・書き込み系の**全14サブコマンド**を実際に走らせる
+# 読み取り系・書き込み系の**全16サブコマンド**を実際に走らせる
 # （run は MYAGENT_UNATTENDED を立てない＝有人扱いなので、書き込み系もここでは通る）
 assert_secure "clients"       clients
 assert_secure "search"        search "テスト"
@@ -232,6 +232,8 @@ assert_secure "update-note"   update-note 1 '{"note":"x"}'
 assert_secure "chatwork"      chatwork '{"body":"x"}'
 assert_secure "create-project" create-project '{"project_name":"x","client_id":1}'
 assert_secure "create-work"    create-work '{"name":"x","project_id":1}'
+assert_secure "unbilled"      unbilled
+assert_secure "work-billing"  work-billing 1 '{"billing_status":"billed"}'
 
 # ソース検査：**行継続をつないでから**、curl を含む行を空白で割ってトークン単位で見る。
 #   ・つながないと `curl -s \` / `  -k -X GET …` のように**分けて書かれた -k** を逃す
@@ -289,6 +291,135 @@ want_in '"project_id":12' "$(cat "$REC/stdin" 2>/dev/null)" "create-work：本�
 
 # 本文は --data-binary で渡す＝`-d` は改行を落とすため、note や message の改行が壊れる
 want_in "data-binary" "$(argv | tr '\n' ' ')" "create-work：本文は --data-binary で渡す（改行を壊さない）"
+
+# --- 請求チェック（2026-10-07 追加・社長指示でエンドポイント新設） ---------------
+# ★ここを守りたい★＝`billing_status` は **一度書くと未記録(null)へ戻せない**。
+#   取り返しがつかない書き込みなので、ラッパーで固定できることを全部固定する：
+#   (a) 無人実行では叩かない（上の拒否ループで確認済み）
+#   (b) work_id は数値だけ（URL パスへの注入防止）
+#   (c) **トップレベルの billing_status が3値でなければ API を叩かない**（叩いてから 422 ではない）
+#   (d) 本文を改変せずそのまま送る（billing_note の文字が落ちない）
+#   (e) 未請求一覧は読み取りで、余計なクエリを付けない
+#
+# ⚠️ (c) は初版で**正規表現の包含検査にしていて、2通りの危険な入力を通していた**
+#    （2026-10-07 コミット前 Codex レビュー🔴）＝重複キーとネスト。どちらも
+#    「**検査した値と実際に書かれる値が違う**」形で、この項目では最悪の壊れ方になる。
+#    下の「構造の反例」はその再発防止なので、**JSON パーサを介さない実装に戻したら必ず落ちる**。
+API="https://stg.example.test/api/external"
+want_argv(){ if argv | grep -Fxq -- "$1"; then say_ok "$2"; else say_ng "$2" "$(argv | tr '\n' ' ' | cut -c1-200)"; fi; }
+
+echo
+echo "--- 請求チェック（unbilled / work-billing） ---"
+
+run unbilled
+want_eq "$(url)" "$API/works/unbilled" "unbilled：works/unbilled を叩く（URL 完全一致・余計なクエリもパスも足さない）"
+want_argv "GET" "unbilled：メソッドは GET（完全一致）"
+
+run work-billing
+want_eq "$RC" "1" "work-billing：引数なしで叩かない"
+want_in "使い方: work-billing" "$OUT" "work-billing：使い方を示す"
+want_eq "$(url)" "" "work-billing：引数なしのとき API を叩かない"
+
+run work-billing 5
+want_eq "$RC" "1" "work-billing：work_id だけでは叩かない（JSON 必須）"
+want_eq "$(url)" "" "work-billing：JSON 無しのとき API を叩かない"
+
+for bad in abc "1;rm" "../3" "１" "1e3" "-1"; do
+  run work-billing "$bad" '{"billing_status":"billed"}'
+  if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+    say_ok "work-billing：work_id=$bad を弾く（API を叩かない）"
+  else say_ng "work-billing：work_id の検証" "$bad rc=$RC url=$(url)"; fi
+done
+
+# ★取り返しがつかない値なので、3値以外は手元で落とす（叩いてから 422 ではない）
+for bad in '{"billing_status":"paid"}' '{"billing_status":"Billed"}' '{"billing_status":""}' \
+           '{"billing_status":null}' '{"billed_on":"2026-10-07"}' '{}' ; do
+  run work-billing 5 "$bad"
+  if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+    say_ok "work-billing：$bad を手元で落とす（API を叩かない）"
+  else say_ng "work-billing：3値以外を落とす" "$bad rc=$RC url=$(url)"; fi
+done
+want_in "unbilled / billed / not_required" "$OUT" "work-billing：受け付ける3値をメッセージに出す"
+want_in "戻せません" "$OUT" "work-billing：null に戻せないことをメッセージで知らせる"
+
+# ★★ 構造の反例（🔴 の再発防止）★★
+# 正規表現の包含検査に戻すと、下の1〜2番目は「通ってしまう」＝検査した値と書かれる値が食い違う。
+echo "  （構造の反例＝正規表現の包含検査では守れないもの）"
+run work-billing 5 '{"billing_status":"unbilled","billing_status":"billed"}'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★重複キーを落とす（先頭を検査して後勝ちで書かれる事故を防ぐ）"
+else say_ng "★重複キーを落とす" "rc=$RC url=$(url)"; fi
+want_in "同じ項目が2回" "$OUT" "★重複キーだと分かるメッセージを出す"
+
+run work-billing 5 '{"billing_status":"billed","billing_status":"paid"}'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★重複キー（許可値→不正値の順）も落とす"
+else say_ng "★重複キー（許可値→不正値の順）" "rc=$RC url=$(url)"; fi
+
+run work-billing 5 '{"billing_status":"paid","meta":{"billing_status":"billed"}}'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★入れ子の中の billing_status をトップレベルと読み違えない"
+else say_ng "★入れ子を読み違えない" "rc=$RC url=$(url)"; fi
+
+run work-billing 5 '{"meta":{"billing_status":"billed"}}'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★入れ子だけに billing_status がある本文を通さない"
+else say_ng "★入れ子だけの本文を通さない" "rc=$RC url=$(url)"; fi
+
+run work-billing 5 '{"billing_note":"\"billing_status\":\"billed\""}'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★billing_note の中の文字列を値と読み違えない"
+else say_ng "★billing_note の中の文字列を読み違えない" "rc=$RC url=$(url)"; fi
+
+run work-billing 5 '{"billing_status":"billed"'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★壊れた JSON を叩く前に落とす"
+else say_ng "★壊れた JSON を落とす" "rc=$RC url=$(url)"; fi
+want_in "JSON として読めません" "$OUT" "★壊れた JSON だと分かるメッセージを出す"
+
+run work-billing 5 '[{"billing_status":"billed"}]'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★ルートが配列の本文を落とす"
+else say_ng "★ルートが配列の本文を落とす" "rc=$RC url=$(url)"; fi
+# 理由まで固定する＝ルート検査を外しても「billing_status が無い」側で偶然落ちるため、
+# 落ちたことだけ見ると検査を外した変異が素通りする（mutation で実際に素通りした）
+want_in "JSON オブジェクト" "$OUT" "★ルートが配列なら『オブジェクトで渡して』と言う（理由まで固定）"
+
+run work-billing 5 '{"billing_status":["billed"]}'
+if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
+  say_ok "★値が文字列でない（配列）本文を落とす"
+else say_ng "★値が文字列でない本文を落とす" "rc=$RC url=$(url)"; fi
+
+# ★正当な本文は通る（禁止の検証と対で「通すべきものが通る」を必ず持つ＝testing.md §7）
+for good in unbilled billed not_required; do
+  run work-billing 5 "{\"billing_status\":\"$good\"}"
+  want_eq "$(url)" "$API/works/5/billing" "work-billing：$good は通る（URL 完全一致）"
+done
+want_argv "PUT" "work-billing：メソッドは PUT（完全一致）"
+want_argv "--data-binary" "work-billing：本文は --data-binary で渡す（完全一致）"
+
+# 空白入りの整形済み JSON でも通る（手で書いた本文を無駄に弾かない）
+run work-billing 5 '{ "billing_status" : "not_required" , "billing_note" : "先方都合で無償対応" }'
+want_eq "$(url)" "$API/works/5/billing" "work-billing：空白入りの JSON でも通す"
+
+# 本文は改変せず渡す（billing_note の日本語・単引用符が落ちない）
+BILL_BODY="$(printf '{"billing_status":"not_required","billing_note":"%s無償対応%s"}' "$SQ" "$SQ")"
+run work-billing 7 "$BILL_BODY"
+want_eq "$(cat "$REC/stdin" 2>/dev/null)" "$BILL_BODY" "work-billing：JSON 本文を改変せず標準入力で渡す"
+want_eq "$(url)" "$API/works/7/billing" "work-billing：work_id が URL に入る"
+
+# 読み取りは無人でも通す（未請求の棚卸しは読むだけなら安全）
+rm -f "$REC"/*
+OUT="$(MYAGENT_UNATTENDED=1 bash "$T/bin/hana-api.sh" unbilled 2>&1 </dev/null)"; RC=$?
+if [ "$RC" -eq 0 ] && [ -f "$REC/argv" ]; then say_ok "無人実行でも unbilled（読み取り）は通す"
+else say_ng "無人実行でも unbilled は通す" "rc=$RC"; fi
+
+# ヘルプに「null は未請求ではない」が書かれていること（誤報の型を文書で止める）
+run nosuchcommand
+want_in "unbilled" "$OUT" "使い方に unbilled が載っている"
+want_in "work-billing" "$OUT" "使い方に work-billing が載っている"
+want_in "null（記録なし）は未請求ではない" "$OUT" "★使い方に「null は未請求ではない」注意がある"
+want_in "戻せません" "$OUT" "★使い方に「null には戻せない」注意がある"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"

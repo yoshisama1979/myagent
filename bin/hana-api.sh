@@ -62,6 +62,70 @@ require_date() {
   fi
 }
 
+# 請求状態の検証：本文の billing_status が3値でなければ API を叩く前に手元で落とす。
+# ★ここを手元でも見る理由★＝この項目は **一度書くと未記録(null)へ戻せない**（2026-10-07 社長指示）。
+#   綴り間違いは 422 で済むが、「通ってしまう値を間違えた」ときは取り返せないため、
+#   受け付ける値をラッパー側にも明示しておく（最終的な権威はサーバ側の検証）。
+#
+# ⚠️ **JSON の構造検証を正規表現でやってはいけない**（2026-10-07 コミット前 Codex レビュー🔴）。
+#    初版は `"billing_status"[[:space:]]*:[[:space:]]*"(3値)"` の包含検査にしていたが、
+#    これは次の2つを通してしまう＝**検証した値と実際に書かれる値が違う**という、
+#    この項目でいちばんやってはいけない形になっていた：
+#      {"billing_status":"unbilled","billing_status":"billed"}
+#        … 検査は先頭の unbilled に一致して通すが、PHP の json_decode は**後勝ち**＝billed が書かれる
+#      {"billing_status":"paid","meta":{"billing_status":"billed"}}
+#        … トップレベルは不正値なのに、入れ子の中の文字列に一致して通る
+#    そこで JSON として読んで (1)妥当なJSON (2)ルートがオブジェクト (3)トップレベルに
+#    billing_status がちょうど1個 (4)値が文字列 (5)3値のいずれか を構造で確かめる。
+#    重複キーは `object_pairs_hook` でしか見えない（`json.loads` も `jq` も黙って畳む）。
+# ⚠️ python3 が使えない等で検証そのものが失敗したら**通さず落とす**（不可逆な更新なので安全側へ倒す）。
+require_billing_status() {
+  local out
+  if ! out=$(HANA_BILLING_JSON="$1" python3 - <<'PYEOF' 2>/dev/null
+import json, os
+ALLOWED = ("unbilled", "billed", "not_required")
+
+def fail(msg):
+    print(json.dumps({"success": False, "message": msg}, ensure_ascii=False))
+    raise SystemExit(1)
+
+def no_dup(pairs):
+    keys = [k for k, _ in pairs]
+    dups = sorted({k for k in keys if keys.count(k) > 1})
+    if dups:
+        fail("同じ項目が2回書かれています（" + " / ".join(dups)
+             + "）。どちらが書かれるかはサーバ側の解釈に依るため実行しません")
+    return dict(pairs)
+
+try:
+    body = json.loads(os.environ["HANA_BILLING_JSON"], object_pairs_hook=no_dup)
+except SystemExit:
+    raise
+except ValueError as e:
+    fail("本文が JSON として読めません（" + str(e) + "）")
+
+if not isinstance(body, dict):
+    fail("本文は JSON オブジェクト（{...}）で渡してください")
+if "billing_status" not in body:
+    fail("billing_status が本文にありません。unbilled / billed / not_required のいずれかが必須です"
+         "（一度設定すると未記録=null には戻せません）")
+v = body["billing_status"]
+# isinstance は ALLOWED の包含検査と重複している（文字列でない値は ALLOWED に入らない）。
+# 意図を明示するために残してあるだけで、挙動の担保ではない＝外しても落ちないことを mutation で確認済み。
+if not isinstance(v, str) or v not in ALLOWED:
+    fail("billing_status は unbilled / billed / not_required のいずれかです（渡された値: "
+         + json.dumps(v, ensure_ascii=False) + "）")
+PYEOF
+  ); then
+    # python 側は JSON1行を stdout に出して非0で終わる。それ以外（python3 が無い等）は定型文で落とす。
+    case "$out" in
+      \{*) printf '%s\n' "$out" >&2 ;;
+      *)   echo '{"success": false, "message": "billing_status の検証自体に失敗しました（python3 が使えない可能性があります）。不可逆な更新なので実行しません"}' >&2 ;;
+    esac
+    exit 1
+  fi
+}
+
 # API 呼び出しの唯一の出口。★ここに集約する理由が今回まさに実害になった★＝
 #   証明書の検証を切る `-k` が12箇所に散っていたので、直すのも12箇所・
 #   テストも「1本だけ直して残り11本が残る」形になりかけた（2026-08-17）。
@@ -330,6 +394,37 @@ update_project_note() {
   printf '%s' "$json" | api_send POST "projects/$id/notes" --data-binary
 }
 
+# --- 請求チェック（2026-10-07 社長指示でエンドポイント新設・マネジメントが案件単位で使う）---
+# ⚠️ **null（billing_status が未記録）は「未請求」ではない**＝請求の記録がまだ無いだけ。
+#    未請求の判定は `billing_status == "unbilled"` のみ（実測 2026-10-07：works 219件すべて null）。
+#    ここを混同すると「未請求219件」という誤報になる。
+# ⚠️ **一度3状態のどれかにすると null へは戻せない**＝書き込みは社長合意の上で（require_billing_status 参照）。
+# 補足：PUT /works/{id}/status で completed にすると warnings に {"type":"work_unbilled",...} が
+#    載ることがあるが、**ブロックはされない**（警告が出ていても状態変更そのものは通っている）。
+
+# 未請求の案件一覧（GET /works/unbilled・パラメータなし・読み取り専用）
+get_unbilled() {
+  api_get "works/unbilled"
+}
+
+# 請求状態の更新（PUT /works/{id}/billing）
+# 引数: <work_id> <JSON文字列>
+# JSON: billing_status  必須。unbilled / billed / not_required のいずれか（3値以外は 422）
+#       billed_on      YYYY-MM-DD（billed で省略時はサーバ側が当日を入れる）
+#       billing_note   not_required の理由など・255文字まで・改行不可
+# 存在しない work_id は 404。
+update_work_billing() {
+  local id="$1"; shift
+  local json="$1"
+  if [ -z "$id" ] || [ -z "$json" ]; then
+    echo '{"success": false, "message": "使い方: work-billing <work_id> <JSON>（billing_status は unbilled / billed / not_required のいずれかが必須）"}' >&2
+    exit 1
+  fi
+  require_int "$id" "work_id"
+  require_billing_status "$json"
+  printf '%s' "$json" | api_send PUT "works/$id/billing" --data-binary
+}
+
 # --- メイン ---
 
 command="$1"
@@ -339,7 +434,7 @@ shift
 # 社長合意の上で有人実行する）。ルールの規約だけに頼らず、無人 claude -p からの暴発を塞ぐ。
 if [ "${MYAGENT_UNATTENDED:-}" = "1" ]; then
   case "$command" in
-    create-todo|update-todo|update-note|chatwork)
+    create-todo|update-todo|update-note|chatwork|work-billing)
       echo "{\"success\": false, \"message\": \"無人実行では書き込み系コマンド($command)は実行できません。実行案を有人セッション/社長合意に回してください。\"}" >&2
       exit 2 ;;
   esac
@@ -360,6 +455,8 @@ case "$command" in
   project)      get_project "$@" ;;
   notes)        get_project_notes "$@" ;;
   update-note)  update_project_note "$@" ;;
+  unbilled)     get_unbilled ;;
+  work-billing) update_work_billing "$@" ;;
   chatwork)     send_chatwork "$@" ;;
   *)
     cat <<USAGE
@@ -380,6 +477,9 @@ hana-tools APIラッパー
   projects [--client_id=N]         プロジェクト一覧取得（client/works・site_url・gsc_dataset 含む）
   project <id>                     プロジェクト詳細取得
   notes <project_id> [--user_id=N] プロジェクトメモ取得（shared ＋ user_id 指定で mine）
+  unbilled                         未請求の案件一覧（請求チェック）
+                                   ※ 未請求＝billing_status=="unbilled" のみ。
+                                     null（記録なし）は未請求ではない＝数に入れない
 
 コマンド（登録・編集＝書き込み。共有システムへの書き込みは社長合意の上で）:
   create-todo '{"work_id":N,...}'  ToDo登録（assignee_user_id 省略 or user_id と同値で「作成者が担当」）
@@ -389,6 +489,10 @@ hana-tools APIラッパー
                                      （200・成功ではない）。人に確認してから "confirm": true で呼び直す
   update-todo <id> '{...}'         ToDo編集（部分更新。work_id変更不可。completed_at で完了/未完了）
   update-note <project_id> '{...}' プロジェクトメモ追加・更新（upsert。visibility=shared|private）
+  work-billing <work_id> '{"billing_status":"billed"}'
+                                   請求状態の更新（unbilled / billed / not_required）
+                                   任意：billed_on（省略時は当日）・billing_note（255字・改行不可）
+                                   ⚠️ **一度設定すると未記録(null)には戻せません**＝実行前に社長合意を
   chatwork '{"message":"..."}'     Chatwork通知送信（外部送信）
 USAGE
     exit 1
