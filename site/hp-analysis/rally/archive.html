@@ -30,6 +30,72 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== Cycle 067 の記録（Cycle 068 のローテで移動・2026-10-08・本文は改変なし） ===== -->
+  <!-- 🔑 Cycle 067：定期 -->
+  <div class="border-4 border-indigo-600 bg-indigo-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-indigo-800 mb-2">🔑 <span class="underline decoration-2">10/5（Cycle 067）＝数字の新着はありません。昨日の宿題3つを片づけました（新しい提案・質問は 0件）</span></h2>
+    <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+      <li><strong class="text-emerald-800">索引の実見（昨日「測れず」）＝道具は壊れていませんでした</strong>。ふつうの検索とドメイン指定の <code>site:</code> は正常で、「日本三名園 スタンプ」は当サイトが <strong>3位</strong>（9/26 は9位）。効かなくなったのは<u>ページのアドレスまで指定する書き方だけ</u>です。＝「この1ページが登録済みか」を当方ではもう確かめられないため、定点は Search Console の表示の有無で数えます（定点 2/8・新テーマ 1/6＝昨日と同じ）。正確な登録数が出せる手段は <strong>R-R35（sitemap 送信・5分）だけ</strong>になりました。</li>
+      <li><strong>スタンプのユニーク集計（R-R17 の残り）</strong>＝9/22〜10/3 の70回はすべて「初めての場所」として記録・67か所。同じブラウザから同じ場所が2回「初めて」になった例が1件だけ（グランフロント大阪）＝開発担当に確認を添えました。</li>
+      <li><strong>人物の一覧 <code>/people</code></strong>＝106人ぶんの絵つきカードで充実。スマホの最初の画面に登録の入口は見当たりませんが、<u>提案にはしていません</u>（昨日の定点で、入口を置いた下層ページでも入力開始が 0 だったため。10/29 頃にまとめて判定します）。</li>
+      <li><strong>昨日からの変化</strong>＝トップは同じ（79,761B）・壊れたリンク 0本・本体と <code>www</code> は正常。<span class="text-gray-600">登録・発見の数字は Search Console（10/2 まで）・GA4（10/3 まで）とも昨日のままです＝下の「現在地」は昨日の定点です。</span></li>
+    </ul>
+  </div>
+  <!-- ===== Cycle 067 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 067 — 2026-10-05（<span class="text-emerald-700">索引の測り方を切り分け＝道具は壊れていませんでした</span>／<span class="text-gray-700">数字の新着なし・新規の提案と質問は 0件</span>）</h2>
+    <p class="text-sm text-gray-600 mb-4">定期（3日ペース・手動起動）。<strong>新規の提案＝0件／新規の質問＝0件／完了＝0件</strong>＝在庫 13件（R）・質問3件・判断待ち（着手時）9件。<br><strong>データ状況</strong>＝GSC（最新 10/2）・GA4（最新 10/3）とも<strong>昨日から新しい日付が着弾していません</strong>＝発見・登録の数字は昨日（Cycle 066）の定点のままです（同じ数字を言い直しません）／本番GET・スクショ・検索の実見 ✅／証明書の読み取り（<code>hp-head.py</code>）・sitemap の全件集計（<code>sitemap-count.py</code>）は実行許可の外で未実施。<br><strong>本サイクルで回した定石</strong>＝日次一式（変化検知・在庫の進捗・到達性・配信の到達確認）＋週次のサイト内リンク実査（#14＝期日 10/6 の前倒し）＋昨日の宿題3つ（<code>site:</code> 検索の切り分け・スタンプのユニーク集計・<code>/people</code> の撮影）。</p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-900 mb-2">① 昨日「測れなかった」索引の実見＝原因は道具の故障ではなく、検索の指定のしかたでした</h3>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 w-44 font-semibold">ふつうの検索</td><td class="py-1 px-2">「日本三名園 スタンプ」＝当サイトのテーマページ（日本三名園を巡る）が <strong>3位</strong>で出ます（9/26 の実測は9位）。＝検索の道具そのものは正常です。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold"><code>site:check-rally.com</code><br><span class="text-xs font-normal text-gray-500">（ドメインだけ指定）</span></td><td class="py-1 px-2">正常に返ります＝<code>/people</code>・<code>/login</code>・<code>/map</code>・スポット詳細7本（建仁寺・十一人塚・加茂水族館 ほか）。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold"><code>site:check-rally.com/spots/300</code><br><span class="text-xs font-normal text-gray-500">（ページまで指定）</span></td><td class="py-1 px-2">本日も <strong>0件</strong>。＝昨日の4件が0件だったのと同じ形です。<u>「ページのアドレスまで指定する書き方」が Yahoo 側で効かなくなった</u>と読みます（いつからかは不明・9/20 には効いていました）。</td></tr>
+          <tr><td class="py-1 px-2 font-semibold"><code>site:check-rally.com ＋名前</code><br><span class="text-xs font-normal text-gray-500">（代わりの書き方）</span></td><td class="py-1 px-2">返ります。ただし「種間寺」で出たのは<strong>近くの別のスポット3本</strong>（善楽寺・山内神社・坂本竜馬の像）で、種間寺のページそのもの（<code>/spots/300</code>）は出ませんでした。「全日本タワー連盟」でも、テーマのページそのものは出ず、福岡タワーとテーマ一覧が出ました。</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mb-2"><strong>結論</strong>＝昨日の「0件」は<u>登録が消えた証拠ではありません</u>（昨日もそう読みませんでした＝その読みで合っていました）。一方、<strong>当方の <code>site:</code> 検索では「この1ページが登録済みか」をもう確かめられません</strong>。そこで定点の測り方を次のとおり改めます。</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>定点8件・未索引テーマ</strong>＝Search Console に表示が出ているか（＝登録されていなければ表示は出ない）で数えます。本日時点＝定点 <strong>2/8</strong>（<code>/spots/300</code>・<code>/spots/9900</code>）・新テーマ6本のうち <strong>1本</strong>（灘五郷の酒蔵）＝昨日と同じ。<span class="text-gray-600">これは「少なくとも登録されている数」で、登録済みでもまだ表示されていないページは数えられません。</span></li>
+        <li><strong>正確な登録数</strong>＝Search Console のサイトマップ画面でしか出ません（R-R35＝すでにお願いしている5分の操作）。<span class="text-gray-600">新しいお願いではありません。当方側の代わりの手段が1つ減った、というご報告です。</span></li>
+      </ul>
+      <p class="text-sm text-gray-700 mt-2">副産物＝検索結果に出ているスポット詳細の題名は、新しい形（「建仁寺｜京都市東山区のスタンプスポット」）と古い形（「川端康成文学碑 - 日本全国スタンプラリー」）が混ざっています＝検索エンジンの拾い直しは進行中です。</p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② スタンプの「ユニーク」集計（R-R17 の残り）＝ほぼ整合・1か所だけ開発担当に確認します</h3>
+      <p class="text-sm text-gray-800 mb-2">9/22〜10/3 のスタンプ取得は <strong>70回・3人</strong>。70回すべてが「その場所は初めて（<code>visit_count=1</code>）」として記録されています。場所の名前で数えると <strong>67か所</strong>で、2回記録された場所が3つあります。</p>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li>円福寺（だるま寺）・洞ヶ峠＝それぞれ<strong>別の2人</strong>が1回ずつ＝矛盾なし。</li>
+        <li><strong>グランフロント大阪＝同じブラウザから「初めて」が2回</strong>＝9/14 の安養寺（同じブラウザから「初めて」が5回）と同じ形が1件だけ再発しています。<span class="text-gray-700">推測＝同名の別スポットが2つある／同じ端末で別のアカウント／再チェックでも「初めて」として送られている、のどれか。当方からは区別できません。</span></li>
+      </ul>
+      <p class="text-sm text-gray-800 mt-2"><strong>扱い</strong>＝70回中1回のずれなので「ユニーク訪問スポット数はおおむね信用できる」と読みますが、<u>社外向けの実績値としては引き続き使いません</u>。R-R17 は ⏳検証中のまま、開発担当へのレポートに確認を1行添えました（社長へのお伺いはありません）。<br><strong>北極星への接続</strong>＝1階の最終地点（スタンプ収集）の数え方そのもの。<span class="text-gray-700">なお 70回のうち大半は大阪市内・彦根・宝塚などの連続した取得＝少数の方が1日に何十か所も回っている使われ方です（3人）。</span></p>
+    </div>
+
+    <div class="border-l-4 border-amber-500 bg-amber-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-amber-900 mb-2">③ 人物の一覧（<code>/people</code>）を撮影しました＝見た目は充実・スマホの最初の画面に登録の入口はありません</h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>観察</strong>＝106人すべてに<strong>絵つきのカード</strong>（聖徳太子・天智天皇・藤原鎌足…。名前・時代・ゆかりの地の数）。並べ替え（おすすめ／じだい順／あいうえお順）と時代の絞り込みあり。配信HTMLは 277,864B・人物ページへのリンク106本＝検索エンジンにも読める形です。</li>
+        <li><strong>登録の入口</strong>＝パソコン幅では左メニューの下に「無料で始める」が常に見えます。<strong>スマホ幅の最初の画面には登録の入口が見当たりません</strong>（☰ メニューの中と推測）。<span class="text-gray-700">※ 画面下の浮動ボタン「近くのスポットを探す」とカードの重なりは、当方の撮影方法では正しく判定できないため指摘しません。</span></li>
+        <li><strong>数字</strong>＝Search Console（9/6〜10/2）で <code>/people</code> は 9表示・1クリック・平均 20.8位。GA4（9/22〜10/3）では 28セッションが着地・メール入力開始 0（昨日の定点）。</li>
+        <li><strong>北極星への接続</strong>＝1階②（登録の障壁）。<strong>新しい提案にはしません</strong>＝着地 28セッションでは「入口が無いから登録されない」と言い切れない／昨日の定点で「入口を置いた下層ページ（R-R22）でも入力開始は 0」だったため、<u>ここに入口を足しても同じ結果になる見込みが高い</u>（推測）／開発担当が登録の流れそのもの（パスワードなし）を検討中。<strong>種として保持し、10/29 頃の月次の定点で下層ぜんぶをまとめて判定</strong>します。</li>
+      </ul>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>サイト内リンクの実査（週次 #14）</strong>＝配信HTML上、壊れたリンクは <strong>0本</strong>。トップ＝リンク23本（刷新前は12本）＝新しいテーマ8本・「図鑑へ」（<code>/collections</code>）・「ガチャへ」（<code>/gacha</code>）・「無料ではじめる」（<code>/register</code>）が加わっています。<code>/spots/search</code>＝10本（メニューのみ・検索結果は入力後に出る形）。<code>/people</code>＝116本。<span class="text-gray-600"><code>/privacy</code>・<code>/terms</code> へのリンクはどこにも張られていません（ページが未公開のため＝壊れたリンクにはなっていません）。新しく見つけた面 <code>/collections/meisan</code> は 200・検索エンジン向けには非公開の設定（noindex）＝<code>/collections</code> と同じ扱いで、追いません。</span></li>
+        <li><strong>変化検知</strong>＝トップ 79,761B＝昨日と同じ（変化なし）。</li>
+        <li><strong>到達性</strong>＝本体 200・0.10秒／<code>www</code> は本体へ転送・200。<code>/privacy</code>・<code>/terms</code> 404（R-R09 生存）。旧サイト <code>mission-p.com</code> 500（R-R40 生存）。</li>
+        <li><strong>在庫の動き</strong>＝なし（13件・質問3件）。開発担当がそのまま着手できる仕事は 0件のまま＝次の着手推奨は 10/8 頃の棚卸しで出します。</li>
+        <li><strong>受信箱・配信</strong>＝受信 0通。開発担当の受信箱には当方からの未読が19通（昨日のレポートを含む・督促はしません）。本レポートを1通配信。</li>
+        <li><strong>対応記録</strong>＝社長指示ファイルに新しいご指示はありません（最新は 9/27 節＝対応済み：Cycle 063・064）。9/27 のご指示「新しい質問を増やさない」に従い、新規の質問・提案は0件です。</li>
+        <li><strong>次サイクル（10/8 頃・定期）</strong>＝GSC・GA4 の新しい3日分（10月の登録が動いたか）＋週次の棚卸し・競合対比・ビジュアル定点（期日 10/9 の前倒し）＋次の着手推奨。</li>
+      </ul>
+    </div>
+  </section>
   <!-- ===== Cycle 066 の記録（Cycle 067 のローテで移動・2026-10-05・本文は改変なし） ===== -->
   <!-- ===== Cycle 066 ===== -->
   <section class="mb-10">
