@@ -307,6 +307,9 @@ want_in "data-binary" "$(argv | tr '\n' ' ')" "create-work：本文は --data-bi
 #    下の「構造の反例」はその再発防止なので、**JSON パーサを介さない実装に戻したら必ず落ちる**。
 API="https://stg.example.test/api/external"
 want_argv(){ if argv | grep -Fxq -- "$1"; then say_ok "$2"; else say_ng "$2" "$(argv | tr '\n' ' ' | cut -c1-200)"; fi; }
+# 「API を叩く前に落ちた」＝非0終了かつ curl が一度も呼ばれていないこと。この節で10回使う判定。
+# $2 を渡すと不合格時のラベルだけ差し替える（合格時のラベルは $1 のまま＝項目名を変えない）。
+want_rejected(){ if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then say_ok "$1"; else say_ng "${2:-$1}" "rc=$RC url=$(url)"; fi; }
 
 echo
 echo "--- 請求チェック（unbilled / work-billing） ---"
@@ -326,18 +329,14 @@ want_eq "$(url)" "" "work-billing：JSON 無しのとき API を叩かない"
 
 for bad in abc "1;rm" "../3" "１" "1e3" "-1"; do
   run work-billing "$bad" '{"billing_status":"billed"}'
-  if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-    say_ok "work-billing：work_id=$bad を弾く（API を叩かない）"
-  else say_ng "work-billing：work_id の検証" "$bad rc=$RC url=$(url)"; fi
+  want_rejected "work-billing：work_id=$bad を弾く（API を叩かない）" "work-billing：work_id の検証"
 done
 
 # ★取り返しがつかない値なので、3値以外は手元で落とす（叩いてから 422 ではない）
 for bad in '{"billing_status":"paid"}' '{"billing_status":"Billed"}' '{"billing_status":""}' \
            '{"billing_status":null}' '{"billed_on":"2026-10-07"}' '{}' ; do
   run work-billing 5 "$bad"
-  if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-    say_ok "work-billing：$bad を手元で落とす（API を叩かない）"
-  else say_ng "work-billing：3値以外を落とす" "$bad rc=$RC url=$(url)"; fi
+  want_rejected "work-billing：$bad を手元で落とす（API を叩かない）" "work-billing：3値以外を落とす"
 done
 want_in "unbilled / billed / not_required" "$OUT" "work-billing：受け付ける3値をメッセージに出す"
 want_in "戻せません" "$OUT" "work-billing：null に戻せないことをメッセージで知らせる"
@@ -346,49 +345,33 @@ want_in "戻せません" "$OUT" "work-billing：null に戻せないことを�
 # 正規表現の包含検査に戻すと、下の1〜2番目は「通ってしまう」＝検査した値と書かれる値が食い違う。
 echo "  （構造の反例＝正規表現の包含検査では守れないもの）"
 run work-billing 5 '{"billing_status":"unbilled","billing_status":"billed"}'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★重複キーを落とす（先頭を検査して後勝ちで書かれる事故を防ぐ）"
-else say_ng "★重複キーを落とす" "rc=$RC url=$(url)"; fi
+want_rejected "★重複キーを落とす（先頭を検査して後勝ちで書かれる事故を防ぐ）" "★重複キーを落とす"
 want_in "同じ項目が2回" "$OUT" "★重複キーだと分かるメッセージを出す"
 
 run work-billing 5 '{"billing_status":"billed","billing_status":"paid"}'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★重複キー（許可値→不正値の順）も落とす"
-else say_ng "★重複キー（許可値→不正値の順）" "rc=$RC url=$(url)"; fi
+want_rejected "★重複キー（許可値→不正値の順）も落とす" "★重複キー（許可値→不正値の順）"
 
 run work-billing 5 '{"billing_status":"paid","meta":{"billing_status":"billed"}}'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★入れ子の中の billing_status をトップレベルと読み違えない"
-else say_ng "★入れ子を読み違えない" "rc=$RC url=$(url)"; fi
+want_rejected "★入れ子の中の billing_status をトップレベルと読み違えない" "★入れ子を読み違えない"
 
 run work-billing 5 '{"meta":{"billing_status":"billed"}}'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★入れ子だけに billing_status がある本文を通さない"
-else say_ng "★入れ子だけの本文を通さない" "rc=$RC url=$(url)"; fi
+want_rejected "★入れ子だけに billing_status がある本文を通さない" "★入れ子だけの本文を通さない"
 
 run work-billing 5 '{"billing_note":"\"billing_status\":\"billed\""}'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★billing_note の中の文字列を値と読み違えない"
-else say_ng "★billing_note の中の文字列を読み違えない" "rc=$RC url=$(url)"; fi
+want_rejected "★billing_note の中の文字列を値と読み違えない" "★billing_note の中の文字列を読み違えない"
 
 run work-billing 5 '{"billing_status":"billed"'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★壊れた JSON を叩く前に落とす"
-else say_ng "★壊れた JSON を落とす" "rc=$RC url=$(url)"; fi
+want_rejected "★壊れた JSON を叩く前に落とす" "★壊れた JSON を落とす"
 want_in "JSON として読めません" "$OUT" "★壊れた JSON だと分かるメッセージを出す"
 
 run work-billing 5 '[{"billing_status":"billed"}]'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★ルートが配列の本文を落とす"
-else say_ng "★ルートが配列の本文を落とす" "rc=$RC url=$(url)"; fi
+want_rejected "★ルートが配列の本文を落とす"
 # 理由まで固定する＝ルート検査を外しても「billing_status が無い」側で偶然落ちるため、
 # 落ちたことだけ見ると検査を外した変異が素通りする（mutation で実際に素通りした）
 want_in "JSON オブジェクト" "$OUT" "★ルートが配列なら『オブジェクトで渡して』と言う（理由まで固定）"
 
 run work-billing 5 '{"billing_status":["billed"]}'
-if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then
-  say_ok "★値が文字列でない（配列）本文を落とす"
-else say_ng "★値が文字列でない本文を落とす" "rc=$RC url=$(url)"; fi
+want_rejected "★値が文字列でない（配列）本文を落とす" "★値が文字列でない本文を落とす"
 
 # ★正当な本文は通る（禁止の検証と対で「通すべきものが通る」を必ず持つ＝testing.md §7）
 for good in unbilled billed not_required; do
