@@ -661,6 +661,121 @@ assert 902 in pro and 903 in inv
 " && ok "★一覧が読めないとき＝警告を出し、顧客案件は unclassified-due に<u>本文ごと</u>出す（消さない）" \
   || ng "★一覧欠損で顧客案件が静かに消える（fail-open）" "$o2"
 
+echo
+echo "=== outside：次の作業日（next_work_date）の区分（2026-10-07 社長ご承認・足すだけ）==="
+# 契機＝朝のブリーフが due_date しか読まないため、**数日かかる作業が期日の当日まで上がらない**。
+#   #459（期日 10/10）の中の雇用保険の届出が 10/5〜10/7 の朝に出ず、社長がたまたま思い出された。
+#   社長「作業は1日で終わるものではないので、期日にいきなり言われても困る」。
+# ★守りたい不変条件★
+#   (1) 既存の区分（tiers）の順・中身・保存則を1つも動かさない＝**足すだけ**
+#   (2) 日付は JST で読む（15:00Z は翌日）＝[:10] で切ると1日早く読む（2度実害のある型）
+#   (3) next_work_date が空のものを「今日」「過ぎた」に数えない
+#   (4) completed 済みは数えない
+#   (5) 期日が来ていない行（internal 落ち）も**数える**＝ここを落とすと本件の目的が達成できない
+#   (6) 件数は全件・本文だけ top 件（古い値の棚卸しが済むまで外の行を押し出さないため）
+NWD='[{"id":701,"assignee_user_id":null,"content":"今日が作業日","updated_at":"2026-10-08",
+       "next_work_date":"2026-10-07T15:00:00.000000Z"},
+      {"id":702,"assignee_user_id":null,"content":"作業日を過ぎた","updated_at":"2026-10-08",
+       "next_work_date":"2026-10-04T15:00:00.000000Z"},
+      {"id":703,"assignee_user_id":null,"content":"作業日はまだ先","updated_at":"2026-10-08",
+       "next_work_date":"2026-10-12T15:00:00.000000Z"},
+      {"id":704,"assignee_user_id":null,"content":"作業日なし・期日が3日後","updated_at":"2026-10-08",
+       "due_date":"2026-10-10T15:00:00.000000Z"},
+      {"id":705,"assignee_user_id":null,"content":"作業日なし・期日が30日後","updated_at":"2026-10-08",
+       "due_date":"2026-11-07T15:00:00.000000Z"},
+      {"id":706,"assignee_user_id":null,"content":"作業日なし・期日が過ぎている","updated_at":"2026-10-08",
+       "due_date":"2026-10-01T15:00:00.000000Z"},
+      {"id":707,"assignee_user_id":null,"content":"作業日も期日もなし","updated_at":"2026-10-08"},
+      {"id":708,"assignee_user_id":null,"content":"完了済み・今日が作業日","updated_at":"2026-10-08",
+       "completed_at":"2026-10-08T01:00:00.000000Z","next_work_date":"2026-10-07T15:00:00.000000Z"},
+      {"id":709,"assignee_user_id":null,"content":"開始日だけある（着手の予定として読まない）",
+       "updated_at":"2026-10-08","start_date":"2026-10-01T15:00:00.000000Z"}]'
+setj "$NWD" "$NWD"
+on=$(tb 2026-10-08 outside)
+blk() { printf '%s' "$2" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+b=next(x for x in d['work_dates']['blocks'] if x['kind']==sys.argv[1])
+print(' '.join(str(r['id']) for r in b['items']))" "$1"; }
+cnt() { printf '%s' "$2" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+b=next(x for x in d['work_dates']['blocks'] if x['kind']==sys.argv[1])
+print(b['count'])" "$1"; }
+
+[ "$(blk work-today "$on")" = "701" ] \
+  && ok "★今日が次の作業日＝701だけ（15:00Z を JST で読む＝10-07T15:00Z は 10-08）" \
+  || ng "work-today が違う" "$(blk work-today "$on")"
+[ "$(blk work-slipped "$on")" = "702" ] \
+  && ok "★次の作業日を過ぎて未完了＝702だけ" || ng "work-slipped が違う" "$(blk work-slipped "$on")"
+[ "$(blk work-undated "$on")" = "704" ] \
+  && ok "★期日7日以内で作業日が空＝704だけ（30日後の705・期日なしの707は入らない）" \
+  || ng "work-undated が違う" "$(blk work-undated "$on")"
+
+printf '%s' "$on" | python3 -c "
+import json,sys
+d=json.load(sys.stdin); w=d['work_dates']
+ids=[r['id'] for b in w['blocks'] for r in b['items']]
+assert 708 not in ids, ('完了済みを数えている', ids)
+assert 703 not in ids, ('作業日がまだ先のものを数えている', ids)
+assert 707 not in ids, ('作業日も期日も無いものを数えている', ids)
+assert 709 not in ids, ('start_date を着手の予定として読んでいる', ids)
+" && ok "★完了済み・まだ先・日付なし・start_date だけ＝いずれも数えない" \
+  || ng "★数えてはいけないものを数えている" "$on"
+
+[ "$(printf '%s' "$on" | python3 -c "
+import json,sys;print(json.load(sys.stdin)['work_dates']['overdue_without_work_date'])")" = "1" ] \
+  && ok "★期限超過かつ作業日が空＝件数で返す（706・本文の列には混ぜない）" \
+  || ng "overdue_without_work_date が違う" "$on"
+
+# ★過ぎた日数を付ける（社長ご依頼の「過ぎた日数つき」）＝10-04T15:00Z は JST 10-05 → 3日
+[ "$(printf '%s' "$on" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+b=next(x for x in d['work_dates']['blocks'] if x['kind']=='work-slipped')
+print(b['items'][0]['next_work_over_days'])")" = "3" ] \
+  && ok "★過ぎた日数を JST で数える（10-04T15:00Z＝JST 10-05 から 3日）" \
+  || ng "過ぎた日数が違う（[:10] で切ると 4 になる）" "$on"
+
+# ★期日が来ていない行も数える＝tiers の internal に落ちた行を拾えているか
+#   703/705/707 は internal 落ち。701 は「期日なし」なので internal だが work-today に出る。
+printf '%s' "$on" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+shown=[r['id'] for t in d['tiers'] for r in t['items']]
+assert 701 not in shown, '701 は期日が無いので tiers には出ない前提が崩れた'
+ids=[r['id'] for b in d['work_dates']['blocks'] for r in b['items']]
+assert 701 in ids, '★internal に落ちた行を work_dates が拾えていない（本件の目的そのもの）'
+" && ok "★期日が来ていない行（internal 落ち）も次の作業日では拾う" \
+  || ng "★internal 落ちを拾えていない＝数日かかる作業が期日まで上がらない" "$on"
+
+# ★既存の区分を1つも動かしていない（保存則＋ラベルの並び）
+printf '%s' "$on" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+want=['promise-slipped','invisible-channel','client-facing','unclassified-due']
+assert [t['tier'] for t in d['tiers']]==want, [t['tier'] for t in d['tiers']]
+ids=[r['id'] for t in d['tiers'] for r in t['items']]+d['internal_ids']
+assert len(ids)==d['count']==d['accounted'], (len(ids), d['count'], d['accounted'])
+assert '実行順ではありません' in d['note'], '既存の note が書き換わった'
+" && ok "★既存の区分の順・保存則・note を動かしていない（足すだけ）" \
+  || ng "★既存の区分を動かした" "$on"
+
+# ★件数は全件・本文は top 件（古い値が多い間、外の行を押し出さない）
+MANY=$(python3 -c "
+import json
+print(json.dumps([{'id':800+i,'assignee_user_id':None,'content':'x','updated_at':'2026-10-08',
+                   'next_work_date':'2026-10-04T15:00:00.000000Z'} for i in range(15)]))")
+setj "$MANY" "$MANY"
+om=$(tb 2026-10-08 outside --work-date-top 3)
+[ "$(cnt work-slipped "$om")" = "15" ] && ok "★件数は全件返す（15件）" || ng "件数が絞られている" "$(cnt work-slipped "$om")"
+[ "$(printf '%s' "$om" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+b=next(x for x in d['work_dates']['blocks'] if x['kind']=='work-slipped')
+print(len(b['items']), b['shown'])")" = "3 3" ] \
+  && ok "★本文は top 件だけ（--work-date-top 3 で3件・shown に明示）" || ng "top が効かない" "$om"
+
 echo "=== ★ルールの追随：CLAUDE.md に『動作』が残っているか ==="
 # 2026-09-11 の見落としの真因は、自動ロードされる CLAUDE.md 側の項目3が「期日を見る」という
 # <u>動作</u>を落として JST 補正の注意書きだけになっていたこと。main.md に「消すな」と書いても

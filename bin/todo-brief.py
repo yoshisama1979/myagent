@@ -75,6 +75,26 @@ CAP_MIN, CAP_MAX, CAP_START = 1, 12, 8
 # 提案してからこの日数が過ぎても未完了なら「終わっていませんか」と聞く材料にする
 STALE_DAYS = 3
 
+# ── 「次の作業日」の欄（2026-10-07 社長ご承認・マネジメント依頼 M-20261007T105014）──
+#  契機＝朝のブリーフが due_date しか読まないため、**数日かかる作業が期日の当日まで上がらない**。
+#  #459（長谷さん退職手続き・期日 10/10）の中の雇用保険の届出が 10/5〜10/7 の朝に出ず、
+#  社長がたまたま思い出された。社長「作業は1日で終わるものではないので、期日にいきなり言われても困る」。
+#
+#  ★欄の定義（社長）★ ここを混ぜると朝の起点がずれる：
+#    next_work_date ＝ 実際にいつ作業する予定か  → **これを朝の起点にする**
+#    start_date     ＝ 最終的にどれだけ時間をかけたかを確かめるための開始日
+#                      → **着手の予定としては読まない**（実データでも値ありは1件だけ）
+#    due_date       ＝ 相手との期日（従来どおり）
+#
+#  期日がこの日数以内なのに next_work_date が空＝「いつ着手するか」の案を出す対象。
+WORK_DATE_SOON_DAYS = 7
+
+# 「次の作業日」の区分で本文を並べる件数の上限。**件数は必ず全部返す**（count）。
+#  なぜ上限を置くか＝実測 2026-10-08 で next_work_date の値ありが56件、その多くが過去日付。
+#  古い値の棚卸しはマネジメントが社長と行う予定で、それが済むまで本文を全部並べると
+#  既存の区分（外のお客様を待たせている行）が画面から押し出される＝本件の再発になる。
+WORK_DATE_TOP = 10
+
 
 def today():
     return datetime.date.fromisoformat(
@@ -239,6 +259,7 @@ def facts(i, ref):
     台帳や本文を読まないと分からないので、モード側が足す。
     """
     due, upd = _date(i.get("due_date")), _date(i.get("updated_at"))
+    nwd = _date(i.get("next_work_date"))
     overdue = (ref - due).days if due and due < ref else 0
     days_left = (due - ref).days if due and due >= ref else None
     if overdue:
@@ -257,6 +278,10 @@ def facts(i, ref):
         "days_left": days_left,
         "stale_days": (ref - upd).days if upd else None,
         "due_reason": reason,          # 日付から決まる「今日出す理由」。無ければ None
+        # ★「次の作業日」＝いつ作業する予定か（社長の欄の定義 2026-10-07）。朝の起点はこちら。
+        #   日付は _date() で読む＝JST 補正（[:10] で切ると1日早く読む・2度実害）。
+        "next_work_date": str(nwd) if nwd else None,
+        "next_work_over_days": (ref - nwd).days if nwd and nwd < ref else 0,
     }
 
 
@@ -414,6 +439,44 @@ def outside_tier(row, raw, names):
     return "unclassified-due", None
 
 
+# ★ここは既存の区分（OUTSIDE_TIERS）を1行も動かさない★
+#   同じ行が tiers と work_dates の両方に出るのは**意図どおり**＝見る目的が違う。
+#     tiers      ＝外への影響が確かな順（誰を待たせているか）
+#     work_dates ＝着手の予定（いつ手をつける予定になっているか）
+#   混ぜて1つの列にすると、片方の意味が必ず壊れる（2026-09-11 に日数と痛みを混ぜて踏んだ型）。
+WORK_DATE_BLOCKS = [
+    ("work-today",   "今日が次の作業日です"),
+    ("work-slipped", "次の作業日を過ぎて未完了です"),
+    ("work-undated", "期日が近いのに次の作業日が空です＝着手日を決める対象"),
+]
+
+
+def work_date_view(rows, ref, top):
+    """「次の作業日」から見た3区分。件数は必ず全部返し、本文だけ top 件に絞る。"""
+    blocks = {
+        "work-today":   [r for r in rows if r["next_work_date"] == str(ref)],
+        "work-slipped": [r for r in rows if r["next_work_over_days"]],
+        # ★「期日が7日以内」は**期限超過を含めない**（社長の依頼文のとおりに読む）。
+        #   超過ぶんは既存の区分（期限超過）で既に大きく鳴っているので、ここに混ぜると
+        #   同じ行が二重に並ぶだけになる。ただし件数だけは下の overdue_without_work_date で返す
+        #   ＝「超過していて着手日も無い」は最も重いので、数が消えないようにする。
+        "work-undated": [r for r in rows if not r["next_work_date"]
+                         and r["days_left"] is not None
+                         and r["days_left"] <= WORK_DATE_SOON_DAYS],
+    }
+    order = {
+        "work-today":   lambda r: (r["overdue_days"] * -1, r["id"]),
+        "work-slipped": lambda r: (-r["next_work_over_days"], r["id"]),
+        "work-undated": lambda r: (r["days_left"], r["id"]),
+    }
+    out = []
+    for k, label in WORK_DATE_BLOCKS:
+        hit = sorted(blocks[k], key=order[k])
+        out.append({"kind": k, "label": label, "count": len(hit),
+                    "shown": len(hit[:top]), "items": hit[:top]})
+    return out, len([r for r in rows if not r["next_work_date"] and r["overdue_days"]])
+
+
 def cmd_outside(a):
     ref = today()
     names = client_names()
@@ -436,6 +499,12 @@ def cmd_outside(a):
     internal = groups.pop("internal")
     shown = [{"tier": k, "label": v, "count": len(groups[k]), "items": groups[k]}
              for k, v in OUTSIDE_TIERS if k in groups]
+    # 「次の作業日」の区分は**全件（internal に落ちたものも含む）**から数える。
+    # ★tiers の箱から数えてはいけない★＝「期日が来ていない／期日なし」は internal に落ちるので、
+    #   そこを除くと「今日が次の作業日だが期日はまだ先」という行が丸ごと消える＝本件の目的そのもの
+    #   （数日かかる作業を期日の前に上げる）が達成できない。
+    all_rows = [r for t in shown for r in t["items"]] + internal
+    work_blocks, overdue_undated = work_date_view(all_rows, ref, a.work_date_top)
     print(json.dumps({
         "as_of": str(ref), "assignee": a.assignee, "count": len(items),
         "client_aliases_loaded": len(names),
@@ -447,6 +516,19 @@ def cmd_outside(a):
         "tiers": shown,
         "internal_count": len(internal),
         "internal_ids": [r["id"] for r in internal],
+        # ── 「次の作業日」から見た区分（2026-10-07 社長ご承認・足すだけ＝上の tiers は不変）──
+        "work_dates": {
+            "soon_days": WORK_DATE_SOON_DAYS,
+            "top": a.work_date_top,
+            "note": ("next_work_date＝いつ作業する予定か（朝の起点）。start_date は"
+                     "『どれだけ時間をかけたか』用なので着手の予定として読みません。"
+                     "上の tiers とは別の箱です＝同じ行が両方に出ます（tiers＝外への影響／"
+                     "こちら＝着手の予定）。count は全件・items は top 件だけ。"
+                     "work-undated は期限超過を含みません＝超過ぶんは"
+                     "overdue_without_work_date の件数で返します"),
+            "blocks": work_blocks,
+            "overdue_without_work_date": overdue_undated,
+        },
         # 保存則の検算用＝どの行も必ずどこか1つの箱に入っている（テストで固定している）
         "accounted": sum(t["count"] for t in shown) + len(internal),
     }, ensure_ascii=False, indent=1))
@@ -662,6 +744,9 @@ def main():
         q.add_argument("--assignee", type=int, default=None)
         if name == "candidates":
             q.add_argument("--limit", type=int, default=0)
+        if name == "outside":
+            q.add_argument("--work-date-top", type=int, default=WORK_DATE_TOP,
+                           dest="work_date_top")
         if name == "record":
             q.add_argument("--ids", required=True)
         if name == "check":
