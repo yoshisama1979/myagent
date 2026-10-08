@@ -444,35 +444,34 @@ def outside_tier(row, raw, names):
 #     tiers      ＝外への影響が確かな順（誰を待たせているか）
 #     work_dates ＝着手の予定（いつ手をつける予定になっているか）
 #   混ぜて1つの列にすると、片方の意味が必ず壊れる（2026-09-11 に日数と痛みを混ぜて踏んだ型）。
+# 1区分＝1行に閉じる（名前・見出し・入る条件・並び順）。
+# ★ここを「名前をキーにした3つの辞書」で持ってはいけない★＝条件だけ直して並び順を直し忘れる、
+#   区分を1つ足してラベルだけ足す、が起きる。このリポジトリで最頻の壊れ方
+#   （rules/testing.md の ads/ga4/gsc の行＝「同じ判定を3本に書いている」と同じ型）。
+#   ⚠️ 「期日が7日以内」は**期限超過を含めない**（社長の依頼文のとおりに読む）。超過ぶんは
+#      既存の区分（期限超過）で既に大きく鳴っており、ここに混ぜると同じ行が二重に並ぶだけ。
+#      ただし件数は cmd_outside の overdue_without_work_date で返す
+#      ＝「超過していて着手日も無い」は最も重いので、数が消えないようにする。
 WORK_DATE_BLOCKS = [
-    ("work-today",   "今日が次の作業日です"),
-    ("work-slipped", "次の作業日を過ぎて未完了です"),
-    ("work-undated", "期日が近いのに次の作業日が空です＝着手日を決める対象"),
+    ("work-today", "今日が次の作業日です",
+     lambda r, ref: r["next_work_date"] == str(ref),
+     lambda r: (-r["overdue_days"], r["id"])),
+    ("work-slipped", "次の作業日を過ぎて未完了です",
+     lambda r, ref: bool(r["next_work_over_days"]),
+     lambda r: (-r["next_work_over_days"], r["id"])),
+    ("work-undated", "期日が近いのに次の作業日が空です＝着手日を決める対象",
+     lambda r, ref: (not r["next_work_date"] and r["days_left"] is not None
+                     and r["days_left"] <= WORK_DATE_SOON_DAYS),
+     lambda r: (r["days_left"], r["id"])),
 ]
 
 
 def work_date_view(rows, ref, top):
     """「次の作業日」から見た3区分。件数は必ず全部返し、本文だけ top 件に絞る。"""
-    blocks = {
-        "work-today":   [r for r in rows if r["next_work_date"] == str(ref)],
-        "work-slipped": [r for r in rows if r["next_work_over_days"]],
-        # ★「期日が7日以内」は**期限超過を含めない**（社長の依頼文のとおりに読む）。
-        #   超過ぶんは既存の区分（期限超過）で既に大きく鳴っているので、ここに混ぜると
-        #   同じ行が二重に並ぶだけになる。ただし件数だけは下の overdue_without_work_date で返す
-        #   ＝「超過していて着手日も無い」は最も重いので、数が消えないようにする。
-        "work-undated": [r for r in rows if not r["next_work_date"]
-                         and r["days_left"] is not None
-                         and r["days_left"] <= WORK_DATE_SOON_DAYS],
-    }
-    order = {
-        "work-today":   lambda r: (r["overdue_days"] * -1, r["id"]),
-        "work-slipped": lambda r: (-r["next_work_over_days"], r["id"]),
-        "work-undated": lambda r: (r["days_left"], r["id"]),
-    }
     out = []
-    for k, label in WORK_DATE_BLOCKS:
-        hit = sorted(blocks[k], key=order[k])
-        out.append({"kind": k, "label": label, "count": len(hit),
+    for kind, label, belongs, order in WORK_DATE_BLOCKS:
+        hit = sorted((r for r in rows if belongs(r, ref)), key=order)
+        out.append({"kind": kind, "label": label, "count": len(hit),
                     "shown": len(hit[:top]), "items": hit[:top]})
     return out, len([r for r in rows if not r["next_work_date"] and r["overdue_days"]])
 
