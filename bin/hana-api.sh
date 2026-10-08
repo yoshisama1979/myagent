@@ -175,6 +175,15 @@ search_clients() {
   api_get "clients/search?q=$encoded"
 }
 
+# API 仕様書の取得（GET /docs・読み取り専用・2026-10-08 社長よりURLを受領）
+# ★一次情報をここから引く★ 仕様を人の記憶や伝聞で書くと、エンドポイントの名前・必須項目・
+#   既定値が食い違ったまま実装が進む（2026-10-07 のタイマー依頼は仕様が無いまま1日止まった）。
+#   トークンを呼び出し側に見せずに仕様を読める経路にしておく＝これが無いと curl を手で組む必要があり、
+#   その過程で .env の実値が画面・履歴に残る。
+get_docs() {
+  api_get "docs"
+}
+
 # 外注先一覧取得
 get_outsources() {
   api_get "outsources"
@@ -394,6 +403,153 @@ update_project_note() {
   printf '%s' "$json" | api_send POST "projects/$id/notes" --data-binary
 }
 
+# --- 作業タイマーの操作（2026-10-08 社長が hana-tools 側を実装・仕様＝docs §21）-------------
+# ⚠️ **ここで記録した時間はそのまま実績（損益計算・見積の根拠）に入る**（仕様書の注意）。
+#    テスト目的の起動を本番で行わない。動作確認は `timers`（読み取り）で済ませる。
+# ⚠️ 外部 API には「ログイン中の本人」が存在しないので、**開始時は user_id で持ち主を必ず指定する**。
+#    トークンは全ユーザーのタイマーを操作でき、**停止には所有者チェックが無い**（仕様書明記）。
+#    ＝誤って他人のタイマーを止められる。だから timer-stop は叩く前に実行中一覧で持ち主を確かめる。
+# ⚠️ 同時起動は1ユーザー3本まで（超過は 400）。案件の状態は問わない（完了済み案件にも起動できる）。
+# ⚠️ タイマーは **案件（work）単位**＝ToDo の番号は記録されない（仕様書 §21・work-logs も同じ）。
+#    「どの ToDo の作業か」を残したいときは description に書く。
+
+# 実行中の作業タイマー一覧（GET /timers/active・読み取り専用）
+# オプション: --user_id=N（省略時は全ユーザー＝帰宅前の止め忘れ拾いはこちら）
+get_timers() {
+  local uid=""
+  for arg in "$@"; do
+    case "$arg" in
+      --user_id=*)
+        if [ -n "$uid" ]; then
+          echo '{"success": false, "message": "--user_id は1つだけ指定してください"}' >&2
+          exit 1
+        fi
+        uid="${arg#*=}"
+        require_int "$uid" "--user_id"
+        ;;
+      *)
+        echo '{"success": false, "message": "使い方: timers [--user_id=N]"}' >&2
+        exit 1 ;;
+    esac
+  done
+  local params=""
+  [ -n "$uid" ] && params="?user_id=$uid"
+  api_get "timers/active${params}"
+}
+
+# タイマー開始（POST /timers/start）
+# 引数: --work_id=N（必須） [--user_id=N]（省略時は .env の既定ユーザー） [--description=...]
+# 成功は 201。存在しない user_id / work_id は 422、3本超過は 400。
+timer_start() {
+  local wid="" uid="$HANA_TOOLS_DEFAULT_USER_ID" desc=""
+  for arg in "$@"; do
+    case "$arg" in
+      --work_id=*)     wid="${arg#*=}" ;;
+      --user_id=*)     uid="${arg#*=}" ;;
+      --description=*) desc="${arg#*=}" ;;
+      *)
+        echo '{"success": false, "message": "使い方: timer-start --work_id=N [--user_id=N] [--description=メモ]"}' >&2
+        exit 1 ;;
+    esac
+  done
+  if [ -z "$wid" ]; then
+    echo '{"success": false, "message": "--work_id は必須です（タイマーは案件 work 単位の記録です）"}' >&2
+    exit 1
+  fi
+  require_int "$wid" "--work_id"
+  if [ -z "$uid" ]; then
+    # ★既定ユーザーが無いまま叩かない★＝持ち主を誤ると、他人の実績に時間が積まれる。
+    #   消すには管理画面での手直しが要る＝黙って既定に倒さない（CLAUDE.md「未登録を既定にしない」と同じ）。
+    echo '{"success": false, "message": "--user_id が要ります（.env の HANA_TOOLS_DEFAULT_USER_ID も未設定です）。持ち主を誤ると他人の実績に時間が入ります"}' >&2
+    exit 1
+  fi
+  require_int "$uid" "--user_id"
+  # 本文は JSON として組み立てる＝description の引用符・改行・日本語で壊れない
+  # （文字列結合で作ると `"` 一つで JSON が壊れ、422 の理由が分からなくなる）
+  local body
+  body=$(HANA_T_UID="$uid" HANA_T_WID="$wid" HANA_T_DESC="$desc" python3 -c '
+import json, os
+b = {"user_id": int(os.environ["HANA_T_UID"]), "work_id": int(os.environ["HANA_T_WID"])}
+if os.environ.get("HANA_T_DESC"):
+    b["description"] = os.environ["HANA_T_DESC"]
+print(json.dumps(b, ensure_ascii=False))') || {
+    echo '{"success": false, "message": "本文の組み立てに失敗しました（python3 が使えない可能性があります）"}' >&2
+    exit 1
+  }
+  printf '%s' "$body" | api_send POST "timers/start" --data-binary
+}
+
+# タイマー停止（POST /timers/{id}/stop・ボディ不要）
+# 引数: <timer_id> [--user_id=N]
+# ★叩く前に実行中一覧で持ち主と案件を確かめる★＝仕様書が呼び出し側の責務としている手順
+#   （「停止には所有者チェックが無い。誤って他人のタイマーを止めないよう、停止前に確認すること」）。
+#   既定ユーザー以外のタイマーは、その user_id を明示したときだけ止める＝取り違えを手元で落とす。
+timer_stop() {
+  local id="$1"; shift 2>/dev/null || true
+  local uid=""
+  for arg in "$@"; do
+    case "$arg" in
+      --user_id=*) uid="${arg#*=}"; require_int "$uid" "--user_id" ;;
+      *)
+        echo '{"success": false, "message": "使い方: timer-stop <timer_id> [--user_id=N]"}' >&2
+        exit 1 ;;
+    esac
+  done
+  if [ -z "$id" ]; then
+    echo '{"success": false, "message": "使い方: timer-stop <timer_id> [--user_id=N]（id は timers で確認）"}' >&2
+    exit 1
+  fi
+  require_int "$id" "timer_id"
+  local active
+  active="$(api_get "timers/active")"
+  local verdict
+  verdict=$(HANA_T_ID="$id" HANA_T_ALLOW="${uid:-$HANA_TOOLS_DEFAULT_USER_ID}" \
+            HANA_T_ACTIVE="$active" python3 -c '
+import json, os
+tid = int(os.environ["HANA_T_ID"])
+allow = os.environ.get("HANA_T_ALLOW") or ""
+try:
+    d = json.loads(os.environ["HANA_T_ACTIVE"])
+except ValueError:
+    print(json.dumps({"ok": False, "message":
+        "実行中タイマーの一覧が読めませんでした＝持ち主を確かめられないので停止しません"},
+        ensure_ascii=False)); raise SystemExit(0)
+if not isinstance(d, dict) or d.get("success") is False or not isinstance(d.get("data"), list):
+    print(json.dumps({"ok": False, "message":
+        "実行中タイマーの一覧を取得できませんでした＝持ち主を確かめられないので停止しません"},
+        ensure_ascii=False)); raise SystemExit(0)
+hit = next((t for t in d["data"] if t.get("id") == tid), None)
+if hit is None:
+    print(json.dumps({"ok": False, "message":
+        "タイマー %d は実行中の一覧にありません（既に停止済み・または存在しません）。"
+        "timers で実行中の id を確かめてください" % tid}, ensure_ascii=False)); raise SystemExit(0)
+owner = (hit.get("user") or {}).get("id")
+if allow and str(owner) != str(allow):
+    print(json.dumps({"ok": False, "message":
+        "タイマー %d の持ち主は user_id %s（%s）です。別の方のタイマーを止めるには "
+        "--user_id=%s を明示してください（停止には所有者チェックがありません）"
+        % (tid, owner, (hit.get("user") or {}).get("name") or "?", owner)},
+        ensure_ascii=False)); raise SystemExit(0)
+print(json.dumps({"ok": True}, ensure_ascii=False))') || {
+    echo '{"success": false, "message": "停止前の確認に失敗しました（python3 が使えない可能性があります）。不用意に他人のタイマーを止めないため実行しません"}' >&2
+    exit 1
+  }
+  case "$verdict" in
+    *'"ok": true'*) ;;
+    *)
+      printf '%s\n' "$verdict" | python3 -c '
+import json, sys
+try:
+    print(json.dumps({"success": False, "message": json.load(sys.stdin)["message"]},
+                     ensure_ascii=False))
+except Exception:
+    print(json.dumps({"success": False, "message": "停止前の確認で止めました"},
+                     ensure_ascii=False))' >&2
+      exit 1 ;;
+  esac
+  api_send POST "timers/$id/stop" --data-binary </dev/null
+}
+
 # --- 請求チェック（2026-10-07 社長指示でエンドポイント新設・マネジメントが案件単位で使う）---
 # ⚠️ **null（billing_status が未記録）は「未請求」ではない**＝請求の記録がまだ無いだけ。
 #    未請求の判定は `billing_status == "unbilled"` のみ（実測 2026-10-07：works 219件すべて null）。
@@ -434,7 +590,7 @@ shift
 # 社長合意の上で有人実行する）。ルールの規約だけに頼らず、無人 claude -p からの暴発を塞ぐ。
 if [ "${MYAGENT_UNATTENDED:-}" = "1" ]; then
   case "$command" in
-    create-todo|update-todo|update-note|chatwork|work-billing)
+    create-todo|update-todo|update-note|chatwork|work-billing|timer-start|timer-stop)
       echo "{\"success\": false, \"message\": \"無人実行では書き込み系コマンド($command)は実行できません。実行案を有人セッション/社長合意に回してください。\"}" >&2
       exit 2 ;;
   esac
@@ -443,6 +599,7 @@ fi
 case "$command" in
   clients)      get_clients ;;
   search)       search_clients "$@" ;;
+  docs)         get_docs ;;
   outsources)   get_outsources ;;
   office-status) get_office_status ;;
   work-logs)    get_work_logs "$@" ;;
@@ -455,6 +612,9 @@ case "$command" in
   project)      get_project "$@" ;;
   notes)        get_project_notes "$@" ;;
   update-note)  update_project_note "$@" ;;
+  timers)       get_timers "$@" ;;
+  timer-start)  timer_start "$@" ;;
+  timer-stop)   timer_stop "$@" ;;
   unbilled)     get_unbilled ;;
   work-billing) update_work_billing "$@" ;;
   chatwork)     send_chatwork "$@" ;;
@@ -466,6 +626,7 @@ hana-tools APIラッパー
   bash bin/hana-api.sh <コマンド> [オプション]
 
 コマンド（取得＝読み取り）:
+  docs                             API 仕様書を取得（★実装の前にまずこれを読む＝一次情報）
   clients                          クライアント一覧取得
   work-logs --from=YYYY-MM-DD --to=YYYY-MM-DD [--user_id=N]
                                    作業タイマー明細（過去期間・読み取り専用）
@@ -477,6 +638,7 @@ hana-tools APIラッパー
   projects [--client_id=N]         プロジェクト一覧取得（client/works・site_url・gsc_dataset 含む）
   project <id>                     プロジェクト詳細取得
   notes <project_id> [--user_id=N] プロジェクトメモ取得（shared ＋ user_id 指定で mine）
+  timers [--user_id=N]             実行中の作業タイマー一覧（省略時は全ユーザー＝止め忘れ拾い）
   unbilled                         未請求の案件一覧（請求チェック）
                                    ※ 未請求＝billing_status=="unbilled" のみ。
                                      null（記録なし）は未請求ではない＝数に入れない
@@ -489,6 +651,16 @@ hana-tools APIラッパー
                                      （200・成功ではない）。人に確認してから "confirm": true で呼び直す
   update-todo <id> '{...}'         ToDo編集（部分更新。work_id変更不可。completed_at で完了/未完了）
   update-note <project_id> '{...}' プロジェクトメモ追加・更新（upsert。visibility=shared|private）
+  timer-start --work_id=N [--user_id=N] [--description=メモ]
+                                   作業タイマーを開始（案件 work 単位。同時は1人3本まで）
+                                   user_id 省略時は .env の既定ユーザー。ToDo 番号は記録されない
+                                   ＝どの ToDo かは --description に書く
+  timer-stop <timer_id> [--user_id=N]
+                                   作業タイマーを停止（id は timers で確認）
+                                   ⚠️ 停止に所有者チェックが無いAPIのため、叩く前に実行中一覧で
+                                     持ち主を確かめます。他の方のぶんは --user_id の明示が必要
+  ⚠️ タイマーの時間は**そのまま実績（損益計算・見積の根拠）**に入ります。
+     動作確認は timers（読み取り）で行い、本番でテスト起動しないこと
   work-billing <work_id> '{"billing_status":"billed"}'
                                    請求状態の更新（unbilled / billed / not_required）
                                    任意：billed_on（省略時は当日）・billing_note（255字・改行不可）

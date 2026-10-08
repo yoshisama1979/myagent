@@ -26,16 +26,28 @@ cp "$PROJ/bin/hana-api.sh" "$T/bin/hana-api.sh"
 
 FAKE_TOKEN="hana-TESTONLY-token-0123"     # 架空
 REC="$T/rec"; export REC
+ACTIVE_FILE="$T/active.json"; export ACTIVE_FILE
 
 # curl のスタブ：実 API へ出ない。argv と標準入力を記録し、それらしい JSON を返す。
 cat > "$T/fakebin/curl" <<'CURLEOF'
 #!/usr/bin/env bash
 printf '%s\n' "$@" > "$REC/argv"
+# ★呼び出しを積む★＝1コマンドが2回 curl を呼ぶ経路（timer-stop＝実行中一覧→停止）で
+#   「先に確認してから叩いたか」を見るため。argv は従来どおり**最後の1回**（既存テストは不変）。
+printf '%s\n' "$*" >> "$REC/calls"
 case " $* " in *" @- "*|*"--data-binary"*|*" -d "*) cat > "$REC/stdin" ;; esac
-echo '{"success":true}'
+# timers/active だけは一覧の形で返す（FAKE_ACTIVE で差し替え可）。それ以外は従来どおり。
+case " $* " in
+  *timers/active*) if [ -n "${FAKE_ACTIVE:-}" ]; then printf '%s' "$FAKE_ACTIVE"; else cat "$ACTIVE_FILE"; fi ;;
+  *) echo '{"success":true}' ;;
+esac
 CURLEOF
 chmod +x "$T/fakebin/curl"
 export PATH="$T/fakebin:$PATH"
+# timers/active の既定の応答（FAKE_ACTIVE が無いときに使う）。既定ユーザー 7 のタイマー1本。
+cat > "$T/active.json" <<'ACTEOF'
+{"success":true,"data":[{"id":501,"user":{"id":7,"name":"テスト担当"},"work":{"id":3,"name":"案件A"},"running":true,"elapsed_minutes":12}]}
+ACTEOF
 
 P=0; N=0
 say_ok(){ P=$((P+1)); printf '  ✅ %s\n' "$1"; }
@@ -49,6 +61,8 @@ mk_env(){ printf '%s\n' "$@" > "$T/.env"; }
 run(){ rm -f "$REC"/*; OUT="$(bash "$T/bin/hana-api.sh" "$@" 2>&1 </dev/null)"; RC=$?; }
 argv(){ cat "$REC/argv" 2>/dev/null; }
 url(){ argv | grep -E '^https?://' | head -1; }
+calls(){ cat "$REC/calls" 2>/dev/null; }
+ncalls(){ calls | grep -c . ; }
 
 mk_env "HANA_TOOLS_API_TOKEN=$FAKE_TOKEN" "HANA_TOOLS_BASE_URL=https://stg.example.test" \
        "HANA_TOOLS_DEFAULT_USER_ID=7"
@@ -147,7 +161,7 @@ want_in "q=a%2Cb" "$(url)" "カンマ区切り（OR検索）も値としてエ�
 
 echo
 echo "=== 無人実行での書き込み拒否（automation.md）==="
-for c in create-todo update-todo update-note chatwork work-billing; do
+for c in create-todo update-todo update-note chatwork work-billing timer-start timer-stop; do
   rm -f "$REC"/*
   OUT="$(MYAGENT_UNATTENDED=1 bash "$T/bin/hana-api.sh" "$c" 1 '{"a":1}' 2>&1 </dev/null)"; RC=$?
   if [ "$RC" -eq 2 ] && [ ! -f "$REC/argv" ]; then
@@ -216,7 +230,7 @@ assert_secure() {  # 1経路ぶん実行し、curl に渡った argv を検査�
     say_ok "証明書の検証を切らない：$label"
   fi
 }
-# 読み取り系・書き込み系の**全16サブコマンド**を実際に走らせる
+# 読み取り系・書き込み系の**全20サブコマンド**を実際に走らせる
 # （run は MYAGENT_UNATTENDED を立てない＝有人扱いなので、書き込み系もここでは通る）
 assert_secure "clients"       clients
 assert_secure "search"        search "テスト"
@@ -234,6 +248,10 @@ assert_secure "create-project" create-project '{"project_name":"x","client_id":1
 assert_secure "create-work"    create-work '{"name":"x","project_id":1}'
 assert_secure "unbilled"      unbilled
 assert_secure "work-billing"  work-billing 1 '{"billing_status":"billed"}'
+assert_secure "docs"          docs
+assert_secure "timers"        timers
+assert_secure "timer-start"   timer-start --work_id=3
+assert_secure "timer-stop"    timer-stop 501
 
 # ソース検査：**行継続をつないでから**、curl を含む行を空白で割ってトークン単位で見る。
 #   ・つながないと `curl -s \` / `  -k -X GET …` のように**分けて書かれた -k** を逃す
@@ -403,6 +421,159 @@ want_in "unbilled" "$OUT" "使い方に unbilled が載っている"
 want_in "work-billing" "$OUT" "使い方に work-billing が載っている"
 want_in "null（記録なし）は未請求ではない" "$OUT" "★使い方に「null は未請求ではない」注意がある"
 want_in "戻せません" "$OUT" "★使い方に「null には戻せない」注意がある"
+
+# --- 作業タイマー（2026-10-08 追加・仕様＝docs §21）---------------------------
+# ★ここを守りたい★＝**記録した時間はそのまま実績（損益計算・見積の根拠）に入る**。
+#   しかも仕様上 **停止には所有者チェックが無い**（トークンがあれば誰のタイマーでも止められる）。
+#   ＝「取り違えて他人のタイマーを止める」「持ち主を誤って他人の実績に時間を積む」が
+#   APIの側では防がれていないので、**ラッパーで落とせるものは全部落とす**。
+#   実測の背景＝10/05 から2本が止め忘れで動き続け、70時間を超えていた（合計の88%が止め忘れ由来）。
+echo
+echo "--- 作業タイマー（timers / timer-start / timer-stop） ---"
+
+run timers
+want_eq "$(url)" "$API/timers/active" "timers：timers/active を叩く（URL 完全一致）"
+want_argv "GET" "timers：メソッドは GET（完全一致）"
+
+run timers --user_id=9
+want_eq "$(url)" "$API/timers/active?user_id=9" "timers：--user_id で絞れる"
+for bad in abc "9;rm" "-1" "１"; do
+  run timers "--user_id=$bad"
+  if [ "$RC" -ne 0 ] && [ -z "$(url)" ]; then say_ok "timers：--user_id=$bad を弾く（API を叩かない）"
+  else say_ng "timers：--user_id の検証" "$bad rc=$RC url=$(url)"; fi
+done
+run timers --user_id=1 --user_id=2
+want_rejected "timers：--user_id の二重指定を弾く"
+run timers --nosuch=1
+want_rejected "timers：知らないオプションを黙って無視しない"
+
+echo "  （timer-start＝持ち主と案件の取り違えを手元で落とす）"
+run timer-start
+want_rejected "timer-start：--work_id なしで叩かない"
+want_in "案件 work 単位" "$OUT" "timer-start：案件単位だと分かるメッセージを出す"
+for bad in abc "3;rm" "../3" "1e3" "-1" "３"; do
+  run timer-start "--work_id=$bad"
+  want_rejected "timer-start：--work_id=$bad を弾く（API を叩かない）" "timer-start：--work_id の検証"
+done
+run timer-start --work_id=3 --user_id=abc
+want_rejected "timer-start：--user_id が数値でなければ弾く"
+# 理由まで固定する＝require_int を外しても python の int() で落ちるので、
+# 落ちたことだけ見ると「検証を外す」変異が素通りする（mutation で実際に素通りした）
+want_in "数値で指定してください" "$OUT" "★timer-start：--user_id は手元の検証で落とす（例外任せにしない）"
+run timer-start --work_id=3 --nosuch=x
+want_rejected "timer-start：知らないオプションを黙って無視しない"
+
+run timer-start --work_id=3
+want_eq "$(url)" "$API/timers/start" "timer-start：timers/start へ送る（URL 完全一致）"
+want_argv "POST" "timer-start：メソッドは POST（完全一致）"
+want_argv "--data-binary" "timer-start：本文は --data-binary で渡す（完全一致）"
+# ★既定ユーザー（.env の HANA_TOOLS_DEFAULT_USER_ID=7）が入る＝持ち主なしで投げない
+printf '%s' "$(cat "$REC/stdin" 2>/dev/null)" | python3 -c '
+import json,sys
+b=json.load(sys.stdin)
+assert b=={"user_id":7,"work_id":3}, b
+' && say_ok "★timer-start：user_id は .env の既定・値は整数・余計な項目を入れない" \
+  || say_ng "★timer-start の本文が違う" "$(cat "$REC/stdin" 2>/dev/null)"
+
+run timer-start --work_id=3 --user_id=12
+printf '%s' "$(cat "$REC/stdin" 2>/dev/null)" | python3 -c '
+import json,sys
+b=json.load(sys.stdin); assert b["user_id"]==12, b
+' && say_ok "timer-start：--user_id を明示すればそちらを使う" || say_ng "--user_id が効かない"
+
+# ★description は JSON として組み立てる＝引用符・改行・日本語で壊れない
+#   （文字列結合で作ると `"` 一つで本文が壊れ、422 の理由が分からなくなる）
+DESC="$(printf '【A社】"大至急"の件\n2行目 %s' "$SQ")"
+run timer-start --work_id=3 "--description=$DESC"
+printf '%s' "$(cat "$REC/stdin" 2>/dev/null)" | HANA_T_EXP="$DESC" python3 -c '
+import json,sys,os
+b=json.load(sys.stdin)
+assert b["description"]==os.environ["HANA_T_EXP"], (b.get("description"), os.environ["HANA_T_EXP"])
+' && say_ok "★timer-start：description の引用符・改行・日本語をそのまま運ぶ（JSON で組む）" \
+  || say_ng "★description が壊れている" "$(cat "$REC/stdin" 2>/dev/null)"
+run timer-start --work_id=3
+printf '%s' "$(cat "$REC/stdin" 2>/dev/null)" | python3 -c '
+import json,sys
+assert "description" not in json.load(sys.stdin)
+' && say_ok "timer-start：description を渡さなければ項目を作らない" || say_ng "空の description を送っている"
+
+# 既定ユーザーが無い環境では**持ち主なしで叩かない**（他人の実績に積む事故を防ぐ）
+mk_env "HANA_TOOLS_API_TOKEN=$FAKE_TOKEN" "HANA_TOOLS_BASE_URL=https://stg.example.test"
+run timer-start --work_id=3
+want_rejected "★timer-start：既定ユーザーが無ければ叩かない（持ち主を誤ると他人の実績になる）"
+want_in "他人の実績" "$OUT" "★なぜ止めたかを言う（持ち主の取り違えの危険）"
+mk_env "HANA_TOOLS_API_TOKEN=$FAKE_TOKEN" "HANA_TOOLS_BASE_URL=https://stg.example.test" \
+       "HANA_TOOLS_DEFAULT_USER_ID=7"
+
+echo "  （timer-stop＝停止に所有者チェックが無いAPIを、手元の確認で補う）"
+run timer-stop
+want_rejected "timer-stop：id なしで叩かない"
+for bad in abc "501;rm" "-1"; do
+  run timer-stop "$bad"
+  want_rejected "timer-stop：id=$bad を弾く（API を叩かない）" "timer-stop：id の検証"
+done
+
+# ★正常系：実行中一覧で持ち主を確かめてから停止する（2回呼ぶ・順序も固定）
+run timer-stop 501
+want_eq "$(url)" "$API/timers/501/stop" "timer-stop：timers/{id}/stop へ送る（URL 完全一致）"
+want_argv "POST" "timer-stop：メソッドは POST（完全一致）"
+want_eq "$(ncalls)" "2" "★timer-stop：確認と停止で2回呼ぶ（確認を省かない）"
+calls | head -1 | grep -q 'timers/active' \
+  && say_ok "★timer-stop：**先に**実行中一覧で持ち主を確かめる（仕様書が呼び出し側の責務とする手順）" \
+  || say_ng "★確認より先に停止を叩いている" "$(calls | head -2 | tr '\n' ' ' | cut -c1-200)"
+
+# ★実行中に無い id は停止を叩かない（停止済み・存在しない＝API では 400/404）
+run timer-stop 999
+if [ "$RC" -ne 0 ] && [ "$(calls | grep -c 'timers/999/stop')" = "0" ]; then
+  say_ok "★timer-stop：実行中に無い id は停止を叩かない（既に停止済み／存在しない）"
+else say_ng "★実行中に無い id で停止を叩いた" "rc=$RC calls=$(calls | tr '\n' ' ' | cut -c1-200)"; fi
+want_in "実行中の一覧にありません" "$OUT" "timer-stop：理由を言う（timers で確かめる案内つき）"
+
+# ★他人のタイマーは明示がなければ止めない（仕様上 API は止められてしまう）
+rm -f "$REC"/*
+OUT="$(FAKE_ACTIVE='{"success":true,"data":[{"id":501,"user":{"id":99,"name":"別の担当"},"work":{"id":3,"name":"案件A"},"running":true,"elapsed_minutes":5}]}' \
+       bash "$T/bin/hana-api.sh" timer-stop 501 2>&1 </dev/null)"; RC=$?
+if [ "$RC" -ne 0 ] && [ "$(calls | grep -c '501/stop')" = "0" ]; then
+  say_ok "★timer-stop：持ち主が違うタイマーは停止を叩かない（取り違えを手元で落とす）"
+else say_ng "★他人のタイマーを止めた" "rc=$RC calls=$(calls | tr '\n' ' ' | cut -c1-200)"; fi
+case "$OUT" in *"--user_id=99"*) say_ok "★持ち主の user_id を示して、明示すれば止められると案内する" ;;
+  *) say_ng "★持ち主の案内が無い" "$OUT" ;; esac
+rm -f "$REC"/*
+OUT="$(FAKE_ACTIVE='{"success":true,"data":[{"id":501,"user":{"id":99,"name":"別の担当"},"work":{"id":3,"name":"案件A"},"running":true,"elapsed_minutes":5}]}' \
+       bash "$T/bin/hana-api.sh" timer-stop 501 --user_id=99 2>&1 </dev/null)"; RC=$?
+[ "$(calls | grep -c '501/stop')" = "1" ] \
+  && say_ok "★--user_id を明示すれば他の方のタイマーも止められる（通すべきものは通す）" \
+  || say_ng "★明示しても止められない" "rc=$RC calls=$(calls | tr '\n' ' ' | cut -c1-200)"
+
+# ★一覧が読めないときは停止しない（fail-closed）＝持ち主を確かめられないまま実績を確定させない
+rm -f "$REC"/*
+OUT="$(FAKE_ACTIVE='これはJSONではない' bash "$T/bin/hana-api.sh" timer-stop 501 2>&1 </dev/null)"; RC=$?
+if [ "$RC" -ne 0 ] && [ "$(calls | grep -c '501/stop')" = "0" ]; then
+  say_ok "★timer-stop：一覧が読めなければ停止しない（確かめられないまま実績を確定させない）"
+else say_ng "★一覧が読めないのに停止した（fail-open）" "rc=$RC calls=$(calls | tr '\n' ' ' | cut -c1-200)"; fi
+rm -f "$REC"/*
+OUT="$(FAKE_ACTIVE='{"success":false,"message":"認証エラー"}' bash "$T/bin/hana-api.sh" timer-stop 501 2>&1 </dev/null)"; RC=$?
+if [ "$RC" -ne 0 ] && [ "$(calls | grep -c '501/stop')" = "0" ]; then
+  say_ok "★timer-stop：一覧が success:false なら停止しない（認証切れを『実行中なし』と読まない）"
+else say_ng "★success:false を無視して停止した" "rc=$RC"; fi
+# 理由まで固定する＝形の検査を外しても d["data"] の KeyError で落ちるため、
+# 落ちたことだけ見ると変異が素通りする（mutation で実際に素通りした）。
+# 例外任せにすると、応答の形が変わった日に「なぜ止まったか」が読めなくなる。
+want_in "持ち主を確かめられない" "$OUT" "★timer-stop：止めた理由を言う（例外任せにしない）"
+
+# 読み取りは無人でも通す／書き込みは通さない（上の拒否ループと対）
+rm -f "$REC"/*
+OUT="$(MYAGENT_UNATTENDED=1 bash "$T/bin/hana-api.sh" timers 2>&1 </dev/null)"; RC=$?
+if [ "$RC" -eq 0 ] && [ -f "$REC/argv" ]; then say_ok "無人実行でも timers（読み取り）は通す"
+else say_ng "無人実行でも timers は通す" "rc=$RC"; fi
+
+# 使い方に「実績に入る」警告が出ている（文書を消したらテストが落ちる）
+run nosuchcommand
+want_in "timer-start" "$OUT" "使い方に timer-start が載っている"
+want_in "timer-stop" "$OUT" "使い方に timer-stop が載っている"
+want_in "timers" "$OUT" "使い方に timers が載っている"
+want_in "実績（損益計算・見積の根拠）" "$OUT" "★使い方に『時間はそのまま実績に入る』警告がある"
+want_in "所有者チェックが無い" "$OUT" "★使い方に『停止に所有者チェックが無い』注意がある"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"

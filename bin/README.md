@@ -59,6 +59,17 @@ bash bin/hana-api.sh update-note 130 '{"visibility":"shared","body":"<p>運用�
 # Chatwork通知
 bash bin/hana-api.sh chatwork '{"room_id":"123","message":"メッセージ"}'
 
+# API 仕様書（★実装の前にまずこれを読む＝一次情報。HTML が返る）
+bash bin/hana-api.sh docs
+
+# 実行中の作業タイマー一覧（読み取り・省略時は全ユーザー＝帰宅前の止め忘れ拾い）
+bash bin/hana-api.sh timers
+bash bin/hana-api.sh timers --user_id=34
+
+# 作業タイマーの開始・停止（書き込み）
+bash bin/hana-api.sh timer-start --work_id=199 --description="【A社】打ち合わせ"
+bash bin/hana-api.sh timer-stop 593
+
 # 未請求の案件一覧（請求チェック・読み取り）
 bash bin/hana-api.sh unbilled
 
@@ -66,6 +77,15 @@ bash bin/hana-api.sh unbilled
 bash bin/hana-api.sh work-billing 140 '{"billing_status":"billed","billed_on":"2026-10-07"}'
 bash bin/hana-api.sh work-billing 140 '{"billing_status":"not_required","billing_note":"先方都合で無償対応"}'
 ```
+
+### 作業タイマーの扱い（2026-10-08 追加・仕様は `docs` §21 が正）
+
+- ⚠️ **記録した時間はそのまま実績（損益計算・見積の根拠）に入ります。** 動作確認は `timers`（読み取り）で行い、本番でテスト起動しないこと（仕様書の注意）。
+- ⚠️ **停止には所有者チェックがありません**（トークンがあれば誰のタイマーでも止められる）。そのため `timer-stop` は叩く前に実行中一覧で持ち主を確かめ、**既定ユーザー以外のタイマーは `--user_id` を明示しないと止めません**。一覧が読めないときも止めません（確かめられないまま実績を確定させない）。
+- タイマーは**案件（work）単位**で、**ToDo の番号は記録されません**。どの ToDo の作業かを残したいときは `--description` に書く。
+- 同時に起動できるのは**1ユーザー3本まで**（超過は 400）。案件の状態は問わない（完了済み案件にも起動できる）。
+- `user_id` を省略すると `.env` の `HANA_TOOLS_DEFAULT_USER_ID` を使います。**既定が未設定なら叩きません**＝持ち主を誤ると他人の実績に時間が入り、消すには管理画面での手直しが必要になるためです。
+- 止め忘れは合計を壊します（実測 2026-10-08：2本が 10/05 から70時間超動いたまま）。**帰宅前に `timers` を見る**のが安い対策です。
 
 ### 請求チェックの読み方（2026-10-07 追加）
 
@@ -77,7 +97,7 @@ bash bin/hana-api.sh work-billing 140 '{"billing_status":"not_required","billing
 - ⚠️ 存在しない `work_id` はサーバが 404 を返しますが、**`curl -s` は終了コード0を返します**＝rc だけ見て「更新できた」と読まないこと（K-954）。
 - `PUT /works/{id}/status` で completed にすると `warnings` に `{"type":"work_unbilled",...}` が載ることがありますが、**ブロックはされません**（警告が出ていても状態変更そのものは通っています）。
 
-> **書き込み系（create-todo / update-todo / update-note / chatwork / work-billing）は共有システムへの書き込み・外部送信**。社長合意の上で実行する（[rules/automation.md](../rules/automation.md) §3）。`gsc_dataset` は `bin/gsc-fetch.py --dataset` にそのまま渡せる。
+> **書き込み系（create-todo / update-todo / update-note / chatwork / work-billing / timer-start / timer-stop）は共有システムへの書き込み・外部送信**。社長合意の上で実行する（[rules/automation.md](../rules/automation.md) §3）。`gsc_dataset` は `bin/gsc-fetch.py --dataset` にそのまま渡せる。
 >
 > スキル（スラッシュコマンド）：`/hana-clients` `/hana-todos` `/hana-create-todo` `/hana-update-todo` `/hana-projects` `/hana-project-notes` `/hana-outsources` `/hana-chatwork`
 
