@@ -500,53 +500,45 @@ timer_stop() {
     exit 1
   fi
   require_int "$id" "timer_id"
-  local active
-  active="$(api_get "timers/active")"
-  local verdict
-  verdict=$(HANA_T_ID="$id" HANA_T_ALLOW="${uid:-$HANA_TOOLS_DEFAULT_USER_ID}" \
-            HANA_T_ACTIVE="$active" python3 -c '
+  # 持ち主と案件を確かめる。★判定の結果を「文字列マッチ」で受けてはいけない★＝
+  #   作業メモ（description）に判定語と同じ文字列が入れば誤って通る。これは同日の Codex レビューで
+  #   🔴 を受けた require_billing_status の初版とまったく同じ型なので、あちらと同じ形に揃える
+  #   ＝python 側が拒否理由の JSON を1行出して**非0で終わる**／通るときは黙って 0 で終わる。
+  local out
+  if ! out=$(HANA_T_ID="$id" HANA_T_ALLOW="${uid:-$HANA_TOOLS_DEFAULT_USER_ID}" \
+             HANA_T_ACTIVE="$(api_get "timers/active")" python3 - <<'PYEOF' 2>/dev/null
 import json, os
+
+def fail(msg):
+    print(json.dumps({"success": False, "message": msg}, ensure_ascii=False))
+    raise SystemExit(1)
+
 tid = int(os.environ["HANA_T_ID"])
 allow = os.environ.get("HANA_T_ALLOW") or ""
 try:
     d = json.loads(os.environ["HANA_T_ACTIVE"])
 except ValueError:
-    print(json.dumps({"ok": False, "message":
-        "実行中タイマーの一覧が読めませんでした＝持ち主を確かめられないので停止しません"},
-        ensure_ascii=False)); raise SystemExit(0)
+    fail("実行中タイマーの一覧が読めませんでした＝持ち主を確かめられないので停止しません")
 if not isinstance(d, dict) or d.get("success") is False or not isinstance(d.get("data"), list):
-    print(json.dumps({"ok": False, "message":
-        "実行中タイマーの一覧を取得できませんでした＝持ち主を確かめられないので停止しません"},
-        ensure_ascii=False)); raise SystemExit(0)
+    fail("実行中タイマーの一覧を取得できませんでした＝持ち主を確かめられないので停止しません")
 hit = next((t for t in d["data"] if t.get("id") == tid), None)
 if hit is None:
-    print(json.dumps({"ok": False, "message":
-        "タイマー %d は実行中の一覧にありません（既に停止済み・または存在しません）。"
-        "timers で実行中の id を確かめてください" % tid}, ensure_ascii=False)); raise SystemExit(0)
+    fail("タイマー %d は実行中の一覧にありません（既に停止済み・または存在しません）。"
+         "timers で実行中の id を確かめてください" % tid)
 owner = (hit.get("user") or {}).get("id")
 if allow and str(owner) != str(allow):
-    print(json.dumps({"ok": False, "message":
-        "タイマー %d の持ち主は user_id %s（%s）です。別の方のタイマーを止めるには "
-        "--user_id=%s を明示してください（停止には所有者チェックがありません）"
-        % (tid, owner, (hit.get("user") or {}).get("name") or "?", owner)},
-        ensure_ascii=False)); raise SystemExit(0)
-print(json.dumps({"ok": True}, ensure_ascii=False))') || {
-    echo '{"success": false, "message": "停止前の確認に失敗しました（python3 が使えない可能性があります）。不用意に他人のタイマーを止めないため実行しません"}' >&2
+    fail("タイマー %d の持ち主は user_id %s（%s）です。別の方のタイマーを止めるには "
+         "--user_id=%s を明示してください（停止には所有者チェックがありません）"
+         % (tid, owner, (hit.get("user") or {}).get("name") or "?", owner))
+PYEOF
+  ); then
+    # python 側は拒否理由の JSON を1行出して非0で終わる。それ以外（python3 が無い等）は定型文。
+    case "$out" in
+      \{*) printf '%s\n' "$out" >&2 ;;
+      *)   echo '{"success": false, "message": "停止前の確認に失敗しました（python3 が使えない可能性があります）。不用意に他人のタイマーを止めないため実行しません"}' >&2 ;;
+    esac
     exit 1
-  }
-  case "$verdict" in
-    *'"ok": true'*) ;;
-    *)
-      printf '%s\n' "$verdict" | python3 -c '
-import json, sys
-try:
-    print(json.dumps({"success": False, "message": json.load(sys.stdin)["message"]},
-                     ensure_ascii=False))
-except Exception:
-    print(json.dumps({"success": False, "message": "停止前の確認で止めました"},
-                     ensure_ascii=False))' >&2
-      exit 1 ;;
-  esac
+  fi
   api_send POST "timers/$id/stop" --data-binary </dev/null
 }
 
