@@ -30,6 +30,55 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== Cycle 053 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 053 — 2026-10-06（定期・本番は変化なし／301 は未実装／検索とトップの定点／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：<strong>本番ページ ✅</strong>（新旧あわせて6本を取得）／<strong>検索（GSC）✅</strong>（新 <span class="font-mono">.jp</span>・旧 <span class="font-mono">.com</span> とも 10/3 分まで着弾）／<strong>スクショ ✅</strong>（トップ PC・SP）／メールボックス ✅（受信0通）。GA4 は今回取っていません（301 が入っていないため、見るべき変化がありません）。</p>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">① 本番は 9/23 夜から変わっていません（13日）</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>新サイトのトップ＝<strong>28,771バイトで不変</strong>。9/23 に入ったページごとのタイトルは維持されています（例＝<span class="font-mono">/cities/334</span>「山形県 山形市の古写真」）。</li>
+        <li><strong>301 はまだ入っていません</strong>＝旧サイトの写真ページ（<span class="font-mono">?p_photo=1000</span>）・県ページ（<span class="font-mono">?p_pref=39</span>＝京都府）とも 200 のまま。実装するのは旧サイトの担当で、実装日の連絡はまだ届いていません。</li>
+        <li>利用許諾の告知ページ（<span class="font-mono">/photo-use</span>）＝404＝未公開。存在しない写真番号（<span class="font-mono">/old-photos/999999</span>）＝200 のまま（R-J15 未反映）。canonical・SNS 用の画像指定（og:image）も未（R-J05・R-J01 の残り）。</li>
+      </ul>
+      <p class="text-gray-600 text-xs mt-2">※ この6本で、在庫18件のうち本番の状態に依存するもの（R-J30・R-J19・R-J24・R-J15・R-J01・R-J05）の前提が崩れていないことを確かめました。全件の棚卸しは期日（10/7）の次の回＝10/9 に行います。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">② 検索：入口の約94%は、いまも旧サイトです（11回目の測定・形は同じ）</p>
+      <table class="w-full text-xs border-collapse bg-white mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">9/29〜10/3（5日）</th><th class="py-1 pr-2">クリック</th><th class="py-1 pr-2">表示</th><th class="py-1 pr-2">CTR</th><th class="py-1">平均順位</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">旧 <span class="font-mono">.com</span></td><td class="py-1 pr-2">996</td><td class="py-1 pr-2">15,717</td><td class="py-1 pr-2">6.34%</td><td class="py-1">6.3位</td></tr>
+          <tr><td class="py-1 pr-2">新 <span class="font-mono">.jp</span></td><td class="py-1 pr-2">60</td><td class="py-1 pr-2">920</td><td class="py-1 pr-2">6.52%</td><td class="py-1">6.8位</td></tr>
+        </tbody>
+      </table>
+      <p class="text-gray-800 mb-2">新サイトの取り分＝<strong>1,056クリック中 60＝5.7%</strong>（前回 9/25〜9/29 は 1,074 中 76＝7.1%）。順位はほぼ同じなのに表示が17倍ちがう、という形は11回すべてで同じです＝<strong>301 で渡す以外に動かす手がない</strong>という結論は変わりません。</p>
+      <p class="text-gray-800"><strong>5.7% を「下がった」とは読みません</strong>＝5日間の数字は本番が動かなくても大きく揺れることを 9/21 に確かめています（合否は14日以上の期間・10ポイント以上の差でしか書かない、という決めごと）。<strong>タイトル改修（9/23）の判定は 9/24〜10/7 の14日間</strong>で行い、検索データが出そろう <strong>10/12 の回</strong>でご報告します（解析は3日おきのため、10/9 の回ではまだ 10/7 分が届きません）。それまで層別の数字は意図して見ていません。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">③ トップの定点：古写真の登録は続いています。参加（今の写真・コメント）は止まったままです</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>投稿写真 <strong>17,848枚</strong>（10/3 から +12）／登録ユーザー <strong>6,842人</strong>。「最新の古写真」8枠は全部入れ替わりました（長崎県・雲仙の絵葉書のまとまり）。</li>
+        <li>「みんなの比較写真（PICK UP）」は 9/18 から同じ顔ぶれ＝<strong>今の写真の新しい投稿が18日間ありません</strong>（10/4 に確認した仕様どおりの読み方）。</li>
+        <li>最新のコメントは <strong>8/27 のまま（40日）</strong>＝「古写真の使用許可はどこへ？」の書き込みが先頭に出たままです（→ 上の🔔①の返信文案）。人気ランキングは3件（♡2・♡1・♡1）で不変。年代不明は 2,404枚。</li>
+      </ul>
+      <p class="text-gray-600 text-xs mt-2">北極星との接続＝古写真は増えているのに「今の写真」が付かない＝比較ページ（主軸）が増えていません。受け持つ提案は R-J18（空枠を参加の入口に）と R-J11（年代・場所の同定）で、どちらも開発担当へ渡し済みです。新しい提案にはしません。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">④ 開発担当との連絡：受信0通。こちらからの照会1件は返信待ちです（止まりとは読みません）</p>
+      <p class="text-gray-800">10/4 に送った照会（旧サイトの市区町村ページの2つのURL形＝<span class="font-mono">?p_city=</span> と <span class="font-mono">?p_pref=60</span> 以上の番号が同じ表か別の表か）は未読です。開発担当あての未読は3通（9/27 の301依頼＝先方の返信で言及済み／9/29 マネジメントからの1通／10/4 の照会）。<strong>今昔写語の開発は週1回・週末ごろにまとめて動く運用</strong>なので、2日の未読は通常の範囲です。次の週末（10/10〜11）を過ぎても未読なら、そのときにお知らせします。</p>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑤ 次の一手</h3>
+    <p class="text-sm text-gray-700 mb-3">①旧サイトの担当から 301 の実装日の連絡が来たら、その日のうちに確認（県47件が正しい県に着くか・ページ番号つきも転送されるか・市区町村は2つの形とも 200 のままか・新に無い写真は 200 のままか）②10/9 の回＝在庫18件の全件棚卸し（週次）③10/12 の回＝タイトル改修の14日判定。<strong>本日の新しい提案・お伺いは0件</strong>です。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑥ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">対応：Cycle 053＝<code>from-president.md</code> に 9/27 節より後の新しいご指示はありません。同節 ⑤「新しい質問を増やさない」に沿い、新規の提案・お伺いは0件・在庫は18件のままです。</p>
+  </section>
   <!-- ===== 撤回・訂正の記録（C052・2026-10-04） ===== -->
   <!-- ===== Cycle 052 ===== -->
   <section class="mb-10">
