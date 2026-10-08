@@ -1,15 +1,43 @@
 {
   "_説明": "窓口＝claude -r で開くセッション（tmux のウィンドウ名は使わない）。セッションID→受信箱の宛名。秘密は含まない。正の読み手は bin/session-desk.py。新しく立ち上げた窓口は社長にIDを確認して足す（未登録を既定の宛名にしない）。2026-09-14 triage 依頼・社長ご決定（マネジメント＝management／開発＝dev）",
   "desks": {
-    "triage":     {"label": "社長との窓口（全窓口のトップ）", "rule": "rules/modes/triage.md"},
-    "management": {"label": "マネジメント（日々のタスク管理・業務フォロー）", "rule": "rules/modes/management.md"},
-    "board":      {"label": "経営会議（会社の向かう先）", "rule": "rules/modes/board.md"},
-    "dev":        {"label": "開発（ツール・ルールの実装と修理）", "rule": "rules/development.md"}
+    "triage": {
+      "label": "社長との窓口（全窓口のトップ）",
+      "rule": "rules/modes/triage.md"
+    },
+    "management": {
+      "label": "マネジメント（日々のタスク管理・業務フォロー）",
+      "rule": "rules/modes/management.md"
+    },
+    "board": {
+      "label": "経営会議（会社の向かう先）",
+      "rule": "rules/modes/board.md"
+    },
+    "dev": {
+      "label": "開発（ツール・ルールの実装と修理）",
+      "rule": "rules/development.md"
+    },
+    "finance": {
+      "label": "経理（財務データ・経費・仕訳・入金）",
+      "rule": "rules/modes/finance.md"
+    },
+    "work": {
+      "label": "実務（ToDo 1件ずつ実作業をこなす）",
+      "rule": "rules/modes/work.md"
+    },
+    "product": {
+      "label": "サービス改善（既存サービスの機能・見せ方を磨く）"
+    }
   },
   "sessions": {
     "fbc67d0b-1beb-4535-9344-e9c0bf327da9": "triage",
+    "3267e95c-4029-4940-9d54-9ae6f87825a3": "triage",
     "c8653946-2259-4360-9337-1216f033122a": "management",
     "42f1f6e1-71e7-47e8-9440-d1f384edb654": "board",
-    "013b0cc6-b280-46bc-a7e0-03dfd706a4e0": "dev"
+    "013b0cc6-b280-46bc-a7e0-03dfd706a4e0": "dev",
+    "7903f09e-2357-4a49-ac88-1c4b7d74edfc": "finance",
+    "b97e3122-dcf5-4f7f-a9a0-6cc35f565758": "board",
+    "242606ec-0c12-4e2d-b942-d470b77c4609": "work",
+    "11f13dba-fcfc-4809-aed8-54d66ece8972": "product"
   }
 }

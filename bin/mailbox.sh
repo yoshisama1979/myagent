@@ -226,7 +226,13 @@ SENDERS    = {"overseer", "hanasaka-main", "triage", "management", "board", "dev
               # 経理（2026-09-23 追加・board D-005）。**送信側にも入れる**＝2026-09-06 に経理が
               # journal-mcp の修理案を出したのに報告を返す配管が無く14日 届かなかった（board D-009 追補）。
               # 受信専用にすると同じ損が繰り返る。窓口は config/session-desks.json に登録済み。
-              "finance"}
+              "finance",
+              # 実務（2026-09-29 社長ご指示で新設）。作業物ができたらマネジメントへ報告する＝送信側にも入れる。
+              "work",
+              # サービス改善（2026-10-07 社長ご決定・triage 依頼で新設）。triage から題材を受け、
+              # 結果を triage へ返す＝**送信側にも入れる**。受信専用にすると K-926（partner は
+              # 受け取れるのに返せない）と同じ片道配管になる。窓口は config/session-desks.json に登録済み。
+              "product"}
 RECIPIENTS = {"overseer", "hanasaka-main", "triage", "management", "board", "dev", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
               "rally-dev", "konjaku-dev", "shigatoyota-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
@@ -236,7 +242,11 @@ RECIPIENTS = {"overseer", "hanasaka-main", "triage", "management", "board", "dev
               "partner",
               # 経理（2026-09-23 追加）。board D-005 は board と finance の両方を足す決定だったが、
               # 実装に入っていたのは board だけだった（実測＝`local-send --to finance` が弾かれる）。
-              "finance"}
+              "finance",
+              # 実務（2026-09-29）。マネジメントから作業依頼を受ける。
+              "work",
+              # サービス改善（2026-10-07）。triage から題材を受ける。
+              "product"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
 if not ID.match(frm) or frm not in SENDERS:
