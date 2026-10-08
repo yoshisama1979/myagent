@@ -178,6 +178,129 @@
       <p class="mt-1"><strong class="text-rose-700">＝だからこそ、社長の一手は変わらず「買い手向けの記事を1本 publish する」だけです。</strong>CTA も title 改善も、<strong>買い手が読んでいない記事に付けている限り CV は増えません</strong>（Cycle 027 で B-009 を「最優先」と伝えたのは誤り＝流入改善であってCV改善ではない。同じ判断軸を B-015・B-019・B-021 にも当てています）。買い手を連れて来られるのは<strong>完成在庫5本（T-003/T-006/T-007/T-008/T-011）</strong>で、料金事実も社長回答も不要で公開できます。<span class="text-xs">※ Cycle 032 の訂正＝作成ソフト系は既存 p=77 が全クエリを受けていたため、T-005 新規公開ではなく <strong>B-012＝p=77 リライト</strong>が正解。この「head は既存の受け皿に譲り、記事は情報意図で棲み分ける」型は T-007・T-011・T-012・T-013 にも適用。</span></p>
     </div>
   </div>
+  <!-- ===== 📦 Cycle 117（2026-10-08）＝ Cycle 118（2026-10-09）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c117">Cycle 117 — 2026-10-08（YCOM ブログ・日次）：<span class="text-rose-700">3〜4位に出ているのに押されない記事 ?p=388（テーブルレイアウト）＝検索している人の多くは「食卓・客席の配置」を探していました</span>／<span class="text-emerald-800">新しい T は立てず、同じ読者の T-014（リニューアル費用）に代表の物差しを1章足しました（執筆はしません）</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-10-08）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。<strong>実データ最終日は 10/04 のまま</strong>（昨日から新しい日は届いていません）。そのため「28日」と指定した窓は 9/10〜10/04 の<u>25日分</u>です＝クリック1,083・表示44,739・CTR2.42%・平均9.2位。<u>昨日の値（28日分・1,163／49,081）とは日数が違うので、増減としては読みません</u>。個別＝ページ別の上位90件・<span class="font-mono">?p=388</span>（28日・90日）・<span class="font-mono">?p=5500</span>・<span class="font-mono">?p=5902</span>（90日）・「リニューアル」を含む語（90日）・<span class="font-mono">/price/basic.html</span>（9/23〜9/29 と 9/30〜）。</li>
+      <li><strong>GA4</strong>（<span class="font-mono">analytics_265729912</span>）＝<u>本日は取っていません</u>（データ未取得）。下の B-106 の効果は GSC のクリック数だけで書いています。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝<span class="font-mono">?p=388</span>（本文・リンク・題と説明文）・本文の外部リンク2本の応答・<span class="font-mono">?p=8365</span>・<span class="font-mono">?p=2117</span>。<strong>WordPress（<span class="font-mono">wp-draft.py get</span>）は未実施</strong>。</li>
+      <li><strong>競合（hp-serp）</strong>＝取得（3語：「テーブルレイアウト」「テーブルレイアウトとは」「ホームページ 古い リニューアル 目安」）。<u>見たのは上位のURLと題だけ</u>です（各ページの本文は読んでいません）。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。</li>
+      <li><strong>過去の B/T の成果の振り返り（PDCA）</strong>：公開された B/T は本日も0件＝GSC で測れる成果はまだありません（正直に）。執筆担当の次の起動は 10/12（月）＝ログに動きはありません。</li>
+    </ul>
+  </div>
+
+  <!-- ===== 中心 ===== -->
+  <div class="bg-white border-4 border-rose-500 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="text-lg font-bold text-rose-800 mb-2">🧭 中心　観点＝「上位にいるのに押されない記事」を1本、検索結果の側から見ました</h3>
+    <p class="mb-2">本日は<strong>検索意図の充足</strong>の観点です。<span class="font-mono">?p=388</span>「ホームページのレイアウトはテーブルではなくCSSを使う理由」（2012-04-02・代表）は、ブログの中で「順位のわりに押されない」がいちばん大きい記事です。</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>① 数字</strong>：90日で「テーブルレイアウト」<strong>393表示・3.6位・クリック1</strong>／「テーブルレイアウトとは」121表示・5.3位・クリック0／「テーブル レイアウト」57表示・4.8位・クリック0。直近（9/10〜10/04）も「テーブルレイアウト」74表示・4.3位・0／「とは」44表示・3.6位・0。ページ全体では同じ期間に338表示・3クリック。</li>
+      <li><strong class="text-rose-700">② 理由が検索結果で分かりました</strong>（10/08 hp-serp「テーブルレイアウト」・URLと題だけ）：上位10件のうち<strong>少なくとも7件が、食卓の置き方・飲食店の客席の話</strong>でした（ダイニングテーブルの配置＝家具店5件・飲食店の予約台帳の「テーブルレイアウトを設定する」・飲食の用語辞典）。Web 制作の話と題で分かるのは1件（ミツエーリンクス）だけです。<u>この語で検索する人の多くは、HTML の話を探していません</u>。</li>
+      <li><strong>③ 「とは」のほうは Web の話です</strong>（同「テーブルレイアウトとは」）：日経クロステック（2006年の連載）・ミツエーリンクス・パソコン教室・MDN・ウェブアクセシビリティ基盤委員会・制作会社が並び、自社の記事は Yahoo では8番目でした（GSC の平均 3.6位は Google の値＝検索エンジンと日が違います）。こちらは月に40表示ほどの小さな帯で、クリックは90日で0です。</li>
+      <li><strong>④ だから題は変えません</strong>：7月に題の変更を提案して取り下げています（<span class="font-mono">B-015</span>・「とは」型でクリック0）。本日の②で、その取り下げが正しかった理由が1つ足りました＝<u>表示の大半は、題をどう直しても押さない人</u>です。<strong>この記事の「3〜4位」は、成果として数えないでください</strong>（推測：家具の話を探す人の検索結果に、たまたま混ざっているだけです）。</li>
+      <li><strong>⑤ 直すのは中身の小さな傷だけ</strong>：読みに来る少数（「css 表 table 使わない」90日34表示・3クリック＝コードを書く人）にとって、<u>記事に載っているコードの例が、そのまま写すと壊れた HTML になります</u>（閉じタグが1つ余分・3か所）。→ 下の <span class="font-mono">B-106</span>。</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>見て、B を立てなかった2本</strong>（検索語だけ・本文は未読）：<span class="font-mono">?p=5500</span>（Kindle でウェブを読む話・90日「kindle web」46表示・9.8位／「kindle for web」36表示・5.9位＝どれもクリック0〜1）と <span class="font-mono">?p=5902</span>（暗い場所での写真の撮り方・直近601表示・15クリック）。どちらもホームページを頼む人の語ではありません＝素材・雑記の記事を見る日の候補として残します。昨日の <span class="font-mono">?p=1085</span>・<span class="font-mono">?p=7085</span> も同じ扱いのままです。</li>
+    </ul>
+    <p class="text-xs text-gray-600"><strong>ファネルの層</strong>：B-106 は ①出会う（コードを書く人）の記事の手入れで、買い手には届きません（正直に）。T-014 の改訂は ③依頼につながる（すでにサイトを持っていて、作り直すか迷っている人）。<strong>YCOM の詰まりの本丸は変わらず ③の料金</strong>です。<span class="font-mono">/price/basic.html</span> の 9/30〜の週は、GSC が 10/04 で止まっているため<u>昨日と同じ5日分</u>です＝「ホームページ制作 料金表」21.4位・17表示／「ホームページ制作 料金」19.5位・14表示／「ホームページ制作 費用」9.5位・16表示（どれもクリック0）。前の週（9/23〜9/29）の「費用」は 35.3位・6表示でした。<u>週が閉じていないので、まだ「上がった」とは言いません</u>（10/06 分が届いたら前の週と並べます）。ブログから今すぐ効かせられるのは、変わらず 8365 の公開だけです（⛳）。</p>
+  </div>
+
+  <!-- ===== 定点 ===== -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から53日目）</strong>。公開URLは HTTP500＝下書きのときの応答のまま（10/08 <span class="font-mono">hp-audit</span>）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ＝公開ページに残存（85日目）</strong>。本日も <span class="font-mono">【要・社長確認：…】</span> を1か所実測。9/10〜10/04 で 170クリック・3,718表示＝いまもブログで最多の記事です。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝32日目・未回答（ここでは重ねて督促しません）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-106</span>）</h3>
+  <div class="bg-white border-2 border-amber-500 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-amber-900 mb-2"><span class="font-mono">B-106</span>　<span class="font-mono">?p=388</span>（テーブルではなくCSSを使う理由）＝コードの例の余分な閉じタグ3か所・誤字3か所・「縦中央」の章に追記1行　🟢　<span class="text-xs font-normal">（社長のご判断は要りません／🔒 ローテ後・10分／題は変えません）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>対象</strong>：<span class="font-mono">https://y-com.info/contents/?p=388</span>「ホームページのレイアウトはテーブルではなくCSSを使う理由」（2012-04-02・代表）。</li>
+      <li><strong>観点</strong>：検索意図の充足（読みに来た人が持ち帰るコードの正しさ）／鮮度</li>
+      <li><strong>観察</strong>（10/08 <span class="font-mono">hp-audit --text／--links</span>）：
+        (ア) コードの例のうち3つ（「３行３列」の例・<span class="font-mono">colspan／rowspan</span> の例が2回）で、<span class="font-mono">&lt;/table&gt;</span> の直前に <span class="font-mono">&lt;/tr&gt;</span> が1つ余分にあります。
+        (イ) 誤字3か所＝「表を構成する<u>ためにの</u>タグ」／「<u>良い混み速度</u>が遅いと」／「中央に大きい<u>用をを</u>入れてくれ」。
+        (ウ) 「テーブルの方が実現しやすいレイアウト」の章は「縦中央に置くのは、テーブルを使わないと簡単にはできない」と書いていますが、同じ記事の最後の章（flexbox）は「縦や横に自由で簡単に配置できるようになりました」と書いています＝<u>前の章だけ昔のまま</u>です。
+        (エ) 本文の外部リンク2本（コリス・アイデアハッカー）はどちらも HTTP200＝生きています（<span class="font-mono">http://</span> のまま・<span class="font-mono">https://</span> へ転送されます）。
+        (オ) 本文から自社のページ・記事へのリンクは0本（下の「関連記事」は自動表示）。</li>
+      <li><strong>なぜ問題か</strong>：題が「〜を使う理由」と正しい書き方を勧める記事なのに、載せているコードの例が文法どおりではありません。読みに来るのはコードを書く人なので、いちばん見られる場所です。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        (1) コードの例3か所の余分な <span class="font-mono">&lt;/tr&gt;</span> を1つずつ外す（<u>WP の編集画面で現物を見てから</u>＝私は公開ページの文字だけで見ています）。
+        (2) 誤字3か所＝「ためのタグ」「読み込み速度」「大きい要素を」。
+        (3) 「これをテーブルタグを使わずに実現しようとするとちょっとした調整が必要になって簡単にはできない。」の後に1行＝「※現在は、この記事の最後で紹介している flexbox を使えば、テーブルを使わずに数行で書けます。（2026年10月追記）」。<u>具体のプロパティ名を書き足す場合は MDN で確かめてから</u>（書かなくても成立します）。
+        (4) 外部リンク2本を <span class="font-mono">https://</span> に。
+        それ以外の代表の文章・口調（「こんななってる」「いつになったら表示されるねん！」など）・題・説明文は変えません。</li>
+      <li><strong>触らないもの（理由つき）</strong>：<u>題と説明文</u>（上の中心④）／<u>「読み込むまで表示されない」「SEOに弱い」の章</u>（いまのブラウザ・検索エンジンでも同じかを、私は確かめていません＝確かめずに直しも消しもしません。古い可能性がある、とだけ記録します）／<u>相談への橋（CTA）</u>＝コードの記事には架けない決まり（<span class="font-mono">B-067</span>）のとおり。</li>
+      <li><strong>効果</strong>：クリック換算＝増えません（月1件前後のまま）。<strong>買い手換算＝0</strong>（正直に）。価値は、制作会社のブログに載っているコードが正しいことだけです。<strong>工数</strong>：10分。<strong>優先度</strong>：🟢。<strong>栓</strong>：🔒 ローテ後（差分作りは栓なし・単独の差分ファイルで可）。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-014</span> の改訂＝新しい番号は立てません）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-014</span>（C117 改訂版）　「ホームページのリニューアル費用はいくら？相場の内訳と、"作り直すべきか・直すだけで済むか"の見分け方」　🔴　<span class="text-xs font-normal">（構成案だけ・執筆しません／器＝新しいURL）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜ新しい T にしないか</strong>：<span class="font-mono">?p=388</span> を読んで出てきた問いは「古い作りのホームページを、作り直すか・直して使うか」でした。これは <span class="font-mono">T-014</span> の h2②（そもそも作り直すべき？）と同じ読者・同じ問いです（原案＝<a href="archive.html" class="underline">アーカイブ</a>の「Cycle 057 — 2026-08-06」の h2①〜⑥を本日読み直して照合）。同じ問いの記事を自分で2本にしない、の決まりどおり、T-014 に足します。<br>
+    <strong>検索結果の観察</strong>（10/08 hp-serp「ホームページ 古い リニューアル 目安」・<u>URLと題だけ</u>）：上位10件は、題とドメインから見る限り制作会社・制作ツール・発注先紹介のサイトの記事で（会社の種類までは確かめていません）、題に出ている物差しは「何年ごと」「頻度」「タイミング」「期間」です。題から見る限り「<u>1か所直すのにどれだけ手間がかかるか</u>」で決める、という記事は見当たりません。<strong>各ページの本文は読んでいません</strong>＝中で触れている可能性はあります。執筆の前に上位3件の本文を見て、構成を直す前提です。<br>
+    <strong>自社の検索の実績</strong>：「リニューアル」を含む語＝90日で3行・合計9表示（「ホームページリニューアル 大阪」67.6位・5表示ほか）＝<strong>この帯に自社はほぼいません。取れるかは未知数です</strong>（正直に・原案の「表示ほぼゼロ」から変わっていません）。</p>
+    <p class="text-xs font-bold mb-1">原案からの差分（3点）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>(1) h2② に h3 を1本足す</strong>＝<strong>「年数ではなく『1か所直すのに何分かかるか』で見る」</strong>。入れる場所は「作り直しが必要なサイン」の前。中身＝代表が <span class="font-mono">?p=388</span> に公開済みの考え方の<u>要旨</u>（引き写さない）：「運用のしやすさが低いと、そのまま運用の費用になる」「数分の違いでも、直すたびに積み重なる」「引き継いだ人が触るのをためらう作りがある」。読者が自分で確かめられる問いを3つ＝①電話番号・営業時間を1か所直すのに、誰に頼んで何日かかったか ②ページを1枚足す見積もりが、毎回思ったより高くないか ③「そこは触ると崩れるので」と言われたことがあるか。出典として本文から <span class="font-mono">?p=388</span> へ1本。<u>「表組みで作られたサイトは作り直し」と断定はしません</u>（作りの古さは1つの手がかり、まで）。</li>
+      <li><strong>(2) 題の末尾の「【大阪】」を外す</strong>（<span class="font-mono">T-006</span> の C098 と同じ扱い＝地名を題に足さない）。</li>
+      <li><strong>(3) h2④「検索順位を落とさない」は1段落に縮めて <span class="font-mono">T-038</span>（リニューアル・ドメイン変更すると、前のお客さんはどこへ行くのか）へ渡す</strong>。原案の時点では T-038 がまだ無く、いまは同じ中身が2本にあります＝詳しい手順は T-038、T-014 には「費用の見積もりに、旧URLの転送の作業が入っているか確かめる」の1点だけ残します。</li>
+    </ul>
+    <p class="text-xs font-bold mb-1">改訂後のアウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：5〜10年前に作ったサイトを持つ小〜中規模の事業者（原案のまま）。<strong>狙う検索意図・クエリ</strong>：買いたい＝「ホームページ リニューアル 費用」「ホームページ 作り直し 費用」「ホームページ リニューアル タイミング」（原案のまま）。</li>
+      <li><strong>h2①　リニューアル費用は「どこまで作り直すか」で4段階に分かれます</strong>（h3 見た目だけ／スマホ対応だけ／更新の仕組みを入れ替える／全面／h3 相場の早見表＝一般相場・出典を明記・<u>自社の金額は書かず <span class="font-mono">/price/basic.html</span> へのリンクのみ</u>／h3 安い見積りと高い見積りの違い）</li>
+      <li><strong>h2②　そもそも作り直すべき？ 直すだけで済むケース</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li><strong>🆕 h3 年数ではなく「1か所直すのに何分かかるか」で見る</strong>（上の (1)）</li>
+          <li>h3 作り直しが必要なサイン（スマホで崩れる／更新の仕組みのサポート終了／自分で更新できない／常時SSL未対応／表示が重い）</li>
+          <li>h3 部分改修で足りるサイン（構造は生きていて見た目と情報が古いだけ／ページ追加で済む）</li>
+          <li>h3 7項目の判断チェックリスト（🆕 の3つの問いをここに入れる＝項目数は7のまま・入れ替えで）</li>
+        </ul></li>
+      <li><strong>h2③　見積書のどこにお金がかかっているのか</strong>（原案のまま。詳しい読み方は 8365 の公開後にそちらへ1行）</li>
+      <li><strong>h2④　リニューアルで検索順位を落とさないために</strong>（🆕 1段落に縮める＝上の (3)。T-038 の公開後にリンク・それまではリンクなしで1段落）</li>
+      <li><strong>h2⑤　費用を抑える3つの現実的な方法</strong>（段階リニューアル／使える資産は残す／補助金は制度名と一般的な要件まで＝<span class="font-mono">Q-002</span>① の回答まで自社の対応可否は書かない）</li>
+      <li><strong>h2⑥　リニューアルの進め方と期間の目安</strong>（<span class="font-mono">/flow/</span> へ／期間の目安＝公開ページの「おおよそ3か月〜5か月」／いまのサイトを作った会社と連絡が取れない場合＝<span class="font-mono">/price/basic.html</span> のよくある質問「他社で制作されたホームページの引き継ぎもご相談いただけます」）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/price/basic.html</span>（金額はここへ送るだけ）・<span class="font-mono">/flow/</span>・<span class="font-mono">/service/web/responsive.html</span>・<span class="font-mono">?p=388</span>（出典）。未公開の 8365・T-007・T-038 へは、それぞれの公開後に。<span class="font-mono">/contact/</span>（403）・<span class="font-mono">/price/</span>（原案の書き方）へはリンクしない。</li>
+      <li><strong>CTA</strong>：お見積り＝<span class="font-mono">/contact/create/</span>（「いまのサイトのURLだけ送っていただければ、直して使えるか・作り直しかの見立てからお返事します」と添える＝<u>この一文は社長のご確認が要ります</u>：見立てだけの相談を無料で受けているか。答えが無ければ「ご相談ください」だけにします）。</li>
+      <li><strong>重複の照合</strong>：<span class="font-mono">T-038</span>（上の (3) で整理）／<span class="font-mono">T-007</span>（スマホ対応の費用＝h2① の「スマホ対応だけ」から1行で送る）／<span class="font-mono">T-036</span>・<span class="font-mono">T-039</span>（作成ソフトで作ったサイト）は題で見る限り隣り合うだけです（<u>T-036・T-039・T-035 の h2 までは本日読み直していません</u>）。</li>
+      <li><strong>用意すべき内容</strong>：<u>必須はありません</u>（一般相場と公開ページの事実で書けます）。あれば強くなるもの（任意）＝「引き継いだサイトで、1か所の直しに時間がかかった作りの実例」を1段落（社名・業種が分からない形で）。無ければ書きません（作りません）。</li>
+      <li><strong>効果</strong>：クリック換算＝未確定（自社はこの帯にほぼ表示なし）。<strong>買い手換算＝未確定</strong>（推測：読者は予算を持って検討中の人なので、取れれば ③ の層に直接効きます・取れるかは未知数）。<strong>工数</strong>：中（新規1本）。<strong>優先度</strong>：🔴（原案のまま）。<strong>栓</strong>：― publish 後（在庫を積まない＝<u>執筆しません</u>）。執筆の前に上位3件の本文を見る。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-10-08）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：from-president.md に追記なし（出典＝同ファイル・最終は 2026-06-23 節）。mailbox 新着なし。<strong>本日の新規質問はゼロ</strong>（未回答 7件のまま）。<span class="font-mono">B-106</span> はご判断の要らない直しです（「まとめて1行」にも入れていません）。T-014 の CTA の一文だけ、任意のご確認として上に書きました（質問には数えていません）。</li>
+      <li><strong>件数を絞りました</strong>：未消化が多いため B1＋T1（T は既存の改訂＝繰り越しの件数は B-106 の1件だけ増えます）。</li>
+      <li><strong>10/12 の起動分</strong>：blog-write は <span class="font-mono">T-006</span> の改訂1件のまま。blog-improve の「急がない差分」に <span class="font-mono">B-106</span> を足しました。<span class="font-mono">T-014</span>（C117 改訂版）は執筆しません。WP への書き込みは保留のまま。</li>
+      <li><strong>他ループへ</strong>：本日はありません。</li>
+      <li><strong>開発宛 <span class="font-mono">Q-C</span></strong>（サイト共通の会社情報コードの住所）：回答待ち（本日は催促していません）。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 116 の本文を <a href="archive.html#c116" class="underline">アーカイブ</a>へ原文のまま移しました（移す前後でファイルの大きさが「元 1,978,419＋見出し 123＋本文 24,743＝2,003,285」と一致・<span class="font-mono">id="c116"</span> の見出し1件を確認 → index から削除）。</li>
+      <li><strong>自己改善（Step 7）</strong>：「順位は高いのにクリックが無い」語は、題を直す前に検索結果の顔ぶれを1回見る（別の意味で検索されていないか）、を決めごとにします＝7月の <span class="font-mono">B-015</span> は提案して取り下げるまでに2サイクルかかりました（<span class="font-mono">K-957</span>）。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（type=report・<span class="font-mono">M-20261008T050728-blog-loop-ycom-c61864</span>・WP への作用を促す依頼なし・スプールで着信を確認）。Slack 日報を1本（blog-loop-ycom スレッド）。</li>
+      <li><strong>実行できなかったもの</strong>：会話の最初の <span class="font-mono">session-desk.py whoami</span>（承認待ち・mailbox は <span class="font-mono">blog-loop-ycom</span> の受信箱として読めました）／GA4（本日は取っていません）／WordPress の <span class="font-mono">get</span>。</li>
+      <li><strong>掲示板の大きさ</strong>：index は 80KB を超えたままです（主因は繰り越し125件の表と ✍️ の指示欄＝公開が動かない限り減りません・Overseer へ申し送り済み）。</li>
+    </ul>
+  </div>
+
+
   <!-- ===== 📦 Cycle 116（2026-10-07）＝ Cycle 117（2026-10-08）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c116">Cycle 116 — 2026-10-07（YCOM ブログ・日次）：<span class="text-rose-700">いまが季節の「ハロウィン素材」の記事 ?p=3546 は、紹介している7つのうち2つの配布ページが無くなっていました（HTTP404）</span>／<span class="text-emerald-800">季節に運営者が実際にやる作業「年末年始の休業のお知らせ」を構成案にしました（T-061・執筆はしません）</span></h2>
 
