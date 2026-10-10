@@ -39,6 +39,63 @@
     </tbody></table>
   </div>
 
+  <!-- ===== Cycle 069 の記録（Cycle 070 のローテで移動・2026-10-11・本文は改変なし） ===== -->
+  <p class="text-xs text-gray-500 mb-2">Cycle 069 時点の掲示板の全文＝<a href="index-snapshot-c069.html" class="text-blue-600 hover:underline">スナップショット</a>。</p>
+  <!-- 🔑 Cycle 069：反応 -->
+  <div class="border-4 border-indigo-600 bg-indigo-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-indigo-800 mb-2">🔑 <span class="underline decoration-2">10/10（Cycle 069）＝開発担当の回答が届き、ゴール計測（R-R17）が完了しました。検索に出るページは 1,568本（約9.5%）。社長への新しい質問は 0件です</span></h2>
+    <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+      <li><strong class="text-emerald-800">完了 1件＝R-R17（登録とスタンプを測る仕組み）</strong>。残っていた「同じ人が同じ場所で『初めて』を2回押した」ように見えた件は、<strong>同じ名前のスポットが2つ登録されていた</strong>ためでした（グランフロント大阪＝<code>/spots/1466</code> と <code>/spots/14674</code>・本番で2件とも確認）。スポットの番号で数え直すと、<strong>9/22 以降の71回に食い違いは 0件</strong>です。以後「訪れた場所の数」は番号で数えます。</li>
+      <li><strong class="text-sky-800">登録のパスワード不要化は 10/6 に本番反映</strong>（開発担当の回答）。「登録完了」の数え方は変更前と同じ意味です。10/7〜10/9 の3日間は、初めての訪問 72人 → メール入力開始 1人 → 登録 1件。件数が小さいので、判定は 10/29 頃の月次の定点で行います。</li>
+      <li><strong>数字</strong>＝検索結果に1回以上出たページ <strong>1,568本</strong>（9/6〜10/6・10/8 時点は 1,500本）。10月の登録は <strong>3件</strong>（10/4・10/6・10/8）。スタンプは 10/9 に1件。</li>
+      <li><strong>気づき（起票はしていません）</strong>＝同じ名前・ほぼ同じ場所のスポットの重複。片方（<code>/spots/14674</code>）は説明文がありません。整理するかどうかは開発担当が預かっています。</li>
+      <li><strong>社長へのお願いは変わりません</strong>＝土曜の枠（本日）で ② R-R35（sitemap 送信・5分）と ⑤ Q-R19（説明文の順番）の2つです。</li>
+    </ul>
+  </div>
+  <!-- ===== Cycle 069 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 069 — 2026-10-10（<span class="text-emerald-700">R-R17 完了</span>／<span class="text-sky-700">パスワード不要化は 10/6 反映</span>／<span class="text-gray-700">発見 1,568本・約9.5%</span>）</h2>
+    <p class="text-sm text-gray-500 mb-4">反応サイクル（開発担当 rally-dev の回答 1通を受けて起動）。データ状況＝Search Console 最新 10/6・GA4 最新 10/9・本番GET 6本＝すべて取得。週次・月次の定石は期日前のため次の定期（10/11）で実施します。</p>
+
+    <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-4 mb-4">
+      <h3 class="font-bold text-emerald-900 mb-2">① 開発担当の回答 3点と、当方での裏取り</h3>
+      <table class="w-full text-sm border-collapse bg-white rounded">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 px-2 w-48">お尋ねしたこと</th><th class="py-1 px-2">開発担当の回答</th><th class="py-1 px-2">当方の裏取り</th></tr></thead>
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-100"><td class="py-1 px-2">パスワード不要化の本番反映日</td><td class="py-1 px-2"><strong>2026-10-06</strong>（時刻の控えなし＝10/6 の登録1件は前後不明・10/4 の1件は変更前）</td><td class="py-1 px-2">10/8 の本番で新しい入口を確認済み（Cycle 068）。受信簿に反映日を追記しました。</td></tr>
+          <tr class="border-b border-gray-100"><td class="py-1 px-2">新しい流れで「登録完了」（<code>sign_up</code>）の意味は変わったか</td><td class="py-1 px-2"><strong>変わらない</strong>＝そのメールアドレスで初めてログインが成功したときに1回だけ。前から登録している人のログインでは数えない。入口は1つのフォームに統合。「入力開始」（<code>form_start</code>）の数え方は未確認。</td><td class="py-1 px-2">GA4 10/8＝入力開始 2回（1人）・登録 1件＝新しい流れでも両方記録されています。初めての訪問に対する入力開始の割合は 変更前 約3.4% → 変更後 約2.8%（3日分・72人）＝切れ目は見えませんが、まだ判定しません。</td></tr>
+          <tr><td class="py-1 px-2">グランフロント大阪で、同じブラウザから「初めて」が2回</td><td class="py-1 px-2"><strong>同じ名前のスポットが2つある</strong>（<code>/spots/1466</code> と <code>/spots/14674</code>・約13m 差・後者は説明文なし）。別々のスポットを1回ずつ。重複の整理は開発担当の判断事項として預かる。</td><td class="py-1 px-2">本番GET＝2件とも 200・同名・<code>14674</code> は説明文なし。<strong>GA4 をスポット番号で引くと 1466 が1回・14674 が1回</strong>＝回答どおり。9/22〜10/9 の 71回は 69か所で、同じブラウザから同じ番号が2回の行は <strong>0件</strong>。</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-800 mt-2"><strong>⇒ R-R17 を ✅完了にしました</strong>。スタンプの「訪れた場所の数」は、名前ではなく<strong>スポット番号</strong>で数えます（同じ名前の別スポットがあるため）。実績として使う起点は、本物の登録が始まった後の <strong>9/22 以降</strong>とします。9/14 の安養寺（同じ番号で5回）は起点より前で、開発担当への照会は取り下げました。</p>
+    </div>
+
+    <div class="border border-sky-300 bg-sky-50 rounded-lg p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 数字の定点（2日ぶんの新着）</h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>発見</strong>＝9/6〜10/6 に検索結果へ出たページ <strong>1,568本</strong>（露出率 約9.5%）。表示 9,451回・404クリック。内訳＝スポット詳細 1,380・市区町村 105・人物 34・テーマ 19・都道府県 14・タグ 5・エリア 3・その他 8。定点8件は 2件のまま。</li>
+        <li><strong>登録</strong>＝10/8 に1件（10月は計3件）。10/7・10/9 は入力開始 0。</li>
+        <li><strong>スタンプ</strong>＝10/9 に1件（ひらかたパーク）。同じ日に口コミの投稿が1件。</li>
+        <li><strong>到達性</strong>＝トップ 200・0.09秒（79,942B＝10/8 と同じ）／<code>www</code> → 本体 200。</li>
+      </ul>
+    </div>
+
+    <div class="border border-amber-300 bg-amber-50 rounded-lg p-4 mb-4">
+      <h3 class="font-bold text-amber-900 mb-2">③ 気づき（種として保持・起票なし）＝同じ名前のスポットの重複</h3>
+      <p class="text-sm text-gray-800"><strong>観察</strong>＝<code>/spots/1466</code>（説明文あり・題名に「大阪市北区」）と <code>/spots/14674</code>（説明文なし・題名に市区町村名なし・「最短記録 258m」の利用記録あり）が別ページとして公開されています。どちらも Search Console にはまだ表示がありません。<br><strong>北極星との接続</strong>＝①中身の薄いほうのページが、同じ名前の本来のページと検索上で競合しうる（推測）②「訪れた場所の数」が重複の分だけ多く出る。<br><strong>起票しない理由</strong>＝確認できたのは1組だけで、何組あるかは外から数えられません。整理の判断は開発担当が預かっています。開発担当には「データベースで同名・近接の組数を数えられるなら数だけ教えてほしい」と伝えました。組数が2桁以上なら提案に上げます。</p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded-lg p-4">
+      <h3 class="font-bold text-gray-800 mb-2">④ 次の動きと対応記録</h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>開発担当への着手推奨は変わりません</strong>＝① R-R46（他のスポット欄を名前＋1行に）→ ② R-R45（テーマ紹介文に別の呼び名）→ ③ R-R28 の残り（<code>/map</code> カルーセルのサムネイル）。いずれも回答不要です。</li>
+        <li><strong>次の定期＝10/11</strong>。リンク構造の実査（期日 10/12）と、月次の2本（期日 10/14）を前倒しで行います。パスワード不要化の判定は 10/29 頃。</li>
+        <li><strong>新規の提案 0件・新規の質問 0件・完了 1件（R-R17）</strong>＝在庫 15 → 14件・質問 3件。</li>
+        <li><strong>対応記録</strong>＝社長指示ファイルに新しいご指示はありません（最新は 9/27 節＝対応済み：Cycle 063・064）。</li>
+        <li><strong>配信</strong>＝開発担当（rally-dev）へ本サイクルのレポートを1通（受領の返信を兼ねる）。Slack の日報は出していません（反応サイクルのため。次は 10/11 の定期で出ます）。</li>
+      </ul>
+    </div>
+  </section>
   <!-- ===== Cycle 068 の記録（Cycle 069 のローテで移動・2026-10-10・本文は改変なし） ===== -->
   <!-- 🔑 Cycle 068：定期 -->
   <div class="border-4 border-indigo-600 bg-indigo-50 rounded-lg p-5 mb-6">
