@@ -30,6 +30,99 @@
 
   <p class="text-xs text-gray-500 mb-6">※ ここにある提案 <code>R-NNN</code>・質問 <code>Q-NNN</code> は<strong>過去サイクルのスナップショット（履歴）</strong>。生死（未完了かどうか）は最新レポート <a href="index.html" class="text-blue-600 hover:underline">index</a> の繰り越し表で管理しています。</p>
 
+  <!-- ===== ✅ 完了した提案（Cycle 069・2026-10-10） ===== -->
+  <div class="border border-emerald-300 bg-emerald-50 rounded-lg p-5 mb-6">
+    <h2 class="text-lg font-semibold text-emerald-900 mb-2">✅ 完了した提案（Cycle 069・2026-10-10）— R-R17</h2>
+    <p class="text-sm text-gray-800 mb-2"><strong>完了の根拠</strong>＝残っていた「ユニーク集計の矛盾」（同じブラウザから同じ場所が2回「初めて」）は、同じ名前のスポットが2つあったため（グランフロント大阪＝<code>/spots/1466</code>・<code>/spots/14674</code>＝開発担当の回答・本番GETで確認）。GA4 を <code>spot_id</code> で引くと 1466・14674 各1回、9/22〜10/9 の71回・69か所に食い違い 0件。以後ユニークは <code>spot_id</code> で数え、実績の起点は 9/22 以降とする。9/14 の安養寺（同じ番号で5回）は起点より前＝照会を取り下げ。下は完了時点の行（改変なし）。</p>
+    <table class="w-full text-sm border-collapse bg-white"><tbody class="align-top">
+        <tr class="border-b border-gray-100 bg-amber-50"><td class="py-1 pr-2 font-mono">R-R17</td><td class="py-1 pr-2"><span class="inline-block bg-sky-600 text-white text-xs font-bold px-2 py-0.5 rounded mb-1">⏳ 登録＝DB と一致を確認（9/23）／スタンプのユニーク集計だけ残る</span><br><span class="text-emerald-800 bg-emerald-50 border-2 border-emerald-500 rounded px-2 py-1 inline-block mb-1"><strong>🆕 9/23 19:2x＝残り①（登録数が本当か）は決着</strong>＝開発担当が本番 DB を直接集計（責任者実行）＝<strong>9/16 0・9/17 0・9/18〜21 各1・9/22 0</strong>＝GA4 <code>sign_up</code> と<u>日別で完全一致・テスト0件</u>。<strong>以後、登録は GA4 だけで追う</strong>。9/1 以降の登録は計4件＝<u>「9/6〜12 の0件」は本当に0件</u>。スタンプ記録のあるアカウントは全体で4件。<span class="text-amber-900">残り＝②ユニークの集計の矛盾（9/14 に安養寺〔枚方市〕で同じブラウザから「初めて」が5件＝開発担当へ照会中）だけ＝9/22 の9件はすべて <code>visit_count=1</code>・2人で矛盾なし。<strong>10/5＝9/22〜10/3 の70回（3人）はすべて <code>visit_count=1</code>・67か所。同じブラウザから同じ場所が2回「初めて」になった例が1件（グランフロント大阪）＝開発担当へ確認を依頼＝②はまだ閉じません</strong>（社外向けの実績値には引き続き使いません）。</span></span><br><strong>北極星の「ゴール地点」を測るGA4イベントを入れる</strong>＝<span class="text-emerald-800">✅ 8/30 サイト側実装（<code>sign_up</code>＝メール認証成功／<code>stamp_get</code>＝GPSチェック成功）・✅ 9/6 GTM 公開（Q-R17 解決）・✅ 9/13 件数の定義確定（成功のたびに記録・<code>visit_count=1</code> がユニーク＝社長ご判断で延べとユニークを両方追う）・<code>/admin/*</code> 混入0件。</span><span class="text-gray-600">⚠️ GA4 は 9/5 以前を測れていない（「無かった」ではなく「測っていなかった」）。9/13〜9/20 の経緯（登録0件前提の旧アカウント削除を止めた件・徳島のスタンプ等）の全文は<a href="index-snapshot-c055.html" class="text-blue-600 hover:underline">スナップショット</a>と<a href="archive.html" class="text-blue-600 hover:underline">アーカイブ</a>の各サイクル記録にあります。</span></td><td class="py-1 pr-2">🔴</td><td class="py-1 pr-2"><span class="text-sky-700"><strong>⏳検証中</strong></span><br><span class="text-xs text-gray-500">（開発担当＝DBの登録数）</span></td><td class="py-1">GA4 に <code>sign_up</code>／<code>stamp_get</code> が出るか（基準0件）／<code>/admin/*</code> の混入が消えるか（基準＝45日で約10%）</td></tr>
+    </tbody></table>
+  </div>
+
+  <!-- ===== Cycle 068 の記録（Cycle 069 のローテで移動・2026-10-10・本文は改変なし） ===== -->
+  <!-- 🔑 Cycle 068：定期 -->
+  <div class="border-4 border-indigo-600 bg-indigo-50 rounded-lg p-5 mb-6">
+    <h2 class="text-xl font-bold text-indigo-800 mb-2">🔑 <span class="underline decoration-2">10/8（Cycle 068）＝検索に出るページは 1,500本（約9.1%）へ。10月の登録は2件。登録が「パスワード不要」の形に変わりました（社長への新しい質問は 0件）</span></h2>
+    <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+      <li><strong class="text-emerald-800">発見</strong>＝工事後（9/6〜10/4）に検索結果へ1回以上出たページは <strong>1,500本</strong>（10/4 定点 1,329本）＝露出率 約9.1%。表示 8,728回・378クリック。</li>
+      <li><strong class="text-rose-800">登録</strong>＝10月は <strong>2件</strong>（10/4・10/6）。入力を始めた着地面は引き続きトップと <code>/map</code> だけで、スポット詳細・人物などの下層に着地したセッションからは 0件のままです。<strong>スタンプ取得は 10/1〜10/6 で 0件</strong>（最後は 9/30）。</li>
+      <li><strong class="text-sky-800">報告なしの変更を1つ検出</strong>＝登録の入口が「メールアドレスだけ入れる → ログイン用のコードがメールで届く（パスワードは要りません）」の形になっています（トップと <code>/register</code> で確認・10/5〜10/8 の間と推測）。10/4 に開発担当が「検討中」と言っていたものです。効果は 10/29 頃の月次の定点で見ます。</li>
+      <li><strong>開発担当への次の着手推奨を出しました</strong>（10/4 に手持ちが 0件になっていたため）＝<strong>回答不要で進められる小さな修正 2件を新しく起こしています</strong>（R-R46 スポット詳細に隣のスポットの説明文が丸ごと入っている件／R-R45 テーマ紹介文に別の呼び名を入れる件）。<u>社長のご判断は要りません</u>。</li>
+      <li><strong>社長へのお願いは変わりません</strong>＝土曜の枠で ② R-R35（sitemap 送信・5分）と ⑤ Q-R19（説明文の順番）の2つです。</li>
+    </ul>
+  </div>
+  <!-- ===== Cycle 068 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 068 — 2026-10-08（<span class="text-emerald-700">発見 1,500本・約9.1%／10月の登録 2件</span>／<span class="text-sky-700">登録がパスワード不要の形に</span>／<span class="text-gray-700">開発担当への着手推奨 3件）</span></h2>
+    <p class="text-sm text-gray-600 mb-4">定期（3日ペース・04:00 の無人実行）。<strong>新規の提案＝2件（どちらも ✅AI即応＝回答不要）／新規の質問＝0件／完了＝0件</strong>＝在庫 15件（R）・質問3件・判断待ち（着手時）9件／上限15。<br><strong>データ状況</strong>＝GSC ✅（最新 10/4＝前回から2日分着弾）・GA4 ✅（最新 10/6＝3日分着弾）／本番GET・スクショ・検索の実見 ✅／証明書の読み取り（<code>hp-head.py</code>）・sitemap の全件集計（<code>sitemap-count.py</code>）は実行許可の外で未実施。<br><strong>本サイクルで回した定石</strong>＝日次一式（変化検知・在庫の進捗・到達性・GA4・GSC・配信の到達確認）＋週次4本を期日 10/9 から前倒し（全体棚卸し・競合対比・勝ちパターン点検・ビジュアル定点）。</p>
+
+    <div class="border-l-4 border-emerald-500 bg-emerald-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-emerald-900 mb-2">① 数字の定点（3日ぶんの新着）</h3>
+      <table class="w-full text-sm border-collapse mb-2 bg-white">
+        <tbody class="align-top text-gray-800">
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 w-44 font-semibold">発見（Search Console・9/6〜10/4）</td><td class="py-1 px-2">表示されたページ <strong>1,500本</strong>（10/4 定点 1,329本）＝露出率 約9.1%。内訳＝スポット詳細 1,321・市区町村 100・人物 32・テーマ 19・都道府県 14・タグ 3・エリア 3・その他 8（トップ・<code>/map</code> 等）。<code>www</code> 側は 0本。表示 8,728回・378クリック。<br><span class="text-gray-600">定点8件のうち表示が出ているのは 2件（<code>/spots/300</code>・<code>/spots/9900</code>）＝前回と同じ。新しいテーマ6本のうち表示が出ているのは 1本（灘五郷の酒蔵）＝前回と同じ。</span></td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">検索語の帯（同じ期間）</td><td class="py-1 px-2">全 793語。「スタンプ」を含む語＝201語・1,160表示・74クリック／「ゆかり」を含む語＝23語・117表示・2クリック。表示の多い語＝「スタンプマップ」71・「全国スタンプラリー」54・「中津城 スタンプ」33・「国立新美術館 スタンプ」31（2クリック）・「松島 スタンプ」26（2クリック）。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 px-2 font-semibold">登録（GA4・10/1〜10/6）</td><td class="py-1 px-2">初めての訪問 211人 → メール入力開始 9回（6人）→ <strong>登録完了 2件（10/4・10/6）</strong>。<br>着地面ごと（9/22〜10/6）＝トップ 69セッション中 3・<code>/map</code> 53セッション中 2 で入力開始または登録。<strong>人物一覧（29セッション）・スポット詳細・テーマ詳細・市区町村は 0 のまま</strong>です。</td></tr>
+          <tr><td class="py-1 px-2 font-semibold">スタンプ（GA4・10/1〜10/6）</td><td class="py-1 px-2"><strong>0件</strong>（最後は 9/30 の1件）。9月後半の70回は3人によるものだったので、その方々が動かない週はゼロになります＝<u>人数が少ないうちは週ごとの増減を傾向として読みません</u>。</td></tr>
+        </tbody>
+      </table>
+      <p class="text-sm text-gray-700"><strong>北極星への接続</strong>＝1階①（発見）は伸び続けています。1階②（登録）は、検索から下層に着地した人が入力を始めていない状態が 15日間続いています（1面あたりの着地が 2〜10 セッションと小さいので、まだ「効かない」とは言いません。判定は 10/29 頃の月次の定点＝前回お伝えしたとおり）。</p>
+    </div>
+
+    <div class="border-l-4 border-sky-500 bg-sky-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-sky-900 mb-2">② 報告なしの変更を検出＝登録が「パスワード不要」になりました</h3>
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>観察</strong>＝トップの登録欄と <code>/register</code> に「ログイン用のコードをメールでお送りします。パスワードは要りません」と表示。<code>/register</code> のボタンは「メールを送る」、下に「以前からパスワードでログインしている方はこちら」。トップの配信HTMLは 79,761B（10/5）→ 79,942B（本日）。</li>
+        <li><strong>いつから</strong>＝10/5 の実査では同じ大きさのままだったので、<span class="text-gray-700">推測：10/5〜10/8 の間</span>。開発担当からの報告はまだ届いていません＝反映日を照会しました。</li>
+        <li><strong>北極星への接続</strong>＝1階②（登録の障壁）そのものです。変更前の基準＝9/22〜10/3 で入力開始 7人 → 登録完了 2件。<strong>10/4 と 10/6 の登録2件が変更の前か後かは、反映日が分かるまで判定しません</strong>。</li>
+        <li><strong>確認を1つ添えました</strong>（開発担当へ・社長へのお伺いではありません）＝新しい流れでも「登録完了」の計測（<code>sign_up</code>）が同じ意味で記録されているか。ここが変わると、変更の前後を比べられなくなります。</li>
+      </ul>
+    </div>
+
+    <div class="border-l-4 border-amber-500 bg-amber-50 rounded-r p-4 mb-4">
+      <h3 class="font-bold text-amber-900 mb-2">③ 開発担当への次の着手推奨（3件・すべて回答不要）</h3>
+      <p class="text-sm text-gray-700 mb-2">10/4 に「開発担当がそのまま着手できる仕事」が 0件になっていました。種として温めていた観察のうち、実測の裏づけがそろった2つを提案に上げます（どちらも既存ページの文言・表示の修正で、社長のご判断は要りません）。</p>
+
+      <div class="bg-white border border-amber-300 rounded p-3 mb-3">
+        <p class="text-sm font-bold text-gray-900 mb-1">R-R46（新規）スポット詳細の「他のスポット」欄を、名前＋1行に絞る</p>
+        <ul class="text-sm text-gray-800 list-disc list-inside space-y-0.5">
+          <li><strong>観点</strong>＝コンテンツ／SEO（ページの主題）</li>
+          <li><strong>観察</strong>＝清水寺のページ（<code>/spots/132</code>）は、9/6〜10/4 に「清水寺はユネスコ世界遺産に2004年に登録された」系の3語で <strong>32表示・クリック0</strong>（7〜9位）。本来の「清水寺 スタンプ」は 15表示・1クリック。清水寺の登録は1994年で、本文もそう書いています。「2004年」は、同じページの「他のスポット」欄に入っている<u>青岸渡寺の説明文の全文</u>から来ています（本日も配信HTMLで確認）。</li>
+          <li><strong>なぜ問題か</strong>＝隣のスポットの文章が、そのページの中身として検索に拾われています。誤った事実の問いに表示され、クリックされません。<span class="text-gray-700">推測：14,477ページすべてが同じ作りなので、どのページも互いに似た中身になり、説明文が無い 6,467ページ（R-R37）では「他のスポットの文章だけ」が本文になっています。</span></li>
+          <li><strong>改善案</strong>＝「他のスポット」欄のカードは <strong>写真＋名前＋1行（キャッチコピー、または先頭40字ほど）</strong>にし、全文はリンク先で読ませる。</li>
+          <li><strong>効果</strong>＝中（1階①＝発見。ページの主題が自分のスポットに戻る）／<strong>工数</strong>＝小〜中／<strong>優先度</strong>＝🟡／<strong>着手区分</strong>＝✅AI即応</li>
+          <li><strong>測れる窓</strong>＝GSC <code>/spots/132</code> の「2004年」系の語の表示（基準＝32表示・0クリック／9/6〜10/4）／本番GETで他のスポットの「歴史」全文が消えるか。</li>
+        </ul>
+      </div>
+
+      <div class="bg-white border border-amber-300 rounded p-3 mb-3">
+        <p class="text-sm font-bold text-gray-900 mb-1">R-R45（新規）テーマ紹介文に、よく使われる別の呼び名を1回入れる（まず「日本三名園」1本で試す）</p>
+        <ul class="text-sm text-gray-800 list-disc list-inside space-y-0.5">
+          <li><strong>観点</strong>＝コンテンツ（テーマ紹介文の言葉）</li>
+          <li><strong>観察</strong>＝テーマ「日本三名園を巡る」は 9/6〜10/4 に <strong>90表示・クリック0</strong>（平均 20.4位）。うち「日本三大名園」は 25表示・34.2位。一方「日本三名園 どこ」などページの表記どおりの語では 1位が出ています（9/13 実測）。ページ本文に「三大名園」の語は <strong>0回</strong>（本日・配信HTMLで確認）。</li>
+          <li><strong>なぜ問題か</strong>＝同じものを指す言葉なのに、検索する人の言い方がページに無いため順位が大きく違います。<span class="text-gray-700">推測：語が無いことが主因。</span></li>
+          <li><strong>改善案</strong>＝紹介文の冒頭に「『日本三大名園』とも呼ばれます」のように、別の呼び名を自然な文で1回入れる。題名（title）は変えない（いまの表記で上位が取れているため）。効いたら、同じ型の別名があるテーマ（三名瀑／三大瀑布 など）へ広げる。</li>
+          <li><strong>効果</strong>＝中（1階①。テーマ名の検索が入口になることは 9/13 に実測済み）／<strong>工数</strong>＝小（文言1か所）／<strong>優先度</strong>＝🟡／<strong>着手区分</strong>＝✅AI即応</li>
+          <li><strong>測れる窓</strong>＝GSC「日本三大名園」の平均順位（基準 34.2位・25表示・0クリック）／同ページのクリック（基準 0）。反映から約3週間後に判定。</li>
+        </ul>
+      </div>
+
+      <p class="text-sm text-gray-800"><strong>推奨の順</strong>＝① R-R46 → ② R-R45 → ③ R-R28 の技術的な残り（<code>/map</code> 下部カルーセルのサムネイル取得＝9/1 のご指示で「回答不要で進めてよい」とされている部分）。<span class="text-gray-600">技術の修正（R-R46）と中身の言葉（R-R45）の両方を出しています。</span></p>
+    </div>
+
+    <div class="border border-gray-300 bg-white rounded p-4">
+      <ul class="text-sm text-gray-800 list-disc list-inside space-y-1">
+        <li><strong>全体棚卸し（週次）</strong>＝在庫 13件をライブで再確認＝<code>/privacy</code>・<code>/terms</code> 404（R-R09 生存）／旧サイト <code>mission-p.com</code> 500（R-R40 生存）／<code>/badges</code> は未ログインでも 200・題名は既定値のまま（R-R32 生存）。撤回・統合なし。受信簿（deploy-log）と確定・仕様ページに「次サイクルで確定」のまま残っている項目はありません。新しく見つけた面＝<code>/ranking/reviewers</code>（レビュアーランキング・200・検索エンジン向けには非公開の設定）＝ほかのランキングと同じ扱いで、追いません。</li>
+        <li><strong>✅ テーマのアイキャッチ画像が入っています</strong>＝テーマ一覧に写真 27枚（すべて代替テキストつき）・トップに 8枚。「📥 分析に欲しい情報」に挙げていた「誰がいつ登録するか」は解消しました（登録日は不明・本日の実査で確認）。</li>
+        <li><strong>競合対比（週次）＝「毛利元就 ゆかりの地」</strong>＝1ページ目は旅行ガイドの「ゆかりの地10選」、安芸高田市の観光サイト、攻城団の「おすすめ19選」など。当サイトの人物ページは Search Console で 77表示・平均 9.6位・クリック0。題名は「毛利元就ゆかりの地」、収録は <strong>4か所</strong>です。<span class="text-gray-700">推測：1ページ目の顔ぶれは 10〜19か所を並べており、差は説明文の書き方よりも「収録数」にあります。提案にはせず、前回お伝えした 10/29 頃の判定の材料にします。</span></li>
+        <li><strong>ビジュアル定点（週次）</strong>＝トップは PC・スマホとも最初の画面に、キャッチコピー・メール欄・「パスワードは要りません」の注記・「無料ではじめる」が収まっています。PC のヒーローの絵にある「RANKING・32/120」は見本です。スマホの浮動ボタンと「すでにアカウントをお持ちの方」の行の重なりは、当方の撮影方法では判定できないため指摘しません。</li>
+        <li><strong>変化検知・到達性</strong>＝トップ 79,942B（+181B＝②の注記）・0.11秒／<code>www</code> は本体へ転送・200。</li>
+        <li><strong>受信箱・配信</strong>＝受信 0通。開発担当の受信箱には当方からの未読が 20通（督促はしません。開発担当からの最後の発信は 10/4）。本レポートを1通配信。</li>
+        <li><strong>対応記録</strong>＝社長指示ファイルに新しいご指示はありません（最新は 9/27 節＝対応済み：Cycle 063・064）。9/27 のご指示「新しい質問を増やさない」に従い、新規の質問は 0件です。</li>
+        <li><strong>次サイクル（10/11 頃・定期）</strong>＝GSC・GA4 の新しい3日分／サイト内リンクの実査（週次・期日 10/12）／月次2本（GA4 の実URL × 本番GET・定石の見直し＝期日 10/14 の前倒し）。</li>
+      </ul>
+    </div>
+  </section>
   <!-- ===== Cycle 067 の記録（Cycle 068 のローテで移動・2026-10-08・本文は改変なし） ===== -->
   <!-- 🔑 Cycle 067：定期 -->
   <div class="border-4 border-indigo-600 bg-indigo-50 rounded-lg p-5 mb-6">
