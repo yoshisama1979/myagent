@@ -166,7 +166,26 @@ fi
 echo
 echo "=== 呼び出し側の配線 ==="
 
-for site in ycom yoshida fujisaka yokohawaii; do
+# ★期待値を台帳から引く（2026-10-11）：cron を持つサイト＝data/hp-loop/config.md の
+#   「解析ペース」表の site-key。手で並べると、サイトが増えた日に片方だけ増えて黙って食い違う。
+# ⚠️ site-key は `[a-z]*` に限定しない（Codex🟡 2026-10-11）。`site2`・`foo-bar` のような
+#    キーを足した日に**その行だけ sed が無視し、他が取れているので非空チェックは通る**
+#    ＝部分的な空振りが緑になる。バッククォートの中身をそのまま拾う。
+CRON_SITES=$(sed -n '/^| `[^`]*` *| *[0-9]*日 /s/^| `\([^`]*\)`.*/\1/p' "$PROJ_REAL/data/hp-loop/config.md")
+[ -n "$CRON_SITES" ] \
+  && ok "期待値を台帳（config.md の解析ペース表）から引けた（$(echo $CRON_SITES | wc -w)サイト）" \
+  || ng "期待値を台帳から引けた" "config.md の表を読めていない＝以下の検査が空回りする"
+
+# ★部分空振りの検知：判定ツール自身が数えたサイト数と突き合わせる。
+#   sed が1行でも取り落とすと、ここで数が合わなくなる（非空チェックでは見えない）。
+DUE_N=$(python3 "$PROJ_REAL/bin/hp-loop-due.py" --schedule 2>/dev/null \
+        | sed -n '/^[a-z]/{/^site /d;p;}' | wc -l)
+SED_N=$(echo $CRON_SITES | wc -w)
+[ "$DUE_N" -gt 0 ] && [ "$SED_N" -eq "$DUE_N" ] \
+  && ok "台帳から抜いた件数が判定ツールの件数と一致（$SED_N サイト）" \
+  || ng "台帳から抜いた件数が判定ツールの件数と一致" "sed=$SED_N / hp-loop-due=$DUE_N＝どちらかが取り落としている"
+
+for site in $CRON_SITES; do
   grep -qE "dispatch \"hp-loop:$site\".*\"hp-loop-$site\" +1" "$SRC" \
     && ok "hp-loop:$site は社長便のみで起動" \
     || ng "hp-loop:$site は社長便のみで起動" "第4引数 1 が付いていない"
@@ -174,12 +193,23 @@ done
 grep -qE 'dispatch "blog-loop:ycom".*"blog-loop-ycom" +1' "$SRC" \
   && ok "blog-loop:ycom は社長便のみで起動" || ng "blog-loop:ycom は社長便のみで起動"
 
-# 月曜だけの daily しか無いループは、待機に回すと最大7日待つので対象外のまま（意図的）
-for site in rally konjaku; do
-  grep -qE "dispatch \"hp-loop:$site\".*\"hp-loop-$site\" +1" "$SRC" \
-    && ng "hp-loop:$site は絞り込みの対象外" "daily が月曜だけなので待機に回すと最大7日待つ" \
-    || ok "hp-loop:$site は絞り込みの対象外（daily が週1のため・意図的）"
-done
+# rally / konjaku も 2026-09-27 社長ご決定（O-034）で絞り込みの対象になった＝上の台帳ループが見る。
+# 旧仕様「daily が月曜だけ＝待機に回すと最大7日待つ」は 2026-08-15 の日次復帰で失効しており、
+# 現在の代償は「解析ペース（5日）まで待つ」。社長はそれをご承知のうえで止めることを選ばれた。
+
+# ⚠️ hikita は cron を持たない手動運転（2026-08-19 社長決定）。待機に回すと拾う定時が
+#   存在せず永久に眠るため、ここだけは絞り込みを付けない。
+grep -qE 'dispatch "hp-loop:hikita".*"hp-loop-hikita" +1' "$SRC" \
+  && ng "hikita は絞り込みの対象外" "cron が無いので待機に回すと永久に眠る" \
+  || ok "★hikita だけは絞り込みの対象外（cron が無く、待機に回すと永久に眠る）"
+# ⚠️ config.md には「サイト登録表」と「解析ペース表」の2つがあり、hikita は前者には載っている。
+#    見るのは後者だけ＝上の CRON_SITES（ペース列を持つ行）と同じ解釈を使う。
+# ★ ここは `echo " $CRON_SITES " | grep -q ' hikita '` と書いていたが、CRON_SITES は改行区切りの
+#   ため、hikita が先頭または末尾に来ると前後が空白にならず **素通りする**（2026-10-11 自己検出）。
+#   行単位の完全一致で見る。
+printf '%s\n' $CRON_SITES | grep -qx hikita \
+  && ng "hikita は解析ペース表に載っていない" "載ると上のループが 1 を要求し、永久に眠る設定になる" \
+  || ok "hikita は解析ペース表にも載っていない（台帳と実装が同じことを言っている）"
 
 # 社長との対話窓口は絞らない（絞る意味がない＝そもそも社長からしか来ない）
 for a in chat partner overseer; do

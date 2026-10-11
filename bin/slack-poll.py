@@ -98,6 +98,18 @@ MAX_PER_POLL = 50
 # トレードオフ：期限超過の古い日報スレッドに社長が返信しても拾えない（その場合はトップレベルで
 # 投稿してもらう＝既定の会話窓口が受ける）。.env の SLACK_THREAD_RETENTION_DAYS で変更可。
 THREAD_RETENTION_DAYS = 14
+# 親の投稿そのものが存在しない＝何度試しても同じ答えしか返らないエラー。
+# ★ ここに入れるのは「存在しない」が確定し、かつ**本番で実際に観測したもの**だけ。
+#   - `ratelimited`・通信エラー … 時間が経てば成功する（入れると生きた追跡を落とす）
+#   - `channel_not_found` … ボットを招き直せば復活する
+#   - `no_permission`・`missing_scope` … 権限の問題で、親は存在している
+#   - `message_not_found` … conversations.replies の公式エラー一覧に無く、本番でも未観測。
+#     「未文書化の一時エラー」である可能性を消せないので**入れない**（Codex🟡 2026-10-11）。
+# ⚠️ `thread_not_found` は Slack の定義では「ts が欠落または無効」であって「親が削除された」とは
+#   限らない。保存した channel が別チャンネルのIDに化けていれば、生きた親でもこれが返り得る。
+#   現在の 69件は全て登録時の正しい channel を持つ（実測）ため即削除で運用するが、
+#   状態が壊れた日に備えて **外した ts と理由は必ずログへ名指しで残す**（下の報告）。
+GONE_ERRORS = ("thread_not_found",)
 # 輪番走査：保持期限内でも全スレッドを毎tick走査すると conversations.replies の Tier 3 上限
 # （約50回/分）を超えるため、「最終活動が RECENT_WINDOW_H 時間以内＝毎tick走査」
 # 「それより古い＝SCAN_SHARDS 分の1ずつ輪番走査（thread_ts の剰余で機械的に分担）」にする。
@@ -401,6 +413,7 @@ def cmd_fetch(args):
     skipped_budget = 0
     reply_calls = 0
     scanned_ok = set()           # replies 走査が成功したスレッド（期限候補の削除判定に使う）
+    gone = {}                    # 親が存在しないスレッド {ts: エラーコード}＝走査不能なので untrack
     # 新しい順に走査：呼び出し上限で切れる場合も「返信が来やすい新しいスレッド」を優先する
     ordered = sorted(threads.items(), key=lambda kv: _activity(kv[0], kv[1])[1], reverse=True)
     for thread_ts, info in ordered:
@@ -425,8 +438,19 @@ def cmd_fetch(args):
                                         inclusive=False, limit=MAX_PER_POLL)
         except Exception as e:  # noqa: BLE001 — レート制限・スレッド消失等。スキップして継続
             # SlackApiError は本文の error コード（ratelimited / thread_not_found 等）が原因特定の鍵。
-            code = (getattr(getattr(e, "response", None), "data", None) or {}).get("error", "")
+            # ★ data は dict だけでなく bytes のこともある（Slack SDK の SlackResponse.data）。
+            #   `(data or {}).get(...)` だと非dictで AttributeError になり、**この except 節自身が
+            #   落ちて fetch が丸ごと止まる**＝1本のスレッドをスキップするはずが全停止する
+            #   （Codex🔴 2026-10-11・非JSONのエラーボディで再現）。
+            _data = getattr(getattr(e, "response", None), "data", None)
+            code = _data.get("error", "") if isinstance(_data, dict) else ""
             print(f"[warn] replies取得失敗 thread={thread_ts}: {code or e}", file=sys.stderr)
+            # ★ 2026-10-11（O-078）：ここで continue するだけだと scanned_ok に入らず、
+            #   (b2) の削除条件「強制走査で新着が無かった」を永久に満たさない＝毎tick
+            #   同じ失敗を繰り返す。実害＝ts の小数部が欠けた1本（2026-07-31 作成）に対して
+            #   thread_not_found が 1分おきに 1,527回。「存在しない」が確定するものは untrack する。
+            if code in GONE_ERRORS:
+                gone[thread_ts] = code
             continue
         scanned_ok.add(thread_ts)
         reps = [m for m in r.get("messages", [])
@@ -442,8 +466,19 @@ def cmd_fetch(args):
             set_thread_seen(thread_ts, newest_t)
             expired_candidates.discard(thread_ts)  # 期限間際に返信あり＝活動再開なので削除しない
 
-    # --- (b2) 期限掃除の確定：強制走査で新着が無かった候補＋壊れた ts だけ削除 ---
-    to_remove = {t for t in expired_candidates if t in scanned_ok} | broken_ts
+    # --- (b2) 掃除の確定：①強制走査で新着が無かった期限候補 ②壊れた ts ③親が存在しないもの ---
+    to_remove = {t for t in expired_candidates if t in scanned_ok} | broken_ts | set(gone)
+    if gone:
+        # 件数だけでは「何が消えたか」が後から追えない＝必ず ts と理由を名指しで残す
+        for ts_, code in sorted(gone.items()):
+            # ★ `(threads.get(ts_) or {}).get(...)` だと、値が空でない非dict（壊れた threads.json の
+            #   「文字列になっている」行など）で AttributeError になり、**fetch が丸ごと落ちて
+            #   untrack されず毎分同じ失敗を繰り返す**＝直したはずの O-078 が形を変えて復活する
+            #   （Codex🔴 2026-10-11）。既存テストが守っている「非dictでも fetch を落とさない」を
+            #   壊していた。
+            _info = threads.get(ts_)
+            agent_ = _info.get("agent", DEFAULT_AGENT) if isinstance(_info, dict) else DEFAULT_AGENT
+            print(f"追跡を外しました thread={ts_}（{agent_}）：{code}＝親の投稿が存在しません")
     if to_remove:
         with state_lock():
             threads = _read_json(THREADS, {})  # 走査中の set_thread_seen を上書きしないよう読み直す

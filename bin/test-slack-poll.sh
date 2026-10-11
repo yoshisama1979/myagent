@@ -415,6 +415,18 @@ def fetch(fake, args=None):
     sp.client = lambda: fake
     return run(sp.cmd_fetch, args or [])
 
+def fetch_safe(fake, args=None):
+    """例外を掴んで (出力, 例外の説明) を返す。
+
+    ★ fetch が例外で死ぬとスイートごと止まり、**合計行が出ない**＝test-all.sh は
+      このスイートを 0項目として数える（K-952）。「落ちたから検知できた」ではなく
+      **❌ として読める形**にするため、ここで掴む（2026-10-11）。
+    """
+    try:
+        return fetch(fake, args), ""
+    except Exception as e:  # noqa: BLE001 — 落ちたこと自体を検査対象にする
+        return "", f"{type(e).__name__}: {e}"
+
 def new_count():
     return len(os.listdir(sp.MAILBOX_NEW)) if os.path.isdir(sp.MAILBOX_NEW) else 0
 
@@ -522,6 +534,140 @@ left = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
 (ok if "こわれたts" not in left else ng)("ts 自体が壊れた行は掃除する（Slackに問い合わせ不能）")
 (ok if ts(-100) in left else ng)("値が dict でない行があっても fetch を落とさない")
 (ok if ts(-200) in left else ng)("last_seen だけ壊れている行は誤削除しない（作成時刻へフォールバック）")
+
+
+print("\n--- 親が消えたスレッドの掃除（O-078・2026-10-11 実害 1,527回の無駄打ち）---")
+# Slack の SlackApiError を模す＝`e.response.data["error"]` にコードが入る形
+class _Resp:
+    def __init__(self, code):
+        self.data = {"error": code}
+class SlackErr(RuntimeError):
+    def __init__(self, code):
+        super().__init__(code)
+        self.response = _Resp(code)
+
+class FakeCoded(Fake):
+    """fail を {ts: エラーコード} で受け、SlackApiError 相当を投げる。"""
+    def conversations_replies(self, channel, ts, oldest, inclusive, limit):
+        self.reps.append((channel, ts, oldest))
+        if ts in self.fail:
+            raise SlackErr(self.fail[ts] if isinstance(self.fail, dict) else "ratelimited")
+        return {"messages": list(self.replies.get(ts, []))}
+    def __init__(self, tops=None, replies=None, fail=None):
+        Fake.__init__(self, tops=tops, replies=replies, fail=())
+        self.fail = fail or {}
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+dead = ts(-72 * DAY)                      # 実害と同じ形＝保持期限を大きく超過し、親が存在しない
+sp.register_thread(dead, "hp-loop-ycom", dead, MAIN)
+out = fetch(FakeCoded(fail={dead: "thread_not_found"}))
+left = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
+(ok if dead not in left else ng)(
+    "thread_not_found のスレッドは untrack する（走査が永久に成功しないため毎tick無駄打ちになる）", out.strip())
+(ok if "追跡を外しました" in out and dead in out else ng)(
+    "外した ts を名指しで報告する（件数だけにしない）", out.strip())
+(ok if "thread_not_found" in out and "親の投稿が存在しません" in out else ng)(
+    "外した理由をエラーコードと日本語の両方で残す", out.strip())
+(ok if "hp-loop-ycom" in out else ng)(
+    "どの窓口のスレッドを外したかも残す（返信が届かなくなる先が分かる）", out.strip())
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+dead = ts(-100)                           # 保持期限の「内側」でも、親が無いなら走査は成功しない
+sp.register_thread(dead, "hp-loop", dead, MAIN)
+out = fetch(FakeCoded(fail={dead: "thread_not_found"}))
+(ok if dead not in json.loads(Path(sp.THREADS).read_text(encoding="utf-8")) else ng)(
+    "保持期限内でも thread_not_found なら外す（期限切れを待つと最大14日 鳴り続ける）", out.strip())
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+alive = ts(-100)
+sp.register_thread(alive, "hp-loop", alive, MAIN)
+out = fetch(FakeCoded(fail={alive: "message_not_found"}))
+(ok if alive in json.loads(Path(sp.THREADS).read_text(encoding="utf-8")) else ng)(
+    "★未観測のエラーコードでは外さない（message_not_found は公式一覧に無く一時エラーの可能性が消せない）",
+    out.strip())
+for code in ("no_permission", "missing_scope", "fatal_error", ""):
+    reset()
+    sp.save_channel_seen(MAIN, ts(-10))
+    alive = ts(-100)
+    sp.register_thread(alive, "hp-loop", alive, MAIN)
+    out = fetch(FakeCoded(fail={alive: code}))
+    (ok if alive in json.loads(Path(sp.THREADS).read_text(encoding="utf-8")) else ng)(
+        f"外すのは GONE_ERRORS に挙げたものだけ（{code or '(コード無し)'} では外さない）", out.strip())
+(ok if sp.GONE_ERRORS == ("thread_not_found",) else ng)(
+    "GONE_ERRORS は本番で観測した1つだけ（増やすときは観測の記録とセット）", repr(sp.GONE_ERRORS))
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+busy = ts(-100)
+sp.register_thread(busy, "hp-loop", busy, MAIN)
+out = fetch(FakeCoded(fail={busy: "ratelimited"}))
+left = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
+(ok if busy in left else ng)(
+    "★ratelimited では外さない（時間が経てば成功する＝生きているスレッドを落とさない）", out.strip())
+(ok if "追跡を外しました" not in out else ng)(
+    "ratelimited のときは untrack の報告も出さない", out.strip())
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+kicked = ts(-100)
+sp.register_thread(kicked, "hp-loop", kicked, MAIN)
+out = fetch(FakeCoded(fail={kicked: "channel_not_found"}))
+(ok if kicked in json.loads(Path(sp.THREADS).read_text(encoding="utf-8")) else ng)(
+    "★channel_not_found では外さない（ボットを招き直せば復活する）", out.strip())
+
+# ★Codex🔴（2026-10-11）：untrack の報告処理が、既存の「threads.json が壊れていても
+#   fetch を落とさない」不変条件を壊していた。2通りとも例外ハンドラ側で起きるため、
+#   落ちると「1本をスキップする」が「全停止」になり、O-078 が形を変えて復活する。
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+bad = ts(-100)
+Path(sp.THREADS).write_text(json.dumps({bad: "文字列になっている"}, ensure_ascii=False), encoding="utf-8")
+out, err = fetch_safe(FakeCoded(fail={bad: "thread_not_found"}))
+(ok if not err else ng)(
+    "★値が dict でない行が thread_not_found でも fetch が落ちない", err)
+(ok if bad not in json.loads(Path(sp.THREADS).read_text(encoding="utf-8")) else ng)(
+    "その行もちゃんと untrack される（窓口名は既定にフォールバック）", out.strip())
+
+class FakeBytes(Fake):
+    """response.data が bytes の SlackApiError（非JSONのエラーボディ）を模す。"""
+    def conversations_replies(self, channel, ts, oldest, inclusive, limit):
+        self.reps.append((channel, ts, oldest))
+        if ts in self.fail:
+            class _R:
+                data = b'{"error":"thread_not_found"}'
+            e = RuntimeError("non-json body")
+            e.response = _R()
+            raise e
+        return {"messages": list(self.replies.get(ts, []))}
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+b1, b2 = ts(-100), ts(-200)
+sp.register_thread(b1, "hp-loop", b1, MAIN)
+sp.register_thread(b2, "hp-loop", b2, MAIN)
+f = FakeBytes(replies={b2: [{"ts": ts(-30), "user": PRES, "text": "生きている返信"}]}, fail=[b1])
+out, err = fetch_safe(f)
+(ok if not err else ng)(
+    "★response.data が bytes でも except 節が落ちない（落ちると fetch が丸ごと止まる）", err)
+left = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
+(ok if b1 in left else ng)(
+    "コードを読み取れないときは外さない（安全側＝生きた追跡を落とさない）", sorted(left))
+(ok if new_count() == 1 else ng)("同じtickの他スレッドの返信は取り込めている（全停止していない）")
+
+reset()
+sp.save_channel_seen(MAIN, ts(-10))
+dead, alive = ts(-100), ts(-200)
+sp.register_thread(dead, "hp-loop", dead, MAIN)
+sp.register_thread(alive, "hp-loop", alive, MAIN)
+out = fetch(FakeCoded(replies={alive: [{"ts": ts(-30), "user": PRES, "text": "生きている返信"}]},
+                      fail={dead: "thread_not_found"}))
+left = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
+(ok if dead not in left and alive in left else ng)(
+    "1本が消えていても他のスレッドの追跡は残る", sorted(left))
+(ok if new_count() == 1 else ng)("同じtickの他スレッドの返信は取り込める")
 
 print("\n--- 輪番走査と呼び出し上限（レート制限の予防）---")
 reset()

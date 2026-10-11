@@ -26,7 +26,7 @@
 #   */10 * * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh                # 10分ごと：受信+対応
 #   0 1   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer        # 1日1回：overseer 精密診断
 #   0 7   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily partner         # 毎朝7:00：経営パートナーの朝礼ブリーフィング（手動テスト＋合意後に有効化）
-#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別。**頻度は案件ごと＝data/hp-loop/config.md の「解析ペース」表・既定3日に1回**。
+#   0 2   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom    # HP解析（サイト別。**頻度は案件ごと＝data/hp-loop/config.md の「解析ペース」表・既定5日に1回**。
 #                                                                                     #   cron は毎日呼び、走る日は bin/hp-loop-due.py が決める＝2026-09-01 社長決定）
 #   0 5   * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom  # ブログ診断（B/T提案）
 #   30 5  * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom   # ブログ新規記事→WP下書き（週次・月曜＝在庫凍結中の右サイズ化 2026-07-08）
@@ -872,11 +872,19 @@ dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"  1
 dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka" 1
 dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
 dispatch "hp-loop:shigatoyota" "/hp-loop shigatoyota" "hp-loop-shigatoyota" 1
-# rally / konjaku は urgent_only を付けない＝全便で反応起動する。daily は解析ペース（既定3日に1回）で
-# 間引かれるため、待機(defer)に回すと最大3日待つことになる（旧コメントの「月曜だけ＝最大7日」は
-# 2026-08-15 の日次復帰で失効。2026-09-01 に解析ペース導入で書き替え）
-dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"
-dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"
+# rally / konjaku も他4サイトと揃えて urgent_only＝社長からの便だけで反応起動する
+# （O-034・2026-09-27 社長ご決定／2026-10-11 適用）。
+# 代償＝開発からの便は待機(defer)に回り、**その日の毎分の反応起動では走らなくなる**。
+# ⚠️ ただし「解析日まで最大5日待つ」ではない（Codex🔴 2026-10-11 の指摘で実装を再確認）。
+#    上の cadence ゲートは `pending + defer > 0` ならペース外でも起動するので、**翌日の
+#    daily cron（最大およそ24時間後）で拾われる**。triage 便の「最大3日待ちます」も同じ誤り。
+#    ＝止めた代償は「即時 → 翌日の定時」であって、ペース日数ぶんではない。
+# 社長はこの代償をご承知のうえで止めることを選ばれた＝理由は「反応して動くこと自体ではなく、
+# 便1通でフル解析 約25分が走ること」。軽い反応経路ができたら、ここは作り直す対象になる。
+# 履歴：旧コメントの「月曜だけ＝最大7日」は 2026-08-15 の日次復帰で失効し、2026-09-01 の
+# 解析ペース導入（3日）で「最大3日」に書き替え、2026-10-04 社長ご決定の5日化で現在の値になった。
+dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"    1
+dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"  1
 # hikita は手動運転（cron 登録なし＝費用の関係・2026-08-19 社長決定）。起動は
 # 手動 `agent-tick.sh daily hp-loop-hikita` か mailbox 便のみ。待機(defer)にすると
 # 拾う定時が存在せず永久に眠るため、第4引数なし＝全便で起動する
