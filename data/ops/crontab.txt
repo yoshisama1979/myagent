@@ -1,0 +1,47 @@
+# VPS crontab の控え（git 追跡下）
+# 目的＝A-065② の解消：VPS を再構築しても朝礼・解析ループの定義を復元できるようにする。
+# 復元＝ crontab data/ops/crontab.txt （先頭のコメント行はそのまま渡して問題ありません）
+# 生成＝ bin/backup-crontab.sh（毎朝 6:20 の cron／手動でも可）。手で編集しないこと。
+# 取得日時: 2026-10-11 10:24:20 JST  取得元: vpsuser@x210-131-217-220
+#
+PATH=/home/vpsuser/.local/bin:/home/vpsuser/.nvm/versions/node/v24.16.0/bin:/home/vpsuser/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+MAILTO=""
+*/1 * * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 1 * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 1 * * 2 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily overseer >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 2 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-ycom     >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+30 2 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-yoshida  >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 3 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-fujisaka >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+30 3 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-yokohawaii >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 4 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-rally    >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+30 4 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-konjaku  >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+45 1 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-shigatoyota >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom
+30 5 * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom
+0 6 * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom
+0 23 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily memo
+55 6 * * * python3 /home/vpsuser/projects/myagent/bin/calendar-fetch.py fetch >> /home/vpsuser/projects/myagent/data/comms/calendar/fetch.log 2>&1
+0 7 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily partner >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+15 1 * * * python3 /home/vpsuser/projects/myagent/bin/system-health.py >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+0 6-22/2 * * * python3 /home/vpsuser/projects/myagent/bin/chatwork-fetch.py poll >> /home/vpsuser/projects/myagent/data/comms/chatwork/poll.log 2>&1
+10 6-22/2 * * * /home/vpsuser/projects/myagent/bin/comms-tick.sh >> /home/vpsuser/projects/myagent/data/comms/chatwork/distill.log 2>&1
+5 6-22/2 * * * python3 /home/vpsuser/projects/myagent/bin/gmail-fetch.py poll >> /home/vpsuser/projects/myagent/data/comms/gmail/poll.log 2>&1
+40 6 * * * /home/vpsuser/projects/myagent/bin/.venv/bin/python /home/vpsuser/projects/myagent/bin/office-forest-fetch.py >> /home/vpsuser/projects/myagent/data/office/forest-fetch.log 2>&1
+
+# SSL 有効期限の見張り（社長承認 2026-08-17・案【1】）：問題があるときだけ Slack へ通知。
+# WARN_DAYS=14 の理由＝対象証明書は全て自動更新型（Let's Encrypt / Amazon）で、既定の30日だと
+# 正常な更新窓に入るたび全ドメインが毎日鳴る＝警報疲れになる。14日＝「自動更新されるはずが されなかった」の合図。
+# 問題が続く間は3暦日おきに鳴らし直す（初回は必ず鳴らす・送信失敗は通知済みにしない）＝重複防止は check-ssl.sh 側で実装。SSL_LOG はログの自己ローテ用。
+30 6 * * * WARN_DAYS=14 SSL_LOG=/home/vpsuser/projects/myagent/data/ssl-check/check.log /home/vpsuser/projects/myagent/bin/check-ssl.sh --slack --only-problems >> /home/vpsuser/projects/myagent/data/ssl-check/check.log 2>&1
+# 仕訳帳をMFクラウド(MCP)から日次取得（F-017・2026-08-19 社長承認）。失敗時は前回CSVを残しSlackへ警告。
+30 1 * * * /home/vpsuser/projects/myagent/bin/journal-mcp-export.sh >> /home/vpsuser/projects/myagent/data/financial/generated/journal-mcp/export.log 2>&1
+# 相談レーン（#partner の軽い会話）。agent-tick とは別ロック・別レーン＝重い解析に待たされない（2026-08-19 社長承認）
+*/1 * * * * /home/vpsuser/projects/myagent/bin/talk-tick.sh >> /home/vpsuser/projects/myagent/data/slack/talk.log 2>&1
+# crontab の控えを git 追跡下へ取り直す（A-065②・2026-09-04 社長ご承認）
+20 6 * * * /home/vpsuser/projects/myagent/bin/backup-crontab.sh >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+# 週1（月曜0:50）：解析ループの産出量を記録する。LLM を起動しない純粋な Python＝トークン消費ゼロ。
+# overseer の月曜1:00 精密診断が新しい数字を読めるよう、その直前に置く（2026-09-12 社長ご承認）
+50 0 * * 1 python3 /home/vpsuser/projects/myagent/bin/loop-quality.py snapshot >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
+# 毎日1:20：社長がブラウザで見る「いまの現在地」を再生成（LLM 不使用・外部API も叩かない）
+# system-health.py(1:15) の直後＝サイズ履歴が最新の状態で作る（2026-09-13 社長ご承認）
+20 1 * * * python3 /home/vpsuser/projects/myagent/bin/build-status-page.py >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
