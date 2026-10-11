@@ -538,24 +538,26 @@ left = json.loads(Path(sp.THREADS).read_text(encoding="utf-8"))
 
 print("\n--- 親が消えたスレッドの掃除（O-078・2026-10-11 実害 1,527回の無駄打ち）---")
 # Slack の SlackApiError を模す＝`e.response.data["error"]` にコードが入る形
-class _Resp:
-    def __init__(self, code):
-        self.data = {"error": code}
 class SlackErr(RuntimeError):
-    def __init__(self, code):
-        super().__init__(code)
-        self.response = _Resp(code)
+    """SlackApiError 相当。`data` は dict だけでなく bytes のこともある（SDK 3.42 の実装）。"""
+    def __init__(self, payload):
+        super().__init__(repr(payload))
+        self.response = type("_Resp", (), {
+            "data": payload if isinstance(payload, (bytes, bytearray)) else {"error": payload}})()
 
 class FakeCoded(Fake):
-    """fail を {ts: エラーコード} で受け、SlackApiError 相当を投げる。"""
-    def conversations_replies(self, channel, ts, oldest, inclusive, limit):
-        self.reps.append((channel, ts, oldest))
-        if ts in self.fail:
-            raise SlackErr(self.fail[ts] if isinstance(self.fail, dict) else "ratelimited")
-        return {"messages": list(self.replies.get(ts, []))}
+    """fail を {ts: エラーコード} で受けて SlackApiError 相当を投げる。
+
+    値を bytes にすると「非JSONのエラーボディ」になる＝コードが読み取れない場合の検査。
+    """
     def __init__(self, tops=None, replies=None, fail=None):
         Fake.__init__(self, tops=tops, replies=replies, fail=())
         self.fail = fail or {}
+    def conversations_replies(self, channel, ts, oldest, inclusive, limit):
+        self.reps.append((channel, ts, oldest))
+        if ts in self.fail:
+            raise SlackErr(self.fail[ts])
+        return {"messages": list(self.replies.get(ts, []))}
 
 reset()
 sp.save_channel_seen(MAIN, ts(-10))
@@ -631,24 +633,13 @@ out, err = fetch_safe(FakeCoded(fail={bad: "thread_not_found"}))
 (ok if bad not in json.loads(Path(sp.THREADS).read_text(encoding="utf-8")) else ng)(
     "その行もちゃんと untrack される（窓口名は既定にフォールバック）", out.strip())
 
-class FakeBytes(Fake):
-    """response.data が bytes の SlackApiError（非JSONのエラーボディ）を模す。"""
-    def conversations_replies(self, channel, ts, oldest, inclusive, limit):
-        self.reps.append((channel, ts, oldest))
-        if ts in self.fail:
-            class _R:
-                data = b'{"error":"thread_not_found"}'
-            e = RuntimeError("non-json body")
-            e.response = _R()
-            raise e
-        return {"messages": list(self.replies.get(ts, []))}
-
 reset()
 sp.save_channel_seen(MAIN, ts(-10))
 b1, b2 = ts(-100), ts(-200)
 sp.register_thread(b1, "hp-loop", b1, MAIN)
 sp.register_thread(b2, "hp-loop", b2, MAIN)
-f = FakeBytes(replies={b2: [{"ts": ts(-30), "user": PRES, "text": "生きている返信"}]}, fail=[b1])
+f = FakeCoded(replies={b2: [{"ts": ts(-30), "user": PRES, "text": "生きている返信"}]},
+              fail={b1: b'{"error":"thread_not_found"}'})
 out, err = fetch_safe(f)
 (ok if not err else ng)(
     "★response.data が bytes でも except 節が落ちない（落ちると fetch が丸ごと止まる）", err)
