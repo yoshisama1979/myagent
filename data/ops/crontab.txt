@@ -2,7 +2,7 @@
 # 目的＝A-065② の解消：VPS を再構築しても朝礼・解析ループの定義を復元できるようにする。
 # 復元＝ crontab data/ops/crontab.txt （先頭のコメント行はそのまま渡して問題ありません）
 # 生成＝ bin/backup-crontab.sh（毎朝 6:20 の cron／手動でも可）。手で編集しないこと。
-# 取得日時: 2026-10-11 10:24:20 JST  取得元: vpsuser@x210-131-217-220
+# 取得日時: 2026-10-11 10:38:42 JST  取得元: vpsuser@x210-131-217-220
 #
 PATH=/home/vpsuser/.local/bin:/home/vpsuser/.nvm/versions/node/v24.16.0/bin:/home/vpsuser/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 MAILTO=""
@@ -18,7 +18,7 @@ MAILTO=""
 45 1 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily hp-loop-shigatoyota >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
 0 5  * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-loop-ycom
 30 5 * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-write-ycom
-0 6 * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom
+20 0 * * 1 /home/vpsuser/projects/myagent/bin/agent-tick.sh daily blog-improve-ycom
 0 23 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily memo
 55 6 * * * python3 /home/vpsuser/projects/myagent/bin/calendar-fetch.py fetch >> /home/vpsuser/projects/myagent/data/comms/calendar/fetch.log 2>&1
 0 7 * * * /home/vpsuser/projects/myagent/bin/agent-tick.sh daily partner >> /home/vpsuser/projects/myagent/data/overseer/cron.log 2>&1
