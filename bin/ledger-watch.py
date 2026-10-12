@@ -192,9 +192,15 @@ def mailbox_queues():
             day = jst_day(msg.get("ts"))
             age = (today - day).days if day else None
             k = (box, to)
-            e = out.setdefault(k, {"box": box, "to": to, "count": 0, "oldest": None})
+            e = out.setdefault(k, {"box": box, "to": to, "count": 0, "oldest": None,
+                                   "age_unknown": 0})
             e["count"] += 1
-            if age is not None:
+            # ★日時が読めない便・未来の日時の便を**数える**（2026-10-12・Codex🟡）。
+            #   黙って飛ばすと、他に新しい便が1通あるだけで最古が 0日になり「滞留なし」に化ける
+            #   ＝不明が健全に見える。負の日数（未来）も滞留日数としては使えない。
+            if age is None or age < 0:
+                e["age_unknown"] += 1
+            else:
                 e["oldest"] = age if e["oldest"] is None else max(e["oldest"], age)
     return sorted(out.values(), key=lambda e: (-(e["oldest"] or 0), -e["count"])), unreadable
 
@@ -303,6 +309,154 @@ def decision_queues():
             note += "（件数は bin/pending-scan.py scan を流すと出ます）"
         out.append({"name": "スキル改善提案の未採否", "count": n, "note": note})
     return out
+
+
+# 窓口の受信箱の滞留のしきい値（★提案既定値＝K-929 の Codex 提案をそのまま採る）。
+# ★「cur/ が0通」を単独で見るのが要点＝新設以来**一度も処理済みにしていない**窓口は、
+#   件数が少なくても止まっている（2026-10-04 実測＝work 宛 new/ 14通・cur/ 0通）。
+DESK_MAIL_RED_DAYS = 3
+DESK_MAIL_WARN_DAYS = 1
+DESK_MAIL_WARN_COUNT = 5
+
+
+def desk_mailbox_snapshots(days=7):
+    """snapshot の履歴から「約 N日前の窓口の受信箱」を引く。
+
+    ★なぜ要るか＝しきい値だけで鳴らすと、実測で**7窓口のうち7窓口が点灯**した（2026-10-12）。
+      この道具の方針は「超過しているか」でなく「超過していて、かつ悪化中か」（ledger-discipline §2）。
+      しきい値（K-929 のご提案）はそのまま残し、**赤の中でどれが増え続けているか**を別の列で出す。
+    ★履歴が無いときは「横ばい」と言わない＝2026-09-12 に踏んだバグそのもの
+      （履歴の無い器が「週あたり 0.0K」＝🟡 に化けた）。取れないものは取れないと言う。
+
+    戻り値＝({窓口: [未読, 最古]}, 実際にさかのぼれた日数) ／ 履歴が無ければ ({}, None)。
+    """
+    if not os.path.exists(SNAP_LOG):
+        return {}, None
+    recs = []
+    try:
+        with open(SNAP_LOG, encoding="utf-8") as f:
+            for ln in f:
+                try:
+                    rec = json.loads(ln)
+                except ValueError:
+                    continue            # 壊れた行は捨てる（【1】の履歴と同じ扱い）
+                if isinstance(rec, dict) and isinstance(rec.get("desk_mailbox"), dict):
+                    d = jst_day(rec.get("ts"))
+                    if d:
+                        recs.append((d, rec["desk_mailbox"]))
+    except OSError:
+        return {}, None
+    if not recs:
+        return {}, None
+    # ★`recs.sort()` と書くと、**同じ日付の記録が2件**あったときタプルの2番目（dict）を
+    #   比べて `TypeError: '<' not supported between instances of 'dict' and 'dict'` で落ちる。
+    #   中身が完全に同じなら等価比較で済んで落ちないため、**件数が動いた日にだけ落ちる**
+    #   （手元で再現・Codex🔴 2026-10-12）。snapshot を1日2回動かせば普通に起きる
+    #   （cron ＋ 手動、cron の再実行）。日付だけで並べる。
+    recs.sort(key=lambda r: r[0])
+    today = datetime.datetime.now(JST).date()
+    want = today - datetime.timedelta(days=days)
+    # want 以前でいちばん新しいもの。無ければ（履歴が浅い）いちばん古いもの。
+    # 同じ日付が複数あればファイル上であとに書かれたものを採る（sort は安定）。
+    past = [r for r in recs if r[0] <= want]
+    day, snap = past[-1] if past else recs[0]
+    span = (today - day).days
+    return (snap, span) if span > 0 else ({}, None)   # 同日の記録しかない＝推移は言えない
+
+
+def desk_mailbox_health(mail, pk, labels, prev=None):
+    """キュー③＝**窓口（人が開く受信箱）**の滞留。【2】の宛先別とは見るものが違う。
+
+    契機＝K-929（2026-10-04 起票）。mailbox 規約 v0.5 が決めたのは「AI が手順を踏むか」なので
+    静的検査が効かない。守られたかどうかは**スプールの実データ**からしか分からない。
+    2026-10-04 の穴（dev 16日・board 11日・work は cur/ が0通）は、合図が毎ターン出ていたのに
+    **誰も数えていなかった**＝「鳴りっぱなしの警告は警告として働かない」の型。
+
+    ★宛先を**対応表の窓口だけ**に絞る（ハードコードしない）。mailbox の宛先には無人モード
+      （hp-loop-* ・*-dev）が混ざるが、あれは「人が開く」ものではないので【2】の表で見る。
+    ★できないこと＝「残した理由を1行言ったか」はスプールからは検証できない。
+      厳密にやるには local-keep（本文を変えずに状態を持つ）が別途要る＝K-929 に書いたまま。
+    """
+    pick = {e["to"]: e for e in pk}
+    rows = []
+    for name in sorted(labels):
+        new = next((m for m in mail if m["to"] == name and m["box"] == "new"), None)
+        hold = next((m for m in mail if m["to"] == name and m["box"] == "hold"), None)
+        got = pick.get(name)
+        unread = new["count"] if new else 0
+        done = got["count"] if got else 0
+        # ★`or 0` で 0日に丸めると**不明が「滞留なし」に化けて ✅ で省略される**
+        #   （Codex🟡 2026-10-12＝今日ずっと直していた「判定不能を健全と呼ぶ」型そのもの）。
+        #   日時が読めない便が**1通でも**あれば、その窓口の滞留日数は言い切れない。
+        unknown = (new.get("age_unknown") or 0) if new else 0
+        raw = new["oldest"] if new else 0
+        bad_age = bool(new) and raw is None and unknown > 0
+        oldest = 0 if raw is None else raw
+        if bad_age:
+            flag, why = "🔴", f"便の日時が読めません（未来・欠落）{unknown}通＝滞留日数が判定できません"
+        elif oldest >= DESK_MAIL_RED_DAYS:
+            flag, why = "🔴", f"最古 {oldest}日"
+        elif not done and oldest >= DESK_MAIL_WARN_DAYS:
+            # 一度も処理済みにしていない＝件数が少なくても手順が回っていない
+            flag, why = "🔴", f"処理済みが0通のまま最古 {oldest}日"
+        elif oldest >= DESK_MAIL_WARN_DAYS:
+            flag, why = "🟡", f"最古 {oldest}日"
+        elif unread >= DESK_MAIL_WARN_COUNT:
+            flag, why = "🟡", f"未読 {unread}通"
+        else:
+            flag, why = "✅", ""
+        if unknown and not bad_age:
+            # しきい値としては軽くても、**判定できない便が混ざっている**ことは隠さない
+            flag = "🔴" if flag == "✅" else flag
+            why = (why + "／" if why else "") + f"日時が読めない便 {unknown}通＝最古は言い切れない"
+        # 推移＝増（悪化）／横（変わらず）／減（改善）。履歴が無ければ None（「横」にしない）。
+        # ★**改善の方向は断定しない**（Codex🔴 2026-10-12・手元で再現）。最古が「不明」なのに
+        #   過去値と引き算して「減 -9日」と出していた＝読めない便が実際の最古かもしれないので、
+        #   減った・変わらないとは言えない。悪化（増）だけは安全側なので言う。
+        #   記録の形は [未読, 最古, 日時不明の件数]。3つ目が無い古い記録は「不明かどうか不明」。
+        was = (prev or {}).get(name)
+        trend = d_unread = d_oldest = None
+        # ★「—」の理由を**必ず**立てる（Codex🔴 2026-10-12・3回目）。旧コードは
+        #   ①過去の記録が空 dict ②過去値が文字列や1要素 のとき blocked が None のままで、
+        #   「比較した日数は出ているのに推移が空欄・理由なし」になった＝黙る形が残っていた。
+        if prev is None:
+            blocked = None                      # 比べる気が無い呼び出し（snapshot 側）
+        elif was is None:
+            blocked = "no_past"
+        elif not (isinstance(was, (list, tuple)) and len(was) >= 2):
+            blocked = "bad_past"
+        else:
+            blocked = None
+            try:
+                p_unread = int(was[0])
+                p_oldest = None if was[1] is None else int(was[1])
+                p_unknown = int(was[2]) if len(was) >= 3 and was[2] is not None else None
+                d_unread = unread - p_unread
+                d_oldest = None if (bad_age or p_oldest is None) else oldest - p_oldest
+                certain = (unknown == 0) and (p_unknown == 0) and (d_oldest is not None)
+                # ★未読の増加は確か（ファイルの数なので日時の読めなさに左右されない）。
+                #   最古の増加は **過去に日時不明が無いときだけ**言える（Codex🔴 3回目）＝
+                #   過去の不明便が実は20日前だったなら、見かけ上の増加は実際には改善のこともある。
+                up = (d_unread > 0) or ((d_oldest or 0) > 0 and p_unknown == 0)
+                if certain:
+                    trend = "増" if up else ("減" if (d_unread < 0 or (d_oldest or 0) < 0) else "横")
+                else:
+                    # 言えるのは「増えた」だけ。減った・横ばいは不明として伏せる
+                    trend, blocked = ("増", None) if up else (None, "age_unknown")
+            except (TypeError, ValueError, IndexError):   # 要素が足りない記録でも落ちない
+                trend, d_unread, d_oldest, blocked = None, None, None, "bad_past"
+        rows.append({"desk": name, "flag": flag, "why": why, "unread": unread,
+                     "oldest": None if bad_age else oldest, "age_unknown": unknown,
+                     "hold": hold["count"] if hold else 0, "done": done,
+                     "last": got["last"] if got else None,
+                     "trend": trend, "d_unread": d_unread, "d_oldest": d_oldest,
+                     "trend_blocked": blocked})
+    order = {"🔴": 0, "🟡": 1, "✅": 2}
+    # 赤の中では**悪化中**を先に出す（しきい値で全部赤になっても読む順番が決まる）
+    worse = {"増": 0, None: 1, "横": 2, "減": 3}
+    rows.sort(key=lambda e: (order[e["flag"]], worse[e["trend"]],
+                             -(e["oldest"] if e["oldest"] is not None else 10 ** 6), -e["unread"]))
+    return rows
 
 
 def desk_table():
@@ -699,6 +853,10 @@ def report(as_json=False):
     dec = decision_queues()
     dk, dk_err = desks()
     pk = pickups()          # 人向けと機械向けで二度数えない（正を2つ持たない）
+    # 窓口の受信箱の滞留（K-929）。対象は対応表の窓口だけ＝正は desk_table()。
+    dm_labels, _, dm_err = desk_table()
+    dm_prev, dm_span = desk_mailbox_snapshots()
+    dm = desk_mailbox_health(mail, pk, dm_labels, dm_prev)
     if as_json:
         print(json.dumps({"generated": datetime.datetime.now(JST).isoformat(timespec="seconds"),
                           "since": str(since), "snapshots": n, "accumulators": rows,
@@ -706,12 +864,15 @@ def report(as_json=False):
                           # ★窓口側のエラーも機械可読に出す。出さないと、読む側（build-status-page）
                           #   からは「窓口が0件＝合図なし（健全）」と「判定できなかった」が
                           #   同じ見た目になる＝沈黙が健全に化ける（2026-10-12）。
-                          "desks_error": dk_err,
+                          "desks_error": dk_err, "desk_mailbox": dm,
+                          "desk_mailbox_error": dm_err, "desk_mailbox_span": dm_span,
                           "unreadable": unreadable, "threshold_error": lim_err},
                          ensure_ascii=False, indent=2))
         return 0
     print(f"■ 器の状態（{datetime.datetime.now(JST).date()}／サイズ履歴 {since}〜・{n}回分）")
-    print("  数えるだけで良し悪しは判断しない。🔴＝超過かつ増え続けている／🟡＝超過だが横ばい〜減少／🆕＝超過だが傾き不明（計測開始直後）／✅＝上限内\n")
+    print("  数えるだけで良し悪しは判断しない。【1】の記号＝🔴 超過かつ増え続けている／"
+          "🟡 超過だが横ばい〜減少／🆕 超過だが傾き不明（計測開始直後）／✅ 上限内"
+          "（**キューの節の記号は意味が違う**＝その節に書いた）\n")
     if lim_err:
         print(f"  ⚠️ {lim_err}\n")
 
@@ -741,6 +902,11 @@ def report(as_json=False):
         print(f"  {label:<34}{e['count']:>6}{(e['oldest'] if e['oldest'] is not None else '—'):>10}")
     if unreadable:
         print(f"  ⚠️ 読めなかったメッセージ {unreadable} 件")
+    odd = [(e["box"], e["to"], e["age_unknown"]) for e in mail if e.get("age_unknown")]
+    if odd:
+        # 最古の列に出てこない便＝日時が欠けている・未来になっている（滞留日数に使えない）
+        print("  ⚠️ 日時が読めない便（最古の列に入っていません）："
+              + "・".join(f"{b}/ → {t} {n}通" for b, t, n in odd))
     if pk:
         print("  宛先が最後に取りに来た日（cur/ の改名時刻からの**推定**"
               "＝復元・cp でずれる。確定値にするには処理時刻の記録が要る／K-890）")
@@ -753,6 +919,50 @@ def report(as_json=False):
     for e in dec:
         c = "—" if e["count"] is None else e["count"]
         print(f"  {e['name']:<34}{c:>6}          {e['note']}")
+
+    print("【2-b】窓口の受信箱（人が開く窓口だけ・無人の宛先は上の表で見る）")
+    # ★記号の意味が節で違うことを**その場で**書く（Codex🔴 2026-10-12）。
+    #   冒頭の凡例「🔴＝超過かつ増え続けている」は【1】蓄積のもの。キューは正常なら減るので、
+    #   減っていないこと自体が異常＝しきい値だけで 🔴 にする。悪化中かは推移の列で見る。
+    #   ⇒ 「🔴 … 減-5通-7日」は矛盾ではなく「重いが改善中」と読む。
+    print("  ここの 🔴🟡 は**滞留のしきい値**（【1】の『超過かつ増加中』とは別の意味）。"
+          "キューは正常なら減る＝減らないこと自体が異常。悪化中かどうかは推移の列で見る")
+    if dm_err:
+        print(f"  ⚠️ 対象の窓口が分かりません＝{dm_err}")
+    elif not dm:
+        print("  （対応表に窓口がありません）")
+    else:
+        span = f"{dm_span}日前比" if dm_span else "推移"
+        print(f"  {'窓口':<14}{'未読':>5}{'最古(日)':>9}{'hold':>6}{'処理済':>7}{span:>9}  見立て")
+        shown = [e for e in dm if e["flag"] != "✅"]
+        for e in shown:
+            if e["trend"] is None:
+                mv = "—"
+            else:
+                du = f"{e['d_unread']:+d}通" if e["d_unread"] is not None else "?通"
+                do = f"{e['d_oldest']:+d}日" if e["d_oldest"] is not None else "?日"
+                mv = f"{e['trend']}{du}{do}"
+            age = "不明" if e["oldest"] is None else str(e["oldest"])
+            print(f"  {e['flag']}{e['desk']:<12}{e['unread']:>5}{age:>9}"
+                  f"{e['hold']:>6}{e['done']:>7}{mv:>9}  {e['why']}")
+        rest = len(dm) - len(shown)
+        if rest:
+            print(f"  … 滞留なし {rest}窓口は省略（全 {len(dm)}窓口）")
+        # 「—」の理由を種類ごとに分けて言う（黙って空欄にしない＝故障と区別できない）
+        for kind, note in (("no_past", "過去の記録にこの窓口がありません（あとから足した窓口）"),
+                           ("age_unknown", "日時が読めない便がある（または過去の記録にその件数が"
+                                           "無い）ため、減った・変わらないとは言えません"),
+                           ("bad_past", "過去の記録の形が壊れています")):
+            who = [e["desk"] for e in shown if dm_span and e["trend_blocked"] == kind]
+            if who:
+                print(f"  ⚠️ 推移を言い切れない窓口 {len(who)}件（{'・'.join(who)}）＝{note}")
+        if dm_span is None:
+            # 「超過かつ悪化中」で鳴らすのがこの道具の方針だが、推移の履歴がまだ無い。
+            # ★取れないものを「横ばい」と言わない（2026-09-12 に踏んだバグ）＝「—」で出す。
+            print(f"  ⚠️ 推移は判定不能＝比べられる過去の記録がまだありません"
+                  f"（{os.path.relpath(SNAP_LOG, ROOT)}・`ledger-watch.py snapshot` を毎日"
+                  "動かすと増減が出る／cron に1行足す必要があります）")
+    print()
 
     print("\n【3】窓口（社長が自分で開くモード・最後に開いた日）")
     print("  ★日付の根拠は**ログが最後に動いた日**（mtime の推定）＝復元・cp・時計ずれでも進む。"
@@ -772,8 +982,14 @@ def snapshot():
     _, _, _, _ = accumulators()
     mail, _ = mailbox_queues()
     dec = decision_queues()
+    labels, _, _ = desk_table()
+    dm = desk_mailbox_health(mail, pickups(), labels)   # 記録するのは実測値だけ（推移は読む側で出す）
     rec = {"ts": datetime.datetime.now(JST).isoformat(timespec="seconds"),
            "mailbox": {f"{e['box']}/{e['to']}": e["count"] for e in mail},
+           # 窓口の受信箱は「未読と最古の滞留日数」の2つで推移を見る（K-929）
+           # [未読, 最古（不明なら null）, 日時が読めない便の件数]
+           # ★3つ目が無いと、翌日「過去も不確かだった」が分からず改善と断定してしまう（Codex🔴）
+           "desk_mailbox": {e["desk"]: [e["unread"], e["oldest"], e["age_unknown"]] for e in dm},
            "decisions": {e["name"]: e["count"] for e in dec}}
     os.makedirs(os.path.dirname(SNAP_LOG), exist_ok=True)
     with open(SNAP_LOG, "a", encoding="utf-8") as f:

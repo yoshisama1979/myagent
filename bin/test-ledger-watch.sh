@@ -532,6 +532,281 @@ if [ "$a2" = "$b2" ]; then ok "new/ → cur/ を実際に動かしても取り�
 # ★0件のとき「0件」と言えること／入力が無いときは「0件」と言わず**判定不能**と言えること（Codex 指摘 🔴3）。
 # ★cron.log はブロック形式（`# system-health YYYY-MM-DD HH:MM` の下に日付の無い ⚠️ 行が並ぶ）＝
 #   行ごとに日付を求めると実データで1件も拾えない（実測ヒット0件・Codex 指摘 🔴1）。
+# ── 【2-b】窓口の受信箱の滞留（K-929・2026-10-12）
+# 契機＝mailbox 規約 v0.5 が決めたのは「AI が手順を踏むか」なので静的検査が効かない。
+# 守られたかは**スプールの実データ**からしか分からない（2026-10-04 実測＝work は cur/ が0通）。
+echo
+echo "── 【2-b】窓口の受信箱の滞留（人が開く窓口だけ）"
+B="$TMP/deskmail"; mkdir -p "$B/bin" "$B/config" "$B/data/mailbox/new" "$B/data/mailbox/hold" "$B/data/mailbox/cur" "$B/data/overseer"
+cp "$PROJ/bin/session-desk.py" "$B/bin/"
+cat > "$B/config/session-desks.json" <<'JSON'
+{
+  "desks": {
+    "aaa": {"label": "最古が3日以上"},
+    "bbb": {"label": "処理済みが0通"},
+    "ccc": {"label": "最古が1日"},
+    "ddd": {"label": "未読が多い"},
+    "eee": {"label": "滞留なし"},
+    "fff": {"label": "日時が1通も読めない"}
+  },
+  "sessions": {}
+}
+JSON
+bmail() { printf '{"id":"%s","to":"%s","ts":"%sT10:00:00+09:00"}' "$1" "$2" "$(DAY "$3")" > "$B/data/mailbox/$4/$1.json"; }
+bmail M-a1 aaa 9 new; bmail M-a2 aaa 1 new          # 最古9日 → 🔴
+bmail M-b1 bbb 2 new                                 # 1通・最古2日・処理済み0 → 🔴
+bmail M-c1 ccc 1 new                                 # 最古1日・処理済みあり → 🟡
+for i in 1 2 3 4 5 6; do bmail "M-d$i" ddd 0 new; done   # 6通・最古0日 → 🟡（件数で鳴る）
+bmail M-e1 eee 0 new                                 # 1通・最古0日・処理済みあり → ✅
+bmail M-z1 hp-loop-ycom 40 new                       # 無人の宛先＝対象外
+bmail M-h1 aaa 5 hold                                # hold は別に数える
+printf '%s' '{"id":"C-a","to":"aaa"}' > "$B/data/mailbox/cur/C-a.json"
+printf '%s' '{"id":"C-c","to":"ccc"}' > "$B/data/mailbox/cur/C-c.json"
+printf '%s' '{"id":"C-d","to":"ddd"}' > "$B/data/mailbox/cur/C-d.json"
+printf '%s' '{"id":"C-e","to":"eee"}' > "$B/data/mailbox/cur/C-e.json"
+cp "$R/bin/system-health.py" "$B/bin/system-health.py"
+brun() { LEDGER_WATCH_ROOT="$B" LEDGER_WATCH_SESSIONS="$TMP/sessions-empty" python3 "$TOOL" "$@" 2>&1; }
+mkdir -p "$TMP/sessions-empty"
+bout="$(brun report)"
+
+printf '%s' "$bout" | grep -q 'hp-loop-ycom' && \
+  { printf '%s' "$bout" | sed -n '/【2-b】/,/【3】/p' | grep -q 'hp-loop-ycom' \
+    && ng "無人の宛先を窓口として数えている" "hp-loop-* や *-dev は人が開く窓口ではない" \
+    || ok "★対象は対応表の窓口だけ（無人の宛先は【2】の表で見る）"; } \
+  || ng "検査が成立していない" "無人の宛先が【2】にも出ていない＝仕掛けが効いていない"
+printf '%s' "$bout" | grep -qE '🔴aaa .*9 ' && ok "最古が3日以上は 🔴" || ng "最古3日以上を 🔴 にしていない"
+printf '%s' "$bout" | grep -qE '🔴bbb .*処理済みが0通' \
+  && ok "★処理済みが0通のまま滞留している窓口は、件数が少なくても 🔴（K-929 の核）" \
+  || ng "★cur/ が0通の窓口を見ていない" "新設以来一度も処理済みにしていない窓口が緑になる"
+printf '%s' "$bout" | grep -qE '🟡ccc ' && ok "最古が1日は 🟡" || ng "最古1日を 🟡 にしていない"
+printf '%s' "$bout" | grep -qE '🟡ddd ' && ok "滞留が浅くても未読5通以上は 🟡（件数でも鳴る）" || ng "件数の条件が効いていない"
+printf '%s' "$bout" | sed -n '/【2-b】/,/【3】/p' | grep -q 'eee' \
+  && ng "滞留なしの窓口を表に出している" "鳴りっぱなしにしない＝省略して件数を言う" \
+  || ok "滞留なしの窓口は省略する"
+printf '%s' "$bout" | grep -q '滞留なし 2窓口は省略' && ok "省略した件数を言う（黙って消さない）" || ng "省略件数を言っていない"
+printf '%s' "$bout" | grep -qE '🔴aaa .* 1 ' && ok "hold/ の件数も出す" || ng "hold/ を数えていない"
+
+# ★推移：履歴が無いときに「横ばい」と言わない（2026-09-12 に踏んだバグ＝履歴の無い器が🟡に化けた）
+printf '%s' "$bout" | grep -q '推移は判定不能' && ok "★履歴が無いときは推移を「判定不能」と言う（横ばいにしない）" \
+  || ng "★履歴が無いのに推移を言っている" "2026-09-12 のバグ（履歴なしが横ばいに化ける）の再発"
+printf '%s' "$bout" | sed -n '/【2-b】/,/【3】/p' | grep -qE '(増|横|減)[-+]' \
+  && ng "履歴が無いのに増減を出している" "根拠のない推移" || ok "履歴が無い行の推移欄は「—」"
+
+# ★推移：7日前の記録と比べる
+brun snapshot >/dev/null
+[ -s "$B/data/overseer/ledger-watch.jsonl" ] && ok "snapshot が窓口の受信箱も記録する" || ng "snapshot に窓口の受信箱が無い"
+python3 -c "
+import json,sys,datetime
+p=sys.argv[1]
+rec=json.loads(open(p).read().splitlines()[-1])
+assert 'desk_mailbox' in rec, rec.keys()
+assert rec['desk_mailbox']['aaa'] == [2, 9, 0], rec['desk_mailbox']['aaa']
+" "$B/data/overseer/ledger-watch.jsonl" && ok "記録の中身が実測値（未読・最古）" || ng "snapshot の中身が合わない"
+# ★今日の記録しか無いときに推移を言わない。自分で今さっき書いた値と比べれば必ず「横+0通+0日」に
+#   なり、**どの窓口も変わっていない**という嘘を毎日出し続ける（履歴なしが横ばいに化けるのと同じ型）。
+bout_same="$(brun report)"
+printf '%s' "$bout_same" | grep -q '推移は判定不能' \
+  && ok "★今日の記録しか無いときは推移を言わない（自分の値と比べて「横」にしない）" \
+  || ng "★同日の記録で推移を出している" "毎日「変わっていません」と嘘を言い続ける"
+
+# 8日前の記録を仕込む（aaa は増・ccc は減・ddd は横）
+python3 -c "
+import json,sys,datetime
+p=sys.argv[1]
+old={'ts':(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))-datetime.timedelta(days=8)).isoformat(),
+     'mailbox':{},'desk_mailbox':{'aaa':[1,2,0],'bbb':[1,2,0],'ccc':[3,9,0],'ddd':[6,0,0],'eee':[1,0,0],'fff':[0,0,0]},'decisions':{}}
+lines=open(p).read().splitlines()
+open(p,'w').write(json.dumps(old,ensure_ascii=False)+'\n'+'\n'.join(lines)+'\n')
+" "$B/data/overseer/ledger-watch.jsonl"
+bout2="$(brun report)"
+printf '%s' "$bout2" | grep -qE '🔴aaa .*増\+1通\+7日' \
+  && ok "★7日前より増えている窓口を「増」として出す（赤の中の悪化中が分かる）" \
+  || ng "★推移を出せていない" "全窓口が赤のまま＝どれが悪化中か読めない（鳴りっぱなしの警告）"
+printf '%s' "$bout2" | grep -qE '🟡ccc .*減' && ok "減っている窓口は「減」" || ng "減少を出せていない"
+printf '%s' "$bout2" | grep -qE '🟡ddd .*横' && ok "変わらない窓口は「横」" || ng "横ばいを出せていない"
+printf '%s' "$bout2" | grep -q '8日前比' && ok "何日前と比べたかを明記する（7日と書いて8日前を見ない）" || ng "比較した日数を言っていない"
+first_red="$(printf '%s' "$bout2" | sed -n '/【2-b】/,/【3】/p' | grep -m1 '^  🔴')"
+printf '%s' "$first_red" | grep -q 'aaa' && ok "★赤の中では悪化中（増）を先頭に置く" \
+  || ng "★赤の並び順が悪化中を先にしていない: $first_red"
+
+# ★記号の意味が節で違うことを、その場に書いてあるか（Codex🔴 2026-10-12）。
+#   冒頭の凡例は【1】蓄積のもの（🔴＝超過かつ増加中）。キューはしきい値だけで 🔴 にするので、
+#   「🔴 … 減-5通-7日」が出る。同じ記号が節で違う意味なら、読む側はその場で知る必要がある。
+printf '%s' "$bout2" | sed -n '/【2-b】/,/窓口 /p' | grep -q '滞留のしきい値' \
+  && ok "★【2-b】の記号の意味をその節に書く（冒頭の凡例と違うことを明示）" \
+  || ng "★節ごとの凡例が無い" "🔴 の意味が節で変わるのに書いていない＝triage が一見で判断できない"
+printf '%s' "$bout2" | sed -n '1,3p' | grep -q '【1】の記号' \
+  && ok "冒頭の凡例が【1】のものだと明示する" || ng "冒頭の凡例が全節に効くと読める"
+
+# ★混合推移：未読は減ったが最古は増えた＝**悪化**として扱う（古い便が残り続けている）
+python3 -c "
+import json,sys,datetime
+p=sys.argv[1]; ls=open(p).read().splitlines()
+old=json.loads(ls[0]); old['desk_mailbox']['aaa']=[9,2,0]   # 未読9→2通に減・最古2→9日に増
+ls[0]=json.dumps(old,ensure_ascii=False); open(p,'w').write('\n'.join(ls)+'\n')
+" "$B/data/overseer/ledger-watch.jsonl"
+bout4="$(brun report)"
+printf '%s' "$bout4" | grep -qE '🔴aaa .*増-7通\+7日' \
+  && ok "★未読が減っても最古が増えていれば「増」（古い便が残り続けている）" \
+  || ng "★混合推移を改善と読んでいる" "件数だけ減って古い便が残る形を見逃す"
+
+# ★日時が読めない便があるときに「減った」「変わらない」と断定しない（Codex🔴 2026-10-12）。
+#   最古が「不明」なのに過去値と引き算して「減 -9日」と出していた＝読めない便が実際の最古かも
+#   しれない。悪化（増）だけは安全側なので言う。記録は [未読, 最古, 日時不明件数] の3つ組で、
+#   3つ目が無い古い記録は「不明かどうか不明」として扱う。
+SEC2B="$(python3 - "$PROJ" <<'PYU'
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location("lw", sys.argv[1] + "/bin/ledger-watch.py")
+lw = importlib.util.module_from_spec(spec); spec.loader.exec_module(lw)
+P = N = 0
+def chk(c, m):
+    global P, N
+    if c: P += 1; print(f"  ok   {m}")
+    else: N += 1; print(f"  NG   {m}")
+
+def one(mail, prev):
+    return lw.desk_mailbox_health(mail, [], {"x": "t"}, prev)[0]
+
+allbad = [{"box": "new", "to": "x", "count": 1, "oldest": None, "age_unknown": 1}]
+good = [{"box": "new", "to": "x", "count": 1, "oldest": 2, "age_unknown": 0}]
+r = one(allbad, {"x": [1, 9, 0]})
+chk(r["trend"] is None and r["trend_blocked"] == "age_unknown",
+    f"★現在の便の日時が全件不明なら改善と断定しない（trend={r['trend']} {r['d_oldest']}）")
+r = one(good, {"x": [1, 9, 3]})
+chk(r["trend"] is None and r["trend_blocked"] == "age_unknown",
+    "★過去の記録に日時不明が混ざっていたら改善と断定しない")
+r = one(good, {"x": [1, 9]})
+chk(r["trend"] is None and r["trend_blocked"] == "age_unknown",
+    "★3つ目が無い古い記録は「不明かどうか不明」として扱う（改善と言わない）")
+r = one(good, {"x": [1, 9, 0]})
+chk(r["trend"] == "減", "両方とも確かなら「減」と言う（伏せすぎない）")
+r = one([{"box": "new", "to": "x", "count": 5, "oldest": None, "age_unknown": 1}], {"x": [1, 9, 0]})
+chk(r["trend"] == "増", "★不明が混ざっていても悪化（増）だけは言う（安全側）")
+r = one(good, {"x": ["こわれた", None]})
+chk(r["trend"] is None and r["trend_blocked"] == "bad_past", "過去の記録が壊れていたら理由を立てる")
+# ★最古の「増」は、過去に日時不明が無いときだけ言える（Codex🔴 3回目）。
+#   過去 [1,2,3]＝最古2日だが不明が3通 → その3通が実は20日前なら、見かけの増加は実は改善。
+# ★ここは現在の最古が**過去より大きい**形でないと検査にならない（good は最古2日＝過去と同じで
+#   差が0になり、条件を外しても同じ答えになる＝別の理由で緑になる。2026-10-12 変異で検出）。
+older = [{"box": "new", "to": "x", "count": 1, "oldest": 9, "age_unknown": 0}]
+r = one(older, {"x": [1, 2, 3]})
+chk(r["trend"] is None and r["trend_blocked"] == "age_unknown",
+    f"★過去に日時不明があるとき、最古が増えただけでは「増」と断定しない（trend={r['trend']} {r['d_oldest']}）")
+r = one(older, {"x": [1, 2, 0]})
+chk(r["trend"] == "増", "過去に日時不明が無ければ最古の増加で「増」と言う（伏せすぎない）")
+r = one([{"box": "new", "to": "x", "count": 5, "oldest": 9, "age_unknown": 0}], {"x": [1, 2, 3]})
+chk(r["trend"] == "増", "未読の増加は日時の読めなさに左右されない（件数は確か）＝「増」と言う")
+# ★「—」の理由を必ず立てる（黙る形を残さない）
+chk(one(good, {})["trend_blocked"] == "no_past", "★過去の記録が空のときも理由を立てる（黙らない）")
+chk(one(good, {"x": "こわれた"})["trend_blocked"] == "bad_past", "★過去値が文字列でも理由を立てる")
+chk(one(good, {"x": [1]})["trend_blocked"] == "bad_past", "★過去値が1要素でも理由を立てる")
+# ★dict（記録の形を {"unread": N} 等に変えた日）は添字で KeyError になり、例外ハンドラでは
+#   掴めない＝**この関数ごと落ちる**。形の検査が要る（2026-10-12 変異テストで気づいた）。
+chk(one(good, {"x": {"unread": 1, "oldest": 2}})["trend_blocked"] == "bad_past",
+    "★過去値が dict でも落ちずに理由を立てる")
+chk(one(good, None)["trend_blocked"] is None, "比べる気が無い呼び出し（snapshot 側）では理由を立てない")
+print(f"__R__ {P} {N}")
+PYU
+)"
+printf '%s\n' "$SEC2B" | grep -v '^__R__'
+R2B="$(printf '%s\n' "$SEC2B" | sed -n 's/^__R__ //p')"
+if [ -n "$R2B" ]; then
+  PASS=$((PASS + ${R2B% *})); FAIL=$((FAIL + ${R2B#* }))
+else
+  ng "推移の断定の節が合計行を出さずに終わった" "例外で落ちると0項目として数えられる（K-952）"
+fi
+
+# ★同日に snapshot が2件あって中身が違うと落ちる（タプルの2番目の dict を比べる）
+#   中身が同じだと等価比較で済んで落ちないため、**件数が動いた日にだけ**落ちた（手元で再現）。
+python3 -c "
+import json,sys
+p=sys.argv[1]; ls=open(p).read().splitlines()
+r=json.loads(ls[-1]); r['desk_mailbox']['aaa']=[99,99,0]
+open(p,'w').write('\n'.join(ls)+'\n'+json.dumps(r,ensure_ascii=False)+'\n')
+" "$B/data/overseer/ledger-watch.jsonl"
+bout5="$(brun report 2>&1)"; brc=$?
+[ "$brc" = "0" ] && printf '%s' "$bout5" | grep -q '【2-b】' \
+  && ok "★同日の記録が2件あって中身が違っても落ちない（dict を比べない）" \
+  || ng "★同日2件で例外停止する" "cron＋手動実行や cron の再実行で普通に起きる: $(printf '%s' "$bout5" | tail -2)"
+python3 -c "
+import json,sys
+p=sys.argv[1]; ls=open(p).read().splitlines()
+open(p,'w').write('\n'.join(ls[:-1])+'\n')
+" "$B/data/overseer/ledger-watch.jsonl"
+
+# ★過去の記録に無い窓口（あとから足した窓口）＝推移欄が「—」になる理由を言う
+python3 -c "
+import json,sys
+p=sys.argv[1]; ls=open(p).read().splitlines()
+old=json.loads(ls[0]); old['desk_mailbox'].pop('bbb',None)
+ls[0]=json.dumps(old,ensure_ascii=False); open(p,'w').write('\n'.join(ls)+'\n')
+" "$B/data/overseer/ledger-watch.jsonl"
+bout6="$(brun report)"
+printf '%s' "$bout6" | grep -q '推移を言い切れない窓口' \
+  && ok "★過去の記録に無い窓口は、推移が「—」である理由を言う" \
+  || ng "★比べられない窓口を黙って「—」にしている" "履歴があるのに空欄＝故障と区別できない"
+
+# ★便の日時が読めない／未来のとき、0日（＝滞留なし）に丸めて ✅ で省略しない。
+#   `mailbox_queues()` は読めない日時を**黙って飛ばして**いたので、他に新しい便が1通あるだけで
+#   最古が 0日になり「滞留なし」に化けた（＝不明が健全に見える・Codex🟡 2026-10-12）。
+# (A) その窓口の便が**1通も読めない**＝最古そのものが言えない
+printf '%s' '{"id":"M-f1","to":"fff","ts":"こわれた日付"}' > "$B/data/mailbox/new/M-f1.json"
+bout7="$(brun report)"
+printf '%s' "$bout7" | grep -qE '🔴fff .*便の日時が読めません' \
+  && ok "★便の日時が1通も読めない窓口は 🔴（不明を「滞留なし」に化けさせない）" \
+  || ng "★日時が読めない便を 0日として扱っている" "不明が健全に化けて表から省かれる"
+printf '%s' "$bout7" | sed -n '/【2-b】/,/【3】/p' | grep -qE '^  🔴fff .*不明' \
+  && ok "最古の欄は「不明」と書く（0 と書かない）" || ng "不明を 0 と書いている"
+# (B) 読める便もある＝最古は出せるが「言い切れない」ことを添える
+printf '%s' '{"id":"M-x1","to":"eee","ts":"こわれた日付"}' > "$B/data/mailbox/new/M-x1.json"
+printf '%s' "$(brun report)" | grep -qE '🔴eee .*日時が読めない便 1通' \
+  && ok "★読める便と混ざっているときは最古を出しつつ「言い切れない」と添える" \
+  || ng "★一部が読めない便を黙って捨てている" "新しい便が1通あるだけで滞留なしに見える"
+rm -f "$B/data/mailbox/new/M-x1.json"
+# (C) 未来の日時＝負の滞留日数は使えない（「新しい便」として健全に見える）
+printf '%s' '{"id":"M-x2","to":"eee","ts":"2099-01-01T10:00:00+09:00"}' > "$B/data/mailbox/new/M-x2.json"
+printf '%s' "$(brun report)" | grep -qE '🔴eee .*日時が読めない便 1通' \
+  && ok "★未来の日時の便も「読めない」として数える（負の滞留日数を平常値にしない）" \
+  || ng "★未来の日時を平常値として扱っている" "負の日数が「新しい」として健全に見える"
+rm -f "$B/data/mailbox/new/M-x2.json"
+# 【2】の表にも出す（最古の列に入っていない便があることを隠さない）
+printf '%s' "$bout7" | grep -q '日時が読めない便（最古の列に入っていません）' \
+  && ok "【2】の宛先別の表でも、日時が読めない便の件数を名指しする" \
+  || ng "【2】で日時が読めない便を黙っている" "宛先別の最古も同じ穴を持つ"
+rm -f "$B/data/mailbox/new/M-f1.json"
+
+# ★--json の契約（読む側＝triage・ダッシュボードが分岐できる形）
+brun report --json | python3 -c '
+import sys, json
+d = json.load(sys.stdin)
+assert isinstance(d["desk_mailbox"], list) and d["desk_mailbox"], "desk_mailbox が空"
+assert d["desk_mailbox_error"] is None, d["desk_mailbox_error"]
+assert d["desk_mailbox_span"] and d["desk_mailbox_span"] > 0, d["desk_mailbox_span"]
+one = {e["desk"]: e for e in d["desk_mailbox"]}["aaa"]
+for k in ("flag", "why", "unread", "oldest", "hold", "done", "last", "trend", "d_unread", "d_oldest", "age_unknown"):
+    assert k in one, f"{k} が無い: {one}"
+print("")' >/dev/null 2>&1 \
+  && ok "--json に窓口の受信箱・エラー・比較した日数を出す（読む側が分岐できる）" \
+  || ng "--json の契約が足りない" "triage とダッシュボードが機械で読めない"
+mv "$B/config/session-desks.json" "$B/config/y.json"
+brun report --json | python3 -c '
+import sys, json
+d = json.load(sys.stdin)
+assert d["desk_mailbox"] == [], d["desk_mailbox"]
+assert d["desk_mailbox_error"], "対象が分からないのに error が空"
+print("")' >/dev/null 2>&1 \
+  && ok "対応表が読めないときは --json も空＋エラーを出す（0窓口＝健全にしない）" \
+  || ng "--json が「0窓口」と「対象不明」を同じ形で出す" "読む側が健全として描く"
+mv "$B/config/y.json" "$B/config/session-desks.json"
+
+# 対応表が読めないときは「対象が分からない」と言う（鳴らない・緑にもしない）
+mv "$B/config/session-desks.json" "$B/config/x.json"
+bout3="$(brun report)"
+printf '%s' "$bout3" | grep -q '対象の窓口が分かりません' \
+  && ok "対応表が読めないときは対象不明と言う（0窓口＝健全にしない）" \
+  || ng "対応表が読めないのに黙っている" "窓口が0件＝滞留なしとして描かれる"
+mv "$B/config/x.json" "$B/config/session-desks.json"
+
 echo
 echo "── alerts（前回以降の警報）"
 mkdir -p "$R/data/overseer"
