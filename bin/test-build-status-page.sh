@@ -7,10 +7,16 @@ set -uo pipefail
 PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PASS=0; FAIL=0
 ok() { PASS=$((PASS+1)); printf '  ok   %s\n' "$1"; }
-ng() { FAIL=$((FAIL+1)); printf '  NG   %s\n' "$1"; }
+# 第2引数＝「何が困るか」。落ちた行だけ見て直せるようにする
+ng() { FAIL=$((FAIL+1)); printf '  NG   %s\n' "$1"; [ -n "${2:-}" ] && printf '       → %s\n' "$2"; return 0; }
+
+TMPD="$(mktemp -d)"; trap 'rm -rf "$TMPD"' EXIT
 
 echo "── §1 誘導の判定（judgment だけを直接叩く）"
-python3 - "$PROJ" <<'PYX'
+# ★旧：`if [ $? -eq 0 ]; then PASS=$((PASS+10))` と**件数を手で書いて**いた。python 側の chk は
+#   NG を印字するだけで終了コードを変えないため、**中で落ちても合計は「不合格 0」**だった
+#   （K-952 と同じ形＝落ちているのに緑に見える）。__R__ 行から実際の件数を取り込む。
+SEC1="$(python3 - "$PROJ" <<'PYX'
 import importlib.util, sys
 spec = importlib.util.spec_from_file_location("bs", sys.argv[1] + "/bin/build-status-page.py")
 bs = importlib.util.module_from_spec(spec); spec.loader.exec_module(bs)
@@ -53,9 +59,52 @@ why = [w for _, w, _ in bs.guidance(d, 0)]
 chk(any("一度も開いていません" in w for w in why), "一度も開いていない窓口を出す")
 chk(any("20日 開いていません" in w for w in why), "長く開いていない窓口を出す（14日以上）")
 chk(not any("窓口" == w for w in why), "最近開いた窓口では誘導しない")
+
+# ★ledger-watch は対応表やセッションログが読めないとき、推定値を出さずに空の一覧と
+#   desks_error を返す（fail-closed）。ここで読まないと「窓口0件＝合図なし（健全）」と
+#   描かれて、作った安全装置が沈黙に化ける（2026-10-12・Codex🔴 2回目）。
+d = dict(empty, desks=[], desks_error="窓口の対応表を読めません＝窓口の最終利用日は判定できません")
+g = bs.guidance(d, 0)
+why = [w for _, w, _ in g]
+chk(any("判定できません" in w for w in why), "★窓口を判定できなかったことを誘導に出す")
+chk(not any("合図なし" in w for w in why), "★判定できなかったときに「合図なし（健全）」と言わない")
+chk(g[0][2] == "red", "★判定不能は赤で出す")
+# ★「最優先」はコメントだけでは守れない。他の合図が全部あるときに**先頭そのもの**が
+#   判定不能であることを見る（旧テストは他の合図が無い入力で色だけ見ていた＝Codex🔴 3回目）。
+busy = {"accumulators": [{"flag": "🔴", "path": "data/x/big.md", "ratio": 7.8, "per_week": 82 * 1024}],
+        "mailbox": [{"to": "lane-a", "oldest": 48}], "decisions": [],
+        "desks": [], "desks_error": "窓口の対応表を読めません"}
+g = bs.guidance(busy, 1)                     # board の期日・器の🔴・便の滞留も同時にある
+chk("判定できません" in g[0][1], f"★他の合図が全部あっても判定不能が先頭に来る（実際の先頭={g[0][1][:24]}）")
+
+# ★判定不能の窓口（未来の日時・stat 失敗で日付を落とした分）を「一度も開いていません」と
+#   誘導しない。社長がいま使っている窓口を未使用と呼ぶ経路になる（Codex🔴 3回目）。
+d = dict(empty, desks=[{"desk": "product", "what": "サービス改善", "last": None, "days": None,
+                        "status": "unknown"},
+                       {"desk": "intake", "what": "取り込み", "last": None, "days": None,
+                        "status": "never"}])
+why = [w for _, w, _ in bs.guidance(d, 0)]
+chk(any("product" in n for n, _, _ in bs.guidance(d, 0)), "判定不能の窓口も行として出す")
+chk(not any("product" in n and "一度も開いていません" in w for n, w, _ in bs.guidance(d, 0)),
+    "★status=unknown の窓口を「一度も開いていません」と誘導しない")
+chk(any("intake" in n and "一度も開いていません" in w for n, w, _ in bs.guidance(d, 0)),
+    "status=never の窓口はこれまで通り「一度も開いていません」と誘導する")
+d2 = dict(empty, desks=[{"desk": "dev", "what": "開発", "last": "2026-10-12", "days": 0}],
+          desks_error="一部を判定できません＝未来の日時のログ 1本")
+why2 = [w for _, w, _ in bs.guidance(d2, 0)]
+chk(any("判定できません" in w for w in why2), "一部だけ判定できないときも申告する（日付が出ていても黙らない）")
 print(f"__R__ {P} {N}")
 PYX
-if [ $? -eq 0 ]; then PASS=$((PASS+10)); else FAIL=$((FAIL+1)); fi
+
+
+)"
+printf '%s\n' "$SEC1" | grep -v '^__R__'
+R1="$(printf '%s\n' "$SEC1" | sed -n 's/^__R__ //p')"
+if [ -n "$R1" ]; then
+  PASS=$((PASS + ${R1% *})); FAIL=$((FAIL + ${R1#* }))
+else
+  ng "§1 が合計行を出さずに終わった" "例外で落ちると0項目として数えられる（K-952）"
+fi
 
 echo "── §2 生成物（本番の site/ を汚さない＝生成先を確認するだけ）"
 grep -q 'OUT = os.path.join(ROOT, "site/business/status.html")' "$PROJ/bin/build-status-page.py" \
@@ -64,6 +113,45 @@ grep -q 'ledger-watch.py' "$PROJ/bin/build-status-page.py" \
   && ok "数字の正は ledger-watch（ページ側で集計し直さない）" || ng "独自集計をしている疑い"
 grep -q -- '--no-api' "$PROJ/bin/build-status-page.py" \
   && ok "board-brief を --no-api で叩く（毎日 cron なので外部APIを使わない）" || ng "外部APIを叩いている"
+
+echo "── §2.5 生成したHTML（配線を通す・本番の site/ は書き換えない）"
+# ★§1 は guidance() を直接叩くだけ＝**表のHTMLを作る部分を1行も通っていない**（Codex🟡）。
+#   判定不能の行は表側にも足したので、入力を差し替えて生成物まで見る。
+SEC25="$(python3 - "$PROJ" "$TMPD" <<'PYH'
+import importlib.util, json, sys, os
+spec = importlib.util.spec_from_file_location("bs", sys.argv[1] + "/bin/build-status-page.py")
+bs = importlib.util.module_from_spec(spec); spec.loader.exec_module(bs)
+P = N = 0
+def chk(c, m):
+    global P, N
+    if c: P += 1; print(f"  ok   {m}")
+    else: N += 1; print(f"  NG   {m}")
+
+out = os.path.join(sys.argv[2], "status.html")
+bs.OUT = out                                  # 本番の site/business/status.html を書き換えない
+data = {"generated": "2026-10-12T00:00:00+09:00", "since": "2026-07-24", "snapshots": 1,
+        "accumulators": [], "mailbox": [], "pickups": [], "decisions": [],
+        "desks": [{"desk": "product", "what": "サービス改善", "last": None, "days": None,
+                   "how": None, "status": "unknown"}],
+        "desks_error": "一部を判定できません＝未来の日時のログ 1本 <script>x</script>",
+        "unreadable": 0, "threshold_error": None}
+bs.run = lambda cmd, timeout=600: (0, json.dumps(data, ensure_ascii=False))
+bs.build()
+h = open(out, encoding="utf-8").read()
+chk("判定できません" in h, "判定不能が生成したHTMLに出る（表と誘導の配線が通っている）")
+chk("判定不能" in h, "窓口の表に「判定不能」の字が出る（空の表にしない）")
+chk("一度も開いていません" not in h, "status=unknown を「一度も開いていません」と書かない")
+chk("<script>x</script>" not in h and "&lt;script&gt;" in h, "エラー文字列を HTML エスケープする")
+print(f"__R__ {P} {N}")
+PYH
+)"
+printf '%s\n' "$SEC25" | grep -v '^__R__'
+R25="$(printf '%s\n' "$SEC25" | sed -n 's/^__R__ //p')"
+if [ -n "$R25" ]; then
+  PASS=$((PASS + ${R25% *})); FAIL=$((FAIL + ${R25#* }))
+else
+  ng "§2.5 が合計行を出さずに終わった" "例外で落ちると0項目として数えられる（K-952）"
+fi
 
 echo "── §3 実際に生成されたページ（本番）"
 F="$PROJ/site/business/status.html"

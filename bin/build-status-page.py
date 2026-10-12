@@ -41,6 +41,14 @@ def e(s):
 def guidance(d, board_rc):
     """いま開くべき窓口。**根拠つきでしか出さない**（/triage §7-2 と同じ規律）。"""
     g = []
+    # ★ledger-watch は対応表やセッションログが読めないとき、推定値を出さずに空の一覧と
+    #   `desks_error` を返す（fail-closed）。ここで読まないと「窓口0件＝合図なし（健全）」と
+    #   描かれて、作った安全装置が沈黙に化ける（2026-10-12・Codex🔴 2回目）。
+    # ★**この節をいちばん先に積む**＝後ろに append すると、board の期日や器の 🔴 があるだけで
+    #   先頭から押し出される（Codex🔴 3回目＝コメントが「最優先」と言うだけになっていた）。
+    #   道具が判定できていないことは、その道具が出す合図より先に読まれないと意味がない。
+    if d.get("desks_error"):
+        g.append(("開発セッション", f"窓口の最終利用日を判定できません＝{d['desks_error']}", "red"))
     if board_rc == 1:
         g.append(("/board", "見直し期日が来た決定があります", "amber"))
     elif board_rc not in (0, 1):
@@ -56,7 +64,12 @@ def guidance(d, board_rc):
         w = max(stale, key=lambda m: m["oldest"] or 0)
         g.append(("/triage", f"{w['to']} 宛の便が {w['oldest']}日 滞留（7日以上 {len(stale)}件）", "amber"))
     for dk in d.get("desks", []):
-        if dk["days"] is None:
+        if dk.get("status") == "unknown":
+            # ★日付を落とした窓口＝「一度も開いていない」ではない（Codex🔴 3回目）。
+            #   未来の日時や stat 失敗で last=None になった分をここで「未使用」と呼ぶと、
+            #   社長がいま使っている窓口へ「一度も開いていません」と誘導する。
+            g.append((f"/{dk['desk']}", f"最終利用日を判定できません（{dk['what']}）", "red"))
+        elif dk["days"] is None:
             g.append((f"/{dk['desk']}", f"一度も開いていません（{dk['what']}）", "sky"))
         elif dk["days"] >= 14:
             g.append((f"/{dk['desk']}", f"{dk['days']}日 開いていません（{dk['what']}）", "sky"))
@@ -140,13 +153,18 @@ def build():
     <tr><th class="p-2 text-left">窓口</th><th class="p-2">扱うもの</th><th class="p-2 text-right">最終</th><th class="p-2 text-right">経過</th></tr>
   </thead><tbody>""")
     for dk in d.get("desks", []):
-        last = dk["last"] or "一度もなし"
+        last = dk["last"] or ("判定不能" if dk.get("status") == "unknown" else "一度もなし")
         days = "—" if dk["days"] is None else f"{dk['days']}日"
-        cls = "bg-sky-50" if (dk["days"] is None or dk["days"] >= 14) else ""
+        # 判定不能（道具の故障）は放置の合図と色でも分ける（2026-10-12・Codex🟢）
+        cls = ("bg-red-50" if dk.get("status") == "unknown"
+               else "bg-sky-50" if (dk["days"] is None or dk["days"] >= 14) else "")
         url = DESK_URL.get(dk["desk"])
         name = f'<a class="text-blue-600 hover:underline" href="{url}">/{e(dk["desk"])}</a>' if url else f'/{e(dk["desk"])}'
         p.append(f"""    <tr class="border-t {cls}"><td class="p-2 font-mono">{name}</td><td class="p-2 text-gray-700">{e(dk['what'])}</td>
       <td class="p-2 text-right">{e(last)}</td><td class="p-2 text-right">{e(days)}</td></tr>""")
+    if d.get("desks_error"):
+        # 空の表を「全部開いている」とも「全部放置」とも読ませない（2026-10-12）
+        p.append(f"""    <tr class="border-t bg-red-50"><td class="p-2" colspan="4">⚠️ 判定できません＝{e(d['desks_error'])}</td></tr>""")
     p.append("""  </tbody></table>
   <p class="text-xs text-gray-500">このページは判断をしません（良し悪しを書かない）。決めるのは社長と <code class="bg-gray-100 px-1 rounded">/triage</code> です。</p>
 </div>
