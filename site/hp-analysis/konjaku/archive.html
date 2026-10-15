@@ -30,6 +30,72 @@
 
   <p class="text-sm text-gray-500 mb-6">未完了の R は最新レポートで追跡。下は完了した提案・解決済みの質問と、過去サイクルの記録（スナップショット）です。</p>
 
+  <!-- ===== Cycle 054 ===== -->
+  <section class="mb-10">
+    <h2 class="text-2xl font-bold mb-1">Cycle 054 — 2026-10-09（定期・本番は変化なし／301 は未実装／週次の在庫棚卸し18件／新規提案ゼロ）</h2>
+    <p class="text-sm text-gray-500 mb-3">データ状況：<strong>本番ページ ✅</strong>（新旧あわせて10本を取得）／<strong>検索（GSC）✅</strong>（新 <span class="font-mono">.jp</span>・旧 <span class="font-mono">.com</span> とも 10/6 分まで着弾）／<strong>GA4 ✅</strong>（新サイト・9/25〜10/7）／<strong>スクショ ✅</strong>（トップ PC・SP）／メールボックス ✅（受信0通）。</p>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">① 本番は 9/23 夜から変わっていません（16日）。301 もまだです</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>新サイトのトップ＝<strong>28,771バイトで不変</strong>。9/23 に入ったページごとのタイトルは維持されています（<span class="font-mono">/cities/334</span>「山形県 山形市の古写真」・<span class="font-mono">/old-photos/1000</span>「神戸海岸オリエンタルホテル（兵庫県）」）。</li>
+        <li><strong>301 はまだ入っていません</strong>＝旧サイトの写真ページ（<span class="font-mono">?p_photo=1000</span>）・県ページ（<span class="font-mono">?p_pref=39</span>＝京都府）・市区町村ページ（<span class="font-mono">?p_city=334</span>＝小田原市）とも 200 のまま。<strong>9/27 のご決定から12日</strong>。実装するのは旧サイトの担当（今昔写語の開発担当とは別）で、実装日の連絡は届いていません。</li>
+        <li>利用許諾の告知ページ（<span class="font-mono">/photo-use</span>）＝404＝未公開。存在しない写真番号（<span class="font-mono">/old-photos/999999</span>）＝200 のまま（R-J15 未反映）。canonical・SNS 用の画像指定（og:image）も未（R-J05・R-J01 の残り）。</li>
+        <li>サイトマップは 9/15 から約7KB 増えています（1,746,068バイト）＝新しい写真は自動で載り続けています。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">② 検索：入口の9割超は、いまも旧サイトです（12回目の測定・形は同じ）</p>
+      <table class="w-full text-xs border-collapse bg-white mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">10/2〜10/6（5日）</th><th class="py-1 pr-2">クリック</th><th class="py-1 pr-2">表示</th><th class="py-1 pr-2">CTR</th><th class="py-1">平均順位</th></tr></thead>
+        <tbody>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">旧 <span class="font-mono">.com</span></td><td class="py-1 pr-2">1,043</td><td class="py-1 pr-2">15,589</td><td class="py-1 pr-2">6.69%</td><td class="py-1">6.5位</td></tr>
+          <tr><td class="py-1 pr-2">新 <span class="font-mono">.jp</span></td><td class="py-1 pr-2">96</td><td class="py-1 pr-2">1,133</td><td class="py-1 pr-2">8.47%</td><td class="py-1">6.8位</td></tr>
+        </tbody>
+      </table>
+      <p class="text-gray-800 mb-2">新サイトの取り分＝<strong>1,139クリック中 96＝8.4%</strong>（前回 9/29〜10/3 は 1,056 中 60＝5.7%）。これまでの11回（5.7〜7.7%）より高い数字ですが、<strong>「上がった」とは読みません</strong>＝3日ずらしただけで 5.7% と 8.4% が出ること自体が、5日間の数字の揺れの大きさを示しています（合否は14日以上の期間・10ポイント以上の差でしか書かない、という決めごと）。</p>
+      <p class="text-gray-800 mb-2"><strong>タイトル改修（9/23）の判定は予定どおり次回 10/12</strong>です（判定に使う 9/24〜10/7 の14日間のうち、10/7 分がまだ届いていません）。</p>
+      <p class="text-gray-800"><strong>新サイトへの来訪の内訳（GA4・9/25〜10/7）</strong>＝旧サイトのリンクから <strong>315セッション（1日約24）</strong>で、これまでの1日約26と変わりません＝301 が入っていないことと合っています。<span class="text-xs text-gray-600">ChatGPT などAIアシスタント経由が14セッション（全体の約1%）見えはじめました。量が小さいので提案にはせず、観察にとどめます。</span></p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">③ トップの定点：古写真の登録は続いています。参加（今の写真・コメント）は止まったままです</p>
+      <ul class="list-disc list-inside text-gray-800 space-y-1">
+        <li>投稿写真 <strong>17,855枚</strong>（10/6 から +7）／登録ユーザー <strong>6,842人</strong>（変わらず）。「最新の古写真」8枠は全部入れ替わりました（熱海・伊東・箱根・草津・伊香保などの温泉地）。</li>
+        <li>「みんなの比較写真（PICK UP）」は 9/18 から同じ顔ぶれ＝<strong>今の写真の新しい投稿が21日間ありません</strong>。</li>
+        <li>最新のコメントは <strong>8/27 のまま（43日）</strong>＝「古写真の使用許可はどこへ？」の書き込みが先頭に出たままです（→ 上の🔔①の返信文案）。人気ランキング3件・年代不明 2,404枚は不変。</li>
+        <li>投稿・コメント・会員登録の計測は、いまも1つもありません（GA4 に出ているのは自動で取れる項目だけ）＝R-J22 の前提はそのままです。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">④ 週に一度の在庫棚卸し（18件）：取り下げ0件・前提が崩れた提案はありません</p>
+      <p class="text-gray-800 mb-2">本日取得した本番10本・GA4・トップの定点で、18件すべての前提を確かめ直しました。止まっている理由を「誰の・何待ちか」で分けると次のとおりです。</p>
+      <table class="w-full text-xs border-collapse bg-white mb-2">
+        <thead><tr class="text-left text-gray-500 border-b border-gray-300"><th class="py-1 pr-2">待ち先</th><th class="py-1 pr-2">件</th><th class="py-1">中身</th></tr></thead>
+        <tbody class="align-top">
+          <tr class="border-b border-gray-200 bg-rose-50"><td class="py-1 pr-2"><strong>旧サイトの担当</strong></td><td class="py-1 pr-2">2</td><td class="py-1">R-J30・R-J19＝301 の実装。<strong>ご決定（9/27）から12日・実装日未定</strong>。社長のご判断は済んでいて、いま止まっているのは実装側です。毎日約200クリックが旧サイトに落ち続けています。</td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2"><strong>社長</strong></td><td class="py-1 pr-2">3</td><td class="py-1">R-J31＝起票案のご承認（10/3 のまとめに載せた件＝<strong>明日 10/10 のまとめに同じ問いを再掲</strong>します）／R-J28＝<span class="font-mono">city_mapping.json</span> の取得（41日）／R-J16＝表示できない341件の扱い（Q-J09）。<span class="text-gray-600">新しいお伺いは増やしていません。</span></td></tr>
+          <tr class="border-b border-gray-200"><td class="py-1 pr-2">開発担当</td><td class="py-1 pr-2">12</td><td class="py-1">渡し済み・未反映（R-J29 は着手中）。<strong>R-J22（計測）は表の表記が「🆕提案」のままでしたが、9/12・9/24・9/27 の配信で渡し済み</strong>だったため「引き渡し済」に直しました。</td></tr>
+          <tr><td class="py-1 pr-2">検証中</td><td class="py-1 pr-2">1</td><td class="py-1">R-J24＝タイトル改修の効果（10/12 判定）。</td></tr>
+        </tbody>
+      </table>
+      <p class="text-gray-600 text-xs"><strong>10/12 の判定についての事前の見立て（外れても記録します）</strong>＝「検索に出るページ数は増えるが、取り戻せたクリックの割合の差は10ポイントに届かない」。他サイト（自社サイト）で 10/4 に確定した結果＝「タイトルや説明文などの技術的な手直しだけでは、順位の壁は動きにくい」を当てはめたものです。届かなかった場合も「効かなかった」ではなく、<strong>本文を検索エンジンに配る（R-J24 の残り）と 301（R-J30）が要る</strong>、という読みになります。</p>
+    </div>
+
+    <div class="bg-white border border-gray-300 rounded-lg p-4 mb-4 text-sm">
+      <p class="font-bold text-gray-900 mb-2">⑤ 開発担当との連絡：受信0通。こちらからの照会1件は返信待ちです（止まりとは読みません）</p>
+      <p class="text-gray-800">10/4 の照会（旧サイトの市区町村ページの2つのURL形の番号が同じ表か別の表か）は未読5日です。<strong>今昔写語の開発は週1回・週末ごろにまとめて動く運用</strong>なので、まだ通常の範囲です。この週末（10/10〜11）を過ぎても未読なら、10/12 の回でお知らせします。</p>
+    </div>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑥ 次の一手</h3>
+    <p class="text-sm text-gray-700 mb-3">①<strong>10/12 の回＝タイトル改修の14日判定</strong>（9/24〜10/7・層別の分子と分母つきでご報告）②旧サイトの担当から 301 の実装日の連絡が来たら、その日のうちに確認（県47件の行き先・ページ番号つきURL・市区町村は2つの形とも 200 のまま・新に無い写真は 200 のまま）③10/15 ごろ＝月に一度の配管点検。<strong>本日の新しい提案・お伺いは0件</strong>です。</p>
+
+    <h3 class="text-lg font-semibold mt-5 mb-2">⑦ 社長のご指示への対応</h3>
+    <p class="text-sm text-gray-700">対応：Cycle 054＝<code>from-president.md</code> に 9/27 節より後の新しいご指示はありません。同節 ⑤「新しい質問を増やさない／判断待ちは土曜に集約」に沿い、新規の提案・お伺いは0件・在庫は18件のまま、R-J31 は明日の土曜のまとめへ同じ問いのまま再掲します。</p>
+  </section>
+
   <!-- ===== Cycle 053 ===== -->
   <section class="mb-10">
     <h2 class="text-2xl font-bold mb-1">Cycle 053 — 2026-10-06（定期・本番は変化なし／301 は未実装／検索とトップの定点／新規提案ゼロ）</h2>
