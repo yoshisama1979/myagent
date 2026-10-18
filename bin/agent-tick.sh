@@ -867,11 +867,13 @@ dispatch "partner"  "/partner"  "partner"
 # HP分析ループはサイト別に独立（mailbox to: hp-loop-<site> 新着 or daily hp-loop-<site> 強制で起動）
 # 第4引数の 1 ＝反応tickでは社長からの便だけで起動する（上の count_pending の注記を参照）。
 # 開発からの report/ack/fyi は待機に回し、定時の解析でまとめて処理する＝本番はもう直っており急がない。
-dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"     1
-dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"  1
-dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka" 1
-dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
-dispatch "hp-loop:shigatoyota" "/hp-loop shigatoyota" "hp-loop-shigatoyota" 1
+# 2026-10-18 HP解析は site-analyzer（Mac mini）へ移設＝myagent 側の hp-loop は止めた（社長ご了承）。
+# 下の dispatch は戻せるように # で残す。blog-loop 系は移設していないので動かす。
+# dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"     1
+# dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"  1
+# dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka" 1
+# dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
+# dispatch "hp-loop:shigatoyota" "/hp-loop shigatoyota" "hp-loop-shigatoyota" 1
 # rally / konjaku も他4サイトと揃えて urgent_only＝社長からの便だけで反応起動する
 # （O-034・2026-09-27 社長ご決定／2026-10-11 適用）。
 # 代償＝開発からの便は待機(defer)に回り、**その日の毎分の反応起動では走らなくなる**。
@@ -883,12 +885,12 @@ dispatch "hp-loop:shigatoyota" "/hp-loop shigatoyota" "hp-loop-shigatoyota" 1
 # 便1通でフル解析 約25分が走ること」。軽い反応経路ができたら、ここは作り直す対象になる。
 # 履歴：旧コメントの「月曜だけ＝最大7日」は 2026-08-15 の日次復帰で失効し、2026-09-01 の
 # 解析ペース導入（3日）で「最大3日」に書き替え、2026-10-04 社長ご決定の5日化で現在の値になった。
-dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"    1
-dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"  1
+# dispatch "hp-loop:rally"    "/hp-loop rally"    "hp-loop-rally"    1
+# dispatch "hp-loop:konjaku"  "/hp-loop konjaku"  "hp-loop-konjaku"  1
 # hikita は手動運転（cron 登録なし＝費用の関係・2026-08-19 社長決定）。起動は
 # 手動 `agent-tick.sh daily hp-loop-hikita` か mailbox 便のみ。待機(defer)にすると
 # 拾う定時が存在せず永久に眠るため、第4引数なし＝全便で起動する
-dispatch "hp-loop:hikita"   "/hp-loop hikita"   "hp-loop-hikita"
+# dispatch "hp-loop:hikita"   "/hp-loop hikita"   "hp-loop-hikita"
 # ブログ：診断(blog-loop)→執筆/下書き投稿(blog-write)。HP解析とは別時刻の daily で回す（05:00/05:30）。
 # blog-loop-ycom は web-hanasaka の事実回答等で反応tick起動もする。blog-write-ycom は daily強制専用キー（mailbox受信なし）。
 dispatch "blog-loop:ycom"    "/blog-loop ycom"    "blog-loop-ycom"    1
