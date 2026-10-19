@@ -869,7 +869,8 @@ dispatch "partner"  "/partner"  "partner"
 # 開発からの report/ack/fyi は待機に回し、定時の解析でまとめて処理する＝本番はもう直っており急がない。
 # 2026-10-18 HP解析は site-analyzer（Mac mini）へ移設＝myagent 側の hp-loop は止めた（社長ご了承）。
 # 下の dispatch は戻せるように # で残す。blog-loop 系は移設していないので動かす。
-# dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"     1
+# 2026-10-19 ycom（自社サイト）だけは myagent で回す（社長決定＝web-hanasaka の便を blog-loop-ycom と同じ受け口に揃える）。
+dispatch "hp-loop:ycom"     "/hp-loop ycom"     "hp-loop-ycom"     1
 # dispatch "hp-loop:yoshida"  "/hp-loop yoshida"  "hp-loop-yoshida"  1
 # dispatch "hp-loop:fujisaka" "/hp-loop fujisaka" "hp-loop-fujisaka" 1
 # dispatch "hp-loop:yokohawaii" "/hp-loop yokohawaii" "hp-loop-yokohawaii" 1
