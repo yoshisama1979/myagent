@@ -61,7 +61,9 @@
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-red-500 pl-3"><strong>2026-10-12 現在（Cycle 089）：社長にお願いしたいのは1点です。</strong><strong class="text-red-700">🔴 O-099</strong>＝毎晩23時の「memo が速すぎる」警報は誤報です。直し方を2案から選んでください（推奨＝メモが0件の夜は claude を起動しない）。<strong>O-095 は解決済み</strong>で、開発セッションへのお声がけは不要になりました。O-092（Slack 報告の形）は3サイクル連続の据え置きです。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-13 現在（Cycle 090）：O-099 のご判断に、お伺いが1点 加わりました。</strong><strong>🟡 O-102</strong>＝#memo はこの2ヶ月 使っていないだけでしょうか（最後のメモは 08-17）。「使っていないだけ」であれば、O-099 は (A)＝メモが0件の夜は起動しない、で決まりです。急ぎません＝次の triage でまとめて。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-19 現在（Cycle 091）：HP解析の移設（10-18）に伴うお伺いが2点 加わりました。</strong>①<strong>🟡 O-103</strong>＝myagent の計測（system-health・産出量の記録）と地図から hp-loop を外してよいか（推奨＝外す）。②<strong>🟡 O-104</strong>＝開発から <span class="font-mono">hp-loop-&lt;site&gt;</span> 宛てに届く便は、移設先が受け口から取りに来る形でよいか。<strong>🟡 O-105</strong>（ご承認済みルール3本のコミット）はご判断不要＝開発へ。O-099・O-102 は変わらず（誤報は今週も3夜）。急ぎません＝次の triage でまとめて。</p>
+    <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-26 現在（Cycle 093）：今日 社長が動くことは ありません。</strong>次の triage でまとめて見ていただきたいのは2点です。①<strong>🟡 O-104 に初めて実害が出ました</strong>＝よしだ歯科の本番反映の報告2通（10-20・インビザラインの料金差し替えほか）が、宛先 <span class="font-mono">hp-loop-yoshida</span> で5日間 誰にも読まれていません。ご判断は前回と同じ1問（移設先が取りに来る形でよいか）。②<strong>🟡 O-106（新規）</strong>＝partner の台帳・社長のお言葉の控えが 08-20 から2ヶ月 git に入っていません（自動コミットの対象に partner が無い）。ご判断不要＝開発へ。</p>
     <ul class="space-y-3 text-sm text-amber-900">
+      <li><strong>🟡 O-106（🆕 2026-10-26 Cycle 093）</strong>：partner は自動コミット（<span class="font-mono">agent-commit.sh</span>）の対象に登録されておらず、<span class="font-mono">data/partner/ledger.md</span>・<span class="font-mono">from-president.md</span>・<span class="font-mono">site/business/partner/</span> の最終コミットは 08-20（67日前）。ご判断不要＝開発が許可パスを1行足す（作業用の断片は除外）。詳細は Cycle 093 のカード。</li>
       <li><strong>🟡 O-103（🆕 2026-10-19 Cycle 091）</strong>：地図（SYSTEM.md）と統括の計測が、10-18 に移設した hp-loop をまだ myagent で動いているものとして数えています（system-health の ⚠️ 3行・月曜 0:50 の産出量記録）。来週から「解析が止まった」と同じ見た目になります。ご判断＝計測と地図から外してよいか。詳細は Cycle 091 のカード。</li>
       <li><strong>🟡 O-104（🆕 2026-10-19 Cycle 091）</strong>：dispatch が止まったため、<span class="font-mono">to: hp-loop-&lt;site&gt;</span> の便は届いても誰も起こしません（いまは hold/ の1通だけ）。ご判断＝移設先が受け口から取りに来る形でよいか。</li>
       <li><strong>🟡 O-105（🆕 2026-10-19 Cycle 091）</strong>：ご承認済みのルール改訂（comms v1.4/1.5・board §8.1・management v0.5ほか）と <span class="font-mono">todo-post.py</span> が 11〜25日 未コミット。ご判断不要＝開発が <span class="font-mono">/commit-pipeline</span> 1回で。</li>
@@ -179,6 +181,73 @@
   </div>
 
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
+
+  <!-- ===== Cycle 093 ===== -->
+  <section class="mb-10 border-t-4 border-blue-500 pt-4">
+    <h3 class="text-xl font-bold mb-1">Cycle 093 — 2026-10-26 未明（精密診断・月曜 1:00 cron＋全体最適棚卸し／🟡1件・O-104 に初の実害2通）</h3>
+    <p class="text-sm text-gray-600 mb-3"><strong>モード判定</strong>：月曜 cron の精密診断（直近の精密診断＝10-19 Cycle 091）。全体最適棚卸しは前回 10-12 から14日＝これまでの2週周期（09-14・09-28・10-12）どおり本日実施。<strong>確認した範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし）／<span class="font-mono">to: overseer</span> 0通／<span class="font-mono">data/overseer/from-president.md</span>（更新 09-27 10:12 のまま＝新しい節なし）／<span class="font-mono">python3 bin/system-health.py</span>（1回のみ）／<span class="font-mono">failures.jsonl</span>・<span class="font-mono">tick.log</span>（10-24〜10-26）／<span class="font-mono">git log</span>（10-01 以降）・<span class="font-mono">git status</span>（全体）／<span class="font-mono">bin/agent-commit.sh</span>・<span class="font-mono">bin/precommit-guard.py</span> の許可パス表／mailbox <span class="font-mono">new/</span> の <span class="font-mono">hp-loop-yoshida</span>・<span class="font-mono">board</span> 宛て／<span class="font-mono">data/hp-loop/quality-log.md</span>／<span class="font-mono">rules/</span>・<span class="font-mono">.claude/commands/</span> の本数と容量。<span class="text-xs">〔<span class="font-mono">crontab -l</span> は無人では許可されず未確認〕</span></p>
+    <p class="text-sm text-gray-800 mb-4 bg-blue-50 p-3 rounded"><strong>健康サマリ</strong>：<strong>故障は静かです</strong>（直近7日＝タイムアウト0・異常終了2〔10-21 memo の誤報＝O-099／10-23 01:09 の Slack 取り込み失敗1回＝次tickで回復〕・メモリ空き66%・OOM +0）。定時の便（partner・blog 3本・comms・memo）はすべて完了しています。<u>主題は2つ</u>：①<strong>O-104 で予測した沈黙が、実際の便で起きました</strong>＝よしだ歯科の本番反映の報告2通が、myagent の誰も受けない宛先で5日間 未読です。②<strong>🆕O-106</strong>＝partner の成果物が自動コミットの対象外で、台帳と社長のお言葉の控えが2ヶ月 git の外にあります。リポジトリ全体の未コミットは <strong>276件</strong>（08-24 の実測は58件）。</p>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-3 mb-3 text-sm">
+      <p><strong>🟡 O-106（🆕）partner の台帳・社長のお言葉の控え・掲示板が、08-20 から2ヶ月 git に入っていません</strong></p>
+      <p class="mt-1"><strong>観察（実測）</strong>＝①<span class="font-mono">tick.log</span> に「<span class="font-mono">[agent-commit] partner は許可パス未登録＝自動コミットの対象外</span>」。<span class="font-mono">bin/precommit-guard.py</span> の <span class="font-mono">AGENT_PATHS</span>（L41-51）に載っているのは overseer・hp-loop-*・blog-loop-*・memo の4つだけです。②その結果、<span class="font-mono">data/partner/ledger.md</span>（166KB）と <span class="font-mono">site/business/partner/index.html</span> の最終コミットは <strong>08-20</strong>（67日前）。<span class="font-mono">data/partner/from-president.md</span>（93KB・社長のお言葉の控え）・<span class="font-mono">milestones.md</span>・<span class="font-mono">ledger-archive.md</span>・<span class="font-mono">archive.html</span>（1.7MB）も <span class="font-mono">M</span> のままです。③<span class="font-mono">git status</span> の未コミット276件のうち <strong><span class="font-mono">data/partner</span> が82件で最多</strong>、うち76件は作業用の断片（<span class="font-mono">_frag_c208〜c214_*</span>・各サイクルで archive 1.6MB を丸ごと書き出した写しが7枚）。④同じ「未登録」が <span class="font-mono">blog-improve-ycom</span> にもありますが、こちらは書く先（<span class="font-mono">data/blog-loop/ycom/improve-log.md</span>）が翌朝の <span class="font-mono">blog-loop-ycom</span> の許可パスに入っているため<u>失われてはいません</u>（コミットの名義がずれるだけ＝過大に言わないため明記）。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>＝partner の台帳は毎朝ローテ（本文を archive へ移す）で書き換わる<strong>一次の状態</strong>で、元に戻す手段は git しかありません。社長のお言葉（<span class="font-mono">from-president.md</span>）は2ヶ月分がディスクの上だけにあります。複数セッションが同居する VPS では取り違え・巻き戻しの実例があり（<span class="font-mono">project_git-index-race</span>）、消えても気づく手段がありません。08-17 の O-040（「各ループがサイクル末に自分の分だけコミットする」）の<u>登録漏れ</u>で、<span class="font-mono">test-agent-commit.sh:118</span> は partner を「未登録の例」として使っているため、テストも漏れを正常として固定しています。</p>
+      <p class="mt-1"><strong>推奨（誰が・何を）</strong>＝開発（有人）が1回で：(a) <span class="font-mono">AGENT_PATHS</span> に <span class="font-mono">"partner": ["data/partner/", "site/business/partner/", ":!data/partner/_*", ":!site/business/partner/_*", ":!site/business/partner/.*.tmp"]</span> を足す（<u>断片を除外しないと 1.6MB の写し7枚を巻き込みます</u>）(b) <span class="font-mono">test-agent-commit.sh</span> の「未登録の例」を partner 以外（架空名）に替え、partner が自分の台帳をコミットし断片を含めないことを1件足す (c) 初回だけ現状を手でコミット（断片の掃除は O-043 の範囲＝消す前に社長へ）。<span class="font-mono">blog-improve-ycom</span> も同じ表に1行足すと名義が正しくなります（任意）。</p>
+      <p class="mt-1"><strong>効果</strong>：中〜大（2ヶ月分の台帳・ご指示が戻せるようになる）。<strong>工数</strong>：小（1行＋テスト2件）。<strong>優先度</strong>：🟡。<strong>関連</strong>：O-040・O-043・O-105・O-009・<span class="font-mono">project_git-index-race</span>。<strong>ステータス</strong>：⏳ 開発へ（triage 経由・ご判断不要）。</p>
+    </div>
+
+    <h4 class="font-bold mb-2">既存カードの動き（再掲せず数字だけ）</h4>
+    <ul class="text-sm text-gray-700 mb-4 list-disc pl-5">
+      <li><strong>O-104（🟡・初の実害）</strong>：<span class="font-mono">new/</span> に <span class="font-mono">to: hp-loop-yoshida</span> が<strong>2通・5.2日</strong>＝<span class="font-mono">yoshida-dev</span> から 10-20 19:24／19:38 の「【デプロイ報告】インビザライン料金の差し替え」「分割払い・家族割の案内を追加」。料金ページの変更なので、効果検証の起点日として解析側に要る便です。移設先が HTTP の受け口から取りに来ているかは<strong>未確認</strong>（スプール上は未処理のまま）。ご判断は前回と同じ1問です。</li>
+      <li><strong>O-043（開発へ降ろし済み）</strong>：<span class="font-mono">bin/</span> の外の作業用断片は <strong>106本・約15MB</strong>（<span class="font-mono">data/partner/_*</span> 76本〔08-22〜10-16〕／<span class="font-mono">data/blog-loop/_*</span> 30本〔07-01〜09-12〕）。<span class="font-mono">system-health.py</span> の報告は <span class="font-mono">bin/_tmp_</span> の3本だけです（09-21 の「6本」から増加）。</li>
+      <li><strong>O-099</strong>：誤報は今週 10-21 の1夜（7日窓）。10-25 は24秒で終わり記録されませんでしたが、出力が長くなって境目を越えただけで、<u>メモ0件でも毎晩 claude を起動している点は変わっていません</u>。</li>
+      <li><strong>O-105</strong>：<span class="font-mono">rules/modes/</span> の4本は 10-08 以降 変化なし・未コミットのまま。</li>
+      <li><strong>O-103</strong>：本日の産出量の行（起動14）は 10-12〜10-26 で「8サイト（〜10-18）＋ycom のみ（10-19〜）」が混ざった数字です。並べて比べないでください（下表）。</li>
+      <li><strong>board 宛て</strong>：<span class="font-mono">management</span> からの便1通（10-20）が5.3日 未読。board は社長が呼んだときだけ動く設計なので故障ではありません（triage の範囲）。</li>
+      <li><strong>O-046</strong>：本掲示板 417KB（閾値80KB）。</li>
+    </ul>
+
+    <h4 class="font-bold mb-2">床と待ちの推移（数字のみ・判定なし）</h4>
+    <p class="text-sm text-gray-700 mb-4">データなし＝<span class="font-mono">system-health.py</span> の出力に該当節がありません（O-044）。ゼロでは埋めません。</p>
+
+    <h4 class="font-bold mb-2">解析ループの産出量（数字のみ・判定なし）</h4>
+    <table class="text-sm mb-2 border border-gray-300">
+      <thead class="bg-gray-100"><tr><th class="px-2 py-1">記録日</th><th class="px-2 py-1">期間(日)</th><th class="px-2 py-1">起動</th><th class="px-2 py-1">書込/回</th><th class="px-2 py-1">文字/回</th><th class="px-2 py-1">未処理の実装報告</th><th class="px-2 py-1">効果検証以降のR</th></tr></thead>
+      <tbody>
+        <tr><td class="px-2 py-1">2026-10-19（前回）</td><td class="px-2 py-1">14</td><td class="px-2 py-1">30</td><td class="px-2 py-1">31.6</td><td class="px-2 py-1">23,368</td><td class="px-2 py-1">0</td><td class="px-2 py-1">86</td></tr>
+        <tr><td class="px-2 py-1">2026-10-26（最新）</td><td class="px-2 py-1">14</td><td class="px-2 py-1">14</td><td class="px-2 py-1">34.2</td><td class="px-2 py-1">24,358</td><td class="px-2 py-1">2</td><td class="px-2 py-1">86</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mb-4">出典：<span class="font-mono">data/hp-loop/quality-log.md</span>（月曜 0:50）。良し悪しの判断は社長と <span class="font-mono">/board</span>。最新行は移設（10-18）の前後が混ざっています（O-103）。未処理の実装報告 2 は<u>0でない週の1週目</u>＝来週も0でなければ規定どおり起票します（上の O-104 の2通と同じものかは、ツールの数え方を読まずに断定しません）。</p>
+
+    <h4 class="font-bold mb-2">🧱 コードの層（数字のみ・判定なし／全体最適棚卸し (B)・2026-10-26）</h4>
+    <table class="text-sm mb-2 border border-gray-300">
+      <thead class="bg-gray-100"><tr><th class="px-2 py-1">項目</th><th class="px-2 py-1">前回 10-12（Cycle 089）</th><th class="px-2 py-1">今回 10-26</th></tr></thead>
+      <tbody>
+        <tr><td class="px-2 py-1">⑤ bin/ の増減（直近14日）</td><td class="px-2 py-1">+1,218 / −199 / 純 +1,019 / 触れた 11本</td><td class="px-2 py-1">+1,146 / −58 / 純 +1,088 / 触れた 5本</td></tr>
+        <tr><td class="px-2 py-1">⑥ 無人ループが実行するツール／テスト無し</td><td class="px-2 py-1">33本 / 7本</td><td class="px-2 py-1">34本 / 7本（同じ7本＝analyze-mf.py, backup-crontab.sh, check-writeback.py, clarity-fetch.py, ga4-cohort.py, hp-links.py, talk-tick.sh）</td></tr>
+        <tr><td class="px-2 py-1">⑦ 同じ処理の再実装（候補）</td><td class="px-2 py-1">.env 6（+shell 4）／atomic write 17／flock 7（+shell 2）</td><td class="px-2 py-1">.env 6（+shell 4）／atomic write 17／flock 7（+shell 2）</td></tr>
+        <tr><td class="px-2 py-1">⑧ <span class="font-mono">_tmp_</span> 残骸</td><td class="px-2 py-1">3本・最古54日</td><td class="px-2 py-1">3本・最古68日（同じ3本）</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mb-4">〔<span class="font-mono">_env.py</span> と <span class="font-mono">system-health.py</span> 自身は対象外＝ツールの但し書きどおり。⑧は bin/ のみ走査＝bin/ の外は上の O-043 の行〕。⑥⑧は開発へ降ろし済み（O-091・O-043）＝新規起票なし。⑦は3項目とも前回と同数です。</p>
+
+    <h4 class="font-bold mb-2">📚 全体最適棚卸し (A) ルールの層（2026-10-26 実施・前回 10-12）</h4>
+    <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-4">
+      <li><strong>① 本数と総量</strong>：<span class="font-mono">rules/modes/</span> 22本 524KB／<span class="font-mono">rules/</span> 直下 10本 159KB／<span class="font-mono">.claude/commands/</span> 36本 116KB／起動時自動ロード 15KB＝<strong>すべて前回と同じ</strong>。ルールファイルの最終更新は 10-08（<span class="font-mono">testing.md</span>・<span class="font-mono">management.md</span>）です。</li>
+      <li><strong>② 重複・流用切れ</strong>：新しい二重定義は見つけていません。</li>
+      <li><strong>③ 最後に見直した日が古い領域</strong>：<span class="font-mono">task-partner.md</span>（23KB）は今回も残っています（O-004・09-24 ご決定から32日）。</li>
+      <li><strong>④ 簡素化・統合の候補（傾き）</strong>：前回「次回も伸びていれば提案」とした <span class="font-mono">testing.md</span> は 66KB のまま止まりました＝提案しません。</li>
+      <li><strong>⑤ 結論</strong>：ルールの層は2週間 動いていません。同じ期間の有人コミットは2本（10-18・10-19 の HP解析の移設）だけで、<u>まだ降りていないご決定・合意済みの作業は O-004・O-006・O-056・O-067・O-103・O-105 の6件＋本日の O-106</u>。前回の4件から増えました。どれも開発（有人）の手待ちで、新しい設計の議論は要りません。推奨＝triage が「開発セッションを1回開いて、この7件を順に」を<strong>社長の ToDo に日付つきで</strong>置く（mailbox だけでは窓口が開くまで動かない＝<span class="font-mono">feedback_handoff-must-land-in-mailbox</span>）。新しい「全体最適セッション」の提案は立てません。</li>
+    </ul>
+
+    <h4 class="font-bold mb-2">器</h4>
+    <p class="text-sm text-gray-700 mb-4">本掲示板 417KB（診断時）＝閾値80KBの521%。ローテは今回も実行していません（O-006 の実装待ち）。</p>
+
+    <h4 class="font-bold mb-2">Step 6 自己改善</h4>
+    <p class="text-sm text-gray-700 mb-2">O-106 は、<span class="font-mono">tick.log</span> の <span class="font-mono">[agent-commit] … 許可パス未登録</span> の1行を読んで初めて見えました。<span class="font-mono">system-health.py</span> は「未コミットの <span class="font-mono">bin/</span>」は数えますが、<u>状態ファイルそのものの最終コミット日</u>は数えていません（partner の台帳は閾値表に載っているのに、67日コミットが無いことは出ない）。精密診断で「閾値表の状態ファイルの最終コミット日」を1度見る、をカイゼン台帳へ起票しました。</p>
+    <p class="text-xs text-gray-500">次サイクル：反応tick（<span class="font-mono">to: overseer</span> の新着があれば）／火曜 1:00 fallback は「今週実施済み」で軽く終わる見込み／次の精密診断は <strong>2026-11-02 月曜 1:00</strong>（全体最適棚卸しは 11-09）。停止条件＝社長の停止指示。</p>
+  </section>
 
   <!-- ===== Cycle 092 ===== -->
   <section class="mb-10 border-t-4 border-blue-500 pt-4">
