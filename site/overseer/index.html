@@ -17,7 +17,8 @@
 
   <h1 class="text-3xl font-bold mb-2">🛰️ 統括レポート（Overseer）</h1>
   <p class="text-gray-600 mb-2">このシステム全体を俯瞰し、<strong>整合・健全性・安全</strong>の綻びを見つけて改善提案を積む統括ループ。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。</p>
-  <p class="text-sm text-gray-700 mb-6 border-l-4 border-amber-500 pl-3">最終更新：<strong>2026-10-20 未明（Cycle 092・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>新規の綻びはありません。<strong>O-103・O-104 のお伺いを1点だけ直しました</strong>＝10-19 夜に社長が「<u>自社サイト（ycom）の HP解析だけ myagent で再開</u>」とお決めになった（commit <span class="font-mono">ac2c8d5</span>）ため、<strong>①は「ycom 以外の hp-loop を計測と地図から外してよいか」に、②は「ycom 以外の宛て」に</strong>範囲が狭まります。ycom の計測・産出量の記録（<span class="font-mono">loop-quality.py</span>）は止めてはいけない側に移りました。10-19 01:00 以降のタイムアウト・異常終了は0件です。</p>
+  <p class="text-sm text-gray-700 mb-6 border-l-4 border-amber-500 pl-3">最終更新：<strong>2026-10-27 未明（Cycle 094・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>故障は静かです（10-23 以降タイムアウト・異常終了0）。新規は1件＝<strong>🟡O-107</strong>：<u>経理窓口（finance）宛ての便2通が23日未読</u>で、うち1通は公庫の試算表の手前の作業（D-021／D-032・法定福利費の中身）です。別経路で済んでいる可能性もあるため、triage での確認をお願いする形にしました（ご判断不要）。</p>
+  <p class="hidden">旧サマリ（Cycle 092）：最終更新：<strong>2026-10-20 未明（Cycle 092・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>新規の綻びはありません。<strong>O-103・O-104 のお伺いを1点だけ直しました</strong>＝10-19 夜に社長が「<u>自社サイト（ycom）の HP解析だけ myagent で再開</u>」とお決めになった（commit <span class="font-mono">ac2c8d5</span>）ため、<strong>①は「ycom 以外の hp-loop を計測と地図から外してよいか」に、②は「ycom 以外の宛て」に</strong>範囲が狭まります。ycom の計測・産出量の記録（<span class="font-mono">loop-quality.py</span>）は止めてはいけない側に移りました。10-19 01:00 以降のタイムアウト・異常終了は0件です。</p>
   <p class="hidden">旧サマリ（Cycle 091）：最終更新：<strong>2026-10-19 未明（Cycle 091・<span class="underline">精密診断</span>・月曜 1:00 cron）</strong><br>10-18 に HP解析（hp-loop 8サイト）が site-analyzer へ移りました。止め方は正しく動いています。<u>ただ、地図・統括の計測・便の受け口がまだ「myagent で動いている」前提のまま</u>です（<strong>🟡O-103</strong>＝来週以降、移設先で元気に動いている解析を「myagent の故障」と読み違える恐れ／<strong>🟡O-104</strong>＝開発から <span class="font-mono">hp-loop-&lt;site&gt;</span> 宛てに届く便を myagent では誰も受けない）。もう1件は <strong>🟡O-105</strong>＝ご承認済みのルール改訂3本（comms・board・management）が11〜25日 git の外で効いている、です。社長のお伺いは2点＝<strong>①myagent の計測と地図から hp-loop を外してよいか ②hp-loop 宛ての便は移設先が取りに来る形でよいか</strong>。タイムアウト0・OOM +0。</p>
   <p class="hidden">旧サマリ（Cycle 090）：最終更新：<strong>2026-10-13 未明（Cycle 090・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>今週の精密診断は 10-12（Cycle 089）で実施済みです。Slack 新着・統括宛の便はともに0。10-12 01:00 以降のタイムアウト・異常終了は0件です。新規は1件（<strong>🟡O-102</strong>）＝<u>メモ窓口（#memo）に、08-17 を最後に56日間 1通も届いていません</u>。その間も毎晩23時に取り込みが起動しており、🔴O-099 の誤報はこの「0件の夜」から出ています。#memo に限らず、Slack から届いた社長の便は全チャンネルで 09-01 が最後です（42日間 0通）。お伺いは1点だけ＝<strong>09月以降 Slack には書いていないだけでしょうか、それとも書いたのに返事が無かったものがありますか。</strong>なお昨夜（10-12）は誤報が鳴りませんでしたが、直ったのではありません（O-099 は未着手のままです）。</p>
   <p class="hidden">旧サマリ（Cycle 089）：最終更新：<strong>2026-10-12 未明（Cycle 089・<span class="underline">精密診断＋全体最適棚卸し（ルール＋コード）</span>・月曜 1:00 cron）</strong><br><strong class="text-red-700">毎晩23時に社長へ届いている「memo が13秒で終了しました」の警報は誤報です</strong>（🔴O-099）。メモが0件の日に正しく終わっているだけで、故障ではありません。10-06 から6夜連続で記録されています。<strong>🔴O-095 は解決しました</strong>（10-11 のコミット <span class="font-mono">521ff49</span> で rally／konjaku の反応起動を停止）。新規は3件（🔴O-099・🟡O-100・🟢O-101）です。</p>
@@ -62,7 +63,9 @@
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-13 現在（Cycle 090）：O-099 のご判断に、お伺いが1点 加わりました。</strong><strong>🟡 O-102</strong>＝#memo はこの2ヶ月 使っていないだけでしょうか（最後のメモは 08-17）。「使っていないだけ」であれば、O-099 は (A)＝メモが0件の夜は起動しない、で決まりです。急ぎません＝次の triage でまとめて。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-19 現在（Cycle 091）：HP解析の移設（10-18）に伴うお伺いが2点 加わりました。</strong>①<strong>🟡 O-103</strong>＝myagent の計測（system-health・産出量の記録）と地図から hp-loop を外してよいか（推奨＝外す）。②<strong>🟡 O-104</strong>＝開発から <span class="font-mono">hp-loop-&lt;site&gt;</span> 宛てに届く便は、移設先が受け口から取りに来る形でよいか。<strong>🟡 O-105</strong>（ご承認済みルール3本のコミット）はご判断不要＝開発へ。O-099・O-102 は変わらず（誤報は今週も3夜）。急ぎません＝次の triage でまとめて。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-26 現在（Cycle 093）：今日 社長が動くことは ありません。</strong>次の triage でまとめて見ていただきたいのは2点です。①<strong>🟡 O-104 に初めて実害が出ました</strong>＝よしだ歯科の本番反映の報告2通（10-20・インビザラインの料金差し替えほか）が、宛先 <span class="font-mono">hp-loop-yoshida</span> で5日間 誰にも読まれていません。ご判断は前回と同じ1問（移設先が取りに来る形でよいか）。②<strong>🟡 O-106（新規）</strong>＝partner の台帳・社長のお言葉の控えが 08-20 から2ヶ月 git に入っていません（自動コミットの対象に partner が無い）。ご判断不要＝開発へ。</p>
+    <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-27 現在（Cycle 094）：社長が動くことはありません。</strong>triage に1点＝<strong>🟡 O-107</strong>：経理窓口宛ての D-032 便（法定福利費の中身・10-04）が23日未読。済んでいなければ「経理セッションを開く」を ToDo に日付つきで（D-021 の見直し 11-01 より前）。</p>
     <ul class="space-y-3 text-sm text-amber-900">
+      <li><strong>🟡 O-107（🆕 2026-10-27 Cycle 094）</strong>：<span class="font-mono">to: finance</span> 2通（board・10-04＝D-032）／<span class="font-mono">to: product</span> 1通（triage・10-08）が <span class="font-mono">new/</span> で19〜23日。有人窓口は開かれるまで動かない。triage が別経路で済んでいるか確認→未了なら社長 ToDo に日付つきで。詳細は Cycle 094 のカード。</li>
       <li><strong>🟡 O-106（🆕 2026-10-26 Cycle 093）</strong>：partner は自動コミット（<span class="font-mono">agent-commit.sh</span>）の対象に登録されておらず、<span class="font-mono">data/partner/ledger.md</span>・<span class="font-mono">from-president.md</span>・<span class="font-mono">site/business/partner/</span> の最終コミットは 08-20（67日前）。ご判断不要＝開発が許可パスを1行足す（作業用の断片は除外）。詳細は Cycle 093 のカード。</li>
       <li><strong>🟡 O-103（🆕 2026-10-19 Cycle 091）</strong>：地図（SYSTEM.md）と統括の計測が、10-18 に移設した hp-loop をまだ myagent で動いているものとして数えています（system-health の ⚠️ 3行・月曜 0:50 の産出量記録）。来週から「解析が止まった」と同じ見た目になります。ご判断＝計測と地図から外してよいか。詳細は Cycle 091 のカード。</li>
       <li><strong>🟡 O-104（🆕 2026-10-19 Cycle 091）</strong>：dispatch が止まったため、<span class="font-mono">to: hp-loop-&lt;site&gt;</span> の便は届いても誰も起こしません（いまは hold/ の1通だけ）。ご判断＝移設先が受け口から取りに来る形でよいか。</li>
@@ -181,6 +184,33 @@
   </div>
 
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
+
+  <!-- ===== Cycle 094 ===== -->
+  <section class="mb-10 border-t-4 border-blue-500 pt-4">
+    <h3 class="text-xl font-bold mb-1">Cycle 094 — 2026-10-27 未明（軽い巡回・火曜 1:00 fallback／🟡1件・経理窓口宛ての便が23日未読）</h3>
+    <p class="text-sm text-gray-600 mb-3"><strong>モード判定</strong>：今週（10-26 月曜起算）の精密診断は Cycle 093 で実施済み＝月曜便は成功＝軽い巡回。<strong>確認した範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし）／<span class="font-mono">to: overseer</span> 0通／<span class="font-mono">from-president.md</span>（09-27 10:12 のまま）／<span class="font-mono">tick.log</span>・<span class="font-mono">failures.jsonl</span>（10-26〜10-27 01:00）／<span class="font-mono">git log</span>（10-26 01:00 以降）／mailbox <span class="font-mono">new/</span> の宛先別件数／<span class="font-mono">data/board/decisions.md</span> の D-021・D-032 行。</p>
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>健康サマリ</strong>：故障は静かです。10-26 の定時便（blog-improve・overseer・hp-loop ycom・blog-loop・blog-write・comms 9回・partner・memo）はすべて起動し、<span class="font-mono">failures.jsonl</span> の最後は 10-23 01:09 のまま（タイムアウト・異常終了0）。10-26 23:00 の memo は誤報なし（O-099 は未着手＝直ったのではない）。新規は1件です。</p>
+    </div>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-3 mb-3 text-sm">
+      <p><strong>🟡 O-107（🆕）有人窓口（finance・product）宛ての便が19〜23日 未読＝うち経理宛て2通は公庫の試算表の手前の作業</strong></p>
+      <p class="mt-1"><strong>観察（実測）</strong>＝<span class="font-mono">new/</span> に <span class="font-mono">to: finance</span> 2通（board 発・10-04 12:36／12:38＝D-032「①法定福利費 ¥2,132,668 の中身 → ②通信費の全件リスト」とその追伸）、<span class="font-mono">to: product</span> 1通（triage 発・10-08＝最初の題材の暫定案）。両窓口は <span class="font-mono">config/session-desks.json</span> に登録済みの<u>有人セッション</u>です。<span class="font-mono">data/board/decisions.md</span> の D-021（法定福利費の中身）は <strong>open・見直し 11-01</strong>、board 台帳自身も「経理の回答は未着」と記録しており、配達確認の欄は「✅ <span class="font-mono">new/</span> に存在」＝<u>届いたことは確かめているが、開かれたかは見ていない</u>。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>＝有人窓口は社長がそのセッションを開くまで動きません（<span class="font-mono">feedback_handoff-must-land-in-mailbox</span>＝10-20 の便5通が16日未読と同型）。D-021 は「試算表（D-014）より前に置く＝公庫へ出す数字が動く」とされた作業で、元の期日 10-10 はすでに過ぎています。推測：経理の作業が別の経路（サブエージェント等）で済んでいて <span class="font-mono">done</span> だけ打たれていない可能性もあります＝<u>未読＝未着手とは断定しません</u>。</p>
+      <p class="mt-1"><strong>推奨（誰が・何を）</strong>＝triage が次の窓口で①経理の件が別経路で済んでいるかを確かめる（済みなら <span class="font-mono">local-done</span>）②済んでいなければ「経理セッションを開いて受信箱の D-032 を」を<strong>社長の ToDo に日付つきで</strong>置く（11-01 の見直しより前）。product 宛ても同じ扱い。仕組みとしては、board・triage が有人窓口へ便を出すときの配達確認を「<span class="font-mono">new/</span> に存在」で終えず、相手が開く日を ToDo に紐づける（ルール改訂は合意後・本カードは提案のみ）。</p>
+      <p class="mt-1"><strong>効果</strong>：中（公庫申込の手前の詰まりが見える）。<strong>工数</strong>：小（確認1回＋ToDo 1件）。<strong>優先度</strong>：🟡。<strong>関連</strong>：D-021・D-032・D-014・O-104（宛先で誰も起きない便＝無人側の同型）・<span class="font-mono">feedback_handoff-must-land-in-mailbox</span>。<strong>ステータス</strong>：⏳ triage へ（ご判断不要・確認のみ）。</p>
+    </div>
+
+    <h4 class="font-bold mb-2">既存カードの動き（数字だけ）</h4>
+    <ul class="text-sm text-gray-700 mb-4 list-disc pl-5">
+      <li><strong>O-104</strong>：<span class="font-mono">to: hp-loop-yoshida</span> 2通は <span class="font-mono">new/</span> に残ったまま（6.2日）。</li>
+      <li><strong>O-106</strong>：10-26 以降のコミットは自動3本（overseer・hp-loop-ycom・blog-loop-ycom）のみ＝partner は今回も対象外。</li>
+    </ul>
+
+    <h4 class="font-bold mb-2">Step 6 自己改善</h4>
+    <p class="text-sm text-gray-700 mb-2">これまでの軽い巡回は <span class="font-mono">new/</span> を「統括宛て」と「O-NNN で追っている宛先」しか見ていなかった。宛先別の件数を1行で出すだけで有人窓口の滞留が見えた＝軽い巡回の定番に「<span class="font-mono">new/</span> の宛先別件数と、有人窓口宛ての最古日数」を足す、をカイゼン台帳へ起票。</p>
+    <p class="text-xs text-gray-500">次サイクル：反応tick（<span class="font-mono">to: overseer</span> の新着があれば）／次の精密診断は <strong>2026-11-02 月曜 1:00</strong>（全体最適棚卸しは 11-09）。停止条件＝社長の停止指示。</p>
+  </section>
 
   <!-- ===== Cycle 093 ===== -->
   <section class="mb-10 border-t-4 border-blue-500 pt-4">
