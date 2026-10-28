@@ -1,6 +1,6 @@
 # TDD/BDD 開発ルール
 
-> 『確認を必ず取る』は都度承認モード（rules/modes/agent.md）の規律。**Autopilot（`status: active`）自走中は、確認ポイントを判断ログ（rules/modes/autopilot.md 7章）への記録に読み替える**（クリティカル判断のみ停止）。
+> 『確認を必ず取る』は、ユーザーと1件ずつ進めるときの規律。**委任カードで進めるときは、確認ポイントを報告（`rules/modes/developer.md` §7）と判断ログ（`rules/modes/director.md` §5.2）への記録に読み替える**（手を止めるのは `rules/modes/developer.md` §4.1「必ず止まるもの」だけ）。
 
 ## 共通
 

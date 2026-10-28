@@ -13,3 +13,4 @@ VS Code 拡張の **Live Sass Compiler** を使用してファイル監視・自
 ### 注意
 
 - Live Sass Compiler はエディタの保存イベントで動くため、**AI のプログラム的な編集（Write/Edit）には反応しない場合がある**。反応しない場合は開発者が保存し直す・Watch を起動する等で補う
+- **拡張の版によって中の処理系が違う。dart-sass ベースの版を使う**（処理系の既定は dart-sass＝`.claude/rules/coding.md`「CSS/Sass」。LibSass ベースの版だと `@use` / `@forward` や新しい色関数が通らない）
