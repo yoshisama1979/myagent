@@ -38,20 +38,29 @@ want_file(){   if [ -f "$1" ]; then say_ok "$2"; else say_ng "$2" "$1 が無い"
 # テンプレートに未コミットの変更があるかで --allow-dirty の要否が変わる。
 # テストは「どちらの状態でも通る」ようにしたいので、必要なときだけ付ける。
 DIRTY=""
-if [ -n "$(git -C "$PROJ" status --porcelain -- claude-rules/websystem/ claude-rules/website/)" ]; then
+if [ -n "$(git -C "$PROJ" status --porcelain -- claude-rules/common/ claude-rules/websystem/ claude-rules/website/)" ]; then
   DIRTY="--allow-dirty"
 fi
 
-echo "▼ テンプレ間で同じであるべきもの"
-# rule-report.sh は website / websystem に同一内容で置いてある（テンプレは別々に配布される
-# ので、共通ライブラリに出さず両方に置くのが正）。片方だけ直すと、配った先で挙動が食い違い、
-# しかも黙って食い違う。機械で見張る。
-if diff -q "$PROJ/claude-rules/website/bin/rule-report.sh" \
-           "$PROJ/claude-rules/websystem/bin/rule-report.sh" >/dev/null 2>&1; then
-  say_ok "両テンプレの bin/rule-report.sh が同一（片方だけ直すと黙ってズレる）"
-else
-  say_ng "両テンプレの bin/rule-report.sh が同一" "差分あり＝片方だけ直されています"
-fi
+echo "▼ 共通のものは common/ に1本だけ（コピーを置かない）"
+# 以前は website / websystem に同一内容のコピーを置き、「同一であること」をテストで見張って
+# いた。common 層が入ってからは**1本しか無い**ので、ズレようがない（＝テストで見張る必要が
+# 無くなった）。ここで見るのは「面レイヤーにコピーが戻っていないか」だけ。
+for f in bin/rule-report.sh bin/rules-update.sh rules/modes/rules-update.md \
+         rules/modes/hana-memo.md rules/modes/mailbox.md .claude/commands/hana-memo.md \
+         documents/pending-issues.md documents/rule-improvements.md; do
+  want_file "$PROJ/claude-rules/common/$f" "common に1本ある: $f"
+  if [ -e "$PROJ/claude-rules/website/$f" ] || [ -e "$PROJ/claude-rules/websystem/$f" ]; then
+    say_ng "面レイヤーにコピーが戻っていない: $f" "common と二重になると、どちらが正か配布先でしか分からない"
+  else
+    say_ok "面レイヤーにコピーが戻っていない: $f"
+  fi
+done
+# 実行ビットは配布でも保たれる必要がある（現場は bash bin/… で叩くが、直接実行もされる）
+for f in bin/rule-report.sh bin/rules-update.sh; do
+  if [ -x "$PROJ/claude-rules/common/$f" ]; then say_ok "実行ビットが立っている: $f"
+  else say_ng "実行ビットが立っている: $f"; fi
+done
 
 echo "▼ 配る前の安全確認"
 OUT="$(dr apply websystem "$T/nowhere" --yes)";     want_in "配布先がありません" "$OUT" "存在しない配布先は拒否"
@@ -73,12 +82,14 @@ want_file "$T/dest/CLAUDE.md"                        "ルール層が置かれ�
 want_file "$T/dest/documents/handoff.md"             "初回は案件の記録の雛形も置かれる"
 want_file "$T/dest/bin/rule-report.sh"               "通知スクリプトが同梱される"
 want_file "$T/dest/.claude/rules-version"            "版が刻印される"
-VER="$(cat "$T/dest/.claude/rules-version")"
+VER="$(head -1 "$T/dest/.claude/rules-version")"
 if printf '%s' "$VER" | grep -qE '^websystem@[0-9]{4}-[0-9]{2}-[0-9]{2}/[0-9a-f]+(\+dirty)?$'; then
-  say_ok "版の形式が <テンプレ>@<日付>/<SHA>"
+  say_ok "版の1行目が <プロファイル>@<日付>/<SHA>"
 else
-  say_ng "版の形式が <テンプレ>@<日付>/<SHA>" "実際=[$VER]"
+  say_ng "版の1行目が <プロファイル>@<日付>/<SHA>" "実際=[$VER]"
 fi
+# 層が2つ以上なら2行目に内訳が入る（1層なら付けない＝下の「配布プロファイル」節で確かめる）
+want_in "layers: common=" "$(cat "$T/dest/.claude/rules-version")" "2層なら版の2行目に層の内訳が入る"
 
 echo "▼ 再配布で案件の記録を消さない（この仕組みの肝）"
 echo "案件が書いた値" >> "$T/dest/project-config.md"
@@ -140,6 +151,83 @@ want_in "myagent 自身" "$OUT" "myagent 自身には配れない"
 OUT="$(dr apply website "$(dirname "$PROJ")" --dest-name "親" $DIRTY)"
 want_in "myagent 自身" "$OUT" "myagent の親にも配れない"
 
+echo "▼ 配布プロファイル（層の組み合わせ）"
+# 一覧の正は claude-rules/profiles.json ひとつ。読む側が Python 2本と PHP 1本に分かれるので、
+# コードに同じ一覧を書き写すと層を足した日に片方だけ古くなる（＝配れるのに取りに来られない）。
+PROF="$PROJ/claude-rules/profiles.json"
+want_file "$PROF" "配布プロファイルの定義ファイルがある"
+want_in "website" "$(cat "$PROF" 2>/dev/null)"   "旧名 website が残っている（現場のトークンがこの名前）"
+want_in "websystem" "$(cat "$PROF" 2>/dev/null)" "旧名 websystem が残っている"
+HARD="$(grep -rn "('website', 'websystem')\|\"website\", \"websystem\"\|'website', 'websystem'" \
+        "$PROJ/bin/distribute-rules.py" "$PROJ/bin/rule-reporter.py" "$PROJ/site/tools/rules/index.php" 2>/dev/null)"
+if [ -z "$HARD" ]; then say_ok "一覧をコードに書き写していない（正は profiles.json ひとつ）"
+else say_ng "一覧をコードに書き写していない" "$(printf '%s' "$HARD" | tr '\n' ' ' | cut -c1-160)"; fi
+
+OUT="$(dr apply nosuchprofile "$T/dest2" --yes $DIRTY)"
+want_in "invalid choice" "$OUT" "知らないプロファイル名は引数の段で弾く"
+printf '{"profiles": {"ghost": ["no-such-layer"]}}\n' > "$T/ghost-profiles.json"
+OUT="$(RULES_PROFILES="$T/ghost-profiles.json" python3 "$PROJ/bin/distribute-rules.py" apply ghost "$T/dest2" --yes --allow-dirty 2>&1)"
+want_in "層がありません" "$OUT" "定義が実在しない層を指していたら止める"
+
+printf '{"profiles": {"x": "not-a-list"}}\n' > "$T/bad-profiles.json"
+OUT="$(RULES_PROFILES="$T/bad-profiles.json" python3 "$PROJ/bin/distribute-rules.py" list 2>&1)"
+want_in "層名の配列" "$OUT" "壊れた定義では黙って既定に落ちず止まる"
+OUT="$(RULES_PROFILES="$T/none.json" python3 "$PROJ/bin/distribute-rules.py" list 2>&1)"
+want_in "定義がありません" "$OUT" "定義が無ければ止まる"
+
+# 🚨 ここから下は 2026-10-28 の Codex レビューで見つかった穴の再発防止。
+# プロファイル名・層名は**コード内の定数から JSON 由来の値になった**ので、形の検証が要る。
+# 検証が無いと、層名に絶対パスを書くだけで claude-rules の外のファイルが配られる（実証済み）。
+mkdir -p "$T/outside/secret" && echo "テンプレ外のファイル" > "$T/outside/secret/leak.md"
+badprof(){ printf '%s\n' "$1" > "$T/p.json"; RULES_PROFILES="$T/p.json" \
+  RULES_DIST_REGISTRY="$T/reg2.md" python3 "$PROJ/bin/distribute-rules.py" "${@:2}" 2>&1; }
+
+mkdir -p "$T/escape"
+OUT="$(badprof "{\"profiles\": {\"evil\": [\"$T/outside/secret\"]}}" apply evil "$T/escape" --dest-name x --yes --allow-dirty)"
+want_in "層名" "$OUT" "層名が絶対パスなら入口で弾く"
+if [ -e "$T/escape/leak.md" ]; then say_ng "テンプレ外のファイルを配っていない" "leak.md が配布された"
+else say_ok "テンプレ外のファイルを配っていない"; fi
+OUT="$(badprof '{"profiles": {"evil": ["../../etc"]}}' list)"
+want_in "層名" "$OUT" "層名に .. があれば弾く"
+OUT="$(badprof '{"profiles": {"../evil": ["website"]}}' list)"
+want_in "プロファイル名" "$OUT" "プロファイル名に .. があれば弾く"
+OUT="$(badprof '{"profiles": {"Evil Name": ["website"]}}' list)"
+want_in "プロファイル名" "$OUT" "プロファイル名に大文字・空白があれば弾く"
+OUT="$(badprof '{"profiles": {"a": ["x","x"]}}' list)"
+want_in "同じ層が2回" "$OUT" "同じ層を2回並べたら弾く"
+
+# 形が違う JSON でトレースバックを出さない（＝必ず「❌ …」で止まる）
+for bad in '{"profiles": []}' '{"profiles": ["website"]}' '{"profiles": {}}' '[]' '{}'; do
+  OUT="$(badprof "$bad" list)"
+  if has "Traceback" "$OUT"; then say_ng "壊れた形でトレースバックを出さない: $bad" "$(printf '%s' "$OUT" | tr '\n' ' ' | cut -c1-120)"
+  elif has "❌" "$OUT"; then say_ok "壊れた形でも明示エラーで止まる: $bad"
+  else say_ng "壊れた形で止まる: $bad" "$(printf '%s' "$OUT" | tr '\n' ' ' | cut -c1-120)"; fi
+done
+
+# 読み取り系が同じ判断をするか。以前は distribute-rules が落ち rule-reporter は通る、と
+# **同じ設定ファイルで判断が割れていた**。設定の不備だと分かるメッセージ（profiles.json を
+# 名指し）が出ることまで見る＝別の理由のエラーを拾って誤って通らないように。
+printf '{"profiles": ["website"]}\n' > "$T/p.json"
+OUT="$(RULES_PROFILES="$T/p.json" RULE_REPORTER_TOKENS="$T/tok.json" RULE_REPORTER_LEDGER="$T/led.md" \
+       python3 "$PROJ/bin/rule-reporter.py" list 2>&1)"
+want_not_in "Traceback" "$OUT" "rule-reporter が壊れた設定でトレースバックを出さない"
+want_in "profiles.json" "$OUT" "rule-reporter も設定の不備として止まる（読み取りの判断は1箇所）"
+
+# 層が3つ以上でも衝突を見つける
+mkdir -p "$T/src3/l1" "$T/src3/l2" "$T/src3/l3"
+echo a > "$T/src3/l1/a.md"; echo b > "$T/src3/l2/b.md"; echo a2 > "$T/src3/l3/a.md"
+printf '{"profiles": {"three": ["l1","l2","l3"]}}\n' > "$T/p3.json"
+mkdir -p "$T/d3"
+OUT="$(RULES_SRC="$T/src3" RULES_PROFILES="$T/p3.json" RULES_DIST_REGISTRY="$T/reg2.md" \
+       python3 "$PROJ/bin/distribute-rules.py" apply three "$T/d3" --yes --allow-dirty 2>&1)"
+want_in "同じパスが2つの層にあります" "$OUT" "3層以上でも同じパスの衝突を見つける"
+want_in "a.md" "$OUT"                                "衝突したパスを示す"
+
+# 🚨 profiles.json は配布物の中身を決めるので、版の対象集合に入っていないといけない
+# （層を1つ足したのに版が進まないと、受け取り側の「もう直っているか」の判定が嘘になる）
+PR="$(python3 -c 'import importlib.util,sys; s=importlib.util.spec_from_file_location("dr",sys.argv[1]+"/bin/distribute-rules.py"); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(" ".join(m.layer_rels("website")))' "$PROJ" 2>&1)"
+want_in "claude-rules/profiles.json" "$PR" "版の対象集合に profiles.json が入っている（層構成の変更が版に出る）"
+
 echo "▼ pack（別マシンの案件向け）"
 OUT="$(dr pack website "案件Z" --out "$T/dist" $DIRTY)"
 want_in "配布用パッケージ" "$OUT" "tar.gz を作れる"
@@ -153,4 +241,6 @@ want_in "案件Z" "$(cat "$RULES_DIST_REGISTRY")" "pack もレジストリに記
 echo
 echo "────────────────────────────────"
 printf '成功 %d / 失敗 %d\n' "$P" "$N"
+# 規定形の1行（rules/testing.md §6-5）。これが無いと bin/test-all.sh が項目数を0と数える。
+printf '合計: 合格 %d ／ 不合格 %d\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1

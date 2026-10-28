@@ -17,7 +17,7 @@ PROJ="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 [ -f "$PROJ/bin/check-onboarding-sync.py" ] || { echo "❌ 起動位置がおかしい: $PROJ" >&2; exit 2; }
 
 python3 - "$PROJ" <<'PYEOF'
-import importlib.util, io, re, subprocess, sys, tempfile
+import importlib.util, io, json, re, subprocess, sys, tempfile
 from contextlib import redirect_stdout
 from pathlib import Path
 
@@ -194,6 +194,10 @@ NOT_IN_TEMPLATE = {
     "documents/handoff-archive.md": "退避時に作るファイル（同梱していない）",
 }
 
+# ガイドが指す原典は「そのガイドのプロファイルに入る層」のどれかにある。層の一覧は
+# claude-rules/profiles.json が正（website/ 固定で探すと、common へ移した原典を見失う）。
+LAYERS = json.loads((proj / "claude-rules/profiles.json").read_text(encoding="utf-8"))["profiles"]["website"]
+
 guide_text = (proj / GUIDE).read_text(encoding="utf-8")
 refs = set(re.findall(
     r"`((?:documents|rules/modes|\.claude/commands)/[A-Za-z0-9_-]+\.md"
@@ -201,12 +205,12 @@ refs = set(re.findall(
 keys = cos.GUIDES[GUIDE].keys()
 
 for rel in sorted(refs):
-    full = f"claude-rules/website/{rel}"
-    covered = any(cos.match(full, k) for k in keys)
+    cands = [f"claude-rules/{layer}/{rel}" for layer in LAYERS]
+    covered = any(cos.match(c, k) for c in cands for k in keys)
     if rel in NOT_IN_TEMPLATE:
         if covered:
             ng(f"除外リストにあるのに対応表にもある: {rel}")
-        elif (proj / full).exists():
+        elif any((proj / c).exists() for c in cands):
             ng(f"除外の理由が古い（実体がある）: {rel} — {NOT_IN_TEMPLATE[rel]}")
         else:
             ok(f"除外（{NOT_IN_TEMPLATE[rel]}）: {rel}")

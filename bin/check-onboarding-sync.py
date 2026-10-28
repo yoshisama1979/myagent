@@ -38,6 +38,10 @@ PROJ = Path(__file__).resolve().parent.parent
 #    足し忘れると黙って検出漏れになる（2026-09-10 の Codex レビューで実際に 4 本の漏れが出た）。
 #    回帰テストが「ガイド本文が言及する原典が全て登録されているか」を突き合わせるので、
 #    足し忘れるとテストが落ちる。
+# 🚨 ここは**層の数を前提にしていない**（パスを素で持っているだけ）＝配布プロファイルが
+#    複数層になっても道具側の変更は要らない。ただし claude-rules/ を `common/` `site/`
+#    `system/` に分けたら（REDESIGN.md ステップ5）、**下のパスを新しい層へ付け替える**。
+#    付け替え忘れは「原典が無い」でテストが落ちるので、黙って検出漏れにはならない。
 GUIDES = {
     "claude-rules/website-onboarding.md": {
         "claude-rules/website/documents/handoff.md": [
@@ -69,13 +73,13 @@ GUIDES = {
             "§3 Step 2 起動時の環境点検", "§7 正本と番号（F-NNN）",
             "§9 やってはいけないこと（開発）", "§11 導入チェックリスト",
         ],
-        "claude-rules/website/documents/pending-issues.md": [
+        "claude-rules/common/documents/pending-issues.md": [
             "§5.3 報告 8 項目（範囲外の気づき）", "§7 正本と番号（PI-NNN）",
         ],
-        "claude-rules/website/documents/rule-improvements.md": [
+        "claude-rules/common/documents/rule-improvements.md": [
             "§7 正本と番号（RI-NNN）",
         ],
-        "claude-rules/website/rules/modes/rules-update.md": [
+        "claude-rules/common/rules/modes/rules-update.md": [
             "§7 正本と番号（ルールの新しい版を取りに来る）",
         ],
         "claude-rules/website/project-config.md": [

@@ -9,11 +9,12 @@
 公開は**社長の明示操作**にしてある。`claude-rules/` を編集している最中の版が現場へ流れると、
 途中の状態を全案件が一斉に受け取ることになるので、「配ってよい」と決めた瞬間だけ更新する。
 
-  publish <template> [--allow-dirty]   いまの claude-rules/<template>/ を配信対象にする
+  publish <profile> [--allow-dirty]    そのプロファイルの層を重ねたものを配信対象にする
   status                               いま何版を配信しているか
-  unpublish <template>                 配信を止める（受け口は 503 を返す）
+  unpublish <profile>                  配信を止める（受け口は 503 を返す）
 
-出力先 data/cache/rules-release/<template>/（git 追跡外・いつでも publish し直せる）
+プロファイル＝配る層の組み合わせ（正は `bin/distribute-rules.py` の `PROFILES`）。
+出力先 data/cache/rules-release/<profile>/（git 追跡外・いつでも publish し直せる）
   package.tar.gz  配布物一式（.claude/rules-version と .claude/rules-keep を同梱）
   meta.json       版・公開日時・サイズ・SHA256（受け取り側が壊れた取得を検出できる）
   changelog.tsv   そのテンプレを触ったコミットの一覧（受け取り側が「自分の版より後の変更」を読む）
@@ -63,16 +64,17 @@ def die(msg):
     sys.exit(f"❌ {msg}")
 
 
-def changelog(template):
-    """そのテンプレを触ったコミットを新しい順に (sha, 日付, 件名) で返す。
+def changelog(profile):
+    """そのプロファイルの**層のどれか**を触ったコミットを新しい順に (sha, 日付, 件名) で返す。
 
     受け取り側は「自分が持っている版の SHA」を目印にここから上だけを読む＝
-    更新すると何が変わるのかを、こちらに聞かずに読める。
+    更新すると何が変わるのかを、こちらに聞かずに読める。層が複数あるときは
+    まとめて1本の履歴にする（受け取り側は層の区別なく「自分に配られる変更」を読みたい）。
     """
     out = subprocess.run(
         ["git", "-C", str(PROJ), "log", f"-n{CHANGELOG_MAX}",
          "--format=%h%x09%ad%x09%s", "--date=short", "--abbrev=12",
-         "--", f"claude-rules/{template}/"],
+         "--", *dr.layer_rels(profile)],
         capture_output=True, text=True, check=True).stdout
     rows = []
     for line in out.splitlines():
@@ -98,6 +100,13 @@ def sha256_of(path):
 def cmd_publish(args):
     template = args.template
     version = dr.make_version(template, args.allow_dirty)
+    # 🚨 公開は7案件が取りに来る口。SHA を引けない版（層が git に入っていない）を公開すると、
+    # 受け取り側が「自分の版より後の変更」を changelog から辿れなくなる＝更新の判断ができない。
+    # `--allow-dirty` は `+dirty`（SHA はある）までの逃げ道で、SHA が無い版の公開は許さない。
+    if "nogit" in version.split("/", 1)[1]:
+        die(f"版の SHA を引けないので公開できません: {version}\n"
+            "   層をコミットしてから publish してください"
+            "（受け取り側が changelog から変更点を辿れなくなります）")
     outdir = RELEASE / template
     outdir.mkdir(parents=True, exist_ok=True)
 
@@ -109,9 +118,9 @@ def cmd_publish(args):
 
     with tempfile.TemporaryDirectory() as td:
         staging = Path(td) / template
-        items = [(rel, "create") for rel, _ in dr.plan(template, staging)]
+        items = [(rel, "create", layer) for rel, _, layer in dr.plan(template, staging)]
         dr.copy_tree(template, staging, items)
-        dr.stamp(staging, version)
+        dr.stamp(staging, version, dr.layer_note(template))
         # 「配布で消してはいけないファイル」を同梱する。受け取り側がこの一覧を読んで守る＝
         # 守る対象の正は distribute-rules.py の KEEP_IF_EXISTS ひとつだけになる
         # （現場のスクリプトに同じ一覧を書くと、足した日に片方だけ古くなる）。
@@ -130,7 +139,9 @@ def cmd_publish(args):
     os.replace(tmp_log, outdir / "changelog.tsv")
 
     meta = {
-        "template": template,
+        "template": template,                  # キー名は互換のため据え置き（値はプロファイル名）
+        "profile": template,
+        "layers": list(dr.PROFILES[template]),
         "version": version,
         "sha": version.split("/", 1)[1],
         "published_at": now().isoformat(timespec="seconds"),
@@ -146,7 +157,8 @@ def cmd_publish(args):
     print(f"✅ 配信する版を更新しました: {version}")
     print(f"   置き場 : {outdir}")
     print(f"   一式   : {meta['files']} ファイル / {meta['size']:,} バイト")
-    print(f"   変更点 : このテンプレを触ったコミット {len(rows)} 件を同梱")
+    print(f"   層     : {' + '.join(dr.PROFILES[template])}")
+    print(f"   変更点 : この層を触ったコミット {len(rows)} 件を同梱")
     print()
     print("   各案件のエージェントは次で受け取れます（人に確認してから適用する作り）:")
     print("     bash bin/rules-update.sh          # 確認だけ")
@@ -166,7 +178,7 @@ def cmd_unpublish(args):
 
 def cmd_status(_args):
     any_found = False
-    for template in dr.TEMPLATES:
+    for template in sorted(dr.PROFILES):
         meta_path = RELEASE / template / "meta.json"
         if not meta_path.is_file():
             print(f"{template:<12} 未公開")
@@ -177,7 +189,7 @@ def cmd_status(_args):
             continue
         m = json.loads(meta_path.read_text(encoding="utf-8"))
         latest = dr.git("log", "-1", "--format=%h", "--abbrev=12", "--",
-                        f"claude-rules/{template}/")
+                        *dr.layer_rels(template))
         stale = "" if m.get("sha", "").startswith(latest) else f"  ⚠️ 最新は {latest}（未公開の変更あり）"
         print(f"{template:<12} {m['version']}  公開 {m['published_at'][:16].replace('T', ' ')}{stale}")
     if any_found:
@@ -189,13 +201,15 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="claude-rules テンプレートの配信版を公開する")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    p = sub.add_parser("publish", help="いまの claude-rules/<template>/ を配信対象にする")
-    p.add_argument("template", choices=dr.TEMPLATES)
+    p = sub.add_parser("publish", help="そのプロファイルの層を重ねたものを配信対象にする")
+    p.add_argument("template", metavar="profile", choices=sorted(dr.PROFILES),
+                   help="配布プロファイル（層の組み合わせ）")
     p.add_argument("--allow-dirty", action="store_true", help="未コミットの変更があっても公開する")
     p.set_defaults(func=cmd_publish)
 
     p = sub.add_parser("unpublish", help="配信を止める")
-    p.add_argument("template", choices=dr.TEMPLATES)
+    p.add_argument("template", metavar="profile", choices=sorted(dr.PROFILES),
+                   help="配布プロファイル")
     p.set_defaults(func=cmd_unpublish)
 
     p = sub.add_parser("status", help="いま何版を配信しているか")

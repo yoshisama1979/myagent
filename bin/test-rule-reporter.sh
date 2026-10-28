@@ -225,4 +225,6 @@ OUT="$(rr revoke "テスト案件A" --reason "全部失効済み")";     want_in
 echo
 echo "────────────────────────────────"
 printf '成功 %d / 失敗 %d\n' "$P" "$N"
+# 規定形の1行（rules/testing.md §6-5）。これが無いと bin/test-all.sh が項目数を0と数える。
+printf '合計: 合格 %d ／ 不合格 %d\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1

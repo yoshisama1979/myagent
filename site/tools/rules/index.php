@@ -35,8 +35,6 @@ require_once __DIR__ . '/../lib/token-auth.php';
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
-const TEMPLATES = ['website', 'websystem'];     // bin/distribute-rules.py の TEMPLATES と対（増やすときは両方）
-
 $ROOT        = realpath(__DIR__ . '/../../..');
 $TOKENS_FILE = $ROOT . '/data/secrets/mailbox-tokens.json';
 $STATE_DIR   = $ROOT . '/data/mailbox/.state';
@@ -52,6 +50,33 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = (string)($_GET['action'] ?? 'version');
 if ($method !== 'GET') {
     fail(405, 'method_not_allowed', ['hint' => 'この受け口は読み取り専用です（GET のみ）']);
+}
+
+// 配布プロファイルの許可リスト。正は claude-rules/profiles.json ひとつ（Python 側の
+// bin/distribute-rules.py ・ bin/rule-reporter.py も同じファイルを読む）。ここに一覧を
+// 書き写すと、層を足した日に「配っているのに取りに来られない」が起きる。
+// 🚨 読めないときは空にせず**停止する**：空の許可リストは全部を unknown_template で
+//    弾くので、配信障害が「設定ミス」ではなく「そのテンプレは無い」と見えてしまう。
+$PROFILES_FILE = $ROOT . '/claude-rules/profiles.json';
+$profiles_raw  = @file_get_contents($PROFILES_FILE);
+$profiles_json = $profiles_raw === false ? null : json_decode($profiles_raw, true);
+if (!is_array($profiles_json) || !isset($profiles_json['profiles']) || !is_array($profiles_json['profiles'])
+    || count($profiles_json['profiles']) === 0) {
+    fail(500, 'profiles_unreadable',
+        ['hint' => '配布プロファイルの定義（claude-rules/profiles.json）が読めません']);
+}
+// 🚨 キーの形まで見る。許可リストは**データ由来**になったので、ここが
+//    `$RELEASE_DIR . '/' . $template` にそのまま入る前の唯一の関門
+//    （Python 側 bin/distribute-rules.py の NAME_RE と同じ形。現場の bin/rule-report.sh も同じ）。
+$TEMPLATES = [];
+foreach (array_keys($profiles_json['profiles']) as $k) {
+    if (is_string($k) && preg_match('/^[a-z0-9][a-z0-9_-]*\z/', $k)) {
+        $TEMPLATES[] = $k;
+    }
+}
+if (count($TEMPLATES) === 0) {
+    fail(500, 'profiles_unreadable',
+        ['hint' => '配布プロファイルの定義に、使える名前が1つもありません']);
 }
 
 // ── どのテンプレートを配るか ─────────────────────────────────────────────
@@ -70,8 +95,11 @@ if ($assigned !== '') {
     fail(403, 'template_not_assigned',
         ['hint' => 'このトークンにはテンプレートが紐づいていません。社長に再発行を依頼してください']);
 }
-if (!in_array($template, TEMPLATES, true)) {
-    fail(400, 'unknown_template', ['allowed' => TEMPLATES]);   // パスに入れる前に許可リストで潰す
+if (!in_array($template, $TEMPLATES, true)) {
+    // パスに入れる前に許可リストで潰す。🚨 **応答に一覧を出さない**＝ここへ来るのは設定の不整合で、
+    // 呼び出し側は他のプロファイル名を知っても何もできない（自分の分は template_not_allowed が返す）
+    fail(400, 'unknown_template',
+        ['hint' => '配布プロファイルの定義に無い名前です。社長に確認してください']);
 }
 
 $dir  = $RELEASE_DIR . '/' . $template;

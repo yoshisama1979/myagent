@@ -103,8 +103,16 @@ else
   echo "警告: $VERSION_FILE が無いため版が不明のまま送ります。" >&2
   echo "      受け取り側で「もう直っている件か」を判定できないので、社長に配布し直しを依頼してください。" >&2
 fi
-TEMPLATE="${VERSION%%@*}"                      # website / websystem / unknown
-case "$TEMPLATE" in website|websystem) ;; *) TEMPLATE="rules" ;; esac
+# 版の頭は配布プロファイル名（website / websystem / site / system / full …）。
+# 🚨 **許可リストを現場に持たせない。** 持たせると、プロファイルを足した日に配った先だけ
+# 古い一覧を握り、報告が黙って別のスレッドへ落ちる。代わりに**形**で判定する：
+# 英小文字・数字・ハイフンだけ／32文字以内／先頭はハイフン以外。外れたら `rules` に寄せる
+# （版が無いときの `unknown` もここで `rules` になる＝従来どおり）。
+TEMPLATE="${VERSION%%@*}"
+case "$TEMPLATE" in
+  "" | unknown | -* | *[!a-z0-9-]* ) TEMPLATE="rules" ;;
+  * ) [ "${#TEMPLATE}" -le 32 ] || TEMPLATE="rules" ;;
+esac
 
 json="$(RR_SUBJECT="[$VERSION] $subject" RR_BODY="$body" RR_THREAD="${TEMPLATE}-kaizen" "$PY" -c '
 import os, json

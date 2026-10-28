@@ -20,6 +20,8 @@ claude-rules テンプレを使う各案件から「ルールの問題」を一�
   - ルールの問題を目安箱へ投函する（tools/mailbox/・投函のみ）
   - 自分のテンプレートの最新版を取りに来る（tools/rules/・読み取りのみ）
 どちらも失効させれば同時に止まる。取りに来られるのは発行時に紐づけた template だけ。
+`--template` に渡すのは**配布プロファイル名**（配る層の組み合わせ）で、一覧の正は
+`claude-rules/profiles.json`（同じ一覧をこのファイルに書き写さない）。
 
 使い方:
   python3 bin/rule-reporter.py issue <案件名> --template website [--days 365]
@@ -29,6 +31,7 @@ claude-rules テンプレを使う各案件から「ルールの問題」を一�
 import argparse
 import contextlib
 import fcntl
+import importlib.util
 import json
 import os
 import re
@@ -46,7 +49,22 @@ STATE = Path(os.environ.get("RULE_REPORTER_STATE") or PROJ / "data/mailbox/.stat
 
 JST = timezone(timedelta(hours=9))
 ROLE = "reporter"
-TEMPLATES = ("website", "websystem")   # bin/distribute-rules.py の TEMPLATES と対
+def load_templates():
+    """配布プロファイルの一覧。**読み取りと検証は `bin/distribute-rules.py` が正。**
+
+    一覧の実体は `claude-rules/profiles.json` ひとつだが、**読み方を2箇所に書くと判断が割れる**。
+    実際に割れていた（2026-10-28 の Codex レビュー）：`{"profiles": ["website"]}` という形で
+    distribute-rules は落ち、こちらは「プロファイル名が1つある」として通してしまった。
+    ハイフン付きのファイル名は import できないのでパスから読み込む（`bin/rules-publish.py` と同じ手）。
+    """
+    path = Path(__file__).with_name("distribute-rules.py")
+    spec = importlib.util.spec_from_file_location("distribute_rules", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)      # 定義が壊れていればここで `❌ …` で止まる
+    return tuple(sorted(mod.PROFILES))
+
+
+TEMPLATES = load_templates()
 PREFIX = "rr-"                      # agent_id の接頭辞（agent トークンと一目で見分ける）
 LEDGER_HEADER = """# ルール通知トークン 発行台帳（rule-reporter）
 
@@ -309,7 +327,7 @@ def main(argv=None):
 
     p = sub.add_parser("issue", help="案件に投函専用トークンを発行する")
     p.add_argument("project", help="案件名（台帳に載る表示名。日本語可）")
-    p.add_argument("--template", required=True, choices=TEMPLATES,
+    p.add_argument("--template", required=True, choices=TEMPLATES, metavar="PROFILE",
                    help="この案件が使うテンプレート（これ以外は取りに来られない）")
     p.add_argument("--id", help="agent_id に使う識別子（英小文字・数字・ハイフン）。"
                                 "案件名が英数字だけでないときは必須")

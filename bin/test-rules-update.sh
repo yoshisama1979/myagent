@@ -52,10 +52,19 @@ mk_template(){  # $1=テンプレ名 $2=CLAUDE.md の中身
   printf '案件固有の設定（雛形）\n'        > "$T/claude-rules/$1/project-config.md"
   printf '環境の癖（雛形）\n'              > "$T/claude-rules/$1/.claude/rules/private.md"
   printf '設計の雛形\n'                    > "$T/claude-rules/$1/Design.sample.md"
-  cp "$PROJ/claude-rules/website/bin/rules-update.sh" "$T/claude-rules/$1/bin/rules-update.sh"
+}
+# 共通層。現場スクリプトは common に1本だけ置く（面レイヤーにコピーを作らない＝本物と同じ形）
+mk_common(){
+  mkdir -p "$T/claude-rules/common/bin" "$T/claude-rules/common/rules/modes"
+  cp "$PROJ/claude-rules/common/bin/rules-update.sh" "$T/claude-rules/common/bin/rules-update.sh"
+  printf '共通のルール（上書きされる）\n' > "$T/claude-rules/common/rules/modes/rules-update.md"
 }
 mk_template website  "ルール第1版"
 mk_template websystem "システム側 第1版"
+mk_common
+# 配る単位（プロファイル＝層の組み合わせ）の定義。**本物をそのまま使う**＝偽リポジトリで
+# 別の一覧を作ると、本物の定義が壊れていてもこのテストは通ってしまう。
+cp "$PROJ/claude-rules/profiles.json" "$T/claude-rules/profiles.json"
 
 git -C "$T" init -q 2>/dev/null
 git -C "$T" config user.email t@example.com; git -C "$T" config user.name t
@@ -70,6 +79,15 @@ OUT="$(cd "$T" && python3 bin/rules-publish.py publish website 2>&1)"; RC=$?
 want_eq "$RC" "1" "未コミットの変更があると公開しない"
 want_in "未コミット" "$OUT" "止まった理由を言う"
 git -C "$T" checkout -- claude-rules/website/CLAUDE.md
+
+# 🚨 profiles.json（層の組み合わせの定義）も配布物の中身を決める。層を1つ足した・順序を変えた
+# のに版が進まないと、受け取り側が「自分の版より後の変更」を辿れず判定が嘘になる。
+# 2026-10-28 の Codex レビューで、版の対象集合が層ディレクトリだけだったことが判明した。
+python3 -c 'import json,sys; p=sys.argv[1]; d=json.load(open(p,encoding="utf-8")); d["profiles"]["website"]=["common","website"]; json.dump(d,open(p,"w",encoding="utf-8"),ensure_ascii=False,indent=2)' "$T/claude-rules/profiles.json"
+OUT="$(cd "$T" && python3 bin/rules-publish.py publish website 2>&1)"; RC=$?
+want_eq "$RC" "1" "profiles.json だけを変えても「未コミット」で止まる（層の構成も版の一部）"
+want_in "profiles.json" "$OUT" "止まった理由に profiles.json が出る"
+git -C "$T" checkout -- claude-rules/profiles.json
 
 OUT="$(cd "$T" && python3 bin/rules-publish.py publish website 2>&1)"
 want_in "配信する版を更新しました" "$OUT" "公開できる"
@@ -145,6 +163,15 @@ touch "$T/data/cache/rules-release/website/.publishing"
 api tk-web "action=version"
 want_eq "$CODE" "503" "公開の最中は配らない（版と実体がズレた瞬間を見せない）"
 rm -f "$T/data/cache/rules-release/website/.publishing"
+# 許可リストの正は claude-rules/profiles.json。読めないときに空の許可リストで続けると、
+# 設定の不具合が「そのテンプレは無い（400 unknown_template）」に化けて原因が追えなくなる。
+mv "$T/claude-rules/profiles.json" "$T/claude-rules/profiles.json.bak"
+api tk-web "action=version"
+want_eq "$CODE" "500" "プロファイルの定義が読めないときは 500 で止まる（空の許可リストで続けない）"
+want_in "profiles_unreadable" "$OUT" "設定の不具合だと分かる名前で返す"
+mv "$T/claude-rules/profiles.json.bak" "$T/claude-rules/profiles.json"
+api tk-web "action=version"
+want_eq "$CODE" "200" "定義を戻せば配信も戻る"
 api tk-web "action=changelog"
 want_eq "$CODE" "200" "変更点の一覧が取れる"
 want_in "初版のルール" "$OUT" "変更点に件名が入る"
@@ -166,9 +193,15 @@ want_in "last_ip" "$(cat "$STATE" 2>/dev/null)" "接続元も記録される"
 # ── 現場側（bin/rules-update.sh） ────────────────────────────────────────
 echo
 echo "── 現場（claude-rules/*/bin/rules-update.sh）"
-want_eq "$(md5sum < "$PROJ/claude-rules/website/bin/rules-update.sh")" \
-        "$(md5sum < "$PROJ/claude-rules/websystem/bin/rules-update.sh")" \
-        "両テンプレの rules-update.sh が同一"
+# 以前は両テンプレのコピーが同一かを見ていた。common に1本化したのでズレようがない＝
+# ここで見るのは「面レイヤーにコピーが戻っていないか」。
+want_file "$PROJ/claude-rules/common/bin/rules-update.sh" "現場スクリプトは common に1本"
+if [ -e "$PROJ/claude-rules/website/bin/rules-update.sh" ] \
+   || [ -e "$PROJ/claude-rules/websystem/bin/rules-update.sh" ]; then
+  say_ng "面レイヤーに現場スクリプトのコピーが無い" "二重になると片方だけ直される"
+else
+  say_ok "面レイヤーに現場スクリプトのコピーが無い"
+fi
 
 # 配布先は macOS（bash 3.2 ＋ BSD の find/xargs）のことがある。ここで動いても現場で落ちる
 # 書き方を機械で弾く＝2026-09-13 に実際に踏んだ（$VAR の直後が日本語／find -printf／xargs -d）。
@@ -454,4 +487,6 @@ want_eq "$RC" "1" "設定が空なら止まる"
 echo
 echo "────────────────────────────────"
 echo "成功 $P / 失敗 $N"
+# 規定形の1行（rules/testing.md §6-5）。これが無いと bin/test-all.sh が項目数を0と数える。
+printf '合計: 合格 %d ／ 不合格 %d\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1

@@ -1,0 +1,16 @@
+{
+  "_readme": [
+    "配る単位＝プロファイル。値は『重ねる順に並べた層』で、層は claude-rules/<層>/ のディレクトリ。",
+    "ここが正。読む側は bin/distribute-rules.py ・ bin/rule-reporter.py ・ site/tools/rules/index.php の3つ。",
+    "層を増やす・組み合わせを増やすときは、このファイルだけを直す（3箇所に同じ一覧を書かない）。",
+    "旧名（website / websystem）は消さない＝稼働中の案件のトークンにこの名前が紐づいており、消すと取りに来られなくなる。",
+    "同じ相対パスを2つの層が持っているとエラーで止まる（原則②＝重複定義しない）。",
+    "移行の現在地（REDESIGN.md ステップ5）：common/ を立て、両テンプレで完全一致していたファイルを移した。",
+    "website/ と websystem/ は面レイヤーとして残っており、共通部分を common/ へ移すたびに薄くなる。",
+    "最終形では website/ → site/ ・ websystem/ → system/ に改名し、full=[common,site,system] を足す。"
+  ],
+  "profiles": {
+    "website": ["common", "website"],
+    "websystem": ["common", "websystem"]
+  }
+}
