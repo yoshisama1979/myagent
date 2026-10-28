@@ -70,7 +70,7 @@ if (!is_array($profiles_json) || !isset($profiles_json['profiles']) || !is_array
 //    （Python 側 bin/distribute-rules.py の NAME_RE と同じ形。現場の bin/rule-report.sh も同じ）。
 $TEMPLATES = [];
 foreach (array_keys($profiles_json['profiles']) as $k) {
-    if (is_string($k) && preg_match('/^[a-z0-9][a-z0-9_-]*\z/', $k)) {
+    if (is_string($k) && preg_match('/^[a-z0-9][a-z0-9-]*\z/', $k)) {
         $TEMPLATES[] = $k;
     }
 }

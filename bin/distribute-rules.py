@@ -66,7 +66,11 @@ def die(msg):
 # **テンプレートの外のファイルが配られる**（2026-10-28 の Codex レビューで実証）。プロファイル名も
 # 一時ディレクトリ名・tar の arcname・配信先ディレクトリ名になる。名前はコード内の定数ではなく
 # **JSON 由来の値**なので、ここで形を絞るのが唯一の関門。現場の `bin/rule-report.sh` も同じ形で判定する。
-NAME_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
+# 🚨 **同じ形の判定が3箇所にある**（ここ・`site/tools/rules/index.php`・配布物の
+# `bin/rule-report.sh`）。言語が違うので1つに統合できない代わりに、**いちばん狭い現場の
+# bash に合わせて同一の文字集合にし、`bin/test-distribute-rules.sh` が3つの一致を見張る**。
+# ズレると「配布はできるのに現場の報告が別スレッドへ落ちる」が黙って起きる。
+NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 
 
 def load_profiles(path=None):
@@ -92,13 +96,13 @@ def load_profiles(path=None):
     for name, layers in raw.items():
         if not NAME_RE.match(name):
             die(f"profiles.json のプロファイル名が使えません: {name!r}"
-                "（英小文字・数字・ハイフン・アンダースコアのみ／先頭は英数字）")
+                "（英小文字・数字・ハイフンのみ／先頭は英数字）")
         if not isinstance(layers, list) or not layers:
             die(f"profiles.json の {name!r} が「層名の配列」になっていません: {layers!r}")
         for l in layers:
             if not isinstance(l, str) or not NAME_RE.match(l):
                 die(f"profiles.json の {name!r} の層名が使えません: {l!r}"
-                    "（英小文字・数字・ハイフン・アンダースコアのみ／先頭は英数字）")
+                    "（英小文字・数字・ハイフンのみ／先頭は英数字）")
         if len(set(layers)) != len(layers):
             die(f"profiles.json の {name!r} に同じ層が2回入っています: {layers!r}")
         out[name] = tuple(layers)

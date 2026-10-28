@@ -196,6 +196,16 @@ want_in "プロファイル名" "$OUT" "プロファイル名に大文字・空�
 OUT="$(badprof '{"profiles": {"a": ["x","x"]}}' list)"
 want_in "同じ層が2回" "$OUT" "同じ層を2回並べたら弾く"
 
+# 🚨 名前の形の判定は **3箇所**にある（Python・PHP・配布物の bash）。言語が違うので1つに
+# 統合できないぶん、**同じ文字集合であること**を機械で見張る。ズレると「配布はできるのに
+# 現場の報告が別スレッドへ落ちる」が黙って起きる（_ を許す／許さないで実際にズレていた）。
+PY_SET="$(grep -o '\^\[a-z0-9\]\[a-z0-9-\]\*\$' "$PROJ/bin/distribute-rules.py" | head -1)"
+PHP_SET="$(grep -o '\^\[a-z0-9\]\[a-z0-9-\]\*' "$PROJ/site/tools/rules/index.php" | head -1)"
+SH_SET="$(grep -o '\*\[!a-z0-9-\]\*' "$PROJ/claude-rules/common/bin/rule-report.sh" | head -1)"
+want_eq "$PY_SET" '^[a-z0-9][a-z0-9-]*$'  "Python の名前の形が [a-z0-9-]"
+want_eq "$PHP_SET" '^[a-z0-9][a-z0-9-]*'  "PHP の名前の形が Python と同じ文字集合"
+want_eq "$SH_SET" '*[!a-z0-9-]*'          "現場 bash の名前の形も同じ文字集合"
+
 # 形が違う JSON でトレースバックを出さない（＝必ず「❌ …」で止まる）
 for bad in '{"profiles": []}' '{"profiles": ["website"]}' '{"profiles": {}}' '[]' '{}'; do
   OUT="$(badprof "$bad" list)"
