@@ -56,6 +56,12 @@ GUIDES = {
             "§4 1 日の流れ", "§5.3 報告 8 項目", "§5.6 直接指示を受けたとき",
             "§9 やってはいけないこと（開発）",
         ],
+        "claude-rules/website/rules/modes/content-planning.md": [
+            "§6.4 標準工程（フェーズ 0〜8）",
+        ],
+        "claude-rules/website/documents/client-questions.md": [
+            "§6.4 標準工程（フェーズ 0〜8）",
+        ],
         "claude-rules/website/rules/modes/build-progress.md": [
             "§6.2 使い始め", "§6.3 記法", "§6.5 促し方", "§6.6 完了の根拠",
             "§6.7 レポートの形", "§6.8 納品単位が複数のとき", "§7 正本と番号",
