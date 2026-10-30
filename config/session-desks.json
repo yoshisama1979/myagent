@@ -27,6 +27,10 @@
     },
     "product": {
       "label": "サービス改善（既存サービスの機能・見せ方を磨く）"
+    },
+    "rule-kaizen": {
+      "label": "ルール改善（配布テンプレート claude-rules/ の設計と改訂）",
+      "rule": "claude-rules/README.md"
     }
   },
   "sessions": {
@@ -38,6 +42,8 @@
     "7903f09e-2357-4a49-ac88-1c4b7d74edfc": "finance",
     "b97e3122-dcf5-4f7f-a9a0-6cc35f565758": "board",
     "242606ec-0c12-4e2d-b942-d470b77c4609": "work",
-    "11f13dba-fcfc-4809-aed8-54d66ece8972": "product"
+    "11f13dba-fcfc-4809-aed8-54d66ece8972": "product",
+    "0bb500a9-32be-4bb4-90df-f1b5547380ec": "rule-kaizen",
+    "07005bb9-b2a2-4683-a4ff-8bfc776909c0": "rule-kaizen"
   }
 }
