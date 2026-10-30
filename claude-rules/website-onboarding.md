@@ -402,6 +402,7 @@ bash bin/rule-report.sh --subject "[<ファイル名>] 要旨" "（対象／現�
 
 - 確認だけなら**何も書き換えません**（`bash bin/rules-update.sh`）。**適用はあなたの承認後**＝ルールが変わると作業の前提が変わるため、作業の区切りで行います。
 - **案件の記録は上書きされません**（`documents/`・`project-config.md`・`Design.md`・あなたの成果物）。上書き前の退避も必ず作ります。
+  - 🚨 **上書きされない代わりに、テンプレート側で増えた記入欄は自動では現れません。** 適用のあとに `project-config.md` の見出しを控え（`.claude/rules-base.tar.gz`）と突き合わせ、増えた節は自分で足してください（手順は `rules/modes/rules-update.md` §4）。
 - 🚨 **配布されたファイル（`CLAUDE.md`・`rules/`・`.claude/commands/` 等）には書き足さないでください。** 更新で上書きされ、書き足した行は消えます。この案件だけのコマンド・ルールは、ファイルを新しく作り、一覧は `project-config.md`「固有の追加」に書きます。書き足しがあると、更新の確認で名指しされ、適用は止まります。
 - 手順は `rules/modes/rules-update.md`（エージェント向け）。初回の受け取り設定（`.env` の3行）は社長側で用意します。
 
