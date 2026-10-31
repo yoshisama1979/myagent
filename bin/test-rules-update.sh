@@ -196,6 +196,20 @@ echo "── 現場（claude-rules/*/bin/rules-update.sh）"
 # 以前は両テンプレのコピーが同一かを見ていた。common に1本化したのでズレようがない＝
 # ここで見るのは「面レイヤーにコピーが戻っていないか」。
 want_file "$PROJ/claude-rules/common/bin/rules-update.sh" "現場スクリプトは common に1本"
+
+# 自己上書き対策（TB-019）は「形」で守られているので、形が崩れていないかを機械で見張る。
+# 🚨 コメントだけでは守れない＝将来の整形で main() の外に処理が出たり、`main "$@"` と `exit` が
+#    別の行に分かれたりすると、黙って元の欠陥に戻る（エラーは出ず、適用の途中で落ちるだけ）。
+RU="$PROJ/claude-rules/common/bin/rules-update.sh"
+grep -q '^main() {$' "$RU" && say_ok "本体が main() に入っている（実行中の自己上書きに耐える・TB-019）" \
+  || say_ng "本体が main() に入っている" "main() { の行が無い"
+LAST="$(grep -v '^[[:space:]]*$' "$RU" | tail -1)"
+want_eq "$LAST" 'main "$@"; exit' "最後の行が main \"\$@\"; exit（同じ行＝main 復帰後にファイルを読み直さない）"
+# main() より前に出てよいのはコメント・set・空行だけ（変数定義などが出ていたら、その分は
+# メモリに載らないまま実行される＝自己上書きの影響を受ける）
+BEFORE="$(sed -n '1,/^main() {$/p' "$RU" | grep -vE '^[[:space:]]*(#|$)' | grep -v '^set -euo pipefail$' | grep -v '^main() {$' || true)"
+[ -z "$BEFORE" ] && say_ok "main() より前にあるのはコメントと set だけ" \
+  || say_ng "main() より前にあるのはコメントと set だけ" "$(printf '%s' "$BEFORE" | tr '\n' ' ' | cut -c1-120)"
 if [ -e "$PROJ/claude-rules/website/bin/rules-update.sh" ] \
    || [ -e "$PROJ/claude-rules/websystem/bin/rules-update.sh" ]; then
   say_ng "面レイヤーに現場スクリプトのコピーが無い" "二重になると片方だけ直される"
@@ -470,6 +484,44 @@ git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "更新" >/dev/null
 run_up
 want_eq "$RC" "0" "--force のあとは最新"
 want_not_in "編集された配布ファイル" "$OUT" "--force のあとは控えが新しい版になり、名指ししない"
+
+# ── 実行中に自分自身を上書きしても最後まで走る（TB-019） ────────────────
+# bash はスクリプトを**バイトオフセットで逐次読む**。配布物には bin/rules-update.sh 自身が
+# 入っているので、適用の途中で自分が差し替わると読み取り位置が新しい中身の別の場所を指し、
+# 以降（版の刻印・控えの差し替え・完了の表示）が実行されない。現場実測＝
+# `bin/rules-update.sh: line 272: =: command not found` / exit 127 で、
+# 「適用は実質終わっているのに版も控えも無い」状態が残り、以後ずっと --force を要求された
+# （rr-toyopet-lp 2026-09-18・website@2026-09-18/c63ba9b00332）。
+# 新版が旧版より長い（＝先頭側の行が増える）ときに起きるので、その形をわざと作って通す。
+# 🚨 ずれた先が偶然 valid な行だと「エラーにならずに途中で終わる」ので、
+#    エラー文ではなく**最後まで走った証拠**（版・控え・完了の表示）で判定する。
+python3 - "$T/claude-rules/common/bin/rules-update.sh" <<'PYIN'
+import io, sys
+p = sys.argv[1]
+lines = io.open(p, encoding="utf-8", newline="").read().split("\n")
+lines[1:1] = ["# 配布される版が伸びた状況を作るための埋め（テスト用）"] * 200
+io.open(p, "w", encoding="utf-8", newline="").write("\n".join(lines))
+PYIN
+printf 'ルール第4版\n' > "$T/claude-rules/website/CLAUDE.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "現場スクリプトが伸びた第4版" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+V4="$(cd "$T" && python3 -c 'import json;print(json.load(open("data/cache/rules-release/website/meta.json"))["version"])')"
+OLD_LINES="$(wc -l < "$SITE/bin/rules-update.sh" | tr -d ' ')"
+run_up --apply
+want_eq "$RC" "0" "自分自身が差し替わっても適用は成功する（TB-019）"
+want_in "✅ 更新しました" "$OUT" "最後の表示まで到達する（途中で読み取り位置がずれていない）"
+want_eq "$(head -1 "$SITE/.claude/rules-version")" "$V4" "版の刻印が書かれる（適用の最後に書くので、ずれると残らない）"
+# 控えは「存在するか」では見ない（前の版の控えが残っていても通る）。中身で見る。
+BASEC="$(tar xzOf "$SITE/.claude/rules-base.tar.gz" --wildcards '*/CLAUDE.md' 2>/dev/null)"
+want_eq "$BASEC" "ルール第4版" "控えが新しい版の中身に置き換わる（版と同じく適用の最後に書く）"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第4版" "ルールは新しい版になっている"
+NEW_LINES="$(wc -l < "$SITE/bin/rules-update.sh" | tr -d ' ')"
+if [ "$NEW_LINES" -gt "$OLD_LINES" ]; then say_ok "現場スクリプト自身も差し替わっている（${OLD_LINES}→${NEW_LINES}行＝再現の前提が成立している）"
+else say_ng "現場スクリプト自身も差し替わっている" "実際=${OLD_LINES}→${NEW_LINES}行（伸びていない＝この試験は何も確かめていない）"; fi
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "第4版" >/dev/null
+run_up
+want_eq "$RC" "0" "差し替わったあとの実行も正常（壊れた状態を残していない）"
+want_in "最新です" "$OUT" "最新だと分かる"
 
 # 設定不足・失効
 printf 'RULE_UPDATE_URL=%s\nRULE_REPORT_TOKEN=tk-revoked\n' "$URL" > "$SITE/.env"
