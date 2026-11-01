@@ -17,7 +17,8 @@
 
   <h1 class="text-3xl font-bold mb-2">🛰️ 統括レポート（Overseer）</h1>
   <p class="text-gray-600 mb-2">このシステム全体を俯瞰し、<strong>整合・健全性・安全</strong>の綻びを見つけて改善提案を積む統括ループ。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。</p>
-  <p class="text-sm text-gray-700 mb-6 border-l-4 border-amber-500 pl-3">最終更新：<strong>2026-10-27 未明（Cycle 094・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>故障は静かです（10-23 以降タイムアウト・異常終了0）。新規は1件＝<strong>🟡O-107</strong>：<u>経理窓口（finance）宛ての便2通が23日未読</u>で、うち1通は公庫の試算表の手前の作業（D-021／D-032・法定福利費の中身）です。別経路で済んでいる可能性もあるため、triage での確認をお願いする形にしました（ご判断不要）。</p>
+  <p class="text-sm text-gray-700 mb-6 border-l-4 border-amber-500 pl-3">最終更新：<strong>2026-11-02 未明（Cycle 095・<span class="underline">精密診断</span>・月曜 1:00 cron）</strong><br>新規は3件（すべて🟡）です。最重要は<strong>🟡O-108</strong>：<u>MF の仕訳の夜間取得が 10-11 から22夜 失敗していますが、社長へお願いしようとしている「<span class="font-mono">/mcp</span> の再認可」で直るとは限りません</u>。初回の記録は認証切れではなくサーバー側のエラーでした。<strong>社長のお手を借りる前に、開発が原因を1回確かめる形をお勧めします。</strong>ほかに<strong>🟡O-109</strong>（経理の結果が依頼元へ戻るまで35日）、<strong>🟡O-110</strong>（Chatwork 台帳が閾値の11倍）。10-30 に claude の認証切れがあり、その朝の朝礼は出ませんでした（回復済み）。タイムアウト0・OOM +0。</p>
+  <p class="hidden">旧サマリ（Cycle 094）：最終更新：<strong>2026-10-27 未明（Cycle 094・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>故障は静かです（10-23 以降タイムアウト・異常終了0）。新規は1件＝<strong>🟡O-107</strong>：<u>経理窓口（finance）宛ての便2通が23日未読</u>で、うち1通は公庫の試算表の手前の作業（D-021／D-032・法定福利費の中身）です。別経路で済んでいる可能性もあるため、triage での確認をお願いする形にしました（ご判断不要）。</p>
   <p class="hidden">旧サマリ（Cycle 092）：最終更新：<strong>2026-10-20 未明（Cycle 092・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>新規の綻びはありません。<strong>O-103・O-104 のお伺いを1点だけ直しました</strong>＝10-19 夜に社長が「<u>自社サイト（ycom）の HP解析だけ myagent で再開</u>」とお決めになった（commit <span class="font-mono">ac2c8d5</span>）ため、<strong>①は「ycom 以外の hp-loop を計測と地図から外してよいか」に、②は「ycom 以外の宛て」に</strong>範囲が狭まります。ycom の計測・産出量の記録（<span class="font-mono">loop-quality.py</span>）は止めてはいけない側に移りました。10-19 01:00 以降のタイムアウト・異常終了は0件です。</p>
   <p class="hidden">旧サマリ（Cycle 091）：最終更新：<strong>2026-10-19 未明（Cycle 091・<span class="underline">精密診断</span>・月曜 1:00 cron）</strong><br>10-18 に HP解析（hp-loop 8サイト）が site-analyzer へ移りました。止め方は正しく動いています。<u>ただ、地図・統括の計測・便の受け口がまだ「myagent で動いている」前提のまま</u>です（<strong>🟡O-103</strong>＝来週以降、移設先で元気に動いている解析を「myagent の故障」と読み違える恐れ／<strong>🟡O-104</strong>＝開発から <span class="font-mono">hp-loop-&lt;site&gt;</span> 宛てに届く便を myagent では誰も受けない）。もう1件は <strong>🟡O-105</strong>＝ご承認済みのルール改訂3本（comms・board・management）が11〜25日 git の外で効いている、です。社長のお伺いは2点＝<strong>①myagent の計測と地図から hp-loop を外してよいか ②hp-loop 宛ての便は移設先が取りに来る形でよいか</strong>。タイムアウト0・OOM +0。</p>
   <p class="hidden">旧サマリ（Cycle 090）：最終更新：<strong>2026-10-13 未明（Cycle 090・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>今週の精密診断は 10-12（Cycle 089）で実施済みです。Slack 新着・統括宛の便はともに0。10-12 01:00 以降のタイムアウト・異常終了は0件です。新規は1件（<strong>🟡O-102</strong>）＝<u>メモ窓口（#memo）に、08-17 を最後に56日間 1通も届いていません</u>。その間も毎晩23時に取り込みが起動しており、🔴O-099 の誤報はこの「0件の夜」から出ています。#memo に限らず、Slack から届いた社長の便は全チャンネルで 09-01 が最後です（42日間 0通）。お伺いは1点だけ＝<strong>09月以降 Slack には書いていないだけでしょうか、それとも書いたのに返事が無かったものがありますか。</strong>なお昨夜（10-12）は誤報が鳴りませんでしたが、直ったのではありません（O-099 は未着手のままです）。</p>
@@ -64,7 +65,11 @@
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-19 現在（Cycle 091）：HP解析の移設（10-18）に伴うお伺いが2点 加わりました。</strong>①<strong>🟡 O-103</strong>＝myagent の計測（system-health・産出量の記録）と地図から hp-loop を外してよいか（推奨＝外す）。②<strong>🟡 O-104</strong>＝開発から <span class="font-mono">hp-loop-&lt;site&gt;</span> 宛てに届く便は、移設先が受け口から取りに来る形でよいか。<strong>🟡 O-105</strong>（ご承認済みルール3本のコミット）はご判断不要＝開発へ。O-099・O-102 は変わらず（誤報は今週も3夜）。急ぎません＝次の triage でまとめて。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-26 現在（Cycle 093）：今日 社長が動くことは ありません。</strong>次の triage でまとめて見ていただきたいのは2点です。①<strong>🟡 O-104 に初めて実害が出ました</strong>＝よしだ歯科の本番反映の報告2通（10-20・インビザラインの料金差し替えほか）が、宛先 <span class="font-mono">hp-loop-yoshida</span> で5日間 誰にも読まれていません。ご判断は前回と同じ1問（移設先が取りに来る形でよいか）。②<strong>🟡 O-106（新規）</strong>＝partner の台帳・社長のお言葉の控えが 08-20 から2ヶ月 git に入っていません（自動コミットの対象に partner が無い）。ご判断不要＝開発へ。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-27 現在（Cycle 094）：社長が動くことはありません。</strong>triage に1点＝<strong>🟡 O-107</strong>：経理窓口宛ての D-032 便（法定福利費の中身・10-04）が23日未読。済んでいなければ「経理セッションを開く」を ToDo に日付つきで（D-021 の見直し 11-01 より前）。</p>
+    <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-11-02 現在（Cycle 095）：社長が今日動くことはありません。</strong>F-038 の「<span class="font-mono">/mcp</span> を再認可してください」は、原因の確認（🟡 O-108）が済むまで保留をお勧めします。triage に3点＝O-108・O-109・O-110。</p>
     <ul class="space-y-3 text-sm text-amber-900">
+      <li><strong>🟡 O-108（🆕 2026-11-02 Cycle 095）</strong>：MF 仕訳の夜間取得が 10-11 から22夜失敗。初回の原因はサーバー側エラーで、認証切れとは未確定。統括・triage の計測の外。推奨＝開発が原因を確かめてから社長へ。</li>
+      <li><strong>🟡 O-109（🆕 2026-11-02 Cycle 095）</strong>：経理の結果（F-036）が依頼元 board へ戻るまで35日。その間に、済んだ作業が社長の ToDo #543 になった。推奨＝便で受けた依頼は、完了時に依頼元へ返す1行を finance.md へ（合意後）。</li>
+      <li><strong>🟡 O-110（🆕 2026-11-02 Cycle 095）</strong>：Chatwork 台帳 752KB（閾値70KBの11倍）・掲示板 917KB。ルールの「70KB超は当サイクルで整理」が効いていない。推奨＝開発が器の作り替えの順番に入れる。</li>
       <li><strong>🟡 O-107（🆕 2026-10-27 Cycle 094）</strong>：<span class="font-mono">to: finance</span> 2通（board・10-04＝D-032）／<span class="font-mono">to: product</span> 1通（triage・10-08）が <span class="font-mono">new/</span> で19〜23日。有人窓口は開かれるまで動かない。triage が別経路で済んでいるか確認→未了なら社長 ToDo に日付つきで。詳細は Cycle 094 のカード。</li>
       <li><strong>🟡 O-106（🆕 2026-10-26 Cycle 093）</strong>：partner は自動コミット（<span class="font-mono">agent-commit.sh</span>）の対象に登録されておらず、<span class="font-mono">data/partner/ledger.md</span>・<span class="font-mono">from-president.md</span>・<span class="font-mono">site/business/partner/</span> の最終コミットは 08-20（67日前）。ご判断不要＝開発が許可パスを1行足す（作業用の断片は除外）。詳細は Cycle 093 のカード。</li>
       <li><strong>🟡 O-103（🆕 2026-10-19 Cycle 091）</strong>：地図（SYSTEM.md）と統括の計測が、10-18 に移設した hp-loop をまだ myagent で動いているものとして数えています（system-health の ⚠️ 3行・月曜 0:50 の産出量記録）。来週から「解析が止まった」と同じ見た目になります。ご判断＝計測と地図から外してよいか。詳細は Cycle 091 のカード。</li>
@@ -184,6 +189,62 @@
   </div>
 
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
+
+  <!-- ===== Cycle 095 ===== -->
+  <section class="mb-10 border-t-4 border-blue-500 pt-4">
+    <h3 class="text-xl font-bold mb-1">Cycle 095 — 2026-11-02 未明（<span class="underline">精密診断</span>・月曜 1:00 cron／🟡3件・MF 夜間取得の22夜失敗は原因が未確定）</h3>
+    <p class="text-sm text-gray-600 mb-3"><strong>モード判定</strong>：月曜 cron の精密診断（直近＝10-26 Cycle 093）。全体最適棚卸しは前回 10-26 から7日＝本日は対象外（次回 11-09）。<strong>確認した範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし）／<span class="font-mono">to: overseer</span> 0通／<span class="font-mono">data/overseer/from-president.md</span>（09-27 10:12 のまま＝新しい節なし）／<span class="font-mono">python3 bin/system-health.py</span>／<span class="font-mono">failures.jsonl</span>／<span class="font-mono">data/financial/generated/journal-mcp/export.log</span>・<span class="font-mono">status.json</span>／<span class="font-mono">bin/journal-mcp-export.sh</span>／<span class="font-mono">data/financial/ledger.md</span> F-036・F-038／<span class="font-mono">data/board/decisions.md</span>／mailbox の宛先別件数と 11-01 の便3通／<span class="font-mono">data/hp-loop/quality-log.md</span>／<span class="font-mono">git log</span>・<span class="font-mono">git status</span>／<span class="font-mono">data/ops/crontab.txt</span> の差分。<span class="text-xs">〔未確認＝<span class="font-mono">session-desk.py whoami</span>・<span class="font-mono">loop-quality.py</span> の表示・<span class="font-mono">crontab -l</span> は無人では実行できず。10-30 当日の <span class="font-mono">tick.log</span> は残っていません〕</span></p>
+    <p class="text-sm text-gray-800 mb-4 bg-blue-50 p-3 rounded"><strong>健康サマリ</strong>：定時の便は動いています（直近7日＝タイムアウト0・異常終了7・メモリ空き64%・OOM +0）。異常終了7の内訳は、<strong>10-30 の claude 認証切れ6件</strong>（05:00 blog-loop・06:10〜12:10 comms 4回・07:00 partner）と 10-29 の memo 誤報1件（O-099）です。認証は 12:10 の後の失敗記録が無く、11-01 の定時便は完了しています。<u>10-30 の朝礼は 07:00 に実行できず、翌朝まで次の便はありません</u>（<span class="font-mono">site/business/partner/index.html</span> に 10-30 の記載なし）。主題は <span class="font-mono">failures.jsonl</span> に現れない別の失敗＝MF の夜間取得です。</p>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-3 mb-3 text-sm">
+      <p><strong>🟡 O-108（🆕）MF 仕訳の夜間取得が22夜失敗＝原因は未確定で、統括・triage の計測の外にある</strong></p>
+      <p class="mt-1"><strong>観察（実測）</strong>＝①<span class="font-mono">export.log</span> は 10-10 が最後の自動成功で、10-11 から失敗（経理台帳 F-038＝失敗継続。直近 10-28〜11-01 は実読で確認）。②<strong>10-11 の初回の記録は認証切れではありません</strong>＝MF の MCP が <span class="font-mono">dependency server internal error</span> を5回返しています。③以後は毎晩「<span class="font-mono">done 0 0</span>」の1行だけで理由が残りません（10-30 だけ <span class="font-mono">OAuth session expired</span>＝この日は claude 全体の認証切れ）。④スクリプトの判定文「MCP認証切れの可能性」は固定文で、原因を調べた結果ではありません。⑤<span class="font-mono">bin/journal-mcp-export.sh</span> は <span class="font-mono">failures.jsonl</span> に書かず、<span class="font-mono">system-health.py</span> も読んでいません。⑥<span class="font-mono">status.json</span> は手動転記で <span class="font-mono">"state": "ok"</span>（注記あり）。⑦失敗時の Slack 通知は <span class="font-mono">slack.sh</span> 経由で、届いているかは未確認です。⑧F-038 の依頼「社長が <span class="font-mono">/mcp</span> で再認可」は <span class="font-mono">to: triage</span> の便（11-01）に載っており未読です。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>＝F-038 は「対話セッションでは動く＝ヘッドレス側の認可の問題（推定）」としていますが、推定です。再認可で直らなければ、社長のお手を1回無駄にします（<span class="font-mono">feedback_dont-stack-predictions-on-similar-logs</span>）。推測：本サイクルの無人セッションの道具一覧に <span class="font-mono">mfc-ca</span> が載っているので、接続自体はできている可能性があります（認可の有効性は未検証。統括は呼んでいません）。夜間取得が止まると CSV の鮮度は手動転記に頼ることになり、11-01 にも古い仕訳57件が見つかっています。</p>
+      <p class="mt-1"><strong>推奨（誰が・何を）</strong>＝開発が①失敗時の claude の出力をログへ残し、1回手動で流して原因を確定する②認可の問題と確定した場合だけ、triage が社長へ <span class="font-mono">/mcp</span> をお願いする③失敗を <span class="font-mono">failures.jsonl</span> に記録し、triage の「前回以降の警報」に載せる④判定文を「原因不明」に直す。<strong>効果</strong>：中（公庫へ出す数字の鮮度を支える経路）。<strong>工数</strong>：小。<strong>優先度</strong>：🟡。<strong>関連</strong>：F-038・F-020・D-014・O-051。<strong>ステータス</strong>：⏳ triage から開発へ（ご判断不要）。</p>
+    </div>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-3 mb-3 text-sm">
+      <p><strong>🟡 O-109（🆕）経理の結果が依頼元へ戻るまで35日＝済んだ作業が社長の ToDo になった</strong></p>
+      <p class="mt-1"><strong>観察（実測）</strong>＝F-036（法定福利費の中身）は台帳の日付・成果物名とも 09-27 ですが、<span class="font-mono">decisions.md:1544</span> は「11/1 に board へ届いた」と記録しています。この間の 10-20 に、同じ作業が社長の ToDo #543 として起票され、作業日を過ぎて残りました。<span class="font-mono">rules/modes/finance.md:55</span> の報告経路は「委任元への返答と台帳への記録」で、<u>mailbox で依頼を受けた場合に依頼元へ返す規定がありません</u>。O-107 は宛先別件数を見て「開かれていない」側を挙げましたが、今回は<strong>結果が戻らない側</strong>です。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>＝board は結果を知らないまま ToDo を起こし、依存の順番も組み違えました（11-01 の便＝9件中6件が順番待ち）。推測：経理と board の窓口が同時に開かないと、同型が再発します。</p>
+      <p class="mt-1"><strong>推奨（誰が・何を）</strong>＝<span class="font-mono">finance.md</span> に「mailbox で受けた依頼は、完了時に <span class="font-mono">local-send</span> で依頼元へ1通返す」を1行足す（ルール編集は合意後）。他の有人窓口にも同じ穴がある場合は <span class="font-mono">mailbox.md</span> に1箇所で書く案が先です。<strong>効果</strong>：中。<strong>工数</strong>：小。<strong>優先度</strong>：🟡。<strong>関連</strong>：O-107・D-021・D-032・<span class="font-mono">feedback_handoff-must-land-in-mailbox</span>。<strong>ステータス</strong>：⏳ triage へ（文面の承認1点）。</p>
+    </div>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-3 mb-3 text-sm">
+      <p><strong>🟡 O-110（🆕）Chatwork 台帳が閾値の11倍＝「70KB超は当サイクルで整理」が効いていない</strong></p>
+      <p class="mt-1"><strong>観察（実測）</strong>＝<span class="font-mono">data/comms/chatwork/ledger.md</span> 752KB（閾値70KBの1074%）／<span class="font-mono">site/comms/index.html</span> 917KB（1147%）／<span class="font-mono">archive.md</span> 2.5MB。台帳は直近9回のスナップショット（およそ1週間）で 607,173B → 770,534B。末尾2回の増分は小さくなっています（+7KB・+1KB）。ルールは <span class="font-mono">comms.md:282-284</span> で「70KB超は当サイクルで整理」としています。<span class="font-mono">system-health.py</span> は「毎サイクル全読み・閾値つき」の状態ファイルに数えています。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>＝蒸留は1日最大9回で、台帳の大きさはその都度の固定費になります。ルールが宣言のままなのは、partner・hp-loop で機械のトリップワイヤが要った経緯と同じです。サイズの監視は今は <span class="font-mono">system-health.py</span> に入っていますが（O-030 の起票当時は対象外）、超過の扱いを持つカードがありませんでした。</p>
+      <p class="mt-1"><strong>推奨（誰が・何を）</strong>＝開発が O-006（器の作り替え）の順番に comms を入れ、残す範囲を決める（例：🔴🟢の未決だけを本体に残す。線引きは <span class="font-mono">comms.md:284</span> の退避方針に合わせる）。<strong>効果</strong>：中（固定費）。<strong>工数</strong>：中。<strong>優先度</strong>：🟡。<strong>関連</strong>：O-006・O-030・<span class="font-mono">rules/ledger-discipline.md</span>。<strong>ステータス</strong>：⏳ triage から開発へ。</p>
+    </div>
+
+    <h4 class="font-bold mb-2">既存カードの動き（再掲せず数字だけ）</h4>
+    <ul class="text-sm text-gray-700 mb-4 list-disc pl-5">
+      <li><strong>O-104（規定の2週連続）</strong>：未処理の実装報告が 10-26・11-02 と2週続けて <strong>2</strong>。<span class="font-mono">overseer.md:78</span> の「2週続いたら上げる」に該当します。<span class="font-mono">new/</span> にある解析レーン宛ては <span class="font-mono">to: hp-loop-yoshida</span> 2通だけ（12.2日）なので同じ2通と読み、新しい番号は起こさず本カードへ統合します。<u>ご判断は前回と同じ1問</u>です。</li>
+      <li><strong>O-107</strong>：<span class="font-mono">to: finance</span> は 0通に解消（経理の回答は 11-01）。<span class="font-mono">to: product</span> 1通は残り 24.3日。</li>
+      <li><strong>O-106</strong>：<span class="font-mono">AGENT_PATHS</span> は変化なし。<span class="font-mono">data/partner/_*</span> は 76本 → <strong>92本</strong>。毎朝 archive の写し（約1.8MB）が増えています。</li>
+      <li><strong>O-105・O-085</strong>：<span class="font-mono">rules/modes/</span> 4本は未コミットのまま。<span class="font-mono">data/ops/crontab.txt</span> も 10-20 取得分（解析の移設＋<span class="font-mono">ledger-watch</span>）が未コミットで13日。リポジトリ全体の未コミットは 260件（前回 276件）。</li>
+      <li><strong>O-099</strong>：memo の誤報は今週 10-29 の1夜。</li>
+      <li><strong>滞り</strong>：mailbox <span class="font-mono">new/</span> 215件・<span class="font-mono">hold/</span> 2件（最古 61.4日）。<span class="font-mono">to: rule-kaizen</span> 3通は最古 44.4日で、棚卸し未実施の目安（2週間）を超えています。同窓口は 10-30 登録・11-01 から窓口扱いになったので、次に開いたときの処理で足ります。<span class="font-mono">to: management</span> 7通のうち2通（11-01）は融資の ToDo の差し替え依頼です。</li>
+      <li><strong>O-046</strong>：本掲示板 441KB（閾値80KB）。ローテは今回も実行していません（O-006 の実装待ち）。</li>
+    </ul>
+
+    <h4 class="font-bold mb-2">床と待ちの推移（数字のみ・判定なし）</h4>
+    <p class="text-sm text-gray-700 mb-4">データなし＝<span class="font-mono">system-health.py</span> の出力に該当節がありません（O-044）。ゼロでは埋めません。</p>
+
+    <h4 class="font-bold mb-2">解析ループの産出量（数字のみ・判定なし）</h4>
+    <table class="text-sm mb-2 border border-gray-300">
+      <thead class="bg-gray-100"><tr><th class="px-2 py-1">記録日</th><th class="px-2 py-1">期間(日)</th><th class="px-2 py-1">起動</th><th class="px-2 py-1">書込/回</th><th class="px-2 py-1">文字/回</th><th class="px-2 py-1">未処理の実装報告</th><th class="px-2 py-1">効果検証以降のR</th></tr></thead>
+      <tbody>
+        <tr><td class="px-2 py-1">2026-10-26（前回）</td><td class="px-2 py-1">14</td><td class="px-2 py-1">14</td><td class="px-2 py-1">34.2</td><td class="px-2 py-1">24,358</td><td class="px-2 py-1">2</td><td class="px-2 py-1">86</td></tr>
+        <tr><td class="px-2 py-1">2026-11-02（最新）</td><td class="px-2 py-1">14</td><td class="px-2 py-1">3</td><td class="px-2 py-1">19.0</td><td class="px-2 py-1">17,516</td><td class="px-2 py-1">2</td><td class="px-2 py-1">86</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs text-gray-500 mb-4">出典：<span class="font-mono">data/hp-loop/quality-log.md</span>（月曜 0:50）。良し悪しの判断は社長と <span class="font-mono">/board</span>。10-18 の移設で対象は ycom のみになりました（O-103）。</p>
+
+    <h4 class="font-bold mb-2">Step 6 自己改善</h4>
+    <p class="text-sm text-gray-700 mb-2"><span class="font-mono">system-health.py</span> は <span class="font-mono">agent-tick</span> 経由の失敗しか数えないため、O-108 は便の本文から偶然見つかりました。crontab の各行と「最後に成功した日」を突き合わせる点検をカイゼン台帳へ起票します。</p>
+    <p class="text-xs text-gray-500">次サイクル：反応tick（<span class="font-mono">to: overseer</span> の新着があれば）／火曜 1:00 fallback は「今週実施済み」で軽く終わる見込み／次の精密診断と全体最適棚卸しは <strong>2026-11-09 月曜 1:00</strong>。停止条件＝社長の停止指示。</p>
+  </section>
 
   <!-- ===== Cycle 094 ===== -->
   <section class="mb-10 border-t-4 border-blue-500 pt-4">
