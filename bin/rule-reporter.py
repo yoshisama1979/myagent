@@ -145,6 +145,8 @@ def load_tokens():
         d = json.load(f)
     if not isinstance(d, dict):
         sys.exit("❌ トークン表の形式が不正です（オブジェクトではありません）")
+    # 実在する値を伏字の対象にする（形を当てるより確実）。この集合は表示も記録もしない
+    KNOWN_TOKENS.update(k for k in d if isinstance(k, str) and len(k) >= 16)
     return d
 
 
@@ -199,6 +201,9 @@ def slug(name):
     return re.sub(r"[^a-z0-9-]+", "-", name.strip().lower()).strip("-")
 
 
+HEX_RUN = re.compile(r"(?i)[0-9a-f]{16,}")
+
+
 def make_id(project, explicit):
     """案件名（表示用・日本語可）から agent_id 用の識別子を決める。
 
@@ -206,6 +211,13 @@ def make_id(project, explicit):
     日本語の案件名から機械的に削ると "テスト案件A" → "a" のような**意味のない識別子が黙って
     できる**ので、英数字だけで書かれていない案件名は --id を必須にする（黙って劣化させない）。
     """
+    for label, v in (("案件名", project), ("--id", explicit)):
+        if v and HEX_RUN.search(str(v)):
+            # 🚨 識別子は agent_id・メッセージID・ファイル名に入る＝伏字をかけても
+            #    「名前そのもの」として残り続ける。入口で断る（人に名前を決めてもらう）
+            sys.exit(f"❌ {label}に長い16進の並びが含まれます（トークンを貼っていませんか）。\n"
+                     f"   案件名を短く書き直し、識別子は --id で英小文字・数字・ハイフンで"
+                     f"指定してください")
     if explicit:
         s = slug(explicit)
         if s != explicit.strip().lower() or not s:
@@ -240,7 +252,12 @@ def find(d, key):
     return hits[0]
 
 
-TOKEN_LIKE = re.compile(r"rr_[0-9a-f]{16,}")
+# 🚨 接頭辞の形（`rr_`）だけを見ると**取りこぼす**。実際に抜けていた＝案件名に貼られた
+#    `rr_<hex>` は `slug()` が `_`→`-` に直すので `rr-<hex>` になり、この形を見ていなかった
+#    `agent_id` 列（台帳は git 追跡）にそのまま載った（2026-11-01 実測）。長い16進そのものを見る。
+TOKEN_LIKE = re.compile(r"(?i)(?:rr[-_])?[0-9a-f]{16,}")
+# 表に実際に載っている値。形を当てるより確実（別の形のトークンも落とせる）。**表示しない**
+KNOWN_TOKENS = set()
 
 
 def redact(v):
@@ -250,7 +267,11 @@ def redact(v):
     `rr_…` を貼られたらそのまま残るので、出すところで落とす（入力は拒否しない＝失効は
     急ぐ操作で、理由の書き方で止めたくない）。
     """
-    return TOKEN_LIKE.sub("rr_…（伏字）", str(v if v is not None else ""))
+    out = str(v if v is not None else "")
+    for tok in sorted(KNOWN_TOKENS, key=len, reverse=True):   # 長いものから（部分一致を避ける）
+        if tok and tok in out:
+            out = out.replace(tok, "…（伏字）")
+    return TOKEN_LIKE.sub("…（伏字）", out)
 
 
 def cell(v):
@@ -513,7 +534,7 @@ def cmd_issue(args):
     ok = persist(d, "発行")
 
     print(f"✅ {number} を発行しました（案件: {cell(project)} / agent_id: {agent_id} "
-          f"/ テンプレ: {args.template}）")
+          f"/ テンプレ: {cell(agent_id)}）")
     print(f"   期限: {d[token]['expires_at']}（{args.days} 日）")
     shown, undone_shown, _ = read_migrations(d[token])
     if shown or undone_shown:
@@ -594,7 +615,7 @@ def cmd_migrated(args):
     """
     item = args.item
     if not VALID_ITEM.fullmatch(item):
-        sys.exit(f"❌ --item は TB-019 のような番号の形で指定してください: {item!r}")
+        sys.exit(f"❌ --item は TB-019 のような番号の形で指定してください: {cell(item)!r}")
     d = load_tokens()
     _, e = find(d, args.key)
     # 🚨 失効した行でも**取り消しは通す**。失効行は再発行のときの引き継ぎ元になるので、
@@ -643,11 +664,11 @@ def cmd_migrated(args):
 
     on = args.on or now().strftime("%Y-%m-%d")
     if not VALID_DATE.fullmatch(on):
-        sys.exit(f"❌ --on は YYYY-MM-DD で指定してください: {on!r}")
+        sys.exit(f"❌ --on は YYYY-MM-DD で指定してください: {cell(on)!r}")
     try:
         day = datetime.strptime(on, "%Y-%m-%d").date()
     except ValueError:
-        sys.exit(f"❌ そんな日付はありません: {on!r}")
+        sys.exit(f"❌ そんな日付はありません: {cell(on)!r}")
     if day > now().date():
         # 未来の日付は打ち間違い（2027 と打つ等）。入れてしまうと「済み」が先に立って気づけない
         sys.exit(f"❌ 未来の日付は受けつけません: {on}（今日は {now().strftime('%Y-%m-%d')}）")
@@ -722,7 +743,7 @@ def cmd_list(args):
     live = [e for _, e in rows if not e.get("revoked")]
     item = getattr(args, "item", None)
     if item and not VALID_ITEM.fullmatch(item):
-        sys.exit(f"❌ --item は TB-019 のような番号の形で指定してください: {item!r}")
+        sys.exit(f"❌ --item は TB-019 のような番号の形で指定してください: {cell(item)!r}")
     if item:
         done, cancelled, broken, todo = [], [], [], []
         for e in live:

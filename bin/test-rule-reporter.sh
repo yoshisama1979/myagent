@@ -783,22 +783,51 @@ rr revoke "$ORD" --reason "検査おわり" >/dev/null
 
 echo "▼ 自由文に貼られたトークンらしき値は出さない"
 FAKE="rr_0123456789abcdef0123456789abcdef0123456789abcdef"
-OUT="$(rr issue "案件 $FAKE メモ" --id test-leak --template website)"
-want_not_in "$FAKE" "$OUT" "🚨 案件名に貼られたトークンらしき値を画面に出さない"
-want_in "伏字" "$OUT" "伏字にしたと分かる"
-LEAK="$(printf '%s' "$OUT" | sed -n 's/^✅ \(RR-[0-9]*\) .*/\1/p')"
-want_not_in "$FAKE" "$(cat "$RULE_REPORTER_LEDGER")" "🚨 台帳（git 追跡）にも出さない"
-want_in "伏字" "$(ROW "$LEAK")" "台帳では伏字で残る"
-OUT="$(rr list)";                                     want_not_in "$FAKE" "$OUT" "一覧にも出さない"
-OUT="$(rr revoke "$LEAK" --reason "理由に $FAKE を貼ってしまった")"
-want_not_in "$FAKE" "$OUT" "失効理由に貼られた分も画面に出さない"
-want_not_in "$FAKE" "$(cat "$RULE_REPORTER_LEDGER")" "失効理由も台帳では伏字"
-want_in "伏字" "$(ROW "$LEAK")" "伏字にして理由自体は残す（失効は止めない）"
+HEXRUN="0123456789abcdef0123456789abcdef"
+# 🚨 入口で断る＝識別子は agent_id・メッセージID・ファイル名に入るので、伏字をかけても
+#    「名前そのもの」として残り続ける。実測の抜け＝`rr_<hex>` は slug で `rr-<hex>` になり、
+#    接頭辞 `rr_` だけを見ていた伏字をすり抜けて agent_id 列（git 追跡）に載った
+OUT="$(rr issue "案件 $FAKE メモ" --id test-leak --template website 2>&1)"
+want_in "長い16進の並びが含まれます" "$OUT" "🚨 案件名にトークンらしき値があれば発行を断る"
+want_not_in "$HEXRUN" "$OUT" "拒否のメッセージにも出さない"
+want_not_in "$HEXRUN" "$(cat "$RULE_REPORTER_LEDGER")" "🚨 台帳（git 追跡）に載らない"
+OUT="$(rr issue "普通の案件" --id "x-$HEXRUN" --template website 2>&1)"
+want_in "長い16進の並びが含まれます" "$OUT" "--id に貼られた分も断る（agent_id に残るため）"
 
-# 拒否のメッセージにも伏字がかかる（成功経路だけでは足りない）
-OUT="$(rr issue "案件 $FAKE" --template website 2>&1)"
-want_not_in "$FAKE" "$OUT" "🚨 --id 無しで拒否されるときも案件名を伏字にする"
-want_in "英数字以外が含まれます" "$OUT" "拒否の理由は出す"
+# 自由文（失効理由）は断らず伏字にする＝失効は急ぐ操作なので理由の書き方で止めない
+OUT="$(rr issue "伏字の案件" --id test-leak --template website)"
+LEAK="$(printf '%s' "$OUT" | sed -n 's/^✅ \(RR-[0-9]*\) .*/\1/p')"
+LEAKTOK="$(printf '%s' "$OUT" | sed -n 's/.*RULE_REPORT_TOKEN=//p')"
+OUT="$(rr revoke "$LEAK" --reason "理由に $FAKE を貼ってしまった")"
+want_not_in "$HEXRUN" "$OUT" "失効理由に貼られた分は画面に出さない"
+want_in "伏字" "$OUT" "伏字にしたと分かる"
+want_not_in "$HEXRUN" "$(cat "$RULE_REPORTER_LEDGER")" "失効理由も台帳では伏字"
+want_in "伏字" "$(ROW "$LEAK")" "理由自体は残す（失効は止めない）"
+# 🚨 形を当てるだけでは別の形のトークンを取りこぼす＝表に実在する値そのものも落とす
+OUT="$(rr issue "実トークンの案件" --id test-leak2 --template website)"
+L2="$(printf '%s' "$OUT" | sed -n 's/^✅ \(RR-[0-9]*\) .*/\1/p')"
+OUT="$(rr revoke "$L2" --reason "発行した値 $LEAKTOK を貼ってしまった")"
+want_not_in "$LEAKTOK" "$OUT" "発行した値も伏字にする"
+want_not_in "$LEAKTOK" "$(cat "$RULE_REPORTER_LEDGER")" "台帳にも載らない"
+# 🚨 16進でない形のトークン＝「形を当てる」伏字では落ちない。表の実値を見る経路だけが効く
+#    （番号つきの行はフィクスチャに足すと next_number がずれるので、使う直前に入れる）
+OPAQUE="tk-opaque-ZZZZZZZZZZZZZZZZZZ"
+python3 - "$RULE_REPORTER_TOKENS" "$OPAQUE" <<'PYEOF12'
+import json, sys
+d = json.load(open(sys.argv[1], encoding="utf-8"))
+d[sys.argv[2]] = {"agent_id": "rr-opaque", "role": "reporter", "reporter_id": "RR-950",
+                  "project": "別形式トークンの案件", "issued_at": "2026-10-01",
+                  "expires_at": "2027-10-01"}
+json.dump(d, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False)
+PYEOF12
+rr rebuild >/dev/null
+OUT="$(rr revoke RR-950 --reason "別形式の値 $OPAQUE を貼ってしまった")"
+want_not_in "$OPAQUE" "$OUT" "🚨 16進でない形のトークンも伏字にする（表に実在する値を落とす）"
+want_not_in "$OPAQUE" "$(cat "$RULE_REPORTER_LEDGER")" "台帳にも載らない"
+want_in "伏字" "$(ROW RR-950)" "理由自体は残す"
+# 日付・番号の拒否メッセージにも伏字
+OUT="$(rr migrated "$LEAK" --item "TB-$HEXRUN" 2>&1)";  want_not_in "$HEXRUN" "$OUT" "--item の拒否でも伏字"
+OUT="$(rr migrated RR-007 --on "$HEXRUN" 2>&1)";        want_not_in "$HEXRUN" "$OUT" "--on の拒否でも伏字"
 OUT="$(rr migrated "$FAKE" 2>&1)";                    want_not_in "$FAKE" "$OUT" "引けなかった鍵も伏字にする（migrated）"
 OUT="$(rr revoke "$FAKE" --reason x 2>&1)";           want_not_in "$FAKE" "$OUT" "引けなかった鍵も伏字にする（revoke）"
 OUT="$(rr issue "x" --id "$FAKE" --template website 2>&1)"; want_not_in "$FAKE" "$OUT" "--id に貼られた分も伏字にする"
