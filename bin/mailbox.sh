@@ -232,7 +232,11 @@ SENDERS    = {"overseer", "hanasaka-main", "triage", "management", "board", "dev
               # サービス改善（2026-10-07 社長ご決定・triage 依頼で新設）。triage から題材を受け、
               # 結果を triage へ返す＝**送信側にも入れる**。受信専用にすると K-926（partner は
               # 受け取れるのに返せない）と同じ片道配管になる。窓口は config/session-desks.json に登録済み。
-              "product"}
+              "product",
+              # ルール改善（2026-10-30 に対応表へ登録したが、ここへの追加が漏れていた＝
+              # `local-send --to rule-kaizen` が弾かれ、窓口同士で降ろせなかった）。
+              # 目安箱（案件からの一方向の投函先）と同じ名前だが、こちらは窓口としての便。
+              "rule-kaizen"}
 RECIPIENTS = {"overseer", "hanasaka-main", "triage", "management", "board", "dev", "web-hanasaka", "yoshida-dev", "fujisaka-dev", "yokohawaii-dev",
               "rally-dev", "konjaku-dev", "shigatoyota-dev",
               "hp-loop-ycom", "hp-loop-yoshida", "hp-loop-fujisaka", "hp-loop-yokohawaii",
@@ -246,7 +250,9 @@ RECIPIENTS = {"overseer", "hanasaka-main", "triage", "management", "board", "dev
               # 実務（2026-09-29）。マネジメントから作業依頼を受ける。
               "work",
               # サービス改善（2026-10-07）。triage から題材を受ける。
-              "product"}
+              "product",
+              # ルール改善（2026-10-30 の登録漏れ・上の SENDERS と同じ理由）。
+              "rule-kaizen"}
 TYPES      = {"request", "report", "ack", "fyi"}
 frm = os.environ["MB_FROM"]; to = os.environ["MB_TO"]; typ = os.environ["MB_TYPE"] or "request"
 if not ID.match(frm) or frm not in SENDERS:
