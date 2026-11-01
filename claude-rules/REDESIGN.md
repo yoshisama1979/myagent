@@ -510,6 +510,8 @@ Codex クロスレビュー | **開発**（`レビュー待ち` にする前） 
 |---|---|---|
 **5-2b** | `deck-format.md`（差2行＝見積もりルールのファイル名の名指し）を common へ。**5-4 の見積もり統合の直後**に回した | 1本・172行 |
 **5-3** | **同名別物の統合**＝`CLAUDE.md`・`project-config.md`・`director.md`・`developer.md`・`handoff.md`。🚨 **ここで「層が行を足せる仕組み」（§9-4 の56本の型）が必要になる**＝器に**追補（append）機構**を足す：`profiles.json` に追補対象のパスを並べ、同じパスが複数層にあればエラーにせず**層の順に連結**する。これが入って初めて `CLAUDE.md` を common に1本置ける | 5本・約1,900行 |
+
+> 🔄 **2026-11-01 追記（5-3 の作業メモ）**：`developer.md` の **§6.1「数えるだけの確認に、必ず「中身」を1つ添える」は両面に同じ内容で置いてある**（starally 報告・`rr-starally` 2026-09-20）。統合のときは**1本に畳む**（いまは「片方だけ直さない」と本文に書いて凌いでいる）。あわせて `websystem/ui-check.md` §3 と `website/check.md` §3 から §6.1 への参照が1行ずつ入っているので、**参照の付け替えが要る**。`ui-check.md` は **§9-6「ステップ3以降への申し送り」の2**（検品の置き場）のとおり common 側へ、`check.md` は公開面に残る。
 **5-4** | **名前違い3組の統合**（`refactor`↔`refactoring` 445行／`design`↔`ui-design` 246行／見積もり4本 552行）＋`design-replication`（299行）・`/dev` `/director` `/commit` 系コマンドの統合 | 約1,700行 |
 **5-5** | `website/` → `site/`・`websystem/` → `system/` に改名し、`full` = `common`+`site`+`system` を追加。`check-onboarding-sync.py` のパス付け替え。旧名プロファイルは残す（トークン互換） | — |
 
