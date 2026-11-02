@@ -179,6 +179,191 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 141（2026-11-02）＝ Cycle 142（2026-11-03）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c141">Cycle 141 — 2026-11-02（YCOM ブログ・日次）：<span class="text-rose-700">経営の決定 <span class="font-mono">D-035</span> をブログに読み替えました＝コーディング受託の入口はブログから見えていません</span>／<span class="text-sky-800"><span class="font-mono">B-135</span> 実装記事3本に受託の1行・<span class="font-mono">T-081</span> コーディングだけ外注するとき・<span class="font-mono">T-082</span> ホームページにAIチャットを置く前に</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-11-02）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。最終日は 10/30。10/05〜10/30＝クリック1,056・表示46,202・CTR2.29%・平均9.3位。個別＝ページ別90日／検索語90日／「コーディング」「外注」「下請」「チャット」を含む語（140日）／<span class="font-mono">?p=2254・6656</span> の検索語。</li>
+      <li><strong>GA4</strong>（<span class="font-mono">analytics_265729912</span>）＝取得（8/04〜11/02）。<span class="font-mono">/partners/</span>・<span class="font-mono">/aichat/</span> の着地、<span class="font-mono">alliance.html</span> の閲覧、流入元、イベント名。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝定点（<span class="font-mono">?p=8365・2117・8299</span>）／<span class="font-mono">/partners/alliance.html</span>・<span class="font-mono">/partners/coder.html</span>・<span class="font-mono">/service/aichat/</span>・<span class="font-mono">/service/system/</span> の本文／<span class="font-mono">?p=2254・5641・7548・8192</span> の本文／サイト内検索「コーディング」「外注」「チャット」「ChatGPT」。<strong>WordPress（<span class="font-mono">wp-draft.py get</span>）は未実施</strong>。</li>
+      <li><strong>競合</strong>（<span class="font-mono">hp-serp</span>）＝3語を取得。<u>読んだのは coding-army の注意点の記事・hnavi の目次・userlocal の見出しまで</u>。他は題の観察です。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<span class="font-mono">Q-C</span>・<span class="font-mono">Q-D</span>（開発宛）の回答はまだありません。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。<strong>執筆担当の報告</strong>：blog-improve が本日 00:20 の回で <span class="font-mono">B-132</span>・<span class="font-mono">B-112</span> の差分2枚を作りました（<span class="font-mono">improve-log.md</span>・WP への書き込みゼロ）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-rose-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-rose-800 mb-2">🧭 D-035 をブログに読み替えると（11/1 経営会議の決定）</h3>
+    <p class="text-xs mb-2"><strong>決定</strong>：WEBサイト制作の新規元請け（ディレクション＋一連の制作）は控える。コーディング受託（ディレクションは他社）とシステム開発・AI は積極的に受ける。フォーム・ブログの入口は広いまま閉じない。ブログのテーマについての社長のお言葉は「受け口は広いほうがいいのでそのままでいいが、システム、AIも強化していきたい」です。<u>テーマは差し替えず、足します</u>。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">ブログ側のもの</th><th class="py-1 pr-2">読み替え</th><th class="py-1">扱い</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">下書き 8365（費用相場）</td><td class="py-1 pr-2">料金で探す人＝元請けの入口です。「閉じない」ので公開は止めません。ただ、<strong>これまでの「なぜ急ぐか」は、元請けの買い手を増やす前提で書いていました</strong>。</td><td class="py-1">公開は残す。<strong>急ぐ理由からは外します</strong>（上の ⛳ を直しました）。お願いの中心は ①パスワード ③社内メモの削除に。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2"><span class="font-mono">Q-006</span>（記事テンプレの「提携パートナー」動線）</td><td class="py-1 pr-2"><span class="font-mono">alliance.html</span> は<strong>コーディング受託の唯一の窓口</strong>になりました。撤去の話に巻き込まないこと。</td><td class="py-1">質問の補足を更新。テンプレの「請負・外注のご案内」は全記事に2本あるので残す。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2"><span class="font-mono">B-067</span>（CSS・PHP の実装記事に橋を架けない）</td><td class="py-1 pr-2">「お客様向けの相談の橋」を架けない判断は有効です。ただ、実装記事の読者には同業者が混じる可能性があります（推測）。</td><td class="py-1">橋は架けないまま、別の1行を試す＝<span class="font-mono">B-135</span>。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2"><span class="font-mono">T-074</span>（印刷会社・代理店が頼まれたら）</td><td class="py-1 pr-2">読者は「技術がない業者様」＝丸投げになりやすく、ディレクションを持つ形に寄ります。</td><td class="py-1">残す。<strong>書く順は <span class="font-mono">T-081</span> を先に</strong>。</td></tr>
+        <tr><td class="py-1 pr-2"><span class="font-mono">clients/ycom.md</span> のゴール欄</td><td class="py-1 pr-2">いまは「買い手意図クエリを取りに行く」のまま＝コーディング受託・システム・AI の語がありません。</td><td class="py-1">社長の領域なので変えていません。📥 に文案を置きました。</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs"><strong>11/15 の論点へ出せる数字</strong>（ブログから見えた分だけ）：受託の窓口 <span class="font-mono">/partners/alliance.html</span> は 8/04〜11/02 で閲覧85回・54人、着地18セッション、CV 0。同じ期間の協力者募集 <span class="font-mono">/partners/designer.html</span> は着地130セッション・CV 24セッション（募集のページ）。<strong>「頼む人」の窓より「働きたい人」の窓のほうが7倍開いています</strong>。ブログの本文で「コーディングだけ頼める」と書いた記事は、サイト内検索の当たりと題を見る限り1本もありません（本文までは全件読んでいません）。</p>
+  </div>
+
+  <div class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📉 過去の提案の振り返り（PDCA）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong><span class="font-mono">T-074</span>（C134）</strong>＝「コーディング 外注 大阪」は 140日で <strong>159表示・23.0位・クリック0</strong>（着地 <span class="font-mono">alliance.html</span>）。90日では C134 の130表示 → 本日121表示で、窓をずらしても横ばいです。<u>C134 に書かなかった点を足します</u>：本日の検索結果の1〜2番目は求人サイト（stanby）で、<strong>この語には「外注の仕事を探す人」も混じっています</strong>（推測）。買い手の語と言い切ったのは強すぎました。</li>
+      <li><strong>料金ページの週の比較は今回もありません</strong>＝10/28〜11/3 の週が締まっていません。</li>
+      <li><strong><span class="font-mono">B-132</span>・<span class="font-mono">B-112</span></strong>＝差分は完成。効果はまだ測れません（WP 反映は 🔒）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から78日目）</strong>。本日も公開URLは HTTP500（下書きのときの応答）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ</strong>＝本日も公開ページの本文に残っています（公開の 7/15 から110日）。<span class="font-mono">?p=8299</span> の「［画像：…］」の1行（<span class="font-mono">B-122</span>）も本日残っています。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝57日目・未回答。次の枠は 11/7（土）です。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-135</span>）</h3>
+  <div class="bg-white border-2 border-rose-300 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-rose-900 mb-2"><span class="font-mono">B-135</span>　読者の多い実装記事3本（<span class="font-mono">?p=5641・7548・8192</span>）の本文の終わりに、コーディング受託の案内を1行　🟡　<span class="text-xs font-normal">（差分作りは栓なし／🔒 WP 反映）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>観点</strong>：内部リンク・回遊→CV（③ 依頼）。<span class="font-mono">D-035</span>「積極的に受ける」の入口をブログから作る最小の一手です。</li>
+      <li><strong>観察</strong>（事実）：
+        (1) 3本の90日＝<span class="font-mono">?p=5641</span>（ページ内リンクのジャンプ先の位置・2018）250クリック／<span class="font-mono">?p=7548</span>（CSS の %・vh・vw・2021）104クリック／<span class="font-mono">?p=8192</span>（SMTP で PHP からメール送信・2023）87クリック＝<strong>計441クリック</strong>。
+        (2) 受託の窓口 <span class="font-mono">alliance.html</span> への導線は、テンプレのメニューとフッタの「請負・外注のご案内」2本だけです。本文からの案内はありません（3本の本文を確認）。
+        (3) <span class="font-mono">alliance.html</span> の本文に「デザインだけ、コーディングだけも大歓迎」「デザインは社内で、コーディングのみをご依頼ください」があります＝<u>1行の根拠は公開済み</u>です。
+        (4) <span class="font-mono">?p=5641</span> の終わりには「ホームページ制作のご相談を承っています」の橋があります。<span class="font-mono">?p=7548・8192</span> には橋がありません（<span class="font-mono">B-067</span> の対象）。</li>
+      <li><strong>推測</strong>：読者の大半は学習中の人や個人で、制作会社の人はごく一部です。ただ、制作会社のコーダーやディレクターが調べ物で読む記事でもあります。お客様向けの橋とは読者が違うので、1行だけなら邪魔になりません。</li>
+      <li><strong>改善案（差分の要点）</strong>：3本とも同じ文で、本文の終わり（<span class="font-mono">?p=5641</span> は橋の<u>前</u>・<span class="font-mono">?p=7548・8192</span> は「関連記事」の前）に：<br>
+        「制作会社・広告代理店の方へ：当社はコーディングだけのご依頼もお受けしています（デザインデータをお預かりして実装します）。請負・外注のご案内はこちら。」＋ <span class="font-mono">/partners/alliance.html</span>。<br>
+        <u>代表の文章・コード・題は変えない。<span class="font-mono">?p=5641</span> の橋は触らない。4本リンクの橋はここでは足さない。ほかの実装記事に広げるのは、3本の結果を見てから</u>。</li>
+      <li><strong>測り方</strong>：<span class="font-mono">alliance.html</span> の閲覧（いま90日で85回・54人）と、そこからの問い合わせ。反映から90日で見ます。<u>GA4 に「記事→次のページ」を数えるモードが無い</u>ので、1行の寄与を切り分けることはできません。増えなければ外します。</li>
+      <li><strong>効果</strong>：受託の窓を、毎月約150クリックの読者の前に出す（③ 依頼）。<strong>問い合わせが増えるかは分かりません</strong>。<strong>工数</strong>：3本で10分。<strong>優先度</strong>：🟡。<strong>栓</strong>：差分作りは栓なし／WP への反映は 🔒。ご判断は要りません（嫌なら1行で却下を）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-4 mb-6 text-xs text-gray-800">
+    <p class="font-bold mb-1">今回見送った候補・広げた項目</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li><span class="font-mono">?p=2254</span>（WEBコーディングもAIで自動化されるのか？それでも外注コーダー募集中。・代表・2016）＝90日4表示で、ほぼ読まれていません。単独の B にはしません。ただ <span class="font-mono">/partners/coder.html</span> は「現在募集停止中」なのに、この記事は題と本文で「外注先を新たに探しています」のままです。<strong><span class="font-mono">B-084</span> に足しました</strong>（「最近、コーディングの外注先を新たに探しています。」の前に「※コーダーの募集は現在停止しています。（2026年11月追記）」・題は変えない）。<u><span class="font-mono">?p=4494</span>（スタッフ募集）・<span class="font-mono">?p=3887</span>（デザイナーを含む提携）は対象にしません</u>＝求人とデザイナー募集は動いている可能性があり、終了と書けません。</li>
+      <li><span class="font-mono">?p=6656</span>（ajaxzip3・2019）＝140日で「ajaxzip3」69表示・9.5位・クリック0／「ajaxzip3.zip2addr」61表示・7.0位・1クリック。未診断のままです。受注に遠いので、本日は <span class="font-mono">D-035</span> の分を優先しました。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-081</span>・<span class="font-mono">T-082</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-081</span>　「コーディングだけ外注するとき、渡す前に決める7つ——ディレクションは自社に残して、手戻りを減らす」　🔴　<span class="text-xs font-normal">（構成案だけ・執筆しません）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜいま</strong>：(1) <span class="font-mono">D-035</span>＝コーディング受託は積極的に受ける。board の記録では「この入口は goals.html にまだ1本も無い」です。
+    (2) GSC 140日＝「コーディング 外注 大阪」159表示・23.0位・クリック0（<span class="font-mono">alliance.html</span>）／「コーディング パートナー」58表示・10.4位／「コーディング 制作会社」5表示・21.6位／「コーディング請負」3表示・19.0位（後ろの3つの着地は募集停止中の <span class="font-mono">coder.html</span>）。<u>数字は小さく、仕事を探す人も混じります</u>。
+    (3) 競合：「コーディング 外注 注意点」の上位は代行会社と比較サイトです。coding-army の6点＝レスポンシブの有無・流し込みの単価・1ページの範囲・ガイドライン・見積の中身・短納期／hnavi＝依頼先の種類・費用相場・メリット・流れ（目次の観察）。<u>会社選びと費用が中心で、「発注側のディレクターが渡す前に何を決めるか」を本題にした記事は、見た範囲ではありません</u>（推測・上位の本文は全部読んでいません）。<br>
+    <strong>器</strong>：<strong>新しいURL</strong>。<span class="font-mono">T-074</span> は「技術がない業者」向け、こちらは「<strong>デザインもディレクションも自社にある</strong>」制作会社・代理店向けです。読者を分けます。</p>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：制作会社・広告代理店のディレクター、デザイナー。デザインと顧客対応は社内で持ち、実装の手だけが足りない。<strong>狙う検索意図・クエリ</strong>：「コーディング 外注」「コーディング 外注 注意点」「コーディング 代行 依頼」「デザインカンプ コーディング 依頼」。</li>
+      <li><strong>h2①　先に結論：外に出すのは実装だけ。判断は自社に残し、渡す前に7つ決める</strong></li>
+      <li><strong>h2②　コーディングだけの外注が合う場面、合わない場面</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　合う＝デザインが固まっている／案件が重なって手が足りない</li>
+          <li>h3　合わない＝原稿や要件がまだ動く（先に決めきるのが先）</li>
+        </ul></li>
+      <li><strong>h2③　渡す前に決める7つ</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　①デザインデータの形式と、書き出し済みの素材</li>
+          <li>h3　②デザインが無い画面幅をどうするか（レスポンシブ。→ <span class="font-mono">?p=3195</span> に1行）</li>
+          <li>h3　③動き（開閉・スライダー・ホバー）。静止画に写らない分</li>
+          <li>h3　④CMS の有無と、更新する人（WordPress なら → <span class="font-mono">T-065</span> に1行）</li>
+          <li>h3　⑤確認するブラウザと端末</li>
+          <li>h3　⑥フォーム・計測タグ・外部サービス（誰が用意するか）</li>
+          <li>h3　⑦納品の形・確認の回数・修正の線</li>
+        </ul></li>
+      <li><strong>h2④　見積もりがぶれるところ</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>1ページの数え方／同じ型のページの流し込み／修正の回数（<u>金額は書かない</u>）</li>
+        </ul></li>
+      <li><strong>h2⑤　質問の窓口を1本にする</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>お客様との話は自社で持つ。実装の質問は誰が受けて、誰が決めるか。公開後の修正は誰に頼むか。</li>
+        </ul></li>
+      <li><strong>h2⑥　よくある質問</strong>（2問）＝デザインデータだけ渡せば頼める？（<span class="font-mono">alliance.html</span>「AIファイルやPSDファイル…」まで）／費用は？（<u>金額は書かず <span class="font-mono">alliance.html</span> へ</u>）</li>
+      <li><strong>h2⑦　まとめ＋チェック表</strong>（7つを1枚に・渡す前にそのまま使える形）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>タイトル案</strong>：上の題／別案「デザインは社内、実装は外へ——コーディング外注の前に決める7つ」。</li>
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/partners/alliance.html</span>（本命）／<span class="font-mono">?p=3195</span>／<span class="font-mono">T-074</span>・<span class="font-mono">T-065</span>（公開されていれば）。</li>
+      <li><strong>CTA</strong>：4本リンクの橋は<u>使わない</u>。本文の終わりに「コーディングだけのご依頼も承っています。請負・外注のご案内はこちら。」＋ <span class="font-mono">alliance.html</span> の1本。</li>
+      <li><strong>用意すべき内容</strong>：<u>必須はありません</u>。あれば強くなるもの（🙋 任意）＝①Figma のデータでも受けるか（公開ページは AI・PSD まで）②大きな案件の受託の実績を、<u>依頼元もお客様も名前を出さずに</u>1段落書いてよいか。<u>お返事が無ければどちらも書きません</u>。<strong>慈恵様の名前と金額は書きません</strong>（社内の決定の記録にあるだけで、公表の可否を確かめていません）。</li>
+      <li><strong>効果</strong>：コーディング受託の入口を文章で1本つくる（③ 依頼）。<strong>問い合わせになるかは未確定</strong>。1社から複数件になりうる点が強みです（推測）。<strong>工数</strong>：中（上位3件の本文を読む）。<strong>優先度</strong>：🔴＝<u>書く順の最優先の提案です</u>。<strong>栓</strong>：― WP が動いてから（在庫を積まない方針のまま）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-082</span>　「ホームページにAIチャットを置く前に決める5つ——何に答えさせ、何に答えさせないか」　🟡　<span class="text-xs font-normal">（構成案だけ・執筆しません）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜいま</strong>：(1) 社長のお言葉「システム、AIも強化していきたい」「AIチャットは集客必要なので広告運用」。<strong>ブログに AI チャットの記事は、題を見る限り0本です</strong>（サイト内検索「チャット」5件はどれも別の話題・「ChatGPT」0件）。
+    (2) GSC 140日＝「チャットボット 24時間」102表示・8.2位・1クリック／「チャットボット 中小企業」29表示・13.6位（どちらも <span class="font-mono">/aichat/</span>）。<span class="font-mono">/service/aichat/</span> は90日110表示・13.7位・クリック0。
+    (3) 競合：「AIチャットボット 導入 中小企業 失敗」の上位はチャットボットの販売会社です。userlocal の5事例＝使われない・運用の手が足りない・画面の作り・会話の仕組み・解決しにくい課題に使った。<u>売る側の失敗事例が中心で、自社の答えられる範囲をどう決めるかを、小さな会社の持ち主の立場で書いた記事は、見た範囲ではありません</u>（推測・題と1件の見出しの観察）。<br>
+    <strong>器</strong>：<strong>新しいURL</strong>（このブログ）。<span class="font-mono">/aichat/blog/</span> に置くかは <span class="font-mono">Q-007</span> 待ちです。お返事が無いあいだは、このブログを既定にします。<br>
+    <strong>広告との関係</strong>：検索広告の行き先ではありません。広告で来た人が名前で調べ直したときの読み物、と位置づけます（推測）。</p>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：同じ質問への電話やメールに時間を取られている、中小企業の社長・Web 担当者。<strong>狙う検索意図・クエリ</strong>：「チャットボット 中小企業」「AIチャット ホームページ 設置」「チャットボット 24時間」「AIチャット 導入 注意点」。</li>
+      <li><strong>h2①　先に結論：置く前に「答えさせること」と「人につなぐこと」を分ける</strong></li>
+      <li><strong>h2②　AIチャットが得意なこと、苦手なこと</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　得意＝ページに書いてあることを、聞かれた形で返す／夜間も答える</li>
+          <li>h3　苦手＝書いていないことを正しく答える／その場で約束する</li>
+          <li>h3　FAQ ページとの違い（<span class="font-mono">?p=2096</span> に1行）</li>
+        </ul></li>
+      <li><strong>h2③　置く前に決める5つ</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　①何に答えさせるか（営業時間・場所・手順・よくある質問）</li>
+          <li>h3　②何に答えさせないか（金額の確定・契約・個別の判断）と、人への案内</li>
+          <li>h3　③何を覚えさせるか（ページ・PDF・ホームページに載っていない最新情報）</li>
+          <li>h3　④誰が、週にどれだけ会話を見るか</li>
+          <li>h3　⑤間違った答えが出たときに、どう直すか</li>
+        </ul></li>
+      <li><strong>h2④　いちばんの収穫は「質問の一覧」</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>お客様が本当に聞きたいことが言葉で残る。ページの直しに返す（<span class="font-mono">/service/aichat/</span> の「ユーザーの質問を分析」の範囲で）。</li>
+        </ul></li>
+      <li><strong>h2⑤　費用の見方</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>初期と月額の分け方、使った量で変わる部分があるか（<u>金額は書かず <span class="font-mono">/service/aichat/</span> へ</u>）。</li>
+        </ul></li>
+      <li><strong>h2⑥　よくある質問</strong>（3問）＝入れてすぐ答えられる？／間違えたら責任は？（一般論・<u>断定しない</u>）／小さな会社でも意味がある？</li>
+      <li><strong>h2⑦　まとめ＋チェック表</strong>（5つを1枚に）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>タイトル案</strong>：上の題／別案「AIチャットを入れて失敗しないために——中小企業が最初に決める5つ」。</li>
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/service/aichat/</span>（本命）／<span class="font-mono">?p=2096</span>。</li>
+      <li><strong>CTA</strong>：本文の終わりに「ホームページに置く AI チャットについては、こちらをご覧ください。」＋ <span class="font-mono">/service/aichat/</span> の1本。</li>
+      <li><strong>用意すべき内容</strong>：<u>必須はありません</u>。<strong>書かないこと</strong>＝モデルの名前（下の 📥 の件が片づくまで）・「SEO に効く」（<span class="font-mono">/service/aichat/</span> の記述の裏が取れていません）・導入先の社名と、お客様の声の引用（出すならページの記述のまま）。</li>
+      <li><strong>効果</strong>：AI チャットの2層目（比べる人）の読み物を1本つくる。<strong>検索の当たりは未確定</strong>で、数字は小さいです。<strong>工数</strong>：中（上位3件の本文を読む）。<strong>優先度</strong>：🟡。<strong>栓</strong>：― WP が動いてから（在庫を積まない）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-11-02）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：<span class="font-mono">data/blog-loop/ycom/from-president.md</span> に追記なし。mailbox 新着なし。<span class="font-mono">D-035</span> は <span class="font-mono">data/board/decisions.md</span> と <span class="font-mono">data/hp-loop/from-president.md</span> の代筆節から読みました。<strong>本日の新規質問はゼロ</strong>（未回答 7件のまま）。</li>
+      <li><strong>件数</strong>：B1＋T2。繰り越しは 171 → 174件です。決定の翌日なので、T は1本多く出しました。</li>
+      <li><strong>blog-improve の申し送り3点への返事</strong>：(a) <span class="font-mono">?p=5813</span> の仮の見出しは「行ごと外す」で可／(b) <span class="font-mono">?p=2117</span> へ送る行は、メモの削除の後か同じ回で可（差分のとおり）／(c) <span class="font-mono">?p=4154</span> の画像の <span class="font-mono">http://www.</span> は今回の差分に入れない（<span class="font-mono">B-037</span> と同じ別件）。</li>
+      <li><strong>次の起動分</strong>：blog-write（本日 05:30）＝新しい作業はありません。<span class="font-mono">T-081</span>・<span class="font-mono">T-082</span> は執筆しません。blog-improve（11/9 月 00:20）＝<span class="font-mono">B-135</span> を先に、続けて <span class="font-mono">B-131</span>・<span class="font-mono">B-133</span>・<span class="font-mono">B-134</span>。WP への書き込みは保留のまま。</li>
+      <li><strong>開発宛</strong>：新しい質問はありません。<span class="font-mono">Q-C</span>・<span class="font-mono">Q-D</span> は回答待ちのまま。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 140 の本文を <a href="archive.html#c140" class="underline">アーカイブ</a>へ原文のまま移しました。</li>
+      <li><strong>index の大きさ</strong>：今回の整理の後も目安の 80KB を大きく超えています（C139 に記録した「執筆担当への指示」の問題のまま）。</li>
+      <li><strong>自己改善（Step 7）</strong>：(1) 経営の決定がこのループの入力に届いていませんでした＝board の代筆先は hp-loop の from-president だけで、blog の from-president は 6/23 のままです。今回は別の調べ物の中で見つけました。kaizen に記録しました。(2) 「コーディング 外注 大阪」を買い手の語と言い切った C134 の書き方は、検索結果の1位が求人だったのを見ていませんでした＝語の性格は検索結果を見てから書きます。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（type=report・WP への作用を促す依頼なし）。Slack 日報を1本（blog-loop-ycom スレッド）。</li>
+      <li><strong>実行できなかったもの</strong>：<span class="font-mono">session-desk.py whoami</span>（承認待ち・宛名は mailbox の応答で確認）／WordPress の <span class="font-mono">get</span>。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 140（2026-11-01）＝ Cycle 141（2026-11-02）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c140">Cycle 140 — 2026-11-01（YCOM ブログ・日次）：<span class="text-sky-800"><span class="font-mono">B-134</span> 「ファーストビュー 高さ 画面いっぱい」1.1位・クリック0の記事の結論が2021年のまま／<span class="font-mono">T-080</span> 問い合わせフォームのメールが、気づかないうちに届かなくなるときの構成案</span></h2>
 
