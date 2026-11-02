@@ -30,3 +30,5 @@
 | RR-013 | hana-analysis-portal | websystem | `rr-rr-hana-analysis-portal` | 2026-10-08 | 2027-10-08 | 失効 | — | 2026-10-08 | 識別子の誤り（agent_id の接頭辞が二重 rr-rr-）。RR-014 で再発行 |
 | RR-014 | hana-analysis-portal | websystem | `rr-hana-analysis-portal` | 2026-10-08 | 2027-10-08 | 有効 | — |  |  |
 | RR-015 | tanoseemo | websystem | `rr-tanoseemo` | 2026-10-30 | 2027-10-30 | 有効 | — |  |  |
+| RR-016 | hana-client-portal | websystem | `rr-hana-client-portal` | 2026-11-02 | 2027-11-02 | 有効 | — |  |  |
+| RR-017 | site-analyzer | websystem | `rr-site-analyzer` | 2026-11-02 | 2027-11-02 | 有効 | — |  |  |
