@@ -534,7 +534,7 @@ def cmd_issue(args):
     ok = persist(d, "発行")
 
     print(f"✅ {number} を発行しました（案件: {cell(project)} / agent_id: {agent_id} "
-          f"/ テンプレ: {cell(agent_id)}）")
+          f"/ テンプレ: {cell(args.template)}）")
     print(f"   期限: {d[token]['expires_at']}（{args.days} 日）")
     shown, undone_shown, _ = read_migrations(d[token])
     if shown or undone_shown:

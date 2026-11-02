@@ -186,6 +186,8 @@ OUT="$(rr issue "テスト案件A" --id "Test_Proj" --template website)"; want_i
 OUT="$(rr issue "テスト案件A" --id test-proj)";        want_in "--template" "$OUT" "テンプレの指定は必須（取りに来られる範囲が決まる）"
 OUT="$(rr issue "テスト案件A" --id test-proj --template website)"; want_in "RR-005" "$OUT" "既存の最大番号の次を採番する"
 want_in "rr-test-proj" "$OUT" "--id が agent_id になる"
+want_in "テンプレ: website" "$OUT" "発行の控えにテンプレ名が出る（agent_id を出すと「どのテンプレで配ったか」が確かめられない）"
+want_not_in "テンプレ: rr-test-proj" "$OUT" "テンプレの欄に agent_id が入らない"
 want_in "RULE_REPORT_TOKEN=rr_" "$OUT" "配布用の .env を出す"
 want_in "RULE_UPDATE_URL" "$OUT" "更新の受け口も .env に入れさせる（同じトークンで取りに来る）"
 TOKV="$(printf '%s' "$OUT" | sed -n 's/.*RULE_REPORT_TOKEN=//p')"
