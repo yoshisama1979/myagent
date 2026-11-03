@@ -29,9 +29,12 @@ src = src.replace('API = os.path.join(ROOT, "bin", "hana-api.sh")',
                   'API = %s' % json.dumps(os.path.join(d, "api.sh")))
 src = src.replace('CLIENTS_CACHE = os.path.join(ROOT, "data", "clients-cache.json")',
                   'CLIENTS_CACHE = %s' % json.dumps(os.path.join(d, "clients.json")))
+src = src.replace('LEDGER = os.path.join(ROOT, "data", "comms", "chatwork", "ledger.md")',
+                  'LEDGER = %s' % json.dumps(os.path.join(d, "ledger.md")))
 open(os.path.join(d, "tb.py"), "w", encoding="utf-8").write(src)
 PY
 grep -q 'STATE = "' "$T/tb.py" || { echo "❌ 差し替え失敗（状態ファイル）" >&2; exit 2; }
+grep -q 'LEDGER = "' "$T/tb.py" || { echo "❌ 差し替え失敗（台帳）＝本物の台帳を読むテストになる" >&2; exit 2; }
 grep -q 'API = "'   "$T/tb.py" || { echo "❌ 差し替え失敗（API）" >&2; exit 2; }
 grep -q 'CLIENTS_CACHE = "' "$T/tb.py" || { echo "❌ 差し替え失敗（クライアント一覧）" >&2; exit 2; }
 
@@ -797,6 +800,171 @@ grep -q 'todo-brief.py outside' "$PROJ/${MG_RULE:-rules/modes/management.md}" \
 grep -q '期日を見る' "$PROJ/${MG_RULE:-rules/modes/management.md}" \
   && ok "★マネジメントのルールに『期日を見る』という<u>動作</u>が残っている（注意書きで置き換えない）" \
   || ng "★動作が注意書きに置き換わった＝2026-09-11 と同じ事故"
+
+echo
+echo "=== 期限なし×作業日なし（2026-11-02 マネジメント依頼・社長ご承認）==="
+# ★実データを使わない★ 台帳は git 外＝テスト環境に無いこともある。固有名詞は架空名のみ。
+cat > "$T/ledger.md" <<'LG'
+# Chatwork・メール 整理台帳（テスト用の架空データ）
+## 🔴 未解決
+C-001 | 🔴 | 💬 架空商事（1対1） | 🆕💰**11/01 見積のご依頼** | 残＝**①見積を出す** | 件名: 【架空商事】見積 |
+C-002 | 🔴 | 💬 架空工業（グループ） | 🆕**10/28 仕様のご質問** | 残＝**①回答する** | 件名: 【架空工業】仕様 |
+C-003 | 🟢 | 📧 架空印刷 | 💰**10/20 入金の確認が済みました** | 残＝**無し** | 件名: 【架空印刷】入金 |
+## 🟢 解決済み
+C-002 | 🟢 | 💬 架空工業（古い行・過去の節に残っているもの） | 済み | 残＝**無し** |
+LG
+# id 1=期限あり / 2=🔴💰 / 3=🔴 / 4=🟢(🔴の節にある行) / 5=台帳に無いタグ / 6,10,11=タグなし
+# 7=作業日が JST で「今日」/ 8=作業日が未来 / 9=説明の300文字より後ろにタグ
+LONG=$(python3 -c "print('あ'*320)")
+python3 - "$T" "$LONG" <<'PY'
+import json, sys, os
+d, long_desc = sys.argv[1], sys.argv[2]
+rows = [
+ {"id":1,"assignee_user_id":None,"due_date":"2026-08-01","updated_at":"2026-08-01","content":"期限あり [C-001]"},
+ {"id":2,"assignee_user_id":None,"due_date":None,"updated_at":"2026-10-20","content":"【架空商事】見積 [C-001]"},
+ {"id":3,"assignee_user_id":None,"due_date":None,"updated_at":"2026-10-20","content":"【架空工業】仕様 [C-002]"},
+ {"id":4,"assignee_user_id":None,"due_date":None,"next_work_date":"2026-11-01","updated_at":"2026-11-01","content":"【架空印刷】入金 [C-003]"},
+ {"id":5,"assignee_user_id":None,"due_date":None,"updated_at":"2026-10-20","content":"台帳に無いタグ [C-999]"},
+ {"id":6,"assignee_user_id":None,"due_date":None,"updated_at":"2026-10-01","content":"手で作った ToDo（タグなし・古い）"},
+ {"id":7,"assignee_user_id":None,"due_date":None,"next_work_date":"2026-11-03T15:00:00.000000Z","updated_at":"2026-11-03","content":"作業日が JST で今日"},
+ {"id":8,"assignee_user_id":None,"due_date":None,"next_work_date":"2026-12-01","updated_at":"2026-11-03","content":"作業日が未来"},
+ {"id":9,"assignee_user_id":None,"due_date":None,"updated_at":"2026-10-20","content":"説明の末尾にタグ","description":long_desc+" [C-001]"},
+ {"id":10,"assignee_user_id":None,"due_date":None,"updated_at":"2026-11-03","content":"手で作った ToDo（タグなし・新しい）"},
+ {"id":11,"assignee_user_id":None,"due_date":None,"next_work_date":"2026-10-20","updated_at":"2026-10-25","content":"手で作った ToDo（作業日を過ぎた）"},
+]
+json.dump(rows, open(os.path.join(d,"all.json"),"w",encoding="utf-8"), ensure_ascii=False)
+json.dump(rows, open(os.path.join(d,"open.json"),"w",encoding="utf-8"), ensure_ascii=False)
+PY
+U=$(tb 2026-11-04 undated)
+jq1() { printf '%s' "$U" | python3 -c "import json,sys;d=json.load(sys.stdin);$1"; }
+
+[ "$(jq1 'print(d["target_count"])')" = 8 ] \
+  && ok "対象は「期限が空 × 作業日が空か過去」だけ（11件中8件＝期限あり・作業日が今日・未来を除く）" || ng "対象の条件が違う" "$(jq1 'print(d["target_count"])')"
+printf '%s' "$U" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+ids={r['id'] for b in d['blocks'] for r in b['items']}
+assert 1 not in ids, '期限のある行が入っている'
+assert 8 not in ids, '作業日が未来の行が入っている'
+" && ok "期限がある行・作業日が未来の行は入らない（既存の区分が鳴らす／予定済み）" || ng "除外が効いていない"
+
+# ★JST★ 作業日 2026-11-03T15:00:00Z は JST では 11/04＝今日。[:10] で切ると 11/03＝過去になり誤って出る
+printf '%s' "$U" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+ids={r['id'] for b in d['blocks'] for r in b['items']}
+assert 7 not in ids, 'JST 補正が効いていない（UTC の 15:00 を前日と読んでいる）'
+" && ok "★作業日を JST で読む（UTC 15:00＝翌日の0時。[:10] で切ると1日早く読む＝2度実害）" \
+  || ng "★JST 補正が効いていない＝作業日が今日の行を『過ぎた』と言う"
+
+blk() { printf '%s' "$U" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+b=[x for x in d['blocks'] if x['kind']==sys.argv[1]][0]
+print(','.join(str(r['id']) for r in b['items']))" "$1"; }
+[ "$(blk red-money)" = "2,9" ] && ok "台帳🔴＋💰 の箱（💰は台帳が付けた印を読む・本文から推測しない）" || ng "red-money が違う" "$(blk red-money)"
+[ "$(blk red)" = "3" ] && ok "台帳🔴（💰なし）の箱" || ng "red が違う" "$(blk red)"
+[ "$(blk other-tagged)" = "4" ] \
+  && ok "★状態は行の2番目の欄から読む（🔴 の節にある 🟢 の行を 🔴 と言わない）" \
+  || ng "★節の見出しで状態を判定している＝閉じた用件を社長の列に積む" "$(blk other-tagged)"
+[ "$(blk tag-not-in-ledger)" = "5" ] && ok "タグはあるが台帳に無い行を別の箱にする（archive へ移った等）" || ng "tag-not-in-ledger が違う" "$(blk tag-not-in-ledger)"
+[ "$(blk untagged)" = "11,6,10" ] \
+  && ok "★タグが無い行も落とさない＝きっかけの #578 型（人が作った ToDo）が消えない" \
+  || ng "★タグなしの行が落ちている／並び順が違う" "$(blk untagged)"
+printf '%s' "$U" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+b=[x for x in d['blocks'] if x['kind']=='red-money'][0]
+assert [r['id'] for r in b['items']][0]==2, b['items']
+" && ok "説明の300文字より後ろにあるタグも拾う（生データで突合・切った文字列で判定しない）" \
+  || ng "表示用に切った説明でタグを探している＝長い経過の行が沈む"
+
+# ★保存則と排他★ 2026-11-03 の実装中、箱ごとに全行を filter したため 🔴💰 が red にも入り
+#   42件が二重計上された。「他に N 件あり」に使う数字なので、二重は判断材料を直接壊す。
+printf '%s' "$U" | python3 -c "
+import json,sys
+from collections import Counter
+d=json.load(sys.stdin)
+assert d['accounted']==d['target_count'], (d['accounted'], d['target_count'])
+assert sum(b['count'] for b in d['blocks'])==d['target_count']
+c=Counter(r['id'] for b in d['blocks'] for r in b['items'])
+dup=[i for i,n in c.items() if n>1]
+assert not dup, f'2つの箱に入っている: {dup}'
+" && ok "★1行は必ず1箱＝件数が二重にならない（保存則の検算つき）" \
+  || ng "★箱が排他になっていない＝件数が二重に増える"
+
+# 件数は全件・本文だけ絞る（一覧の「他に N 件あり」に使う）
+printf '%s' "$(tb 2026-11-04 undated --top 1)" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+rm=[b for b in d['blocks'] if b['kind']=='red-money'][0]
+assert rm['count']==2 and rm['shown']==1, rm
+assert d['target_count']==8, d['target_count']
+" && ok "★--top は本文だけ絞る＝count は全件返す（「他に N 件あり」の元）" || ng "★top が件数まで削っている"
+
+printf '%s' "$U" | grep -qE '"priority"|"score"|"recommend"' \
+  && ng "★ツールが優先度を決めている（判断はモードの仕事）" \
+  || ok "★ツールは優先度を決めない＝台帳の印で並べるだけ"
+printf '%s' "$U" | python3 -c "
+import json,sys
+d=json.load(sys.stdin); assert d['warnings']==[], d['warnings']
+assert d['ledger']['rows']==3 and d['ledger']['red']==2, d['ledger']
+" && ok "台帳の読み取り件数を返す（同じ C-NNN は新しい行を正とする＝C-002 は🔴のまま）" || ng "台帳の集計が違う"
+
+# ★台帳が無い環境★ git 外なので存在しないことがある。並べ替えができないだけで、行は隠さない。
+mv "$T/ledger.md" "$T/ledger.off"
+printf '%s' "$(tb 2026-11-04 undated)" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+assert d['warnings'], '警告が出ていない'
+assert d['target_count']==8, d['target_count']
+assert d['accounted']==8, d['accounted']   # 1件も消えない（どの箱に入るかは別問題）
+assert d['ledger']=={'rows':0,'red':0}, d['ledger']
+# 印で絞れない2つの箱（タグなし／台帳で見つからない）に全件が落ちる＝🔴 の並べ替えだけが失われる
+blind=sum(b['count'] for b in d['blocks'] if b['kind'] in ('untagged','tag-not-in-ledger'))
+assert blind==8, blind
+" && ok "★台帳が読めなくても行は全件返す＋警告を立てる（隠すと見落としが見えない）" \
+  || ng "★台帳が無いと行が消える／警告が出ない"
+mv "$T/ledger.off" "$T/ledger.md"
+
+# ルール側との連鎖（マネジメントが実際に呼ぶ形で書かれているか）
+# ★ルール側との連鎖★「見ろ」だけでは動かない＝一覧の<u>作り方</u>が名指しされていること
+#   （undated でも、手作業の逃げ道＝hana-api.sh todos で全件を引く形でもよい）。
+#   ⚠️ 条件そのもの（項目5）はマネジメント窓口のルールに入る予定のもので、2026-11-03 時点では
+#      まだコミットされていない。**他の窓口の未コミットのファイルに依存して赤にしない**
+#      （この検査でコミットを止めない＝判断は人間・check-onboarding-sync.py と同じ扱い）。
+MG_FILE="$PROJ/${MG_RULE:-rules/modes/management.md}"
+if grep -qE '作業日が空か過去' "$MG_FILE"; then
+  grep -qE 'todo-brief\.py undated|hana-api\.sh todos' "$MG_FILE" \
+    && ok "★ルールに一覧の作り方が名指しされている（undated か全件取得）" \
+    || ng "★条件はあるのに作り方が書かれていない＝毎朝この一覧が作られない"
+else
+  echo "  ⚠️ マネジメントのルールにまだ項目5（期限が空の ToDo も見る）が入っていません"
+  echo "     ＝連鎖の検査は保留。入ったらこの検査が自動で効きます"
+fi
+
+# ★🔴 と 💰 は同じ行に付いていること（2026-11-03 Codex 指摘）★
+# 1件の ToDo に複数の C-NNN が付く。別々の行の 🔴 と 💰 を足して「お金が動く用件」と言わない。
+cat > "$T/ledger.md" <<'LG2'
+## 🔴 未解決
+C-021 | 🔴 | 💬 架空商事 | 経緯（お金の印なし） | 残＝**①回答する** |
+C-022 | 🟢 | 📧 架空印刷 | 💰**入金の確認** | 残＝**無し** |
+LG2
+python3 - "$T" <<'PY'
+import json, os, sys
+d=sys.argv[1]
+rows=[{"id":21,"assignee_user_id":None,"due_date":None,"updated_at":"2026-10-20",
+       "content":"2つのタグが付いた行 [C-021] [C-022]"}]
+json.dump(rows, open(os.path.join(d,"all.json"),"w",encoding="utf-8"), ensure_ascii=False)
+json.dump(rows, open(os.path.join(d,"open.json"),"w",encoding="utf-8"), ensure_ascii=False)
+PY
+printf '%s' "$(tb 2026-11-04 undated)" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+got={b['kind']:[r['id'] for r in b['items']] for b in d['blocks'] if b['count']}
+assert got=={'red':[21]}, got
+" && ok "★🔴 と 💰 が別の行なら red-money に入れない（見出しと実態を食い違わせない）" \
+  || ng "★別々の行の 🔴 と 💰 を足して『お金が動く用件』と言っている" "$(tb 2026-11-04 undated | head -40)"
 
 echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"

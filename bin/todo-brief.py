@@ -22,6 +22,7 @@
   todo-brief.py record --assignee N --ids 1,2,3          # 今日提案した ID を記録
   todo-brief.py review --assignee N                      # 前回の消化率と次回の推奨件数
   todo-brief.py stale --assignee N                       # 提案済みで動きが無いもの（完了漏れの疑い）
+  todo-brief.py undated [--assignee N] [--top M]          # 期限が空×作業日が空か過去（台帳🔴を上に）
 """
 import argparse
 import datetime
@@ -66,6 +67,10 @@ HOLD_REASONS = {
     # 案件が無い用件は work 199 へ入れて起票はするが、**案件を作るお願い自体が
     # ToDo 本文に埋もれて社長に届かない**ので、確認列に立てて上がるようにする。
     "work-missing": "この用件の案件が HANAツールに無い＝案件の作成をお願いします",
+    # 2026-11-03 Codex 指摘＝起票の応答で作業日が空だったとき、警告を画面に出すだけだと
+    #   comms の無人サイクル（2時間おき）はログに流して終了コード0で進むため、**宿題が残らない**。
+    #   自動で入れ直すとToDoの二重作成の危険があるので、確認列に積んで人に渡す。
+    "work-date-not-set": "作業日が保存されなかった（API が受けていない）＝手で入れてください",
     "other":        "その他（社長に口頭で確認）",
 }
 
@@ -533,6 +538,158 @@ def cmd_outside(a):
     }, ensure_ascii=False, indent=1))
 
 
+# ── 「期限なし × 作業日なし」の見落とし（2026-11-02 マネジメント依頼・社長ご承認済み）──
+#  契機＝発注済みの案件（#578／#589）が優先の一覧から落ちた。`outside` は **due_date のある行しか
+#  区分しない**ため、期限が空の行は `internal`（件数だけ）に落ちて本文が1行も出ない。
+#  実測 2026-11-03（社長ぶん 未完了238件）＝期限が空 152件／そのうち作業日が空か過去 **140件**
+#  （空 94・過去 46）。台帳の C-NNN と突き合わせて 🔴 は 62件。
+#
+#  ★ここは「🔴 で絞る」のではなく「🔴 を上に置く」★
+#    ご依頼の字面は「🔴」だが、実測するときっかけの #578 には `[C-NNN]` のタグが無い
+#    （人が作った ToDo）。🔴 だけに絞ると**きっかけの行そのものが落ちる**＝本件の再発。
+#    よって 140件すべてを返し、印で並べ替えるだけにする。件数は必ず全件返す。
+#  ★「発注・着手の約束らしい行」を本文から推測しない★
+#    代わりに**台帳が自分で付けた 💰 の印**（お金が動く用件）を読む。ToDo の文面から
+#    「発注済みらしさ」を当てるのは推測なので、やらない（ご依頼「判定できないものを
+#    推測で上げない」）。印が無い行は印が無いまま、下の箱に件数つきで出す。
+LEDGER = os.path.join(ROOT, "data", "comms", "chatwork", "ledger.md")
+
+# 台帳の行＝`C-NNN | 状態 | ルーム | 経緯 | 残＝… | 件名: …` のパイプ区切り1行。
+# ★状態は「行の2番目の欄」から読む・節の見出しから読まない★
+#   実データでは「🔴 の節に 🟢 の行がある」（状態を変えた直後・移動の途中）。
+#   節で判定すると、閉じた用件を 🔴 として社長の列に積む。
+LEDGER_ROW_RE = re.compile(r"^\s*(C-\d{3,})\s*\|\s*([^|]*)\|")
+TODO_TAG_RE = re.compile(r"\[(C-\d{3,})\]")
+
+# 本文を並べる上限。★件数（count）は必ず全件返す★＝一覧の「他に N 件あり」に使う。
+UNDATED_TOP = 10
+
+
+def ledger_states(path=None):
+    """台帳（git外）から C-NNN ごとの印を読む。戻り＝({C-NNN: {red, money}}, 警告 or None)。
+
+    ★読めないことがある★ 台帳は git 追跡外なので、環境によっては存在しない。
+      そのときは**空で返して警告を立てる**＝並べ替えができないだけで、行は1件も隠さない
+      （隠すと「台帳が無い環境では見落としが見えない」という別の穴になる）。
+    """
+    try:
+        with open(path or LEDGER, encoding="utf-8") as f:
+            lines = f.readlines()
+    except OSError:
+        return {}, ("台帳が読めません（data/comms/chatwork/ledger.md）"
+                    "＝🔴・💰 での並べ替えができません。行は全件返します")
+    st = {}
+    for line in lines:
+        m = LEDGER_ROW_RE.match(line)
+        if not m:
+            continue
+        tag, state = m.group(1), m.group(2)
+        # ★最初に出た行を正とする★ 台帳は新しい順。同じ C-NNN が過去の節に残っていても
+        #   上（新しい）を採る＝「解決済みなのに 🔴 と言う」を防ぐ。
+        if tag not in st:
+            st[tag] = {"red": "🔴" in state, "money": "💰" in line}
+    return st, None
+
+
+# 1箱＝1行（名前・見出し・入る条件）。**上から順に最初に当たった箱に入る**＝1行は必ず1箱。
+# ⚠️ 箱を足すときは順番も一緒に考える（上が重い）。並び順を別の場所に持たせない。
+UNDATED_BLOCKS = [
+    ("red-money", "台帳🔴＋💰＝お金が動く用件（台帳が付けた印。本文からの推測ではありません）",
+     lambda r: r["ledger"] == "red" and r["ledger_money"]),
+    ("red", "台帳🔴＝未解決のまま台帳に残っています",
+     lambda r: r["ledger"] == "red"),
+    ("tag-not-in-ledger", "★タグはあるのに台帳で見つかりません（台帳が読めない／archive へ移った等）＝印で絞れないので目を通す",
+     lambda r: r["ledger"] == "unknown-tag"),
+    ("other-tagged", "台帳にはあるが🔴ではない（🟢・👥・📌）",
+     lambda r: r["ledger"] == "other"),
+    ("untagged", "★台帳に紐づきません（人が作った ToDo など）＝印では絞れないので必ず目を通す",
+     lambda r: r["ledger"] is None),
+]
+
+
+def _undated_order(r):
+    """作業日を過ぎたものを先（過ぎた日数の大きい順）→ 次に作業日が空（最終更新が古い順）。
+
+    ★日付は facts() が JST に直した値だけを見る★（`[:10]` で切ると1日早く読む＝2度実害）。
+    """
+    return (0 if r["next_work_over_days"] else 1,
+            -r["next_work_over_days"], -(r["stale_days"] or 0), r["id"] or 0)
+
+
+def undated_rows(items, ref, st):
+    """期限が空 × 作業日が空か過去 の行だけを返す（台帳の印を付けて）。
+
+    ★タグは生データから拾う★ `facts()` の `description` は表示用に300文字で切ってあるので、
+      切った文字列で探すと長い経過の末尾に付いたタグを落とす（2026-09-11 と同じ型）。
+    """
+    out = []
+    for i in items:
+        r = facts(i, ref)
+        if r["due"]:
+            continue                      # 期限があるものは既存の区分（tiers）が鳴らす
+        if r["next_work_date"] and not r["next_work_over_days"]:
+            continue                      # 今日・これからの作業日が入っている＝予定済み
+        raw = (i.get("content") or "") + " " + (i.get("description") or "")
+        tags = list(dict.fromkeys(TODO_TAG_RE.findall(raw)))
+        hits = [st[t] for t in tags if t in st]
+        if not tags:
+            state = None
+        elif not hits:
+            state = "unknown-tag"
+        elif any(h["red"] for h in hits):
+            state = "red"
+        else:
+            state = "other"
+        r["ledger_tags"] = tags
+        r["ledger"] = state
+        # ★🔴 と 💰 は**同じ行**に付いていることを要求する（2026-11-03 Codex 指摘）★
+        #   1件の ToDo に複数の C-NNN が付くことがある。別々の行の 🔴 と 💰 を足すと
+        #   「🔴＋💰＝お金が動く用件」という見出しが実態と食い違う（誤報の向きを作る）。
+        r["ledger_money"] = any(h["red"] and h["money"] for h in hits)
+        out.append(r)
+    return out
+
+
+def cmd_undated(a):
+    ref = today()
+    st, warn = ledger_states()
+    rows = undated_rows(_my_items(a), ref, st)
+    # ★1行は必ず1箱＝上から順に最初に当たった箱へ入れる★
+    #   各箱の条件を全行に当てる書き方（箱ごとに filter）だと `red-money` の行が `red` にも
+    #   入り、件数が二重に増える（2026-11-03 実装中に保存則の検算で検出＝42件が二重）。
+    #   「他に N 件あり」に使う数字なので、二重計上は社長の判断材料を直接壊す。
+    picked = {kind: [] for kind, _, _ in UNDATED_BLOCKS}
+    for r in rows:
+        for kind, _label, belongs in UNDATED_BLOCKS:
+            if belongs(r):
+                picked[kind].append(r)
+                break
+    blocks = []
+    for kind, label, _belongs in UNDATED_BLOCKS:
+        hit = sorted(picked[kind], key=_undated_order)
+        blocks.append({"kind": kind, "label": label, "count": len(hit),
+                       "shown": len(hit[:a.top]), "items": hit[:a.top]})
+    print(json.dumps({
+        "as_of": str(ref), "assignee": a.assignee,
+        "target_count": len(rows),
+        "top": a.top,
+        "warnings": [w for w in [warn] if w],
+        "note": ("期限（due_date）が空で、かつ次の作業日が空か過ぎている未完了 ToDo。"
+                 "`outside` は期限のある行しか区分しないため、ここは本文が1行も出ない死角でした。"
+                 "★🔴 で絞っていません＝台帳のタグが無い行（人が作った ToDo）も必ず返します。"
+                 "並び順は『台帳が付けた印』だけで決めています（本文から発注済みらしさを推測しません）。"
+                 "count は全件・items は top 件だけ。どれをやるかは選びません＝判断はモードの仕事"),
+        "ledger": {"rows": len(st), "red": sum(1 for v in st.values() if v["red"])},
+        "work_date": {
+            "empty": sum(1 for r in rows if not r["next_work_date"]),
+            "past": sum(1 for r in rows if r["next_work_over_days"]),
+        },
+        "blocks": blocks,
+        # 保存則の検算用＝どの行も必ずどこか1つの箱に入っている（テストで固定）
+        "accounted": sum(b["count"] for b in blocks),
+    }, ensure_ascii=False, indent=1))
+
+
 def cmd_record(a):
     ids = [int(x) for x in a.ids.split(",") if x.strip()]
     if not ids:
@@ -738,7 +895,8 @@ def cmd_hold(a):
 def main():
     p = argparse.ArgumentParser()
     sub = p.add_subparsers(dest="cmd", required=True)
-    for name in ("candidates", "outside", "record", "review", "stale", "check", "check-batch", "hold"):
+    for name in ("candidates", "outside", "undated", "record", "review", "stale",
+                 "check", "check-batch", "hold"):
         q = sub.add_parser(name)
         q.add_argument("--assignee", type=int, default=None)
         if name == "candidates":
@@ -746,6 +904,8 @@ def main():
         if name == "outside":
             q.add_argument("--work-date-top", type=int, default=WORK_DATE_TOP,
                            dest="work_date_top")
+        if name == "undated":
+            q.add_argument("--top", type=int, default=UNDATED_TOP)
         if name == "record":
             q.add_argument("--ids", required=True)
         if name == "check":
@@ -754,7 +914,8 @@ def main():
         if name == "hold":
             q.add_argument("--add"); q.add_argument("--reason"); q.add_argument("--resolve")
     a = p.parse_args()
-    {"candidates": cmd_candidates, "outside": cmd_outside, "record": cmd_record, "review": cmd_review,
+    {"candidates": cmd_candidates, "outside": cmd_outside, "undated": cmd_undated,
+     "record": cmd_record, "review": cmd_review,
      "stale": cmd_stale, "check": cmd_check, "check-batch": cmd_check_batch,
      "hold": cmd_hold}[a.cmd](a)
 

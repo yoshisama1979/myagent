@@ -68,7 +68,12 @@ ROW = re.compile(r"^\s*(C-\d{3})\s*\|")
 #   `"👥" in line` をすり抜けて対象に混ざっていた（2026-09-03 実測＝C-039・C-125）。
 FILE_STATES = ("👥", "🔴")
 
-HOLD_PRIORITY = ["assignee-unclear", "no-fields", "work-ambiguous",
+# ★先頭が最優先（同じ行に複数あてはまるとき、どの理由を見せるか）★
+#   `work-date-not-set` を先頭に置くのは、起票**後**に付く唯一の理由だから。
+#   後ろに置くと、次の hold-sync で「重複の疑い」（起票済みなので必ず当たる）に
+#   上書きされ、作業日が入っていない宿題が静かに消える。
+HOLD_PRIORITY = ["work-date-not-set",
+                 "assignee-unclear", "no-fields", "work-ambiguous",
                  "duplicate-suspect", "work-missing", "due-needs-human"]
 
 
@@ -126,6 +131,54 @@ def valid_date(v):
         return str(datetime.date.fromisoformat(v)) if RE_DATE.match(v) else None
     except ValueError:
         return None
+
+
+JST = datetime.timezone(datetime.timedelta(hours=9))
+
+
+def today():
+    """基準日＝**JST の今日**。テストから固定できるようにする（本番では当日）。
+
+    ★`date.today()` を使ってはいけない★ 実行ホストの TZ に依存する（2026-11-03 Codex 指摘）。
+      UTC のホストでは JST の 0:00〜8:59 が前日として計算され、金曜の早朝に作った ToDo の
+      作業日が「月曜」ではなく「金曜」になる。いまの VPS は JST だが、ここが前提になると
+      移設・コンテナ化で静かに1日ずれる（この repo が2度踏んだ日付ずれと同じ型）。
+    """
+    return datetime.date.fromisoformat(
+        os.environ.get("TODO_POST_TODAY") or datetime.datetime.now(JST).date().isoformat())
+
+
+# ── 自動起票には必ず「作業日」を入れる（2026-11-03 社長ご決定・マネジメント依頼 e6a8e3）──
+#  契機＝🔴 の自動起票の多くが作業日なしで入り、朝の一覧に一度も映らなかった。
+#  実測 2026-11-03＝直近28日の自動起票85件のうち **53件（62%）が作業日なし**。
+#
+#  ★既定は「翌営業日」＝翌日。土日に当たったら月曜へ寄せる★（社長ご決定 2026-11-03
+#    「私の会社の ToDo ですね。でしたら月曜日にしてもらって構いません」）
+#    ＝ここで決めるのは**はなさか自身がいつ着手するか**なので、こちらの休みで寄せてよい。
+#    寄せる理由＝寄せないと金曜の分が土曜の予定になり、月曜には必ず「作業日を過ぎて未完了」で
+#    出る。その印が毎週増えると**「過ぎた」が普通の状態になって印として働かなくなる**。
+#  ⚠️ **祝日は寄せられない**（祝日表がこのリポジトリに無い＝持てば必ず古くなる）。
+#     祝日に当たった分は翌日に「過ぎて未完了」で出る＝隠れないが、印は1日ぶん汚れる。
+#     祝日表を入れるかは別件（必要になったら起票）。
+#  ★期日を追い越さない★ 期日が明示されていて翌営業日より前なら、作業日は期日の当日にする
+#    （約束の日より後ろに「やる予定」が来るのを防ぐ。**土曜が期日なら土曜のまま**＝
+#     相手との約束はこちらの休みで動かさない）。
+#  ★ここで「至急だから今日」などと読み替えない★ 強度・逆算から日付は作らない（v1.1 の線）。
+def default_work_date(due, ref=None):
+    """自動起票の既定の作業日。戻りは `YYYY-MM-DD`。
+
+    due は「根拠: 明示」で確定した期日だけが渡ってくる（None のこともある）。
+    """
+    ref = ref or today()
+    nxt = ref + datetime.timedelta(days=1)
+    while nxt.weekday() >= 5:          # 5=土 6=日 → 月曜へ寄せる
+        nxt += datetime.timedelta(days=1)
+    d = valid_date(due or "")
+    if d:
+        due_date = datetime.date.fromisoformat(d)
+        if due_date < nxt:
+            return str(due_date)       # 約束の日は寄せない（土日でもその日）
+    return str(nxt)
 
 
 def field_value(line, name):
@@ -242,6 +295,11 @@ def plan_rows():
             "description": f"Chatworkの会話から自動起票（{tag}）。\n{body}"
                            + (FALLBACK_NOTE if fallback else ""),
             "due_date": due,
+            # ★作業日は**必ず**入れる（期日と違って「人が決める」送りにしない）★
+            #   期日＝相手との約束なので台帳に明示が無ければ入れない。作業日＝こちらの予定なので
+            #   空にすると朝の一覧に一度も出ない＝用件そのものが消える（本件の実害）。
+            #   出た日に「今日はやらない」と決めたら動かす＝規律はそこで回す。
+            "next_work_date": default_work_date(due),
         })
     return todo, hold
 
@@ -358,13 +416,15 @@ def plan_skipped():
 def cmd_plan(a, do_post=False):
     ready, skipped = split_by_duplicate(*plan_rows())
     made = []
+    warnings = []
+    held_after_create = []      # 起票したあとに分かった宿題（作業日が保存されなかった等）
     for it in ready:
         if not do_post:
             made.append({**it, "would_create": True})
             continue
         payload = {k: v for k, v in it.items()
                    if k in ("work_id", "user_id", "assignee_user_id", "content",
-                            "description", "due_date") and v is not None}
+                            "description", "due_date", "next_work_date") and v is not None}
         r = subprocess.run(["bash", API, "create-todo", json.dumps(payload, ensure_ascii=False)],
                            capture_output=True, text=True, timeout=180)
         try:
@@ -373,15 +433,30 @@ def cmd_plan(a, do_post=False):
             sys.exit(f"ERROR: 起票の応答を読めません（{it['tag']}）: {r.stdout[:160]}")
         if not res.get("success") or t.get("assignee_user_id") != it["assignee_user_id"]:
             sys.exit(f"ERROR: 起票に失敗、または担当が意図と違います（{it['tag']}）: {r.stdout[:200]}")
+        # ★作業日が落ちていないかを応答で確かめる★
+        #   送ったのに空で返るなら、API が `next_work_date` を受けていない＝
+        #   「入れたつもり」で朝の一覧に出ないまま進む（本件の実害そのものの再発）。
+        #   ⚠️ 日付の中身は検算しない＝JST の読み方（UTC 15:00Z＝翌日0時）を2箇所に持たないため。
+        #      表示と比較は todo-brief.py 側の仕事。ここは「空かどうか」だけを見る。
+        if it.get("next_work_date") and not t.get("next_work_date"):
+            warnings.append(f"{it['tag']}: 作業日が保存されませんでした"
+                            f"（送信した値 {it['next_work_date']}）"
+                            "＝API が next_work_date を受けていない可能性。手で入れてください")
+            # ★画面の警告だけでは宿題が残らない★ comms の無人サイクルは出力をログへ流し、
+            #   終了コード0なら保留マーカーを消す＝誰も気づかないまま「起票成功」で終わる。
+            #   自動で入れ直すと二重作成の危険があるので、確認列に積んで人へ渡す。
+            held_after_create.append((it["tag"], "work-date-not-set"))
         made.append({"tag": it["tag"], "id": t.get("id"), "work_id": t.get("work_id"),
-                     "assignee": t.get("assignee_user_id"), "due_date": t.get("due_date")})
+                     "assignee": t.get("assignee_user_id"), "due_date": t.get("due_date"),
+                     "next_work_date": t.get("next_work_date")})
     # ★見送りは必ず確認列へ回す。ここが無いと「出力に出して終わり」になり、
     #   社長に上がる場が一度も開かない（2026-09-03 に実際にそうなっていた）。
-    _, add, gone = hold_plan(skipped)
+    _, add, gone = hold_plan(skipped + held_after_create)
     if do_post:
         hold_apply(add)
     print(json.dumps({"mode": "post" if do_post else "plan",
                       "created" if do_post else "would_create": made,
+                      "warnings": warnings,
                       "skipped": [{"tag": t, "reason": r} for t, r in skipped],
                       "hold_added" if do_post else "hold_would_add":
                           [{"tag": t, "reason": c} for t, c in add],

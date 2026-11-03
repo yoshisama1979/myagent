@@ -423,5 +423,88 @@ echo "$r9" | jq_ "[x['work_id'] for x in d['would_create']]==[131]" | grep -q Tr
   && ok "★本文中の『案件: 999』でなく、列の『案件: 131』を読む" || ng "本文を欄と読み違えた" "$r9"
 
 echo
+echo "=== 自動起票には必ず作業日を入れる（2026-11-03 社長ご決定＝翌営業日・土日は月曜へ）==="
+led "C-910 | 👥 | 💬 R〔A→B〕 | 期日なし | 次 | 担当: 担当A | 案件: 131 | 期日: 無し | 根拠: 無し | 最終: 11/03 | cw: 1-9" \
+    "C-911 | 👥 | 💬 R〔A→B〕 | 明示の期限（先） | 次 | 担当: 担当A | 案件: 131 | 期日: 2026-11-20 | 根拠: 明示 | 最終: 11/03 | cw: 1-10" \
+    "C-912 | 👥 | 💬 R〔A→B〕 | 明示の期限（今日） | 次 | 担当: 担当A | 案件: 131 | 期日: 2026-11-03 | 根拠: 明示 | 最終: 11/03 | cw: 1-11" \
+    "C-913 | 👥 | 💬 R〔A→B〕 | 逆算 | 次 | 担当: 担当A | 案件: 131 | 期日: 2026-11-10 | 根拠: 逆算 | 最終: 11/03 | cw: 1-12"
+wd() { printf '%s' "$1" | python3 -c "
+import json,sys
+d=json.load(sys.stdin)
+print([x.get('next_work_date') for x in d['would_create'] if x['tag']==sys.argv[1]][0])" "$2"; }
+r=$(TODO_POST_TODAY=2026-11-03 tp plan)   # 2026-11-03 は火曜
+[ "$(wd "$r" C-910)" = "2026-11-04" ] \
+  && ok "★期日が無い行にも作業日が入る（翌日）＝これが空だと朝の一覧に一度も出ない" \
+  || ng "★作業日が入っていない（本件の実害そのもの）" "$(wd "$r" C-910)"
+[ "$(wd "$r" C-911)" = "2026-11-04" ] && ok "期日が先にあっても作業日は翌営業日（期日の直前まで待たない）" || ng "期日から逆算してしまっている" "$(wd "$r" C-911)"
+[ "$(wd "$r" C-912)" = "2026-11-03" ] \
+  && ok "★期日を追い越さない（期日が翌営業日より前なら期日の当日）" || ng "★約束の日より後ろに作業日が来ている" "$(wd "$r" C-912)"
+[ "$(wd "$r" C-913)" = "2026-11-04" ] \
+  && ok "★根拠が『逆算』でも作業日は入る（期日は入れない＝線は従来どおり）" || ng "逆算の行に作業日が入らない" "$(wd "$r" C-913)"
+printf '%s' "$r" | jq_ "[x['due_date'] for x in d['would_create'] if x['tag']=='C-913']==[None]" | grep -q True \
+  && ok "★作業日を足しても『逆算の期日は入れない』が守られている" || ng "逆算から期日を作ってしまった" "$r"
+
+# ★土日は月曜へ寄せる（社長ご決定）★ 2026-11-06 は金曜＝翌日は土曜
+r2=$(TODO_POST_TODAY=2026-11-06 tp plan)
+[ "$(wd "$r2" C-910)" = "2026-11-09" ] \
+  && ok "★金曜に起票した分は月曜へ寄せる（土日を予定日にしない＝「過ぎた」の山を増やさない）" \
+  || ng "★土日に寄せていない" "$(wd "$r2" C-910)"
+r3=$(TODO_POST_TODAY=2026-11-07 tp plan)   # 土曜に起票＝翌日も日曜
+[ "$(wd "$r3" C-910)" = "2026-11-09" ] && ok "土曜に起票した分も月曜（日曜を飛ばす）" || ng "日曜を飛ばしていない" "$(wd "$r3" C-910)"
+# 期日が土曜なら土曜のまま＝相手との約束はこちらの休みで動かさない
+led "C-914 | 👥 | 💬 R〔A→B〕 | 期日が土曜 | 次 | 担当: 担当A | 案件: 131 | 期日: 2026-11-07 | 根拠: 明示 | 最終: 11/03 | cw: 1-13"
+r4=$(TODO_POST_TODAY=2026-11-06 tp plan)
+[ "$(wd "$r4" C-914)" = "2026-11-07" ] \
+  && ok "★期日が土曜なら作業日も土曜のまま（約束の日はこちらの休みで動かさない）" \
+  || ng "★約束の日を月曜へずらしている" "$(wd "$r4" C-914)"
+
+echo
+echo "=== 作業日が本当に保存されたかを応答で確かめる ==="
+led "C-910 | 👥 | 💬 R〔A→B〕 | 期日なし | 次 | 担当: 担当A | 案件: 131 | 期日: 無し | 根拠: 無し | 最終: 11/03 | cw: 1-9"
+: > "$FAKE_CALLS"
+TODO_POST_TODAY=2026-11-03 tp post >/dev/null
+grep -q '"next_work_date": "2026-11-04"' "$FAKE_CALLS" \
+  && ok "★起票の送信内容に作業日が入っている（payload の許可リストに入れ忘れていない）" \
+  || ng "★送信していない＝ツールの中だけで決めて API に渡していない" "$(cat "$FAKE_CALLS")"
+# ★API が作業日を落としたら黙らない★（受けていないのに「入れたつもり」で進むと本件が再発する）
+cat > "$T/api-drop.sh" <<'DROP'
+#!/bin/bash
+echo "$2" >> "$FAKE_CALLS"
+python3 -c "
+import json,sys
+p=json.loads(sys.argv[1]); p['id']=999; p.pop('next_work_date',None)
+print(json.dumps({'success':True,'data':p}))" "$2"
+DROP
+chmod +x "$T/api-drop.sh"
+rp=$(FAKE_API="$T/api-drop.sh" TODO_POST_TODAY=2026-11-03 tp post)
+printf '%s' "$rp" | jq_ "len(d['warnings'])==1 and '作業日が保存されませんでした' in d['warnings'][0]" | grep -q True \
+  && ok "★応答に作業日が無ければ警告を出す（API が受けていないことを黙って見逃さない）" \
+  || ng "★作業日が落ちても黙って成功にしている" "$rp"
+rp2=$(TODO_POST_TODAY=2026-11-03 tp post)
+printf '%s' "$rp2" | jq_ "d['warnings']==[]" | grep -q True \
+  && ok "保存されていれば警告は出さない（鳴りっぱなしにしない）" || ng "正常でも警告が出ている" "$rp2"
+
+# ★基準日は JST 固定（2026-11-03 Codex 指摘）★ ホストの TZ に依存すると移設で1日ずれる
+TZ=UTC python3 -c "
+import importlib.util, datetime, sys
+spec=importlib.util.spec_from_file_location('tp', sys.argv[1])
+m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+jst=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).date()
+assert m.today()==jst, (m.today(), jst)
+" "$T/tp.py" && ok "★基準日は JST 固定（TZ=UTC のホストでも JST の今日）" \
+  || ng "★date.today() を使っている＝ホストの TZ で1日ずれる"
+
+# ★作業日が保存されなかったら確認列に積む（画面の警告だけでは宿題が残らない）★
+led "C-910 | 👥 | 💬 R〔A→B〕 | 期日なし | 次 | 担当: 担当A | 案件: 131 | 期日: 無し | 根拠: 無し | 最終: 11/03 | cw: 1-9"
+rm -f "$T/hold-state.json"
+rh=$(FAKE_API="$T/api-drop.sh" TODO_POST_TODAY=2026-11-03 tp post)
+printf '%s' "$rh" | jq_ "any(x['reason']=='work-date-not-set' for x in d['hold_added'])" | grep -q True \
+  && ok "★作業日が落ちたら確認列に積む（無人サイクルはログに流して終わるので画面だけでは消える）" \
+  || ng "★確認列に積んでいない＝宿題が残らない" "$rh"
+python3 "$T/tb_real.py" hold | jq_ "any(x['tag']=='C-910' and x['reason']=='work-date-not-set' for x in d['items'])" | grep -q True \
+  && ok "★確認列に実際に載っている（区分が未登録だと弾かれて『積んだつもり』になる）" \
+  || ng "★確認列に載っていない" "$(python3 "$T/tb_real.py" hold)"
+
+echo
 printf '合計: 合格 %s ／ 不合格 %s\n' "$P" "$N"
 [ "$N" -eq 0 ] || exit 1
