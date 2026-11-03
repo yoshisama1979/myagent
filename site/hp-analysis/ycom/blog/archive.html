@@ -179,6 +179,145 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 142（2026-11-03）＝ Cycle 143（2026-11-04）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c142">Cycle 142 — 2026-11-03（YCOM ブログ・日次）：<span class="text-rose-700">ブログに「弊社は基本的にシステムは社内ではやらない」が残っています（<span class="font-mono">?p=6721</span>・2019）</span>／<span class="text-sky-800"><span class="font-mono">B-136</span> その直後に1行・<span class="font-mono">T-083</span> WordPress に機能を足すときの分かれ目</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-11-03）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。最終日は 10/31。10/06〜10/31＝クリック1,034・表示45,515・CTR2.27%・平均9.5位。個別＝ページ別90日／<span class="font-mono">?p=6721</span>・<span class="font-mono">/service/system/</span>・<span class="font-mono">/service/web/wordpress.html</span> の検索語90日／「システム」「開発」「業務」「カスタマイズ」「プラグイン」を含む語（140日）。</li>
+      <li><strong>GA4</strong>（<span class="font-mono">analytics_265729912</span>）＝<span class="font-mono">/service/system/</span> の閲覧だけ取得（8/05〜11/03）。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝定点（<span class="font-mono">?p=8365・2117・8299</span>）／<span class="font-mono">/service/system/</span>・<span class="font-mono">/service/web/wordpress.html</span>・<span class="font-mono">?p=6721</span> の本文／サイト内検索「システム」「システム開発」「システム会社」「提携している」「社内では」「Laravel」「カスタムフィールド」。<strong>WordPress（<span class="font-mono">wp-draft.py get</span>）は未実施</strong>。</li>
+      <li><strong>競合</strong>（<span class="font-mono">hp-serp</span>）＝3語を取得。<u>読んだのは bundlyze の1本の全文・fixit の目次・wpmake と hnavi の見出しまで</u>。他は題の観察です。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<span class="font-mono">Q-C</span>・<span class="font-mono">Q-D</span>（開発宛）の回答はまだありません。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。<strong>board</strong>：<span class="font-mono">D-035</span> の後に新しい決定はありません。<strong>執筆担当の報告</strong>：blog-write は 11/02 05:30 の回が意図どおり作業なし（<span class="font-mono">drafts-log.md</span>）。blog-improve は 11/02 00:20 の後の起動なし。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-rose-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-rose-800 mb-2">🧭 ブログから見た「システム開発」の入口（<span class="font-mono">D-035</span> の続き）</h3>
+    <p class="text-xs mb-2">昨日のコーディング受託・AI に続いて、本日はシステム開発の側を見ました。<strong>入口はありません</strong>。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">見たもの</th><th class="py-1 pr-2">結果</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">ブログの本文に「システム開発」</td><td class="py-1 pr-2"><strong>サイト内検索で0件</strong>（WordPress 標準の検索＝題と本文が対象。全記事を読んだわけではありません）。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">検索からの「システム開発」</td><td class="py-1 pr-2">語を含む検索は <strong>140日で0表示</strong>（10/01 の C110 と同じ）。「webシステム 大阪」26表示・63.2位がトップページに着いているのが最も近い語です。「業務」を含む語は0行です。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">受け皿 <span class="font-mono">/service/system/</span></td><td class="py-1 pr-2">GSC 90日＝検索語の行で計3表示・クリック0。GA4 90日＝閲覧7回・6人。<u>ページの中身は十分あります</u>（対応できる種類・進め方・「ヒアリングから見積までは無料」）。</td></tr>
+        <tr><td class="py-1 pr-2">ブログが書いている自社の立場</td><td class="py-1 pr-2"><strong class="text-rose-700"><span class="font-mono">?p=6721</span> に「弊社は基本的にシステムは社内ではやらないんですが」</strong>＝下の <span class="font-mono">B-136</span>。</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs"><strong>同じ北区の会社の動き（観察）</strong>：検索結果で読んだ <span class="font-mono">bundlyze.co.jp</span>（大阪市北区）は、2026年9〜10月の公開日で「システムを作った会社と連絡が取れない」「大阪でシステム開発を頼む」「請負か準委任か」の記事を出しています（1本の全文と、その関連記事欄の観察）。読者を発注する中小企業に置いた書き方です。<u>「システム開発 大阪」の語の順位は測っていません</u>。11/15 の論点へ出せる材料として 📥 に置きました。</p>
+  </div>
+
+  <div class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📉 過去の提案の振り返り（PDCA）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong><span class="font-mono">T-058</span>・<span class="font-mono">T-062</span>・<span class="font-mono">T-072</span>（システム側の3本・どれも未執筆）</strong>＝検索の入口は 10/01 の測定から動いていません。公開が動いていないので、提案の良し悪しはまだ測れません。</li>
+      <li><strong>料金ページの週の比較</strong>＝10/28〜11/3 の週は本日で終わりますが、GSC の最終日は 10/31 です。データがそろう 11/5〜11/6 ごろに並べます。</li>
+      <li><strong>自己訂正</strong>＝以前のサイクルで <span class="font-mono">?p=6721</span> を「事業から遠い読者＝対象外」と書きました。読者の見立ては今も同じです。ただ、<u>本文の中の自社の立場は読んでいませんでした</u>。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から79日目）</strong>。本日も公開URLは HTTP500（下書きのときの応答）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ</strong>＝本日も公開ページの本文に残っています（公開の 7/15 から111日）。<span class="font-mono">?p=8299</span> の「［画像：…］」の1行（<span class="font-mono">B-122</span>）も本日残っています。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝58日目・未回答。次の枠は 11/7（土）です。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-136</span>）</h3>
+  <div class="bg-white border-2 border-rose-300 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-rose-900 mb-2"><span class="font-mono">B-136</span>　<span class="font-mono">?p=6721</span>（Laravel の POST・代表・2019）の「弊社は基本的にシステムは社内ではやらないんですが」の直後に、いまの立場の1行　🟡　<span class="text-xs font-normal">（差分作りは栓なし／🔒 WP 反映）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>観点</strong>：E-E-A-T（信頼）／鮮度。②信頼の層の一手です。お客様や同業者が会社を調べたときに読む面の、事実の矛盾を消します。</li>
+      <li><strong>観察</strong>（事実）：
+        (1) 本文に「弊社は基本的にシステムは社内ではやらないんですが、提携しているシステム会社の方も最近はLAravelでの案件が増えてるって言ってました。」があります（2019年7月25日・11/03 取得）。
+        (2) 同じサイトの <span class="font-mono">/service/system/</span> は「実際に開発する技術者がお話を伺います」「技術者が直接ヒアリング」です。<strong>読み比べると、逆のことを書いています</strong>。
+        (3) 90日＝8クリック・339表示・10.0位。語は「laravel post」24表示・7.2位が中心で、「laravel 開発会社」も1表示あります。
+        (4) サイト内検索で、同じ趣旨の記事は「システム会社」「提携している」とも <span class="font-mono">?p=6721</span> の1本だけでした。「社内では」の残り2本（<span class="font-mono">?p=2291・5917</span>）は本文の該当行を読み、別の話でした。<u>言い回しが違う記事までは確かめていません</u>。</li>
+      <li><strong>なぜ問題か</strong>：読者の多くは学習中の人で、影響は大きくありません（推測）。ただ <span class="font-mono">D-035</span> はシステムを伸ばす決定です。「Laravel 開発会社」で調べた人や、依頼を考えて会社を調べた人が読むと、「システムはやらない会社」に見えます。数字は小さく、直す手間はもっと小さい件です。</li>
+      <li><strong>改善案（差分の要点）</strong>：該当の文の直後に1行：<br>
+        「※2019年7月時点の話です。現在は、当社でもシステム開発をお受けしています。」＋ <span class="font-mono">/service/system/</span> へのリンク（「システム開発について」）。<br>
+        <u>代表の文章・口調・コード・題は変えない。CTA は足さない。<span class="font-mono">B-135</span> の受託の1行はこの記事に広げない</u>。</li>
+      <li><strong>効果</strong>：矛盾が1つ消える（② 信頼）。<strong>アクセスや問い合わせが増える提案ではありません</strong>。<strong>工数</strong>：5分。<strong>優先度</strong>：🟡。<strong>栓</strong>：差分作りは栓なし／WP への反映は 🔒。ご判断は要りません（残すなら1行で却下を）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-4 mb-6 text-xs text-gray-800">
+    <p class="font-bold mb-1">今回見送った候補</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li>新しいテーマ「システムを作った会社と連絡が取れない」（引き継ぎ）＝上位8件が開発会社の専用記事で、同じ北区の会社が9月末に出しています。さらに <span class="font-mono">/service/system/</span> に「他社が作ったシステムを引き受ける」という記述がありません。<strong>事実が確かめられないので、本日は立てません</strong>。</li>
+      <li><span class="font-mono">?p=6656</span>（ajaxzip3・2019）＝2日続けて見送り。受注に遠いので、システムの入口を先にしました。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-083</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-083</span>　「WordPressに機能を足したいとき、どう頼む？——プラグイン・カスタマイズ・別のシステムの分かれ目」　🟡　<span class="text-xs font-normal">（構成案だけ・執筆しません）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜいま</strong>：(1) <span class="font-mono">/service/system/</span> の悩みの一覧に「WordPressに独自の機能を足したいが、対応してくれる会社が見つからない」、対応の種類に「WordPress活用・拡張」があります。<strong>ホームページの読者からシステム開発へ渡る、いちばん短い橋です</strong>。
+    (2) GSC 90日＝<span class="font-mono">/service/web/wordpress.html</span> に「ワードプレスカスタマイズ 大阪」<strong>88表示・10.4位・クリック0</strong>。同じページの上位10語で計553表示・クリック0です。<u>地名つきの語は機械の検索が混じる可能性があります</u>（推測）。「プラグイン」を含む語は0行で、需要の証拠はこの1語だけです。
+    (3) 競合：「WordPress 業務システム 開発 依頼」の上位は会社一覧（biz）・費用相場（ripla）・独自プラグインの代行（wpmake＝メリット・流れ・会社の選び方）・作り手向けの解説（hnavi＝自作テーマの作り方）。「WordPress カスタマイズ 外注」の上位はクラウドソーシング（lancers）と、自分で直す手順です。<u>発注する側が「どの形で頼むか」を決める記事は、見た範囲ではありません</u>（推測・題と2件の見出しの観察）。<br>
+    <strong>器</strong>：<strong>新しいURL</strong>。<span class="font-mono">T-041</span>（できないときの症状別）・<span class="font-mono">T-032</span>（どこまで自分で触るか）・<span class="font-mono">T-065</span>（WordPress で作ってもらう前）とは時点が違います。こちらは「動いているサイトに機能を足す」ときです。システム側の4本目です（<span class="font-mono">T-058・T-062・T-072</span>）。</p>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：WordPress の会社サイトを持つ、中小企業の社長・Web 担当者。予約・会員・見積もり・社内の台帳などを足したい。<strong>狙う検索意図・クエリ</strong>：「ワードプレス カスタマイズ」「WordPress 機能追加 依頼」「WordPress 業務システム」「WordPress 独自プラグイン 外注」。</li>
+      <li><strong>h2①　先に結論：「何を足すか」より「止まったら誰が困るか」で決める</strong></li>
+      <li><strong>h2②　機能の足し方は4つ</strong>（早見表＝向く場面・公開後の手間・頼む相手。<u>金額は書かない</u>）
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　①既存のプラグインを入れる</li>
+          <li>h3　②カスタムフィールドとテーマの調整（→ <span class="font-mono">/service/web/wordpress.html</span>）</li>
+          <li>h3　③専用のプラグインを作る</li>
+          <li>h3　④WordPress の外に別のシステムを作ってつなぐ</li>
+        </ul></li>
+      <li><strong>h2③　どれで頼むかを決める5つ</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　①使う人はお客様か、社内か</li>
+          <li>h3　②個人情報やお金を扱うか</li>
+          <li>h3　③止まったときに業務も止まるか</li>
+          <li>h3　④データをいつまで持ち、どう取り出すか</li>
+          <li>h3　⑤WordPress や PHP を更新するたびに、誰が動作を確かめるか（→ <span class="font-mono">T-075</span> に1行）</li>
+        </ul></li>
+      <li><strong>h2④　WordPress の中に入れないほうがよいとき</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>社内の台帳（顧客・案件・在庫）／複数人が同時に編集する／権限を細かく分ける（一般論。<span class="font-mono">/service/system/</span> の「顧客・案件管理」「在庫・受発注管理」へ1行）</li>
+          <li><u>自社の侵害の件は書かない</u>（<span class="font-mono">T-040</span> の回答待ち）</li>
+        </ul></li>
+      <li><strong>h2⑤　頼むときに渡すもの</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>いま紙や Excel でどうしているか（→ <span class="font-mono">T-072</span> に1行）／入れているテーマとプラグインの一覧／管理画面に入れる人は誰か</li>
+          <li>作る人に直接話す（伝言ゲームを減らす＝<span class="font-mono">/service/system/</span> の「技術者が直接ヒアリング」の範囲で）</li>
+        </ul></li>
+      <li><strong>h2⑥　よくある質問</strong>（2問）＝プラグインを入れすぎるとどうなる？／費用は？（<u>金額は書かず</u>、公開文「内容によって変わりますのでお見積りいたします」まで。システムは <span class="font-mono">/service/system/</span> の「ヒアリング・要件整理・お見積りまでは無料」）</li>
+      <li><strong>h2⑦　まとめ＋チェック表</strong>（5つを1枚に・頼む前にそのまま使える形）</li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>タイトル案</strong>：上の題／別案「そのWordPress、プラグインで足りますか？——機能を足す前に決める5つ」。</li>
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/service/system/</span>（本命）／<span class="font-mono">/service/web/wordpress.html</span>／<span class="font-mono">?p=6505</span>（WordPress と HTML）／<span class="font-mono">?p=7159</span>（カスタムフィールドの設定手順＝題の観察・<u>開いて確かめてから</u>）／<span class="font-mono">T-072</span>・<span class="font-mono">T-075</span>（公開されていれば）。</li>
+      <li><strong>CTA</strong>：4本リンクの橋は<u>使わない</u>。本文の終わりに「WordPress に機能を足す相談は、システム開発のページをご覧ください。ヒアリングから見積までは無料です。」＋ <span class="font-mono">/service/system/</span> の1本。</li>
+      <li><strong>用意すべき内容</strong>：<u>必須はありません</u>。🙋 任意＝<strong>他社が作った WordPress への機能追加もお受けしますか</strong>。公開ページに記述がありません。<u>お返事が無ければ書きません</u>。<span class="font-mono">/service/system/</span> の事例の社名・細部も書きません。</li>
+      <li><strong>効果</strong>：システム開発の入口を、読者の多い WordPress の側から1本つくる（① → ③）。<strong>検索の当たりは未確定で、問い合わせになるかも分かりません</strong>。<strong>工数</strong>：中（上位3件の本文を読む）。<strong>優先度</strong>：🟡。<strong>栓</strong>：― WP が動いてから（在庫を積まない方針のまま）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-11-03）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：<span class="font-mono">data/blog-loop/ycom/from-president.md</span> に追記なし。mailbox 新着なし。<strong>本日の新規質問はゼロ</strong>（未回答 7件のまま）。</li>
+      <li><strong>件数</strong>：B1＋T1。繰り越しは 174 → 176件です。</li>
+      <li><strong>次の起動分</strong>：blog-improve（11/9 月 00:20）＝<span class="font-mono">B-135</span>、<span class="font-mono">B-136</span> の順、続けて <span class="font-mono">B-131</span>・<span class="font-mono">B-133</span>・<span class="font-mono">B-134</span>。blog-write（11/9 月 05:30）＝新しい作業はありません。<span class="font-mono">T-083</span> は執筆しません。WP への書き込みは保留のまま。</li>
+      <li><strong>開発宛</strong>：新しい質問はありません。<span class="font-mono">Q-C</span>・<span class="font-mono">Q-D</span> は回答待ちのまま。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 141 の本文を <a href="archive.html#c141" class="underline">アーカイブ</a>へ原文のまま移しました。あわせて、このページの中で行き先が切れていた旧サイクルへのリンク（<span class="font-mono">#c140</span> など）をアーカイブ先へ直しました。</li>
+      <li><strong>index の大きさ</strong>：今回の整理の後も目安の 80KB を大きく超えています（C139 に記録した「執筆担当への指示」の問題のまま）。</li>
+      <li><strong>自己改善（Step 7）</strong>：方針が変わったときに「ブログの中の自社についての古い記述」を探す手順がありません。<span class="font-mono">?p=6721</span> は別の調べ物の途中で見つけました。kaizen に記録しました。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（type=report・WP への作用を促す依頼なし）。Slack 日報を1本（blog-loop-ycom スレッド）。</li>
+      <li><strong>実行できなかったもの</strong>：<span class="font-mono">session-desk.py whoami</span>（承認待ち・宛名は mailbox の応答で確認）／WordPress の <span class="font-mono">get</span>。</li>
+    </ul>
+  </div>
+
   <!-- ===== 📦 Cycle 141（2026-11-02）＝ Cycle 142（2026-11-03）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c141">Cycle 141 — 2026-11-02（YCOM ブログ・日次）：<span class="text-rose-700">経営の決定 <span class="font-mono">D-035</span> をブログに読み替えました＝コーディング受託の入口はブログから見えていません</span>／<span class="text-sky-800"><span class="font-mono">B-135</span> 実装記事3本に受託の1行・<span class="font-mono">T-081</span> コーディングだけ外注するとき・<span class="font-mono">T-082</span> ホームページにAIチャットを置く前に</span></h2>
 
