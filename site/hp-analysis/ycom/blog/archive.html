@@ -179,6 +179,137 @@
     </div>
   </div>
 
+  <!-- ===== 📦 Cycle 143（2026-11-04）＝ Cycle 144（2026-11-05）で index から退避・原文無改変 ===== -->
+  <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c143">Cycle 143 — 2026-11-04（YCOM ブログ・日次）：<span class="text-rose-700">ブログに「作るという仕事からは少しずつ離れていかないと」が残っています（<span class="font-mono">?p=4847</span>・2017）／解析の入口も検索側にありません</span>／<span class="text-sky-800"><span class="font-mono">B-137</span> 冒頭に時点の1行・<span class="font-mono">T-084</span> アクセス解析を AI に任せる前に</span></h2>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📊 データ状況（2026-11-04）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>GSC</strong>（<span class="font-mono">searchconsole_ycom</span>）＝取得。最終日は 11/01。10/05〜11/01＝クリック1,126・表示49,339・CTR2.28%・平均9.5位。個別＝検索語28日（上位60）／<span class="font-mono">?p=4847</span>・<span class="font-mono">/service/web/data.html</span> の検索語90日／「メール」「はなさか」「ワイコム」「解析」「分析」「アナリティクス」「サーチコンソール」を含む語（90日）。</li>
+      <li><strong>GA4</strong>（<span class="font-mono">analytics_265729912</span>）＝<span class="font-mono">?p=4847</span>（取れる期間＝daily 140日分）と <span class="font-mono">/service/web/data.html</span>（90日）の閲覧だけ取得。</li>
+      <li><strong>公開ページ</strong>（<span class="font-mono">hp-audit</span>・HTTP GET のみ）＝定点（<span class="font-mono">?p=8365・2117・8299</span>）／<span class="font-mono">?p=4847</span>・<span class="font-mono">/service/web/data.html</span> の本文／サイト内検索「やっていません」「下請け」「お断り」「弊社では」「はなさか」。<strong>WordPress（<span class="font-mono">wp-draft.py get</span>）は未実施</strong>。</li>
+      <li><strong>競合</strong>（<span class="font-mono">hp-serp</span>）＝2語。<u>題の観察だけで、本文は読んでいません</u>。</li>
+      <li><strong>mailbox</strong>：<span class="font-mono">blog-loop-ycom</span> 宛の新着 0通。<span class="font-mono">Q-C</span>・<span class="font-mono">Q-D</span>（開発宛）の回答はまだありません。<strong>from-president.md</strong>：追記なし（最終 2026-06-23）。<strong>board</strong>：<span class="font-mono">D-035</span> の後に新しい決定はありません（11/15 が見直し日）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border-2 border-rose-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-rose-800 mb-2">🧭 ブログの中の「自社の立場」を、言い回しで横断して探しました（昨日の自己改善の1回目）</h3>
+    <p class="text-xs mb-2">昨日の <span class="font-mono">?p=6721</span>（「システムは社内ではやらない」）は、別の調べ物の途中で見つけたものでした。本日は <span class="font-mono">D-035</span>（コーディング受託は積極的に・システムと AI を強化）と逆の記述を、サイト内検索で探しました。<u>WordPress 標準の検索（題と本文）で、ヒットした記事を全部は読んでいません</u>。</p>
+    <table class="w-full text-xs border-collapse mb-2">
+      <thead><tr class="text-left border-b border-gray-300"><th class="py-1 pr-2">検索した語</th><th class="py-1 pr-2">ヒット</th><th class="py-1 pr-2">読んだか・結果</th></tr></thead>
+      <tbody class="align-top">
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">弊社では</td><td class="py-1 pr-2">30本（1ページ目）</td><td class="py-1 pr-2">題から会社の方針の記事と分かる <strong class="text-rose-700"><span class="font-mono">?p=4847</span>（「ワイコムはこれからもお客様に無くてはならない会社として歩み続けます」・2017）を全文</strong>＝下の <span class="font-mono">B-137</span>。<u>残り29本は未読</u>（<span class="font-mono">?p=6551</span> は <span class="font-mono">B-128</span>、<span class="font-mono">?p=2291</span> は C142 で該当行を読み済み）。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">お断り</td><td class="py-1 pr-2">2本</td><td class="py-1 pr-2"><span class="font-mono">?p=3887</span>・<span class="font-mono">?p=5731</span>＝どちらも募集の記事（題の観察）。募集の扱いは <span class="font-mono">B-084</span>・<span class="font-mono">Q-006</span> の範囲です。</td></tr>
+        <tr class="border-b border-gray-100"><td class="py-1 pr-2">やっていません／下請け</td><td class="py-1 pr-2">2本／1本</td><td class="py-1 pr-2"><span class="font-mono">?p=6537・7483</span>／<span class="font-mono">?p=5400</span>＝題は自社の立場の話ではありません。<u>未読</u>。</td></tr>
+        <tr><td class="py-1 pr-2">はなさか</td><td class="py-1 pr-2">2本</td><td class="py-1 pr-2">7/15 の書き直し2本（<span class="font-mono">?p=3028・8299</span>）だけ。ほかの記事は「YCOM」「ワイコム」の名前です（ブログの名札の件は <span class="font-mono">K-520</span> で扱い済み・本日は新しく立てません）。</td></tr>
+      </tbody>
+    </table>
+    <p class="text-xs"><strong>解析（AI 強化のもう1本）の入口も見ました</strong>：受け皿の <span class="font-mono">/service/web/data.html</span>（「データの活用」）は、GA・Search Console・BigQuery・可視化まで書いてあり、<u>AI の記述はありません</u>。GSC 90日＝表示2（「大阪 ホームページ分析」38.5位）、GA4 90日＝閲覧3回。「解析」「分析」「アナリティクス」を含む検索は、サイト全体で90日 計5表示です。<strong>昨日のシステム開発と同じで、検索側に入口がありません</strong>＝下の <span class="font-mono">T-084</span>。</p>
+  </div>
+
+  <div class="bg-white border-2 border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📉 過去の提案の振り返り（PDCA）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>料金ページの週の比較</strong>＝GSC の最終日は 11/01 で、10/28〜11/3 の週はまだそろっていません。明日以降に並べます。</li>
+      <li><strong><span class="font-mono">?p=8192</span>（PHP の SMTP 認証メール）</strong>＝「php メール 送信 smtp 認証」90日 105表示・2.2位・<strong>クリック0</strong>（同じ語の空白なしの書き方は 40表示・6クリック）。7/26 には CTR21% でした。<u>書き方違いの語に表示が分かれただけか、検索結果の見た目が変わったのかは分かりません</u>（推測を2つ並べるだけにします）。この記事は <span class="font-mono">B-039</span>（取り下げ提案 <span class="font-mono">B-049</span> の対象）なので、新しい提案は立てません。</li>
+      <li><strong>指名検索（橋の指標）</strong>＝「株式会社はなさか」90日＝トップ19・会社概要7・制作実績1クリック（計27）。「ワイコム」は9表示・クリック0。ブログの記事は指名検索に1回も出ていません。<u>四半期の点検（A-051）の材料として記録だけ</u>します。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📍 定点（ご報告だけ）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong class="text-rose-700">下書き 8365＝公開されていません（投入 8/17 から80日目）</strong>。本日も公開URLは HTTP500（下書きのときの応答）。</li>
+      <li><strong class="text-rose-700"><span class="font-mono">?p=2117</span> の社内メモ</strong>＝本日も公開ページの本文に残っています（公開の 7/15 から112日）。<span class="font-mono">?p=8299</span> の「［画像：…］」の1行（<span class="font-mono">B-122</span>）も本日残っています。</li>
+      <li><span class="font-mono">Q-011</span>（WP作業の宛先）＝59日目・未回答。次の枠は 11/7（土）です。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ① 既存記事の改善 ===== -->
+  <h3 class="text-xl font-bold text-violet-800 mb-3">① 既存記事の改善（<span class="font-mono">B-137</span>）</h3>
+  <div class="bg-white border-2 border-rose-300 rounded-lg p-5 mb-4 text-sm text-gray-800">
+    <p class="font-bold text-rose-900 mb-2"><span class="font-mono">B-137</span>　<span class="font-mono">?p=4847</span>（「ワイコムはこれからもお客様に無くてはならない会社として歩み続けます」・代表・2017）の冒頭に、時点の1行　🟢　<span class="text-xs font-normal">（差分作りは栓なし／🔒 WP 反映）</span></p>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>観点</strong>：E-E-A-T（信頼）／鮮度。②信頼の層の一手です。<span class="font-mono">B-136</span> と同じ型＝会社を調べた人が読む面の、いまの方針との食い違いを消します。</li>
+      <li><strong>観察</strong>（事実・11/04 取得）：
+        (1) 2017年5月31日の代表の記事です。本文に「コーディングの仕事自体は手間ではあるけれど難しいものではない」「一応制作っていう仕事をやってますが、コーディングとかってそんなに難しいものではないです」「作るという仕事からは少しずつ離れていかないといけないと思っています」「もっとマーケティングに強みを見出していきたい」があります。
+        (2) <span class="font-mono">D-035</span>（11/01）は「コーディング受託は積極的に受ける」「システム開発と AI を強化する」です。<strong>コーディングを頼む先を探している制作会社・代理店が読むと、逆の向きに読めます</strong>。
+        (3) <strong>読まれていません</strong>＝GSC 90日で表示0、GA4 で取れる期間（daily 140日分）の閲覧1回。カテゴリは「未分類」です。</li>
+      <li><strong>なぜ問題か</strong>：いまの読者はほぼいません。<u>アクセスや問い合わせが増える提案ではありません</u>。ただ、会社名つきの題で「これからも…歩み続けます」と書いた記事は、会社を調べた人が開く可能性がある面です（推測）。文の中身（マーケティングで結果を出す）は今も外れていませんが、「コーディングは難しくない」「作る仕事から離れる」の2つは、受託を伸ばす方針と並べると誤解されやすい文です。</li>
+      <li><strong>改善案（差分の要点）</strong>：
+        <ul class="list-[circle] list-inside ml-4">
+          <li><strong>(a) 既定</strong>＝本文の冒頭（日付の下）に1行：「※2017年5月時点の考えです。」<u>だけ</u>。代表の文章・口調・題は変えない。いまの方針は書かない。CTA は足さない。</li>
+          <li><strong>(b)</strong>＝(a) に続けて、いまの立場を1文（例：「現在は、ホームページ制作に加えて、コーディングのご依頼やシステム開発もお受けしています。」＋ <span class="font-mono">/service/system/</span>）。<u>いまの方針を公開の文にするかは社長のご判断です</u>（D-035 は社内の決定）。</li>
+          <li><strong>(c)</strong>＝今のまま。</li>
+        </ul></li>
+      <li><strong>効果</strong>：食い違いが1つ消える（② 信頼）。<strong>工数</strong>：1分。<strong>優先度</strong>：🟢（読者がほぼいないため。<span class="font-mono">B-136</span> より後）。<strong>栓</strong>：差分作りは栓なし／WP への反映は 🔒。(a) ならご判断は要りません（残すなら1行で却下を）。</li>
+    </ul>
+  </div>
+
+  <div class="bg-white border border-gray-300 rounded-lg p-4 mb-6 text-xs text-gray-800">
+    <p class="font-bold mb-1">今回見送った候補</p>
+    <ul class="list-disc list-inside space-y-1">
+      <li><span class="font-mono">?p=8192</span> の「smtp 認証」の語のクリック0＝<span class="font-mono">B-039</span> の対象で、読者は買い手ではない（C039 の判断のまま）。</li>
+      <li>「弊社では」の残り29本＝本日は読みません。明日以降、題から自社の立場を語っていそうな記事（<span class="font-mono">?p=2669</span> 制作フロー・<span class="font-mono">?p=4645</span> 安く作ってもらうには・<span class="font-mono">?p=4886</span> 弊社ブログの CV への影響）から読みます。</li>
+    </ul>
+  </div>
+
+  <!-- ===== ② 新規記事 ===== -->
+  <h3 class="text-xl font-bold text-sky-800 mb-3">② 新規記事のテーマ＋構成案（<span class="font-mono">T-084</span>）</h3>
+  <div class="bg-white border-2 border-sky-400 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <p class="font-bold text-sky-900 mb-2"><span class="font-mono">T-084</span>　「アクセス解析をAIに任せる前に——数字がずれる5つの原因は、データの側にある」　🟡　<span class="text-xs font-normal">（構成案だけ・執筆しません）</span></p>
+    <p class="text-xs mb-2 bg-gray-50 border border-gray-300 rounded p-2"><strong>なぜいま</strong>：(1) <span class="font-mono">D-035</span> の「AI（チャット・解析）を強化」のうち、ブログで解析側の記事は0本です（チャット側は <span class="font-mono">T-082</span>）。
+    (2) 受け皿の <span class="font-mono">/service/web/data.html</span> は中身があるのに、検索の表示は90日で2・閲覧3回です（上の 🧭）。
+    (3) 競合：「アクセス解析 外注 中小企業」の上位は代行会社の一覧と費用相場（conmark・web-tantou・sib-lab ほか）。「アクセス解析 AI 任せる」の上位は AI 解析ツールの紹介・GA4 の月次要約の自動化（sitest・boostx・waltsu ほか）。<u>「AI に渡す前に、データが正しく取れているか」を発注側の目線で書いた題は、見た10件にはありません</u>（推測・題だけの観察）。
+    (4) 書く材料は、このループが実際に GSC・GA4 を毎日読んで出会ったことです（データの遅れ・CV の取りこぼし・社内のアクセス）。<u>当社の解析の進め方を、一般論として書ける範囲で使います。お客様名・数字は書きません</u>。<br>
+    <strong>器</strong>：<strong>新しいURL</strong>。<span class="font-mono">?p=4886</span>（弊社ブログの CV への影響・2018）・<span class="font-mono">?p=7407</span>（データポータルとスプレッドシート）とは問いが違います（あちらは自社の話と道具の手順）。</p>
+    <p class="text-xs font-bold mb-1">アウトライン（h2 / h3）</p>
+    <ul class="list-disc list-inside space-y-1 text-xs mb-2">
+      <li><strong>想定読者</strong>：自社サイトの数字を毎月見たいが時間がない、中小企業の社長・Web 担当者。「AI に聞けば分かるのでは」と思い始めている人。<strong>狙う検索意図・クエリ</strong>：「アクセス解析 AI」「GA4 AI 分析」「アクセス解析 任せる」「アクセス解析 外注 何をしてもらえる」。</li>
+      <li><strong>h2①　先に結論：AI の答えは、渡したデータより正しくはならない</strong></li>
+      <li><strong>h2②　数字がずれる5つの原因</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>h3　①問い合わせ（CV）が計測されていない・二重に数えている</li>
+          <li>h3　②社内のアクセスが混じっている</li>
+          <li>h3　③データに遅れがある（Search Console は2〜3日・「今日の数字がゼロ」は遅れのことがある）</li>
+          <li>h3　④期間の切り方（大きな1件・季節・リニューアルの前後）</li>
+          <li>h3　⑤サイトの外で起きていること（電話・紹介・Googleマップ）が入っていない</li>
+        </ul></li>
+      <li><strong>h2③　AI に任せてよいこと・人が決めること</strong>
+        <ul class="list-[circle] list-inside ml-4">
+          <li>任せてよい＝毎月の要約、変化の検知、ページの読み比べ</li>
+          <li>人が決める＝何を「成果」とするか、どの数字を追うか、施策の優先順位</li>
+        </ul></li>
+      <li><strong>h2④　任せる前に確かめる7つのチェック表</strong>（GA4 と Search Console がつながっているか／CV の定義／除外の設定／データの置き場所〈BigQuery・スプレッドシート〉→ <span class="font-mono">/service/web/data.html</span> の「データの記録」に1行）</li>
+      <li><strong>h2⑤　外に頼むなら、何を渡すか</strong>（管理画面の権限の渡し方＝閲覧だけで足りる・パスワードは渡さない。→ <span class="font-mono">?p=8299</span>〈所有者確認〉に1行）</li>
+      <li><strong>h2⑥　よくある質問</strong>（2問）＝無料のツールだけで足りる？／費用は？（<u>金額は書かない</u>）</li>
+      <li><strong>h2⑦　まとめ</strong></li>
+    </ul>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>タイトル案</strong>：上の題／別案「AI でアクセス解析、その前に。データが正しく取れているか確かめる7つ」。</li>
+      <li><strong>内部リンク先</strong>：<span class="font-mono">/service/web/data.html</span>（本命）／<span class="font-mono">?p=8299</span>（所有者確認）／<span class="font-mono">?p=7407</span>（データポータル）／<span class="font-mono">T-080</span>（フォームのメール＝CV の取りこぼし・公開されていれば）。</li>
+      <li><strong>CTA</strong>：4本リンクの橋は<u>使わない</u>。本文の終わりに「データの記録と見える化のご相談は、データの活用のページをご覧ください。」＋ <span class="font-mono">/service/web/data.html</span> の1本。</li>
+      <li><strong>用意すべき内容</strong>：<u>必須はありません</u>。🙋 任意＝<strong>AI を使った解析を、当社のサービスとして記事で案内してよいですか</strong>。<span class="font-mono">/service/web/data.html</span> に AI の記述がありません。<u>お返事が無ければ、記事は一般論にとどめ、当社が AI で解析しているとは書きません</u>。</li>
+      <li><strong>効果</strong>：解析の入口をブログに1本つくる（① → ③）。<strong>検索の当たりは未確定で、問い合わせになるかも分かりません</strong>。競合は多い語です。<strong>工数</strong>：中（上位3件の本文を読む）。<strong>優先度</strong>：🟡。<strong>栓</strong>：― WP が動いてから（在庫を積まない方針のまま）。</li>
+    </ul>
+  </div>
+
+  <!-- 本日の記録 -->
+  <div class="bg-white border border-gray-300 rounded-lg p-5 mb-6 text-sm text-gray-800">
+    <h3 class="font-bold text-gray-900 mb-2">📝 本日の記録（2026-11-04）</h3>
+    <ul class="list-disc list-inside space-y-1 text-xs">
+      <li><strong>社長からの新しいご指示</strong>：<span class="font-mono">data/blog-loop/ycom/from-president.md</span> に追記なし。mailbox 新着なし。<strong>本日の新規質問はゼロ</strong>（未回答 7件のまま。<span class="font-mono">B-137</span> (b)・<span class="font-mono">T-084</span> の1点は 🙋 任意で、お返事が無ければ既定どおり）。</li>
+      <li><strong>件数</strong>：B1＋T1。繰り越しは 176 → 178件です。</li>
+      <li><strong>次の起動分</strong>：blog-improve（11/9 月 00:20）＝<span class="font-mono">B-135</span>、<span class="font-mono">B-136</span>、<span class="font-mono">B-137</span>（(a) の1行）の順、続けて <span class="font-mono">B-131</span>・<span class="font-mono">B-133</span>・<span class="font-mono">B-134</span>。blog-write（11/9 月 05:30）＝新しい作業はありません。<span class="font-mono">T-084</span> は執筆しません。WP への書き込みは保留のまま。</li>
+      <li><strong>開発宛</strong>：新しい質問はありません。<span class="font-mono">Q-C</span>・<span class="font-mono">Q-D</span> は回答待ちのまま。</li>
+      <li><strong>掲示板の整理（ローテ）</strong>：Cycle 142 の本文を <a href="archive.html#c142" class="underline">アーカイブ</a>へ原文のまま移しました（行数で照合）。このページ内の <span class="font-mono">#c142</span> へのリンクはアーカイブ先へ直しました。</li>
+      <li><strong>index の大きさ</strong>：目安の 80KB を大きく超えたままです（C139 に記録した問題のまま）。</li>
+      <li><strong>自己改善（Step 7）</strong>：昨日の「古い自社記述の探し方」を、語で横断する形で1回やってみました。語ごとにヒットが30本と多く、1日で読み切れません。<u>読んだ記事・読んでいない記事の控えが無いと、同じ記事を何度も開くか、読み残しを「無い」と言ってしまいます</u>。kaizen に記録しました。</li>
+      <li><strong>配信・日報</strong>：web-hanasaka へテキスト版を1通（type=report・WP への作用を促す依頼なし）。Slack 日報を1本（blog-loop-ycom スレッド）。</li>
+      <li><strong>実行できなかったもの</strong>：<span class="font-mono">session-desk.py whoami</span>（承認待ち）／WordPress の <span class="font-mono">get</span>／<span class="font-mono">curl</span> 直叩き（承認待ち＝定点は <span class="font-mono">hp-audit</span> で取得）。</li>
+    </ul>
+  </div>
   <!-- ===== 📦 Cycle 142（2026-11-03）＝ Cycle 143（2026-11-04）で index から退避・原文無改変 ===== -->
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4" id="c142">Cycle 142 — 2026-11-03（YCOM ブログ・日次）：<span class="text-rose-700">ブログに「弊社は基本的にシステムは社内ではやらない」が残っています（<span class="font-mono">?p=6721</span>・2019）</span>／<span class="text-sky-800"><span class="font-mono">B-136</span> その直後に1行・<span class="font-mono">T-083</span> WordPress に機能を足すときの分かれ目</span></h2>
 
