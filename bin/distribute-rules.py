@@ -301,25 +301,27 @@ def plan(name, dest):
 
     🚨 **同じ相対パスを2つの層が持っていたらエラーで止める。** 後の層で黙って上書きすると、
     どちらが正かが配布先でしか分からなくなる（原則②＝重複定義しない）。面ごとの違いは
-    別ファイル名の追補として置く。
+    別ファイル名で置くか、`profiles.json` の `append` に挙げて**層の順に連結**する
+    （挙げたパスは層ごとの行を持てる＝3要素目が層のタプルになる）。
     """
     owner, order = {}, []
     for layer, src in profile_layers(name):
         root = os.path.realpath(src)
         for p in sorted(src.rglob("*")):
+            rel = p.relative_to(src).as_posix()
             # 🚨 **配布元のリンクは読まない。** `is_file()` はリンクも真になるので、
             #    層の中に `CLAUDE.md -> /etc/passwd` のようなリンクを置くと、
             #    **リンク先の中身が配布物に混ざる**（copy2 も read_text も辿る）。
             #    外向きかどうかで判定を分けない＝層の中を指すリンクも、ディレクトリの
             #    リンクも止める（辿れること自体を無くす方が、検証の抜けが出ない）。
             if p.is_symlink():
-                die(f"層の中にシンボリックリンクがあります: {layer}/{p.relative_to(src).as_posix()}"
+                die(f"層の中にシンボリックリンクがあります: {layer}/{rel}"
                     "（辿った先を配ってしまうので中断しました。実ファイルを置いてください）")
             if not p.is_file():
                 continue
-            if os.path.dirname(os.path.realpath(p)) and not os.path.realpath(p).startswith(root + os.sep):
-                die(f"層の外のファイルを指しています: {layer}/{p.relative_to(src).as_posix()}")
-            rel = p.relative_to(src).as_posix()
+            # リンクは上で止めてあるので通常ここは通る。層の外を指すものが残っていたら配らない。
+            if not os.path.realpath(p).startswith(root + os.sep):
+                die(f"層の外のファイルを指しています: {layer}/{rel}")
             if rel in owner:
                 if rel not in APPEND:
                     die(f"同じパスが2つの層にあります: {rel}\n"
