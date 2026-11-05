@@ -32,3 +32,4 @@
 | RR-015 | tanoseemo | websystem | `rr-tanoseemo` | 2026-10-30 | 2027-10-30 | 有効 | — |  |  |
 | RR-016 | hana-client-portal | websystem | `rr-hana-client-portal` | 2026-11-02 | 2027-11-02 | 有効 | — |  |  |
 | RR-017 | site-analyzer | websystem | `rr-site-analyzer` | 2026-11-02 | 2027-11-02 | 有効 | — |  |  |
+| RR-018 | 藤阪ガス | website | `rr-fujisaka` | 2026-11-05 | 2027-11-05 | 有効 | — |  |  |
