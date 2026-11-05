@@ -32,6 +32,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import sys
 import tarfile
@@ -109,7 +110,47 @@ def load_profiles(path=None):
     return out
 
 
+def load_append(path=None):
+    """`append`（追補）＝**同じ相対パスが複数の層にあってもよい**と宣言したパスの一覧。
+
+    `CLAUDE.md`・`director.md` のようなファイルは「共通の土台＋面ごとの追加」という形なので、
+    common に1本置くには層をまたいで**連結**する必要がある（REDESIGN.md ステップ5-3）。
+    ここに挙げていないパスの衝突は従来どおり止める（原則②＝重複定義しない）。
+
+    🚨 **書き方が壊れていたら黙って無視せず止める。** 無視すると「連結されるつもりだった
+    ファイルが衝突で止まる」か、より悪く「片方だけが配られる」ことになる。
+    """
+    p = Path(path or PROFILES_FILE)
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ()                                 # 形の検査は load_profiles が先に済ませている
+    raw = data.get("append", [])
+    if not isinstance(raw, list):
+        die(f"profiles.json の `append` が配列ではありません: {raw!r}")
+    out = []
+    for rel in raw:
+        if not isinstance(rel, str) or not rel.strip():
+            die(f"profiles.json の `append` の要素が文字列ではありません: {rel!r}")
+        if rel.endswith("/"):
+            die(f"profiles.json の `append` にディレクトリは書けません: {rel!r}"
+                "（連結はファイル単位。1本ずつ挙げてください）")
+        if rel.startswith("/") or ".." in Path(rel).parts or Path(rel).is_absolute():
+            die(f"profiles.json の `append` のパスが配布先の外を指しています: {rel!r}")
+        # 🚨 **正規形だけ受ける。** 実際の相対パスは `as_posix()` で作るので、`./x.md` や
+        #    `a//b.md` を書くと**宣言と一致せず、追補のつもりが「衝突」で止まる**。
+        #    原因が分かりにくい止まり方になるので、宣言の時点で弾く。
+        if "\\" in rel or "\x00" in rel or rel != Path(rel).as_posix() or "." in Path(rel).parts:
+            die(f"profiles.json の `append` のパスが正規形ではありません: {rel!r}"
+                "（`./` や `//`・逆斜線を使わず、配布先からの相対パスをそのまま書いてください）")
+        if rel in out:
+            die(f"profiles.json の `append` に同じパスが2回入っています: {rel!r}")
+        out.append(rel)
+    return tuple(out)
+
+
 PROFILES = load_profiles()
+APPEND = load_append()
 TEMPLATES = tuple(sorted(PROFILES))   # 旧称。外から参照している箇所の互換のために残す
 
 # 配布のたびに上書きしてよいか＝そのファイルが「テンプレの内容」か「案件の記録」か。
@@ -262,23 +303,42 @@ def plan(name, dest):
     どちらが正かが配布先でしか分からなくなる（原則②＝重複定義しない）。面ごとの違いは
     別ファイル名の追補として置く。
     """
-    out, owner = [], {}
+    owner, order = {}, []
     for layer, src in profile_layers(name):
+        root = os.path.realpath(src)
         for p in sorted(src.rglob("*")):
+            # 🚨 **配布元のリンクは読まない。** `is_file()` はリンクも真になるので、
+            #    層の中に `CLAUDE.md -> /etc/passwd` のようなリンクを置くと、
+            #    **リンク先の中身が配布物に混ざる**（copy2 も read_text も辿る）。
+            #    外向きかどうかで判定を分けない＝層の中を指すリンクも、ディレクトリの
+            #    リンクも止める（辿れること自体を無くす方が、検証の抜けが出ない）。
+            if p.is_symlink():
+                die(f"層の中にシンボリックリンクがあります: {layer}/{p.relative_to(src).as_posix()}"
+                    "（辿った先を配ってしまうので中断しました。実ファイルを置いてください）")
             if not p.is_file():
                 continue
+            if os.path.dirname(os.path.realpath(p)) and not os.path.realpath(p).startswith(root + os.sep):
+                die(f"層の外のファイルを指しています: {layer}/{p.relative_to(src).as_posix()}")
             rel = p.relative_to(src).as_posix()
             if rel in owner:
-                die(f"同じパスが2つの層にあります: {rel}\n"
-                    f"   {owner[rel]} と {layer} の両方が持っています。"
-                    "どちらが正かを決めて1つにしてください（原則②＝重複定義しない）。")
-            owner[rel] = layer
-            exists = (dest / rel).exists()
-            if keep(rel):
-                act = "skip" if exists else "create"
-            else:
-                act = "overwrite" if exists else "create"
-            out.append((rel, act, layer))
+                if rel not in APPEND:
+                    die(f"同じパスが2つの層にあります: {rel}\n"
+                        f"   {' / '.join(owner[rel])} と {layer} の両方が持っています。"
+                        "どちらが正かを決めて1つにしてください（原則②＝重複定義しない）。\n"
+                        "   面ごとの追加をこのファイルに残すなら、profiles.json の `append` に"
+                        f" {rel!r} を挙げてください（層の順に連結します）。")
+                owner[rel].append(layer)          # 追補＝層の順に連結する
+                continue
+            owner[rel] = [layer]
+            order.append(rel)
+    out = []
+    for rel in order:
+        exists = (dest / rel).exists()
+        if keep(rel):
+            act = "skip" if exists else "create"
+        else:
+            act = "overwrite" if exists else "create"
+        out.append((rel, act, tuple(owner[rel])))
     out.sort(key=lambda row: row[0])
     return out
 
@@ -307,12 +367,68 @@ def safe_target(dest, rel):
     return target
 
 
+def append_mark(layer, rel):
+    """連結の境界に入れる1行。**どの層を直せばよいか**を配布先で分かるようにする。
+
+    Markdown のコメントなので表示には出ないが、エージェントが読むソースには出る。
+    これが無いと、現場は面固有の記述を common の問題として報告してくる（逆もある）。
+    """
+    return (f"<!-- ▼ ここから下は {layer} 層（正＝claude-rules/{layer}/{rel}）。"
+            "上は共通の層。直すときは正しい層を直す（このファイルは配布のたびに組み直される） -->")
+
+
+def build_appended(srcs, items):
+    """追補するファイルの**完成品を、1バイトも書く前に**全部作って返す（{rel: (本文, mode)}）。
+
+    🚨 **書きながら作らない。** 途中の層が UTF-8 で読めない・実行ビットが食い違う等で
+    失敗すると、**先に書いたファイルだけが新しい**配布先が残る（版は最後に書くので
+    「更新済み」と名乗りはしないが、案件のリポジトリは新旧混在になる）。
+
+    連結の決まり（配布物のバイト表現なので明記する）：
+      - 各層の本文は**末尾の改行を落として**から、**空行1つ**で継ぐ
+      - 2層目以降の前に境界コメント（`append_mark`）を入れる
+      - 完成品の末尾は**改行1つ**
+      - 読み込みは text モード＝**CRLF は LF に揃う**
+      - **中身が空の層は飛ばす**（空行や境界コメントだけが残らないように）
+      - 実行ビットは**全層で一致していなければ配らない**（どちらかに黙って決めない）
+    """
+    out = {}
+    for rel, act, layers in items:
+        if act == "skip" or len(layers) == 1:
+            continue
+        parts, modes = [], []
+        for layer in layers:
+            src = srcs[layer] / rel
+            try:
+                body = src.read_text(encoding="utf-8")
+            except UnicodeDecodeError as e:
+                die(f"追補するファイルが UTF-8 で読めません: {layer}/{rel}（{e}）")
+            modes.append(stat.S_IMODE(src.stat().st_mode))
+            body = body.rstrip("\n")
+            if not body.strip():
+                continue                      # 空の層は飛ばす
+            parts.append(body if not parts else append_mark(layer, rel) + "\n\n" + body)
+        if len(set(m & 0o111 for m in modes)) > 1:
+            die(f"追補する層で実行ビットが食い違っています: {rel}"
+                f"（{' / '.join(f'{l}={oct(m)}' for l, m in zip(layers, modes))}）。"
+                "どちらを正にするか決めて揃えてください（黙ってどちらかに決めません）。")
+        out[rel] = ("\n\n".join(parts) + "\n", modes[0])
+    return out
+
+
 def copy_tree(name, dest, items):
     srcs = dict(profile_layers(name))
-    for rel, act, layer in items:
+    appended = build_appended(srcs, items)     # 先に全部作る（部分配布を作らない）
+    for rel, act, layers in items:
         if act == "skip":
             continue
-        shutil.copy2(srcs[layer] / rel, safe_target(dest, rel))
+        target = safe_target(dest, rel)
+        if len(layers) == 1:
+            shutil.copy2(srcs[layers[0]] / rel, target)
+            continue
+        body, mode = appended[rel]
+        target.write_text(body, encoding="utf-8")
+        os.chmod(target, mode)
 
 
 def stamp(dest, version, note=None):
@@ -380,13 +496,18 @@ def record(dest_name, name, version, how):
 def show_plan(items, layers=()):
     n = {"overwrite": 0, "create": 0, "skip": 0}
     per = {}
-    for rel, a, layer in items:
+    # 🚨 ループ変数に `layers` を使わない＝引数（プロファイルの層）を潰す。潰すと
+    #    「層の内訳を出すか」の判定が**最後の行の層**で決まり、内訳が黙って消える。
+    for rel, a, row_layers in items:
         n[a] += 1
-        per[layer] = per.get(layer, 0) + 1
+        for layer in row_layers:                  # 追補は複数層から来る＝どちらにも数える
+            per[layer] = per.get(layer, 0) + 1
     if len(layers) > 1:
-        print("  層    : " + " + ".join(f"{l}（{per.get(l, 0)}）" for l in layers))
+        # 「寄与」＝追補したファイルは複数層から来るので、合計は総ファイル数を超える。
+        # 「層」と書くと物理ファイル数と読み違える。
+        print("  層の寄与: " + " + ".join(f"{l}（{per.get(l, 0)}）" for l in layers))
     print(f"  上書き {n['overwrite']} / 新規 {n['create']} / 触らない {n['skip']}")
-    for rel, a, _layer in items:
+    for rel, a, _layers in items:
         if a == "skip":
             print(f"    - 触らない : {rel}  ← 案件の記録")
 
@@ -400,7 +521,7 @@ def cmd_pack(args):
     stem = version.replace("/", "_").replace("@", "_")
     with tempfile.TemporaryDirectory() as td:
         staging = Path(td) / args.template
-        items = [(rel, "create", layer) for rel, _, layer in plan(args.template, staging)]
+        items = [(rel, "create", layers) for rel, _, layers in plan(args.template, staging)]
         copy_tree(args.template, staging, items)
         stamp(staging, version, layer_note(args.template))
         tgz = outdir / f"{stem}.tar.gz"
