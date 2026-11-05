@@ -7,7 +7,7 @@
 （README.md 設計原則②のスコープは 1 テンプレートの中）。
 
 2026-09-10、起票（TB-010）した当日に 1 回目の版ズレが実際に起きた：
-`website/documents/handoff.md` の状態遷移の矛盾を直したとき、同じ誤りが
+`common/documents/handoff.md` の状態遷移の矛盾を直したとき、同じ誤りが
 ガイド §5.1 にも入っており、気づかなければ「誰も動かせなくなるルール」を
 Notion に貼るところだった。忘れることだけが本当のリスクなので、宣言でなく機械で拾う。
 
@@ -44,7 +44,7 @@ PROJ = Path(__file__).resolve().parent.parent
 #    付け替え忘れは「原典が無い」でテストが落ちるので、黙って検出漏れにはならない。
 GUIDES = {
     "claude-rules/website-onboarding.md": {
-        "claude-rules/website/documents/handoff.md": [
+        "claude-rules/common/documents/handoff.md": [
             "§5.1 状態は 6 つだけ", "§5.2 カードの形", "§5.4 書き込むときの約束",
             "§5.7 台帳が長くなったら（退避）",
         ],

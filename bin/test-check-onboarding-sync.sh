@@ -2,7 +2,7 @@
 # 要約ガイドの追随漏れ検出（bin/check-onboarding-sync.py）の回帰テスト。
 #
 # 契機＝2026-09-10、TB-010「ガイドと原典の版ズレ」が起票当日に現実化した
-# （website/documents/handoff.md の状態遷移の矛盾を直した際、同じ誤りが
+# （common/documents/handoff.md の状態遷移の矛盾を直した際、同じ誤りが
 #  website-onboarding.md §5.1 にもあった）。
 #
 # このツールは「何も出力しない」が正常系＝**壊れても気づけない**。
@@ -33,7 +33,7 @@ def ng(m, d=""):
     global N; N += 1; print(f"  ❌ {m}" + (f"\n     {d}" if d else ""))
 
 GUIDE = "claude-rules/website-onboarding.md"
-ORIGIN = "claude-rules/website/documents/handoff.md"
+ORIGIN = "claude-rules/common/documents/handoff.md"
 CMDDIR = "claude-rules/website/.claude/commands/"
 
 def capture(entries=None, argv=None):
@@ -132,7 +132,7 @@ with tempfile.TemporaryDirectory() as tmp:
     repo = make_repo(tmp)
 
     # (a) 原典のリネーム ＝ --name-only では新名しか出ず検出できなかったケース
-    git(repo, "mv", ORIGIN, "claude-rules/website/documents/handoff-renamed.md")
+    git(repo, "mv", ORIGIN, "claude-rules/common/documents/handoff-renamed.md")
     code, out = run_in(repo)
     ok("原典リネームを実 git 経由で拾う") if "🔔" in out else ng("拾えない", out)
     ok("終了コード 0") if code == 0 else ng(f"終了コードが {code}")

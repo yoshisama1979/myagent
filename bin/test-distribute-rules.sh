@@ -48,7 +48,8 @@ echo "▼ 共通のものは common/ に1本だけ（コピーを置かない）
 # 無くなった）。ここで見るのは「面レイヤーにコピーが戻っていないか」だけ。
 for f in bin/rule-report.sh bin/rules-update.sh rules/modes/rules-update.md \
          rules/modes/hana-memo.md rules/modes/mailbox.md .claude/commands/hana-memo.md \
-         documents/pending-issues.md documents/rule-improvements.md; do
+         documents/pending-issues.md documents/rule-improvements.md \
+         documents/handoff.md; do
   want_file "$PROJ/claude-rules/common/$f" "common に1本ある: $f"
   if [ -e "$PROJ/claude-rules/website/$f" ] || [ -e "$PROJ/claude-rules/websystem/$f" ]; then
     say_ng "面レイヤーにコピーが戻っていない: $f" "common と二重になると、どちらが正か配布先でしか分からない"
@@ -237,6 +238,126 @@ want_in "a.md" "$OUT"                                "衝突したパスを示�
 # （層を1つ足したのに版が進まないと、受け取り側の「もう直っているか」の判定が嘘になる）
 PR="$(python3 -c 'import importlib.util,sys; s=importlib.util.spec_from_file_location("dr",sys.argv[1]+"/bin/distribute-rules.py"); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(" ".join(m.layer_rels("website")))' "$PROJ" 2>&1)"
 want_in "claude-rules/profiles.json" "$PR" "版の対象集合に profiles.json が入っている（層構成の変更が版に出る）"
+
+echo "▼ 追補（append）＝同じパスを層の順に連結する（REDESIGN ステップ5-3 の器）"
+# なぜ要るか：CLAUDE.md・director.md などは「共通の土台＋面ごとの追加」という形なので、
+# common に1本置くには**同じパスが複数層にあっても連結する**仕組みが要る。
+# 連結しない従来の挙動（原則②＝重複定義しない）は、追補に挙げていないパスでは変えない。
+mkdir -p "$T/srcA/base" "$T/srcA/face" "$T/srcA/base/documents" "$T/srcA/face/documents" "$T/dA/documents"
+printf '# 土台\n\n共通の行\n' > "$T/srcA/base/CLAUDE.md"
+printf '面の行\n'             > "$T/srcA/face/CLAUDE.md"
+printf 'base-only\n'          > "$T/srcA/base/only.md"
+printf '雛形（共通）\n'        > "$T/srcA/base/documents/handoff.md"
+printf '雛形（面）\n'          > "$T/srcA/face/documents/handoff.md"
+printf '案件が書いたカード\n'  > "$T/dA/documents/handoff.md"
+printf '{"profiles": {"mix": ["base","face"]}, "append": ["CLAUDE.md","only.md","documents/handoff.md"]}\n' > "$T/pA.json"
+drA(){ RULES_SRC="$T/srcA" RULES_PROFILES="$T/pA.json" RULES_DIST_REGISTRY="$T/regA.md" \
+       python3 "$PROJ/bin/distribute-rules.py" "$@" 2>&1; }
+OUT="$(drA apply mix "$T/dA" --yes --allow-dirty)"
+want_in "配りました" "$OUT"                      "追補に挙げたパスが2層にあっても配れる（衝突で止まらない）"
+CA="$(cat "$T/dA/CLAUDE.md" 2>/dev/null)"
+want_in "共通の行" "$CA"                         "追補：共通層の中身が入る"
+want_in "面の行" "$CA"                           "追補：面層の中身も入る（片方が消えない）"
+want_eq "$(printf '%s\n' "$CA" | awk '/共通の行/{a=NR} /面の行/{b=NR} END{print (a&&b&&a<b)?"共通が先":"順序がおかしい"}')" \
+        "共通が先" "追補：連結の順は profiles.json の層の順"
+want_in "face 層" "$CA"                          "追補：どの層から来た行かが分かる境界が入る"
+want_eq "$(cat "$T/dA/only.md")" "base-only"     "追補に挙げても1層にしか無ければ中身はそのまま（境界を足さない）"
+want_eq "$(cat "$T/dA/documents/handoff.md")" "案件が書いたカード" \
+        "追補でも案件の記録は上書きしない（KEEP_IF_EXISTS が勝つ）"
+# 層ごとの枚数にも数える（追補の分が数え落ちると「層が入っていない」と誤読する）
+want_in "base（" "$OUT"                          "追補：層ごとの枚数に数える"
+# 🔴1 配布元のシンボリックリンクは読まない（リンク先の中身を配布物に混ぜない）
+mkdir -p "$T/srcL/base" "$T/srcL/face" "$T/dL"
+printf 'ひそかに読まれては困る中身\n' > "$T/outside.md"
+printf '# 土台\n' > "$T/srcL/base/CLAUDE.md"
+ln -s "$T/outside.md" "$T/srcL/face/CLAUDE.md"
+printf '{"profiles": {"mix": ["base","face"]}, "append": ["CLAUDE.md"]}\n' > "$T/pL.json"
+drL(){ RULES_SRC="$T/srcL" RULES_PROFILES="$T/pL.json" RULES_DIST_REGISTRY="$T/regL.md" \
+       python3 "$PROJ/bin/distribute-rules.py" "$@" 2>&1; }
+OUT="$(drL apply mix "$T/dL" --yes --allow-dirty)"
+want_in "シンボリックリンク" "$OUT"                  "配布元がシンボリックリンクなら止める（リンク先を配らない）"
+want_not_in "ひそかに読まれては困る中身" "$(cat "$T/dL/CLAUDE.md" 2>/dev/null || true)" "リンク先の中身が配布物に入らない"
+# 層の中のファイルを指すリンクでも止める（「外向きでなければ良い」にしない）
+rm "$T/srcL/face/CLAUDE.md"; ln -s "$T/srcL/base/CLAUDE.md" "$T/srcL/face/CLAUDE.md"
+want_in "シンボリックリンク" "$(drL apply mix "$T/dL" --yes --allow-dirty)" "層の中を指すリンクでも止める"
+# ディレクトリのリンクでも止める
+rm "$T/srcL/face/CLAUDE.md"; mkdir -p "$T/srcL/face/real"; ln -s "$T/srcL/face/real" "$T/srcL/face/link"
+want_in "シンボリックリンク" "$(drL apply mix "$T/dL" --yes --allow-dirty)" "ディレクトリのリンクでも止める"
+rm -rf "$T/srcL/face/link" "$T/srcL/face/real"
+
+# 🔴2 追補する層で実行ビットが食い違っていたら、黙ってどちらかに決めずに止める
+mkdir -p "$T/srcM/base" "$T/srcM/face" "$T/dM"
+printf '#!/bin/sh\necho base\n' > "$T/srcM/base/tool.sh"; chmod 644 "$T/srcM/base/tool.sh"
+printf 'echo face\n'           > "$T/srcM/face/tool.sh"; chmod 755 "$T/srcM/face/tool.sh"
+printf '{"profiles": {"mix": ["base","face"]}, "append": ["tool.sh"]}\n' > "$T/pM.json"
+drM(){ RULES_SRC="$T/srcM" RULES_PROFILES="$T/pM.json" RULES_DIST_REGISTRY="$T/regM.md" \
+       python3 "$PROJ/bin/distribute-rules.py" "$@" 2>&1; }
+OUT="$(drM apply mix "$T/dM" --yes --allow-dirty)"
+want_in "実行ビット" "$OUT"                          "追補する層で実行ビットが食い違えば止める"
+if [ -e "$T/dM/tool.sh" ]; then say_ng "食い違いのときは1ファイルも書かない" "tool.sh が書かれている"
+else say_ok "食い違いのときは1ファイルも書かない"; fi
+chmod 755 "$T/srcM/base/tool.sh"
+OUT="$(drM apply mix "$T/dM" --yes --allow-dirty)"
+want_in "配りました" "$OUT"                          "揃っていれば配れる"
+if [ -x "$T/dM/tool.sh" ]; then say_ok "揃った実行ビットが配布先でも立つ"; else say_ng "揃った実行ビットが配布先でも立つ"; fi
+
+# 🟡3 書く前に全部読んで検証する＝途中で失敗しても部分配布にしない
+mkdir -p "$T/srcU/base" "$T/srcU/face" "$T/dU"
+printf '# 土台\n' > "$T/srcU/base/CLAUDE.md"
+printf 'ok\n'     > "$T/srcU/base/zz-other.md"
+printf '\xff\xfe これは UTF-8 ではない\n' > "$T/srcU/face/CLAUDE.md"
+printf '{"profiles": {"mix": ["base","face"]}, "append": ["CLAUDE.md"]}\n' > "$T/pU.json"
+OUT="$(RULES_SRC="$T/srcU" RULES_PROFILES="$T/pU.json" RULES_DIST_REGISTRY="$T/regU.md" \
+       python3 "$PROJ/bin/distribute-rules.py" apply mix "$T/dU" --yes --allow-dirty 2>&1)"
+want_in "UTF-8" "$OUT"                               "追補元が UTF-8 で読めなければ止める"
+if [ -e "$T/dU/zz-other.md" ]; then say_ng "読めないファイルがあるときは1ファイルも書かない" "先行ファイルが書かれている"
+else say_ok "読めないファイルがあるときは1ファイルも書かない"; fi
+
+# 🟡5 連結の改行の仕様（末尾改行は1つに揃える・CRLF は LF に・空の層は境界だけ残さない）
+mkdir -p "$T/srcN/base" "$T/srcN/face" "$T/dN"
+printf '# 土台（末尾に改行なし）' > "$T/srcN/base/CLAUDE.md"
+printf '面の行\r\n\r\n\r\n'       > "$T/srcN/face/CLAUDE.md"
+: > "$T/srcN/base/empty.md"
+printf '面だけの行\n'             > "$T/srcN/face/empty.md"
+printf '{"profiles": {"mix": ["base","face"]}, "append": ["CLAUDE.md","empty.md"]}\n' > "$T/pN.json"
+OUT="$(RULES_SRC="$T/srcN" RULES_PROFILES="$T/pN.json" RULES_DIST_REGISTRY="$T/regN.md" \
+       python3 "$PROJ/bin/distribute-rules.py" apply mix "$T/dN" --yes --allow-dirty 2>&1)"
+want_in "配りました" "$OUT" "改行が揃っていなくても配れる"
+want_eq "$(tail -c 1 "$T/dN/CLAUDE.md" | od -An -c | tr -d ' \n')" '\n' "連結の末尾は改行で終わる"
+want_not_in '\\n\\n' "$(tail -c 2 "$T/dN/CLAUDE.md" | od -An -c | tr -d ' \n')" "末尾の改行は1つだけ（空行で終わらない）"
+want_eq "$(grep -c $'\r' "$T/dN/CLAUDE.md" || true)" "0" "CRLF は LF に揃える"
+want_eq "$(head -1 "$T/dN/empty.md")" "面だけの行" "空の層は飛ばす（空行や境界だけを残さない）"
+
+# 🟢8 3層の追補も層の順に連結し、寄与を3層それぞれに数える
+mkdir -p "$T/srcT/a" "$T/srcT/b" "$T/srcT/c" "$T/dT"
+printf 'A\n' > "$T/srcT/a/x.md"; printf 'B\n' > "$T/srcT/b/x.md"; printf 'C\n' > "$T/srcT/c/x.md"
+printf '{"profiles": {"three": ["a","b","c"]}, "append": ["x.md"]}\n' > "$T/pT.json"
+OUT="$(RULES_SRC="$T/srcT" RULES_PROFILES="$T/pT.json" RULES_DIST_REGISTRY="$T/regT.md" \
+       python3 "$PROJ/bin/distribute-rules.py" apply three "$T/dT" --yes --allow-dirty 2>&1)"
+want_eq "$(tr -d '\n' < "$T/dT/x.md" | sed 's/<!--[^>]*-->//g')" "ABC" "3層でも層の順に連結する"
+want_in "層の寄与" "$OUT" "層ごとの数は「寄与」と明示する（総ファイル数と読み違えない）"
+want_in "a（1）" "$OUT" "3層それぞれに1件ずつ数える"
+want_in "c（1）" "$OUT" "3層目も数える"
+
+# 追補に挙げていない同名パスは、今までどおり止める
+mkdir -p "$T/srcB/l1" "$T/srcB/l2" "$T/dB"
+echo x > "$T/srcB/l1/dup.md"; echo y > "$T/srcB/l2/dup.md"
+printf '{"profiles": {"two": ["l1","l2"]}, "append": ["CLAUDE.md"]}\n' > "$T/pB.json"
+OUT="$(RULES_SRC="$T/srcB" RULES_PROFILES="$T/pB.json" RULES_DIST_REGISTRY="$T/regB.md" \
+       python3 "$PROJ/bin/distribute-rules.py" apply two "$T/dB" --yes --allow-dirty 2>&1)"
+want_in "同じパスが2つの層にあります" "$OUT" "追補に挙げていないパスの衝突は今までどおり止める"
+# 追補の書き方が壊れていたら、黙って無視せず止める
+badapp(){ printf '%s\n' "$1" > "$T/pC.json"; RULES_SRC="$T/srcA" RULES_PROFILES="$T/pC.json" \
+          RULES_DIST_REGISTRY="$T/regC.md" python3 "$PROJ/bin/distribute-rules.py" list 2>&1; }
+want_in "append"   "$(badapp '{"profiles":{"mix":["base","face"]},"append":"CLAUDE.md"}')" "append が配列でなければ止まる"
+want_in "ディレクトリ" "$(badapp '{"profiles":{"mix":["base","face"]},"append":["documents/"]}')" "append にディレクトリは書けない"
+want_in "append"   "$(badapp '{"profiles":{"mix":["base","face"]},"append":["../x.md"]}')"   "append に配布先の外へ出るパスは書けない"
+want_in "append"   "$(badapp '{"profiles":{"mix":["base","face"]},"append":["a.md","a.md"]}')" "append に同じパスを2回書けない"
+# 🟡4 append のパスは正規形だけ受ける（宣言と実際の相対パスがズレると衝突で止まる）
+want_in "append" "$(badapp '{"profiles":{"mix":["base","face"]},"append":["./CLAUDE.md"]}')"  "append に ./ 付きは書けない"
+want_in "append" "$(badapp '{"profiles":{"mix":["base","face"]},"append":["a//b.md"]}')"      "append に空の区切りは書けない"
+want_in "append" "$(badapp '{"profiles":{"mix":["base","face"]},"append":["a\\b.md"]}')"      "append に逆斜線は書けない"
+
 
 echo "▼ pack（別マシンの案件向け）"
 OUT="$(dr pack website "案件Z" --out "$T/dist" $DIRTY)"
