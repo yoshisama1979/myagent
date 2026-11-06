@@ -73,6 +73,8 @@ cp -rn website/. .          # 既存ファイルは上書きしない
 rm -rf website
 
 # .env に上の3行を追記（.env は git に入れない）
+# 🚨 .gitignore に2行を足すところまでやる（足し忘れると次の git add . でトークンが履歴に入る）
+printf '.env\n.claude/rules-backup/\n' >> .gitignore
 
 # 疎通確認（何も書き換えません）
 bash bin/rules-update.sh    # 「最新です」と出れば配線OK
@@ -120,4 +122,7 @@ python3 bin/rules-publish.py status             # いま何版を配信してい
 | 現場で「まだ配信されていません」 | こちらで `rules-publish.py publish` をしていない |
 | 現場で「サーバに接続できません」 | 案件の PC が Tailscale に入っていない |
 | 現場で「失効／期限切れ」 | 期限切れか revoke 済み。②で再発行して `.env` を差し替える |
+| 現場で「.env が git 管理外になっていません」 | `.gitignore` に `.env` と `.claude/rules-backup/` が入っていない。足す（④） |
+| 🚨 現場で「.env が既に git に入っています」 | トークンがコミット済み。`git rm --cached .env`＋`.gitignore` に追記し、**②で再発行して差し替える**（古い値は revoke） |
+| 現場（Windows）で、配布ファイルがほぼ全部「同じ名前のファイルが…既にあります」 | 2026-11-05 より前の版の改行の不具合。**`--force` で押し切らず**、控えと手元を突き合わせてから。この版以降に更新すれば直る |
 | `pack` が止まる | `claude-rules/` に未コミットの変更がある（③） |

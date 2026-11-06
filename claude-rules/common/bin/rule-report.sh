@@ -67,11 +67,17 @@ command -v curl >/dev/null 2>&1 || die "curl が見つかりません"
 # ⚠️ この検出と下の read_env() は bin/rules-update.sh にも同じものがある（直すときは両方・TB-012）。
 PY=""
 for c in python3 python; do
-  if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info[0] >= 3 else 1)' 2>/dev/null; then
+  if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3, 7) else 1)' 2>/dev/null; then
     PY="$c"; break
   fi
 done
-[ -n "$PY" ] || die "python3（または Python 3 系の python）が見つかりません（JSON生成に使用）"
+# 3.7 以上を要求する＝下の PY_LF（stdout.reconfigure）が 3.7 から（rules-update.sh と同じ）。
+[ -n "$PY" ] || die "Python 3.7 以上（python3 または python）が見つかりません（JSON生成に使用）。python --version で版を確かめてください"
+# Windows の Python は標準出力の \n を \r\n にする。ここでは出力を `$(…)` で受けるだけなので Git Bash では
+# 実害が出ないが、\r を落とさない bash だと送信の成否の判定を読み違える。bin/rules-update.sh と同じ前置きを通す（TB-012）。
+PY_LF='import sys
+if hasattr(sys.stdout, "reconfigure"): sys.stdout.reconfigure(newline="\n")
+'
 [ -f "$ENV_FILE" ] || die ".env が見つかりません（${ENV_FILE}）"
 
 # ここから下はトークンを扱う。bash -x（xtrace）が有効だと展開がそのままログに出るので、
@@ -114,7 +120,7 @@ case "$TEMPLATE" in
   * ) [ "${#TEMPLATE}" -le 32 ] || TEMPLATE="rules" ;;
 esac
 
-json="$(RR_SUBJECT="[$VERSION] $subject" RR_BODY="$body" RR_THREAD="${TEMPLATE}-kaizen" "$PY" -c '
+json="$(RR_SUBJECT="[$VERSION] $subject" RR_BODY="$body" RR_THREAD="${TEMPLATE}-kaizen" "$PY" -c "$PY_LF"'
 import os, json
 print(json.dumps({
     "to": "rule-kaizen",
@@ -135,7 +141,7 @@ resp="$(printf '%s' "$json" | curl -sS --max-time 15 --config "$cfg" \
         -X POST -H "Content-Type: application/json" --data-binary @- "${URL}/?action=send")" || \
   die "送信に失敗しました（ネットワーク）。rule-improvements.md に残して社長に伝えてください。"
 
-ok="$(RR_RESP="$resp" "$PY" -c '
+ok="$(RR_RESP="$resp" "$PY" -c "$PY_LF"'
 import os, json, sys
 try:
     d = json.loads(os.environ["RR_RESP"])

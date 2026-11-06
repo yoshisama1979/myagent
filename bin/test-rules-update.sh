@@ -523,6 +523,106 @@ run_up
 want_eq "$RC" "0" "差し替わったあとの実行も正常（壊れた状態を残していない）"
 want_in "最新です" "$OUT" "最新だと分かる"
 
+# 🚨 Windows（python.org 版 Python ＋ Git Bash）の改行（2026-11-05 earthraise_web 報告）
+# Windows の Python はテキストで書くと \n を \r\n にする（ファイルにも標準出力にも）。控えの一覧・
+# 編集の一覧に \r が付き、比べると①全件が「新規と同名」で止まる（誤検知）うえ、②「配布後に書き足した
+# 配布ファイル」の判定が常に空になり、書き足しが黙って上書きされる。①で --force に慣れると②も外れる。
+# ここでは sitecustomize で、その振る舞いを Linux の Python に再現して流す。
+mkdir -p "$T/winpy"
+cat > "$T/winpy/sitecustomize.py" <<'PYEOF'
+import builtins, sys
+_open = builtins.open
+def _win_open(file, mode="r", buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None):
+    if "b" not in mode and newline is None and any(c in mode for c in "wax+"):
+        newline = "\r\n"
+    return _open(file, mode, buffering, encoding, errors, newline, closefd, opener)
+builtins.open = _win_open
+# 標準出力：ファイルへ向けたとき（`> "$EDITED"` 等）は \r\n。`$(…)` で受けるとき（パイプ）は、
+# Git Bash が末尾の \r を落とすので実害が出ない＝報告の症状と合わせる。WINPY_STRICT=1 なら
+# パイプでも \r\n（\r を落とさない bash でも壊れないことの念押し用）。
+import os, stat
+if os.environ.get("WINPY_STRICT") == "1" or stat.S_ISREG(os.fstat(1).st_mode):
+    sys.stdout.reconfigure(newline="\r\n")
+PYEOF
+run_win(){ OUT="$(cd "$SITE" && PYTHONPATH="$T/winpy" bash bin/rules-update.sh "$@" 2>&1)"; RC=$?; }
+# 再現できていることを先に確かめる（できていなければ、以下は何も確かめていない）
+PYTHONPATH="$T/winpy" python3 -c 'print("a")' > "$T/winprobe-out"
+want_eq "$(od -An -c "$T/winprobe-out" | tr -d ' \n')" 'a\r\n' \
+        "前提：Windows の Python の改行（標準出力をファイルへ）を再現できている"
+want_eq "$(PYTHONPATH="$T/winpy" python3 -c 'open("'"$T"'/winprobe","w").write("a\n")'; od -An -c "$T/winprobe" | tr -d ' \n')" 'a\r\n' \
+        "前提：Windows の Python の改行（ファイル）を再現できている"
+printf 'ルール第5版\n' > "$T/claude-rules/website/CLAUDE.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "第5版" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+run_win --apply
+want_not_in "同じ名前のファイル" "$OUT" "Windows：控えと同じなら「新規と同名」で止まらない（誤検知しない）"
+want_eq "$RC" "0" "Windows：書き足しが無ければ --force 無しで適用できる"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第5版" "Windows：新しい版になる"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "第5版（Windows）" >/dev/null
+printf 'ルール第6版\n' > "$T/claude-rules/website/CLAUDE.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "第6版" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+printf '| /mine-win | この案件だけのコマンド（Windows） |\n' >> "$SITE/CLAUDE.md"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "現場で書き足した（Windows）" >/dev/null
+run_win --apply
+want_eq "$RC" "1" "Windows：書き足した配布ファイルを上書きする適用は止まる"
+want_in "書き足した分が消えます" "$OUT" "Windows：止まった理由が「書き足しが消える」である（黙って上書きしない）"
+want_in "/mine-win" "$(cat "$SITE/CLAUDE.md")" "Windows：書き足した行が残っている"
+printf 'ルール第5版\n' > "$SITE/CLAUDE.md"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "書き足しを戻した（Windows）" >/dev/null
+run_win --apply
+want_eq "$RC" "0" "Windows：書き足しを戻せば適用できる"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "第6版（Windows）" >/dev/null
+printf 'ルール第7版\n' > "$T/claude-rules/website/CLAUDE.md"
+git -C "$T" add -A -- claude-rules >/dev/null; git -C "$T" commit -qm "第7版" >/dev/null
+(cd "$T" && python3 bin/rules-publish.py publish website >/dev/null 2>&1)
+OUT="$(cd "$SITE" && WINPY_STRICT=1 PYTHONPATH="$T/winpy" bash bin/rules-update.sh --apply 2>&1)"; RC=$?
+want_eq "$RC" "0" "\r を落とさない bash でも（Python の出力が全部 \r\n でも）適用できる"
+want_eq "$(cat "$SITE/CLAUDE.md")" "ルール第7版" "そのとき新しい版になる"
+git -C "$SITE" add -A >/dev/null; git -C "$SITE" commit -qm "第7版（Windows・厳しい版）" >/dev/null
+# 古い Python（3.6 以前）は入口で止める（2026-11-06 Codex レビュー 🔴）。PY_LF の stdout.reconfigure は
+# 3.7 から＝3.6 以前だと Windows で出力に \r が残り、SHA256 の照合が必ず外れて更新できない。黙って壊れるより
+# 「版が古い」と言って止める。sys.version_info を (3, 6, 9) に差し替えて渡す偽物で、版の判定式そのものを試す。
+mkdir -p "$T/oldpy"
+for n in python3 python; do
+  cat > "$T/oldpy/$n" <<SHEOF
+#!/usr/bin/env bash
+a=(); for x in "\$@"; do a+=("\${x//sys.version_info/(3, 6, 9)}"); done
+exec $(command -v python3) "\${a[@]}"
+SHEOF
+  chmod +x "$T/oldpy/$n"
+done
+OUT="$(cd "$SITE" && PATH="$T/oldpy:$PATH" bash bin/rules-update.sh 2>&1)"; RC=$?
+want_eq "$RC" "1" "Python 3.7 未満しか無ければ止まる"
+want_in "Python 3.7 以上" "$OUT" "止まった理由が「Python の版」だと分かる"
+for f in rules-update.sh rule-report.sh; do
+  want_in "sys.version_info[:2] >= (3, 7)" "$(cat "$PROJ/claude-rules/common/bin/$f")" "$f も 3.7 以上を要求する（PY_LF と揃える）"
+done
+
+# .env が git 管理外になっているかを機械で確かめる（2026-09-18 大阪トヨペット報告：.gitignore に
+# 入っておらず `?? .env` で追跡候補に出ていた＝次の `git add .` でトークンが履歴に入るところだった）
+# この試験の案件は最初のコミットで .env を入れている＝実際に起きうる一番危ない状態から確かめる
+run_up
+want_in ".env が既に git に入っています" "$OUT" ".env がコミット済みなら、それを名指しする（.gitignore に足しても無視されない状態）"
+want_in "git rm --cached .env" "$OUT" "外し方を示す"
+want_in "再発行" "$OUT" "トークンの再発行が要ると言う"
+want_eq "$RC" "0" "警告しても止めない（最新なら 0 のまま）"
+git -C "$SITE" rm -q --cached .env; git -C "$SITE" commit -qm ".env を追跡から外す" >/dev/null
+run_up
+want_in ".env が git 管理外になっていません" "$OUT" "追跡していなくても、無視されていなければ警告する（次の git add . で入る）"
+want_in ".claude/rules-backup/" "$OUT" "足すべきもの（.claude/rules-backup/ も）を示す"
+want_not_in ".env が既に git に入っています" "$OUT" "追跡していないものをコミット済みと言わない"
+printf '.env\n.claude/rules-backup/\n' > "$SITE/.gitignore"
+git -C "$SITE" add .gitignore; git -C "$SITE" commit -qm ".gitignore" >/dev/null
+run_up
+want_not_in ".env が git 管理外になっていません" "$OUT" ".gitignore に入っていれば警告しない"
+want_not_in ".env が既に git に入っています" "$OUT" "無視されていればコミット済みとも言わない"
+want_not_in "tk-web" "$OUT" "警告にトークンの値を出さない"
+mkdir -p "$T/nogit-site"; cp -r "$SITE/." "$T/nogit-site/"; rm -rf "$T/nogit-site/.git" "$T/nogit-site/.gitignore"
+# 試験の置き場（$T）自体が別の git リポジトリなので、その親を見に行かせない
+OUT="$(cd "$T/nogit-site" && GIT_CEILING_DIRECTORIES="$T" bash bin/rules-update.sh 2>&1)"
+want_not_in ".env が" "$OUT" "git のリポジトリでなければ確かめない（誤った警告を出さない）"
+
 # 設定不足・失効
 printf 'RULE_UPDATE_URL=%s\nRULE_REPORT_TOKEN=tk-revoked\n' "$URL" > "$SITE/.env"
 run_up

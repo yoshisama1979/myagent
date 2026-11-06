@@ -78,12 +78,36 @@ command -v tar  >/dev/null 2>&1 || die "tar が見つかりません"
 # ⚠️ この検出と下の read_env() は bin/rule-report.sh にも同じものがある（直すときは両方・TB-012）。
 PY=""
 for c in python3 python; do
-  if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info[0] >= 3 else 1)' 2>/dev/null; then
+  if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3, 7) else 1)' 2>/dev/null; then
     PY="$c"; break
   fi
 done
-[ -n "$PY" ] || die "python3（または Python 3 系の python）が見つかりません"
+# 3.7 以上を要求する＝下の PY_LF（stdout.reconfigure）が 3.7 から。3.6 以前では Windows で出力に \r が残り、
+# SHA256 の照合が必ず外れて更新できない（2026-11-06 Codex レビュー）。黙って壊れるより入口で止める。
+[ -n "$PY" ] || die "Python 3.7 以上（python3 または python）が見つかりません。python --version で版を確かめてください"
+# 🚨 Windows の Python はテキストで書くと \n を \r\n にする（ファイルにも標準出力にも）。
+#    一覧に \r が付くと比較が全部外れ、①全件が「新規と同名」で止まり（誤検知）、②「配布後に書き足した
+#    配布ファイル」の判定が常に空になって書き足しが黙って上書きされる（2026-11-05 earthraise_web 報告）。
+#    Python の出力は必ずこの前置きを通す。書き込む open() には newline="\n" を付ける。比較の入口でも \r を
+#    落とす（csort）＝片方が漏れても壊れない二重の守り。
+PY_LF='import sys
+if hasattr(sys.stdout, "reconfigure"): sys.stdout.reconfigure(newline="\n")
+'
 [ -f "$ENV_FILE" ] || die ".env が見つかりません（${ENV_FILE}）"
+# .env が git 管理外かを機械で確かめる（2026-09-18 大阪トヨペット報告：.gitignore に入っておらず
+# `?? .env` で追跡候補に出ていた＝次の `git add .` でトークンが履歴に入るところだった。.env を置くのは
+# 人の作業なので、ルール文で「管理外にする」と書くだけでは誰も気づけない）。止めずに警告だけ出す。
+if git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  if git -C "$ROOT_DIR" ls-files --error-unmatch -- .env >/dev/null 2>&1; then
+    # 既に追跡されている＝.gitignore に足しても無視されない（追跡中のファイルは無視の対象外）
+    echo "🚨 .env が既に git に入っています（トークンがコミットされています）。人に伝えて、"
+    echo "   git rm --cached .env と .gitignore への追記をし、トークンの再発行を頼んでください（rules/modes/rules-update.md §1）。"
+    echo
+  elif ! git -C "$ROOT_DIR" check-ignore -q -- .env 2>/dev/null; then
+    echo "⚠️  .env が git 管理外になっていません（トークンがコミットされる恐れ）。.gitignore に「.env」と「.claude/rules-backup/」を足してください（rules/modes/rules-update.md §1）。"
+    echo
+  fi
+fi
 
 # ここから下はトークンを扱う。bash -x が有効だと展開がそのままログに出るので切る。
 XTRACE_WAS_ON=""
@@ -152,7 +176,7 @@ keep_p() {  # $1=相対パス → 案件の記録（$KEEPFILE に載っている
 # 展開する前に全メンバーを見る。`/` 始まり・`..` を含むパス・リンク・特殊ファイルは、tar の実装や
 # メンバーの順番次第で展開先の外へ書きに行く。危ないもの（読めなければその旨）を最大3件出す
 unsafe_paths() {
-  RU_F="$1" "$PY" -c '
+  RU_F="$1" "$PY" -c "$PY_LF"'
 import os, tarfile
 bad = []
 try:
@@ -188,7 +212,7 @@ api() {  # $1=action, $2=出力ファイル。HTTPコードを返す
 }
 
 sha256_of() {
-  RU_F="$1" "$PY" -c '
+  RU_F="$1" "$PY" -c "$PY_LF"'
 import hashlib, os
 h = hashlib.sha256()
 with open(os.environ["RU_F"], "rb") as f:
@@ -226,7 +250,7 @@ LOCAL_SHA="${LOCAL_VERSION##*/}"
 
 CODE="$(api version "$TMPDIR_WORK/version.json")" || die "サーバに接続できません（${URL}）"
 if [ "$CODE" != "200" ]; then
-  ERR="$(RU_F="$TMPDIR_WORK/version.json" "$PY" -c '
+  ERR="$(RU_F="$TMPDIR_WORK/version.json" "$PY" -c "$PY_LF"'
 import json, os, sys
 try:
     print(json.load(open(os.environ["RU_F"], encoding="utf-8")).get("error", "unknown"))
@@ -244,7 +268,7 @@ except Exception:
   exit 1
 fi
 
-eval "$(RU_F="$TMPDIR_WORK/version.json" "$PY" -c '
+eval "$(RU_F="$TMPDIR_WORK/version.json" "$PY" -c "$PY_LF"'
 import json, os, shlex
 d = json.load(open(os.environ["RU_F"], encoding="utf-8"))
 for k in ("version", "sha", "published_at", "sha256", "size", "template"):
@@ -287,7 +311,7 @@ if [ "$BASE_STATE" != "ok" ] && [ "$LOCAL_VERSION" = "$REMOTE_VERSION" ]; then
 fi
 if [ -n "$BSRC" ]; then
   # 改行コードの違い（CRLF⇔LF。Windows の git が変える）だけなら編集と数えない。単独の CR は数える
-  RU_B="$BSRC" RU_R="$ROOT_DIR" RU_V="$VERSION_REL" RU_L="$BASE_LIST" "$PY" -c '
+  RU_B="$BSRC" RU_R="$ROOT_DIR" RU_V="$VERSION_REL" RU_L="$BASE_LIST" "$PY" -c "$PY_LF"'
 import os
 base, root, ver = os.environ["RU_B"], os.environ["RU_R"], os.environ["RU_V"]
 with open(os.path.join(base, ".claude", "rules-keep"), encoding="utf-8") as f:
@@ -301,7 +325,7 @@ for d, _, fs in os.walk(base):
         if p != ver and not kept(p):
             dist.append(p)
 dist.sort()
-with open(os.environ["RU_L"], "w", encoding="utf-8") as o:
+with open(os.environ["RU_L"], "w", encoding="utf-8", newline="\n") as o:
     o.write("".join(p + "\n" for p in dist))
 for p in dist:
     lp = os.path.join(root, p)
@@ -351,7 +375,7 @@ fi
 if [ "$(api changelog "$TMPDIR_WORK/changelog.tsv")" = "200" ]; then
   echo
   echo "── この更新で入る変更 ─────────────────────────────"
-  RU_F="$TMPDIR_WORK/changelog.tsv" RU_SHA="$LOCAL_SHA" "$PY" -c '
+  RU_F="$TMPDIR_WORK/changelog.tsv" RU_SHA="$LOCAL_SHA" "$PY" -c "$PY_LF"'
 import os
 sha = os.environ["RU_SHA"].replace("+dirty", "")
 rows = [l.rstrip("\n").split("\t", 2) for l in open(os.environ["RU_F"], encoding="utf-8")]
@@ -421,7 +445,7 @@ fi
 
 
 # ここからは「コミット済みでも消えるもの」を見る。未コミットの確認（上）より後＝止まる理由が1つずつ出る
-csort() { LC_ALL=C sort -u "$1"; }
+csort() { tr -d '\r' < "$1" | LC_ALL=C sort -u; }   # \r を落としてから比べる（Windows の Python・上の PY_LF と二重の守り）
 if [ "$BASE_STATE" != "ok" ] && [ -s "$OVER" ] && [ "$FORCE" != "1" ]; then
   echo "❌ ${BASE_WHY}。配布後に書き足した配布ファイルがあっても見つけられないので、適用しません。" >&2
   echo "   git log -p で CLAUDE.md・rules/・.claude/ に書き足しが無いことを確かめ、人が判断したら --force を付けてください。" >&2
