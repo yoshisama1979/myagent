@@ -17,7 +17,8 @@
 
   <h1 class="text-3xl font-bold mb-2">🛰️ 統括レポート（Overseer）</h1>
   <p class="text-gray-600 mb-2">このシステム全体を俯瞰し、<strong>整合・健全性・安全</strong>の綻びを見つけて改善提案を積む統括ループ。このページは<strong>「社長が今知るべきこと」だけ</strong>を載せた最新レポートです。</p>
-  <p class="text-sm text-gray-700 mb-6 border-l-4 border-amber-500 pl-3">最終更新：<strong>2026-11-03 未明（Cycle 096・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>新規は1件です。<strong>🟡O-111</strong>：<u>MF の夜間取得は 11-02 01:39 に成功しましたが、MF より38件少ないままで、表示されている直し方はどちらも使えません</u>。<span class="font-mono">--seed</span> は 08-06 の古い CSV へ巻き戻し、<span class="font-mono">--full</span> は存在しません。<strong>社長のお手は不要で、開発で直す話です。</strong>O-108 の「<span class="font-mono">/mcp</span> の再認可」のお願いは、もう一晩の結果を見るまで保留をお勧めします（前回の統括の後に成功しましたが、再認可の記録は見当たらず、回復した理由は不明です）。11-02 01:00 以降のタイムアウト・異常終了は0件です。</p>
+  <p class="text-sm text-gray-700 mb-6 border-l-4 border-amber-500 pl-3">最終更新：<strong>2026-11-09（Cycle 097・<span class="underline">精密診断＋全体最適棚卸し</span>・月曜）</strong><br>社長が今日動くことはありません。故障は静かです（7日でタイムアウト0・異常終了2＝どちらも既知の型・OOM +0）。<strong>MF の夜間取得は 11-07・11-08 に再び失敗</strong>しました。記録はサーバー側のエラー（"dependency server is unavailable"）なのに、表示は「MCP認証切れの可能性」と出ます＝<u>「/mcp を再認可」のお願いは引き続き保留をお勧めします</u>（O-108）。新規は🟡O-112＝ルール3箇所が、つながらない Codex MCP を名指ししていて、コミット前の Codex レビューが黙って抜けます（開発へ・ご判断不要）。棚卸しは実施済み（ルール22本・コードの層は⑥⑧とも前回と同じ本数）。</p>
+  <p class="hidden">旧サマリ（Cycle 096）：最終更新：<strong>2026-11-03 未明（Cycle 096・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>新規は1件です。<strong>🟡O-111</strong>：<u>MF の夜間取得は 11-02 01:39 に成功しましたが、MF より38件少ないままで、表示されている直し方はどちらも使えません</u>。<span class="font-mono">--seed</span> は 08-06 の古い CSV へ巻き戻し、<span class="font-mono">--full</span> は存在しません。<strong>社長のお手は不要で、開発で直す話です。</strong>O-108 の「<span class="font-mono">/mcp</span> の再認可」のお願いは、もう一晩の結果を見るまで保留をお勧めします（前回の統括の後に成功しましたが、再認可の記録は見当たらず、回復した理由は不明です）。11-02 01:00 以降のタイムアウト・異常終了は0件です。</p>
   <p class="hidden">旧サマリ（Cycle 095）：最終更新：<strong>2026-11-02 未明（Cycle 095・<span class="underline">精密診断</span>・月曜 1:00 cron）</strong><br>新規は3件（すべて🟡）です。最重要は<strong>🟡O-108</strong>：<u>MF の仕訳の夜間取得が 10-11 から22夜 失敗していますが、社長へお願いしようとしている「<span class="font-mono">/mcp</span> の再認可」で直るとは限りません</u>。初回の記録は認証切れではなくサーバー側のエラーでした。<strong>社長のお手を借りる前に、開発が原因を1回確かめる形をお勧めします。</strong>ほかに<strong>🟡O-109</strong>（経理の結果が依頼元へ戻るまで35日）、<strong>🟡O-110</strong>（Chatwork 台帳が閾値の11倍）。10-30 に claude の認証切れがあり、その朝の朝礼は出ませんでした（回復済み）。タイムアウト0・OOM +0。</p>
   <p class="hidden">旧サマリ（Cycle 094）：最終更新：<strong>2026-10-27 未明（Cycle 094・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>故障は静かです（10-23 以降タイムアウト・異常終了0）。新規は1件＝<strong>🟡O-107</strong>：<u>経理窓口（finance）宛ての便2通が23日未読</u>で、うち1通は公庫の試算表の手前の作業（D-021／D-032・法定福利費の中身）です。別経路で済んでいる可能性もあるため、triage での確認をお願いする形にしました（ご判断不要）。</p>
   <p class="hidden">旧サマリ（Cycle 092）：最終更新：<strong>2026-10-20 未明（Cycle 092・<span class="underline">軽い巡回</span>・火曜 1:00 fallback）</strong><br>新規の綻びはありません。<strong>O-103・O-104 のお伺いを1点だけ直しました</strong>＝10-19 夜に社長が「<u>自社サイト（ycom）の HP解析だけ myagent で再開</u>」とお決めになった（commit <span class="font-mono">ac2c8d5</span>）ため、<strong>①は「ycom 以外の hp-loop を計測と地図から外してよいか」に、②は「ycom 以外の宛て」に</strong>範囲が狭まります。ycom の計測・産出量の記録（<span class="font-mono">loop-quality.py</span>）は止めてはいけない側に移りました。10-19 01:00 以降のタイムアウト・異常終了は0件です。</p>
@@ -58,7 +59,9 @@
   <!-- ===== 🔔 社長の判断・対応待ち（未処理だけ） ===== -->
   <div class="border-2 border-amber-400 bg-amber-50 rounded-lg p-5 mb-8">
     <h2 class="text-xl font-bold text-amber-800 mb-3">🔔 社長の判断・対応待ち</h2>
-    <p class="text-sm text-amber-900 mb-3 border-l-4 border-blue-500 pl-3"><strong>2026-11-03 現在（Cycle 096）：新しいお願いはありません。</strong>O-108 の <span class="font-mono">/mcp</span> 再認可は保留をお勧めします（11-02 の夜間取得は再認可の記録なしで成功）。triage への要点＝O-111 を開発へ、経理台帳 F-038 の「失敗継続」は 11-02 の成功が未反映です。</p>
+    <p class="text-sm text-amber-900 mb-3 border-l-4 border-blue-500 pl-3"><strong>2026-11-09 現在（Cycle 097）：新しいお願いはありません。</strong>triage への要点＝①🟡O-112（Codex の呼び出し手段を CLI に揃える）を開発へ ②O-108・O-111 の便に「サーバー側エラーのときは『認証切れ』と表示しない」を1行足す ③O-104＝よしだ歯科宛ての報告が3通・19日に（ご判断は前回と同じ1問）。</p>
+    <p class="text-sm text-amber-900 mb-3">🟡 <strong>O-112</strong>（🆕 2026-11-09 Cycle 097）：<span class="font-mono">mcp__codex__codex</span> を名指しするルール3箇所（partnership.md・commit-pipeline.md・hp-prospect.md）。MCP は接続できず、クロスレビューが記録なしで抜ける。推奨＝開発が CLI 直呼びの1行に揃える（正は partnership.md に1つ）。ご判断不要。</p>
+    <p class="text-sm text-amber-900 mb-3"><strong>2026-11-03 現在（Cycle 096）：新しいお願いはありません。</strong>O-108 の <span class="font-mono">/mcp</span> 再認可は保留をお勧めします（11-02 の夜間取得は再認可の記録なしで成功）。triage への要点＝O-111 を開発へ、経理台帳 F-038 の「失敗継続」は 11-02 の成功が未反映です。</p>
     <p class="text-sm text-amber-900 mb-3"><strong>2026-09-28 現在（Cycle 085）：社長のご判断が要るのは <span class="text-red-700">🙋1件（O-092）</span> だけです。</strong>下に並ぶその他のカードは、<u>09-24 のご決定で開発へ降ろし済み（47件・<span class="font-mono">data/triage/handoff-dev-overseer-47-20260924.md</span>）</u>か、解決済みです＝<strong>社長のお手は不要</strong>です。器の作り替え（O-006・09-24 着手OK）が済むまで、カード本文は履歴として残しています。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-red-500 pl-3"><strong>2026-10-05 現在（Cycle 087）：社長にお願いしたいのは2点です。</strong>①<strong class="text-red-700">🔴 O-095</strong>＝開発セッションを開いて「受信箱の 09-27 triage 便（O-034）を先にやって」と一言（直すのは2行）。②<strong>🙋 O-092</strong>＝Slack 報告の文面を1箇所に置いてよいか（先週から据え置き）。O-096・O-097 は急ぎません。</p>
     <p class="text-sm text-amber-900 mb-3 border-l-4 border-amber-500 pl-3"><strong>2026-10-06 現在（Cycle 088）：上の2点は変わりません。</strong>加わったのは <strong>🟡 O-098</strong> の1点＝「解析」セッションを窓口の対応表に載せてよいか（宛名とセッションIDのご確認）。急ぎません＝次の triage でまとめて。</p>
@@ -191,6 +194,73 @@
   </div>
 
   <h2 class="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-6">最新サイクル</h2>
+
+  <!-- ===== Cycle 097 ===== -->
+  <section class="mb-10 border-t-4 border-blue-500 pt-4">
+    <h3 class="text-xl font-bold mb-1">Cycle 097 — 2026-11-09（精密診断＋全体最適棚卸し（ルール＋コード）／🟡1件・MF 取得は 11-07 から再び失敗、表示は「認証切れ」だが記録はサーバー側エラー）</h3>
+    <p class="text-sm text-gray-600 mb-3"><strong>モード判定</strong>：月曜の精密診断（直近＝11-02 Cycle 095）。全体最適棚卸しは前回 10-26 から14日＝本日実施。<strong>確認した範囲</strong>：Slack <span class="font-mono">fetch</span>（新着なし）／<span class="font-mono">to: overseer</span> 0通（スプール直読み）／<span class="font-mono">data/overseer/from-president.md</span>（09-27 10:12 のまま＝新しい節なし）／<span class="font-mono">python3 bin/system-health.py</span>／<span class="font-mono">failures.jsonl</span>／<span class="font-mono">export.log</span>・<span class="font-mono">status.json</span>（11-03〜11-08）／<span class="font-mono">data/hp-loop/quality-log.md</span>／git log（11-03 以降）・git status（rules/・crontab 控え）／ルール実 version と SYSTEM.md の版表／Codex の呼び出し箇所（rules・commands）。〔未確認＝<span class="font-mono">session-desk.py whoami</span>・<span class="font-mono">comms-rotate.py plan</span>・<span class="font-mono">codex --version</span>・<span class="font-mono">~/.codex/sessions</span> は本セッションの許可が無く実行できず〕</p>
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>健康サマリ</strong>：故障は静かです（直近7日＝タイムアウト0・異常終了2〔11-03 23:00 memo の誤報＝O-099／11-04 09:42 Slack 取り込み失敗1回＝次tickで回復〕・警報0・メモリ空き66%・OOM +0）。主題は MF の夜間取得＝11-03〜11-06 は「38件ズレ」のまま成功、<strong>11-07・11-08 は再び失敗</strong>しました。新規は1件（🟡O-112＝改善提案）です。</p>
+    </div>
+
+    <div class="border border-amber-300 bg-amber-50 rounded p-3 mb-3 text-sm">
+      <p><strong>🟡 O-112（🆕）ルール3箇所が、つながらない Codex MCP（<span class="font-mono">mcp__codex__codex</span>）を名指ししている＝コミット前の Codex レビューが黙って抜ける</strong></p>
+      <p class="mt-1"><strong>観察（実測）</strong>＝①<span class="font-mono">mcp__codex__codex</span> を呼び出し手段として書いているのは <span class="font-mono">rules/partnership.md</span>（:205 付近）・<span class="font-mono">.claude/commands/commit-pipeline.md:51</span>・<span class="font-mono">rules/modes/hp-prospect.md:36</span> の3箇所。②本セッション起動時、codex の MCP サーバーは <span class="font-mono">CONNECTION_CLOSED</span> で接続できませんでした。③<span class="font-mono">partnership.md</span> は 11-06 にモデル名（gpt-6.1-sol）だけ更新されましたが、呼び出し経路は MCP のままです（未コミット）。④統括の記録には、CLI 0.161.0 に MCP サーバー機能が無く、<span class="font-mono">codex exec -s read-only … -o 結果</span> で直に呼ぶのが動く形、という過去の確認があります。</p>
+      <p class="mt-1"><strong>なぜ問題か</strong>＝<span class="font-mono">/commit-pipeline</span> の「Codex に依頼する」を選んでも道具が無く、hp-prospect は毎回「Codexレビュー未実施」で発行されます。<u>失敗として記録されないので、クロスレビューが抜けていても誰にも見えません</u>。推測：MCP 経路が最後に動いた日は未確認です（<span class="font-mono">~/.codex/sessions</span> を本セッションで読めず）。</p>
+      <p class="mt-1"><strong>推奨（誰が・何を）</strong>＝開発が①CLI で1回動かして実際に使えるモデル名を確かめる ②3箇所の呼び出し手段を CLI 直呼びの1行に揃える（正は <span class="font-mono">partnership.md</span> に1つだけ置き、2箇所はそこを参照）。ルール編集なので合意後。<strong>効果</strong>：中（コミット前のクロスレビュー・営業レポートの品質担保が実際に効く）。<strong>工数</strong>：小。<strong>優先度</strong>：🟡。<strong>関連</strong>：O-105（<span class="font-mono">partnership.md</span> の未コミット）。<strong>ステータス</strong>：⏳ triage から開発へ（ご判断不要＝直し方は1つ）。</p>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>既存カードの動き（数字だけ）</strong></p>
+      <ul class="list-disc ml-5 mt-1 space-y-1">
+        <li><strong>O-108</strong>：11-03〜11-06 の4夜は取得成功、<strong>11-07・11-08 は失敗</strong>。失敗の夜の記録はどちらも <span class="font-mono">"dependency server is unavailable"</span>（サーバー側）ですが、<span class="font-mono">status.json</span> の note は <strong>「MCP認証切れの可能性」</strong>と出ます＝<u>表示が社長に「/mcp を再認可」を促す向きに読ませています</u>。10-11 初回と同じ型です。推奨に1行追加＝エラー文が「dependency server」のときは note を「サーバー側の応答なし（再認可では直らない可能性）」にする（開発・O-111 と同じ便で）。社長へのお願いは引き続き保留をお勧めします。</li>
+        <li><strong>O-111</strong>：成功した4夜はすべて「新規0／差替0／MF削除0」で、窓の中は 35〜50件、<strong>ズレは 38件で一定</strong>＝「窓より前の日付で後から入った仕訳」という見立てと合います（内訳は未確認）。<span class="font-mono">last_success</span> は 11-01 08:46 のまま<strong>8日</strong>止まっています＝<span class="font-mono">finance.md</span> の鮮度確認では「8日前のデータ」に見えます。11-03 以降、<span class="font-mono">journal-mcp-*</span> への変更コミットはありません。</li>
+        <li><strong>O-104</strong>：未処理の実装報告 2→2→<strong>3</strong>（3週連続で0でない）。<span class="font-mono">to: hp-loop-yoshida</span> は 3通・最古 19.2日。ご判断は前回と同じ1問です。</li>
+        <li><strong>O-110</strong>：11-03 に <span class="font-mono">comms-rotate.py</span> が新設され 803→555KB に。<strong>その後6日で 635KB（+80KB）</strong>＝退避は 11-08 12:12 にも動いていますが、なお閾値70KBの9倍です。開発へ依頼済みのため重複依頼はしません。</li>
+        <li><strong>O-105・O-096</strong>：未コミットのルールは 5本（board・comms・management・partnership・crontab 控え）＋未追跡の <span class="font-mono">rules/modes/work.md</span>・<span class="font-mono">.claude/commands/work.md</span>。</li>
+        <li><strong>O-067（地図の遅れ）</strong>：SYSTEM.md の版表と実 version のズレ＝management 0.2→<strong>0.8</strong>・comms 0.3→<strong>1.6</strong>・partner 1.3→<strong>1.4</strong>・finance 0.1→<strong>0.2</strong>・overseer 1.3→<strong>1.4</strong>・triage 0.1→<strong>1.4</strong>。work は地図に無し（O-096）。新規起票はせず本カードの実測として記録します。</li>
+        <li>滞り：<span class="font-mono">new/</span> 225件（web-hanasaka 81・yoshida-dev 57・rally-dev 27・work 18・dev 10・management 9・konjaku-dev 6・yokohawaii-dev 5・shigatoyota-dev 4・hp-loop-yoshida 3・triage 2・product／fujisaka-dev／rule-kaizen 各1）・<span class="font-mono">hold/</span> 2件（最古 68.4日）。</li>
+      </ul>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>床と待ちの推移（数字のみ・判定なし）</strong>：<span class="font-mono">system-health.py</span> の本日の出力に「床と待ち」節は出ませんでした＝<strong>データなし</strong>として記録します。故障の行＝タイムアウト 0・異常終了 2・警報 0・heartbeat 1分前（読めた 7.0日分）。</p>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>解析ループの産出量（数字のみ・判定なし）</strong></p>
+      <table class="text-xs mt-1 border-collapse">
+        <tr class="bg-gray-100"><th class="border px-2">記録日</th><th class="border px-2">期間(日)</th><th class="border px-2">起動</th><th class="border px-2">書込/回</th><th class="border px-2">文字/回</th><th class="border px-2">未処理の実装報告</th><th class="border px-2">効果検証以降のR</th></tr>
+        <tr><td class="border px-2">2026-11-02</td><td class="border px-2">14</td><td class="border px-2">3</td><td class="border px-2">19.0</td><td class="border px-2">17,516</td><td class="border px-2">2</td><td class="border px-2">86</td></tr>
+        <tr><td class="border px-2">2026-11-09</td><td class="border px-2">14</td><td class="border px-2">3</td><td class="border px-2">23.3</td><td class="border px-2">18,498</td><td class="border px-2">3</td><td class="border px-2">86</td></tr>
+      </table>
+      <p class="text-xs text-gray-500 mt-1">出典：<span class="font-mono">data/hp-loop/quality-log.md</span>（月曜 0:50）。対象は ycom のみ（10-18 の移設後）。良し悪しの判断は社長と <span class="font-mono">/board</span>。</p>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>📚 全体最適棚卸し (A) ルールの層（2026-11-09 実施・前回 10-26）</strong></p>
+      <ul class="list-disc ml-5 mt-1 space-y-1">
+        <li>① 本数と総量：<span class="font-mono">rules/modes/</span> 22本 521KB（前回 524KB）／<span class="font-mono">rules/</span> 直下 10本 156KB（前回 159KB）／<span class="font-mono">.claude/commands/</span> 36本 113KB（前回 116KB）／起動時自動ロード 15KB（同じ）。〔本数は前回と同じ。KB は今回 du の 1024 割りで、前回との差は測り方の差を含む可能性あり〕</li>
+        <li>② 重複・流用切れ：<strong>Codex の呼び出し手段が3箇所に別々に書かれ、3箇所とも同じ古い経路</strong>＝O-112。ほかに新しい二重定義は見つけていません。</li>
+        <li>③ 最後に見直した日が古い領域：<span class="font-mono">task-partner.md</span> は今回も残っています（O-004・09-24 ご決定から46日）。</li>
+        <li>④ 動き：前回「2週間動いていない」とした層は、この2週で comms v1.6・management・mailbox・hp-loop・partnership が更新されました。うち 4本は未コミット（O-105）。</li>
+      </ul>
+      <p class="mt-2"><strong>(B) コードの層（数字のみ・判定なし）</strong></p>
+      <table class="text-xs mt-1 border-collapse">
+        <tr class="bg-gray-100"><th class="border px-2">項目</th><th class="border px-2">前回 10-26</th><th class="border px-2">今回 11-09</th></tr>
+        <tr><td class="border px-2">⑤ bin/ の増減（直近14日）</td><td class="border px-2">+1,218 / −199 / 純 +1,019 / 触れた 11本</td><td class="border px-2">+3,333 / −196 / 純 +3,137 / 触れた 16本</td></tr>
+        <tr><td class="border px-2">⑥ 無人ループが実行するツール／テスト無し</td><td class="border px-2">33本 / 7本</td><td class="border px-2">35本 / 7本（同じ7本）</td></tr>
+        <tr><td class="border px-2">⑦ 同じ処理の再実装（候補）</td><td class="border px-2">.env 6（+shell 4）／atomic write 17／flock 7（+shell 2）</td><td class="border px-2">.env 7（+shell 4）／atomic write 18／flock 8（+shell 2）</td></tr>
+        <tr><td class="border px-2">⑧ _tmp_ 残骸</td><td class="border px-2">3本・最古 68日</td><td class="border px-2">3本・最古 82日（同じ3本）</td></tr>
+      </table>
+      <p class="text-xs text-gray-500 mt-1">〔<span class="font-mono">_env.py</span> と <span class="font-mono">system-health.py</span> 自身は対象外＝ツールの但し書きどおり。⑥⑧は開発へ降ろし済み（O-091・O-043）。⑦は3項目とも +1＝同じ週に1本増えた形で、「3箇所以上に新しく増えた」不整合の芽ではないため起票しません〕</p>
+    </div>
+
+    <div class="bg-white rounded shadow p-4 mb-3 text-sm leading-relaxed">
+      <p><strong>Step 6 自己改善</strong>：本セッションでは <span class="font-mono">session-desk.py</span>・<span class="font-mono">comms-rotate.py plan</span>・<span class="font-mono">codex --version</span> が許可外で実行できず、「未確認」が3つ残りました。統括の許可リストに読み取り専用の3本を足すかは、許可の追加＝社長作業なので、カイゼン台帳へ起票して棚卸しの議題にします。〔記録：「床と待ち」節の有無を確かめるため <span class="font-mono">system-health.py</span> を2回実行し、11-09 のスナップショットが2行あります＝トレンド比較では同日の重複として読んでください〕</p>
+      <p class="mt-1">次サイクル：反応tick（<span class="font-mono">to: overseer</span> の新着があれば）／火曜 1:00 fallback は「今週実施済み」で軽く終える／次の精密診断は 2026-11-16 月曜、次の全体最適棚卸しは 11-23。停止条件＝社長の停止指示。</p>
+    </div>
+  </section>
 
   <!-- ===== Cycle 096 ===== -->
   <section class="mb-10 border-t-4 border-blue-500 pt-4">
