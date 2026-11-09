@@ -91,6 +91,10 @@ GUIDES = {
         "claude-rules/website/project-config.md": [
             "§3 Step 1 プロジェクトの設定を書く", "§11 導入チェックリスト",
         ],
+        # CLAUDE.md は追補（append）で配る＝共通の原則が common、面の構成が website（5-3c・2026-11-06）
+        "claude-rules/common/CLAUDE.md": [
+            "§7 正本と番号（ルールの出自と改善ループ・テンプレ還元）",
+        ],
         "claude-rules/website/CLAUDE.md": [
             "§2 全体像", "§7 正本と番号",
         ],

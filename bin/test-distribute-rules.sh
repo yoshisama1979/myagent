@@ -63,6 +63,26 @@ for f in bin/rule-report.sh bin/rules-update.sh; do
   else say_ng "実行ビットが立っている: $f"; fi
 done
 
+echo "▼ CLAUDE.md は共通の原則（common）＋面の構成（website／websystem）を連結して1本で配る（5-3c）"
+# 共通の原則は common に1本だけ。面の層は title を持たず、境界のコメントの下に面の構成だけを持つ。
+# 崩れると①両面で原則の言い回しがズレる（片方だけ直る）②title や原則が二重に出る ③境界が消えて
+# 現場が「どの層を直せと言えばいいか」分からなくなる。
+for p in website websystem; do
+  mkdir -p "$T/cm-$p"
+  dr apply "$p" "$T/cm-$p" --dest-name "CLAUDE確認-$p" --yes $DIRTY >/dev/null
+  C="$T/cm-$p/CLAUDE.md"
+  want_eq "$(head -1 "$C")" "# CLAUDE.md" "$p: 先頭は title（common が持つ）"
+  want_eq "$(grep -c '^# CLAUDE.md$' "$C")" "1" "$p: title は1つだけ（面の層に title が残っていない）"
+  want_eq "$(grep -c '^<!-- ▼ ここから下は ' "$C")" "1" "$p: 境界のコメントは1つ"
+  want_in "ここから下は $p 層" "$(grep '^<!-- ▼' "$C")" "$p: 境界が正しい層を名指す"
+  want_eq "$(grep -c '^## コラボレーションの原則$' "$C")" "1" "$p: 共通の原則は二重に出ない"
+  want_in "## 複数のセッションで作業を受け渡すとき" "$(sed '/^<!-- ▼/,$d' "$C")" "$p: 受け渡しの規律は境界より上（全案件が毎回読む共通の層）にある"
+  want_in "## プロジェクト概要" "$(sed -n '/^<!-- ▼/,$p' "$C")" "$p: 面の構成は境界の下にある"
+  if grep -q $'\r' "$C"; then say_ng "$p: 改行が LF に揃っている" "CR が残っている"; else say_ok "$p: 改行が LF に揃っている"; fi
+done
+want_eq "$(sed '/^<!-- ▼/,$d' "$T/cm-website/CLAUDE.md" | md5sum)" "$(sed '/^<!-- ▼/,$d' "$T/cm-websystem/CLAUDE.md" | md5sum)" \
+        "境界より上（共通の原則）は両面で1字も違わない"
+
 echo "▼ 配る前の安全確認"
 OUT="$(dr apply websystem "$T/nowhere" --yes)";     want_in "配布先がありません" "$OUT" "存在しない配布先は拒否"
 OUT="$(dr apply websystem "$PROJ/claude-rules/websystem" --yes $DIRTY)"

@@ -11,7 +11,7 @@
     "website/ と websystem/ は面レイヤーとして残っており、共通部分を common/ へ移すたびに薄くなる。",
     "最終形では website/ → site/ ・ websystem/ → system/ に改名し、full=[common,site,system] を足す。"
   ],
-  "append": [],
+  "append": ["CLAUDE.md"],
   "profiles": {
     "website": ["common", "website"],
     "websystem": ["common", "websystem"]

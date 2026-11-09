@@ -59,7 +59,7 @@
 ステージング済みの差分を Codex(OpenAI GPT-5系)に投げてクロスレビューを実施する。
 `/codex-review` コマンドが未導入の環境では `mcp__codex__codex`（sandbox: read-only / approval-policy: never）を直接呼ぶ。それも不可なら、本ステップの観点リストで Claude 単独レビューに切り替えた旨を報告して進める。
 
-**使用モデル**：`model` パラメータは原則指定しない＝実行環境の `~/.codex/config.toml`（CODEX_HOME）の `model` 既定に従う(2026-07-14 時点の推奨既定＝`gpt-5.6-sol`。新版が出たら config.toml の1行を更新すれば全経路に効く)。明示指定する場合もサフィックス無し系列を使う(`-codex` 付きモデルは「未サポート」エラーになることがある)。**実際に使われたモデル名をレビュー報告に明記**する(裏取りは `~/.codex/sessions/<日付>/rollout-*.jsonl` の `"model":` 記録)。
+**使用モデル**：`model` パラメータは原則指定しない＝実行環境の `~/.codex/config.toml`（CODEX_HOME）の `model` 既定に従う(**使用モデルは `gpt-6.1-sol`**＝2026-11-06 社長指示。各環境の config.toml の `model` をこの値にしておく＝1行で全経路に効く。レビュー報告に出た実使用モデルが違えば config.toml を直す)。明示指定する場合もサフィックス無し系列を使う(`-codex` 付きモデルは「未サポート」エラーになることがある)。**実際に使われたモデル名をレビュー報告に明記**する(裏取りは `~/.codex/sessions/<日付>/rollout-*.jsonl` の `"model":` 記録)。
 
 Web制作の差分なので、特に以下の観点を重点的に見てもらう:
 
