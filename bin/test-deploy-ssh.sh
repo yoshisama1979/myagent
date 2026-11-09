@@ -234,6 +234,18 @@ want_file_eq "$STG/data/x" "keep" "除外したフォルダの中身はそのま
 [ -d "$STG/data" ] && ok "フォルダが置き換わっていない" || ng "フォルダが置き換わっていない"
 want_absent "$T/srv/stg-state/in-progress" "書き込み前に止まったので途中の印は無い"
 
+echo "■ サーバー上の値を信用しない"
+mkdir -p "$T/outside"; ln -s "$T/outside" "$STG/shared"
+printf 'EXCLUDE=shared\n' >> "$SC"; git -C "$A" rm -q data; mkdir -p "$A/shared"; printf 'a\n' > "$A/shared/a.txt"; pushc symlink
+run -t staging preview;      want_rc $RC 0 "除外したリンクの下のパスは preview では見えない"
+runh -t staging apply "$(tok)"; want_rc $RC 2 "途中のフォルダがリンクなら書き込む前に止まる"; want_in "symbolic link" "理由を出す"
+want_absent "$T/outside/a.txt" "公開フォルダの外に書き込まない"
+cp "$T/srv/stg-state/deployed" "$T/deployed.bak"
+printf -- '--output=%s/pwned\n' "$T" > "$T/srv/stg-state/deployed"
+run -t staging status;       want_rc $RC 2 "壊れた記録（コミット番号でない値）で止まる"
+want_absent "$T/pwned" "記録の値を git のオプションとして使わない"
+cp "$T/deployed.bak" "$T/srv/stg-state/deployed"
+
 echo "■ 設定"
 sed -i 's|^SSH_HOST=.*|SSH_HOST=CHANGE_ME|' "$A/.deploy/production.conf"
 run preview;                want_rc $RC 2 "未記入の設定で止まる"

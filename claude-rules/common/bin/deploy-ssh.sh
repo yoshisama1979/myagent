@@ -213,9 +213,11 @@ read_state() {
       INSIDE) stop "STATE_DIR resolves inside REMOTE_ROOT on the server (it would be public)" ;;
       STATE=yes) HAS_STATE=yes ;;
       MANIFEST=yes) HAS_MANIFEST=yes ;;
-      DEPLOYED=*) DEPLOYED=${line#DEPLOYED=} ;;
-      LOCK=*) LOCK=${line#LOCK=} ;;
-      INPROGRESS=*) INPROGRESS=${line#INPROGRESS=} ;;
+      DEPLOYED=*) DEPLOYED=${line#DEPLOYED=}
+                  [[ $DEPLOYED =~ ^[0-9a-f]{40}$ ]] || stop "the server's deploy record is broken (not a commit id). Ask for help; do not edit it by guess" ;;
+      LOCK=*) LOCK=$(safe_text "${line#LOCK=}") ;;
+      INPROGRESS=*) INPROGRESS=$(printf '%s' "${line#INPROGRESS=}" | tr -cd 'A-Za-z0-9:-')
+                    [[ $INPROGRESS =~ ^(undo:)?[0-9TZ]+-[0-9a-f]+$ ]] || stop "the server's unfinished marker is broken: ask for help" ;;
     esac
   done <<< "$out"
 }
@@ -653,7 +655,16 @@ apply)
       if [ -d "$f" ]; then echo "ERR: CONFLICT folder exists on server: $f"; exit 255; fi
       d=$(dirname -- "$f")
       while [ "$d" != "." ]; do
+        if [ -L "$d" ]; then echo "ERR: CONFLICT folder is a symbolic link on server: $d"; exit 255; fi
         if [ -e "$d" ] && [ ! -d "$d" ]; then echo "ERR: CONFLICT file exists on server where a folder is needed: $d"; exit 255; fi
+        d=$(dirname -- "$d")
+      done
+    done' sh ); then rm -rf "$B"; exit 3; fi
+  if ! cat "$B/modified.lst" "$B/deleted.lst" | tr '\n' '\0' | ( cd "$R" && xargs -0 sh -c 'for f do
+      if [ -L "$f" ]; then echo "ERR: CONFLICT is a symbolic link on server: $f"; exit 255; fi
+      d=$(dirname -- "$f")
+      while [ "$d" != "." ]; do
+        if [ -L "$d" ]; then echo "ERR: CONFLICT folder is a symbolic link on server: $d"; exit 255; fi
         d=$(dirname -- "$d")
       done
     done' sh ); then rm -rf "$B"; exit 3; fi
@@ -680,6 +691,14 @@ undo)
   R=$1 S=$2 ID=$3
   B=$S/backups/$ID
   [ -d "$S/lock" ] || { echo "ERR: lock not held"; exit 3; }
+  if ! cat "$B/added.lst" "$B/modified.lst" "$B/deleted.lst" | tr '\n' '\0' | ( cd "$R" && xargs -0 sh -c 'for f do
+      if [ -L "$f" ]; then echo "ERR: CONFLICT is a symbolic link on server: $f"; exit 255; fi
+      d=$(dirname -- "$f")
+      while [ "$d" != "." ]; do
+        if [ -L "$d" ]; then echo "ERR: CONFLICT folder is a symbolic link on server: $d"; exit 255; fi
+        d=$(dirname -- "$d")
+      done
+    done' sh ); then exit 3; fi
   echo "undo:$ID" > "$S/in-progress" || { echo "ERR: cannot write marker"; exit 3; }
   export R B
   tr '\n' '\0' < "$B/added.lst" | ( cd "$R" && xargs -0 sh -c 'for f do rm -f -- "$f" || exit 255; done' sh ) || { echo "ERR: remove failed"; exit 5; }
@@ -706,7 +725,7 @@ preflight)
   miss=""
   for c in sh find tar cp mkdir mv rm xargs sed tr cat ls sort head tail wc dirname grep; do command -v $c >/dev/null 2>&1 || miss="$miss $c"; done
   command -v sha256sum >/dev/null 2>&1 || command -v shasum >/dev/null 2>&1 || miss="$miss sha256sum"
-  if command -v tar >/dev/null 2>&1; then printf 'x\0' > /dev/null; tar --help 2>&1 | grep -q -- '--null' || miss="$miss tar(--null)"; fi
+  if command -v tar >/dev/null 2>&1; then tar --help 2>&1 | grep -q -- '--null' || miss="$miss tar(--null)"; fi
   echo "MISSING=${miss:- none}"
   if [ -d "$R" ]; then
     echo "ROOT=$(ls -ld "$R")"
