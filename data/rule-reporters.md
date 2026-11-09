@@ -33,3 +33,5 @@
 | RR-016 | hana-client-portal | websystem | `rr-hana-client-portal` | 2026-11-02 | 2027-11-02 | 有効 | — |  |  |
 | RR-017 | site-analyzer | websystem | `rr-site-analyzer` | 2026-11-02 | 2027-11-02 | 有効 | — |  |  |
 | RR-018 | 藤阪ガス | website | `rr-fujisaka` | 2026-11-05 | 2027-11-05 | 有効 | — |  |  |
+| RR-019 | おもいでフォト | websystem | `rr-omoide-photo` | 2026-11-06 | 2027-11-06 | 有効 | — |  |  |
+| RR-020 | オリジナルシャンパン | website | `rr-original-champagne` | 2026-11-06 | 2027-11-06 | 有効 | — |  |  |
