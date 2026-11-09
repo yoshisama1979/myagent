@@ -652,6 +652,7 @@ apply)
   for f in meta prev.manifest new.manifest added.lst modified.lst deleted.lst; do cp "$X/$f" "$B/$f" || { rm -rf "$B"; exit 3; }; done
   export R B X
   if ! tr '\n' '\0' < "$B/added.lst" | ( cd "$R" && xargs -0 sh -c 'for f do
+      if [ -L "$f" ]; then echo "ERR: CONFLICT is a symbolic link on server: $f"; exit 255; fi
       if [ -d "$f" ]; then echo "ERR: CONFLICT folder exists on server: $f"; exit 255; fi
       d=$(dirname -- "$f")
       while [ "$d" != "." ]; do
