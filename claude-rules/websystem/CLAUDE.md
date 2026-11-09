@@ -58,6 +58,7 @@
 | `.claude/rules/api-design.md`（paths自動） | **API を実装・変更するとき**（認証系統の明示・管理用と公開用の分離・複数経路の共通化・内部表現を返さない・DB制約とバリデーションの整合・部分更新の検証・一括インポート・テストDBと本番DBの差）※実パス・middleware名・モデル名は `project-config.md` 側 |
 | `rules/modes/commit.md` | コミットメッセージを作成・提案するとき（汎用ガイドライン）／**ブランチ運用方針：単一AI × 作業ブランチ直接コミット**（feature ブランチを切らない・PR とマージはユーザー手動。**ブランチ名と昇格経路は `project-config.md` を正とする**） |
 | `rules/modes/deploy.md` | **本番デプロイの手順を提示するとき**。推測で手順を書かず、まず本番の実状態（`git log -1` / `git branch --show-current` / `git status`）を読む。ブランチ名を信用しない・反映に再ビルドが要るかは構成で決まる・破壊的マイグレーション時の順序。**AI は push / マージ / 本番コマンドを実行しない** |
+| `rules/modes/deploy-ssh.md` | **SSH で本番（検証環境）へ上げるとき／`bash bin/deploy-ssh.sh` が止まったとき。** リポジトリ経由のデプロイの簡易版＝FTP の置き換え。push 済みのコミットだけを上げる・`preview`（AI 可）→`apply <番号>`（人がターミナルで）・本番の直接変更や巻き戻しは機械で止める・undo で戻せる。使える条件／使えない条件は同ファイル §0。設定は `.deploy/production.conf` |
 | `rules/modes/estimation.md` | 新機能のタスク抽出・見積もり（難易度評価）を行うとき |
 | `rules/modes/quotation.md` | **顧客向けの見積書**（工数・費用・但し書き）を作成・提示するとき。内部のタスク抽出は rules/modes/estimation.md、見積書への仕立ては rules/modes/quotation.md |
 | `rules/modes/deck-format.md` | **クライアント向けスライド資料（提案書・報告デッキ）を HTML→PDF で作るとき**。ヘッドレスChrome→A4横PDF の手順・落とし穴（用紙が縦になる等）・検証・スクショの実データ混入防止 |

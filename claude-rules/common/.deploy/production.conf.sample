@@ -1,0 +1,38 @@
+# Settings for bin/deploy-ssh.sh  (rule: rules/modes/deploy-ssh.md section 4)
+# Copy this file to .deploy/production.conf, fill in every CHANGE_ME, and commit it.
+# For a staging server, make .deploy/staging.conf and use: bash bin/deploy-ssh.sh -t staging preview
+# No secrets here: host address, user and key live in ~/.ssh/config on each PC.
+
+# Host name you gave in ~/.ssh/config (e.g. example-prod)
+SSH_HOST=CHANGE_ME
+
+# Folder on the server to keep identical to SOURCE_DIR (absolute path)
+#   e.g. /home/exampleuser/example.com/public_html
+#   WordPress: the theme folder only, e.g. /home/exampleuser/example.com/public_html/wp-content/themes/example
+REMOTE_ROOT=CHANGE_ME
+
+# Where records and backups go: OUTSIDE the public folder (absolute path)
+#   e.g. /home/exampleuser/.deploy-state/example-production
+STATE_DIR=CHANGE_ME
+
+# Folder in this repository to deploy ("." = whole repository)
+SOURCE_DIR=.
+
+# Deploy only from this remote branch (already pushed)
+BRANCH=main
+REMOTE=origin
+
+# How many past deploys to keep backups for (1-100)
+BACKUP_KEEP=10
+
+# Never deploy / never delete / never compare (relative to REMOTE_ROOT, * allowed, one per line).
+# Always excluded without listing: .git* .deploy/ .claude/ .env .env.* *.md *.sh
+# Files that exist only on the server and are not listed here WILL BE DELETED by apply.
+#EXCLUDE=wp-config.php
+#EXCLUDE=config.php
+#EXCLUDE=uploads/*
+#EXCLUDE=cache/*
+#EXCLUDE=.htaccess
+
+# URLs to fetch after apply (status code only; check the change itself by eye)
+#CHECK_URL=https://www.example.com/
